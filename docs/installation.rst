@@ -7,7 +7,7 @@ Installing
 Requirements
 ^^^^^^^^^^^^
 
-<PKG_NAME> requires the following packages:
+junifer requires the following packages:
 
 Running the examples requires:
 
@@ -16,7 +16,7 @@ automatically.
 
 Installing
 ^^^^^^^^^^
-There are different ways to install <PKG_NAME>:
+There are different ways to install junifer:
 
 * Install the :ref:`install_latest_release`. This is the most suitable approach
   for most end users.
@@ -39,12 +39,12 @@ Either way, we strongly recommend using virtual environments:
 Latest release
 --------------
 
-We have packaged <PKG_NAME> and published it in PyPi, so you can just install it
+We have packaged junifer and published it in PyPi, so you can just install it
 with `pip`.
 
 .. code-block:: bash
 
-    pip install -U <PKG_NAME>
+    pip install -U junifer
 
 
 .. _install_latest_development:
@@ -53,11 +53,11 @@ Latest Development Version
 --------------------------
 First, make sure that you have all the dependencies installed:
 
-Then, install <PKG_NAME> from TestPypi
+Then, install junifer from TestPypi
 
 .. code-block:: bash
 
-    pip install --index-url https://test.pypi.org/simple/ -U <PKG_NAME> --pre
+    pip install -U junifer --pre
 
 
 .. _install_development_git:
@@ -66,17 +66,17 @@ Local git repository (for developers)
 -------------------------------------
 First, make sure that you have all the dependencies installed:
 
-Then, clone `<PKG_NAME> Github`_ repository in a folder of your choice:
+Then, clone `junifer Github`_ repository in a folder of your choice:
 
 .. code-block:: bash
 
-    git clone <GITHUB_URL>.git
+    git clone https://github.com/juaml/junifer.git
 
 Install development mode requirements:
 
 .. code-block:: bash
 
-    cd <PKG_NAME>
+    cd junifer
     pip install -r dev-requirements.txt
 
 Finally, install in development mode:

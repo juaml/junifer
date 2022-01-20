@@ -7,14 +7,14 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 
-DOWNLOAD_URL = '<GITHUB_URL>'
-URL = '<DOC_URL>'
+DOWNLOAD_URL = 'https://github.com/juaml/junifer'
+URL = 'https://juaml.github.io/junifer'
 
 setuptools.setup(
-    name='<PKG_NAME>',
-    author='<AUTHOR_NAME>',
-    author_email='<AUTHOR_EMAIL>',
-    description='<SHORT_DESC>',
+    name='junifer',
+    author='Fede Raimondo',
+    author_email='f.raimondo@fz-juelich.de',
+    description='JUelich NeuroImaging FEature extractoR',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url=URL,
@@ -42,7 +42,7 @@ setuptools.setup(
     use_scm_version=dict(
         version_scheme="python-simplified-semver",
         local_scheme="node-and-date",
-        write_to="<PKG_NAME>/_version.py",
+        write_to="junifer/_version.py",
         write_to_template="__version__ = '{version}'\n"
     ),
     setup_requires=['setuptools_scm'],

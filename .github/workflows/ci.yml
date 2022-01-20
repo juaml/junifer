@@ -21,7 +21,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r test-requirements.txt
         pip install -r requirements.txt
-    - name: Install <PKG_NAME>
+    - name: Install junifer
       shell: bash -el {0}
       run: |
           python setup.py build
@@ -32,10 +32,10 @@ jobs:
         flake8 . --count  --show-source --statistics
     - name: Spell check
       run: |
-        codespell <PKG_NAME>/ docs/ examples/
+        codespell junifer/ docs/ examples/
     - name: Test with pytest
       run: |
-        PYTHONPATH="." pytest --cov=<PKG_NAME> --cov-report xml -vv <PKG_NAME>/
+        PYTHONPATH="." pytest --cov=junifer --cov-report xml -vv junifer/
     - name: 'Upload coverage to CodeCov'
       uses: codecov/codecov-action@master
       if: success() && matrix.python-version == 3.8

@@ -59,7 +59,7 @@ release.
 
 .. code-block:: bash
 
-    SETUPTOOLS_SCM_DEBUG=1 python -m pep517.build --source --binary --out-dir dist/ .
+    SETUPTOOLS_SCM_DEBUG=1 python -m build --sdist --wheel --outdir dist/ .
 
 8. Push the tag
 
