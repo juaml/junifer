@@ -108,9 +108,9 @@ def finish_logging():
         logger.removeHandler(h)
 
 
-def raise_error(msg):
+def raise_error(msg, klass=ValueError):
     logger.error(msg)
-    raise ValueError(msg)
+    raise klass(msg)
 
 
 class LoggerWriter:
