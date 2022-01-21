@@ -11,8 +11,8 @@ def test_basedatagrabber():
     with pytest.raises(TypeError, match=r"must be a list of strings"):
         BaseDataGrabber('/tmp', [1, 2, 3])
 
-    datagrabber = BaseDataGrabber('/tmp', ['func', 'anat'])
-    assert datagrabber.workdir == Path('/tmp')
+    datagrabber = BaseDataGrabber('/tmp/data', ['func', 'anat'])
+    assert datagrabber.datadir == Path('/tmp/data')
     assert datagrabber.types == ['func', 'anat']
 
     with pytest.raises(NotImplementedError, match=r"get_elements not"):

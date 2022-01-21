@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import datalad.api as dl
+
 from ..utils.logging import raise_error
 
 
@@ -32,11 +34,11 @@ def _validate_patterns(types, patterns):
 
 
 class BaseDataGrabber:
-    def __init__(self, workdir, types):
+    def __init__(self, datadir, types):
         _validate_types(types)
-        if not isinstance(workdir, Path):
-            workdir = Path(workdir)
-        self.workdir = workdir
+        if not isinstance(datadir, Path):
+            datadir = Path(datadir)
+        self.datadir = datadir
         self.types = types
 
     def __iter__(self):
@@ -57,14 +59,28 @@ class BaseDataGrabber:
 
 
 class BIDSDataGrabber(BaseDataGrabber):
-    def __init__(self, workdir, types, patterns):
+    def __init__(self, datadir, types, patterns):
         _validate_patterns(types, patterns)
-        super().__init__(workdir, types)
+        super().__init__(datadir, types)
         self.patterns = patterns
 
     def get_elements(self):
-        elems = [x for x in self.workdir.iterdir() if x.is_dir()]
+        elems = [x for x in self.datadir.iterdir() if x.is_dir()]
         return elems
 
     def __getitem__(self, element):
         pass
+
+
+class DataladDataGrabber(BaseDataGrabber):
+    def __init__(self, datadir, uri, types):
+        super().__init__(datadir, types)
+        self.uri = uri
+
+    def __enter__(self):
+        self.dataset = dl.install(  # type: ignore
+            self.datadir, source=self.uri)
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        self.dataset.remove(recursive=True)
