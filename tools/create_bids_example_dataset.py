@@ -3,12 +3,11 @@ from pathlib import Path
 
 import datalad.api as dl
 
-dst = 'https://gin.g-node.org/juaml/datalad-example-bids'
-
+dst = 'git@gin.g-node.org:/juaml/datalad-example-bids.git'
 
 with TemporaryDirectory() as tmpdir_name:
     tmpdir = Path(tmpdir_name)
-    ds = dl.create(tmpdir)
+    ds = dl.create(tmpdir)  # type: ignore
 
     base_dir = tmpdir / 'example_bids'
     base_dir.mkdir()
@@ -28,4 +27,6 @@ with TemporaryDirectory() as tmpdir_name:
             with open(sub_dir / fname, 'w') as f:
                 f.write('placeholder')
 
-    dl.save(recursive=True)
+    ds.save(recursive=True)
+    ds.siblings('add', name='gin', url=dst)
+    ds.push(to='gin', force='all')
