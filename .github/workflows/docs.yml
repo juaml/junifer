@@ -33,7 +33,10 @@ jobs:
           pip install -r docs-requirements.txt
           python setup.py build
           python setup.py install
-
+      - name: Configure git for datalad
+        run: |
+          git config --global user.email "runner@github.com"
+          git config --global user.name "GITHUB CI Runner"
       - name: Checkout gh-pages
         # As we already did a deploy of gh-pages above, it is guaranteed to be there
         # so check it out so we can selectively build docs below
