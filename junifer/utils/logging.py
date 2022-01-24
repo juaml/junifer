@@ -1,8 +1,12 @@
+# Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+# License: AGPL
 import logging
 import subprocess
 import sys
 from distutils.version import LooseVersion
 from pathlib import Path
+import warnings
+
 
 logging.basicConfig(stream=sys.stdout, level=logging.WARN)
 logger = logging.getLogger('JUNIFER')
@@ -108,9 +112,22 @@ def finish_logging():
         logger.removeHandler(h)
 
 
-def raise_error(msg):
+def raise_error(msg, klass=ValueError):
     logger.error(msg)
-    raise ValueError(msg)
+    raise klass(msg)
+
+
+def warn(msg, category=RuntimeWarning):
+    """Warn, but first log it
+    Parameters
+    ----------
+    msg : str
+        Warning message
+    category : instance of Warning
+        The warning class. Defaults to ``RuntimeWarning``.
+    """
+    logger.warning(msg)
+    warnings.warn(msg, category=category)
 
 
 class LoggerWriter:
