@@ -50,4 +50,6 @@ jobs:
         PYTHONPATH="." pytest --cov=junifer --cov-report xml -vv junifer/
     - name: 'Upload coverage to CodeCov'
       uses: codecov/codecov-action@master
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
       if: success() && matrix.python-version == 3.8
