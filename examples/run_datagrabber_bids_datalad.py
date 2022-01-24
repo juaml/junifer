@@ -2,27 +2,51 @@
 Generic BIDS datagrabber for datalad.
 =====================================
 
+This example uses a generic BIDS datagraber to get the data from a BIDS dataset
+store in a datalad remote sibling.
+
 Authors: Federico Raimondo
 
 License: BSD 3 clause
 """
 
 from junifer.datagrabber.base import BIDSDataladDataGrabber
+from junifer.utils import configure_logging
 
-repo_uri = 'https://gin.g-node.org/juaml/datalad-example-bids'
+###############################################################################
+# Set the logging level to info to see extra information
+configure_logging(level='INFO')
 
 
+###############################################################################
+# The BIDS datagrabber requires two parameters: the types of data we want,
+# and the specific pattern that matches each type.
 types = ['T1w', 'bold']
 patterns = {
     'T1w': 'anat/{subject}_T1w.nii.gz',
     'bold': 'func/{subject}_task-rest_bold.nii.gz'
 }
 
+###############################################################################
+# Additionally, a datalad datagrabber requires the URI of the remote sibling
+# and the location of the dataset within the remote sibling.
+repo_uri = 'https://gin.g-node.org/juaml/datalad-example-bids'
+rootdir = 'example_bids'
 
-with BIDSDataladDataGrabber(rootdir='example_bids', types=types,
+###############################################################################
+# Now we can use the datagrabber within a `with` context
+# One thing we can do with any datagrabber is iterate over the elements.
+# In this case, each element of the datagrabber is one session.
+with BIDSDataladDataGrabber(rootdir=rootdir, types=types,
                             patterns=patterns, uri=repo_uri) as dg:
     for elem in dg:
         print(elem)
 
+###############################################################################
+# Another feature of the datagrabber is the ability to get a specific
+# element by its name. In this case, we index `sub-01` and we get the file
+# paths for the two types of data we want (T1w and bold).
+with BIDSDataladDataGrabber(rootdir=rootdir, types=types,
+                            patterns=patterns, uri=repo_uri) as dg:
     sub01 = dg['sub-01']
     print(sub01)

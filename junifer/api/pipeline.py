@@ -1,3 +1,30 @@
+# Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Leonard Sasse <l.sasse@fz-juelich.de>
+# License: AGPL
+from ..utils.logging import raise_error, logger
+
+_valid_steps = [
+    'datagrabber', 'datareader', 'preprocessing', 'marker', 'storage']
+
+_registry = {x: {} for x in _valid_steps}
+
+
+def register(step, name, klass):
+    """Register a function to be used in a pipeline step
+
+    Parameters
+    ----------
+    step : str
+        Name of the step
+    name : str
+        Name of the function
+    klass : class
+        Class to be registered
+    """
+    if step not in _valid_steps:
+        raise_error(f'Invalid step: {step}', ValueError)
+    logger.info(f'Registering {name} in {step}')
+    _registry[step][name] = klass
 
 
 def run_pipeline(
