@@ -25,18 +25,14 @@ def _validate_patterns(types, patterns):
     """
     Validate the patterns.
     """
-    if not isinstance(types, list):
-        raise_error("types must be a list", TypeError)
+    _validate_types(types)
     if not isinstance(patterns, dict):
         raise_error("patterns must be a dict", TypeError)
     if len(types) != len(patterns):
-        raise ValueError("types and patterns must have the same length")
-    for i in range(len(types)):
-        if not isinstance(types[i], str):
-            raise_error("types must be a list of strings", TypeError)
+        raise_error("types and patterns must have the same length", ValueError)
 
     if any(x not in patterns for x in types):
-        raise_error("patterns must contain all types", TypeError)
+        raise_error("patterns must contain all types", ValueError)
 
 
 class BaseDataGrabber(ABC):

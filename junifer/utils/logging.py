@@ -79,10 +79,12 @@ def log_versions(tbox_path=None):
     logger.info('===== Lib Versions =====')
     _safe_log(versions, 'numpy')
     _safe_log(versions, 'scipy')
+    _safe_log(versions, 'pandas')
     _safe_log(versions, 'nipype')
     _safe_log(versions, 'nitime')
     _safe_log(versions, 'nilearn')
     _safe_log(versions, 'nibabel')
+    _safe_log(versions, 'junifer')
     logger.info('========================')
 
     if tbox_path is not None:
@@ -91,25 +93,70 @@ def log_versions(tbox_path=None):
         logger.info('========================')
 
 
-def configure_logging(fname=None, level=logging.DEBUG):
-    finish_logging()
-    logger.setLevel(level)
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+_logging_types = dict(DEBUG=logging.DEBUG, INFO=logging.INFO,
+                      WARNING=logging.WARNING, ERROR=logging.ERROR)
+
+
+def configure_logging(level='WARNING', fname=None, overwrite=None,
+                      output_format=None):
+    """Configure the logging functionality
+
+    Parameters
+    ----------
+    level : int or string
+        The level of the messages to print. If string, it will be interpreted
+        as elements of logging.
+        Options are: ['DEBUG', 'INFO', 'WARNING', 'ERROR']. Defaults to
+        'WARNING'.
+    fname : str, Path or None
+        Filename of the log to print to. If None, stdout is used.
+    overwrite : bool | None
+        Overwrite the log file (if it exists). Otherwise, statements
+        will be appended to the log (default). None is the same as False,
+        but additionally raises a warning to notify the user that log
+        entries will be appended.
+    output_format : str
+        Format of the output messages. See the following for examples:
+
+            https://docs.python.org/dev/howto/logging.html
+
+        e.g., "%(asctime)s - %(levelname)s - %(message)s".
+
+        Defaults to "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    """
+    _close_handlers(logger)
+    if output_format is None:
+        output_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    formatter = logging.Formatter(output_format)
+
     if fname is not None:
-        fh = logging.FileHandler(fname, mode='a')
-        fh.setLevel(level)
-        fh.setFormatter(formatter)
-        logger.addHandler(fh)
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(level)
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
+        if not isinstance(fname, Path):
+            fname = Path(fname)
+        if fname.exists() and overwrite is None:
+            warnings.warn(
+                f'File ({fname.as_posix()}) exists. '
+                'Messages will be appended. Use overwrite=True to '
+                'overwrite or overwrite=False to avoid this message')
+            overwrite = False
+        mode = 'w' if overwrite else 'a'
+        lh = logging.FileHandler(fname, mode=mode)
+    else:
+        lh = logging.StreamHandler(WrapStdOut())  # type: ignore
+
+    if isinstance(level, str):
+        level = _logging_types[level]
+    lh.setFormatter(formatter)
+    logger.setLevel(level)
+    logger.addHandler(lh)
+    log_versions()
 
 
-def finish_logging():
-    for h in list(logger.handlers):
-        logger.removeHandler(h)
+def _close_handlers(logger):
+    for handler in list(logger.handlers):
+        if isinstance(handler, (logging.FileHandler, logging.StreamHandler)):
+            if isinstance(handler, logging.FileHandler):
+                handler.close()
+            logger.removeHandler(handler)
 
 
 def raise_error(msg, klass=ValueError):
@@ -130,24 +177,17 @@ def warn(msg, category=RuntimeWarning):
     warnings.warn(msg, category=category)
 
 
-class LoggerWriter:
-    # Got this from StackOverflow to redirect stdout and stderr to the logger
-    # log = logging.getLogger('foobar')
-    # sys.stdout = LoggerWriter(log.debug)
-    # sys.stderr = LoggerWriter(log.warning)
-    def __init__(self, level):
-        # self.level is really like using log.debug(message)
-        self.level = level
+class WrapStdOut(object):
+    """Dynamically wrap to sys.stdout.
 
-    def write(self, message):
-        # if statement reduces the amount of newlines that are
-        # printed to the logger
-        if message != '\n':
-            self.level(message)
+    This makes packages that monkey-patch sys.stdout (e.g.doctest,
+    sphinx-gallery) work properly.
+    """
 
-    def flush(self):
-        # create a flush method so things can be flushed when
-        # the system wants to. Not sure if simply 'printing'
-        # sys.stderr is the correct way to do it, but it seemed
-        # to work properly for me.
-        self.level(sys.stderr)
+    def __getattr__(self, name):  # noqa: D105
+        # Even more ridiculous than this class, this must be sys.stdout (not
+        # just stdout) in order for this to work (tested on OSX and Linux)
+        if hasattr(sys.stdout, name):
+            return getattr(sys.stdout, name)
+        else:
+            raise AttributeError(f"'file' object has not attribute '{name}'")
