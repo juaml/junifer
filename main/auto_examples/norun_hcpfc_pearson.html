@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SyntaxError &mdash; junifer  documentation</title>
+  <title>HCP FC Extraction &mdash; junifer  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
@@ -48,7 +48,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="norun_ukbvm_gmd.html">UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">Generic BIDS datagrabber for datalad.</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">SyntaxError</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">HCP FC Extraction</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../maintaining.html">Maintaining</a></li>
@@ -70,7 +70,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="index.html">Examples</a> &raquo;</li>
-      <li>SyntaxError</li>
+      <li>HCP FC Extraction</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/auto_examples/norun_hcpfc_pearson.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,18 +85,11 @@
 <p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-norun-hcpfc-pearson-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
-<section class="sphx-glr-example-title" id="syntaxerror">
-<span id="sphx-glr-auto-examples-norun-hcpfc-pearson-py"></span><h1>SyntaxError<a class="headerlink" href="#syntaxerror" title="Permalink to this headline"></a></h1>
-<p>Example script with invalid Python syntax</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">HCP FC Extraction</span>
-<span class="sd">======================</span>
-<span class="sd">Authors: Leonard Sasse</span>
-<span class="sd">License: BSD 3 clause</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-
-<span class="kn">from</span> <span class="nn">junifer.api</span> <span class="kn">import</span> <span class="n">run_pipeline</span>
+<section class="sphx-glr-example-title" id="hcp-fc-extraction">
+<span id="sphx-glr-auto-examples-norun-hcpfc-pearson-py"></span><h1>HCP FC Extraction<a class="headerlink" href="#hcp-fc-extraction" title="Permalink to this headline"></a></h1>
+<p>Authors: Leonard Sasse
+License: BSD 3 clause</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.api</span> <span class="kn">import</span> <span class="n">run_pipeline</span>
 
 <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Power264_FCPearson&#39;</span><span class="p">,</span>
@@ -112,12 +105,12 @@ to download the full example code</p>
     <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Power264_FCSpearman&#39;</span><span class="p">,</span>
      <span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="s1">&#39;FunctionalConnectivity&#39;</span><span class="p">,</span>
      <span class="s1">&#39;atlas&#39;</span><span class="p">:</span> <span class="s1">&#39;Power264&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Spearman&#39;</span>
+     <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Spearman&#39;</span><span class="p">,</span>
      <span class="s1">&#39;confound_strategy&#39;</span><span class="p">:</span> <span class="s1">&#39;ICAAROMA&#39;</span><span class="p">},</span>
     <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Schaefer400x17_FCSpearman&#39;</span><span class="p">,</span>
      <span class="s1">&#39;kind&#39;</span><span class="p">:</span> <span class="s1">&#39;FunctionalConnectivity&#39;</span><span class="p">,</span>
      <span class="s1">&#39;atlas&#39;</span><span class="p">:</span> <span class="s1">&#39;Schaefer400x17&#39;</span><span class="p">,</span>
-     <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Spearman&#39;</span>
+     <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;Spearman&#39;</span><span class="p">,</span>
      <span class="s1">&#39;confound_strategy&#39;</span><span class="p">:</span> <span class="s1">&#39;path/to/predefined/confound_file.tsv&#39;</span><span class="p">}</span>
 <span class="p">]</span>
 
