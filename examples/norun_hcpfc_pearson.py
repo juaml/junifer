@@ -22,12 +22,12 @@ markers = [
     {'name': 'Power264_FCSpearman',
      'kind': 'FunctionalConnectivity',
      'atlas': 'Power264',
-     'method': 'Spearman'
+     'method': 'Spearman',
      'confound_strategy': 'ICAAROMA'},
     {'name': 'Schaefer400x17_FCSpearman',
      'kind': 'FunctionalConnectivity',
      'atlas': 'Schaefer400x17',
-     'method': 'Spearman'
+     'method': 'Spearman',
      'confound_strategy': 'path/to/predefined/confound_file.tsv'}
 ]
 
