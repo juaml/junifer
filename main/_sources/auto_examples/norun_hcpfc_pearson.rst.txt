@@ -18,21 +18,15 @@
 .. _sphx_glr_auto_examples_norun_hcpfc_pearson.py:
 
 
-SyntaxError
-===========
+HCP FC Extraction
+======================
+Authors: Leonard Sasse
+License: BSD 3 clause
 
-Example script with invalid Python syntax
-
-.. GENERATED FROM PYTHON SOURCE LINES 1-68
+.. GENERATED FROM PYTHON SOURCE LINES 7-66
 
 .. code-block:: default
 
-    """
-    HCP FC Extraction
-    ======================
-    Authors: Leonard Sasse
-    License: BSD 3 clause
-    """
 
 
     from junifer.api import run_pipeline
@@ -69,7 +63,7 @@ Example script with invalid Python syntax
          'kind': 'FunctionalConnectivity',
          'atlas': 'Schaefer400x17',
          'method': 'Spearman',
-         'confound_strategy': 'path/to/predefined/confound_file.tsv'}
+         'confound_strategy': 'path/to/predefined/confound_file.tsv'},
         {'name': 'Schaefer400x17_FCSpearman',
          'kind': 'FunctionalConnectivity',
          'atlas': 'Schaefer400x17',
@@ -79,8 +73,6 @@ Example script with invalid Python syntax
 
     dg_params = {
         'modality': 'fMRI',
-        'tasks':  ['REST1', 'REST2', 'SOCIAL'],
-        'phase_encoding': ('LR', 'RL'),
         'preprocessed': 'ICA+FIX',
         'space': 'volumetric',
     }
@@ -88,8 +80,8 @@ Example script with invalid Python syntax
     run_pipeline(
         workdir='/tmp',
         datagrabber='HCPOpenAccess',
-        datagrabber_params = dg_params,
-        element='100408',
+        datagrabber_params=dg_params,
+        element=('100408', 'REST1', "LR"),
         markers=markers,
         storage='SQLDataFrameStorage',
         storage_params={'outpath': '/data/project/juniferexample'},
