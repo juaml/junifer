@@ -40,7 +40,7 @@ markers = [
      'kind': 'FunctionalConnectivity',
      'atlas': 'Schaefer400x17',
      'method': 'Spearman',
-     'confound_strategy': 'path/to/predefined/confound_file.tsv'}
+     'confound_strategy': 'path/to/predefined/confound_file.tsv'},
     {'name': 'Schaefer400x17_FCSpearman',
      'kind': 'FunctionalConnectivity',
      'atlas': 'Schaefer400x17',
@@ -50,8 +50,6 @@ markers = [
 
 dg_params = {
     'modality': 'fMRI',
-    'tasks':  ['REST1', 'REST2', 'SOCIAL'],
-    'phase_encoding': ('LR', 'RL'),
     'preprocessed': 'ICA+FIX',
     'space': 'volumetric',
 }
@@ -59,8 +57,8 @@ dg_params = {
 run_pipeline(
     workdir='/tmp',
     datagrabber='HCPOpenAccess',
-    datagrabber_params = dg_params,
-    element='100408',
+    datagrabber_params=dg_params,
+    element=('100408', 'REST1', "LR"),
     markers=markers,
     storage='SQLDataFrameStorage',
     storage_params={'outpath': '/data/project/juniferexample'},
