@@ -264,13 +264,16 @@ class DataladDataGrabber(BaseDataGrabber):
         """Remove the datalad dataset from the datadir."""
         self.dataset.remove(recursive=True)
 
+    def _dataset_get(self, out):
+        for _, v in out.items():
+            self.dataset.get(v)
+
     def __getitem__(self, element):
         """Index one element in the Datalad database. It will first obtain
         the paths from the parent class and then `datalad get` each of the
         files."""
         out = super().__getitem__(element)
-        for _, v in out.items():
-            self.dataset.get(v)
+        self._dataset_get(out)
         return out
 
 
