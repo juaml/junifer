@@ -34,8 +34,8 @@ def test_read_nifti():
     reader = DefaultDataReader()
     nib_data_path = Path(nib_testing.data_path)
 
-    for fname in ['example4d.NII.GZ', 'example4d.nii.gz',
-                  'reoriented_anat_moved.nii', 'reoriented_anat_moved.NII']:
+    for fname in ['example4d.nii.gz',
+                  'reoriented_anat_moved.nii']:
         t_path = nib_data_path / fname
 
         input = {'bold': t_path}
