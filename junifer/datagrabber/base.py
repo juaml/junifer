@@ -184,7 +184,7 @@ class BIDSDataGrabber(BaseDataGrabber):
             t_pattern = self.patterns[t_type]  # type: ignore
             t_replace = t_pattern.replace('{subject}', element)
             t_out = self.datadir / element / t_replace
-            out[t_type] =dict(path=t_out)
+            out[t_type] = dict(path=t_out)
 
         return out
 
