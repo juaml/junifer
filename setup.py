@@ -1,10 +1,24 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Sami Hamdan <s.hamdan@fz-juelich.de>
 # License: AGPL
+from importlib_metadata import version
 import setuptools
 
 with open('README.md', 'r') as fh:
     long_description = fh.read()
+
+def _getversion():
+    from setuptools_scm.version import get_local_node_and_date, \
+        simplified_semver_version
+
+    def clean_scheme(version):
+        return get_local_node_and_date(version) if version.dirty else ""
+
+    return {
+        'version_scheme': simplified_semver_version,
+        'local_scheme': clean_scheme,
+        'write_to': 'junifer/_version.py',
+        'write_to_template': "__version__ = '{version}'\n"}
 
 
 DOWNLOAD_URL = 'https://github.com/juaml/junifer'
@@ -39,11 +53,6 @@ setuptools.setup(
     },
     install_requires=[],  # TODO: Complete
     python_requires='>=3.6',
-    use_scm_version=dict(
-        version_scheme="python-simplified-semver",
-        local_scheme="node-and-date",
-        write_to="junifer/_version.py",
-        write_to_template="__version__ = '{version}'\n"
-    ),
+    use_scm_version=_getversion,
     setup_requires=['setuptools_scm'],
 )
