@@ -12,6 +12,7 @@ def _getversion():
         simplified_semver_version
 
     def clean_scheme(version):
+        print(version)
         return get_local_node_and_date(version) if version.dirty else ""
 
     return {
