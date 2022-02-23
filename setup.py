@@ -7,6 +7,7 @@ import setuptools
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
+
 def _getversion():
     from setuptools_scm.version import get_local_node_and_date, \
         simplified_semver_version
