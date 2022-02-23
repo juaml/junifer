@@ -65,10 +65,12 @@ def test_BIDSDataladDataGrabber():
 
         for elem in dg:
             t_sub = dg[elem]
-            assert t_sub['T1w'] == \
+            assert 'path' in t_sub['T1w']
+            assert t_sub['T1w']['path'] == \
                 (dg.datadir / f'{elem}/anat/{elem}_T1w.nii.gz')
-            assert t_sub['bold'] == \
+            assert 'path' in t_sub['bold']
+            assert t_sub['bold']['path'] == \
                 (dg.datadir / f'{elem}/func/{elem}_task-rest_bold.nii.gz')
 
-            with open(t_sub['T1w'], 'r') as f:
+            with open(t_sub['T1w']['path'], 'r') as f:
                 assert f.readlines()[0] == 'placeholder'

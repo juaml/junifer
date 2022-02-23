@@ -184,7 +184,7 @@ class BIDSDataGrabber(BaseDataGrabber):
             t_pattern = self.patterns[t_type]  # type: ignore
             t_replace = t_pattern.replace('{subject}', element)
             t_out = self.datadir / element / t_replace
-            out[t_type] = t_out
+            out[t_type] =dict(path=t_out)
 
         return out
 
@@ -266,7 +266,7 @@ class DataladDataGrabber(BaseDataGrabber):
 
     def _dataset_get(self, out):
         for _, v in out.items():
-            self.dataset.get(v)
+            self.dataset.get(v['path'])
 
     def __getitem__(self, element):
         """Index one element in the Datalad database. It will first obtain
