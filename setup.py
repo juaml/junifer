@@ -1,7 +1,6 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Sami Hamdan <s.hamdan@fz-juelich.de>
 # License: AGPL
-from importlib_metadata import version
 import setuptools
 
 with open('README.md', 'r') as fh:
