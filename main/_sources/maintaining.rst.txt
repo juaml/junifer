@@ -38,36 +38,20 @@ release.
     git checkout main
     git pull --rebase origin main
 
-4. Edit the file ``_version.py`` and remove '.dev'. It should match the next
-   release
-
-5. Make sure that test pass and CI won't fail after this modification:
+4. Create tag (replace ``X.Y.Z`` with the proper version).
 
 .. code-block:: bash
 
-    pytest -v
-    flake8
-
-6. Commit and create tag (replace ``X.Y.Z`` with the proper version).
-
-.. code-block:: bash
-
-    git commit -am "Set version to X.Y.Z"
     git tag vX.Y.Z
 
-7. Check that the build system is creating the proper version
+5. Check that the build system is creating the proper version
 
 .. code-block:: bash
 
-    SETUPTOOLS_SCM_DEBUG=1 python -m build --sdist --wheel --outdir dist/ .
+    SETUPTOOLS_SCM_DEBUG=1 python -m build --source --binary --out-dir dist/ .
 
-8. Push the tag
+6. Push the tag
 
 .. code-block:: bash
 
     git push origin vX.Y.Z
-
-9. Edit the file ``_version.py`` with the version of the next release and 
-   append '.dev' at the end.
-
-10. Commit and push to main
