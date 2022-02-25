@@ -42,7 +42,6 @@ for n_rois in range(100, 1001, 100):
             'family': 'Schaefer',
             'n_rois': n_rois,
             'yeo_networks': t_net,
-            'valid_resolutions': [1, 2]
         }
 
 
@@ -102,8 +101,7 @@ def _check_resolution(resolution, valid_resolution):
     return resolution
 
 
-def load_atlas(name, atlas_dir=None, resolution=None, path_only=False,
-               **kwargs):
+def load_atlas(name, atlas_dir=None, resolution=None, path_only=False):
     """
     Loads a brain atlas (including a label file).
     If it is built-in atlas and file is not present in the `atlas_dir`
@@ -154,7 +152,7 @@ def load_atlas(name, atlas_dir=None, resolution=None, path_only=False,
         File path to the atlas image.
     """
 
-    atlas_definition = _available_atlases[name]
+    atlas_definition = _available_atlases[name].copy()
     t_family = atlas_definition.pop('family')
 
     if t_family == 'CustomUserAtlas':
@@ -163,7 +161,7 @@ def load_atlas(name, atlas_dir=None, resolution=None, path_only=False,
     else:
         # retrieve atlases by passing arguments on to _retrieve_atlas()
         atlas_fname, atlas_labels = _retrieve_atlas(
-            t_family, out_dir=atlas_dir, **kwargs)
+            t_family, atlas_dir=atlas_dir, **atlas_definition)
 
     logger.info(
         f'Loading atlas {atlas_fname.as_posix()}')  # type: ignore
@@ -226,10 +224,10 @@ def _retrieve_atlas(family, atlas_dir=None, resolution=None, **kwargs):
     # retrieval details per atlas
     if family == 'Schaefer':
         atlas_fname, atl_labels = \
-            _retrieve_schaefer(atlas_dir, **kwargs)
+            _retrieve_schaefer(atlas_dir, resolution=resolution, **kwargs)
     elif family == 'SUIT':
         atlas_fname, atl_labels = \
-            _retrieve_suit(atlas_dir, **kwargs)
+            _retrieve_suit(atlas_dir, resolution=resolution, **kwargs)
     else:
         raise_error(
             f"The provided atlas name {family} cannot be retrieved. ")
@@ -254,10 +252,10 @@ def _closest_resolution(resolution, valid_resolution):
     return closest
 
 
-def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_network=7):
+def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_networks=7):
     logger.info('Atlas parameters:')
     logger.info(f'\tn_rois: {n_rois}')
-    logger.info(f'\tyeo_network: {yeo_network}')
+    logger.info(f'\tyeo_networks: {yeo_networks}')
     logger.info(f'\tresolution: {resolution}')
 
     _valid_n_rois = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
@@ -268,19 +266,19 @@ def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_network=7):
         raise_error(
             f'The parameter `n_rois` ({n_rois}) needs to be one of the '
             f'following: {_valid_n_rois}')
-    if yeo_network not in _valid_networks:
+    if yeo_networks not in _valid_networks:
         raise_error(
-            f'The parameter `yeo_network` ({yeo_network}) needs to be one of '
-            f'the following: {_valid_networks}')
+            f'The parameter `yeo_networks` ({yeo_networks}) needs to be one of'
+            f' the following: {_valid_networks}')
 
     resolution = _closest_resolution(resolution, _valid_resolutions)
 
     # define file names
     atlas_fname = atlas_dir / 'schaefer_2018' / (
-        f'Schaefer2018_{n_rois}Parcels_{yeo_network}Networks_order_'
+        f'Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order_'
         f'FSLMNI152_{resolution}mm.nii.gz')
     atlas_lname = atlas_dir / 'schaefer_2018' / (
-        f'Schaefer2018_{n_rois}Parcels_{yeo_network}Networks_order.txt')
+        f'Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order.txt')
 
     # check existance of atlas
     if not (atlas_fname.exists() and atlas_lname.exists()):
@@ -289,7 +287,7 @@ def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_network=7):
             'Fetching using nilearn.')
         datasets.fetch_atlas_schaefer_2018(
             n_rois=n_rois,
-            yeo_networks=yeo_network,
+            yeo_networks=yeo_networks,
             resolution_mm=resolution,
             data_dir=atlas_dir.as_posix())
 
@@ -306,7 +304,7 @@ def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_network=7):
     return atlas_fname, labels
 
 
-def _retrieve_suit(out_dir, resolution, space='MNI'):
+def _retrieve_suit(atlas_path, resolution, space='MNI'):
     logger.info('Atlas parameters:')
     logger.info(f'\tspace: {space}')
 
@@ -324,9 +322,9 @@ def _retrieve_suit(out_dir, resolution, space='MNI'):
     resolution = _closest_resolution(resolution, _valid_resolutions)
 
     # define file names
-    atlas_fname = out_dir / 'SUIT' / (
+    atlas_fname = atlas_path / 'SUIT' / (
         f'SUIT_{space}Space_{resolution}mm.nii')
-    atlas_lname = out_dir / 'SUIT' / (
+    atlas_lname = atlas_path / 'SUIT' / (
         f'SUIT_{space}Space_{resolution}mm.tsv')
 
     # check existance of atlas
