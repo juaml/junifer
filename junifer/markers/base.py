@@ -1,5 +1,7 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
+from ..utils import logger
+
 
 class PipelineStepMixin():
 
@@ -60,3 +62,48 @@ class PipelineStepMixin():
 
     def fit_transform(self, input):
         raise NotImplementedError('fit_transform not implemented')
+
+
+class BaseMarker(PipelineStepMixin):
+    """Base class for all markers."""
+
+    def __init__(self, on):
+        if not isinstance(on, list):
+            on = [on]
+        self._valid_inputs = on
+
+    def get_meta(self):
+        t_meta = {}
+        t_meta['class'] = self.__class__.__name__
+        for k, v in vars(self).items():
+            if not k.startswith('_'):
+                t_meta[k] = v
+        return t_meta
+
+    def validate_input(self, input):
+        return any(x in input for x in self._valid_inputs)
+
+    def get_output_kind(self, input):
+        return None
+
+    def compute(self, input):
+        raise NotImplementedError('compute not implemented')
+
+    def fit_transform(self, input, storage=None):
+        out = {}
+        meta = input.get('meta', {})
+        for kind in self._valid_inputs:
+            if kind in input.keys():
+                logger.info(f'Computing {kind}')
+                t_input = input[kind]
+                t_meta = meta.copy()
+                t_meta.update(t_input.get('meta', {}))
+                t_meta.update(self.get_meta())
+                t_out = self.compute(t_input)
+                t_out.update(meta=t_meta)
+                if storage is not None:
+                    storage.store_2d(t_out)
+                else:
+                    out[kind] = t_out
+
+        return out
