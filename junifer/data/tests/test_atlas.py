@@ -49,7 +49,7 @@ def test_schaefer_atlas():
 
     with tempfile.TemporaryDirectory() as tmpdir:
         fname1 = 'Schaefer2018_100Parcels_7Networks_order_FSLMNI152_1mm.nii.gz'
-        fname2 = 'Schaefer2018_100Parcels_7Networks_order_FSLMNI152_1mm.nii.gz'
+        fname2 = 'Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz'
 
         img, lbl, fname = load_atlas('Schaefer100x7', atlas_dir=tmpdir)
 
