@@ -41,7 +41,7 @@ marker = ParcelAggregation(atlas='Schaefer100x7', method='mean')
 ###############################################################################
 # Prepare the input
 input = {
-    'BOLD': {'data': fmri_img}, 
+    'BOLD': {'data': fmri_img},
     'VBM_GM': {'data': vbm_img}
 }
 
