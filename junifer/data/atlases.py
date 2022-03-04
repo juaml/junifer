@@ -285,7 +285,7 @@ def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_networks=7):
     atlas_lname = atlas_dir / 'schaefer_2018' / (
         f'Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order.txt')
 
-    # check existance of atlas
+    # check existence of atlas
     if not (atlas_fname.exists() and atlas_lname.exists()):
         logger.info(
             'At least one of the atlas files is missing. '
@@ -332,7 +332,7 @@ def _retrieve_suit(atlas_path, resolution, space='MNI'):
     atlas_lname = atlas_path / 'SUIT' / (
         f'SUIT_{space}Space_{resolution}mm.tsv')
 
-    # check existance of atlas
+    # check existence of atlas
     if not (atlas_fname.exists() and atlas_lname.exists()):
         atlas_fname.parent.mkdir(exist_ok=True, parents=True)
         logger.info(

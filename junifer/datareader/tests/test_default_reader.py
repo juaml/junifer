@@ -75,7 +75,7 @@ def test_read_unknown():
     nib_data_path = Path(nib_testing.data_path)
 
     anat_path = nib_data_path / 'reoriented_anat_moved.nii'
-    whatever_path = nib_data_path / 'unexistant.unkwnownextension'
+    whatever_path = nib_data_path / 'unexistent.unkwnownextension'
 
     input = {'anat': anat_path, 'whatever': whatever_path}
     output = reader.fit_transform(input)
