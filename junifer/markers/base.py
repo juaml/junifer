@@ -5,9 +5,13 @@ from ..utils import logger
 
 class PipelineStepMixin():
 
-    @property
-    def name(self):
-        return self.__class__.__name__
+    def get_meta(self):
+        t_meta = {}
+        t_meta['class'] = self.__class__.__name__
+        for k, v in vars(self).items():
+            if not k.startswith('_'):
+                t_meta[k] = v
+        return t_meta
 
     def validate_input(self, input):
         """Validate the input to the pipeline step.
@@ -67,21 +71,23 @@ class PipelineStepMixin():
 class BaseMarker(PipelineStepMixin):
     """Base class for all markers."""
 
-    def __init__(self, on):
+    def __init__(self, on, name=None):
         if not isinstance(on, list):
             on = [on]
         self._valid_inputs = on
+        self.name = self.__class__.__name__ if name is None else name
 
     def get_meta(self):
-        t_meta = {}
-        t_meta['class'] = self.__class__.__name__
-        for k, v in vars(self).items():
-            if not k.startswith('_'):
-                t_meta[k] = v
-        return t_meta
+        s_meta = super().get_meta()
+        s_meta['name'] = self.name
+        return dict(marker=s_meta)
 
     def validate_input(self, input):
-        return any(x in input for x in self._valid_inputs)
+        if not any(x in input for x in self._valid_inputs):
+            raise ValueError(
+                'Input does not have the required data.'
+                f'\t Input: {input}'
+                f'\t Required (any of): {self._valid_inputs}')
 
     def get_output_kind(self, input):
         return None
@@ -102,7 +108,7 @@ class BaseMarker(PipelineStepMixin):
                 t_out = self.compute(t_input)
                 t_out.update(meta=t_meta)
                 if storage is not None:
-                    storage.store_2d(t_out)
+                    storage.store_2d(**t_out)
                 else:
                     out[kind] = t_out
 

@@ -6,6 +6,14 @@ from pathlib import Path
 from junifer.datagrabber.base import BIDSDataGrabber, BIDSDataladDataGrabber
 
 
+_testing_dataset = {
+    'example_bids': {
+        'uri': 'https://gin.g-node.org/juaml/datalad-example-bids',
+        'id': 'e2ce149bd723088769a86c72e57eded009258c6b'
+    }
+}
+
+
 def test_BIDSDataGrabber():
     """Test BIDSDataGrabber"""
     with pytest.raises(TypeError, match=r"types must be a list"):
@@ -54,8 +62,9 @@ def test_BIDSDataladDataGrabber():
     with pytest.raises(ValueError, match=r"uri must be provided"):
         BIDSDataladDataGrabber(datadir=None, types=types, patterns=patterns)
 
-    repo_uri = 'https://gin.g-node.org/juaml/datalad-example-bids'
+    repo_uri =  _testing_dataset['example_bids']['uri']
     rootdir = 'example_bids'
+    repo_commit =  _testing_dataset['example_bids']['id']
 
     with BIDSDataladDataGrabber(rootdir=rootdir, uri=repo_uri,
                                 types=types, patterns=patterns) as dg:
@@ -71,6 +80,16 @@ def test_BIDSDataladDataGrabber():
             assert 'path' in t_sub['bold']
             assert t_sub['bold']['path'] == \
                 (dg.datadir / f'{elem}/func/{elem}_task-rest_bold.nii.gz')
+
+            assert 'meta' in t_sub
+            assert 'datagrabber' in t_sub['meta']
+            dg_meta = t_sub['meta']['datagrabber']
+            assert 'class' in dg_meta
+            assert dg_meta['class'] == 'BIDSDataladDataGrabber'
+            assert 'uri' in dg_meta
+            assert dg_meta['uri'] == repo_uri
+            assert 'dataset_commit_id' in dg_meta
+            assert dg_meta['dataset_commit_id'] == repo_commit
 
             with open(t_sub['T1w']['path'], 'r') as f:
                 assert f.readlines()[0] == 'placeholder'

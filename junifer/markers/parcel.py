@@ -1,3 +1,5 @@
+# Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+# License: AGPL
 import numpy as np
 
 from nilearn.maskers import NiftiMasker
@@ -55,5 +57,7 @@ class ParcelAggregation(BaseMarker):
             out_labels.append(t_labels[t_v - 1])
 
         out_values = np.array(out_values).transpose()
-        out =  dict(data=out_values, labels=out_labels)
+        out = dict(data=out_values, columns=out_labels)
+        if out_values.shape[0] > 1:
+            out['row_names'] = 'scan'  # type: ignore
         return out

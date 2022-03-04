@@ -26,7 +26,7 @@ Optional keys:
 _available_atlases = {
     'SUITxSUIT': {
         'family': 'SUIT',
-        'sace': 'SUIT'
+        'space': 'SUIT'
     },
     'SUITxMNI': {
         'family': 'SUIT',
@@ -76,6 +76,8 @@ def register_atlas(name, atlas_path, atl_labels, overwrite=False):
             raise_error(
                 f'Atlas {name} already registered. Set `overwrite=True` to '
                 'update its value.')
+    if not isinstance(atlas_path, Path):
+        atlas_path = Path(atlas_path)
     _available_atlases[name] = {
         'path': atlas_path, 'labels': atl_labels,
         'family': 'CustomUserAtlas'}
@@ -161,7 +163,8 @@ def load_atlas(name, atlas_dir=None, resolution=None, path_only=False):
     else:
         # retrieve atlases by passing arguments on to _retrieve_atlas()
         atlas_fname, atlas_labels = _retrieve_atlas(
-            t_family, atlas_dir=atlas_dir, **atlas_definition)
+            t_family, resolution=resolution, atlas_dir=atlas_dir,
+            **atlas_definition)
 
     logger.info(
         f'Loading atlas {atlas_fname.as_posix()}')  # type: ignore
@@ -184,7 +187,7 @@ def _retrieve_atlas(family, atlas_dir=None, resolution=None, **kwargs):
     ---------------------
     family : str
         Specify by name of atlas family, e.g. 'Schaefer'.
-    atlas_dir: path
+    atlas_dir: str or Path
         Path to where to store the retrieved atlas file.
         Defaults to: $HOME/junifer/data/atlas
     resolution : int
@@ -218,6 +221,8 @@ def _retrieve_atlas(family, atlas_dir=None, resolution=None, **kwargs):
     if atlas_dir is None:
         atlas_dir = Path().home() / 'junifer' / 'data' / 'atlas'
         atlas_dir.mkdir(exist_ok=True, parents=True)
+    elif not isinstance(atlas_dir, Path):
+        atlas_dir = Path(atlas_dir)
 
     logger.info(f"Fetching one of {family} atlas.")
 
@@ -329,12 +334,13 @@ def _retrieve_suit(atlas_path, resolution, space='MNI'):
 
     # check existance of atlas
     if not (atlas_fname.exists() and atlas_lname.exists()):
+        atlas_fname.parent.mkdir(exist_ok=True, parents=True)
         logger.info(
             'At least one of the atlas files is missing. '
             'Fetching.')
 
         url_basis = (
-            'https://github.com/DiedrichsenLab/cerebellar_atlases/blob'
+            'https://github.com/DiedrichsenLab/cerebellar_atlases/raw'
             '/master/Diedrichsen_2009/')
         url_MNI = url_basis + 'atl-Anatom_space-MNI_dseg.nii'
         url_SUIT = url_basis + 'atl-Anatom_space-SUIT_dseg.nii'

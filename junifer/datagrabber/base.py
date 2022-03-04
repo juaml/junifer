@@ -75,6 +75,14 @@ class BaseDataGrabber(ABC):
         self._datadir = datadir
         self.types = types
 
+    def get_meta(self):
+        t_meta = {}
+        t_meta['class'] = self.__class__.__name__
+        for k, v in vars(self).items():
+            if not k.startswith('_'):
+                t_meta[k] = v
+        return t_meta
+
     @property
     def datadir(self):
         """
@@ -185,7 +193,9 @@ class BIDSDataGrabber(BaseDataGrabber):
             t_replace = t_pattern.replace('{subject}', element)
             t_out = self.datadir / element / t_replace
             out[t_type] = dict(path=t_out)
-
+        # Meta here is element and types
+        out['meta'] = dict(datagrabber=self.get_meta())
+        out['meta']['element'] = element
         return out
 
 
@@ -266,14 +276,25 @@ class DataladDataGrabber(BaseDataGrabber):
 
     def _dataset_get(self, out):
         for _, v in out.items():
-            self.dataset.get(v['path'])
+            if 'path' in v:
+                self.dataset.get(v['path'])
+
+        # append the version of the dataset
+        out['meta']['datagrabber']['dataset_commit_id'] = \
+            self.dataset.repo.get_hexsha(
+                self.dataset.repo.get_corresponding_branch())
+        return out
 
     def __getitem__(self, element):
         """Index one element in the Datalad database. It will first obtain
         the paths from the parent class and then `datalad get` each of the
-        files."""
+        files.
+
+        This method only works with multiple inheritance.
+
+        """
         out = super().__getitem__(element)
-        self._dataset_get(out)
+        out = self._dataset_get(out)
         return out
 
 

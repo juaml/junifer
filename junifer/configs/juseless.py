@@ -62,4 +62,5 @@ class JuselessUKBVBM(DataladDataGrabber):
 
         out['VBM_GM'] = self.datadir / f'm0wp1{sub}_{ses}_T1w.nii.gz'
         self._dataset_get(out)
+        out['meta']['element'] = dict(subject=sub, session=ses)
         return out

@@ -29,6 +29,22 @@ def test_validation():
         assert reader.validate(t_kind) == t_kind
 
 
+def test_meta():
+    """Test reader metadata"""
+    reader = DefaultDataReader()
+    t_meta = reader.get_meta()
+    assert t_meta['class'] == 'DefaultDataReader'
+
+    nib_data_path = Path(nib_testing.data_path)
+    t_path = nib_data_path / 'example4d.nii.gz'
+    input = {'bold': t_path}
+    output = reader.fit_transform(input)
+    assert 'meta' in output
+    assert 'datareader' in output['meta']
+    assert 'class' in output['meta']['datareader']
+    assert output['meta']['datareader']['class'] == 'DefaultDataReader'
+
+
 def test_read_nifti():
     """Test reading NIFTI files"""
     reader = DefaultDataReader()

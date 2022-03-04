@@ -63,4 +63,7 @@ class DefaultDataReader(PipelineStepMixin):
                 logger.info(
                     f'Unknown file type {t_path.as_posix()}, skipping reading')
             out[kind]['data'] = fread
+            if 'meta' not in out:
+                out['meta'] = {}
+            out['meta']['datareader'] = self.get_meta()
         return out
