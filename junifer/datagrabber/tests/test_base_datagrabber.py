@@ -1,9 +1,10 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
+from typing import Type
 import pytest
 from pathlib import Path
-from junifer.datagrabber.base import BIDSDataGrabber, BIDSDataladDataGrabber
+from junifer.datagrabber.base import BIDSDataGrabber, BIDSDataladDataGrabber, BaseDataGrabber
 
 
 _testing_dataset = {
@@ -12,6 +13,26 @@ _testing_dataset = {
         'id': 'e2ce149bd723088769a86c72e57eded009258c6b'
     }
 }
+
+
+def test_BaseDataGrabber():
+    """Test BaseDataGrabber"""
+    with pytest.raises(TypeError, match=r"abstract"):
+        BaseDataGrabber(datadir='/tmp', types=['func'])  # type: ignore
+
+    class MyDataGrabber(BaseDataGrabber):
+        def __getitem__(self, element):
+            return super().__getitem__(element)
+
+        def get_elements(self):
+            return super().get_elements()
+
+    dg = MyDataGrabber(datadir='/tmp', types=['func'])
+    with pytest.raises(NotImplementedError):
+        dg['elem']
+
+    with pytest.raises(NotImplementedError):
+        dg.get_elements()
 
 
 def test_BIDSDataGrabber():

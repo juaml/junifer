@@ -1,9 +1,8 @@
 
 .. include:: links.inc
 
-Data Object
-===========
-
+The Data Object
+===============
 
 Introduction
 ^^^^^^^^^^^^

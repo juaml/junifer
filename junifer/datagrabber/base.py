@@ -221,8 +221,8 @@ class DataladDataGrabber(BaseDataGrabber):
         Remove the datalad dataset from the datadir. This method is called
         automatically when the datagrabber is used within a `with` statement.
 
-    Note
-    ----
+    Notes
+    -----
     By itself, this class is still abstract as the `__getitem__` method relies
     on the parent class `BaseDataGrabber.__getitem__` which is not yet
     implemented. This class is intended to be used as a superclass of a class

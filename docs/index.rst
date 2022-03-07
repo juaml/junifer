@@ -9,6 +9,7 @@ Welcome to the documentation!
    :caption: Contents:
 
    installation
+   data
    api
    auto_examples/index.rst
    maintaining
