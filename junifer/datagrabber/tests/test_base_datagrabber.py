@@ -1,10 +1,10 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
-from typing import Type
 import pytest
 from pathlib import Path
-from junifer.datagrabber.base import BIDSDataGrabber, BIDSDataladDataGrabber, BaseDataGrabber
+from junifer.datagrabber.base import BIDSDataGrabber, BIDSDataladDataGrabber, \
+    BaseDataGrabber
 
 
 _testing_dataset = {
