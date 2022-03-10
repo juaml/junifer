@@ -75,6 +75,9 @@ class BaseDataGrabber(ABC):
         self._datadir = datadir
         self.types = types
 
+    def get_types(self):
+        return self.types.copy()
+
     def get_meta(self):
         t_meta = {}
         t_meta['class'] = self.__class__.__name__

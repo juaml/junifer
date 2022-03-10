@@ -4,6 +4,8 @@
 from ..utils import logger
 from ..datareader import DefaultDataReader
 
+from collections import Counter
+
 
 class MarkerCollection():
     def __init__(self, markers, datareader=None, preprocessing=None,
@@ -14,6 +16,14 @@ class MarkerCollection():
         self._preprocessing = preprocessing
         self._markers = markers
         self._storage = storage
+
+        # Check that the markers have different names
+        marker_names = [m.name for m in self._markers]
+        if len(set(marker_names)) != len(marker_names):
+            counts = Counter(marker_names)
+            raise ValueError(
+                'Markers must have different names. '
+                f'Current names are: {counts}')
 
     def fit(self, input):
         """Fit the pipeline.
@@ -26,7 +36,7 @@ class MarkerCollection():
 
         Returns
         -------
-        output : dict[str -> object]
+        output : dict[str -> object] | None
             The output of the pipeline. Each key represents a marker name and
             the values are the computer marker values. If the pipeline has a
             storage configured, then the output will be None.
@@ -54,7 +64,7 @@ class MarkerCollection():
         check that the storage can handle the markers output.
         """
         logger.info('Validating Marker Collection')
-        t_data = datagrabber.get_output_kind()
+        t_data = datagrabber.get_types()
         logger.info(f'DataGrabber output type: {t_data}')
 
         logger.info(f'Validating Data Reader:')
