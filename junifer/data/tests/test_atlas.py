@@ -48,7 +48,7 @@ def test_wrong_atlas():
 
     with pytest.raises(ValueError, match=r"not found"):
         load_atlas('wrongatlas')
-    with pytest.raises(ValueError, match=r"rovided atlas name"):
+    with pytest.raises(ValueError, match=r"provided atlas name"):
         _retrieve_atlas('wrongatlas')
 
 
