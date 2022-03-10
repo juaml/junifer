@@ -1,6 +1,7 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
+import tempfile
 import pytest
 from pathlib import Path
 from junifer.datagrabber.base import BIDSDataGrabber, BIDSDataladDataGrabber, \
@@ -33,6 +34,10 @@ def test_BaseDataGrabber():
 
     with pytest.raises(NotImplementedError):
         dg.get_elements()
+
+    with dg:
+        assert dg.datadir == Path('/tmp')
+        assert dg.types == ['func']
 
 
 def test_BIDSDataGrabber():
@@ -114,3 +119,9 @@ def test_BIDSDataladDataGrabber():
 
             with open(t_sub['T1w']['path'], 'r') as f:
                 assert f.readlines()[0] == 'placeholder'
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        with BIDSDataladDataGrabber(rootdir=rootdir, uri=repo_uri,
+                                    types=types, patterns=patterns,
+                                    datadir=tmpdir) as dg:
+            assert dg.datadir == Path(tmpdir) / rootdir

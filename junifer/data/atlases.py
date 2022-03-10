@@ -95,12 +95,12 @@ def list_atlases():
     return sorted(_available_atlases.keys())
 
 
-def _check_resolution(resolution, valid_resolution):
-    if resolution is None:
-        return None
-    if resolution not in valid_resolution:
-        raise ValueError(f'Invalid resolution: {resolution}')
-    return resolution
+# def _check_resolution(resolution, valid_resolution):
+#     if resolution is None:
+#         return None
+#     if resolution not in valid_resolution:
+#         raise ValueError(f'Invalid resolution: {resolution}')
+#     return resolution
 
 
 def load_atlas(name, atlas_dir=None, resolution=None, path_only=False):
@@ -153,7 +153,9 @@ def load_atlas(name, atlas_dir=None, resolution=None, path_only=False):
     atlas_fname : Path
         File path to the atlas image.
     """
-
+    if name not in _available_atlases:
+        raise_error(f'Atlas {name} not found. '
+                    f'Valid options are: {list_atlases()}')
     atlas_definition = _available_atlases[name].copy()
     t_family = atlas_definition.pop('family')
 
@@ -296,7 +298,8 @@ def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_networks=7):
             resolution_mm=resolution,
             data_dir=atlas_dir.as_posix())
 
-        if not (atlas_fname.exists() and atlas_lname.exists()):
+        if not (atlas_fname.exists() and
+                atlas_lname.exists()):  # pragma: no cover
             raise_error('There was a problem fetching the atlases.')
 
     # Load labels
@@ -363,7 +366,8 @@ def _retrieve_suit(atlas_path, resolution, space='MNI'):
             sep='\t', usecols=['name'])
 
         labels.to_csv(atlas_lname, sep='\t', index=False)
-        if not (atlas_fname.exists() and atlas_lname.exists()):
+        if not (atlas_fname.exists() and
+                atlas_lname.exists()):  # pragma: no cover
             raise_error('There was a problem fetching the atlases.')
 
     labels = pd.read_csv(

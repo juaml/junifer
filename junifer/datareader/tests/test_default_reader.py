@@ -68,6 +68,10 @@ def test_read_nifti():
         t_read_img = nib.load(t_path)
         assert_array_equal(read_img.get_fdata(), t_read_img.get_fdata())
 
+        input = {'bold': t_path.as_posix()}
+        output2 = reader.fit_transform(input)
+        assert output['bold']['path'] == output2['bold']['path']
+
 
 def test_read_unknown():
     """Test (not) reading unknown files"""

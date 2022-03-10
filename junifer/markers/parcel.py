@@ -11,10 +11,10 @@ from ..data import load_atlas
 
 
 class ParcelAggregation(BaseMarker):
-    def __init__(self, atlas, method, method_params=None, on=None):
+    def __init__(self, atlas, method, method_params=None, on=None, name=None):
         if on is None:
             on = ['T1w', 'BOLD', 'VBM_GM', 'VBM_WM']
-        super().__init__(on=on)
+        super().__init__(on=on, name=name)
         self.atlas = atlas
         self.method = method
         self.method_params = {} if method_params is None else method_params

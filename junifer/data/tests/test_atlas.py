@@ -1,8 +1,11 @@
 import tempfile
 import pytest
+from pathlib import Path
 from numpy.testing import assert_array_equal
 
-from junifer.data.atlases import register_atlas, list_atlases, load_atlas
+from junifer.data.atlases import (register_atlas, list_atlases, load_atlas,
+                                  _retrieve_schaefer, _retrieve_suit,
+                                  _retrieve_atlas)
 
 
 def test_register_atlas():
@@ -31,10 +34,22 @@ def test_register_atlas():
     register_atlas('testatlas', 'testatlas_2.nii.gz', ['1', '2', '6'],
                    overwrite=True)
 
+    register_atlas('testatlas', Path('testatlas_2.nii.gz'), ['1', '2', '6'],
+                   overwrite=True)
+
     _, lbl, fname = load_atlas('testatlas', path_only=True)
 
     assert lbl == ['1', '2', '6']
     assert fname.name == 'testatlas_2.nii.gz'  # type: ignore
+
+
+def test_wrong_atlas():
+    """Test invalid atlas"""
+
+    with pytest.raises(ValueError, match=r"not found"):
+        load_atlas('wrongatlas')
+    with pytest.raises(ValueError, match=r"rovided atlas name"):
+        _retrieve_atlas('wrongatlas')
 
 
 def test_schaefer_atlas():
@@ -59,6 +74,9 @@ def test_schaefer_atlas():
         assert len(lbl) == 100
         assert_array_equal(img.header['pixdim'][1:4], [1, 1, 1])
 
+        # test with Path
+        img, lbl, fname = load_atlas('Schaefer100x7', atlas_dir=Path(tmpdir))
+
         img2, lbl, fname = load_atlas(
             'Schaefer100x7', atlas_dir=tmpdir, resolution=3)
         assert fname.name == fname2  # type: ignore
@@ -79,6 +97,26 @@ def test_schaefer_atlas():
         assert len(lbl) == 100
         assert img2 is not None
         assert_array_equal(img2.header['pixdim'][1:4], [1, 1, 1])
+
+        img2, lbl, fname = load_atlas(
+            'Schaefer100x7', atlas_dir=tmpdir, resolution=0.5)
+        assert fname.name == fname1  # type: ignore
+        assert len(lbl) == 100
+        assert img2 is not None
+        assert_array_equal(img2.header['pixdim'][1:4], [1, 1, 1])
+
+        with pytest.raises(ValueError, match=r"The parameter `n_rois`"):
+            _retrieve_schaefer(tmpdir, 1, 101, 7)
+
+        with pytest.raises(ValueError, match=r"The parameter `yeo_networks`"):
+            _retrieve_schaefer(tmpdir, 1, 100, 8)
+
+    # Test without a dir
+
+    img, lbl, fname = load_atlas('Schaefer100x7')
+    assert img is not None
+    home_dir = Path().home() / 'junifer' / 'data' / 'atlas'
+    assert home_dir in fname.parents  # type: ignore
 
 
 def test_suit():
@@ -102,3 +140,13 @@ def test_suit():
         assert fname.name == fname1  # type: ignore
         assert len(lbl) == 34
         assert_array_equal(img.header['pixdim'][1:4], [1, 1, 1])
+
+        img, lbl, fname = load_atlas('SUITxMNI', atlas_dir=tmpdir)
+        fname1 = 'SUIT_MNISpace_1mm.nii'
+        assert img is not None
+        assert fname.name == fname1  # type: ignore
+        assert len(lbl) == 34
+        assert_array_equal(img.header['pixdim'][1:4], [1, 1, 1])
+
+        with pytest.raises(ValueError, match=r"The parameter `space`"):
+            _retrieve_suit(tmpdir, 1, space='wrong')
