@@ -2,8 +2,10 @@
 # License: AGPL
 
 import pytest
+from numpy.testing import assert_array_equal
 from junifer.datareader.default import DefaultDataReader
 from junifer.markers import MarkerCollection, ParcelAggregation
+from junifer.markers.base import PipelineStepMixin
 from junifer.testing import OasisVBMTestingDatagrabber
 
 
@@ -59,3 +61,20 @@ def test_markercollection():
             assert 'data' in t_vbm
             assert 'columns' in t_vbm
             assert 'meta' in t_vbm
+
+    # Test preprocessing
+    class BypassPreprocessing(PipelineStepMixin):
+        def fit_transform(self, input):
+            return input
+
+    mc2 = MarkerCollection(
+        markers=markers, preprocessing=BypassPreprocessing(),
+        datareader=DefaultDataReader())
+    assert isinstance(mc2._datareader, DefaultDataReader)
+    with dg:
+        input = dg[1]
+        out2 = mc2.fit(input)
+        for t_marker in markers:
+            t_name = t_marker.name
+            assert_array_equal(out[t_name]['VBM_GM']['data'],
+                               out2[t_name]['VBM_GM']['data'])  # type: ignore

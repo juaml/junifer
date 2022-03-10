@@ -47,7 +47,8 @@ def test_parcelagregation_3D():
 
     # Use the ParcelAggregation object
     marker = ParcelAggregation(
-        atlas='Schaefer100x7', method='mean', name='gmd_schaefer100x7_mean')
+        atlas='Schaefer100x7', method='mean', name='gmd_schaefer100x7_mean',
+        on='VBM_GM')   # Test passing "on" as a keyword argument
     input = dict(VBM_GM=dict(data=img))
     jun_values3d_mean = marker.fit_transform(input)['VBM_GM']['data']
 

@@ -354,7 +354,7 @@ def _retrieve_suit(atlas_path, resolution, space='MNI'):
             atlas_download = requests.get(url_MNI)
             with open(atlas_fname, 'wb') as f:
                 f.write(atlas_download.content)
-        elif space == 'SUIT':
+        else:  # if not MNI, then SUIT
             logger.info(f'Downloading {url_SUIT}')
             atlas_download = requests.get(url_SUIT)
             with open(atlas_fname, 'wb') as f:
