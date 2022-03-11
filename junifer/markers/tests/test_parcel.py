@@ -1,5 +1,5 @@
 import numpy as np
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_equal, assert_array_almost_equal
 from scipy.stats import trim_mean
 import nibabel as nib
 
@@ -44,6 +44,11 @@ def test_parcelagregation_3D():
         t_values = np.mean(data[:, atlas_values == t_v])
         manual.append(t_values)
     manual = np.array(manual)[np.newaxis, :]
+
+    nifti_masker = NiftiLabelsMasker(labels_img=atlas.maps)
+    auto = nifti_masker.fit_transform(img)
+
+    assert_array_almost_equal(auto, manual)
 
     # Use the ParcelAggregation object
     marker = ParcelAggregation(
@@ -114,10 +119,11 @@ def test_parcelagregation_3D():
 
 
 def test_parcelagregation_4D():
-    """Test ParcelAggregation object on 3D images"""
+    """Test ParcelAggregation object on 4D images"""
 
     # Get the testing atlas (for nilearn)
-    atlas = datasets.fetch_atlas_schaefer_2018(n_rois=100)
+    atlas = datasets.fetch_atlas_schaefer_2018(
+        n_rois=100, yeo_networks=7, resolution_mm=2)
 
     # Get the SPM auditory data:
     subject_data = datasets.fetch_spm_auditory()
@@ -130,11 +136,9 @@ def test_parcelagregation_4D():
     input = dict(BOLD=dict(data=fmri_img))
     jun_values4d = marker.fit_transform(input)['BOLD']['data']
 
-    # TODO: check https://github.com/nilearn/nilearn/issues/2686
-    # assert_array_equal(auto4d, jun_values4d)
-
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
+    assert_array_equal(auto4d, jun_values4d)
 
     meta = marker.get_meta()['marker']
     assert meta['method'] == 'mean'
