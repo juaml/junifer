@@ -10,7 +10,7 @@ from nilearn.maskers import NiftiMasker, NiftiLabelsMasker
 from junifer.markers.parcel import ParcelAggregation
 
 
-def test_parcelagregation_3D():
+def test_ParcelAggregation_3D():
     """Test ParcelAggregation object on 3D images"""
 
     # Get the testing atlas (for nilearn)
@@ -118,7 +118,7 @@ def test_parcelagregation_3D():
     assert meta['method_params'] == {'proportiontocut': 0.1}
 
 
-def test_parcelagregation_4D():
+def test_ParcelAggregation_4D():
     """Test ParcelAggregation object on 4D images"""
 
     # Get the testing atlas (for nilearn)

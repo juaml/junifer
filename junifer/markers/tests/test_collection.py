@@ -9,7 +9,7 @@ from junifer.markers.base import PipelineStepMixin
 from junifer.testing import OasisVBMTestingDatagrabber
 
 
-def test_markercollection():
+def test_MarkerCollection():
     """Test MarkerCollection"""
     wrong_markers = [
         ParcelAggregation(
