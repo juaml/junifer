@@ -121,7 +121,8 @@ def test_BIDSDataladDataGrabber():
                 assert f.readlines()[0] == 'placeholder'
 
     with tempfile.TemporaryDirectory() as tmpdir:
+        datadir = Path(tmpdir) / 'dataset'  # Need this for testing
         with BIDSDataladDataGrabber(rootdir=rootdir, uri=repo_uri,
                                     types=types, patterns=patterns,
-                                    datadir=tmpdir) as dg:
-            assert dg.datadir == Path(tmpdir) / rootdir
+                                    datadir=datadir) as dg:
+            assert dg.datadir == datadir / rootdir
