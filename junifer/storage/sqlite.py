@@ -71,7 +71,7 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
         raise NotImplementedError('store_timeseries not implemented')
 
     def _save_upsert(self, df, name, if_exist='append'):
-        """ Implemention of UPSERT functionality.
+        """ Implementation of UPSERT functionality.
 
         Parameters
         ----------
