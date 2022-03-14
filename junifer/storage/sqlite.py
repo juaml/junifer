@@ -6,10 +6,10 @@ from pandas.io.sql import pandasSQL_builder
 from sqlalchemy import create_engine, inspect
 import hashlib
 import json
-from .base import BaseFeatureStorage, _element_to_index
+from .base import PandasFeatureStoreage, element_to_index, meta_hash
 
 
-class SQLiteFeatureStorage(BaseFeatureStorage):
+class SQLiteFeatureStorage(PandasFeatureStoreage):
     """
     SQLite feature storage.
     """
@@ -19,9 +19,11 @@ class SQLiteFeatureStorage(BaseFeatureStorage):
         self._engine = create_engine(uri, echo=False)
 
     def store_metadata(self, meta):
-        meta_md5 = self._meta_hash(meta)
+        t_meta = meta.copy()
+        t_meta.update(self.get_meta())
+        meta_md5 = meta_hash(t_meta)
         if meta_md5 not in inspect(self._engine).get_table_names():
-            meta_df = self._meta_row(meta, meta_md5)
+            meta_df = self._meta_row(t_meta, meta_md5)
             self._save_upsert(meta_df, 'meta')
         return meta_md5
 
@@ -30,7 +32,7 @@ class SQLiteFeatureStorage(BaseFeatureStorage):
         raise NotImplementedError('store_matrix2d not implemented')
 
     def store_2d(self, data, meta, columns=None, row_names=None):
-        idx = _element_to_index(
+        idx = element_to_index(
             meta, n_rows=data.shape[0], row_names=row_names)
         data_df = pd.DataFrame(data, columns=columns, index=idx)
         self.store_df(data_df, meta)
@@ -41,21 +43,6 @@ class SQLiteFeatureStorage(BaseFeatureStorage):
 
     def store_timeseries(self, data):
         raise NotImplementedError('store_timeseries not implemented')
-
-    def _meta_hash(self, meta):
-        t_meta = meta.copy()
-        t_meta.update(self.get_meta())
-        meta_md5 = hashlib.md5(
-            json.dumps(meta, sort_keys=True).encode('utf-8')).hexdigest()
-        return meta_md5
-
-    def _meta_row(self, meta, meta_md5):
-        data_df = {}
-        for k, v in meta:
-            data_df[k] = json.dumps(v, sort_keys=True)
-        data_df['name'] = meta['marker']['name']
-        df = pd.DataFrame(data_df, index=[meta_md5])
-        return df
 
     def _save_upsert(self, df, name, upsert='ignore', if_exist='append'):
         if upsert not in ['delete', 'ignore']:
