@@ -114,32 +114,32 @@ def test_BaseFeatureStorage():
         def store_metadata(self, metadata):
             super().store_metadata(metadata)
 
-        def store_matrix2d(self, matrix):
-            super().store_matrix2d(matrix)
+        def store_matrix2d(self, matrix, meta):
+            super().store_matrix2d(matrix, meta)
 
-        def store_table(self, table):
-            super().store_table(table)
+        def store_table(self, table, meta):
+            super().store_table(table, meta)
 
-        def store_df(self, df):
-            super().store_df(df)
+        def store_df(self, df, meta):
+            super().store_df(df, meta)
 
-        def store_timeseries(self, timeseries):
-            super().store_timeseries(timeseries)
+        def store_timeseries(self, timeseries, meta):
+            super().store_timeseries(timeseries, meta)
 
     st = MyFeatureStorage(uri='/tmp')
     with pytest.raises(NotImplementedError):
         st.store_metadata(None)
 
     with pytest.raises(NotImplementedError):
-        st.store_matrix2d(None)
+        st.store_matrix2d(None, None)
 
     with pytest.raises(NotImplementedError):
-        st.store_table(None)
+        st.store_table(None, None)
 
     with pytest.raises(NotImplementedError):
-        st.store_df(None)
+        st.store_df(None, None)
 
     with pytest.raises(NotImplementedError):
-        st.store_timeseries(None)
+        st.store_timeseries(None, None)
 
     assert st.uri == '/tmp'

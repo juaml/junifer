@@ -16,9 +16,10 @@ def _validate_types(types):
     Validate the types
     """
     if not isinstance(types, list):
-        raise_error("types must be a list", TypeError)
+        raise_error("types must be a list", TypeError)  # type: ignore
     if any(not isinstance(x, str) for x in types):
-        raise_error("types must be a list of strings", TypeError)
+        raise_error(
+            "types must be a list of strings", TypeError)  # type: ignore
 
 
 def _validate_patterns(types, patterns):
@@ -27,7 +28,7 @@ def _validate_patterns(types, patterns):
     """
     _validate_types(types)
     if not isinstance(patterns, dict):
-        raise_error("patterns must be a dict", TypeError)
+        raise_error("patterns must be a dict", TypeError)  # type: ignore
     if len(types) != len(patterns):
         raise_error("types and patterns must have the same length", ValueError)
 

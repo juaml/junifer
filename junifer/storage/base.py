@@ -57,7 +57,7 @@ def element_to_index(meta, n_rows=1, rows_col_name=None):
         elem_idx = {
             k: [v] * n_rows for k, v in element.items()
         }
-        elem_idx[rows_col_name] = np.arange(n_rows)
+        elem_idx[rows_col_name] = np.arange(n_rows)  # type: ignore
     else:
         elem_idx = element
     index = pd.MultiIndex.from_frame(
@@ -86,29 +86,31 @@ class BaseFeatureStorage(ABC):
         raise NotImplementedError('store_metadata not implemented')
 
     @abstractmethod
-    def store_matrix2d(self, data, col_names=None, row_names=None, meta=None):
+    def store_matrix2d(self, data, meta, col_names=None, row_names=None):
         raise NotImplementedError('store_matrix2d not implemented')
 
     @abstractmethod
-    def store_table(self, data, columns=None, row_names=None, meta=None):
+    def store_table(self, data, meta, columns=None, rows_col_name=None):
         raise NotImplementedError('store_table not implemented')
 
     @abstractmethod
-    def store_df(self, df):
+    def store_df(self, df, meta):
         raise NotImplementedError('store_df not implemented')
 
     @abstractmethod
-    def store_timeseries(self, data):
+    def store_timeseries(self, data, meta):
         raise NotImplementedError('store_timeseries not implemented')
 
 
 class PandasFeatureStoreage(BaseFeatureStorage):
 
     def _meta_row(self, meta, meta_md5):
-        """Converta the meta to a dataframe row"""
+        """Convert the meta to a dataframe row"""
         data_df = {}
-        for k, v in meta:
+        for k, v in meta.items():
             data_df[k] = json.dumps(v, sort_keys=True)
-        data_df['name'] = meta['marker']['name']
+        if 'marker' in meta:
+            data_df['name'] = meta['marker']['name']
         df = pd.DataFrame(data_df, index=[meta_md5])
+        df.index.name = 'meta_md5'
         return df
