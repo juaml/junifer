@@ -43,10 +43,35 @@ def _read_sql(table_name, uri, index_col):
     return df
 
 
+def test_upsert_replace():
+    """Test store_df (if_exist=replace)"""
+    with tempfile.TemporaryDirectory() as _tmpdir:
+        uri = f'sqlite:///{_tmpdir}/test.db'
+        storage = SQLiteFeatureStorage(uri=uri, upsert='ignore')
+        meta = {'element': 'test', 'version': '0.0.1'}
+
+        # Save to SQL
+        storage.store_df(df1, meta)
+
+        # Test the internals
+        table_name = storage.store_metadata(meta)
+
+        c_df1 = _read_sql(table_name, uri=uri, index_col=['pk1', 'pk2'])
+        assert_frame_equal(df1, c_df1)
+
+        storage._save_upsert(df2, table_name, if_exist='replace')
+
+        c_df2 = _read_sql(table_name, uri=uri, index_col=['pk1', 'pk2'])
+        assert_frame_equal(df2, c_df2)
+
+
 def test_upsert_ignore():
     """Test store_df (upsert=ignore)"""
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'sqlite:///{_tmpdir}/test.db'
+        with pytest.raises(ValueError):
+            SQLiteFeatureStorage(uri=uri, upsert='wrong')
+
         storage = SQLiteFeatureStorage(uri=uri, upsert='ignore')
         meta = {'element': 'test', 'version': '0.0.1'}
 
@@ -92,7 +117,7 @@ def test_upsert_update():
 
 def test_store_table():
     """Test store_df"""
-    meta = {'element': 'test', 'version': '0.0.1'}
+    meta = {'element': 'test', 'version': '0.0.1', 'marker': 'fc'}
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'sqlite:///{_tmpdir}/test.db'
         storage = SQLiteFeatureStorage(uri=uri)
