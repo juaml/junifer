@@ -4,8 +4,7 @@ import pandas as pd
 from pandas.core.base import NoNewAttributesMixin
 from pandas.io.sql import pandasSQL_builder
 from sqlalchemy import create_engine, inspect
-import hashlib
-import json
+
 from .base import PandasFeatureStoreage, element_to_index, meta_hash
 
 
@@ -27,13 +26,14 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
             self._save_upsert(meta_df, 'meta')
         return meta_md5
 
-    def store_matrix2d(self, data, col_names=None, row_names=None, meta=None):
+    def store_matrix2d(
+            self, data, col_names=None, rows_col_name=None, meta=None):
         # Same as store_2d, but order is important
         raise NotImplementedError('store_matrix2d not implemented')
 
-    def store_2d(self, data, meta, columns=None, row_names=None):
+    def store_2d(self, data, meta, columns=None, rows_col_name=None):
         idx = element_to_index(
-            meta, n_rows=data.shape[0], row_names=row_names)
+            meta, n_rows=data.shape[0], rows_col_name=rows_col_name)
         data_df = pd.DataFrame(data, columns=columns, index=idx)
         self.store_df(data_df, meta)
 
