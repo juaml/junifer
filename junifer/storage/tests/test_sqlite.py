@@ -117,7 +117,7 @@ def test_upsert_update():
 
 def test_store_table():
     """Test store_df"""
-    meta = {'element': 'test', 'version': '0.0.1', 'marker': 'fc'}
+    meta = {'element': 'test', 'version': '0.0.1', 'marker': {'name': 'fc'}}
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'sqlite:///{_tmpdir}/test.db'
         storage = SQLiteFeatureStorage(uri=uri)
