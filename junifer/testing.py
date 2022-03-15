@@ -10,7 +10,7 @@ from .api.registry import register
 def register_testing():
     """Register testing datagrabber"""
     register(
-        'datagrabber', 'OasisVBMTestingDatagrabber', 
+        'datagrabber', 'OasisVBMTestingDatagrabber',
         OasisVBMTestingDatagrabber)
 
 
