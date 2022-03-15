@@ -80,7 +80,6 @@ def test_upsert_ignore():
 
         # Test the internals
         table_name = storage.store_metadata(meta)
-        
 
         c_df1 = _read_sql(table_name, uri=uri, index_col=['pk1', 'pk2'])
         assert_frame_equal(df1, c_df1)
@@ -125,8 +124,17 @@ def test_store_read_df():
             'element': 'test', 'version': '0.0.1',
             'marker': {'name': 'fcname'}}
 
+        to_store = df1[['col1', 'col2']]
+
         # Save to SQL
-        storage.store_df(df1, meta)
+        with pytest.raises(ValueError, match=r"index of the dataframe"):
+            storage.store_df(to_store, meta)
+
+        _, _, idx = process_meta(  # type: ignore
+            meta, return_idx=True, n_rows=len(to_store))
+        to_store = to_store.set_index(idx)
+
+        storage.store_df(to_store, meta)
 
         # Test the internals
         table_name = storage.store_metadata(meta)
@@ -149,9 +157,7 @@ def test_store_read_df():
         read_df1 = storage.read_df(feature_md5=feature_md5)
         read_df2 = storage.read_df(feature_name='fcname')
         assert_frame_equal(read_df1, read_df2)
-        assert_frame_equal(read_df1, df1)
-
-
+        assert_frame_equal(read_df1, to_store.reset_index())
 
 
 def test_store_table():
