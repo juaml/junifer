@@ -1,7 +1,7 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
-from .run import register
+from .registry import register
 
 
 def register_datagrabber(klass):

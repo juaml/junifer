@@ -31,7 +31,7 @@ def process_meta(meta, return_idx=False, n_rows=1, rows_col_name=None):
         The md5 hash of the meta
     meta : dict
         The metadata processed for storage
-    idx : pd.MultiIndex 
+    idx : pd.MultiIndex
         The pandas index (if return_idx is True)
     """
     if meta is None:
@@ -122,13 +122,28 @@ def _element_to_index(meta, n_rows=1, rows_col_name=None):
     return index
 
 
+def element_to_prefix(element):
+    prefix = 'element'
+    if isinstance(element, str):
+        prefix = f'{prefix}_{element}'
+    elif isinstance(element, tuple):
+        prefix = f"{prefix}_{'_'.join(element)}"
+    elif isinstance(element, dict):
+        prefix = f"{prefix}_{'_'.join(element.values())}"
+    else:
+        raise ValueError(f'Cannot convert element {element} to prefix. '
+                         'Must be a str, tuple or dict')
+    return f'{prefix}_'
+
+
 class BaseFeatureStorage(ABC):
     """
     Base class for feature storage.
     """
 
-    def __init__(self, uri):
+    def __init__(self, uri, single_output=False):
         self.uri = uri
+        self.single_output = single_output
 
     def get_meta(self):
         meta = {}

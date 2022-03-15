@@ -8,7 +8,7 @@ License: BSD 3 clause
 """
 
 
-from junifer.api import run_pipeline
+from junifer.api import run
 
 markers = [
     {'name': 'Schaefer1000x7_TrimMean80',
@@ -26,10 +26,10 @@ markers = [
      'method': 'std'}
 ]
 
-run_pipeline(
+run(
     workdir='/tmp',
     datagrabber='JuselessUKBVBM',
-    element=('sub-1627474', 'ses-2'),
+    elements=('sub-1627474', 'ses-2'),
     markers=markers,
     storage='SQLDataFrameStorage',
     storage_params={'outpath': '/data/project/juniferexample'},

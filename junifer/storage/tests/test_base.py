@@ -133,6 +133,9 @@ def test_BaseFeatureStorage():
         BaseFeatureStorage(uri='/tmp')  # type: ignore
 
     class MyFeatureStorage(BaseFeatureStorage):
+        def __init__(self, uri, single_output=False):
+            super().__init__(uri, single_output=single_output)
+
         def validate(self, input):
             super().validate(input)
 
@@ -159,6 +162,10 @@ def test_BaseFeatureStorage():
             super().store_timeseries(timeseries, meta)
 
     st = MyFeatureStorage(uri='/tmp')
+    assert st.single_output is False
+
+    st = MyFeatureStorage(uri='/tmp', single_output=True)
+    assert st.single_output is True
 
     with pytest.raises(NotImplementedError):
         st.validate(None)

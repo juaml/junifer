@@ -1,34 +1,18 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
-from ..utils.logging import raise_error, logger
 
-_valid_steps = [
-    'datagrabber', 'datareader', 'preprocessing', 'marker', 'storage']
+from pathlib import Path
 
-_registry = {x: {} for x in _valid_steps}
-
-
-def register(step, name, klass):
-    """Register a function to be used in a pipeline step
-
-    Parameters
-    ----------
-    step : str
-        Name of the step
-    name : str
-        Name of the function
-    klass : class
-        Class to be registered
-    """
-    if step not in _valid_steps:
-        raise_error(f'Invalid step: {step}', ValueError)
-    logger.info(f'Registering {name} in {step}')
-    _registry[step][name] = klass
+from .registry import build
+from ..datagrabber.base import BaseDataGrabber
+from ..markers.base import BaseMarker
+from ..storage.base import BaseFeatureStorage
+from ..markers.collection import MarkerCollection
 
 
 def run(
-        workdir, datagrabber, element, markers, storage, source_params=None,
+        workdir, datagrabber, elements, markers, storage, source_params=None,
         storage_params=None):
     """Run the pipeline on the selected element
 
@@ -38,8 +22,8 @@ def run(
         Directory where the pipeline will be executed
     datagrabber : str
         Name of the datagrabber to use
-    element : str
-        Name of the element to process. Will be used to index the datagrabber.
+    elements : str, tuple or list[str or tuple]
+        Element(s) to process. Will be used to index the datagrabber.
     markers : list of dict
         List of markers to extract. Each marker is a dict with at least two
         keys: 'name' and 'kind'. The 'name' key is used to name the output
@@ -58,3 +42,28 @@ def run(
 
     if storage_params is None:
         storage_params = {}
+
+    if isinstance(workdir, str):
+        workdir = Path(workdir)
+
+    datagrabber = build(
+        'datagrabber', datagrabber, BaseDataGrabber, init_params=source_params)
+
+    built_markers = []
+    for t_marker in markers:
+        kind = t_marker.pop('kind')
+        t_m = build('marker', kind, BaseMarker, init_params=t_marker)
+        built_markers.append(t_m)
+
+    storage = build(
+        'storage', storage, BaseFeatureStorage, init_params=storage_params)
+
+    mc = MarkerCollection(markers, storage=storage)
+
+    with datagrabber:
+        if elements is not None:
+            for t_element in elements:
+                mc.fit(datagrabber[t_element])
+        else:
+            for t_element in datagrabber:
+                mc.fit(datagrabber[t_element])
