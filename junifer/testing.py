@@ -4,6 +4,14 @@ import tempfile
 from nilearn import datasets
 
 from .datagrabber.base import BaseDataGrabber
+from .api.registry import register
+
+
+def register_testing():
+    """Register testing datagrabber"""
+    register(
+        'datagrabber', 'OasisVBMTestingDatagrabber', 
+        OasisVBMTestingDatagrabber)
 
 
 class OasisVBMTestingDatagrabber(BaseDataGrabber):
@@ -20,7 +28,7 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
 
     def __getitem__(self, element):
         out = {}
-        out['VBM_GM'] = self._dataset.gray_matter_maps[element]
+        out['VBM_GM'] = self._dataset.gray_matter_maps[element - 1]
         out['meta'] = {'subject': element}
         return out
 

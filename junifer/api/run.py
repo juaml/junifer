@@ -12,8 +12,8 @@ from ..markers.collection import MarkerCollection
 
 
 def run(
-        workdir, datagrabber, elements, markers, storage, source_params=None,
-        storage_params=None):
+        workdir, datagrabber,  markers, storage, source_params=None,
+        storage_params=None, elements=None):
     """Run the pipeline on the selected element
 
     Parameters
@@ -58,7 +58,7 @@ def run(
     storage = build(
         'storage', storage, BaseFeatureStorage, init_params=storage_params)
 
-    mc = MarkerCollection(markers, storage=storage)
+    mc = MarkerCollection(built_markers, storage=storage)
 
     with datagrabber:
         if elements is not None:

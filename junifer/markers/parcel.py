@@ -8,8 +8,10 @@ from nilearn.image import resample_to_img, math_img
 from .base import BaseMarker
 from ..stats import get_aggfunc_by_name
 from ..data import load_atlas
+from ..api.decorators import register_marker
 
 
+@register_marker
 class ParcelAggregation(BaseMarker):
     def __init__(self, atlas, method, method_params=None, on=None, name=None):
         if on is None:
