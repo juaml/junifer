@@ -1,3 +1,5 @@
+from pathlib import Path
+import numpy as np
 import pandas as pd
 from pandas.testing import assert_frame_equal
 import tempfile
@@ -5,7 +7,7 @@ from sqlalchemy import create_engine
 import pytest
 
 from junifer.storage.sqlite import SQLiteFeatureStorage
-from junifer.storage.base import process_meta
+from junifer.storage.base import process_meta, element_to_prefix
 
 
 df1 = pd.DataFrame({
@@ -66,7 +68,6 @@ def test_store_metadata():
         meta = {'element': 'test', 'version': '0.0.1'}
         table_name = storage.store_metadata(meta)
         assert table_name.startswith('meta_')
-
 
 
 def test_upsert_replace():
@@ -141,7 +142,8 @@ def test_upsert_update():
 
         storage.store_df(df2, meta)
 
-        c_dfupdate = _read_sql(table_name, uri=uri, index_col=['element', 'pk2'])
+        c_dfupdate = _read_sql(
+            table_name, uri=uri, index_col=['element', 'pk2'])
         assert_frame_equal(c_dfupdate, df_update)
 
 
@@ -234,3 +236,77 @@ def test_store_table():
 
         c_df2 = _read_sql(table_name, uri=uri, index_col=['element', 'scan'])
         assert_frame_equal(df2, c_df2)
+
+
+def test_store_multiple_output():
+    """Test storing using single_output=False"""
+
+    meta1 = {'element': {'subject': 'test-01', 'session': 'ses-01'},
+             'version': '0.0.1', 'marker': {'name': 'fc'}}
+    meta2 = {'element': {'subject': 'test-02', 'session': 'ses-01'},
+             'version': '0.0.1', 'marker': {'name': 'fc'}}
+    meta3 = {'element': {'subject': 'test-01', 'session': 'ses-02'},
+             'version': '0.0.1', 'marker': {'name': 'fc'}}
+    with tempfile.TemporaryDirectory() as _tmpdir:
+        uri = Path(f'{_tmpdir}/test.db')
+        storage = SQLiteFeatureStorage(uri=uri, single_output=False)
+        data1 = np.array([
+            [1, 10],
+            [2, 20],
+            [3, 30],
+            [4, 40],
+            [5, 50],
+        ])
+
+        data2 = data1 * 10
+        data3 = data1 * 20
+
+        hash1, _, idx1 = process_meta(  # type: ignore
+            meta1, return_idx=True, n_rows=5, rows_col_name='scan')
+        df1 = pd.DataFrame(data1, columns=['f1', 'f2'], index=idx1)
+
+        hash2, _, idx2 = process_meta(  # type: ignore
+            meta2, return_idx=True, n_rows=5, rows_col_name='scan')
+        df2 = pd.DataFrame(data2, columns=['f1', 'f2'], index=idx2)
+
+        hash3, _, idx3 = process_meta(  # type: ignore
+            meta3, return_idx=True, n_rows=5, rows_col_name='scan')
+        df3 = pd.DataFrame(data3, columns=['f1', 'f2'], index=idx3)
+
+        assert hash1 == hash2
+        assert hash2 == hash3
+
+        storage.store_table(
+            data1, meta1, columns=['f1', 'f2'], rows_col_name='scan')
+
+        storage.store_table(
+            data2, meta2, columns=['f1', 'f2'], rows_col_name='scan')
+
+        storage.store_table(
+            data3, meta3, columns=['f1', 'f2'], rows_col_name='scan')
+
+        assert not uri.exists()
+
+        prefix1 = element_to_prefix(meta1['element'])
+        prefix2 = element_to_prefix(meta2['element'])
+        prefix3 = element_to_prefix(meta3['element'])
+
+        uri1 = uri.parent / f'{prefix1}{uri.name}'
+        uri2 = uri.parent / f'{prefix2}{uri.name}'
+        uri3 = uri.parent / f'{prefix3}{uri.name}'
+
+        assert uri1.exists()
+        assert uri2.exists()
+        assert uri3.exists()
+
+        table_name = storage.store_metadata(meta1)
+
+        cols = ['subject', 'session', 'scan']
+
+        cdf1 = _read_sql(table_name, uri1, index_col=cols)
+        cdf2 = _read_sql(table_name, uri2, index_col=cols)
+        cdf3 = _read_sql(table_name, uri3, index_col=cols)
+
+        assert_frame_equal(df1, cdf1)
+        assert_frame_equal(df2, cdf2)
+        assert_frame_equal(df3, cdf3)

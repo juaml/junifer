@@ -111,11 +111,12 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
     def store_metadata(self, meta):
         t_meta = meta.copy()
         t_meta.update(self.get_meta())
-        meta_md5, t_meta = process_meta(  # type: ignore
+        meta_md5, t_meta_row = process_meta(  # type: ignore
             t_meta, return_idx=False)
-        if meta_md5 not in inspect(self.get_engine(meta)).get_table_names():
-            meta_df = self._meta_row(t_meta, meta_md5)
-            self._save_upsert(meta_df, 'meta')
+        engine = self.get_engine(t_meta)
+        if meta_md5 not in inspect(engine).get_table_names():
+            meta_df = self._meta_row(t_meta_row, meta_md5)
+            self._save_upsert(meta_df, 'meta', engine)
         return f'meta_{meta_md5}'
 
     def store_matrix2d(
@@ -145,12 +146,13 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
                 'index of the meta data. This happens when the element '
                 'is not part of the index.')
         # Save
-        self._save_upsert(df, table_name)
+        engine = self.get_engine(meta)
+        self._save_upsert(df, table_name, engine)
 
     def store_timeseries(self, data, meta):
         raise NotImplementedError('store_timeseries not implemented')
 
-    def _save_upsert(self, df, name, if_exist='append'):
+    def _save_upsert(self, df, name, engine=None, if_exist='append'):
         """ Implementation of UPSERT functionality.
 
         Parameters
@@ -171,7 +173,8 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
             If the table exists and if_exist is 'fail'
         """
         index_col = df.index.names
-        engine = self.get_engine()
+        if engine is None:
+            engine = self.get_engine()
         with engine.begin() as con:
             if if_exist == 'replace':
                 # Case 1: replace all the existing elements

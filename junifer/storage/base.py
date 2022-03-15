@@ -6,6 +6,7 @@ import json
 import hashlib
 from abc import ABC, abstractmethod
 
+from ..utils import logger
 from .. import __version__
 
 
@@ -51,8 +52,9 @@ def process_meta(meta, return_idx=False, n_rows=1, rows_col_name=None):
             t_meta['_element_keys'] = list(element.keys())
         else:
             t_meta['_element_keys'] = ['element']
-
-    md5_hash = _meta_hash(meta)
+    logger.debug(f'Hasing meta {t_meta}')
+    md5_hash = _meta_hash(t_meta)
+    logger.debug(f'Hash computed: {md5_hash}')
     if return_idx is True:
         out = md5_hash, t_meta, idx
     else:
