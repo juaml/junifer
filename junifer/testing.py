@@ -21,6 +21,7 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
     def __getitem__(self, element):
         out = {}
         out['VBM_GM'] = self._dataset.gray_matter_maps[element]
+        out['meta'] = {'subject': element}
         return out
 
     def __enter__(self):

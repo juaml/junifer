@@ -77,9 +77,10 @@ class BaseMarker(PipelineStepMixin):
         self._valid_inputs = on
         self.name = self.__class__.__name__ if name is None else name
 
-    def get_meta(self):
+    def get_meta(self, kind):
         s_meta = super().get_meta()
         s_meta['name'] = self.name
+        s_meta['kind'] = kind  # same marker can be fit into different kinds
         return dict(marker=s_meta)
 
     def validate_input(self, input):
@@ -95,6 +96,9 @@ class BaseMarker(PipelineStepMixin):
     def compute(self, input):
         raise NotImplementedError('compute not implemented')
 
+    def store(self, input, out, storage):
+        raise NotImplementedError('store not implemented')
+
     def fit_transform(self, input, storage=None):
         out = {}
         meta = input.get('meta', {})
@@ -104,11 +108,11 @@ class BaseMarker(PipelineStepMixin):
                 t_input = input[kind]
                 t_meta = meta.copy()
                 t_meta.update(t_input.get('meta', {}))
-                t_meta.update(self.get_meta())
+                t_meta.update(self.get_meta(kind))
                 t_out = self.compute(t_input)
                 t_out.update(meta=t_meta)
                 if storage is not None:
-                    storage.store_2d(**t_out)
+                    self.store(kind, t_out, storage)
                 else:
                     out[kind] = t_out
 

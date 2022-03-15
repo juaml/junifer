@@ -27,7 +27,7 @@ def register(step, name, klass):
     _registry[step][name] = klass
 
 
-def run_pipeline(
+def run(
         workdir, datagrabber, element, markers, storage, source_params=None,
         storage_params=None):
     """Run the pipeline on the selected element

@@ -5,10 +5,12 @@ from pandas.core.base import NoNewAttributesMixin
 from pandas.io.sql import pandasSQL_builder
 from sqlalchemy import create_engine, inspect
 
-from .base import PandasFeatureStoreage, element_to_index, meta_hash
+from ..api.decorators import register_storage
+from .base import PandasFeatureStoreage, process_meta
 from ..utils.logging import warn
 
 
+@register_storage
 class SQLiteFeatureStorage(PandasFeatureStoreage):
     """
     SQLite feature storage.
@@ -38,11 +40,61 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
         super().__init__(uri)
         self._engine = create_engine(uri, echo=False)
         self._upsert = upsert
+        self._valid_inputs = ['table', 'timeseries']
+
+    def validate(self, input):
+        if not isinstance(input, list):
+            input = [input]
+        return all(x in self._valid_inputs for x in input)
+
+    def list_features(self):
+        meta_df = pd.read_sql('meta', con=self._engine, index_col='meta_md5')
+        return meta_df.to_dict(orient='index')
+
+    def read_df(self, feature_name=None, feature_md5=None):
+        """Read features from the storage.
+
+        Parameters
+        ----------
+        feature_name : str
+            Name of the feature to read. At least one of feature_name or
+            feature_md5 must be specified.
+        feature_md5 : str
+            MD5 of the feature to read. At least one of feature_name or
+            feature_md5 must be specified.
+
+        Returns
+        -------
+        pandas.DataFrame
+            The features.
+        """
+        if feature_md5 is not None and feature_name is not None:
+            raise ValueError('Only one of feature_name or feature_md5 can be '
+                             'specified')
+        elif feature_md5 is None and feature_name is None:
+            raise ValueError('At least one of feature_name or feature_md5 '
+                             'must be specified')
+        elif feature_md5 is not None:
+            feature_md5 = f'meta_{feature_md5}'
+        else:
+            meta_df = pd.read_sql(
+                'meta', con=self._engine, index_col='meta_md5')
+            t_df = meta_df.query(f"name == '{feature_name}'")
+            if len(t_df) == 0:
+                raise ValueError(f'Feature {feature_name} not found')
+            elif len(t_df) > 1:
+                raise ValueError(
+                    f'More than one feature with name {feature_name} found',
+                    'This file is invalid. You can bypass this issue by '
+                    'specifying a feature_md5')
+            feature_md5 = t_df.index[0]
+        return pd.read_sql(feature_md5, con=self._engine)
 
     def store_metadata(self, meta):
         t_meta = meta.copy()
         t_meta.update(self.get_meta())
-        meta_md5 = meta_hash(t_meta)
+        meta_md5, t_meta = process_meta(  # type: ignore
+            t_meta, return_idx=False)
         if meta_md5 not in inspect(self._engine).get_table_names():
             meta_df = self._meta_row(t_meta, meta_md5)
             self._save_upsert(meta_df, 'meta')
@@ -58,13 +110,14 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
 
     def store_2d(self, data, meta, columns=None, rows_col_name=None):
         n_rows = len(data)
-        idx = element_to_index(
-            meta, n_rows=n_rows, rows_col_name=rows_col_name)
+        _, _, idx = process_meta(  # type: ignore
+            meta, return_idx=True, n_rows=n_rows, rows_col_name=rows_col_name)
         data_df = pd.DataFrame(data, columns=columns, index=idx)
         self.store_df(data_df, meta)
 
     def store_df(self, df, meta):
         table_name = self.store_metadata(meta)
+        # TODO: Check that the element is in the index of the dataframe
         self._save_upsert(df, table_name)
 
     def store_timeseries(self, data, meta):

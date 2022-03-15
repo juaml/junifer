@@ -61,11 +61,12 @@ def test_ParcelAggregation_3D():
     assert jun_values3d_mean.shape[0] == 1
     assert_array_equal(manual, jun_values3d_mean)
 
-    meta = marker.get_meta()['marker']
+    meta = marker.get_meta('VBM_GM')['marker']
     assert meta['method'] == 'mean'
     assert meta['atlas'] == 'Schaefer100x7'
     assert meta['name'] == 'gmd_schaefer100x7_mean'
     assert meta['class'] == 'ParcelAggregation'
+    assert meta['kind'] == 'VBM_GM'
     assert meta['method_params'] == {}
 
     # Test using another function (std)
@@ -84,11 +85,12 @@ def test_ParcelAggregation_3D():
     assert jun_values3d_std.shape[0] == 1
     assert_array_equal(manual, jun_values3d_std)
 
-    meta = marker.get_meta()['marker']
+    meta = marker.get_meta('VBM_GM')['marker']
     assert meta['method'] == 'std'
     assert meta['atlas'] == 'Schaefer100x7'
     assert meta['name'] == 'ParcelAggregation'
     assert meta['class'] == 'ParcelAggregation'
+    assert meta['kind'] == 'VBM_GM'
     assert meta['method_params'] == {}
 
     # Test using another function with parameters
@@ -110,11 +112,12 @@ def test_ParcelAggregation_3D():
     assert jun_values3d_tm.shape[0] == 1
     assert_array_equal(manual, jun_values3d_tm)
 
-    meta = marker.get_meta()['marker']
+    meta = marker.get_meta('VBM_GM')['marker']
     assert meta['method'] == 'trim_mean'
     assert meta['atlas'] == 'Schaefer100x7'
     assert meta['name'] == 'ParcelAggregation'
     assert meta['class'] == 'ParcelAggregation'
+    assert meta['kind'] == 'VBM_GM'
     assert meta['method_params'] == {'proportiontocut': 0.1}
 
 
@@ -140,9 +143,10 @@ def test_ParcelAggregation_4D():
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
 
-    meta = marker.get_meta()['marker']
+    meta = marker.get_meta('BOLD')['marker']
     assert meta['method'] == 'mean'
     assert meta['atlas'] == 'Schaefer100x7'
     assert meta['name'] == 'ParcelAggregation'
     assert meta['class'] == 'ParcelAggregation'
+    assert meta['kind'] == 'BOLD'
     assert meta['method_params'] == {}

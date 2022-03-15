@@ -41,6 +41,9 @@ class DefaultDataReader(PipelineStepMixin):
         if params is None:
             params = {}
         for kind in input.keys():
+            if kind == 'meta':
+                out['meta'] = input['meta']
+                continue
             t_path = input[kind]
             t_params = params.get(kind, {})
             if not isinstance(t_path, Path):

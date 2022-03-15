@@ -87,6 +87,9 @@ class BaseDataGrabber(ABC):
                 t_meta[k] = v
         return t_meta
 
+    def get_element_keys(self):
+        return 'element'
+
     @property
     def datadir(self):
         """
@@ -183,8 +186,10 @@ class BIDSDataGrabber(BaseDataGrabber):
 
         Parameters
         ----------
-        element : str
-            The element to be indexed.
+        element : str or tuple
+            The element to be indexed. If one string is provided, it is
+            assumed to be a subject. If a tuple is provided, it is assumed to
+            be a (subject, session) pair.
         Returns
         -------
         out : dict[str -> Path]
@@ -192,14 +197,21 @@ class BIDSDataGrabber(BaseDataGrabber):
             specified element.
         """
         out = {}
+        if not isinstance(element, tuple):
+            element = (element,)
         for t_type in self.types:
             t_pattern = self.patterns[t_type]  # type: ignore
-            t_replace = t_pattern.replace('{subject}', element)
-            t_out = self.datadir / element / t_replace
+            t_replace = t_pattern.replace('{subject}', element[0])
+            if len(element) > 1:
+                t_replace = t_replace.replace(
+                    '{session}', element[1])  # type: ignore
+            t_out = self.datadir / element[0] / t_replace
             out[t_type] = dict(path=t_out)
         # Meta here is element and types
         out['meta'] = dict(datagrabber=self.get_meta())
-        out['meta']['element'] = element
+        out['meta']['element'] = {'subject': element[0]}
+        if len(element) > 1:
+            out['meta']['element']['session'] = element[1]  # type: ignore
         return out
 
 

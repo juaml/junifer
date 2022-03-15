@@ -19,6 +19,18 @@ class ParcelAggregation(BaseMarker):
         self.method = method
         self.method_params = {} if method_params is None else method_params
 
+    def get_output_kind(self, input):
+        if input in ['GMD_GM', 'GMD_WM']:
+            return 'table'
+        if input in ['BOLD']:
+            return 'timeseries'
+
+    def store(self, kind, out, storage):
+        if kind in ['GMD_GM', 'GMD_WM']:
+            storage.store_table(**out)
+        if kind in ['BOLD']:
+            storage.store_timeseries(**out)
+
     def compute(self, input):
         t_input = input['data']
         agg_func = get_aggfunc_by_name(
