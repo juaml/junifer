@@ -22,13 +22,13 @@ class ParcelAggregation(BaseMarker):
         self.method_params = {} if method_params is None else method_params
 
     def get_output_kind(self, input):
-        if input in ['GMD_GM', 'GMD_WM']:
+        if input in ['VBM_GM', 'VBM_WM']:
             return 'table'
         if input in ['BOLD']:
             return 'timeseries'
 
     def store(self, kind, out, storage):
-        if kind in ['GMD_GM', 'GMD_WM']:
+        if kind in ['VBM_GM', 'VBM_WM']:
             storage.store_table(**out)
         if kind in ['BOLD']:
             storage.store_timeseries(**out)

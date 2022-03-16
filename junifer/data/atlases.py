@@ -293,7 +293,7 @@ def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_networks=7):
             'At least one of the atlas files is missing. '
             'Fetching using nilearn.')
         datasets.fetch_atlas_schaefer_2018(
-            n_rois=n_rois,
+            n_rois=n_rois,  # type: ignore
             yeo_networks=yeo_networks,
             resolution_mm=resolution,
             data_dir=atlas_dir.as_posix())

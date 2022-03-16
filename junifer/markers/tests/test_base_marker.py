@@ -20,13 +20,13 @@ def test_meta():
 
     base = BaseMarker(on=['bold', 'dwi'])
 
-    t_meta = base.get_meta()
+    t_meta = base.get_meta('bold')
     assert t_meta['marker']['class'] == 'BaseMarker'
     assert t_meta['marker']['name'] == 'BaseMarker'
 
     base = BaseMarker(on=['bold', 'dwi'], name='mymarker')
 
-    t_meta = base.get_meta()
+    t_meta = base.get_meta('dwi')
     assert t_meta['marker']['name'] == 'mymarker'
 
 

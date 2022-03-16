@@ -99,8 +99,8 @@ def test_MarkerCollection_storage():
     # Test storage
     dg = OasisVBMTestingDatagrabber()
     with tempfile.TemporaryDirectory() as tmpdir:
-        uri = f'sqlite:///{tmpdir}/test.db'
-        storage = SQLiteFeatureStorage(uri=uri)
+        uri = f'{tmpdir}/test.db'
+        storage = SQLiteFeatureStorage(uri=uri, single_output=True)
         mc = MarkerCollection(
             markers=markers, storage=storage, datareader=DefaultDataReader())
         mc.validate(dg)
@@ -120,7 +120,24 @@ def test_MarkerCollection_storage():
             out = mc2.fit(input)
 
         features = storage.list_features()
-        assert len(features) == 1
-        feature_md5 = features.keys()[0]
+        assert len(features) == 3
+        feature_md5 = list(features.keys())[0]
         t_feature = storage.read_df(feature_md5=feature_md5)
-    
+        fname = 'gmd_schaefer100x7_mean'
+        t_data = out[fname]['VBM_GM']['data']  # type: ignore
+        cols = out[fname]['VBM_GM']['columns']  # type: ignore
+        assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
+
+        feature_md5 = list(features.keys())[1]
+        t_feature = storage.read_df(feature_md5=feature_md5)
+        fname = 'gmd_schaefer100x7_std'
+        t_data = out[fname]['VBM_GM']['data']  # type: ignore
+        cols = out[fname]['VBM_GM']['columns']  # type: ignore
+        assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
+
+        feature_md5 = list(features.keys())[2]
+        t_feature = storage.read_df(feature_md5=feature_md5)
+        fname = 'gmd_schaefer100x7_trim_mean90'
+        t_data = out[fname]['VBM_GM']['data']  # type: ignore
+        cols = out[fname]['VBM_GM']['columns']  # type: ignore
+        assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
