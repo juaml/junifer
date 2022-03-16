@@ -3,7 +3,11 @@
 # License: AGPL
 from pathlib import Path
 import io
+import os
 import requests
+import wget
+import shutil
+import zipfile
 import numpy as np
 import pandas as pd
 
@@ -43,6 +47,36 @@ for n_rois in range(100, 1001, 100):
             'n_rois': n_rois,
             'yeo_networks': t_net,
         }
+
+for scale in range(1, 5):
+    for field in ['3T', '7T']:
+        if field == '7T':
+            space = 'MNI6thgeneration'
+            t_name = f'Tian{scale}x{field}x{space}'
+            _available_atlases[t_name] = {
+                'family': 'Tian',
+                'scale': scale,
+                'magneticfield': field,
+                'valid_resolutions': [1.6]
+            }
+        else:
+            for space in ['MNI6thgeneration', 'MNInonlinear2009cAsym']:
+                if space == 'MNI6thgeneration':
+                    t_name = f'Tian{scale}x{field}x{space}'
+                    _available_atlases[t_name] = {
+                        'family': 'Tian',
+                        'scale': scale,
+                        'magneticfield': field,
+                        'valid_resolutions': [1, 2]
+                    }
+                elif space == 'MNInonlinear2009cAsym':
+                    t_name = f'Tian{scale}x{field}x{space}'
+                    _available_atlases[t_name] = {
+                        'family': 'Tian',
+                        'scale': scale,
+                        'magneticfield': field,
+                        'valid_resolutions': [2]
+                    }
 
 
 def register_atlas(name, atlas_path, atl_labels, overwrite=False):
@@ -136,7 +170,15 @@ def load_atlas(name, atlas_dir=None, resolution=None, path_only=False):
             Number of yeo networks to use. Valid values: 7, 17. Defaults to 7.
 
     Tian :
-        # TODO add
+        scale (required) : int
+            Scale of atlas between 1 and 4 (defines granularity)
+        space (optional) : str
+            Space of atlas can be either 'MNI6thgeneration' or
+            'MNInonlinear2009cAsym' (for some cases).
+            Defaults to 'MNI6thgeneration'. (For more information see
+            https://github.com/yetianmed/subcortex)
+        magneticfield (optional) : str
+            Options are 3T and 7T, defaults to 3T.
 
     SUIT :
         space (optional) : str
@@ -207,6 +249,16 @@ def _retrieve_atlas(family, atlas_dir=None, resolution=None, **kwargs):
             (included) in steps of 100.
         yeo_network (optional) : int
             Number of yeo networks to use [7 or 17]. Defaults to 7.
+    Tian :
+        scale (required) : int
+            Scale of atlas between 1 and 4 (defines granularity)
+        space (optional) : str
+            Space of atlas can be either 'MNI6thgeneration' or
+            'MNInonlinear2009cAsym' (for some cases).
+            Defaults to 'MNI6thgeneration'. (For more information see 
+            https://github.com/yetianmed/subcortex)
+        magneticfield (optional) : str
+            Options are 3T and 7T, defaults to 3T.
     SUIT :
         space (optional) : str
             Space of atlas can be either 'MNI' or 'SUIT' (for more information
@@ -235,6 +287,9 @@ def _retrieve_atlas(family, atlas_dir=None, resolution=None, **kwargs):
     elif family == 'SUIT':
         atlas_fname, atl_labels = \
             _retrieve_suit(atlas_dir, resolution=resolution, **kwargs)
+    elif family == 'Tian':
+        atlas_fname, atl_labels = \
+            _retrieve_tian(atlas_dir, resolution=resolution, **kwargs)
     else:
         raise_error(
             f"The provided atlas name {family} cannot be retrieved. ")
@@ -308,6 +363,109 @@ def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_networks=7):
         for x in pd.read_csv(
             atlas_lname, sep='\t', header=None).iloc[:, 1].to_list()
     ]
+
+    return atlas_fname, labels
+
+
+def _retrieve_tian(
+    atlas_dir, resolution, scale=None, space='MNI6thgeneration',
+        magneticfield='3T'):
+
+    # check validity of atlas parameters
+    _valid_scales = [1, 2, 3, 4]
+    _valid_fields = ['3T', '7T']
+    if scale not in _valid_scales:
+        raise_error(
+            f'The parameter `scale` ({scale}) needs to be one of the '
+            f'following: {_valid_scales}')
+    if field not in _valid_fields:
+        raise_error(
+            f'The parameter `magneticfield` ({field}) needs to be one of '
+            f'the following: {_valid_fields}')
+
+    if magneticfield == '3T':
+        _valid_spaces = ['MNI6thgeneration', 'MNInonlinear2009cAsym']
+        if space == 'MNI6thgeneration':
+            _valid_resolutions = [1, 2]
+        elif space == 'MNInonlinear2009cAsym':
+            _valid_resolutions = [2]
+    if magneticfield == '7T':
+        _valid_spaces = ['MNI6thgeneration']
+        _valid_resolutions = [1.6]
+    if space not in _valid_spaces:
+        raise_error(
+            f'The parameter `space` ({space}) needs to be one of '
+            f'the following: {_valid_spaces}')
+
+    resolution = _closest_resolution(resolution, _valid_resolutions)
+
+    # show atlas parameters to user
+    logger.info('Atlas parameters:')
+    logger.info(f'\tscale: {scale}')
+    logger.info(f'\tspace: {space}')
+    logger.info(f'\tmagneticfield: {magneticfield}')
+    logger.info(f'\tresolution: {resolution}')
+
+    # define file names
+    if magneticfield == '3T':
+        atlas_fname_base_3T = (
+            atlas_dir / 'Tian2020MSA_v1.1' / '3T' / 'Subcortex-Only')
+        atlas_lname = atlas_fname_base_3T / (
+            f'Tian_Subcortex_S{scale}_3T_label.txt')
+        if space == 'MNI6thgeneration':
+            atlas_fname = atlas_fname_base_3T / (
+                f'Tian_Subcortex_S{scale}_{magneticfield}.nii.gz')
+            if resolution == 1:
+                atlas_fname = atlas_fname_base_3T / (
+                    f'Tian_Subcortex_S{scale}_{magneticfield}_{resolution}'
+                    'mm.nii.gz')
+        elif space == 'MNInonlinear2009cAsym':
+            space = '2009cAsym'
+            atlas_fname = atlas_fname_base_3T / (
+                f'Tian_Subcortex_S{scale}_{magneticfield}_{space}.nii.gz')
+    elif magneticfield == '7T':
+        atlas_fname_base_7T = (
+            atlas_dir / 'Tian2020MSA_v1.1' / '7T')
+        atlas_fname = atlas_dir / 'Tian2020MSA_v1.1' / f'{magneticfield}' / (
+            f'Tian_Subcortex_S{scale}_{magneticfield}.nii.gz')
+        # define 7T labels (b/c currently no labels file available for 7T)
+        scale7Trois = {1: 16, 2: 34, 3: 54, 4: 62}
+        labels = [
+            ('parcel_' + str(x)) for x in np.arange(1, scale7Trois[scale]+1)]
+        atlas_lname = atlas_fname_base_7T / (
+            f'Tian_Subcortex_S{scale}_7T_labelnumbering.txt')
+        with open(atlas_lname, 'w') as filehandle:
+            for listitem in labels:
+                filehandle.write('%s\n' % listitem)
+        logger.info(
+            'Currently there are no labels provided for the 7T Tian atlas. A '
+            'simple numbering scheme for distinction was therefore used.')
+
+    # check existance of atlas
+    if not (atlas_fname.exists() and atlas_lname.exists()):
+        logger.info(
+            'At least one of the atlas files is missing. '
+            'Fetching.')
+
+        url_basis = (
+            'https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip')
+
+        logger.info(f'Downloading {url_basis}')
+        atlas_download_dir = wget.download(url_basis, atlas_dir.as_posix())
+        with zipfile.ZipFile(atlas_download_dir, 'r') as zip_ref:
+            zip_ref.extractall(atlas_dir.as_posix())
+        # clean after unzipping
+        if os.path.exists(atlas_download_dir):
+            os.remove(atlas_download_dir)
+        if os.path.exists((atlas_dir / '__MACOSX').as_posix()):
+            shutil.rmtree((atlas_dir / '__MACOSX').as_posix())
+
+        labels = pd.read_csv(atlas_lname, sep=" ", header=None)[0].to_list()
+
+        if not (atlas_fname.exists() and atlas_lname.exists()):
+            raise_error('There was a problem fetching the atlases.')
+
+    labels = pd.read_csv(atlas_lname, sep=" ", header=None)[0].to_list()
 
     return atlas_fname, labels
 
