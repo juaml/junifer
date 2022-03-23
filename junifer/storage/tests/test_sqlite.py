@@ -58,6 +58,11 @@ def test_get_engine():
         assert engine.url.drivername == 'sqlite'
         assert f'{engine.url.database}' == uri
 
+        storage = SQLiteFeatureStorage(
+            uri=uri, single_output=False, upsert='ignore')
+        with pytest.raises(ValueError, match='element must be specified'):
+            storage.get_engine()
+
 
 def test_store_metadata():
     """Test store_metadata"""
@@ -163,6 +168,10 @@ def test_store_read_df():
 
         # Save to SQL
         with pytest.raises(ValueError, match=r"missing index items"):
+            storage.store_df(to_store.set_index('col1'), meta)
+
+        to_store = df1.reset_index.set_index(['element', 'pk2', 'col1'])
+        with pytest.raises(ValueError, match=r"extra items"):
             storage.store_df(to_store.set_index('col1'), meta)
 
         idx = element_to_index(meta, n_rows=len(to_store))
@@ -310,3 +319,66 @@ def test_store_multiple_output():
         assert_frame_equal(df1, cdf1)
         assert_frame_equal(df2, cdf2)
         assert_frame_equal(df3, cdf3)
+
+
+def test_collect():
+    meta1 = {'element': {'subject': 'test-01', 'session': 'ses-01'},
+             'version': '0.0.1', 'marker': {'name': 'fc'}}
+    meta2 = {'element': {'subject': 'test-02', 'session': 'ses-01'},
+             'version': '0.0.1', 'marker': {'name': 'fc'}}
+    meta3 = {'element': {'subject': 'test-01', 'session': 'ses-02'},
+             'version': '0.0.1', 'marker': {'name': 'fc'}}
+    with tempfile.TemporaryDirectory() as _tmpdir:
+        uri = Path(f'{_tmpdir}/test.db')
+        storage = SQLiteFeatureStorage(uri=uri)
+
+        data1 = np.array([
+            [1, 10],
+            [2, 20],
+            [3, 30],
+            [4, 40],
+            [5, 50],
+        ])
+
+        data2 = data1 * 10
+        data3 = data1 * 20
+        storage.store_table(
+            data1, meta1, columns=['f1', 'f2'], rows_col_name='scan')
+
+        storage.store_table(
+            data2, meta2, columns=['f1', 'f2'], rows_col_name='scan')
+
+        storage.store_table(
+            data3, meta3, columns=['f1', 'f2'], rows_col_name='scan')
+
+        prefix1 = element_to_prefix(meta1['element'])
+        prefix2 = element_to_prefix(meta2['element'])
+        prefix3 = element_to_prefix(meta3['element'])
+
+        uri1 = uri.parent / f'{prefix1}{uri.name}'
+        uri2 = uri.parent / f'{prefix2}{uri.name}'
+        uri3 = uri.parent / f'{prefix3}{uri.name}'
+
+        assert uri1.exists()
+        assert uri2.exists()
+        assert uri3.exists()
+
+        assert not uri.exists()
+
+        storage.collect()
+
+        assert uri.exists()
+
+        cols = ['subject', 'session', 'scan']
+        table_name = storage.store_metadata(meta1)
+        all_df = _read_sql(table_name, uri, index_col=cols)
+
+        cdf1 = _read_sql(table_name, uri1, index_col=cols)
+        cdf2 = _read_sql(table_name, uri2, index_col=cols)
+        cdf3 = _read_sql(table_name, uri3, index_col=cols)
+
+        all_cdf = pd.concat([cdf1, cdf2, cdf3])
+        all_df.sort_index(level=cols, inplace=True)
+        all_cdf.sort_index(level=cols, inplace=True)
+
+        assert_frame_equal(all_df, all_cdf)
