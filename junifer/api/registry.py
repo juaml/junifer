@@ -93,14 +93,12 @@ def build(step, name, baseclass, init_params=None):
         If the name is not a string or the object is not an instance of the
         baseclass parameter.
     """
-    if not isinstance(name, str):
-        raise_error(f'Invalid name: {name}', ValueError)
     klass = get(step, name)
     if init_params is None:
         init_params = {}
     object = klass(**init_params)
     if not isinstance(object, baseclass):
         raise_error(
-            f'Invalid {step} ({object.__class__.name}). '
-            f'Must inherit from {baseclass.name}', ValueError)
+            f'Invalid {step} ({object.__class__.__name__}). '
+            f'Must inherit from {baseclass.__name__}', ValueError)
     return object

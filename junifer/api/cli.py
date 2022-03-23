@@ -1,8 +1,8 @@
 import click
 
 from .parser import parse_yaml
-from .run import run as api_run
-from .run import collect as api_collect
+from .functions import run as api_run
+from .functions import collect as api_collect
 from ..utils.logging import configure_logging
 
 

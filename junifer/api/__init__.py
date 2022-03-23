@@ -1,2 +1,2 @@
-from . run import run
-from . import cli
+from .functions import run, collect
+from .import cli
