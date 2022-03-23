@@ -9,10 +9,11 @@ License: BSD 3 clause
 import tempfile
 
 from junifer.api import run
-from junifer.testing import register_testing
+import junifer.testing.registry  # noqa: F401
 
-
-register_testing()
+datagrabber = {
+    'kind': 'OasisVBMTestingDatagrabber',
+}
 
 markers = [
     {'name': 'Schaefer1000x7_TrimMean80',
@@ -30,12 +31,16 @@ markers = [
      'method': 'std'}
 ]
 
+storage = {
+    'kind': 'SQLiteFeatureStorage',
+}
+
 with tempfile.TemporaryDirectory() as tmpdir:
     uri = f'{tmpdir}/test.db'
+    storage['uri'] = uri
     run(
         workdir='/tmp',
-        datagrabber='OasisVBMTestingDatagrabber',
+        datagrabber=datagrabber,
         markers=markers,
-        storage='SQLiteFeatureStorage',
-        storage_params={'uri': uri},
+        storage=storage,
     )

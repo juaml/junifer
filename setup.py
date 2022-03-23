@@ -52,7 +52,13 @@ setuptools.setup(
         'Source': DOWNLOAD_URL,
         'Tracker': f'{DOWNLOAD_URL}issues/',
     },
-    install_requires=[],  # TODO: Complete
+    install_requires=['Click'],  # TODO: Complete
+    py_modules=['junifer.api.cli'],
+    entry_points={
+        'console_scripts': [
+            'junifer=junifer.api.cli:cli',
+        ]
+    },
     python_requires='>=3.6',
     use_scm_version=_getversion,
     setup_requires=['setuptools_scm'],

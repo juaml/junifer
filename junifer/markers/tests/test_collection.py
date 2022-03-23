@@ -7,7 +7,7 @@ from numpy.testing import assert_array_equal
 from junifer.datareader.default import DefaultDataReader
 from junifer.markers import MarkerCollection, ParcelAggregation
 from junifer.markers.base import PipelineStepMixin
-from junifer.testing import OasisVBMTestingDatagrabber
+from junifer.testing.datagrabbers import OasisVBMTestingDatagrabber
 from junifer.storage import SQLiteFeatureStorage
 
 

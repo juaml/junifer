@@ -6,7 +6,14 @@ License: BSD 3 clause
 """
 
 
-from junifer.api import run_pipeline
+from junifer.api import run
+
+datagrabber = {
+    'kind': 'HCPOpenAccess',
+    'modality': 'fMRI',
+    'preprocessed': 'ICA+FIX',
+    'space': 'volumetric',
+}
 
 custom_confound_strategy = {
     'filter': 'butterworth',
@@ -48,18 +55,15 @@ markers = [
      'confound_strategy': custom_confound_strategy}
 ]
 
-dg_params = {
-    'modality': 'fMRI',
-    'preprocessed': 'ICA+FIX',
-    'space': 'volumetric',
+storage = {
+    'kind': 'SQLiteFeatureStorage',
+    'uri': '/data/project/juniferexample'
 }
 
-run_pipeline(
+run(
     workdir='/tmp',
-    datagrabber='HCPOpenAccess',
-    datagrabber_params=dg_params,
-    element=('100408', 'REST1', "LR"),
+    datagrabber=datagrabber,
+    elements=[('100408', 'REST1', "LR")],
     markers=markers,
-    storage='SQLDataFrameStorage',
-    storage_params={'outpath': '/data/project/juniferexample'},
+    storage=storage,
 )

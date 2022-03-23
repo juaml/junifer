@@ -10,7 +10,7 @@ from ..utils import logger
 from .. import __version__
 
 
-def process_meta(meta, return_idx=False, n_rows=1, rows_col_name=None):
+def process_meta(meta):
     """Process the metadata for storage. It removes the "element" key
     and adds the "_element_keys" with the keys used to index the element.
 
@@ -38,10 +38,6 @@ def process_meta(meta, return_idx=False, n_rows=1, rows_col_name=None):
     if meta is None:
         raise ValueError('Meta must be a dict (currently is None)')
     t_meta = meta.copy()
-    idx = None
-    if return_idx is True:
-        idx = _element_to_index(
-            meta, n_rows=n_rows, rows_col_name=rows_col_name)
     element = t_meta.pop('element', None)
     if element is None:
         if '_element_keys' not in t_meta:
@@ -52,14 +48,8 @@ def process_meta(meta, return_idx=False, n_rows=1, rows_col_name=None):
             t_meta['_element_keys'] = list(element.keys())
         else:
             t_meta['_element_keys'] = ['element']
-    logger.debug(f'Hasing meta {t_meta}')
     md5_hash = _meta_hash(t_meta)
-    logger.debug(f'Hash computed: {md5_hash}')
-    if return_idx is True:
-        out = md5_hash, t_meta, idx
-    else:
-        out = md5_hash, t_meta
-    return out
+    return md5_hash, t_meta
 
 
 def _meta_hash(meta):
@@ -75,12 +65,15 @@ def _meta_hash(meta):
     md5: str
         The md5 hash of the meta
     """
+    logger.debug(f'Hashing meta {meta}')
     meta_md5 = hashlib.md5(
         json.dumps(meta, sort_keys=True).encode('utf-8')).hexdigest()
+    logger.debug(f'Hash computed: {meta_md5}')
     return meta_md5
 
 
-def _element_to_index(meta, n_rows=1, rows_col_name=None):
+# TODO: Test this new functionality
+def element_to_index(meta, n_rows=1, rows_col_name=None):
     """Convert the element meta to index
 
     Parameters
@@ -88,7 +81,7 @@ def _element_to_index(meta, n_rows=1, rows_col_name=None):
     meta: dict
         The metadata. Must contain the key 'element'
     n_rows: int
-        Number of rows to create
+        Number of rows to create. Defaults to 1.
     rows_col_name: str
         The column name to use in case n_rows > 1. If None (default) and
         n_rows > 1, the name will be 'index'.
@@ -109,32 +102,30 @@ def _element_to_index(meta, n_rows=1, rows_col_name=None):
     element = meta['element']
     if not isinstance(element, dict):
         element = dict(element=element)
-    if n_rows > 1:
-        if rows_col_name is None:
-            rows_col_name = 'index'
-        elem_idx = {
-            k: [v] * n_rows for k, v in element.items()
-        }
-        elem_idx[rows_col_name] = np.arange(n_rows)  # type: ignore
-    else:
-        elem_idx = element
+    if rows_col_name is None:
+        rows_col_name = 'idx'
+    elem_idx = {
+        k: [v] * n_rows for k, v in element.items()
+    }
+    elem_idx[rows_col_name] = np.arange(n_rows)  # type: ignore
     index = pd.MultiIndex.from_frame(
         pd.DataFrame(elem_idx, index=range(n_rows)))
-
     return index
 
 
 def element_to_prefix(element):
+    logger.debug(f'Converting element {element} to prefix')
     prefix = 'element'
-    if isinstance(element, str):
-        prefix = f'{prefix}_{element}'
-    elif isinstance(element, tuple):
-        prefix = f"{prefix}_{'_'.join(element)}"
+    if isinstance(element, tuple):
+        prefix = f"{prefix}_{'_'.join([f'{x}' for x in element])}"
     elif isinstance(element, dict):
-        prefix = f"{prefix}_{'_'.join(element.values())}"
+        prefix = f"{prefix}_{'_'.join([f'{x}' for x in element.values()])}"
+    elif isinstance(element, (str, int)):
+        prefix = f'{prefix}_{element}'
     else:
         raise ValueError(f'Cannot convert element {element} to prefix. '
                          'Must be a str, tuple or dict')
+    logger.debug(f'Converted prefix {prefix}')
     return f'{prefix}_'
 
 
@@ -213,6 +204,10 @@ class BaseFeatureStorage(ABC):
     @abstractmethod
     def store_timeseries(self, data, meta):
         raise NotImplementedError('store_timeseries not implemented')
+
+    @abstractmethod
+    def collect(self):
+        raise NotImplementedError('collect not implemented')
 
 
 class PandasFeatureStoreage(BaseFeatureStorage):

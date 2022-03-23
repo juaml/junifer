@@ -7,7 +7,8 @@ from sqlalchemy import create_engine
 import pytest
 
 from junifer.storage.sqlite import SQLiteFeatureStorage
-from junifer.storage.base import process_meta, element_to_prefix
+from junifer.storage.base import (process_meta, element_to_prefix,
+                                  element_to_index)
 
 
 df1 = pd.DataFrame({
@@ -160,11 +161,10 @@ def test_store_read_df():
         to_store = df1[['col1', 'col2']]
 
         # Save to SQL
-        with pytest.raises(ValueError, match=r"index of the dataframe"):
+        with pytest.raises(ValueError, match=r"missing index items"):
             storage.store_df(to_store.set_index('col1'), meta)
 
-        _, _, idx = process_meta(  # type: ignore
-            meta, return_idx=True, n_rows=len(to_store))
+        idx = element_to_index(meta, n_rows=len(to_store))
         to_store = to_store.set_index(idx)
 
         storage.store_df(to_store, meta)
@@ -190,7 +190,7 @@ def test_store_read_df():
         read_df1 = storage.read_df(feature_md5=feature_md5)
         read_df2 = storage.read_df(feature_name='fcname')
         assert_frame_equal(read_df1, read_df2)
-        assert_frame_equal(read_df1, to_store.reset_index())
+        assert_frame_equal(read_df1, to_store)
 
 
 def test_store_table():
@@ -206,8 +206,8 @@ def test_store_table():
             [4, 40],
             [5, 50],
         ]
-        _, _, idx = process_meta(  # type: ignore
-            meta, return_idx=True, n_rows=5, rows_col_name='scan')
+
+        idx = element_to_index(meta, n_rows=5, rows_col_name='scan')
         df1 = pd.DataFrame(data, columns=['f1', 'f2'], index=idx)
 
         storage.store_table(
@@ -226,8 +226,7 @@ def test_store_table():
             [6, 600]
         ]
 
-        _, _, idx = process_meta(  # type: ignore
-            meta, return_idx=True, n_rows=6, rows_col_name='scan')
+        idx = element_to_index(meta, n_rows=6, rows_col_name='scan')
         df2 = pd.DataFrame(data2, columns=['f1', 'f2'], index=idx)
 
         with pytest.warns(RuntimeWarning, match=r"Some rows"):
@@ -261,16 +260,16 @@ def test_store_multiple_output():
         data2 = data1 * 10
         data3 = data1 * 20
 
-        hash1, _, idx1 = process_meta(  # type: ignore
-            meta1, return_idx=True, n_rows=5, rows_col_name='scan')
+        hash1, _ = process_meta(meta1)
+        idx1 = element_to_index(meta1, n_rows=5, rows_col_name='scan')
         df1 = pd.DataFrame(data1, columns=['f1', 'f2'], index=idx1)
 
-        hash2, _, idx2 = process_meta(  # type: ignore
-            meta2, return_idx=True, n_rows=5, rows_col_name='scan')
+        hash2, _ = process_meta(meta2)
+        idx2 = element_to_index(meta2, n_rows=5, rows_col_name='scan')
         df2 = pd.DataFrame(data2, columns=['f1', 'f2'], index=idx2)
 
-        hash3, _, idx3 = process_meta(  # type: ignore
-            meta3, return_idx=True, n_rows=5, rows_col_name='scan')
+        hash3, _ = process_meta(meta3)
+        idx3 = element_to_index(meta3, n_rows=5, rows_col_name='scan')
         df3 = pd.DataFrame(data3, columns=['f1', 'f2'], index=idx3)
 
         assert hash1 == hash2

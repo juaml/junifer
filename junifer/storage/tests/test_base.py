@@ -1,7 +1,8 @@
 import pytest
 
-from junifer.storage.base import (process_meta, _element_to_index,
-                                  BaseFeatureStorage)
+from junifer.storage.base import (process_meta, element_to_index,
+                                  BaseFeatureStorage,
+                                  element_to_prefix)
 
 
 def test_process_meta_hash():
@@ -12,14 +13,14 @@ def test_process_meta_hash():
         process_meta(meta)
 
     meta = {'element': 'foo', 'A': 1, 'B': [2, 3, 4, 5, 6]}
-    hash1, _ = process_meta(meta, return_idx=False)  # type: ignore
+    hash1, _ = process_meta(meta)
 
     meta = {'element': 'foo', 'B': [2, 3, 4, 5, 6], 'A': 1}
-    hash2, _ = process_meta(meta, return_idx=False)  # type: ignore
+    hash2, _ = process_meta(meta)
     assert hash1 == hash2
 
     meta = {'element': 'foo', 'A': 1, 'B': [2, 3, 1, 5, 6]}
-    hash3, _ = process_meta(meta, return_idx=False)  # type: ignore
+    hash3, _ = process_meta(meta)
     assert hash1 != hash3
 
     meta1 = {
@@ -41,8 +42,8 @@ def test_process_meta_hash():
         'element': 'foo'
     }
 
-    hash4, _ = process_meta(meta1, return_idx=False)  # type: ignore
-    hash5, _ = process_meta(meta2, return_idx=False)  # type: ignore
+    hash4, _ = process_meta(meta1)
+    hash5, _ = process_meta(meta2)
     assert hash4 == hash5
 
 
@@ -51,10 +52,10 @@ def test_process_meta_element():
 
     meta = {}
     with pytest.raises(ValueError, match=r"_element_keys"):
-        process_meta(meta, return_idx=False)
+        process_meta(meta)
 
     meta = {'element': 'foo', 'A': 1, 'B': [2, 3, 4, 5, 6]}
-    _, new_meta = process_meta(meta, return_idx=False)  # type: ignore
+    _, new_meta = process_meta(meta)
     assert '_element_keys' in new_meta
     assert new_meta['_element_keys'] == ['element']
     assert 'A' in new_meta
@@ -63,7 +64,7 @@ def test_process_meta_element():
     meta = {
         'element': {'subject': 'foo', 'session': 'bar'},
         'B': [2, 3, 4, 5, 6], 'A': 1}
-    _, new_meta = process_meta(meta, return_idx=False)  # type: ignore
+    _, new_meta = process_meta(meta)
     assert '_element_keys' in new_meta
     assert new_meta['_element_keys'] == ['subject', 'session']
     assert 'A' in new_meta
@@ -71,35 +72,44 @@ def test_process_meta_element():
 
 
 def test_process_meta_index():
-    """Test _element_to_index"""
+    """Test element_to_index"""
 
     meta = {'noelement': 'foo'}
     with pytest.raises(ValueError, match=r'meta must contain the key'):
-        _element_to_index(meta)
+        element_to_index(meta)
 
     meta = {'element': 'foo', 'A': 1, 'B': [2, 3, 4, 5, 6]}
-    index = _element_to_index(meta)
-    assert index.names == ['element']
+    index = element_to_index(meta)
+    assert index.names == ['element', 'idx']
     assert index.levels[0].name == 'element'
     assert index.levels[0].values[0] == 'foo'
+    assert all(x == 'foo' for x in index.levels[0].values)
+    assert index.levels[0].values.shape == (1,)
+    assert index.levels[1].name == 'idx'
+    assert all(x == i for i, x in enumerate(index.levels[1].values))
+    assert index.levels[1].values.shape == (1,)
 
-    index = _element_to_index(meta, n_rows=10)
-    assert index.names == ['element', 'index']
+    index = element_to_index(meta, n_rows=10)
+    assert index.names == ['element', 'idx']
     assert index.levels[0].name == 'element'
     assert all(x == 'foo' for x in index.levels[0].values)
     assert index.levels[0].values.shape == (1,)
 
-    assert index.levels[1].name == 'index'
+    assert index.levels[1].name == 'idx'
     assert all(x == i for i, x in enumerate(index.levels[1].values))
     assert index.levels[1].values.shape == (10,)
 
-    index = _element_to_index(meta, n_rows=1, rows_col_name='scan')
-    assert index.names == ['element']
+    index = element_to_index(meta, n_rows=1, rows_col_name='scan')
+    assert index.names == ['element', 'scan']
     assert index.levels[0].name == 'element'
+    assert index.levels[0].values[0] == 'foo'
     assert all(x == 'foo' for x in index.levels[0].values)
     assert index.levels[0].values.shape == (1,)
+    assert index.levels[1].name == 'scan'
+    assert all(x == i for i, x in enumerate(index.levels[1].values))
+    assert index.levels[1].values.shape == (1,)
 
-    index = _element_to_index(meta, n_rows=7, rows_col_name='scan')
+    index = element_to_index(meta, n_rows=7, rows_col_name='scan')
     assert index.names == ['element', 'scan']
     assert index.levels[0].name == 'element'
     assert all(x == 'foo' for x in index.levels[0].values)
@@ -112,7 +122,7 @@ def test_process_meta_index():
     meta = {
         'element': {'subject': 'sub-01', 'session': 'ses-01'},
         'A': 1, 'B': [2, 3, 4, 5, 6]}
-    index = _element_to_index(meta, n_rows=10)
+    index = element_to_index(meta, n_rows=10)
 
     assert index.levels[0].name == 'subject'
     assert all(x == 'sub-01' for x in index.levels[0].values)
@@ -122,7 +132,7 @@ def test_process_meta_index():
     assert all(x == 'ses-01' for x in index.levels[1].values)
     assert index.levels[1].values.shape == (1,)
 
-    assert index.levels[2].name == 'index'
+    assert index.levels[2].name == 'idx'
     assert all(x == i for i, x in enumerate(index.levels[2].values))
     assert index.levels[2].values.shape == (10,)
 
@@ -161,6 +171,9 @@ def test_BaseFeatureStorage():
         def store_timeseries(self, timeseries, meta):
             super().store_timeseries(timeseries, meta)
 
+        def collect(self):
+            return super().collect()
+
     st = MyFeatureStorage(uri='/tmp')
     assert st.single_output is False
 
@@ -191,4 +204,43 @@ def test_BaseFeatureStorage():
     with pytest.raises(NotImplementedError):
         st.store_timeseries(None, None)
 
+    with pytest.raises(NotImplementedError):
+        st.collect()
+
     assert st.uri == '/tmp'
+
+
+def test_element_to_prefix():
+    """Test converting element to prefix (for file naming)"""
+
+    element = 'sub-01'
+    prefix = element_to_prefix(element)
+    assert prefix == 'element_sub-01_'
+
+    element = 1
+    prefix = element_to_prefix(element)
+    assert prefix == 'element_1_'
+
+    element = {'subject': 'sub-01'}
+    prefix = element_to_prefix(element)
+    assert prefix == 'element_sub-01_'
+
+    element = {'subject': 1}
+    prefix = element_to_prefix(element)
+    assert prefix == 'element_1_'
+
+    element = {'subject': 'sub-01', 'session': 'ses-02'}
+    prefix = element_to_prefix(element)
+    assert prefix == 'element_sub-01_ses-02_'
+
+    element = {'subject': 1, 'session': 2}
+    prefix = element_to_prefix(element)
+    assert prefix == 'element_1_2_'
+
+    element = ('sub-01', 'ses-02')
+    prefix = element_to_prefix(element)
+    assert prefix == 'element_sub-01_ses-02_'
+
+    element = (1, 2)
+    prefix = element_to_prefix(element)
+    assert prefix == 'element_1_2_'
