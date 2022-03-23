@@ -170,7 +170,7 @@ def test_store_read_df():
         with pytest.raises(ValueError, match=r"missing index items"):
             storage.store_df(to_store.set_index('col1'), meta)
 
-        to_store = df1.reset_index.set_index(['element', 'pk2', 'col1'])
+        to_store = df1.reset_index().set_index(['element', 'pk2', 'col1'])
         with pytest.raises(ValueError, match=r"extra items"):
             storage.store_df(to_store.set_index('col1'), meta)
 
