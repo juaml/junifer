@@ -43,7 +43,6 @@ def collect(filepath, verbose):
     api_collect(storage)
 
 
-
 @cli.command()
 def queue():
     click.echo('queue')
