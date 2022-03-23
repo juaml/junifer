@@ -109,7 +109,7 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
             table_name = f'meta_{t_df.index[0]}'
         df = pd.read_sql(table_name, con=engine)
         # Read the index:
-        query = ("SELECT ii.name FROM sqlite_schema AS m, "
+        query = ("SELECT ii.name FROM sqlite_master AS m, "
                  "pragma_index_list(m.name) AS il, "
                  "pragma_index_info(il.name) AS ii "
                  f"WHERE tbl_name='{table_name}' "

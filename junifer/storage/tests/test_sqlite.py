@@ -115,7 +115,8 @@ def test_upsert_ignore():
         c_df1 = _read_sql(table_name, uri=uri, index_col=['element', 'pk2'])
         assert_frame_equal(df1, c_df1)
 
-        storage.store_df(df2, meta)
+        with pytest.warns(RuntimeWarning, match='are already present'):
+            storage.store_df(df2, meta)
 
         c_dfignore = _read_sql(
             table_name, uri=uri, index_col=['element', 'pk2'])
