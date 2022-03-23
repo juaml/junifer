@@ -47,9 +47,10 @@ def run(
     datagrabber = build(
         'datagrabber', datagrabber_kind, BaseDataGrabber,
         init_params=datagrabber_params)
-
+    # Copy to avoid changing the original dict
+    _markers = [x.copy() for x in markers]
     built_markers = []
-    for t_marker in markers:
+    for t_marker in _markers:
         kind = t_marker.pop('kind')
         t_m = build('marker', kind, BaseMarker, init_params=t_marker)
         built_markers.append(t_m)
