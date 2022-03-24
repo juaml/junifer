@@ -13,6 +13,13 @@ def test_parse_yaml():
 
     with tempfile.TemporaryDirectory() as _tmpdir:
         fname = Path(_tmpdir) / 'test.yaml'
+
+        with open(fname, 'w') as f:
+            f.write('foo: bar\n')
+        contents = parse_yaml(fname)
+        assert 'foo' in contents
+        assert 'bar' == contents['foo']
+
         with open(fname, 'w') as f:
             f.write('foo: bar\n')
             f.write('with: numpy\n')

@@ -12,4 +12,4 @@ spellcheck:
 	codespell junifer/ docs/ examples/
 
 test:
-	pytest -v
+	pytest -vv --cov=junifer --cov-report html --cov-report term
