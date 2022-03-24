@@ -153,7 +153,7 @@ def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
         executable = 'run_conda.sh'
         exec_string = f'{env_name} junifer {junifer_args}'
         # TODO: Copy run_conda.sh to job_dir
-        shutil.copy(Path(__file__).parent / 'res' / executable, 
+        shutil.copy(Path(__file__).parent / 'res' / executable,
                     job_dir / executable)
     elif env['kind'] == 'venv':
         env_name = env['name']
