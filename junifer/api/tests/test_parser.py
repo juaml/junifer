@@ -15,25 +15,20 @@ def test_parse_yaml():
         fname = Path(_tmpdir) / 'test.yaml'
         with open(fname, 'w') as f:
             f.write('foo: bar\n')
-            f.write('with: junifer.configs.juseless\n')
+            f.write('with: numpy\n')
 
-        assert 'junifer.configs.juseless' not in sys.modules
         contents = parse_yaml(fname)
         assert 'foo' in contents
         assert 'bar' == contents['foo']
         assert 'with' not in contents
-        assert 'junifer.configs.juseless' in sys.modules
 
-        assert 'junifer.testing.registry' not in sys.modules
+        assert 'junifer.configs.wrong_config' not in sys.modules
 
         with open(fname, 'w') as f:
             f.write('foo: bar\n')
             f.write('with:\n')
-            f.write('  - junifer.configs.juseless\n')
-            f.write('  - junifer.testing.registry\n')
+            f.write('  - numpy\n')
+            f.write('  - junifer.testing.wrong_config\n')
 
-        contents = parse_yaml(fname.as_posix())
-        assert 'foo' in contents
-        assert 'bar' == contents['foo']
-        assert 'with' not in contents
-        assert 'junifer.testing.registry' in sys.modules
+        with pytest.raises(ImportError, match='wrong_config'):
+            contents = parse_yaml(fname.as_posix())

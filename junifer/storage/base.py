@@ -72,7 +72,6 @@ def _meta_hash(meta):
     return meta_md5
 
 
-# TODO: Test this new functionality
 def element_to_index(meta, n_rows=1, rows_col_name=None):
     """Convert the element meta to index
 
