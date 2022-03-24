@@ -3,7 +3,6 @@ workdir: /tmp
 
 datagrabber:
   kind: OasisVBMTestingDatagrabber
-elements: [1, 2]
 markers:
   - name: Schaefer1000x7_Mean
     kind: ParcelAggregation
@@ -12,4 +11,10 @@ markers:
 storage: 
   kind: SQLiteFeatureStorage
   uri: /Users/fraimondo/dev/tbox/junifer/scratch/db/test.db
-
+queue:
+  jobname: TestHTCondorQueue
+  kind: HTCondor
+  env:
+    kind: conda
+    name: junifer
+  mem: 8G

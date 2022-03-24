@@ -3,12 +3,25 @@
 # License: AGPL
 
 from pathlib import Path
+import shutil
+import yaml
+import subprocess
 
 from .registry import build
+from ..utils import logger, raise_error
 from ..datagrabber.base import BaseDataGrabber
 from ..markers.base import BaseMarker
 from ..storage.base import BaseFeatureStorage
 from ..markers.collection import MarkerCollection
+
+
+def _get_datagrabber(datagrabber_config):
+    datagrabber_params = datagrabber_config.copy()
+    datagrabber_kind = datagrabber_params.pop('kind')
+    datagrabber = build(
+        'datagrabber', datagrabber_kind, BaseDataGrabber,
+        init_params=datagrabber_params)
+    return datagrabber
 
 
 def run(
@@ -36,17 +49,13 @@ def run(
         storage to use. All other keys are passed to the storage
         init function.
     """
-    datagrabber_params = datagrabber.copy()
-    datagrabber_kind = datagrabber_params.pop('kind')
     storage_params = storage.copy()
     storage_kind = storage_params.pop('kind')
 
     if isinstance(workdir, str):
         workdir = Path(workdir)
 
-    datagrabber = build(
-        'datagrabber', datagrabber_kind, BaseDataGrabber,
-        init_params=datagrabber_params)
+    datagrabber = _get_datagrabber(datagrabber)
     # Copy to avoid changing the original dict
     _markers = [x.copy() for x in markers]
     built_markers = []
@@ -73,8 +82,133 @@ def run(
 def collect(storage):
     storage_params = storage.copy()
     storage_kind = storage_params.pop('kind')
-
+    logger.info(f'Collecting data using {storage_kind}')
+    logger.debug(f'\tStorage params: {storage_params}')
     storage = build(
         'storage', storage_kind, BaseFeatureStorage,
         init_params=storage_params)
+    logger.debug('Running storage.collect()')
     storage.collect()
+    logger.info('Collect done')
+
+
+def queue(config, kind, jobname='junifer_job', overwrite=False, elements=None,
+          **kwargs):
+    """Queue a job to be executed later
+
+    Parameters
+    ----------
+    kind : str
+        The kind of job to queue.
+    **kwargs : dict
+        The parameters to pass to the job.
+    """
+    # Create a folder within the CWD to store the job files / config
+    cwd = Path.cwd()
+    job_dir = cwd / 'junifer_jobs' / jobname
+    logger.info(f'Creating job in {job_dir.as_posix()}')
+    if job_dir.exists():
+        if overwrite is not True:
+            raise_error(f'Job folder for {jobname} already exists. '
+                        'This error is raise to prevent overwriting files '
+                        'of jobs that might be scheduled but yet not '
+                        'executed. Either delete the directory '
+                        f'{job_dir.as_posix()} or set overwrite to True.')
+    job_dir.mkdir(exist_ok=True, parents=True)
+
+    yaml_config = job_dir / 'config.yaml'
+    logger.info(f'Writing YAML config to {yaml_config}')
+    with open(yaml_config, 'w') as f:
+        f.write(yaml.dump(config))
+
+    # Get list of elements
+    if elements is None:
+        if 'elements' in config:
+            elements = config['elements']
+        else:
+            # If no elements are specified, use all elements from the
+            # datagrabber
+            datagrabber = _get_datagrabber(config['datagrabber'])
+            with datagrabber as dg:
+                elements = dg.get_elements()
+    if kind == 'HTCondor':
+        _queue_condor(job_dir, yaml_config, elements, **kwargs)
+    elif kind == 'SLURM':
+        _queue_slurm(job_dir, yaml_config, elements, **kwargs)
+    else:
+        raise ValueError(f'Unknown queue kind: {kind}')
+
+    logger.info('Queue done')
+
+
+def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
+                  disk='1G', extra_preamble='', verbose='info', submit=False):
+    logger.debug('Creating HTCondor job')
+    junifer_args = (f'run {yaml_config.as_posix()} '
+                    f'--verbose {verbose} --element $(element)')
+    if env is None:
+        env = {'kind': 'local'}
+    if env['kind'] == 'conda':
+        env_name = env['name']
+        executable = 'run_conda.sh'
+        exec_string = f'{env_name} junifer {junifer_args}'
+        # TODO: Copy run_conda.sh to job_dir
+        shutil.copy(Path(__file__).parent / 'res' / executable, 
+                    job_dir / executable)
+    elif env['kind'] == 'venv':
+        env_name = env['name']
+        executable = 'run_venv.sh'
+        exec_string =  f'{env_name} junifer {junifer_args}'
+        # TODO: Copy run_venv.sh to job_dir
+    elif env['kind'] == 'local':
+        executable = 'junifer'
+        exec_string = junifer_args
+    else:
+        raise ValueError(f'Unknown env kind: {env["kind"]}')
+    log_dir = job_dir / 'logs'
+    log_dir.mkdir(exist_ok=True, parents=True)
+    preamble = f"""
+        # The environment
+        universe = vanilla
+        getenv = True
+
+        # Resources
+        request_cpus = {cpus}
+        request_memory = {mem}
+        request_disk = {disk}
+
+        # Executable
+        initial_dir = {job_dir.as_posix()}
+        executable = $(initial_dir)/{executable}
+        transfer_executable = False
+
+        arguments = {exec_string}
+
+        {extra_preamble}
+
+        # Logs
+        log = {log_dir.as_posix()}/junifer_run_$(element).log
+        output = {log_dir.as_posix()}/junifer_run_$(element).out
+        error = {log_dir.as_posix()}/junifer_run_$(element).err
+        """
+
+    submit_fname = job_dir / 'condor.submit'
+    dag_fname = job_dir / 'condor.dag'
+    with open(submit_fname, 'w') as submit_file:
+        submit_file.write(preamble)
+        submit_file.write('queue\n')
+
+    with open(dag_fname, 'w') as dag_file:
+        # Get all subject and session names from file list
+        for i_job, t_elem in enumerate(elements):
+            dag_file.write(f'JOB job{i_job} {submit_fname}\n')
+            dag_file.write(f'VARS job{i_job} element={t_elem}\n\n')
+
+    if submit:
+        logger.info('Submitting HTCondor job')
+        subprocess.run(['condor_submit_dag', dag_fname])
+        logger.info('HTCondor job submitted')
+
+
+def _queue_slurm(job_dir, yaml_config, elements):
+    pass
