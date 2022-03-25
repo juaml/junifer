@@ -218,7 +218,7 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
             Name of the table to save
         if_exist : str
             If the table exists, the behavior is controlled by this parameter.
-            Options are 'append' (default) and 'fail'. If 'fail' and th table
+            Options are 'append' (default) and 'fail'. If 'fail' and the table
             exists, it will raise an error. If 'append', the data will be
             appended to the existing table (following the upsert mode).
 

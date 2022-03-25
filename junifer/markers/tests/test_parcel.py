@@ -97,7 +97,8 @@ def test_ParcelAggregation_3D():
     manual = []
     for t_v in sorted(np.unique(atlas_values)):
         t_values = trim_mean(
-            data[:, atlas_values == t_v], proportiontocut=0.1, axis=None)
+            data[:, atlas_values == t_v], proportiontocut=0.1,
+            axis=None)  # type: ignore
         manual.append(t_values)
     manual = np.array(manual)[np.newaxis, :]
 
