@@ -63,6 +63,13 @@ def test_get_engine():
         with pytest.raises(ValueError, match='element must be specified'):
             storage.get_engine()
 
+        tocreate = Path(_tmpdir) / 'tocreate'
+        assert not tocreate.exists()
+        uri = f'{tocreate.as_posix()}/test.db'
+        storage = SQLiteFeatureStorage(
+            uri=uri, single_output=True, upsert='ignore')
+        assert tocreate.exists()
+
 
 def test_store_metadata():
     """Test store_metadata"""

@@ -23,14 +23,15 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
 
         Parameters
         ----------
-        uri : str
-            The connection URI.
-            Easy options:
-                'sqlite://' for an in memory sqlite database
-                'sqlite:///<path_to_file>' to save in a file
-
-            Check https://docs.sqlalchemy.org/en/14/core/engines.html for more
-            options
+        uri : str or Path (must be a file)
+            The Path to the file to be used.
+        single_output : bool
+            If False (default), will create one file per element. The name
+            of the file will be prefixed with the respective element.
+            If True, will create only one file, the specified in the URI and
+            store all the elements in the same file. This behaviour is only
+            suitable for non-parallel executions. SQLite does not support
+            concurrency.
         upsert : str
             Upsert mode. Options are 'ignore' and 'update' (default). If
             'ignore', the existing elements are ignored. If update, the
@@ -41,6 +42,10 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
             raise ValueError('upsert must be either "update" or "ignore"')
         if not isinstance(uri, Path):
             uri = Path(uri)
+        if not uri.parent.exists():
+            logger.info(f'Output directory ({uri.parent.as_posix()}) '
+                        'does not exist, creating')
+            uri.parent.mkdir(parents=True, exist_ok=True)
         super().__init__(uri, single_output=single_output)
         self._upsert = upsert
         self._valid_inputs = ['table', 'timeseries']
@@ -64,10 +69,13 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
         uri = f'sqlite:///{self.uri.parent}/{prefix}{self.uri.name}'
         return create_engine(uri, echo=False)
 
-    def list_features(self):
+    def list_features(self, return_df=False):
         meta_df = pd.read_sql(
             'meta', con=self.get_engine(), index_col='meta_md5')
-        return meta_df.to_dict(orient='index')
+        out = meta_df
+        if return_df is False:
+            out = meta_df.to_dict(orient='index')
+        return out
 
     def read_df(self, feature_name=None, feature_md5=None):
         """Read features from the storage.

@@ -161,15 +161,19 @@ class BaseFeatureStorage(ABC):
         raise NotImplementedError('validate_input not implemented')
 
     @abstractmethod
-    def list_features(self):
+    def list_features(self, return_df=False):
         """List the features in the storage
-
+        Parameters
+        ----------
+            return_df : bool
+            If True, return a dataframe. If False, (default) return a
+            dictionary
         Returns
         -------
-        features: dict(str, dict)
-            List of features in the storage. The keys are the feature names
-            to be used in read_features. The values are the metadata of each
-            feature
+        features: dict(str, dict) | pd.DataFrame
+            List of features in the storage. If dictionarly, the keys are the
+            feature names to be used in read_features. The values are the
+            metadata of each feature.
         """
         raise NotImplementedError('list_features not implemented')
 
