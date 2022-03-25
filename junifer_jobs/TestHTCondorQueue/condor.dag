@@ -1,30 +1,33 @@
-JOB job0 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job0 element=1
+JOB run0 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run0 element=1
 
-JOB job1 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job1 element=2
+JOB run1 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run1 element=2
 
-JOB job2 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job2 element=3
+JOB run2 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run2 element=3
 
-JOB job3 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job3 element=4
+JOB run3 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run3 element=4
 
-JOB job4 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job4 element=5
+JOB run4 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run4 element=5
 
-JOB job5 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job5 element=6
+JOB run5 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run5 element=6
 
-JOB job6 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job6 element=7
+JOB run6 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run6 element=7
 
-JOB job7 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job7 element=8
+JOB run7 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run7 element=8
 
-JOB job8 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job8 element=9
+JOB run8 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run8 element=9
 
-JOB job9 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/condor.submit
-VARS job9 element=10
+JOB run9 /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/run.submit
+VARS run9 element=10
+
+JOB collect /Users/fraimondo/dev/tbox/junifer/junifer_jobs/TestHTCondorQueue/collect.submit
+PARENT run0 run1 run2 run3 run4 run5 run6 run7 run8 run9 CHILD collect
 

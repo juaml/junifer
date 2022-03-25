@@ -9,6 +9,7 @@ import subprocess
 
 from .registry import build
 from ..utils import logger, raise_error
+from ..utils.fs import make_executable
 from ..datagrabber.base import BaseDataGrabber
 from ..markers.base import BaseMarker
 from ..storage.base import BaseFeatureStorage
@@ -142,32 +143,39 @@ def queue(config, kind, jobname='junifer_job', overwrite=False, elements=None,
 
 
 def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
-                  disk='1G', extra_preamble='', verbose='info', submit=False):
+                  disk='1G', extra_preamble='', verbose='info', collect=True,
+                  submit=False):
     logger.debug('Creating HTCondor job')
-    junifer_args = (f'run {yaml_config.as_posix()} '
-                    f'--verbose {verbose} --element $(element)')
+    run_junifer_args = (f'run {yaml_config.as_posix()} '
+                        f'--verbose {verbose} --element $(element)')
+    collect_junifer_args = \
+        f'collect {yaml_config.as_posix()} --verbose {verbose} '
+
+    # Set up the env_name, executable and arguments according to the
+    # environment type
     if env is None:
         env = {'kind': 'local'}
     if env['kind'] == 'conda':
         env_name = env['name']
         executable = 'run_conda.sh'
-        exec_string = f'{env_name} junifer {junifer_args}'
+        arguments = f'{env_name} junifer'
         # TODO: Copy run_conda.sh to job_dir
-        shutil.copy(Path(__file__).parent / 'res' / executable,
-                    job_dir / executable)
+        exec_path = job_dir / executable
+        shutil.copy(Path(__file__).parent / 'res' / executable, exec_path)
+        make_executable(exec_path)
     elif env['kind'] == 'venv':
         env_name = env['name']
         executable = 'run_venv.sh'
-        exec_string =  f'{env_name} junifer {junifer_args}'
+        arguments =  f'{env_name} junifer'
         # TODO: Copy run_venv.sh to job_dir
     elif env['kind'] == 'local':
         executable = 'junifer'
-        exec_string = junifer_args
+        arguments = ''
     else:
         raise ValueError(f'Unknown env kind: {env["kind"]}')
     log_dir = job_dir / 'logs'
     log_dir.mkdir(exist_ok=True, parents=True)
-    preamble = f"""
+    run_preamble = f"""
         # The environment
         universe = vanilla
         getenv = True
@@ -182,7 +190,7 @@ def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
         executable = $(initial_dir)/{executable}
         transfer_executable = False
 
-        arguments = {exec_string}
+        arguments = {arguments} {run_junifer_args}
 
         {extra_preamble}
 
@@ -192,19 +200,58 @@ def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
         error = {log_dir.as_posix()}/junifer_run_$(element).err
         """
 
-    submit_fname = job_dir / 'condor.submit'
+    submit_run_fname = job_dir / 'run.submit'
+    submit_collect_fname = job_dir / 'collect.submit'
     dag_fname = job_dir / 'condor.dag'
-    with open(submit_fname, 'w') as submit_file:
-        submit_file.write(preamble)
+
+    # Write to run submit files
+    with open(submit_run_fname, 'w') as submit_file:
+        submit_file.write(run_preamble)
+        submit_file.write('queue\n')
+
+    collect_preamble = f"""
+        # The environment
+        universe = vanilla
+        getenv = True
+
+        # Resources
+        request_cpus = {cpus}
+        request_memory = {mem}
+        request_disk = {disk}
+
+        # Executable
+        initial_dir = {job_dir.as_posix()}
+        executable = $(initial_dir)/{executable}
+        transfer_executable = False
+
+        arguments = {arguments} {collect_junifer_args}
+
+        {extra_preamble}
+
+        # Logs
+        log = {log_dir.as_posix()}/junifer_collect.log
+        output = {log_dir.as_posix()}/junifer_collect.out
+        error = {log_dir.as_posix()}/junifer_collect.err
+        """
+
+    # Now create the collect submit file
+    with open(submit_collect_fname, 'w') as submit_file:
+        submit_file.write(collect_preamble)  # Eval preamble here
         submit_file.write('queue\n')
 
     with open(dag_fname, 'w') as dag_file:
         # Get all subject and session names from file list
         for i_job, t_elem in enumerate(elements):
-            dag_file.write(f'JOB job{i_job} {submit_fname}\n')
-            dag_file.write(f'VARS job{i_job} element={t_elem}\n\n')
+            dag_file.write(f'JOB run{i_job} {submit_run_fname}\n')
+            dag_file.write(f'VARS run{i_job} element={t_elem}\n\n')
+        if collect is True:
+            dag_file.write(f'JOB collect {submit_collect_fname}\n')
+            dag_file.write('PARENT ')
+            for i_job, t_elem in enumerate(elements):
+                dag_file.write(f'run{i_job} ')
+            dag_file.write(f'CHILD collect\n\n')
 
-    if submit:
+    if submit is True:
         logger.info('Submitting HTCondor job')
         subprocess.run(['condor_submit_dag', dag_fname])
         logger.info('HTCondor job submitted')
