@@ -32,7 +32,9 @@ def cli():
 
 
 @cli.command()
-@click.argument('filepath', type=click.File('r'))
+@click.argument(
+    'filepath',
+    type=click.Path(exists=True, readable=True, dir_okay=False))
 @click.option('-v', '--verbose',
               type=click.Choice(['warning', 'info', 'debug'],
                                 case_sensitive=False),
@@ -52,7 +54,9 @@ def run(filepath, element, verbose):
 
 
 @cli.command()
-@click.argument('filepath', type=click.File('r'))
+@click.argument(
+    'filepath',
+    type=click.Path(exists=True, readable=True, dir_okay=False))
 @click.option('-v', '--verbose',
               type=click.Choice(['warning', 'info', 'debug'],
                                 case_sensitive=False),

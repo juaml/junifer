@@ -47,7 +47,7 @@ def test_MarkerCollection():
     mc.validate(dg)
 
     with dg:
-        input = dg[1]
+        input = dg['sub-01']
         out = mc.fit(input)
         assert out is not None
         assert isinstance(out, dict)
@@ -74,7 +74,7 @@ def test_MarkerCollection():
         datareader=DefaultDataReader())
     assert isinstance(mc2._datareader, DefaultDataReader)
     with dg:
-        input = dg[1]
+        input = dg['sub-01']
         out2 = mc2.fit(input)
         for t_marker in markers:
             t_name = t_marker.name
@@ -106,7 +106,7 @@ def test_MarkerCollection_storage():
         mc.validate(dg)
         assert mc._storage.uri == storage.uri
         with dg:
-            input = dg[1]
+            input = dg['sub-01']
             out = mc.fit(input)
             assert out is None
 
@@ -116,7 +116,7 @@ def test_MarkerCollection_storage():
         assert mc2._storage is None
 
         with dg:
-            input = dg[1]
+            input = dg['sub-01']
             out = mc2.fit(input)
 
         features = storage.list_features()

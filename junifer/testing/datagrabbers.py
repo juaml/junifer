@@ -16,11 +16,12 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
         super().__init__(types=types, datadir=datadir)
 
     def get_elements(self):
-        return list(range(1, 11))
+        return [f'sub-{x:02d}' for x in list(range(1, 11))]
 
     def __getitem__(self, element):
         out = {}
-        out['VBM_GM'] = self._dataset.gray_matter_maps[element - 1]
+        i_sub = int(element.split('-')[1]) - 1
+        out['VBM_GM'] = self._dataset.gray_matter_maps[i_sub]
         out['meta'] = {'element': {'subject': element}}
         return out
 

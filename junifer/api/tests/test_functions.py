@@ -41,7 +41,7 @@ def test_run():
             datagrabber=datagrabber,
             markers=markers,
             storage=storage,
-            elements=[1]
+            elements=['sub-01']
         )
 
         files = list(outdir.glob('*.db'))
@@ -52,7 +52,7 @@ def test_run():
             datagrabber=datagrabber,
             markers=markers,
             storage=storage,
-            elements=[1, 3]
+            elements=['sub-01', 'sub-03']
         )
 
         files = list(outdir.glob('*.db'))
