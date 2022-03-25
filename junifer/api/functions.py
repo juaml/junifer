@@ -106,18 +106,22 @@ def queue(config, kind, jobname='junifer_job', overwrite=False, elements=None,
     """
     # Create a folder within the CWD to store the job files / config
     cwd = Path.cwd()
-    job_dir = cwd / 'junifer_jobs' / jobname
-    logger.info(f'Creating job in {job_dir.as_posix()}')
-    if job_dir.exists():
+    jobdir = cwd / 'junifer_jobs' / jobname
+    logger.info(f'Creating job in {jobdir.as_posix()}')
+    if jobdir.exists():
         if overwrite is not True:
             raise_error(f'Job folder for {jobname} already exists. '
                         'This error is raise to prevent overwriting files '
                         'of jobs that might be scheduled but yet not '
                         'executed. Either delete the directory '
-                        f'{job_dir.as_posix()} or set overwrite to True.')
-    job_dir.mkdir(exist_ok=True, parents=True)
+                        f'{jobdir.as_posix()} or set overwrite to True.')
+        else:
+            logger.info(
+                f'Deleting previous job directory {jobdir.as_posix()}')
+            shutil.rmtree(jobdir)
+    jobdir.mkdir(exist_ok=True, parents=True)
 
-    yaml_config = job_dir / 'config.yaml'
+    yaml_config = jobdir / 'config.yaml'
     logger.info(f'Writing YAML config to {yaml_config}')
     with open(yaml_config, 'w') as f:
         f.write(yaml.dump(config))
@@ -133,18 +137,18 @@ def queue(config, kind, jobname='junifer_job', overwrite=False, elements=None,
             with datagrabber as dg:
                 elements = dg.get_elements()
     if kind == 'HTCondor':
-        _queue_condor(job_dir, yaml_config, elements, **kwargs)
+        _queue_condor(jobname, jobdir, yaml_config, elements, **kwargs)
     elif kind == 'SLURM':
-        _queue_slurm(job_dir, yaml_config, elements, **kwargs)
+        _queue_slurm(jobname, jobdir, yaml_config, elements, **kwargs)
     else:
         raise ValueError(f'Unknown queue kind: {kind}')
 
     logger.info('Queue done')
 
 
-def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
-                  disk='1G', extra_preamble='', verbose='info', collect=True,
-                  submit=False):
+def _queue_condor(jobname, jobdir, yaml_config, elements, env, mem='8G',
+                  cpus=1, disk='1G', extra_preamble='', verbose='info',
+                  collect=True, submit=False):
     logger.debug('Creating HTCondor job')
     run_junifer_args = (f'run {yaml_config.as_posix()} '
                         f'--verbose {verbose} --element $(element)')
@@ -159,21 +163,21 @@ def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
         env_name = env['name']
         executable = 'run_conda.sh'
         arguments = f'{env_name} junifer'
-        # TODO: Copy run_conda.sh to job_dir
-        exec_path = job_dir / executable
+        # TODO: Copy run_conda.sh to jobdir
+        exec_path = jobdir / executable
         shutil.copy(Path(__file__).parent / 'res' / executable, exec_path)
         make_executable(exec_path)
     elif env['kind'] == 'venv':
         env_name = env['name']
         executable = 'run_venv.sh'
         arguments =  f'{env_name} junifer'
-        # TODO: Copy run_venv.sh to job_dir
+        # TODO: Copy run_venv.sh to jobdir
     elif env['kind'] == 'local':
         executable = 'junifer'
         arguments = ''
     else:
         raise ValueError(f'Unknown env kind: {env["kind"]}')
-    log_dir = job_dir / 'logs'
+    log_dir = jobdir / 'logs'
     log_dir.mkdir(exist_ok=True, parents=True)
     run_preamble = f"""
         # The environment
@@ -186,7 +190,7 @@ def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
         request_disk = {disk}
 
         # Executable
-        initial_dir = {job_dir.as_posix()}
+        initial_dir = {jobdir.as_posix()}
         executable = $(initial_dir)/{executable}
         transfer_executable = False
 
@@ -200,9 +204,9 @@ def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
         error = {log_dir.as_posix()}/junifer_run_$(element).err
         """
 
-    submit_run_fname = job_dir / 'run.submit'
-    submit_collect_fname = job_dir / 'collect.submit'
-    dag_fname = job_dir / 'condor.dag'
+    submit_run_fname = jobdir / f'run_{jobname}.submit'
+    submit_collect_fname = jobdir / f'collect_{jobname}.submit'
+    dag_fname = jobdir / f'{jobname}.dag'
 
     # Write to run submit files
     with open(submit_run_fname, 'w') as submit_file:
@@ -220,7 +224,7 @@ def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
         request_disk = {disk}
 
         # Executable
-        initial_dir = {job_dir.as_posix()}
+        initial_dir = {jobdir.as_posix()}
         executable = $(initial_dir)/{executable}
         transfer_executable = False
 
@@ -243,7 +247,7 @@ def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
         # Get all subject and session names from file list
         for i_job, t_elem in enumerate(elements):
             dag_file.write(f'JOB run{i_job} {submit_run_fname}\n')
-            dag_file.write(f'VARS run{i_job} element={t_elem}\n\n')
+            dag_file.write(f'VARS run{i_job} element="{t_elem}"\n\n')
         if collect is True:
             dag_file.write(f'JOB collect {submit_collect_fname}\n')
             dag_file.write('PARENT ')
@@ -255,7 +259,11 @@ def _queue_condor(job_dir, yaml_config, elements, env, mem='8G', cpus=1,
         logger.info('Submitting HTCondor job')
         subprocess.run(['condor_submit_dag', dag_fname])
         logger.info('HTCondor job submitted')
+    else:
+        cmd = f'condor_submit_dag {dag_fname.as_posix()}'
+        logger.info('HTCondor job files created, to submit the job, '
+                    f'run "{cmd}"')
 
 
-def _queue_slurm(job_dir, yaml_config, elements):
+def _queue_slurm(jobname, jobdir, yaml_config, elements):
     pass

@@ -111,9 +111,10 @@ class BaseDataGrabber(ABC):
         for elem in self.get_elements():
             yield elem
 
-    @abstractmethod
     def __getitem__(self, element):
-        raise NotImplementedError('__getitem__ not implemented')
+        out = {}
+        out['meta'] = dict(datagrabber=self.get_meta())
+        return out
 
     @abstractmethod
     def get_elements(self):
@@ -196,7 +197,7 @@ class BIDSDataGrabber(BaseDataGrabber):
             Dictionary of paths for each type of data required for the
             specified element.
         """
-        out = {}
+        out = super().__getitem__(element)
         if not isinstance(element, tuple):
             element = (element,)
         for t_type in self.types:
@@ -208,7 +209,6 @@ class BIDSDataGrabber(BaseDataGrabber):
             t_out = self.datadir / element[0] / t_replace
             out[t_type] = dict(path=t_out)
         # Meta here is element and types
-        out['meta'] = dict(datagrabber=self.get_meta())
         out['meta']['element'] = {'subject': element[0]}
         if len(element) > 1:
             out['meta']['element']['session'] = element[1]  # type: ignore
