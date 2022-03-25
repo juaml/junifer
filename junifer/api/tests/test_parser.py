@@ -27,7 +27,8 @@ def test_parse_yaml():
         contents = parse_yaml(fname)
         assert 'foo' in contents
         assert 'bar' == contents['foo']
-        assert 'with' not in contents
+        assert 'with' in contents
+        assert 'numpy' in contents['with']
 
         assert 'junifer.configs.wrong_config' not in sys.modules
 

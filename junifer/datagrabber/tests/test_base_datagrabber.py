@@ -29,8 +29,11 @@ def test_BaseDataGrabber():
             return super().get_elements()
 
     dg = MyDataGrabber(datadir='/tmp', types=['func'])
-    with pytest.raises(NotImplementedError):
-        dg['elem']
+    elem = dg['elem']
+    assert 'meta' in elem
+    assert 'datagrabber' in elem['meta']
+    assert 'class' in elem['meta']['datagrabber']
+    assert MyDataGrabber.__name__ in elem['meta']['datagrabber']['class']
 
     with pytest.raises(NotImplementedError):
         dg.get_elements()
