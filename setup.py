@@ -25,6 +25,8 @@ def _getversion():
 DOWNLOAD_URL = 'https://github.com/juaml/junifer'
 URL = 'https://juaml.github.io/junifer'
 
+# TODO: Read requirementes from requirements.txt and use them
+
 setuptools.setup(
     name='junifer',
     author='Fede Raimondo',
