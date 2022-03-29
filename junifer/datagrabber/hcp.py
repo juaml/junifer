@@ -70,15 +70,6 @@ class HCP1200(PatternDataGrabber):
         if self.phase_encodings is None:
             self.phase_encodings = ['LR', 'RL']
 
-        repl_tasks = []
-        for t in self.tasks:
-            if 'REST' in t:
-                repl_tasks.append(f'rfMRI_{t}')
-            else:
-                repl_tasks.append(f'tfMRI_{t}')
-
-        self.tasks = repl_tasks
-
     def get_elements(self):
         """Get the list of subjects in the dataset.
 
@@ -116,23 +107,15 @@ class HCP1200(PatternDataGrabber):
 
         sub, task, phase_encoding = element
 
-        out = super().__getitem__(element)
+        if "REST" in task:
+            new_task = f'rfMRI_{task}'
+        else:
+            new_task = f'tfMRI_{task}'
 
-        self.tasks = [x.split("_")[1] for x in self.tasks]
-
-        out['meta'] = dict(datagrabber=self.get_meta())
+        out = super().__getitem__((sub, new_task, phase_encoding))
         out['meta']['element'] = dict(
             subject=sub, task=task, phase_encoding=phase_encoding
         )
-
-        repl_tasks = []
-        for t in self.tasks:
-            if 'REST' in t:
-                repl_tasks.append(f'rfMRI_{t}')
-            else:
-                repl_tasks.append(f'tfMRI_{t}')
-
-        self.tasks = repl_tasks
 
         return out
 
