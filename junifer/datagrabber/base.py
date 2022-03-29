@@ -252,8 +252,8 @@ class PatternDataGrabber(BaseDataGrabber):
                 t_matches = list(self.datadir.glob(t_replace))
                 if len(t_matches) > 1:
                     raise_error(
-                        f'More than one file matches for {element} / {t_type}: '
-                        f'{t_matches}')
+                        f'More than one file matches for {element} / {t_type}:'
+                        f' {t_matches}')
                 elif len(t_matches) == 0:
                     raise_error(f'No file matches for {element} / {t_type}')
                 t_out = t_matches[0]
