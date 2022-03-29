@@ -38,8 +38,8 @@ class HCP1200(PatternDataGrabber):
         replacements = ['subject', 'task', 'phase_encoding']
         patterns = {
             'BOLD': ('{subject}/MNINonLinear/Results/'
-                     '*fMRI_{task}_{phase_encoding}/'
-                     '*fMRI_{task}_{phase_encoding}_hp2000_clean.nii.gz')
+                     '{task}_{phase_encoding}/'
+                     '{task}_{phase_encoding}_hp2000_clean.nii.gz')
         }
         super().__init__(
             types=types, datadir=datadir, patterns=patterns,
@@ -68,7 +68,16 @@ class HCP1200(PatternDataGrabber):
             ]
 
         if self.phase_encodings is None:
-            self.phase_encodings = ["LR", "RL"]
+            self.phase_encodings = ['LR', 'RL']
+
+        repl_tasks = []
+        for t in self.tasks:
+            if 'REST' in t:
+                repl_tasks.append(f'rfMRI_{t}')
+            else:
+                repl_tasks.append(f'tfMRI_{t}')
+
+        self.tasks = repl_tasks
 
     def get_elements(self):
         """Get the list of subjects in the dataset.
@@ -88,9 +97,48 @@ class HCP1200(PatternDataGrabber):
 
         return elems
 
+    def __getitem__(self, element):
+        """Index one element in the dataset.
+
+        Parameters
+        ----------
+        element : tuple[str, str]
+            The element to be indexed. First element in the tuple is the
+            subject, second element is the task, third element is the
+            phase encoding direction.
+
+        Returns
+        -------
+        out : dict[str -> Path]
+            Dictionary of paths for each type of data required for the
+            specified element.
+        """
+
+        sub, task, phase_encoding = element
+
+        out = super().__getitem__(element)
+
+        self.tasks = [x.split("_")[1] for x in self.tasks]
+
+        out['meta'] = dict(datagrabber=self.get_meta())
+        out['meta']['element'] = dict(
+            subject=sub, task=task, phase_encoding=phase_encoding
+        )
+
+        repl_tasks = []
+        for t in self.tasks:
+            if 'REST' in t:
+                repl_tasks.append(f'rfMRI_{t}')
+            else:
+                repl_tasks.append(f'tfMRI_{t}')
+
+        self.tasks = repl_tasks
+
+        return out
+
 
 @register_datagrabber
-class DataladHCP1200(HCP1200, DataladDataGrabber):
+class DataladHCP1200(DataladDataGrabber, HCP1200,):
     def __init__(self, datadir=None, tasks=None, phase_encodings=None):
         uri = (
             'https://github.com/datalad-datasets/'
