@@ -8,7 +8,7 @@ import datalad.api as dl
 from abc import ABC, abstractmethod
 
 from ..api.decorators import register_datagrabber
-from ..utils.logging import logger, raise_error
+from ..utils.logging import logger, raise_error, warn
 
 
 def _validate_types(types):
@@ -20,6 +20,22 @@ def _validate_types(types):
     if any(not isinstance(x, str) for x in types):
         raise_error(
             "types must be a list of strings", TypeError)  # type: ignore
+
+
+def _validate_replacements(replacements, patterns):
+    """
+    Validate the replacements
+    """
+    if not isinstance(replacements, list):
+        raise_error("replacements must be a list", TypeError)  # type: ignore
+    if any(not isinstance(x, str) for x in replacements):
+        raise_error(
+            "replacements must be a list of strings",
+            TypeError)  # type: ignore
+
+    for x in replacements:
+        if all(f'{{x}}' not in y for y in patterns.values()):
+            warn(f"Replacement {x} is not part of any pattern")
 
 
 def _validate_patterns(types, patterns):
@@ -73,6 +89,9 @@ class BaseDataGrabber(ABC):
         _validate_types(types)
         if not isinstance(datadir, Path):
             datadir = Path(datadir)
+        logger.debug('Initializing BaseDataGrabber')
+        logger.debug(f'\t_datadir = {datadir}')
+        logger.debug(f'\ttypes = {types}')
         self._datadir = datadir
         self.types = types
 
@@ -112,13 +131,16 @@ class BaseDataGrabber(ABC):
             yield elem
 
     def __getitem__(self, element):
+        logger.info(f'Getting element {element}')
         out = {}
         out['meta'] = dict(datagrabber=self.get_meta())
         return out
 
     @abstractmethod
     def get_elements(self):
-        raise NotImplementedError('get_elements not implemented')
+        raise_error(
+            'get_elements not implemented',
+            NotImplementedError)  # type: ignore
 
     def __enter__(self):
         return self
@@ -128,34 +150,37 @@ class BaseDataGrabber(ABC):
 
 
 @register_datagrabber
-class BIDSDataGrabber(BaseDataGrabber):
-    """BIDS DataGrabber class. Implements a DataGrabber that understands BIDS
-    database format.
+class PatternDataGrabber(BaseDataGrabber):
+    """Patternd DataGrabber class (abstract). Implements a DataGrabber that
+    understands patterns to grab data.
 
     Attributes
     ----------
-    datadir
-    types : list
+    datadir: Path
+        Directory where the data is stored
+    types : list[str]
         List of data types to be grabbed.
     patterns : dict[str -> str]
         Patterns for each type of data.
+    replacements: list[str]
+        Replacements in the patterns for each item in the `element` tuple.
 
     Methods
     -------
     get_elements: list[str]
         Returns a list of elements that can be grabbed. Each element is a
         subject in the BIDS database.
-    __getitem__(str): dict[str -> Path]
+    __getitem__(str): dict[str -> dict]
         Returns a dictionary of paths for each type of data required for the
         specified element. Each occurrence of the string `{subject}` is
         replaced by the indexed element
     """
-    def __init__(self, types=None, patterns=None, **kwargs):
+    def __init__(self, types=None, patterns=None, replacements=None, **kwargs):
         """Initialize a BaseDataGrabber object.
 
         Parameters
         ----------
-        types : list of str
+        types : list[str]
             The types of data to be grabbed.
         patterns : dict[str -> str]
             Patterns for each type of data. The keys are the types and the
@@ -165,32 +190,52 @@ class BIDSDataGrabber(BaseDataGrabber):
             That directory where the data is/will be stored.
         """
         _validate_patterns(types, patterns)
+        if not isinstance(replacements, list):
+            replacements = [replacements]
+        _validate_replacements(replacements, patterns)
         super().__init__(types=types, **kwargs)
+        logger.debug('Initializing PatternDataGrabber')
+        logger.debug(f'\tpatterns = {patterns}')
+        logger.debug(f'\treplacements = {replacements}')
         self.patterns = patterns
+        self.replacements = replacements
 
-    def get_elements(self):
-        """Get all the elements in the BIDS database
+    def _replace_patterns(self, element, pattern):
+        """Replace the patterns in the pattern with the element.
+
+        Parameters
+        ----------
+        element : tuple
+            The element to be used in the replacement.
+        pattern : str
+            The pattern to be replaced.
 
         Returns
         -------
-        elems : list[str]
-            List of all the elements in the database root directory
+        str
+            The pattern with the element replaced.
         """
-        elems = [x.name for x in self.datadir.iterdir() if x.is_dir()]
-        return elems
+        if len(element) != len(self.replacements):
+            raise_error(
+                f'The element lenght must be {len(self.replacements)}, '
+                f'indicating {self.replacements}')
+        to_replace = dict(zip(self.replacements, element))
+        return pattern.format(**to_replace)
 
     def __getitem__(self, element):
-        """Index one element in the BIDS database.
+        """Index one element in the database.
 
-        Each occurrence of the string `{subject}` is replaced by the indexed
-        element.
+        Each occurrence of the strings in `replacements` is replaced by the
+        corresponding item in the element tuple.
 
         Parameters
         ----------
         element : str or tuple
             The element to be indexed. If one string is provided, it is
-            assumed to be a subject. If a tuple is provided, it is assumed to
-            be a (subject, session) pair.
+            assumed to be a tuple with only one item. If a tuple is provided,
+            each item in the tuple is the value for the replacement string
+            specified in `replacements`.
+
         Returns
         -------
         out : dict[str -> Path]
@@ -202,24 +247,19 @@ class BIDSDataGrabber(BaseDataGrabber):
             element = (element,)
         for t_type in self.types:
             t_pattern = self.patterns[t_type]  # type: ignore
-            t_replace = t_pattern.replace('{subject}', element[0])
-            if len(element) > 1:
-                t_replace = t_replace.replace(
-                    '{session}', element[1])  # type: ignore
+            t_replace = self._replace_patterns(element, t_pattern)
             t_out = self.datadir / element[0] / t_replace
             out[t_type] = dict(path=t_out)
         # Meta here is element and types
-        out['meta']['element'] = {'subject': element[0]}
-        if len(element) > 1:
-            out['meta']['element']['session'] = element[1]  # type: ignore
+        out['meta']['element'] = dict(zip(self.replacements, element))
         return out
 
 
 @register_datagrabber
 class DataladDataGrabber(BaseDataGrabber):
     """
-    Datalad DataGrabber class. Implements a DataGrabber that gets data from
-    a datalad sibling.
+    Datalad DataGrabber class (abstract). Implements a DataGrabber that gets
+    data from a datalad sibling.
 
     Attributes
     ----------
@@ -267,6 +307,9 @@ class DataladDataGrabber(BaseDataGrabber):
             datadir = tempfile.mkdtemp()
             logger.info(f'datadir set to {datadir}')
         super().__init__(datadir=datadir, **kwargs)
+        logger.debug('Initializing DataladDataGrabber')
+        logger.debug(f'\turi = {uri}')
+        logger.debug(f'\t_rootdir = {rootdir}')
         self.uri = uri
         self._rootdir = rootdir
 
@@ -280,11 +323,15 @@ class DataladDataGrabber(BaseDataGrabber):
 
     def install(self):
         """Install the datalad dataset into the datadir."""
+        logger.debug(f'Installing dataset {self.uri} to {self._datadir}')
         self.dataset = dl.install(  # type: ignore
             self._datadir, source=self.uri)
+        logger.debug('Dataset installed')
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
+        logger.debug('Removing dataset')
         self.remove()
+        logger.debug('Dataset removed')
 
     def remove(self):
         """Remove the datalad dataset from the datadir."""
@@ -293,7 +340,9 @@ class DataladDataGrabber(BaseDataGrabber):
     def _dataset_get(self, out):
         for _, v in out.items():
             if 'path' in v:
+                logger.debug(f'Getting {v["path"]}')
                 self.dataset.get(v['path'])
+                logger.debug(f'Get done')
 
         # append the version of the dataset
         out['meta']['datagrabber']['dataset_commit_id'] = \
@@ -314,15 +363,16 @@ class DataladDataGrabber(BaseDataGrabber):
         return out
 
 
-class BIDSDataladDataGrabber(DataladDataGrabber, BIDSDataGrabber):
-    """BIDS Datalad DataGrabber class.
-    Implements a DataGrabber that gets data from a datalad sibling which
-    follows a BIDS format.
+class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
+    """Pattern-based Datalad DataGrabber class (abstract).
+    Implements a DataGrabber that gets data from a datalad sibling,
+    interpreting patterns.
+
 
     See Also
     --------
     DataladDataGrabber
-    BIDSDataGrabber
+    PatternDataGrabber
 
     """
     def __init__(self, types=None, patterns=None, **kwargs):

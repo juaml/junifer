@@ -126,7 +126,8 @@ def configure_logging(level='WARNING', fname=None, overwrite=None,
     """
     _close_handlers(logger)
     if output_format is None:
-        output_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        output_format = ('%(asctime)s [%(levelname)8s] %(message)s '
+                         '(%(filename)s:%(lineno)s)')
     formatter = logging.Formatter(output_format)
 
     if fname is not None:

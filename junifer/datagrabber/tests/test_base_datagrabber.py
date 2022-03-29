@@ -4,8 +4,8 @@
 import tempfile
 import pytest
 from pathlib import Path
-from junifer.datagrabber.base import BIDSDataGrabber, BIDSDataladDataGrabber, \
-    BaseDataGrabber
+from junifer.datagrabber.base import (PatternDataGrabber, BaseDataGrabber,
+                                      PatternDataladDataGrabber)
 
 
 _testing_dataset = {
@@ -43,60 +43,98 @@ def test_BaseDataGrabber():
         assert dg.types == ['func']
 
 
-def test_BIDSDataGrabber():
-    """Test BIDSDataGrabber"""
+def test_PatternDataGrabber():
+    class MyDataGrabber(PatternDataGrabber):
+        def get_elements(self):
+            return super().get_elements()
+
+    """Test test_PatternDataGrabber"""
     with pytest.raises(TypeError, match=r"types must be a list"):
-        BIDSDataGrabber(datadir='/tmp', types='wrong',
-                        patterns=dict(wrong='pattern'))
+        MyDataGrabber(datadir='/tmp', types='wrong',
+                      patterns=dict(wrong='pattern'),
+                      replacements='subject')
 
     with pytest.raises(TypeError, match=r"must be a list of strings"):
-        BIDSDataGrabber(datadir='/tmp', types=[1, 2, 3],
-                        patterns={'1': 'pattern', '2': 'pattern',
-                                  '3': 'pattern'})
+        MyDataGrabber(datadir='/tmp', types=[1, 2, 3],
+                      patterns={'1': 'pattern', '2': 'pattern',
+                                '3': 'pattern'},
+                      replacements='subject')
 
-    datagrabber = BIDSDataGrabber(
-        datadir='/tmp/data', types=['func', 'anat'],
-        patterns=dict(func='pattern1', anat='pattern2'))
-    assert datagrabber.datadir == Path('/tmp/data')
-    assert datagrabber.types == ['func', 'anat']
-
-    datagrabber = BIDSDataGrabber(
-        datadir=Path('/tmp/data'), types=['func', 'anat'],
-        patterns=dict(func='pattern1', anat='pattern2'))
-    assert datagrabber.datadir == Path('/tmp/data')
-    assert datagrabber.types == ['func', 'anat']
+    with pytest.raises(ValueError, match=r"must have the same length"):
+        MyDataGrabber(datadir='/tmp', types=['func', 'anat'],
+                      patterns={'1': 'pattern', '2': 'pattern',
+                                '3': 'pattern'},
+                      replacements=1)
 
     with pytest.raises(TypeError, match=r"patterns must be a dict"):
-        BIDSDataGrabber(datadir='/tmp', types=['func', 'anat'],
-                        patterns='wrong')
+        MyDataGrabber(datadir='/tmp', types=['func', 'anat'],
+                      patterns='wrong', replacements='subject')
 
     with pytest.raises(ValueError,
                        match=r"patterns must have the same length"):
-        BIDSDataGrabber(datadir='/tmp', types=['func', 'anat'],
-                        patterns={'wrong': 'pattern'})
+        MyDataGrabber(datadir='/tmp', types=['func', 'anat'],
+                      patterns={'wrong': 'pattern'}, replacements='subject')
 
     with pytest.raises(ValueError, match=r"patterns must contain all types"):
-        BIDSDataGrabber(datadir='/tmp', types=['func', 'anat'],
-                        patterns={'wrong': 'pattern', 'func': 'pattern'})
+        MyDataGrabber(datadir='/tmp', types=['func', 'anat'],
+                      patterns={'wrong': 'pattern', 'func': 'pattern'},
+                      replacements='subject')
+
+    with pytest.raises(TypeError, match=r"must be a list of strings"):
+        MyDataGrabber(datadir='/tmp', types=['func', 'anat'],
+                      patterns={'func': 'func/test', 'anat': 'anat/test'},
+                      replacements=1)
+
+    with pytest.warns(RuntimeWarning, match=r"not part of any pattern"):
+        MyDataGrabber(datadir='/tmp', types=['func', 'anat'],
+                      patterns={'func': 'func/{subject}.nii',
+                                'anat': 'anat/{subject}.nii'},
+                      replacements=['subject', 'wrong'])
+
+    datagrabber = MyDataGrabber(
+        datadir='/tmp/data', types=['func', 'anat'],
+        patterns={'func': 'func/{subject}.nii',
+                  'anat': 'anat/{subject}.nii'},
+        replacements='subject')
+    assert datagrabber.datadir == Path('/tmp/data')
+    assert datagrabber.types == ['func', 'anat']
+    assert datagrabber.replacements == ['subject']
+
+    datagrabber = MyDataGrabber(
+        datadir=Path('/tmp/data'), types=['func', 'anat'],
+        patterns={'func': 'func/{subject}.nii',
+                  'anat': 'anat/{subject}_{session}.nii'},
+        replacements=['subject', 'session'])
+    assert datagrabber.datadir == Path('/tmp/data')
+    assert datagrabber.types == ['func', 'anat']
+    assert datagrabber.replacements == ['subject', 'session']
 
 
-def test_BIDSDataladDataGrabber():
-    """Test BIDSDataladDataGrabber"""
+def test_bids_datalad_PatternDataGrabber():
+    """Test a subject-based BIDS datalad datagrabber"""
     types = ['T1w', 'bold']
     patterns = {
         'T1w': 'anat/{subject}_T1w.nii.gz',
         'bold': 'func/{subject}_task-rest_bold.nii.gz'
     }
+    replacements = ['subject']
+
+    class MyDataGrabber(PatternDataladDataGrabber):
+        def get_elements(self):
+            elems = [x.name for x in self.datadir.iterdir() if x.is_dir()]
+            return elems
 
     with pytest.raises(ValueError, match=r"uri must be provided"):
-        BIDSDataladDataGrabber(datadir=None, types=types, patterns=patterns)
+        MyDataGrabber(datadir=None, types=types, patterns=patterns,
+                      replacements=replacements)
 
     repo_uri =  _testing_dataset['example_bids']['uri']
     rootdir = 'example_bids'
     repo_commit =  _testing_dataset['example_bids']['id']
 
-    with BIDSDataladDataGrabber(rootdir=rootdir, uri=repo_uri,
-                                types=types, patterns=patterns) as dg:
+    with MyDataGrabber(rootdir=rootdir, uri=repo_uri,
+                       types=types, patterns=patterns,
+                       replacements=replacements) as dg:
         subs = [x for x in dg]
         expected_subs = [f'sub-{i:02d}' for i in range(1, 10)]
         assert set(subs) == set(expected_subs)
@@ -114,7 +152,7 @@ def test_BIDSDataladDataGrabber():
             assert 'datagrabber' in t_sub['meta']
             dg_meta = t_sub['meta']['datagrabber']
             assert 'class' in dg_meta
-            assert dg_meta['class'] == 'BIDSDataladDataGrabber'
+            assert dg_meta['class'] == 'MyDataGrabber'
             assert 'uri' in dg_meta
             assert dg_meta['uri'] == repo_uri
             assert 'dataset_commit_id' in dg_meta
@@ -125,7 +163,7 @@ def test_BIDSDataladDataGrabber():
 
     with tempfile.TemporaryDirectory() as tmpdir:
         datadir = Path(tmpdir) / 'dataset'  # Need this for testing
-        with BIDSDataladDataGrabber(rootdir=rootdir, uri=repo_uri,
-                                    types=types, patterns=patterns,
-                                    datadir=datadir) as dg:
+        with MyDataGrabber(rootdir=rootdir, uri=repo_uri,
+                           types=types, patterns=patterns,
+                           datadir=datadir, replacements=replacements) as dg:
             assert dg.datadir == datadir / rootdir

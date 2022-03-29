@@ -1,13 +1,11 @@
-import os
-from itertools import product
-from pathlib import Path
-from ..datagrabber import DataladDataGrabber
+from ..datagrabber import PatternDataladDataGrabber
 from ..api.decorators import register_datagrabber
+from ..utils import logger
 
 
 @register_datagrabber
-class JuselessUKBVBM(DataladDataGrabber):
-    """Juseless UKB VMG DataGrabber class.
+class JuselessDataladUKBVBM(PatternDataladDataGrabber):
+    """Juseless UKB VBM DataGrabber class.
 
     Implements a DataGrabber to access the UKB VBM data in Juseless.
 
@@ -26,8 +24,13 @@ class JuselessUKBVBM(DataladDataGrabber):
         uri = 'ria+http://ukb.ds.inm7.de#~cat_m0wp1'
         rootdir = 'm0wp1'
         types = ['VBM_GM']
+        replacements = ['subject', 'session']
+        patterns = {
+            'VBM_GM': 'm0wp1{subject}_{session}_T1w.nii.gz'
+        }
         super().__init__(
-            types=types, datadir=datadir, uri=uri, rootdir=rootdir)
+            types=types, datadir=datadir, uri=uri, rootdir=rootdir,
+            replacements=replacements, patterns=patterns)
 
     def get_elements(self):
         """Get the list of subjects in the dataset.
@@ -37,6 +40,7 @@ class JuselessUKBVBM(DataladDataGrabber):
         elements : list[str]
             The list of subjects in the dataset.
         """
+        logger.debug('Getting the list of subjects in the dataset')
         elems = []
         for x in self.datadir.glob('*._T1w.nii.gz'):
             sub, ses = x.name.split('_')
@@ -45,164 +49,140 @@ class JuselessUKBVBM(DataladDataGrabber):
             elems.append((sub, ses))
         return elems
 
-    def __getitem__(self, element):
-        """Index one element in the dataset.
 
-        Parameters
-        ----------
-        element : tuple[str, str]
-            The element to be indexed. First element in the tuple is the
-            subject, second element is the session.
+# @register_datagrabber
+# class HCP1200(PatternDataGrabber):
+#     """ Human Connectome Project Datalad DataGrabber class
 
-        Returns
-        -------
-        out : dict[str -> Path]
-            Dictionary of paths for each type of data required for the
-            specified element.
-        """
-        sub, ses = element
-        out = {}
+#     Implements a DataGrabber to access the Human Connectome Project
 
-        out['VBM_GM'] = self.datadir / f'm0wp1{sub}_{ses}_T1w.nii.gz'
-        out['meta'] = dict(datagrabber=self.get_meta())
-        self._dataset_get(out)
-        out['meta']['element'] = dict(subject=sub, session=ses)
-        return out
+#     """
 
+#     def __init__(
+#         self, datadir=None, subjects=None, tasks=None, phase_encodings=None
+#     ):
+#         """Initialize a HCP object.
 
-@register_datagrabber
-class HCP1200(DataladDataGrabber):
-    """ Human Connectome Project Datalad DataGrabber class
+#         Parameters
+#         ----------
+#         datadir : str or Path
+#             That directory where the datalad dataset will be cloned. If None,
+#             (default), the datalad dataset will be cloned into a temporary
+#             directory.
+#         subjects : str or list of strings
+#             HCP subject ID's. If 'None' (default), all available subjects are
+#             selected
+#         tasks : str or list of strings
+#             HCP task sessions. If 'None' (default), all available task
+#             sessions are selected. Can be 'REST1', 'REST2', 'SOCIAL', 'WM',
+#             'RELATIONAL', 'EMOTION', 'LANGUAGE', 'GAMBLING', 'MOTOR', or a
+#             list consisting of these names.
+#         phase_encoding : str or list of strings
+#             HCP phase encoding directions. Can be 'LR' or 'RL'. If 'None'
+#             (default) both will be used.
 
-    Implements a DataGrabber to access the Human Connectome Project
+#         """
+#         uri = (
+#             'https://github.com/datalad-datasets/'
+#             'human-connectome-project-openaccess.git'
+#         )
+#         rootdir = 'HCP1200'
+#         types = ['BOLD']
+#         super().__init__(
+#             types=types, datadir=datadir, uri=uri, rootdir=rootdir
+#         )
 
-    """
+#         self.subjects = subjects
+#         self.tasks = tasks
+#         self.phase_encodings = phase_encodings
 
-    def __init__(
-        self, datadir=None, subjects=None, tasks=None, phase_encodings=None
-    ):
-        """Initialize a HCP object.
+#         if isinstance(self.subjects, str):
+#             self.subjects = [self.subjects]
+#         if isinstance(self.tasks, str):
+#             self.tasks = [self.tasks]
+#         if isinstance(self.phase_encodings, str):
+#             self.phase_encodings = [self.phase_encodings]
 
-        Parameters
-        ----------
-        datadir : str or Path
-            That directory where the datalad dataset will be cloned. If None,
-            (default), the datalad dataset will be cloned into a temporary
-            directory.
-        subjects : str or list of strings
-            HCP subject ID's. If 'None' (default), all available subjects are
-            selected
-        tasks : str or list of strings
-            HCP task sessions. If 'None' (default), all available task
-            sessions are selected. Can be 'REST1', 'REST2', 'SOCIAL', 'WM',
-            'RELATIONAL', 'EMOTION', 'LANGUAGE', 'GAMBLING', 'MOTOR', or a
-            list consisting of these names.
-        phase_encoding : str or list of strings
-            HCP phase encoding directions. Can be 'LR' or 'RL'. If 'None'
-            (default) both will be used.
+#         if self.tasks is None:
+#             self.tasks = [
+#                 'REST1',
+#                 'REST2',
+#                 'SOCIAL',
+#                 'WM',
+#                 'RELATIONAL',
+#                 'EMOTION',
+#                 'LANGUAGE',
+#                 'GAMBLING',
+#                 'MOTOR',
+#             ]
 
-        """
-        uri = (
-            'https://github.com/datalad-datasets/'
-            'human-connectome-project-openaccess.git'
-        )
-        rootdir = 'HCP1200'
-        types = ['BOLD']
-        super().__init__(
-            types=types, datadir=datadir, uri=uri, rootdir=rootdir
-        )
+#         if self.phase_encodings is None:
+#             self.phase_encodings = ["LR", "RL"]
 
-        self.subjects = subjects
-        self.tasks = tasks
-        self.phase_encodings = phase_encodings
+#     def get_elements(self):
+#         """Get the list of subjects in the dataset.
 
-        if isinstance(self.subjects, str):
-            self.subjects = [self.subjects]
-        if isinstance(self.tasks, str):
-            self.tasks = [self.tasks]
-        if isinstance(self.phase_encodings, str):
-            self.phase_encodings = [self.phase_encodings]
+#         Returns
+#         -------
+#         elements : list[str]
+#             The list of subjects in the dataset.
+#         """
+#         elems = []
 
-        if self.tasks is None:
-            self.tasks = [
-                'REST1',
-                'REST2',
-                'SOCIAL',
-                'WM',
-                'RELATIONAL',
-                'EMOTION',
-                'LANGUAGE',
-                'GAMBLING',
-                'MOTOR',
-            ]
+#         if self.subjects is None:
+#             self.subjects = os.listdir(self.datadir)
 
-        if self.phase_encodings is None:
-            self.phase_encodings = ["LR", "RL"]
+#         for subject, task, phase_encoding in product(
+#             self.subjects, self.tasks, self.phase_encodings
+#         ):
+#             elems.append((subject, task, phase_encoding))
 
-    def get_elements(self):
-        """Get the list of subjects in the dataset.
+#         return elems
 
-        Returns
-        -------
-        elements : list[str]
-            The list of subjects in the dataset.
-        """
-        elems = []
+#     def __getitem__(self, element):
+#         """Index one element in the dataset.
 
-        if self.subjects is None:
-            self.subjects = os.listdir(self.datadir)
+#         Parameters
+#         ----------
+#         element : tuple[str, str]
+#             The element to be indexed. First element in the tuple is the
+#             subject, second element is the task, third element is the
+#             phase encoding direction.
 
-        for subject, task, phase_encoding in product(
-            self.subjects, self.tasks, self.phase_encodings
-        ):
-            elems.append((subject, task, phase_encoding))
+#         Returns
+#         -------
+#         out : dict[str -> Path]
+#             Dictionary of paths for each type of data required for the
+#             specified element.
+#         """
+#         sub, task, phase_encoding = element
+#         out = {}
 
-        return elems
+#         if 'REST' in task:
+#             task_name = f'rfMRI_{task}'
+#         else:
+#             task_name = f'tfMRI_{task}'
 
-    def __getitem__(self, element):
-        """Index one element in the dataset.
+#         out['BOLD'] = dict(
+#             path=self.datadir / sub / 'MNINonLinear' / 'Results' /
+#             f'{task_name}_{phase_encoding}' /
+#             f'{task_name}_{phase_encoding}_hp2000_clean.nii.gz'
+#         )
 
-        Parameters
-        ----------
-        element : tuple[str, str]
-            The element to be indexed. First element in the tuple is the
-            subject, second element is the task, third element is the
-            phase encoding direction.
+#         conf_dir = (
+#             Path('/data') / 'group' / 'appliedml' /
+#             'data' / 'HCP1200_Confounds_tsv'
+#         )
+#         out['BOLD']['confounds'] = (
+#             conf_dir / sub / 'MNINonLinear' / 'Results' /
+#             f'{task_name}_{phase_encoding}' / f'Confounds_{sub}.tsv'
+#         )
 
-        Returns
-        -------
-        out : dict[str -> Path]
-            Dictionary of paths for each type of data required for the
-            specified element.
-        """
-        sub, task, phase_encoding = element
-        out = {}
+#         out['meta'] = dict(datagrabber=self.get_meta())
+#         self._dataset_get(out)
 
-        if 'REST' in task:
-            task_name = f'rfMRI_{task}'
-        else:
-            task_name = f'tfMRI_{task}'
+#         out['meta']['element'] = dict(
+#             subject=sub, task=task, phase_encoding=phase_encoding
+#         )
 
-        out['BOLD'] = dict(
-            path=self.datadir / sub / 'MNINonLinear' / 'Results' /
-            f'{task_name}_{phase_encoding}' /
-            f'{task_name}_{phase_encoding}_hp2000_clean.nii.gz'
-        )
-
-        conf_dir = (
-            Path('/data') / 'group' / 'appliedml' /
-            'data' / 'HCP1200_Confounds_tsv'
-        )
-        out['BOLD']['confounds'] = (
-            conf_dir / sub / 'MNINonLinear' / 'Results' /
-            f'{task_name}_{phase_encoding}' / f'Confounds_{sub}.tsv'
-        )
-
-        out['meta'] = dict(datagrabber=self.get_meta())
-        self._dataset_get(out)
-
-        out['meta']['element'] = dict(
-            subject=sub, task=task, phase_encoding=phase_encoding
-        )
-
-        return out
+#         return out
