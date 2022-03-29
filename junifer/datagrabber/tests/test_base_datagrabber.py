@@ -114,8 +114,8 @@ def test_bids_datalad_PatternDataGrabber():
     """Test a subject-based BIDS datalad datagrabber"""
     types = ['T1w', 'bold']
     patterns = {
-        'T1w': 'anat/{subject}_T1w.nii.gz',
-        'bold': 'func/{subject}_task-rest_bold.nii.gz'
+        'T1w': '{subject}/anat/{subject}_T1w.nii.gz',
+        'bold': '{subject}/func/{subject}_task-rest_bold.nii.gz'
     }
     replacements = ['subject']
 
@@ -163,7 +163,19 @@ def test_bids_datalad_PatternDataGrabber():
 
     with tempfile.TemporaryDirectory() as tmpdir:
         datadir = Path(tmpdir) / 'dataset'  # Need this for testing
+        patterns = {
+            'T1w': '{subject}/anat/{subject}_T*w.nii.gz',
+            'bold': '{subject}/func/{subject}_task-rest_*.nii.gz'
+        }
         with MyDataGrabber(rootdir=rootdir, uri=repo_uri,
                            types=types, patterns=patterns,
                            datadir=datadir, replacements=replacements) as dg:
             assert dg.datadir == datadir / rootdir
+            for elem in dg:
+                t_sub = dg[elem]
+                assert 'path' in t_sub['T1w']
+                assert t_sub['T1w']['path'] == \
+                    (dg.datadir / f'{elem}/anat/{elem}_T1w.nii.gz')
+                assert 'path' in t_sub['bold']
+                assert t_sub['bold']['path'] == \
+                    (dg.datadir / f'{elem}/func/{elem}_task-rest_bold.nii.gz')

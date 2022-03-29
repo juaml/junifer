@@ -248,7 +248,17 @@ class PatternDataGrabber(BaseDataGrabber):
         for t_type in self.types:
             t_pattern = self.patterns[t_type]  # type: ignore
             t_replace = self._replace_patterns(element, t_pattern)
-            t_out = self.datadir / element[0] / t_replace
+            if '*' in t_replace:
+                t_matches = list(self.datadir.glob(t_replace))
+                if len(t_matches) > 1:
+                    raise_error(
+                        f'More than one file matches for {element} / {t_type}: '
+                        f'{t_matches}')
+                elif len(t_matches) == 0:
+                    raise_error(f'No file matches for {element} / {t_type}')
+                t_out = t_matches[0]
+            else:
+                t_out = self.datadir / t_replace
             out[t_type] = dict(path=t_out)
         # Meta here is element and types
         out['meta']['element'] = dict(zip(self.replacements, element))
