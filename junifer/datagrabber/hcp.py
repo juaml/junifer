@@ -32,8 +32,6 @@ class HCP1200(PatternDataGrabber):
         """
 
         types = ['BOLD']
-        # TODO: Validate tasks
-        # TODO: Validate phase_encodings
 
         replacements = ['subject', 'task', 'phase_encoding']
         patterns = {
@@ -54,21 +52,38 @@ class HCP1200(PatternDataGrabber):
         if isinstance(self.phase_encodings, str):
             self.phase_encodings = [self.phase_encodings]
 
+        all_tasks = [
+            'REST1',
+            'REST2',
+            'SOCIAL',
+            'WM',
+            'RELATIONAL',
+            'EMOTION',
+            'LANGUAGE',
+            'GAMBLING',
+            'MOTOR',
+        ]
+
         if self.tasks is None:
-            self.tasks = [
-                'REST1',
-                'REST2',
-                'SOCIAL',
-                'WM',
-                'RELATIONAL',
-                'EMOTION',
-                'LANGUAGE',
-                'GAMBLING',
-                'MOTOR',
-            ]
+            self.tasks = all_tasks
 
         if self.phase_encodings is None:
             self.phase_encodings = ['LR', 'RL']
+
+        for task in self.tasks:
+            if task not in all_tasks:
+                raise ValueError(
+                    f'{task} not a valid HCP-YA fMRI task input! \n'
+                    f'task can be any of {all_tasks}'
+                )
+
+        for pe in self.phase_encodings:
+            if pe not in ['LR', 'RL']:
+                raise ValueError(
+                    f'{pe} not a valid HCP-YA phase encoding. \n'
+                    'phase_encoding can be LR or RL (or both)!'
+                )
+
 
     def get_elements(self):
         """Get the list of subjects in the dataset.
@@ -121,7 +136,7 @@ class HCP1200(PatternDataGrabber):
 
 
 @register_datagrabber
-class DataladHCP1200(DataladDataGrabber, HCP1200,):
+class DataladHCP1200(DataladDataGrabber, HCP1200):
     def __init__(self, datadir=None, tasks=None, phase_encodings=None):
         uri = (
             'https://github.com/datalad-datasets/'
