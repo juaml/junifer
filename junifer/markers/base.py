@@ -18,8 +18,9 @@ class PipelineStepMixin():
 
         Parameters
         ----------
-        input : Junifer Data dictionary
-            The input to the pipeline step.
+        input : list[str]
+            The input to the pipeline step. The list must contain the
+            available Junifer Data dictionary keys.
 
         Raises
         ------
@@ -33,13 +34,15 @@ class PipelineStepMixin():
 
         Parameters
         ----------
-        input : Junifer Data dictionary
-            The input to the pipeline step.
+        input : list[str]
+            The input to the pipeline step. The list must contain the
+            available Junifer Data dictionary keys.
 
         Returns
         -------
-        output : Junifer Data dictionary
-            The output of the pipeline step.
+        output : list[str]
+            The updated list of available Junifer Data dictionary keys after
+            the pipeline step.
         """
         raise NotImplementedError('get_output_kind not implemented')
 
