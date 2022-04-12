@@ -161,22 +161,21 @@ class BaseConfoundRemover(PipelineStepMixin):
         to_select = []
         confounds_df = input['data']
         confounds_spec = input['names']['spec']
-        derivatives_to_compute = input['names']['derivatives']
+        derivatives_to_compute = input['names'].get('derivatives', {})
         spike_name = input['names']['spike']
 
         # Get all the column names according to the strategy
         for comp, param in self.strategy.items():
-            to_select.append(confounds_spec[comp][param])
+            to_select.extend(confounds_spec[comp][param])
 
         # Add derivatives if needed
         to_compute = [x in derivatives_to_compute.keys() for x in to_select]
         out_df = confounds_df.copy()
         if any(to_compute):
-            for t_dst in to_compute:
-                t_src = derivatives_to_compute[t_dst]
-            out_df[t_dst] = np.append(  # type: ignore
-                np.diff(out_df[t_src]), 0)  # type: ignore
-
+            for t_dst, t_src in derivatives_to_compute.items():
+                out_df[t_dst] = np.append(  # type: ignore
+                    np.diff(out_df[t_src]), 0)  # type: ignore
+        out_df = out_df[to_select]
         # add binary spike regressor if needed at given threshold
         if self.spike is not None:
             fd = confounds_df[spike_name].copy()
@@ -284,7 +283,8 @@ class BaseConfoundRemover(PipelineStepMixin):
 
         spike_name = input['confounds']['names']['spike']
 
-        derivatives_to_compute = input['confounds']['names']['derivatives']
+        derivatives_to_compute = input['confounds']['names'].get(
+            'derivatives', {})
         if not(isinstance(derivatives_to_compute, dict)):
             raise_error(
                 'input["confounds"]["names"]["derivatives"] '
@@ -310,7 +310,10 @@ class BaseConfoundRemover(PipelineStepMixin):
                 f'({input["confounds"]["path"].as_posix()}) '
                 'and the datagrabber.', ValueError)
 
-        column_names = set([x for y in conf_spec.values() for x in y])
+        t_conf_spec = {k: input['confounds']['names']['spec'][k][v]
+                       for k, v in self.strategy.items()}
+
+        column_names = set([x for y in t_conf_spec.values() for x in y])
         column_names.add(spike_name)
 
         missing_columns = [

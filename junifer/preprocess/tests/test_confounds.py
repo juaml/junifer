@@ -2,13 +2,14 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
 import numpy as np
 import pandas as pd
 from nibabel import Nifti1Image
 from nilearn._utils.niimg_conversions import check_niimg_4d
 import random
 import string
-from junifer.preprocess.confounds import FelixConfoundRemover
+from junifer.preprocess.confounds import BaseConfoundRemover
 
 np.random.seed(1234567)
 
@@ -27,24 +28,45 @@ def _simu_img():
     return img, mask
 
 
-def test_felixconfoundremover():
+def test_baseconfoundremover():
     # Generate a simulated BOLD img
     siimg, simsk = _simu_img()
 
     # generate random confound dataframe with Felix's column naming
+
+    motion_basic = [f'RP.{i}' for i in range(1, 7)]
+    motion_power2 = [f'RP^2.{i}' for i in range(1, 7)]
+    motion_derivatives = [f'DRP.{i}' for i in range(1, 7)]
+    motion_full = [f'DRP^2.{i}' for i in range(1, 7)]
+
+    wm_csf_basic = ['WM', 'CSF']
+    wm_csf_power2 = ['WM^2', 'CSF^2']
+    wm_csf_derivatives = ['DWM', 'DCSF']
+    wm_csf_full = ['DWM^2', 'DCSF^2']
+
+    gs_basic = ['GS']
+    gs_power2 = ['GS^2']
+    gs_derivatives = ['DGS']
+    gs_full = ['DGS^2']
+
     confound_column_names = []
 
-    confound_column_names.append('FD')
+    confound_column_names.append('FD')  # spike
 
-    for i in range(1, 7):
-        confound_column_names.append(f'RP.{i}')
-        confound_column_names.append(f'RP^2.{i}')
-        confound_column_names.append(f'DRP.{i}')
-        confound_column_names.append(f'DRP^2.{i}')
+    confound_column_names.extend(motion_basic)
+    confound_column_names.extend(motion_power2)
+    confound_column_names.extend(motion_derivatives)
+    confound_column_names.extend(motion_full)
 
-    for conf in ['WM', 'CSF', 'GS']:
-        confound_column_names.append(conf)
-        confound_column_names.append(f'{conf}^2')
+    confound_column_names.extend(wm_csf_basic)
+    confound_column_names.extend(wm_csf_power2)
+    confound_column_names.extend(wm_csf_derivatives)
+    confound_column_names.extend(wm_csf_full)
+
+    confound_column_names.extend(gs_basic)
+    confound_column_names.extend(gs_power2)
+    confound_column_names.extend(gs_derivatives)
+    confound_column_names.extend(gs_full)
 
     # add some random irrelevant confounds
     for i in range(10):
@@ -57,84 +79,262 @@ def test_felixconfoundremover():
         columns=confound_column_names
     )
 
-    # generate confound removal strategies with varying numbers of parameters
-    list_of_strategy_tuples = []
-
-    # 36 params
-    strat1 = {
-        'motion': 'full',
-        'wm_csf': 'full',
-        'global_signal': 'full'
+    # Generate spec from Felix's column naming
+    spec = {
+        'motion': {
+            'basic': motion_basic,
+            'power2': motion_basic + motion_power2,
+            'derivatives': motion_basic + motion_derivatives,
+            'full':
+                motion_basic + motion_derivatives + motion_power2 + motion_full
+        },
+        'wm_csf': {
+            'basic': wm_csf_basic,
+            'power2': wm_csf_basic + wm_csf_power2,
+            'derivatives': wm_csf_basic + wm_csf_derivatives,
+            'full':
+                wm_csf_basic + wm_csf_derivatives + wm_csf_power2 + wm_csf_full
+        },
+        'global_signal': {
+            'basic': gs_basic,
+            'power2': gs_basic + gs_power2,
+            'derivatives': gs_basic + gs_derivatives,
+            'full': gs_basic + gs_derivatives + gs_power2 + gs_full
+        }
     }
-    list_of_strategy_tuples.append((strat1, 36))
-
-    # 24 params
-    strat2 = {
-        'motion': 'full',
-    }
-    list_of_strategy_tuples.append((strat2, 24))
-
-    # 9 params
-    strat3 = {
-        'motion': 'basic',
-        'wm_csf': 'basic',
-        'global_signal': 'basic'
-    }
-    list_of_strategy_tuples.append((strat3, 9))
-
-    # 6 params
-    strat4 = {
-        'motion': 'basic',
-    }
-    list_of_strategy_tuples.append((strat4, 6))
-
-    # 2 params
-    strat5 = {
-        'wm_csf': 'basic',
-    }
-    list_of_strategy_tuples.append((strat5, 2))
 
     # generate a junifer pipeline data object dictionary
     input_data_obj = {}
     input_data_obj['meta'] = {}
     input_data_obj['BOLD'] = {}
     input_data_obj['BOLD']['data'] = siimg
-    input_data_obj['confounds'] = confounds_df
+    input_data_obj['confounds'] = {}
+    input_data_obj['confounds']['path'] = Path('/test.df')
+    input_data_obj['confounds']['data'] = confounds_df
+    input_data_obj['confounds']['names'] = {}
+    input_data_obj['confounds']['names']['spec'] = spec
+    input_data_obj['confounds']['names']['spike'] = 'FD'
 
-    # run confound removal
-    for spike in [None, 0.25]:
-        for strategy, n_params in list_of_strategy_tuples:
-            FCR = FelixConfoundRemover(
-                strategy=strategy,
-                spike=spike,
-                mask_img=simsk,
-                t_r=0.75
-            )
+    # generate confound removal strategies with varying numbers of parameters
 
-            # first test some methods manually
-            FCR.validate_input(input_data_obj)
-            out_type = FCR.get_output_kind(input_data_obj)
+    # Test #1: 36 params, no derivatives to compute, no spike
+    # 36 params
+    strat1 = {
+        'motion': 'full',
+        'wm_csf': 'full',
+        'global_signal': 'full'
+    }
 
-            assert out_type in ['BOLD']
+    cr = BaseConfoundRemover(
+        strategy=strat1, spike=None, mask_img=simsk, t_r=0.75
+    )
+    cr.validate_input(input_data_obj.keys())
+    out_type = cr.get_output_kind(input_data_obj.keys())
 
-            selected_conf_frame = FCR.read_confounds(confounds_df)
-            timepoints, n_sel_confs = selected_conf_frame.shape
+    assert 'BOLD' in out_type
 
-            assert timepoints == 100
-            assert isinstance(selected_conf_frame, pd.DataFrame)
+    # Check if the input data is valid
+    cr._validate_data(input_data_obj)
 
-            if spike is None:
-                assert n_sel_confs == n_params
-            else:
-                assert n_sel_confs == n_params + 1
+    # Check that the confounds are picked correctly:
+    t_df = cr._pick_confounds(input_data_obj['confounds'])
+    assert len(t_df.columns) == 36
+    assert all(x in t_df.columns for x in motion_basic)
+    assert all(x in t_df.columns for x in motion_power2)
+    assert all(x in t_df.columns for x in motion_derivatives)
+    assert all(x in t_df.columns for x in motion_full)
+    assert all(x in t_df.columns for x in wm_csf_basic)
+    assert all(x in t_df.columns for x in wm_csf_power2)
+    assert all(x in t_df.columns for x in wm_csf_derivatives)
+    assert all(x in t_df.columns for x in wm_csf_full)
+    assert all(x in t_df.columns for x in gs_basic)
+    assert all(x in t_df.columns for x in gs_power2)
+    assert all(x in t_df.columns for x in gs_derivatives)
+    assert all(x in t_df.columns for x in gs_full)
+    assert 'FD' not in t_df.columns
+    assert 'spike' not in t_df.columns
 
-            cl_bold = FCR.remove_confounds(siimg, selected_conf_frame)
-            check_niimg_4d(cl_bold)
+    # Test #2: 24 params, no derivatives to compute, no spike
+    # 24 params
+    strat2 = {
+        'motion': 'full',
+    }
 
-            # finally test fit_transform
-            output_data_obj = FCR.fit_transform(input_data_obj)
+    cr = BaseConfoundRemover(
+        strategy=strat2, spike=None, mask_img=simsk, t_r=0.75
+    )
+    cr.validate_input(input_data_obj.keys())
+    out_type = cr.get_output_kind(input_data_obj.keys())
 
-            for key in ['BOLD', 'confounds', 'meta']:
-                assert key in output_data_obj
+    assert 'BOLD' in out_type
 
-            check_niimg_4d(output_data_obj['BOLD']['data'])
+    # Check if the input data is valid
+    cr._validate_data(input_data_obj)
+
+    # Check that the confounds are picked correctly:
+    t_df = cr._pick_confounds(input_data_obj['confounds'])
+    assert len(t_df.columns) == 24
+    assert all(x in t_df.columns for x in motion_basic)
+    assert all(x in t_df.columns for x in motion_power2)
+    assert all(x in t_df.columns for x in motion_derivatives)
+    assert all(x in t_df.columns for x in motion_full)
+    assert all(x not in t_df.columns for x in wm_csf_basic)
+    assert all(x not in t_df.columns for x in wm_csf_power2)
+    assert all(x not in t_df.columns for x in wm_csf_derivatives)
+    assert all(x not in t_df.columns for x in wm_csf_full)
+    assert all(x not in t_df.columns for x in gs_basic)
+    assert all(x not in t_df.columns for x in gs_power2)
+    assert all(x not in t_df.columns for x in gs_derivatives)
+    assert all(x not in t_df.columns for x in gs_full)
+    assert 'FD' not in t_df.columns
+    assert 'spike' not in t_df.columns
+
+    # Test #3: 9 params, no derivatives to compute, no spike
+    strat3 = {
+        'motion': 'basic',
+        'wm_csf': 'basic',
+        'global_signal': 'basic'
+    }
+
+    cr = BaseConfoundRemover(
+        strategy=strat3, spike=None, mask_img=simsk, t_r=0.75
+    )
+    cr.validate_input(input_data_obj.keys())
+    out_type = cr.get_output_kind(input_data_obj.keys())
+
+    assert 'BOLD' in out_type
+
+    # Check if the input data is valid
+    cr._validate_data(input_data_obj)
+
+    # Check that the confounds are picked correctly:
+    t_df = cr._pick_confounds(input_data_obj['confounds'])
+    assert len(t_df.columns) == 9
+    assert all(x in t_df.columns for x in motion_basic)
+    assert all(x not in t_df.columns for x in motion_power2)
+    assert all(x not in t_df.columns for x in motion_derivatives)
+    assert all(x not in t_df.columns for x in motion_full)
+    assert all(x in t_df.columns for x in wm_csf_basic)
+    assert all(x not in t_df.columns for x in wm_csf_power2)
+    assert all(x not in t_df.columns for x in wm_csf_derivatives)
+    assert all(x not in t_df.columns for x in wm_csf_full)
+    assert all(x in t_df.columns for x in gs_basic)
+    assert all(x not in t_df.columns for x in gs_power2)
+    assert all(x not in t_df.columns for x in gs_derivatives)
+    assert all(x not in t_df.columns for x in gs_full)
+    assert 'FD' not in t_df.columns
+    assert 'spike' not in t_df.columns
+
+    # Test #4: 6 params, no derivatives to compute, no spike
+    strat4 = {
+        'motion': 'basic',
+    }
+    cr = BaseConfoundRemover(
+        strategy=strat4, spike=None, mask_img=simsk, t_r=0.75
+    )
+    cr.validate_input(input_data_obj.keys())
+    out_type = cr.get_output_kind(input_data_obj.keys())
+
+    assert 'BOLD' in out_type
+
+    # Check if the input data is valid
+    cr._validate_data(input_data_obj)
+
+    # Check that the confounds are picked correctly:
+    t_df = cr._pick_confounds(input_data_obj['confounds'])
+    assert len(t_df.columns) == 6
+    assert all(x in t_df.columns for x in motion_basic)
+    assert all(x not in t_df.columns for x in motion_power2)
+    assert all(x not in t_df.columns for x in motion_derivatives)
+    assert all(x not in t_df.columns for x in motion_full)
+    assert all(x not in t_df.columns for x in wm_csf_basic)
+    assert all(x not in t_df.columns for x in wm_csf_power2)
+    assert all(x not in t_df.columns for x in wm_csf_derivatives)
+    assert all(x not in t_df.columns for x in wm_csf_full)
+    assert all(x not in t_df.columns for x in gs_basic)
+    assert all(x not in t_df.columns for x in gs_power2)
+    assert all(x not in t_df.columns for x in gs_derivatives)
+    assert all(x not in t_df.columns for x in gs_full)
+    assert 'FD' not in t_df.columns
+    assert 'spike' not in t_df.columns
+
+    # Test #5: 2 params, no derivatives to compute, no spike
+    strat5 = {
+        'wm_csf': 'basic',
+    }
+    cr = BaseConfoundRemover(
+        strategy=strat5, spike=None, mask_img=simsk, t_r=0.75
+    )
+    cr.validate_input(input_data_obj.keys())
+    out_type = cr.get_output_kind(input_data_obj.keys())
+
+    assert 'BOLD' in out_type
+
+    # Check if the input data is valid
+    cr._validate_data(input_data_obj)
+
+    # Check that the confounds are picked correctly:
+    t_df = cr._pick_confounds(input_data_obj['confounds'])
+    assert len(t_df.columns) == 2
+    assert all(x not in t_df.columns for x in motion_basic)
+    assert all(x not in t_df.columns for x in motion_power2)
+    assert all(x not in t_df.columns for x in motion_derivatives)
+    assert all(x not in t_df.columns for x in motion_full)
+    assert all(x in t_df.columns for x in wm_csf_basic)
+    assert all(x not in t_df.columns for x in wm_csf_power2)
+    assert all(x not in t_df.columns for x in wm_csf_derivatives)
+    assert all(x not in t_df.columns for x in wm_csf_full)
+    assert all(x not in t_df.columns for x in gs_basic)
+    assert all(x not in t_df.columns for x in gs_power2)
+    assert all(x not in t_df.columns for x in gs_derivatives)
+    assert all(x not in t_df.columns for x in gs_full)
+    assert 'FD' not in t_df.columns
+    assert 'spike' not in t_df.columns
+
+    out = cr.fit_transform(input_data_obj)
+    check_niimg_4d(out['BOLD']['data'])
+    # TODO: check meta
+
+    # Test #6: 12 params, derivatives to compute, spike
+    to_select = [x for x in confounds_df.columns
+                 if x not in motion_derivatives]
+    no_d_df = confounds_df[to_select]
+    input_data_obj['confounds']['data'] = no_d_df
+
+    derivatives = {
+        f'D{x}': x for x in motion_basic
+    }
+
+    input_data_obj['confounds']['names']['derivatives'] = derivatives
+
+    strat6 = {
+        'motion': 'derivatives',
+    }
+    cr = BaseConfoundRemover(
+        strategy=strat6, spike=0.75, mask_img=simsk, t_r=0.75
+    )
+    cr.validate_input(input_data_obj.keys())
+    out_type = cr.get_output_kind(input_data_obj.keys())
+
+    assert 'BOLD' in out_type
+
+    # Check if the input data is valid
+    cr._validate_data(input_data_obj)
+
+    # Check that the confounds are picked correctly:
+    t_df = cr._pick_confounds(input_data_obj['confounds'])
+    assert len(t_df.columns) == 13
+    assert all(x in t_df.columns for x in motion_basic)
+    assert all(x not in t_df.columns for x in motion_power2)
+    assert all(x in t_df.columns for x in motion_derivatives)
+    assert all(x not in t_df.columns for x in motion_full)
+    assert all(x not in t_df.columns for x in wm_csf_basic)
+    assert all(x not in t_df.columns for x in wm_csf_power2)
+    assert all(x not in t_df.columns for x in wm_csf_derivatives)
+    assert all(x not in t_df.columns for x in wm_csf_full)
+    assert all(x not in t_df.columns for x in gs_basic)
+    assert all(x not in t_df.columns for x in gs_power2)
+    assert all(x not in t_df.columns for x in gs_derivatives)
+    assert all(x not in t_df.columns for x in gs_full)
+    assert 'FD' not in t_df.columns
+    assert 'spike' in t_df.columns
