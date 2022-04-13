@@ -1,6 +1,5 @@
 import socket
 import pytest
-import os
 
 from junifer.configs.juseless import JuselessDataladUKBVBM
 from junifer.utils.logging import configure_logging
@@ -21,7 +20,6 @@ def test_juselessdataladukbvbm_datagrabber():
         assert out['VBM_GM']['path'].name == \
             f'm0wp1sub-{test_element[0]}_ses-{test_element[1]}_T1w.nii.gz'
         assert out['VBM_GM']['path'].exists()
-
 
 
 def test_juselessdataladhcp_datagrabber():
