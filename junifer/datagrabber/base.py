@@ -2,6 +2,7 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 from pathlib import Path
+import re
 import tempfile
 
 import datalad.api as dl
@@ -200,8 +201,73 @@ class PatternDataGrabber(BaseDataGrabber):
         self.patterns = patterns
         self.replacements = replacements
 
-    def _replace_patterns(self, element, pattern):
-        """Replace the patterns in the pattern with the element.
+    def _replace_patterns_regex(self, pattern):
+        """Replace the patterns in the pattern with the named groups so the
+        elements can be obtained from the filesystem.
+
+        Parameters
+        ----------
+        pattern : str
+            The pattern to be replaced.
+
+        Returns
+        -------
+        re_pattern : str
+            The regular expression with the named groups.
+        glob_pattern : str
+            The search pattern to be used with glob
+
+        """
+        re_pattern = pattern
+        glob_pattern = pattern
+        for t_r in self.replacements:
+            # Replace the first of each with a named group definition
+            re_pattern = re_pattern.replace(
+                f'{{{t_r}}}', f'(?P<{t_r}>.*)', 1)
+
+        for t_r in self.replacements:
+            # Replace the second appearance of each with the named group
+            # back reference
+            re_pattern = re_pattern.replace(f'{{{t_r}}}', f'(?P={t_r})')
+
+        for t_r in self.replacements:
+            glob_pattern = glob_pattern.replace(f'{{{t_r}}}', f'*')
+        return re_pattern, glob_pattern
+
+    def get_elements(self):
+        """Get the list of elements in the dataset. It will use regex
+        to search for `replacements` in the `patterns` and return the
+        intersection of the results for each type. That is, build a list
+        of elements that have all the required types.
+
+        Returns
+        -------
+        elements : list
+            The list of elements in the dataset.
+        """
+        elements = None
+        for t_type in self.types:
+            types_element = set()
+            t_pattern = self.patterns[t_type]  # get the pattern
+            re_pattern, glob_pattern = self._replace_patterns_regex(t_pattern)
+            for fname in self.datadir.glob(glob_pattern):
+                suffix = fname.relative_to(self.datadir).as_posix()
+                m = re.match(re_pattern, suffix)
+                if m is not None:
+                    t_element = tuple(m.group(k) for k in self.replacements)
+                    if len(self.replacements) == 1:
+                        t_element = t_element[0]
+                    types_element.add(t_element)
+            if elements is None:
+                elements = types_element
+            else:
+                elements = elements.intersection(types_element)
+
+        return list(elements)
+
+    def _replace_patterns_glob(self, element, pattern):
+        """Replace the patterns in the pattern with the element so it can
+        be globbed.
 
         Parameters
         ----------
@@ -247,7 +313,7 @@ class PatternDataGrabber(BaseDataGrabber):
             element = (element,)
         for t_type in self.types:
             t_pattern = self.patterns[t_type]  # type: ignore
-            t_replace = self._replace_patterns(element, t_pattern)
+            t_replace = self._replace_patterns_glob(element, t_pattern)
             if '*' in t_replace:
                 t_matches = list(self.datadir.glob(t_replace))
                 if len(t_matches) > 1:
