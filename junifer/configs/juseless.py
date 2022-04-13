@@ -25,7 +25,7 @@ class JuselessDataladUKBVBM(PatternDataladDataGrabber):
         types = ['VBM_GM']
         replacements = ['subject', 'session']
         patterns = {
-            'VBM_GM': 'm0wp1_sub-{subject}_ses-{session}_T1w.nii.gz'
+            'VBM_GM': 'm0wp1sub-{subject}_ses-{session}_T1w.nii.gz'
         }
         super().__init__(
             types=types, datadir=datadir, uri=uri, rootdir=rootdir,

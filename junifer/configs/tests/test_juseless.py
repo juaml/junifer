@@ -18,9 +18,9 @@ def test_juselessdataladukbvbm_datagrabber():
         test_element = all_elements[0]
         out = dg[test_element]
         assert 'VBM_GM' in out
-        assert out['VBM_GM'].name == \
+        assert out['VBM_GM']['path'].name == \
             f'm0wp1sub-{test_element[0]}_ses-{test_element[1]}_T1w.nii.gz'
-        assert out['VBM_GM'].exists()
+        assert out['VBM_GM']['path'].exists()
 
 
 def test_juselessdataladhcp_datagrabber():
@@ -30,5 +30,5 @@ def test_juselessdataladhcp_datagrabber():
 
         out = dg[test_element]
 
-        assert out['BOLD'].exists()
-        assert os.path.isfile(out['BOLD']['path'])
+        assert out['BOLD']['path'].exists()
+        assert out['BOLD']['path'].isfile()
