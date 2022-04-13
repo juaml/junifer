@@ -14,9 +14,12 @@ configure_logging(level='DEBUG')
 
 def test_juselessdataladukbvbm_datagrabber():
     with JuselessDataladUKBVBM() as dg:
-        out = dg[('2670511', '2')]
+        all_elements = dg.get_elements()
+        test_element = all_elements[0]
+        out = dg[test_element]
         assert 'VBM_GM' in out
-        assert out['VBM_GM'].name == 'm0wp1sub-2670511_ses-2_T1w.nii.gz'
+        assert out['VBM_GM'].name == \
+            f'm0wp1sub-{test_element[0]}_ses-{test_element[1]}_T1w.nii.gz'
         assert out['VBM_GM'].exists()
 
 
