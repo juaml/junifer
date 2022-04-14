@@ -82,8 +82,10 @@ class BaseMarker(PipelineStepMixin):
 
     def get_meta(self, kind):
         s_meta = super().get_meta()
-        s_meta['name'] = self.name
-        s_meta['kind'] = kind  # same marker can be fit into different kinds
+        # same marker can be fit into different kinds, so the name
+        # is created from the kind and the name of the marker
+        s_meta['name'] = f'{kind}_{self.name}'
+        s_meta['kind'] = kind
         return dict(marker=s_meta)
 
     def validate_input(self, input):

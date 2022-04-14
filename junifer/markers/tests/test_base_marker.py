@@ -22,12 +22,12 @@ def test_meta():
 
     t_meta = base.get_meta('bold')
     assert t_meta['marker']['class'] == 'BaseMarker'
-    assert t_meta['marker']['name'] == 'BaseMarker'
+    assert t_meta['marker']['name'] == 'bold_BaseMarker'
 
     base = BaseMarker(on=['bold', 'dwi'], name='mymarker')
 
     t_meta = base.get_meta('dwi')
-    assert t_meta['marker']['name'] == 'mymarker'
+    assert t_meta['marker']['name'] == 'dwi_mymarker'
 
 
 def test_BaseMarker():
@@ -50,12 +50,12 @@ def test_BaseMarker():
 
     out = base.fit_transform(input)
     assert out['bold']['data'] == 1
-    assert out['bold']['meta']['marker']['name'] == 'mymarker'
+    assert out['bold']['meta']['marker']['name'] == 'bold_mymarker'
     assert out['bold']['meta']['marker']['class'] == 'BaseMarker'
 
     base2 = BaseMarker(on='bold', name='mymarker')
     base2.compute = lambda x: dict(data=1)  # type: ignore
     out2 = base2.fit_transform(input)
     assert out2['bold']['data'] == 1
-    assert out2['bold']['meta']['marker']['name'] == 'mymarker'
+    assert out2['bold']['meta']['marker']['name'] == 'bold_mymarker'
     assert out2['bold']['meta']['marker']['class'] == 'BaseMarker'

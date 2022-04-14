@@ -64,7 +64,7 @@ def test_ParcelAggregation_3D():
     meta = marker.get_meta('VBM_GM')['marker']
     assert meta['method'] == 'mean'
     assert meta['atlas'] == 'Schaefer100x7'
-    assert meta['name'] == 'gmd_schaefer100x7_mean'
+    assert meta['name'] == 'VBM_GM_gmd_schaefer100x7_mean'
     assert meta['class'] == 'ParcelAggregation'
     assert meta['kind'] == 'VBM_GM'
     assert meta['method_params'] == {}
@@ -88,7 +88,7 @@ def test_ParcelAggregation_3D():
     meta = marker.get_meta('VBM_GM')['marker']
     assert meta['method'] == 'std'
     assert meta['atlas'] == 'Schaefer100x7'
-    assert meta['name'] == 'ParcelAggregation'
+    assert meta['name'] == 'VBM_GM_ParcelAggregation'
     assert meta['class'] == 'ParcelAggregation'
     assert meta['kind'] == 'VBM_GM'
     assert meta['method_params'] == {}
@@ -116,7 +116,7 @@ def test_ParcelAggregation_3D():
     meta = marker.get_meta('VBM_GM')['marker']
     assert meta['method'] == 'trim_mean'
     assert meta['atlas'] == 'Schaefer100x7'
-    assert meta['name'] == 'ParcelAggregation'
+    assert meta['name'] == 'VBM_GM_ParcelAggregation'
     assert meta['class'] == 'ParcelAggregation'
     assert meta['kind'] == 'VBM_GM'
     assert meta['method_params'] == {'proportiontocut': 0.1}
@@ -147,7 +147,7 @@ def test_ParcelAggregation_4D():
     meta = marker.get_meta('BOLD')['marker']
     assert meta['method'] == 'mean'
     assert meta['atlas'] == 'Schaefer100x7'
-    assert meta['name'] == 'ParcelAggregation'
+    assert meta['name'] == 'BOLD_ParcelAggregation'
     assert meta['class'] == 'ParcelAggregation'
     assert meta['kind'] == 'BOLD'
     assert meta['method_params'] == {}
