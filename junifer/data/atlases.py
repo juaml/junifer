@@ -3,9 +3,8 @@
 # License: AGPL
 from pathlib import Path
 import io
-import os
+import tempfile
 import requests
-import wget
 import shutil
 import zipfile
 import numpy as np
@@ -49,34 +48,27 @@ for n_rois in range(100, 1001, 100):
         }
 
 for scale in range(1, 5):
-    for field in ['3T', '7T']:
-        if field == '7T':
-            space = 'MNI6thgeneration'
-            t_name = f'Tian{scale}x{field}x{space}'
-            _available_atlases[t_name] = {
-                'family': 'Tian',
-                'scale': scale,
-                'magneticfield': field,
-                'valid_resolutions': [1.6]
-            }
-        else:
-            for space in ['MNI6thgeneration', 'MNInonlinear2009cAsym']:
-                if space == 'MNI6thgeneration':
-                    t_name = f'Tian{scale}x{field}x{space}'
-                    _available_atlases[t_name] = {
-                        'family': 'Tian',
-                        'scale': scale,
-                        'magneticfield': field,
-                        'valid_resolutions': [1, 2]
-                    }
-                elif space == 'MNInonlinear2009cAsym':
-                    t_name = f'Tian{scale}x{field}x{space}'
-                    _available_atlases[t_name] = {
-                        'family': 'Tian',
-                        'scale': scale,
-                        'magneticfield': field,
-                        'valid_resolutions': [2]
-                    }
+    t_name = f'TianxS{scale}x7TxMNI6thgeneration'
+    _available_atlases[t_name] = {
+        'family': 'Tian',
+        'scale': scale,
+        'magneticfield': '7T',
+        'space': 'MNI6thgeneration'
+    }
+    t_name = f'TianxS{scale}x3TxMNI6thgeneration'
+    _available_atlases[t_name] = {
+        'family': 'Tian',
+        'scale': scale,
+        'magneticfield': '3T',
+        'space': 'MNI6thgeneration'
+    }
+    t_name = f'TianxS{scale}x3TxMNInonlinear2009cAsym'
+    _available_atlases[t_name] = {
+        'family': 'Tian',
+        'scale': scale,
+        'magneticfield': '3T',
+        'space': 'MNInonlinear2009cAsym'
+    }
 
 
 def register_atlas(name, atlas_path, atl_labels, overwrite=False):
@@ -255,7 +247,7 @@ def _retrieve_atlas(family, atlas_dir=None, resolution=None, **kwargs):
         space (optional) : str
             Space of atlas can be either 'MNI6thgeneration' or
             'MNInonlinear2009cAsym' (for some cases).
-            Defaults to 'MNI6thgeneration'. (For more information see 
+            Defaults to 'MNI6thgeneration'. (For more information see
             https://github.com/yetianmed/subcortex)
         magneticfield (optional) : str
             Options are 3T and 7T, defaults to 3T.
@@ -370,7 +362,12 @@ def _retrieve_schaefer(atlas_dir, resolution, n_rois=None, yeo_networks=7):
 def _retrieve_tian(
     atlas_dir, resolution, scale=None, space='MNI6thgeneration',
         magneticfield='3T'):
-
+    # show atlas parameters to user
+    logger.info('Atlas parameters:')
+    logger.info(f'\tscale: {scale}')
+    logger.info(f'\tspace: {space}')
+    logger.info(f'\tmagneticfield: {magneticfield}')
+    logger.info(f'\tresolution: {resolution}')
     # check validity of atlas parameters
     _valid_scales = [1, 2, 3, 4]
     _valid_fields = ['3T', '7T']
@@ -378,18 +375,18 @@ def _retrieve_tian(
         raise_error(
             f'The parameter `scale` ({scale}) needs to be one of the '
             f'following: {_valid_scales}')
-    if field not in _valid_fields:
+    if magneticfield not in _valid_fields:
         raise_error(
-            f'The parameter `magneticfield` ({field}) needs to be one of '
-            f'the following: {_valid_fields}')
+            f'The parameter `magneticfield` ({magneticfield}) needs to be '
+            f'one of the following: {_valid_fields}')
 
     if magneticfield == '3T':
         _valid_spaces = ['MNI6thgeneration', 'MNInonlinear2009cAsym']
         if space == 'MNI6thgeneration':
             _valid_resolutions = [1, 2]
-        elif space == 'MNInonlinear2009cAsym':
+        else:  # space == 'MNInonlinear2009cAsym':
             _valid_resolutions = [2]
-    if magneticfield == '7T':
+    else:  # magneticfield == '7T':
         _valid_spaces = ['MNI6thgeneration']
         _valid_resolutions = [1.6]
     if space not in _valid_spaces:
@@ -398,13 +395,6 @@ def _retrieve_tian(
             f'the following: {_valid_spaces}')
 
     resolution = _closest_resolution(resolution, _valid_resolutions)
-
-    # show atlas parameters to user
-    logger.info('Atlas parameters:')
-    logger.info(f'\tscale: {scale}')
-    logger.info(f'\tspace: {space}')
-    logger.info(f'\tmagneticfield: {magneticfield}')
-    logger.info(f'\tresolution: {resolution}')
 
     # define file names
     if magneticfield == '3T':
@@ -416,14 +406,13 @@ def _retrieve_tian(
             atlas_fname = atlas_fname_base_3T / (
                 f'Tian_Subcortex_S{scale}_{magneticfield}.nii.gz')
             if resolution == 1:
-                atlas_fname = atlas_fname_base_3T / (
-                    f'Tian_Subcortex_S{scale}_{magneticfield}_{resolution}'
-                    'mm.nii.gz')
-        elif space == 'MNInonlinear2009cAsym':
+                atlas_fname = atlas_fname_base_3T / \
+                    f'Tian_Subcortex_S{scale}_{magneticfield}_1mm.nii.gz'
+        else:  # space == 'MNInonlinear2009cAsym':
             space = '2009cAsym'
             atlas_fname = atlas_fname_base_3T / (
                 f'Tian_Subcortex_S{scale}_{magneticfield}_{space}.nii.gz')
-    elif magneticfield == '7T':
+    else:  # magneticfield == '7T':
         atlas_fname_base_7T = (
             atlas_dir / 'Tian2020MSA_v1.1' / '7T')
         atlas_fname = atlas_dir / 'Tian2020MSA_v1.1' / f'{magneticfield}' / (
@@ -431,7 +420,7 @@ def _retrieve_tian(
         # define 7T labels (b/c currently no labels file available for 7T)
         scale7Trois = {1: 16, 2: 34, 3: 54, 4: 62}
         labels = [
-            ('parcel_' + str(x)) for x in np.arange(1, scale7Trois[scale]+1)]
+            ('parcel_' + str(x)) for x in np.arange(1, scale7Trois[scale] + 1)]
         atlas_lname = atlas_fname_base_7T / (
             f'Tian_Subcortex_S{scale}_7T_labelnumbering.txt')
         with open(atlas_lname, 'w') as filehandle:
@@ -447,18 +436,20 @@ def _retrieve_tian(
             'At least one of the atlas files is missing. '
             'Fetching.')
 
-        url_basis = (
-            'https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip')
+        url_basis = \
+            'https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip'
 
-        logger.info(f'Downloading {url_basis}')
-        atlas_download_dir = wget.download(url_basis, atlas_dir.as_posix())
-        with zipfile.ZipFile(atlas_download_dir, 'r') as zip_ref:
-            zip_ref.extractall(atlas_dir.as_posix())
-        # clean after unzipping
-        if os.path.exists(atlas_download_dir):
-            os.remove(atlas_download_dir)
-        if os.path.exists((atlas_dir / '__MACOSX').as_posix()):
-            shutil.rmtree((atlas_dir / '__MACOSX').as_posix())
+        logger.info(f'Downloading TIAN from {url_basis}')
+        with tempfile.TemporaryDirectory() as tmpdir:
+            atlas_download = requests.get(url_basis)
+            atlas_zip_fname = Path(tmpdir) / 'Tian2020MSA_v1.1.zip'
+            with open(atlas_zip_fname, 'wb') as f:
+                f.write(atlas_download.content)
+            with zipfile.ZipFile(atlas_zip_fname, 'r') as zip_ref:
+                zip_ref.extractall(atlas_dir.as_posix())
+            # clean after unzipping
+            if (atlas_dir / '__MACOSX').exists():
+                shutil.rmtree((atlas_dir / '__MACOSX').as_posix())
 
         labels = pd.read_csv(atlas_lname, sep=" ", header=None)[0].to_list()
 
