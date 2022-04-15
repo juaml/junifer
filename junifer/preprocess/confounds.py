@@ -182,7 +182,7 @@ class BaseConfoundRemover(PipelineStepMixin):
         # Add squares (of base confounds and derivatives) if needed 
         to_compute = [x in squares_to_compute.keys() for x in to_select]
         if any(to_compute):
-            for t_dst, t_src in derivatives_to_compute.items():
+            for t_dst, t_src in squares_to_compute.items():
                 out_df[t_dst] = out_df[t_src] ** 2
         out_df = out_df[to_select]
        
