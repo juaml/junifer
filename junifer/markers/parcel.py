@@ -15,7 +15,7 @@ from ..api.decorators import register_marker
 class ParcelAggregation(BaseMarker):
     def __init__(self, atlas, method, method_params=None, on=None, name=None):
         if on is None:
-            on = ['T1w', 'BOLD', 'VBM_GM', 'VBM_WM']
+            on = ['T1w', 'BOLD', 'VBM_GM', 'VBM_WM', 'fALFF', 'GCOR', 'LCOR']
         super().__init__(on=on, name=name)
         self.atlas = atlas
         self.method = method
