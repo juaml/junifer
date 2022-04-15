@@ -1,11 +1,11 @@
 import tempfile
 import pytest
 from pathlib import Path
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_equal, assert_array_almost_equal
 
 from junifer.data.atlases import (register_atlas, list_atlases, load_atlas,
                                   _retrieve_schaefer, _retrieve_suit,
-                                  _retrieve_atlas)
+                                  _retrieve_atlas, _retrieve_tian)
 
 
 def test_register_atlas():
@@ -150,3 +150,67 @@ def test_suit():
 
         with pytest.raises(ValueError, match=r"The parameter `space`"):
             _retrieve_suit(tmpdir, 1, space='wrong')
+
+
+def test_tian():
+    """Test TIAN atlas"""
+
+    atlases = list_atlases()
+    assert 'TianxS1x3TxMNI6thgeneration' in atlases
+    assert 'TianxS2x3TxMNI6thgeneration' in atlases
+    assert 'TianxS3x3TxMNI6thgeneration' in atlases
+    assert 'TianxS4x3TxMNI6thgeneration' in atlases
+
+    assert 'TianxS1x3TxMNInonlinear2009cAsym' in atlases
+    assert 'TianxS2x3TxMNInonlinear2009cAsym' in atlases
+    assert 'TianxS3x3TxMNInonlinear2009cAsym' in atlases
+    assert 'TianxS4x3TxMNInonlinear2009cAsym' in atlases
+
+    assert 'TianxS1x7TxMNI6thgeneration' in atlases
+    assert 'TianxS2x7TxMNI6thgeneration' in atlases
+    assert 'TianxS3x7TxMNI6thgeneration' in atlases
+    assert 'TianxS4x7TxMNI6thgeneration' in atlases
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        for scale, n_lbl in zip([1, 2, 3, 4], [16, 32, 50, 54]):
+            img, lbl, fname = load_atlas(
+                f'TianxS{scale}x3TxMNI6thgeneration', atlas_dir=tmpdir)
+            fname1 = f'Tian_Subcortex_S{scale}_3T_1mm.nii.gz'
+            assert img is not None
+            assert fname.name == fname1  # type: ignore
+            assert len(lbl) == n_lbl
+            assert_array_equal(img.header['pixdim'][1:4], [1, 1, 1])
+
+            img, lbl, fname = load_atlas(
+                f'TianxS{scale}x3TxMNI6thgeneration', atlas_dir=tmpdir,
+                resolution=2)
+            fname1 = f'Tian_Subcortex_S{scale}_3T.nii.gz'
+            assert img is not None
+            assert fname.name == fname1  # type: ignore
+            assert len(lbl) == n_lbl
+            assert_array_equal(img.header['pixdim'][1:4], [2, 2, 2])
+
+            img, lbl, fname = load_atlas(
+                f'TianxS{scale}x3TxMNInonlinear2009cAsym', atlas_dir=tmpdir)
+            fname1 = f'Tian_Subcortex_S{scale}_3T_2009cAsym.nii.gz'
+            assert img is not None
+            assert fname.name == fname1  # type: ignore
+            assert len(lbl) == n_lbl
+            assert_array_equal(img.header['pixdim'][1:4], [2, 2, 2])
+
+        for scale, n_lbl in zip([1, 2, 3, 4], [16, 34, 54, 62]):
+            img, lbl, fname = load_atlas(
+                f'TianxS{scale}x7TxMNI6thgeneration', atlas_dir=tmpdir)
+            fname1 = f'Tian_Subcortex_S{scale}_7T.nii.gz'
+            assert img is not None
+            assert fname.name == fname1  # type: ignore
+            assert len(lbl) == n_lbl
+            assert_array_almost_equal(
+                img.header['pixdim'][1:4], [1.6, 1.6, 1.6])
+
+        with pytest.raises(ValueError, match=r"The parameter `space`"):
+            _retrieve_tian(tmpdir, resolution=1, scale=1, space='wrong')
+
+        with pytest.raises(ValueError, match=r"The parameter `magneticfield`"):
+            _retrieve_tian(
+                tmpdir, resolution=1, scale=1, magneticfield='wrong')
