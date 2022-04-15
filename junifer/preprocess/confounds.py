@@ -161,7 +161,10 @@ class BaseConfoundRemover(PipelineStepMixin):
         to_select = []
         confounds_df = input['data']
         confounds_spec = input['names']['spec']
+        # for every confound there is a derivative
+        # and for every confound + derivative there should be squares
         derivatives_to_compute = input['names'].get('derivatives', {})
+        squares_to_compute = input['names'].get('squares', {})
         spike_name = input['names']['spike']
 
         # Get all the column names according to the strategy
@@ -175,7 +178,14 @@ class BaseConfoundRemover(PipelineStepMixin):
             for t_dst, t_src in derivatives_to_compute.items():
                 out_df[t_dst] = np.append(  # type: ignore
                     np.diff(out_df[t_src]), 0)  # type: ignore
+
+        # Add squares (of base confounds and derivatives) if needed 
+        to_compute = [x in squares_to_compute.keys() for x in to_select]
+        if any(to_compute):
+            for t_dst, t_src in derivatives_to_compute.items():
+                out_df[t_dst] = out_df[t_src] ** 2
         out_df = out_df[to_select]
+       
         # add binary spike regressor if needed at given threshold
         if self.spike is not None:
             fd = confounds_df[spike_name].copy()
