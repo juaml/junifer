@@ -212,6 +212,11 @@ class BaseFeatureStorage(ABC):
     def collect(self):
         raise NotImplementedError('collect not implemented')
 
+    def __str__(self):
+        single = '(single output)' \
+            if self.single_output is True else '(multiple output)'
+        return f'<{self.__class__.__name__} @ {self.uri} {single}>'
+
 
 class PandasFeatureStoreage(BaseFeatureStorage):
 

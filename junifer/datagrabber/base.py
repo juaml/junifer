@@ -400,7 +400,7 @@ class DataladDataGrabber(BaseDataGrabber):
     def install(self):
         """Install the datalad dataset into the datadir."""
         logger.debug(f'Installing dataset {self.uri} to {self._datadir}')
-        self.dataset = dl.install(  # type: ignore
+        self._dataset = dl.install(  # type: ignore
             self._datadir, source=self.uri)
         logger.debug('Dataset installed')
 
@@ -411,19 +411,19 @@ class DataladDataGrabber(BaseDataGrabber):
 
     def remove(self):
         """Remove the datalad dataset from the datadir."""
-        self.dataset.remove(recursive=True)
+        self._dataset.remove(recursive=True)
 
     def _dataset_get(self, out):
         for _, v in out.items():
             if 'path' in v:
                 logger.debug(f'Getting {v["path"]}')
-                self.dataset.get(v['path'])
+                self._dataset.get(v['path'])
                 logger.debug(f'Get done')
 
         # append the version of the dataset
         out['meta']['datagrabber']['dataset_commit_id'] = \
-            self.dataset.repo.get_hexsha(
-                self.dataset.repo.get_corresponding_branch())
+            self._dataset.repo.get_hexsha(
+                self._dataset.repo.get_corresponding_branch())
         return out
 
     def __getitem__(self, element):
@@ -439,6 +439,7 @@ class DataladDataGrabber(BaseDataGrabber):
         return out
 
 
+@register_datagrabber
 class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
     """Pattern-based Datalad DataGrabber class (abstract).
     Implements a DataGrabber that gets data from a datalad sibling,

@@ -117,8 +117,10 @@ class BaseMarker(PipelineStepMixin):
                 t_out = self.compute(t_input)
                 t_out.update(meta=t_meta)
                 if storage is not None:
+                    logger.info(f'Storing in {storage}')
                     self.store(kind, t_out, storage)
                 else:
+                    logger.info('No storage specified, returning dictionary')
                     out[kind] = t_out
 
         return out

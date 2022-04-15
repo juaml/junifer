@@ -9,6 +9,7 @@ from .base import BaseMarker
 from ..stats import get_aggfunc_by_name
 from ..data import load_atlas
 from ..api.decorators import register_marker
+from ..utils import logger
 
 
 @register_marker
@@ -22,19 +23,21 @@ class ParcelAggregation(BaseMarker):
         self.method_params = {} if method_params is None else method_params
 
     def get_output_kind(self, input):
-        if input in ['VBM_GM', 'VBM_WM']:
+        if input in ['VBM_GM', 'VBM_WM', 'fALFF', 'GCOR', 'LCOR']:
             return 'table'
         if input in ['BOLD']:
             return 'timeseries'
 
     def store(self, kind, out, storage):
-        if kind in ['VBM_GM', 'VBM_WM']:
+        logger.debug(f'Storing {kind} in {storage}')
+        if kind in ['VBM_GM', 'VBM_WM', 'fALFF', 'GCOR', 'LCOR']:
             storage.store_table(**out)
         if kind in ['BOLD']:
             storage.store_timeseries(**out)
 
     def compute(self, input):
         t_input = input['data']
+        logger.debug(f'Parcel aggregation using {self.method}')
         agg_func = get_aggfunc_by_name(
             self.method, func_params=self.method_params)
         # Get the min of the voxels sizes and use it as the resolution
@@ -50,7 +53,7 @@ class ParcelAggregation(BaseMarker):
             'img != 0',
             img=atlas_img_res,
         )
-
+        logger.debug('Masking')
         masker = NiftiMasker(atlas_bin, target_affine=t_input.affine)
 
         # Mask the input data and the atlas
@@ -59,6 +62,7 @@ class ParcelAggregation(BaseMarker):
         atlas_values = np.squeeze(atlas_values).astype(int)
 
         # Get the values for each parcel and apply agg function
+        logger.debug('Computing ROI means')
         atlas_roi_vals = sorted(np.unique(atlas_values))
         out_labels = []
         out_values = []

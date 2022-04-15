@@ -52,7 +52,7 @@ class MarkerCollection():
             m_value = marker.fit_transform(data, storage=self._storage)
             if self._storage is None:
                 out[marker.name] = m_value
-
+        logger.info(f'Marker collection fitting done')
         return None if self._storage else out
 
     def validate(self, datagrabber):
