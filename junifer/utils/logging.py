@@ -8,7 +8,7 @@ from pathlib import Path
 import warnings
 
 
-logging.basicConfig(stream=sys.stdout, level=logging.WARN)
+# logging.basicConfig(stream=sys.stdout, level=logging.WARN)
 logger = logging.getLogger('JUNIFER')
 
 

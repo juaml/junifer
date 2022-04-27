@@ -5,6 +5,7 @@ import pandas as pd
 from pandas.core.base import NoNewAttributesMixin
 from pandas.io.sql import pandasSQL_builder
 from sqlalchemy import create_engine, inspect
+import tqdm 
 
 from ..api.decorators import register_storage
 from .base import (PandasFeatureStoreage, process_meta, element_to_prefix,
@@ -191,7 +192,8 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
         out_storage = SQLiteFeatureStorage(
             uri=self.uri, single_output=True, upsert='ignore')
 
-        for elem in self.uri.parent.glob(f'*{self.uri.name}'):
+        files = self.uri.parent.glob(f'*{self.uri.name}')
+        for elem in tqdm.tqdm(files, desc='file'):
             logger.debug(f'Reading from {elem.as_posix()}')
             in_storage = SQLiteFeatureStorage(uri=elem, single_output=True)
             in_engine = in_storage.get_engine()
@@ -199,13 +201,13 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
             t_meta_df = pd.read_sql(
                 'meta', con=in_engine, index_col='meta_md5')
             out_storage._save_upsert(t_meta_df, 'meta')
-            for meta_md5 in t_meta_df.index:
+            for meta_md5 in tqdm.tqdm(t_meta_df.index, desc='feature'):
                 logger.debug(f'Collecting feature {meta_md5}')
                 # TODO: Fix this, needs that read_feature sets the index
                 # properly
                 table_name = f'meta_{meta_md5}'
                 t_df = in_storage.read_df(feature_md5=meta_md5)
-                out_storage._save_upsert(t_df, table_name)
+                out_storage._save_upsert(t_df, table_name, if_exist='nocheck')
 
     def _save_upsert(self, df, name, engine=None, if_exist='append'):
         """ Implementation of UPSERT functionality.
@@ -237,8 +239,12 @@ class SQLiteFeatureStorage(PandasFeatureStoreage):
             elif not inspect(engine).has_table(name):
                 # Case 2: new table, so no big issue
                 df.to_sql(name, con=con, if_exists='append')
+            elif if_exist == 'nocheck':
+                # Case 3: existing table, but we will not check for
+                # existing
+                df.to_sql(name, con=con, if_exists='append')
             else:
-                # Case 3: existing table, so we need to check if the index
+                # Case 4: existing table, so we need to check if the index
                 # is present or not.
                 if if_exist == 'fail':
                     raise ValueError(f"Table ({name}) already exists")
