@@ -25,8 +25,7 @@ def _getversion():
         'write_to_template': "__version__ = '{version}'\n"}
 
 
-
-setuptools.setup(
-    use_scm_version=_getversion,
-    setup_requires=['setuptools_scm'],
-)
+if __name__ == "__main__":
+    setup(
+        use_scm_version=_getversion,
+    )
