@@ -37,7 +37,7 @@ def test_meta():
 
     nib_data_path = Path(nib_testing.data_path)
     t_path = nib_data_path / 'example4d.nii.gz'
-    input = {'bold': t_path}
+    input = {'bold': {'path': t_path}}
     output = reader.fit_transform(input)
     assert 'meta' in output
     assert 'datareader' in output['meta']
@@ -54,7 +54,7 @@ def test_read_nifti():
                   'reoriented_anat_moved.nii']:
         t_path = nib_data_path / fname
 
-        input = {'bold': t_path}
+        input = {'bold': {'path': t_path}}
         output = reader.fit_transform(input)
 
         assert isinstance(output, dict)
@@ -68,7 +68,7 @@ def test_read_nifti():
         t_read_img = nib.load(t_path)
         assert_array_equal(read_img.get_fdata(), t_read_img.get_fdata())
 
-        input = {'bold': t_path.as_posix()}
+        input = {'bold': {'path': t_path.as_posix()}}
         output2 = reader.fit_transform(input)
         assert output['bold']['path'] == output2['bold']['path']
 
@@ -81,7 +81,7 @@ def test_read_unknown():
     anat_path = nib_data_path / 'reoriented_anat_moved.nii'
     whatever_path = nib_data_path / 'unexistent.unkwnownextension'
 
-    input = {'anat': anat_path, 'whatever': whatever_path}
+    input = {'anat': {'path': anat_path}, 'whatever': {'path': whatever_path}}
     output = reader.fit_transform(input)
 
     assert isinstance(output, dict)
@@ -108,7 +108,7 @@ def test_read_csv():
         df.to_csv(tmpdir / 'test.csv')
 
         reader = DefaultDataReader()
-        input = {'csv': tmpdir / 'test.csv'}
+        input = {'csv': {'path': tmpdir / 'test.csv'}}
         output = reader.fit_transform(input)
 
         assert isinstance(output, dict)
@@ -121,7 +121,7 @@ def test_read_csv():
         assert_frame_equal(df, read_df)
 
         df.to_csv(tmpdir / 'test.csv', sep=';')
-        input = {'csv': tmpdir / 'test.csv'}
+        input = {'csv': {'path': tmpdir / 'test.csv'}}
         params = {'csv': {'sep': ';'}}
         output = reader.fit_transform(input, params)
 
@@ -135,7 +135,7 @@ def test_read_csv():
         assert_frame_equal(df, read_df)
 
         df.to_csv(tmpdir / 'test.tsv', sep='\t')
-        input = {'csv': tmpdir / 'test.tsv'}
+        input = {'csv': {'path': tmpdir / 'test.tsv'}}
         output = reader.fit_transform(input)
 
         assert isinstance(output, dict)

@@ -40,7 +40,7 @@ class DefaultDataReader(PipelineStepMixin):
 
         # out is the same, but with the 'data' key set in
         # each kind dictionary, except for meta
-        out = input
+        out = input.copy()
         if params is None:
             params = {}
         for kind in input.keys():
