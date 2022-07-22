@@ -4,7 +4,6 @@ on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -27,30 +26,17 @@ jobs:
         $SUDO bash -c "$(curl -fsSL http://neuro.debian.net/_files/neurodebian-travis.sh)"
         $SUDO apt-get update -qq
         $SUDO apt-get install git-annex-standalone
-        python -m pip install --upgrade pip
-        pip install -r test-requirements.txt
-        pip install -r requirements.txt
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install tox tox-gh-actions
     - name: Configure git for datalad
       run: |
         git config --global user.email "runner@github.com"
         git config --global user.name "GITHUB CI Runner"
-    - name: Install junifer
-      shell: bash -el {0}
+    - name: Test with tox
       run: |
-          python setup.py build
-          python setup.py install
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count  --show-source --statistics
-    - name: Spell check
-      run: |
-        codespell junifer/ docs/ examples/
-    - name: Test with pytest
-      run: |
-        PYTHONPATH="." pytest --cov=junifer --cov-report xml -vv junifer/
-    - name: 'Upload coverage to CodeCov'
+        tox
+    - name: Upload coverage to Codecov
       uses: codecov/codecov-action@master
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-      if: success() && matrix.python-version == 3.8
+      if: success() && matrix.python-version == 3.9
