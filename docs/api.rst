@@ -9,9 +9,9 @@ Data Grabbers
 
 .. autoclass:: junifer.datagrabber.base.BaseDataGrabber
    :members: 
-.. autoclass:: junifer.datagrabber.base.BIDSDataGrabber
+.. autoclass:: junifer.datagrabber.base.PatternDataGrabber
    :members: 
 .. autoclass:: junifer.datagrabber.base.DataladDataGrabber
    :members: 
-.. autoclass:: junifer.datagrabber.base.BIDSDataladDataGrabber
+.. autoclass:: junifer.datagrabber.base.PatternDataladDataGrabber
    :members: 

@@ -34,8 +34,8 @@ Data types
 The Data Object
 ^^^^^^^^^^^^^^^
 
-This is the _object_ that traverses the steps of the pipeline. It is indeed a
-dictionary of dictionaries. The first level of keys are the _data types_ and a
+This is the *object* that traverses the steps of the pipeline. It is indeed a
+dictionary of dictionaries. The first level of keys are the *data types* and a
 special key named 'meta' that contains all the information on the data object
 including source and previous transformation steps.
 
@@ -43,6 +43,6 @@ The second level of keys are the actual data. So far, there are two keys used:
 - `path`: path to the file containing the data.
 - `data`: the data loaded in memory.
 
-The _DataGrabber_ step will only fill the `path` value. The `data` value will
-be filled by the _DataReader_ step, if it is one of the possible file types 
+The *DataGrabber* step will only fill the `path` value. The `data` value will
+be filled by the *DataReader* step, if it is one of the possible file types 
 that the datareader can read.
