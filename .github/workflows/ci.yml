@@ -31,6 +31,7 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Test with tox
       run: |
+        git config --global -l | cat
         tox
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@master
