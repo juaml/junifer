@@ -16,10 +16,6 @@ jobs:
         bash -c "$(curl -fsSL http://neuro.debian.net/_files/neurodebian-travis.sh)"
         sudo apt-get update -qq
         sudo apt-get install git-annex-standalone
-    - name: Configure git for datalad
-      run: |
-        git config --global user.email "runner@github.com"
-        git config --global user.name "GitHub CI Runner"
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -31,7 +27,6 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Test with tox
       run: |
-        git config --global -l | cat
         tox
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@master
