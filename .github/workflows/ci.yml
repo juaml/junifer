@@ -30,8 +30,8 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Configure git for datalad
       run: |
-        git config --global user.email "runner@github.com"
-        git config --global user.name "GITHUB CI Runner"
+        /usr/bin/git config --global user.email "runner@github.com"
+        /usr/bin/git config --global user.name "GITHUB CI Runner"
     - name: Test with tox
       run: |
         tox
