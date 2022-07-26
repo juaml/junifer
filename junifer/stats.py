@@ -1,3 +1,5 @@
+"""Provide functions for statistics."""
+
 from functools import partial
 import numpy as np
 from scipy.stats.mstats import winsorize
@@ -6,8 +8,7 @@ from .utils import logger, raise_error
 
 
 def get_aggfunc_by_name(name, func_params):
-    """
-    Helper function to get an aggregation function by its name.
+    """Get an aggregation function by its name.
 
     Parameters
     ----------
@@ -28,7 +29,6 @@ def get_aggfunc_by_name(name, func_params):
     func : function
         Respective function with `func_params` parameter set.
     """
-
     # check validity of names
     _valid_func_names = {'winsorized_mean', 'mean', 'std', 'trim_mean'}
 
@@ -56,8 +56,7 @@ def get_aggfunc_by_name(name, func_params):
 
 
 def winsorized_mean(data, axis=None, **win_params):
-    """
-    Compute a winsorized mean by chaining winsorization and mean.
+    """Compute a winsorized mean by chaining winsorization and mean.
 
     Parameters
     ----------
@@ -73,7 +72,6 @@ def winsorized_mean(data, axis=None, **win_params):
         Winsorized mean of the inputted data with the winsorize settings
         applied as specified in win_params.
     """
-
     win_dat = winsorize(data, axis=axis, **win_params)
     win_mean = win_dat.mean(axis=axis)
 
