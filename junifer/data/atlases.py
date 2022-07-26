@@ -1,6 +1,10 @@
+"""Provide functions for atlases."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+
 from pathlib import Path
 import io
 import tempfile
@@ -130,8 +134,8 @@ def list_atlases():
 
 
 def load_atlas(name, atlas_dir=None, resolution=None, path_only=False):
-    """
-    Loads a brain atlas (including a label file).
+    """Load a brain atlas (including a label file).
+
     If it is built-in atlas and file is not present in the `atlas_dir`
     directory, it will be downloaded.
 
@@ -213,9 +217,9 @@ def load_atlas(name, atlas_dir=None, resolution=None, path_only=False):
 
 
 def _retrieve_atlas(family, atlas_dir=None, resolution=None, **kwargs):
-    """
-    Retrieves a brain atlas object either from nilearn or a specified online
-    source. Only returns one atlas per call. Call function multiple times for
+    """Retrieve a brain atlas object from nilearn or a specified online source.
+
+    Only returns one atlas per call. Call function multiple times for
     different parameter specifications. Only retrieves atlas if it is not yet
     in atlas_dir.
 
@@ -295,7 +299,7 @@ def _closest_resolution(resolution, valid_resolution):
         valid_resolution = np.array(valid_resolution)
     if resolution is None:
         logger.info('Resolution set to None, using highest resolution.')
-        closest  = np.min(valid_resolution)
+        closest = np.min(valid_resolution)
     elif any(x <= resolution for x in valid_resolution):
         # Case 1: get the highest closest resolution
         closest = np.max(valid_resolution[valid_resolution <= resolution])
@@ -515,8 +519,8 @@ def _retrieve_suit(atlas_path, resolution, space='MNI'):
             sep='\t', usecols=['name'])
 
         labels.to_csv(atlas_lname, sep='\t', index=False)
-        if not (atlas_fname.exists() and
-                atlas_lname.exists()):  # pragma: no cover
+        if not atlas_fname.exists() and \
+           atlas_lname.exists():  # pragma: no cover
             raise_error('There was a problem fetching the atlases.')
 
     labels = pd.read_csv(
