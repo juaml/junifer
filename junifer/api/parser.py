@@ -1,3 +1,5 @@
+"""Provide functions for parser."""
+
 import yaml
 import importlib
 from pathlib import Path
@@ -6,6 +8,7 @@ from ..utils.logging import raise_error, logger
 
 
 def parse_yaml(filepath):
+    """Parse YAML."""
     if not isinstance(filepath, Path):
         filepath = Path(filepath)
     logger.info(f'Parsing yaml file: {filepath.as_posix()}')
