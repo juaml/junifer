@@ -1,3 +1,5 @@
+"""Provide tests for sqlite."""
+
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -47,7 +49,7 @@ def _read_sql(table_name, uri, index_col):
 
 
 def test_get_engine():
-    """Test get_engine"""
+    """Test engine retrieval."""
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'{_tmpdir}/test.db'
         # Single storage, must be the uri
@@ -72,7 +74,7 @@ def test_get_engine():
 
 
 def test_store_metadata():
-    """Test store_metadata"""
+    """Test metadata store."""
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'{_tmpdir}/test.db'
         # Single storage, must be the uri
@@ -84,7 +86,7 @@ def test_store_metadata():
 
 
 def test_upsert_replace():
-    """Test store_df (upsert=replace)"""
+    """Test dataframe store (upsert=replace)."""
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'{_tmpdir}/test.db'
         # Single storage, must be the uri
@@ -108,7 +110,7 @@ def test_upsert_replace():
 
 
 def test_upsert_ignore():
-    """Test store_df (upsert=ignore)"""
+    """Test dataframe store (upsert=ignore)."""
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'{_tmpdir}/test.db'
         with pytest.raises(ValueError):
@@ -139,7 +141,7 @@ def test_upsert_ignore():
 
 
 def test_upsert_update():
-    """Test store_df (upsert=delete)"""
+    """Test dataframe store (upsert=delete)."""
     meta = {'element': 'test', 'version': '0.0.1'}
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'{_tmpdir}/test.db'
@@ -162,7 +164,7 @@ def test_upsert_update():
 
 
 def test_store_read_df():
-    """Test store_df"""
+    """Test dataframe store."""
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'{_tmpdir}/test.db'
         storage = SQLiteFeatureStorage(
@@ -211,7 +213,7 @@ def test_store_read_df():
 
 
 def test_store_table():
-    """Test store_table"""
+    """Test table store."""
     meta = {'element': 'test', 'version': '0.0.1', 'marker': {'name': 'fc'}}
     with tempfile.TemporaryDirectory() as _tmpdir:
         uri = f'{_tmpdir}/test.db'
@@ -255,7 +257,7 @@ def test_store_table():
 
 
 def test_store_multiple_output():
-    """Test storing using single_output=False"""
+    """Test storing using single_output=False."""
 
     meta1 = {'element': {'subject': 'test-01', 'session': 'ses-01'},
              'version': '0.0.1', 'marker': {'name': 'fc'}}
@@ -329,6 +331,7 @@ def test_store_multiple_output():
 
 
 def test_collect():
+    """Test collect."""
     meta1 = {'element': {'subject': 'test-01', 'session': 'ses-01'},
              'version': '0.0.1', 'marker': {'name': 'fc'}}
     meta2 = {'element': {'subject': 'test-02', 'session': 'ses-01'},
