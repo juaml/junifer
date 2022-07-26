@@ -1,3 +1,5 @@
+"""Provide tests for cli."""
+
 from pathlib import Path
 import tempfile
 import yaml
@@ -10,7 +12,7 @@ runner = CliRunner()
 
 
 def _modify_path(tmpdir, in_file):
-    """Modify the path to use the temporary directory"""
+    """Modify the path to use the temporary directory."""
     if not isinstance(tmpdir, Path):
         tmpdir = Path(tmpdir)
     with open(in_file, 'r') as f:
@@ -26,7 +28,7 @@ def _modify_path(tmpdir, in_file):
 
 
 def test_run_collect():
-    """Test run and collect"""
+    """Test run and collect."""
     infile = Path(__file__).parent / 'data' / 'gmd_mean.yaml'
     with tempfile.TemporaryDirectory() as _tmpdir:
         runfile = _modify_path(_tmpdir, infile)
