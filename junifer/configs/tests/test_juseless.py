@@ -1,3 +1,5 @@
+"""Provide tests for juseless datagrabber."""
+
 import socket
 import pytest
 
@@ -12,6 +14,7 @@ configure_logging(level='DEBUG')
 
 
 def test_juselessdataladukbvbm_datagrabber():
+    """Test datalad UKBVBM datagrabber."""
     with JuselessDataladUKBVBM() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
@@ -23,6 +26,7 @@ def test_juselessdataladukbvbm_datagrabber():
 
 
 def test_juselessdataladhcp_datagrabber():
+    """Test datalad HCP datagrabber."""
     with DataladHCP1200() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
