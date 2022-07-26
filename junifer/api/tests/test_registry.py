@@ -1,3 +1,5 @@
+"""Provide tests for registry."""
+
 import pytest
 from abc import ABC
 
@@ -5,13 +7,13 @@ from junifer.api.registry import register, get_step_names, get, build
 
 
 def test_register_error():
-    """Test register error"""
+    """Test register error."""
     with pytest.raises(ValueError, match='Invalid ste'):
         register('foo', 'bar', 'baz')
 
 
 def test_gets():
-    """Test get"""
+    """Test get."""
     with pytest.raises(ValueError, match='Invalid ste'):
         get_step_names('foo')
 
@@ -32,7 +34,7 @@ def test_gets():
 
 
 def test_build():
-    """Test building objects from names"""
+    """Test building objects from names."""
     import numpy as np
 
     class SuperClass(ABC):
