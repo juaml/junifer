@@ -1,6 +1,9 @@
+"""Provide functions for registry."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
+
 from ..utils.logging import raise_error, logger
 
 _valid_steps = [
@@ -10,7 +13,7 @@ _registry = {x: {} for x in _valid_steps}
 
 
 def register(step, name, klass):
-    """Register a function to be used in a pipeline step
+    """Register a function to be used in a pipeline step.
 
     Parameters
     ----------
@@ -28,7 +31,7 @@ def register(step, name, klass):
 
 
 def get_step_names(step):
-    """Get the names of the registered functions for a given step
+    """Get the names of the registered functions for a given step.
 
     Parameters
     ----------
@@ -46,7 +49,7 @@ def get_step_names(step):
 
 
 def get(step, name):
-    """Get the class of the registered function for a given step
+    """Get the class of the registered function for a given step.
 
     Parameters
     ----------
@@ -68,7 +71,7 @@ def get(step, name):
 
 
 def build(step, name, baseclass, init_params=None):
-    """Ensure that the given object is an instance of the given class
+    """Ensure that the given object is an instance of the given class.
 
     Parameters
     ----------
