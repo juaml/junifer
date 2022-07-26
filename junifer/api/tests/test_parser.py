@@ -1,3 +1,5 @@
+"""Provide tests for parser."""
+
 import sys
 from pathlib import Path
 import tempfile
@@ -7,7 +9,7 @@ from junifer.api.parser import parse_yaml
 
 
 def test_parse_yaml():
-    """Test parse yaml"""
+    """Test parse yaml."""
     with pytest.raises(ValueError, match='does not exist'):
         parse_yaml('foo.yaml')
 
