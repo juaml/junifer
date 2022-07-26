@@ -1,6 +1,10 @@
+"""Provide decorators for api."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+
 from .registry import register
 
 
@@ -24,7 +28,7 @@ def register_datagrabber(klass):
 
 
 def register_marker(klass):
-    """marker decorator.
+    """Marker decorator.
 
     Registers the marker so it can be used by name.
 
