@@ -430,7 +430,7 @@ def _retrieve_tian(
             'Currently there are no labels provided for the 7T Tian atlas. A '
             'simple numbering scheme for distinction was therefore used.')
 
-    # check existance of atlas
+    # check existence of atlas
     if not (atlas_fname.exists() and atlas_lname.exists()):
         logger.info(
             'At least one of the atlas files is missing. '

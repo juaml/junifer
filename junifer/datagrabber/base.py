@@ -283,7 +283,7 @@ class PatternDataGrabber(BaseDataGrabber):
         """
         if len(element) != len(self.replacements):
             raise_error(
-                f'The element lenght must be {len(self.replacements)}, '
+                f'The element length must be {len(self.replacements)}, '
                 f'indicating {self.replacements}')
         to_replace = dict(zip(self.replacements, element))
         return pattern.format(**to_replace)
