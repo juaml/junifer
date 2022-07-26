@@ -1,3 +1,5 @@
+"""Provide testing registry."""
+
 from .datagrabbers import OasisVBMTestingDatagrabber
 from ..api.registry import register
 
