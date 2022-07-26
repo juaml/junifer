@@ -1,3 +1,5 @@
+"""Provide functions for cli."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
@@ -25,9 +27,8 @@ def _get_datagrabber(datagrabber_config):
     return datagrabber
 
 
-def run(
-        workdir, datagrabber,  markers, storage, elements=None):
-    """Run the pipeline on the selected element
+def run(workdir, datagrabber,  markers, storage, elements=None):
+    """Run the pipeline on the selected element.
 
     Parameters
     ----------
@@ -81,6 +82,7 @@ def run(
 
 
 def collect(storage):
+    """Collect data."""
     storage_params = storage.copy()
     storage_kind = storage_params.pop('kind')
     logger.info(f'Collecting data using {storage_kind}')
@@ -93,9 +95,15 @@ def collect(storage):
     logger.info('Collect done')
 
 
-def queue(config, kind, jobname='junifer_job', overwrite=False, elements=None,
-          **kwargs):
-    """Queue a job to be executed later
+def queue(
+        config,
+        kind,
+        jobname='junifer_job',
+        overwrite=False,
+        elements=None,
+        **kwargs
+):
+    """Queue a job to be executed later.
 
     Parameters
     ----------
@@ -251,9 +259,9 @@ def _queue_condor(jobname, jobdir, yaml_config, elements, env, mem='8G',
         if collect is True:
             dag_file.write(f'JOB collect {submit_collect_fname}\n')
             dag_file.write('PARENT ')
-            for i_job, t_elem in enumerate(elements):
+            for i_job, _t_elem in enumerate(elements):
                 dag_file.write(f'run{i_job} ')
-            dag_file.write(f'CHILD collect\n\n')
+            dag_file.write('CHILD collect\n\n')
 
     if submit is True:
         logger.info('Submitting HTCondor job')
