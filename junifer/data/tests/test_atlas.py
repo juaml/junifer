@@ -1,15 +1,22 @@
+"""Provide tests for atlas."""
+
 import tempfile
 import pytest
 from pathlib import Path
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 
-from junifer.data.atlases import (register_atlas, list_atlases, load_atlas,
-                                  _retrieve_schaefer, _retrieve_suit,
-                                  _retrieve_atlas, _retrieve_tian)
+from junifer.data.atlases import (
+    register_atlas, list_atlases,
+    load_atlas,
+    _retrieve_schaefer,
+    _retrieve_suit,
+    _retrieve_atlas,
+    _retrieve_tian,
+)
 
 
 def test_register_atlas():
-    """Test register_atlas"""
+    """Test atlas registration."""
 
     atlases = list_atlases()
     assert 'testatlas' not in atlases
@@ -44,7 +51,7 @@ def test_register_atlas():
 
 
 def test_wrong_atlas():
-    """Test invalid atlas"""
+    """Test invalid atlas."""
 
     with pytest.raises(ValueError, match=r"not found"):
         load_atlas('wrongatlas')
@@ -53,7 +60,7 @@ def test_wrong_atlas():
 
 
 def test_schaefer_atlas():
-    """Test Schaefer atlas"""
+    """Test Schaefer atlas."""
 
     atlases = list_atlases()
 
@@ -120,7 +127,7 @@ def test_schaefer_atlas():
 
 
 def test_suit():
-    """Test SUIT atlas"""
+    """Test SUIT atlas."""
 
     atlases = list_atlases()
     assert 'SUITxSUIT' in atlases
@@ -153,7 +160,7 @@ def test_suit():
 
 
 def test_tian():
-    """Test TIAN atlas"""
+    """Test TIAN atlas."""
 
     atlases = list_atlases()
     assert 'TianxS1x3TxMNI6thgeneration' in atlases
