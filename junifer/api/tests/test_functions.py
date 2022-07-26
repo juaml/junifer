@@ -1,3 +1,5 @@
+"""Provide tests for functions."""
+
 import tempfile
 from pathlib import Path
 
@@ -27,7 +29,7 @@ storage = {
 
 
 def test_run():
-    """Test run function"""
+    """Test run function."""
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp_path = Path(tmpdir)
         workdir = tmp_path / 'workdir'
@@ -60,7 +62,7 @@ def test_run():
 
 
 def test_collect():
-    """Test run and collect functions"""
+    """Test run and collect functions."""
 
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp_path = Path(tmpdir)
