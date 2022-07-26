@@ -1,3 +1,5 @@
+"""Provide class for juseless datagrabber."""
+
 from ..datagrabber import PatternDataladDataGrabber
 from ..api.decorators import register_datagrabber
 
