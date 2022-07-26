@@ -1,3 +1,5 @@
+"""Provide class and functions for storage."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 import numpy as np
@@ -11,8 +13,10 @@ from .. import __version__
 
 
 def process_meta(meta):
-    """Process the metadata for storage. It removes the "element" key
-    and adds the "_element_keys" with the keys used to index the element.
+    """Process the metadata for storage.
+
+    It removes the "element" key and adds the "_element_keys" with the keys
+    used to index the element.
 
     Parameters
     ----------
@@ -53,7 +57,7 @@ def process_meta(meta):
 
 
 def _meta_hash(meta):
-    """Compute the md5 hash of the meta
+    """Compute the md5 hash of the meta.
 
     Parameters
     ----------
@@ -73,7 +77,7 @@ def _meta_hash(meta):
 
 
 def element_to_index(meta, n_rows=1, rows_col_name=None):
-    """Convert the element meta to index
+    """Convert the element meta to index.
 
     Parameters
     ----------
@@ -113,6 +117,7 @@ def element_to_index(meta, n_rows=1, rows_col_name=None):
 
 
 def element_to_prefix(element):
+    """Convert the element meta to prefix."""
     logger.debug(f'Converting element {element} to prefix')
     prefix = 'element'
     if isinstance(element, tuple):
@@ -129,15 +134,15 @@ def element_to_prefix(element):
 
 
 class BaseFeatureStorage(ABC):
-    """
-    Base class for feature storage.
-    """
+    """Base class for feature storage."""
 
     def __init__(self, uri, single_output=False):
+        """Initialize the class."""
         self.uri = uri
         self.single_output = single_output
 
     def get_meta(self):
+        """Get metadata."""
         meta = {}
         meta['versions'] = {
             'junifer': __version__,
@@ -162,7 +167,8 @@ class BaseFeatureStorage(ABC):
 
     @abstractmethod
     def list_features(self, return_df=False):
-        """List the features in the storage
+        """List the features in the storage.
+
         Parameters
         ----------
             return_df : bool
@@ -179,7 +185,7 @@ class BaseFeatureStorage(ABC):
 
     @abstractmethod
     def read_df(self, feature_name=None, feature_md5=None):
-        """Read the features from the storage
+        """Read the features from the storage.
 
         Returns
         -------
@@ -190,38 +196,46 @@ class BaseFeatureStorage(ABC):
 
     @abstractmethod
     def store_metadata(self, meta):
+        """Store metadata."""
         raise NotImplementedError('store_metadata not implemented')
 
     @abstractmethod
     def store_matrix2d(self, data, meta, col_names=None, row_names=None):
+        """Store 2D matrix."""
         raise NotImplementedError('store_matrix2d not implemented')
 
     @abstractmethod
     def store_table(self, data, meta, columns=None, rows_col_name=None):
+        """Store table."""
         raise NotImplementedError('store_table not implemented')
 
     @abstractmethod
     def store_df(self, df, meta):
+        """Store dataframe."""
         raise NotImplementedError('store_df not implemented')
 
     @abstractmethod
     def store_timeseries(self, data, meta):
+        """Store timeseries."""
         raise NotImplementedError('store_timeseries not implemented')
 
     @abstractmethod
     def collect(self):
+        """Collect data."""
         raise NotImplementedError('collect not implemented')
 
     def __str__(self):
+        """Represent object as string."""
         single = '(single output)' \
             if self.single_output is True else '(multiple output)'
         return f'<{self.__class__.__name__} @ {self.uri} {single}>'
 
 
 class PandasFeatureStoreage(BaseFeatureStorage):
+    """Store features via pandas."""
 
     def _meta_row(self, meta, meta_md5):
-        """Convert the meta to a dataframe row"""
+        """Convert the meta to a dataframe row."""
         data_df = {}
         for k, v in meta.items():
             data_df[k] = json.dumps(v, sort_keys=True)
