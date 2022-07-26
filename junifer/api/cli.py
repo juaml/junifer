@@ -1,3 +1,5 @@
+"""Provide functions for cli."""
+
 import click
 
 from .parser import parse_yaml
@@ -28,6 +30,7 @@ def _parse_elements(element, config):
 
 @click.group()
 def cli():
+    """CLI wrapper."""
     pass
 
 
@@ -41,6 +44,7 @@ def cli():
               default='info')
 @click.option('--element', type=str, multiple=True)
 def run(filepath, element, verbose):
+    """Run command for CLI."""
     configure_logging(level=verbose.upper())
     config = parse_yaml(filepath)
     workdir = config['workdir']
@@ -62,6 +66,7 @@ def run(filepath, element, verbose):
                                 case_sensitive=False),
               default='info')
 def collect(filepath, verbose):
+    """Collect command for CLI."""
     configure_logging(level=verbose.upper())
     config = parse_yaml(filepath)
     storage = config['storage']
@@ -80,6 +85,7 @@ def collect(filepath, verbose):
 @click.option('--submit', is_flag=True)
 @click.option('--element', type=str, multiple=True)
 def queue(filepath, element, overwrite, submit, verbose):
+    """Queue command for CLI."""
     configure_logging(level=verbose.upper())
     config = parse_yaml(filepath)
     elements = _parse_elements(element, config)
