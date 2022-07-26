@@ -33,7 +33,7 @@ jobs:
       run: |
         tox
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@master
+      uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
       if: success() && matrix.python-version == 3.9
