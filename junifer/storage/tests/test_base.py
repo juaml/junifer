@@ -1,3 +1,5 @@
+"""Provide tests for base."""
+
 import pytest
 
 from junifer.storage.base import (process_meta, element_to_index,
@@ -6,8 +8,7 @@ from junifer.storage.base import (process_meta, element_to_index,
 
 
 def test_process_meta_hash():
-    """Test meta_hash"""
-
+    """Test metadata hash."""
     meta = None
     with pytest.raises(ValueError, match=r"Meta must be a dict"):
         process_meta(meta)
@@ -48,8 +49,7 @@ def test_process_meta_hash():
 
 
 def test_process_meta_element():
-    """Test meta element"""
-
+    """Test metadata element."""
     meta = {}
     with pytest.raises(ValueError, match=r"_element_keys"):
         process_meta(meta)
@@ -72,8 +72,7 @@ def test_process_meta_element():
 
 
 def test_process_meta_index():
-    """Test element_to_index"""
-
+    """Test metadata element to index."""
     meta = {'noelement': 'foo'}
     with pytest.raises(ValueError, match=r'meta must contain the key'):
         element_to_index(meta)
@@ -138,7 +137,7 @@ def test_process_meta_index():
 
 
 def test_BaseFeatureStorage():
-    """Test BaseFeatureStorage"""
+    """Test BaseFeatureStorage."""
     with pytest.raises(TypeError, match=r"abstract"):
         BaseFeatureStorage(uri='/tmp')  # type: ignore
 
@@ -211,7 +210,7 @@ def test_BaseFeatureStorage():
 
 
 def test_element_to_prefix():
-    """Test converting element to prefix (for file naming)"""
+    """Test converting element to prefix (for file naming)."""
 
     element = 'sub-01'
     prefix = element_to_prefix(element)
