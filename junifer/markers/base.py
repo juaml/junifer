@@ -1,11 +1,16 @@
+"""Provide base class and mixin class for markers."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
+
 from ..utils import logger
 
 
 class PipelineStepMixin():
+    """Mixin class for pipeline."""
 
     def get_meta(self):
+        """Get metadata."""
         t_meta = {}
         t_meta['class'] = self.__class__.__name__
         for k, v in vars(self).items():
@@ -68,6 +73,7 @@ class PipelineStepMixin():
         return self.get_output_kind(input)
 
     def fit_transform(self, input):
+        """Fit and transform."""
         raise NotImplementedError('fit_transform not implemented')
 
 
@@ -75,12 +81,14 @@ class BaseMarker(PipelineStepMixin):
     """Base class for all markers."""
 
     def __init__(self, on, name=None):
+        """Initialize the class."""
         if not isinstance(on, list):
             on = [on]
         self._valid_inputs = on
         self.name = self.__class__.__name__ if name is None else name
 
     def get_meta(self, kind):
+        """Get metadata."""
         s_meta = super().get_meta()
         # same marker can be fit into different kinds, so the name
         # is created from the kind and the name of the marker
@@ -89,6 +97,7 @@ class BaseMarker(PipelineStepMixin):
         return dict(marker=s_meta)
 
     def validate_input(self, input):
+        """Validate input."""
         if not any(x in input for x in self._valid_inputs):
             raise ValueError(
                 'Input does not have the required data.'
@@ -96,15 +105,19 @@ class BaseMarker(PipelineStepMixin):
                 f'\t Required (any of): {self._valid_inputs}')
 
     def get_output_kind(self, input):
+        """Get output kind."""
         return None
 
     def compute(self, input):
+        """Compute."""
         raise NotImplementedError('compute not implemented')
 
     def store(self, input, out, storage):
+        """Store."""
         raise NotImplementedError('store not implemented')
 
     def fit_transform(self, input, storage=None):
+        """Fit and transform."""
         out = {}
         meta = input.get('meta', {})
         for kind in self._valid_inputs:
