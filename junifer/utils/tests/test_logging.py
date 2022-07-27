@@ -1,6 +1,9 @@
+"""Provide tests for logging."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Sami Hamdan <s.hamdan@fz-juelich.de>
 # License: AGPL
+
 from junifer.utils import logger, configure_logging, raise_error, warn
 from junifer.utils.logging import _close_handlers
 import pytest
@@ -9,7 +12,7 @@ from pathlib import Path
 
 
 def test_log_file():
-    """Test logging to a file"""
+    """Test logging to a file."""
     with tempfile.TemporaryDirectory() as tmp:
         tmpdir = Path(tmp)
         configure_logging(fname=tmpdir / 'test1.log')
@@ -112,13 +115,13 @@ def test_log_file():
 
 
 def test_log():
-    """Simple log test"""
+    """Simple log test."""
     configure_logging()
     logger.info('Testing')
 
 
 def test_lib_logging():
-    """Test logging versions"""
+    """Test logging versions."""
 
     import numpy as np  # noqa
     import pandas  # noqa
