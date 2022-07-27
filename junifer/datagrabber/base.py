@@ -1,6 +1,9 @@
+"""Provide class and functions for base datagrabber."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
+
 from pathlib import Path
 import re
 import tempfile
@@ -13,9 +16,7 @@ from ..utils.logging import logger, raise_error, warn
 
 
 def _validate_types(types):
-    """
-    Validate the types
-    """
+    """Validate the types."""
     if not isinstance(types, list):
         raise_error("types must be a list", TypeError)  # type: ignore
     if any(not isinstance(x, str) for x in types):
@@ -24,9 +25,7 @@ def _validate_types(types):
 
 
 def _validate_replacements(replacements, patterns):
-    """
-    Validate the replacements
-    """
+    """Validate the replacements."""
     if not isinstance(replacements, list):
         raise_error("replacements must be a list", TypeError)  # type: ignore
     if any(not isinstance(x, str) for x in replacements):
@@ -35,14 +34,12 @@ def _validate_replacements(replacements, patterns):
             TypeError)  # type: ignore
 
     for x in replacements:
-        if all(f'{{x}}' not in y for y in patterns.values()):
+        if all(x not in y for y in patterns.values()):
             warn(f"Replacement {x} is not part of any pattern")
 
 
 def _validate_patterns(types, patterns):
-    """
-    Validate the patterns.
-    """
+    """Validate the patterns."""
     _validate_types(types)
     if not isinstance(patterns, dict):
         raise_error("patterns must be a dict", TypeError)  # type: ignore
@@ -77,6 +74,7 @@ class BaseDataGrabber(ABC):
         Does nothing. Can be overridden by subclasses to clean up after
         `__enter__`
     """
+
     def __init__(self, types, datadir):
         """Initialize a BaseDataGrabber object.
 
@@ -97,9 +95,11 @@ class BaseDataGrabber(ABC):
         self.types = types
 
     def get_types(self):
+        """Get types."""
         return self.types.copy()
 
     def get_meta(self):
+        """Get metadata."""
         t_meta = {}
         t_meta['class'] = self.__class__.__name__
         for k, v in vars(self).items():
@@ -108,11 +108,13 @@ class BaseDataGrabber(ABC):
         return t_meta
 
     def get_element_keys(self):
+        """Get element keys."""
         return 'element'
 
     @property
     def datadir(self):
-        """
+        """Get data directory path.
+
         Returns
         -------
         Path to the data directory. Implemented as a property, can be
@@ -132,6 +134,7 @@ class BaseDataGrabber(ABC):
             yield elem
 
     def __getitem__(self, element):
+        """Get item implementation."""
         logger.info(f'Getting element {element}')
         out = {}
         out['meta'] = dict(datagrabber=self.get_meta())
@@ -139,21 +142,25 @@ class BaseDataGrabber(ABC):
 
     @abstractmethod
     def get_elements(self):
+        """Get elements."""
         raise_error(
             'get_elements not implemented',
             NotImplementedError)  # type: ignore
 
     def __enter__(self):
+        """Context entry implementation."""
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
+        """Context exit implementation."""
         pass
 
 
 @register_datagrabber
 class PatternDataGrabber(BaseDataGrabber):
-    """Patternd DataGrabber class (abstract). Implements a DataGrabber that
-    understands patterns to grab data.
+    """Pattern DataGrabber class (abstract).
+
+    Implements a DataGrabber that understands patterns to grab data.
 
     Attributes
     ----------
@@ -176,6 +183,7 @@ class PatternDataGrabber(BaseDataGrabber):
         specified element. Each occurrence of the string `{subject}` is
         replaced by the indexed element
     """
+
     def __init__(self, types=None, patterns=None, replacements=None, **kwargs):
         """Initialize a BaseDataGrabber object.
 
@@ -202,8 +210,9 @@ class PatternDataGrabber(BaseDataGrabber):
         self.replacements = replacements
 
     def _replace_patterns_regex(self, pattern):
-        """Replace the patterns in the pattern with the named groups so the
-        elements can be obtained from the filesystem.
+        """Replace the patterns in the pattern with the named groups.
+
+        It allows elements to be obtained from the filesystem.
 
         Parameters
         ----------
@@ -231,14 +240,15 @@ class PatternDataGrabber(BaseDataGrabber):
             re_pattern = re_pattern.replace(f'{{{t_r}}}', f'(?P={t_r})')
 
         for t_r in self.replacements:
-            glob_pattern = glob_pattern.replace(f'{{{t_r}}}', f'*')
+            glob_pattern = glob_pattern.replace(f'{{{t_r}}}', '*')
         return re_pattern, glob_pattern
 
     def get_elements(self):
-        """Get the list of elements in the dataset. It will use regex
-        to search for `replacements` in the `patterns` and return the
-        intersection of the results for each type. That is, build a list
-        of elements that have all the required types.
+        """Get the list of elements in the dataset.
+
+        It will use regex to search for `replacements` in the `patterns` and
+        return the intersection of the results for each type. That is, build a
+        list of elements that have all the required types.
 
         Returns
         -------
@@ -266,8 +276,7 @@ class PatternDataGrabber(BaseDataGrabber):
         return list(elements)
 
     def _replace_patterns_glob(self, element, pattern):
-        """Replace the patterns in the pattern with the element so it can
-        be globbed.
+        """Replace patterns with the element so it can be globbed.
 
         Parameters
         ----------
@@ -333,9 +342,9 @@ class PatternDataGrabber(BaseDataGrabber):
 
 @register_datagrabber
 class DataladDataGrabber(BaseDataGrabber):
-    """
-    Datalad DataGrabber class (abstract). Implements a DataGrabber that gets
-    data from a datalad sibling.
+    """Datalad DataGrabber class (abstract).
+
+    Implements a DataGrabber that gets data from a datalad sibling.
 
     Attributes
     ----------
@@ -362,6 +371,7 @@ class DataladDataGrabber(BaseDataGrabber):
     concrete class implementation.
 
     """
+
     def __init__(self, rootdir='.', datadir=None, uri=None, **kwargs):
         """Initialize a DataladDataGrabber object.
 
@@ -390,11 +400,13 @@ class DataladDataGrabber(BaseDataGrabber):
         self._rootdir = rootdir
 
     def __enter__(self):
+        """Context entry implementation."""
         self.install()
         return self
 
     @property
     def datadir(self):
+        """Get data directory path."""
         return super().datadir / self._rootdir
 
     def install(self):
@@ -405,6 +417,7 @@ class DataladDataGrabber(BaseDataGrabber):
         logger.debug('Dataset installed')
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
+        """Context exit implementation."""
         logger.debug('Removing dataset')
         self.remove()
         logger.debug('Dataset removed')
@@ -418,7 +431,7 @@ class DataladDataGrabber(BaseDataGrabber):
             if 'path' in v:
                 logger.debug(f'Getting {v["path"]}')
                 self._dataset.get(v['path'])
-                logger.debug(f'Get done')
+                logger.debug('Get done')
 
         # append the version of the dataset
         out['meta']['datagrabber']['dataset_commit_id'] = \
@@ -427,9 +440,10 @@ class DataladDataGrabber(BaseDataGrabber):
         return out
 
     def __getitem__(self, element):
-        """Index one element in the Datalad database. It will first obtain
-        the paths from the parent class and then `datalad get` each of the
-        files.
+        """Index one element in the Datalad database.
+
+        It will first obtain the paths from the parent class and then
+        `datalad get` each of the files.
 
         This method only works with multiple inheritance.
 
@@ -442,6 +456,7 @@ class DataladDataGrabber(BaseDataGrabber):
 @register_datagrabber
 class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
     """Pattern-based Datalad DataGrabber class (abstract).
+
     Implements a DataGrabber that gets data from a datalad sibling,
     interpreting patterns.
 
@@ -452,7 +467,9 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
     PatternDataGrabber
 
     """
+
     def __init__(self, types=None, patterns=None, **kwargs):
+        """Initialize the class."""
         _validate_patterns(types, patterns)
         super().__init__(types=types, patterns=patterns, **kwargs)
         self.patterns = patterns
