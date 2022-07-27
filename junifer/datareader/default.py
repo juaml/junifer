@@ -1,3 +1,5 @@
+"""Provide class for default data reader."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
@@ -26,16 +28,20 @@ _readers['TSV'] = dict(func=pd.read_csv, params={'sep': '\t'})
 
 
 class DefaultDataReader(PipelineStepMixin):
+    """Mixin class for default data reader."""
 
     def validate_input(self, input):
+        """Validate input."""
         # Nothing to validate, any input is fine
         pass
 
     def get_output_kind(self, input):
+        """Get output kind."""
         # It will output the same kind of data as the input
         return input
 
     def fit_transform(self, input, params=None):
+        """Fit and transform."""
         # For each kind of data, try to read it
 
         # out is the same, but with the 'data' key set in
