@@ -1,3 +1,5 @@
+"""Provide tests for marker collection."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
@@ -12,7 +14,7 @@ from junifer.storage import SQLiteFeatureStorage
 
 
 def test_MarkerCollection():
-    """Test MarkerCollection"""
+    """Test MarkerCollection."""
     wrong_markers = [
         ParcelAggregation(
             atlas='Schaefer100x7', method='mean',
@@ -83,7 +85,7 @@ def test_MarkerCollection():
 
 
 def test_MarkerCollection_storage():
-    """Test marker collection with storage"""
+    """Test marker collection with storage."""
     markers = [
         ParcelAggregation(
             atlas='Schaefer100x7', method='mean',
