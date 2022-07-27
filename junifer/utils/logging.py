@@ -1,5 +1,8 @@
+"""Provide class and functions for logging."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
+
 import logging
 import subprocess
 import sys
@@ -13,7 +16,7 @@ logger = logging.getLogger('JUNIFER')
 
 
 def _get_git_head(path):
-    """Aux function to read HEAD from git"""
+    """Aux function to read HEAD from git."""
     if not path.exists():
         raise ValueError('This path does not exist: {}'.format(path))
     command = ('cd {gitpath}; '
@@ -27,7 +30,8 @@ def _get_git_head(path):
 
 
 def get_versions(sys):
-    """Import stuff and get versions if module
+    """Import stuff and get versions if module.
+
     Parameters
     ----------
     sys : module
@@ -58,7 +62,7 @@ def get_versions(sys):
 
 
 def get_ext_versions(tbox_path):
-    """ Get versions of external tools used by JUNIFER."""
+    """Get versions of external tools used by JUNIFER."""
     versions = {}
     # spm_path = tbox_path / 'spm12'
     # if spm_path.exists():
@@ -74,6 +78,7 @@ def _safe_log(versions, name):
 
 
 def log_versions(tbox_path=None):
+    """Log versions of dependencies and junifer."""
     versions = get_versions(sys)
 
     logger.info('===== Lib Versions =====')
@@ -97,9 +102,10 @@ _logging_types = dict(DEBUG=logging.DEBUG, INFO=logging.INFO,
                       WARNING=logging.WARNING, ERROR=logging.ERROR)
 
 
-def configure_logging(level='WARNING', fname=None, overwrite=None,
-                      output_format=None):
-    """Configure the logging functionality
+def configure_logging(
+        level='WARNING', fname=None, overwrite=None, output_format=None
+):
+    """Configure the logging functionality.
 
     Parameters
     ----------
@@ -161,12 +167,14 @@ def _close_handlers(logger):
 
 
 def raise_error(msg, klass=ValueError):
+    """Raise error."""
     logger.error(msg)
     raise klass(msg)
 
 
 def warn(msg, category=RuntimeWarning):
-    """Warn, but first log it
+    """Warn, but first log it.
+
     Parameters
     ----------
     msg : str
