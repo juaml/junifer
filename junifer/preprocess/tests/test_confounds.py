@@ -1,3 +1,5 @@
+"""Provide tests for confound removal."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
@@ -15,11 +17,11 @@ np.random.seed(1234567)
 
 
 def generate_conf_name(size=6, chars=string.ascii_uppercase + string.digits):
+    """Generate configuration name."""
     return ''.join(random.choice(chars) for _ in range(size))
 
 
 def _simu_img():
-
     # Random 4D volume with 100 time points
     vol = 100 + 10 * np.random.randn(5, 5, 2, 100)
     img = Nifti1Image(vol, np.eye(4))
@@ -29,6 +31,7 @@ def _simu_img():
 
 
 def test_baseconfoundremover():
+    """Test BaseConfoundRemover."""
     # Generate a simulated BOLD img
     siimg, simsk = _simu_img()
 
@@ -69,7 +72,7 @@ def test_baseconfoundremover():
     confound_column_names.extend(gs_full)
 
     # add some random irrelevant confounds
-    for i in range(10):
+    for _ in range(10):
         confound_column_names.append(generate_conf_name())
 
     np.random.shuffle(confound_column_names)
