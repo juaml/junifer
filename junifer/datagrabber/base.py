@@ -61,10 +61,6 @@ class BaseDataGrabber(ABC):
 
     Methods
     -------
-    get_elements : List
-        Returns a list of elements that can be grabbed. The elements can be
-        strings, tuples or any object that will be then used as a key to
-        index the datagrabber
     __getitem__(element) : dict[str -> Path]
         Returns a dictionary of paths for each type of data required for the
         specified element. Use the element as a key to index the datagrabber.
@@ -142,7 +138,16 @@ class BaseDataGrabber(ABC):
 
     @abstractmethod
     def get_elements(self):
-        """Get elements."""
+        """Get elements.
+
+        Returns
+        -------
+        list
+            List of elements that can be grabbed. The elements can be strings,
+            tuples or any object that will be then used as a key to index the
+            datagrabber.
+
+        """
         raise_error(
             'get_elements not implemented',
             NotImplementedError)  # type: ignore
