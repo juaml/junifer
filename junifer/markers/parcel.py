@@ -1,3 +1,5 @@
+"""Provide class for parcel aggregation."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 import numpy as np
@@ -14,7 +16,10 @@ from ..utils import logger
 
 @register_marker
 class ParcelAggregation(BaseMarker):
+    """Class for parcel aggregation."""
+
     def __init__(self, atlas, method, method_params=None, on=None, name=None):
+        """Initialize the class."""
         if on is None:
             on = ['T1w', 'BOLD', 'VBM_GM', 'VBM_WM', 'fALFF', 'GCOR', 'LCOR']
         super().__init__(on=on, name=name)
@@ -23,12 +28,14 @@ class ParcelAggregation(BaseMarker):
         self.method_params = {} if method_params is None else method_params
 
     def get_output_kind(self, input):
+        """Get output kind."""
         if input in ['VBM_GM', 'VBM_WM', 'fALFF', 'GCOR', 'LCOR']:
             return 'table'
         if input in ['BOLD']:
             return 'timeseries'
 
     def store(self, kind, out, storage):
+        """Store."""
         logger.debug(f'Storing {kind} in {storage}')
         if kind in ['VBM_GM', 'VBM_WM', 'fALFF', 'GCOR', 'LCOR']:
             storage.store_table(**out)
@@ -36,6 +43,7 @@ class ParcelAggregation(BaseMarker):
             storage.store_timeseries(**out)
 
     def compute(self, input):
+        """Compute."""
         t_input = input['data']
         logger.debug(f'Parcel aggregation using {self.method}')
         agg_func = get_aggfunc_by_name(
