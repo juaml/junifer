@@ -1,3 +1,5 @@
+"""Provide class for marker collection."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
@@ -8,8 +10,12 @@ from collections import Counter
 
 
 class MarkerCollection():
-    def __init__(self, markers, datareader=None, preprocessing=None,
-                 storage=None):
+    """Class for marker collection."""
+
+    def __init__(
+            self, markers, datareader=None, preprocessing=None, storage=None
+    ):
+        """Initialize the class."""
         if datareader is None:
             datareader = DefaultDataReader()
         self._datareader = datareader
@@ -52,7 +58,7 @@ class MarkerCollection():
             m_value = marker.fit_transform(data, storage=self._storage)
             if self._storage is None:
                 out[marker.name] = m_value
-        logger.info(f'Marker collection fitting done')
+        logger.info('Marker collection fitting done')
         return None if self._storage else out
 
     def validate(self, datagrabber):
@@ -67,7 +73,7 @@ class MarkerCollection():
         t_data = datagrabber.get_types()
         logger.info(f'DataGrabber output type: {t_data}')
 
-        logger.info(f'Validating Data Reader:')
+        logger.info('Validating Data Reader:')
         t_data = self._datareader.validate(t_data)
         logger.info(f'Data Reader output type: {t_data}')
 
