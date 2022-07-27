@@ -1,3 +1,5 @@
+"""Provide test for parcel aggregation."""
+
 import numpy as np
 from numpy.testing import assert_array_equal, assert_array_almost_equal
 from scipy.stats import trim_mean
@@ -11,7 +13,7 @@ from junifer.markers.parcel import ParcelAggregation
 
 
 def test_ParcelAggregation_3D():
-    """Test ParcelAggregation object on 3D images"""
+    """Test ParcelAggregation object on 3D images."""
 
     # Get the testing atlas (for nilearn)
     atlas = datasets.fetch_atlas_schaefer_2018(n_rois=100)
@@ -123,7 +125,7 @@ def test_ParcelAggregation_3D():
 
 
 def test_ParcelAggregation_4D():
-    """Test ParcelAggregation object on 4D images"""
+    """Test ParcelAggregation object on 4D images."""
 
     # Get the testing atlas (for nilearn)
     atlas = datasets.fetch_atlas_schaefer_2018(
