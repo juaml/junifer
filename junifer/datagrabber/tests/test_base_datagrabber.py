@@ -1,11 +1,17 @@
+"""Provide tests for base datagrabber."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
+
 import tempfile
 import pytest
 from pathlib import Path
-from junifer.datagrabber.base import (PatternDataGrabber, BaseDataGrabber,
-                                      PatternDataladDataGrabber)
+from junifer.datagrabber.base import (
+    PatternDataGrabber,
+    BaseDataGrabber,
+    PatternDataladDataGrabber,
+)
 
 
 _testing_dataset = {
@@ -21,7 +27,7 @@ _testing_dataset = {
 
 
 def test_BaseDataGrabber():
-    """Test BaseDataGrabber"""
+    """Test BaseDataGrabber."""
     with pytest.raises(TypeError, match=r"abstract"):
         BaseDataGrabber(datadir='/tmp', types=['func'])  # type: ignore
 
@@ -48,11 +54,11 @@ def test_BaseDataGrabber():
 
 
 def test_PatternDataGrabber():
+    """Test PatternDataGrabber."""
     class MyDataGrabber(PatternDataGrabber):
         def get_elements(self):
             return super().get_elements()
 
-    """Test test_PatternDataGrabber"""
     with pytest.raises(TypeError, match=r"types must be a list"):
         MyDataGrabber(datadir='/tmp', types='wrong',
                       patterns=dict(wrong='pattern'),
@@ -115,7 +121,7 @@ def test_PatternDataGrabber():
 
 
 def test_bids_datalad_PatternDataGrabber():
-    """Test a subject-based BIDS datalad datagrabber"""
+    """Test a subject-based BIDS datalad datagrabber."""
     types = ['T1w', 'bold']
     patterns = {
         'T1w': '{subject}/anat/{subject}_T1w.nii.gz',
@@ -127,9 +133,9 @@ def test_bids_datalad_PatternDataGrabber():
         PatternDataladDataGrabber(datadir=None, types=types, patterns=patterns,
                                   replacements=replacements)
 
-    repo_uri =  _testing_dataset['example_bids']['uri']
+    repo_uri = _testing_dataset['example_bids']['uri']
     rootdir = 'example_bids'
-    repo_commit =  _testing_dataset['example_bids']['id']
+    repo_commit = _testing_dataset['example_bids']['id']
 
     with PatternDataladDataGrabber(
             rootdir=rootdir, uri=repo_uri, types=types, patterns=patterns,
@@ -181,7 +187,7 @@ def test_bids_datalad_PatternDataGrabber():
 
 
 def test_bids_datalad_PatternDataGrabber_session():
-    """Test a subject and session-based BIDS datalad datagrabber"""
+    """Test a subject and session-based BIDS datalad datagrabber."""
     types = ['T1w', 'bold']
     patterns = {
         'T1w': '{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz',
@@ -194,7 +200,7 @@ def test_bids_datalad_PatternDataGrabber_session():
         PatternDataladDataGrabber(datadir=None, types=types, patterns=patterns,
                                   replacements=replacements)
 
-    repo_uri =  _testing_dataset['example_bids_ses']['uri']
+    repo_uri = _testing_dataset['example_bids_ses']['uri']
     rootdir = 'example_bids_ses'
     # repo_commit =  _testing_dataset['example_bids_ses']['id']
 
