@@ -1,3 +1,5 @@
+"""Provide classes for HCP data access."""
+
 from itertools import product
 
 from junifer.datagrabber.base import DataladDataGrabber
@@ -8,6 +10,7 @@ from ..api.decorators import register_datagrabber
 
 @register_datagrabber
 class HCP1200(PatternDataGrabber):
+    """PatternDataGrabber implementation for HCP1200."""
 
     def __init__(
         self, datadir=None, tasks=None, phase_encodings=None
@@ -30,7 +33,6 @@ class HCP1200(PatternDataGrabber):
             (default) both will be used.
 
         """
-
         types = ['BOLD']
 
         replacements = ['subject', 'task', 'phase_encoding']
@@ -84,7 +86,6 @@ class HCP1200(PatternDataGrabber):
                     'phase_encoding can be LR or RL (or both)!'
                 )
 
-
     def get_elements(self):
         """Get the list of subjects in the dataset.
 
@@ -93,7 +94,6 @@ class HCP1200(PatternDataGrabber):
         elements : list[str]
             The list of subjects in the dataset.
         """
-
         subjects = [x.name for x in self.datadir.iterdir() if x.is_dir()]
         elems = []
         for subject, task, phase_encoding in product(
@@ -119,7 +119,6 @@ class HCP1200(PatternDataGrabber):
             Dictionary of paths for each type of data required for the
             specified element.
         """
-
         sub, task, phase_encoding = element
 
         if "REST" in task:
@@ -137,12 +136,18 @@ class HCP1200(PatternDataGrabber):
 
 @register_datagrabber
 class DataladHCP1200(DataladDataGrabber, HCP1200):
+    """DataladDataGrabber implementation for HCP1200."""
+
     def __init__(self, datadir=None, tasks=None, phase_encodings=None):
+        """Initialize the class."""
         uri = (
             'https://github.com/datalad-datasets/'
             'human-connectome-project-openaccess.git'
         )
         rootdir = 'HCP1200'
-        super().__init__(datadir=datadir, tasks=tasks,
-                         phase_encodings=phase_encodings,
-                         uri=uri, rootdir=rootdir)  # type: ignore
+        super().__init__(
+            datadir=datadir,
+            tasks=tasks,
+            phase_encodings=phase_encodings,
+            uri=uri, rootdir=rootdir
+        )  # type: ignore
