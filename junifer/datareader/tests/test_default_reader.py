@@ -1,3 +1,5 @@
+"""Provide tests for default data reader."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
@@ -13,7 +15,7 @@ from junifer.datareader import DefaultDataReader
 
 
 def test_validation():
-    """Test validating input/output"""
+    """Test validating input/output."""
     kinds = [
         ['T1w', 'BOLD', 'T2', 'dwi'],
         [],
@@ -30,7 +32,7 @@ def test_validation():
 
 
 def test_meta():
-    """Test reader metadata"""
+    """Test reader metadata."""
     reader = DefaultDataReader()
     t_meta = reader.get_meta()
     assert t_meta['class'] == 'DefaultDataReader'
@@ -46,7 +48,7 @@ def test_meta():
 
 
 def test_read_nifti():
-    """Test reading NIFTI files"""
+    """Test reading NIFTI files."""
     reader = DefaultDataReader()
     nib_data_path = Path(nib_testing.data_path)
 
@@ -74,7 +76,7 @@ def test_read_nifti():
 
 
 def test_read_unknown():
-    """Test (not) reading unknown files"""
+    """Test (not) reading unknown files."""
     reader = DefaultDataReader()
     nib_data_path = Path(nib_testing.data_path)
 
@@ -100,7 +102,7 @@ def test_read_unknown():
 
 
 def test_read_csv():
-    """Test reading CSV files"""
+    """Test reading CSV files."""
     d = {'col1': [1, 2, 3, 4, 5], 'col2': [3, 4, 5, 6, 7]}
     df = pd.DataFrame(d)
     with tempfile.TemporaryDirectory() as tmpdir:
