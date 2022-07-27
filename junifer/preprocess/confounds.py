@@ -1,3 +1,5 @@
+"""Provide classes for confound removal."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
@@ -14,8 +16,10 @@ from ..utils.logging import logger, raise_error
 
 
 class BaseConfoundRemover(PipelineStepMixin):
-    """ A base class to read confound files and select columns according to
-    a pre-defined strategy
+    """Base class for cofound removal.
+
+    Read confound files and select columns according to
+    a pre-defined strategy.
 
     """
 
@@ -25,10 +29,18 @@ class BaseConfoundRemover(PipelineStepMixin):
     # in particular scrubbing
     # TODO: Implement read_confounds for fmriprep data
 
-    def __init__(self, strategy=None, spike=None, detrend=True,
-                 standardize=True, low_pass=None, high_pass=None, t_r=None,
-                 mask_img=None):
-        """ Initialise a BaseConfoundReader object
+    def __init__(
+            self,
+            strategy=None,
+            spike=None,
+            detrend=True,
+            standardize=True,
+            low_pass=None,
+            high_pass=None,
+            t_r=None,
+            mask_img=None,
+    ):
+        """Initialise a BaseConfoundReader object.
 
         Confound removal is based on nilearn.image.clean_img
 
@@ -157,7 +169,7 @@ class BaseConfoundRemover(PipelineStepMixin):
         return input
 
     def _pick_confounds(self, input):
-        """ Select relevant confounds from the specified file """
+        """Select relevant confounds from the specified file."""
         to_select = []
         confounds_df = input['data']
         confounds_spec = input['names']['spec']
@@ -179,13 +191,13 @@ class BaseConfoundRemover(PipelineStepMixin):
                 out_df[t_dst] = np.append(  # type: ignore
                     np.diff(out_df[t_src]), 0)  # type: ignore
 
-        # Add squares (of base confounds and derivatives) if needed 
+        # Add squares (of base confounds and derivatives) if needed
         to_compute = [x in squares_to_compute.keys() for x in to_select]
         if any(to_compute):
             for t_dst, t_src in squares_to_compute.items():
                 out_df[t_dst] = out_df[t_src] ** 2
         out_df = out_df[to_select]
-       
+
         # add binary spike regressor if needed at given threshold
         if self.spike is not None:
             fd = confounds_df[spike_name].copy()
@@ -196,7 +208,7 @@ class BaseConfoundRemover(PipelineStepMixin):
         return out_df
 
     def _remove_confounds(self, bold_img, confounds_df):
-        """ Remove confounds from the BOLD image
+        """Remove confounds from the BOLD image.
 
         bold_img : Niimg-like object
             4D image. The signals in the last dimension are filtered
@@ -212,7 +224,6 @@ class BaseConfoundRemover(PipelineStepMixin):
             input image, cleaned.
 
         """
-
         confounds_array = confounds_df.values
 
         t_r = self.t_r
@@ -340,6 +351,7 @@ class BaseConfoundRemover(PipelineStepMixin):
                 'and the datagrabber.', ValueError)
 
     def fit_transform(self, input):
+        """Fit and transform."""
         self._validate_data(input)
         bold_img = input['BOLD']['data']
         confounds_df = self._pick_confounds(input['confounds'])
