@@ -1,8 +1,11 @@
+"""Provide tests for base marker."""
+
 import pytest
 from junifer.markers.base import BaseMarker, PipelineStepMixin
 
 
 def test_PipelineStepMixin():
+    """Test PipelineStepMixin."""
     mixin = PipelineStepMixin()
     with pytest.raises(NotImplementedError):
         mixin.validate_input(None)
@@ -13,7 +16,7 @@ def test_PipelineStepMixin():
 
 
 def test_meta():
-    """Test metadata"""
+    """Test metadata."""
     pipemixin = PipelineStepMixin()
     t_meta = pipemixin.get_meta()
     assert t_meta['class'] == 'PipelineStepMixin'
@@ -31,7 +34,7 @@ def test_meta():
 
 
 def test_BaseMarker():
-    """Test base class"""
+    """Test base class."""
     base = BaseMarker(on=['bold', 'dwi'], name='mymarker')
     input = {'bold': {'path': 'test'}, 't2': {'path': 'test'}}
     base.validate_input(input)
