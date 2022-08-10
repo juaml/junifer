@@ -5,7 +5,8 @@
 # License: AGPL
 
 import json
-from typing import Dict
+from pathlib import Path
+from typing import Dict, Union
 
 import pandas as pd
 
@@ -18,15 +19,26 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     For every interface that is required, one needs to provide a concrete
     implementation of this abstract class.
 
+    Parameters
+    ----------
+    uri : str or pathlib.Path
+        The path to the storage.
+    single_output : bool, optional
+        Whether to have single output (default False).
+    **kwargs
+        Keyword arguments passed to superclass.
+
     See Also
     --------
     BaseFeatureStorage
 
     """
 
-    def __init__(**kwargs) -> None:
+    def __init__(
+        self, uri: Union[str, Path], single_output: bool = False, **kwargs
+    ) -> None:
         """Initialize the class."""
-        super().__init__(**kwargs)
+        super().__init__(uri=uri, single_output=single_output, **kwargs)
 
     def _meta_row(self, meta: Dict, meta_md5: str) -> pd.DataFrame:
         """Convert the metadata to a pandas DataFrame.
