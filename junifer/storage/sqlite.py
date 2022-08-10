@@ -95,7 +95,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         Returns
         -------
         sqlalchemy.Engine
-            The sqlalcemy engine.
+            The sqlalchemy engine.
 
         """
         # Set metadata as empty dictionary if None
