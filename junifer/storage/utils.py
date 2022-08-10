@@ -129,7 +129,7 @@ def element_to_index(
         Number of rows to create (default 1).
     rows_col_name: str, optional
         The column name to use in case `n_rows` > 1. If None and
-        n_rows > 1, the name will be "index" (default None).
+        n_rows > 1, the name will be "idx" (default None).
 
     Returns
     -------
@@ -152,7 +152,7 @@ def element_to_index(
         element = {"element": element}
     # Check rows_col_name
     if rows_col_name is None:
-        rows_col_name = "index"
+        rows_col_name = "idx"
     elem_idx = {k: [v] * n_rows for k, v in element.items()}
     elem_idx[rows_col_name] = np.arange(n_rows)
     # Create index
