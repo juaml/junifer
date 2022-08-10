@@ -74,7 +74,7 @@ def process_meta(meta: Dict) -> Tuple[str, Dict]:
         if isinstance(element, dict):
             meta["_element_keys"] = list(element.keys())
         else:
-            meta["_element_keyes"] = ["element"]
+            meta["_element_keys"] = ["element"]
     # MD5 hash of the metadata
     md5_hash = _meta_hash(meta)
     return md5_hash, meta
