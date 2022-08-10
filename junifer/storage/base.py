@@ -1,246 +1,263 @@
-"""Provide class and functions for storage."""
+"""Provide abstract base class for feature storage."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
-import numpy as np
-import pandas as pd
-import json
-import hashlib
+
 from abc import ABC, abstractmethod
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Union
 
-from ..utils import logger
+import pandas as pd
+
 from .. import __version__
-
-
-def process_meta(meta):
-    """Process the metadata for storage.
-
-    It removes the "element" key and adds the "_element_keys" with the keys
-    used to index the element.
-
-    Parameters
-    ----------
-    meta: dict
-        The metadata. Must contain the key 'element'
-    return_idx: bool
-        If true, return the pandas index to be stored. Defaults to false
-    n_rows: int
-        Number of rows to create (if return_idx is true)
-    rows_col_name: str
-        The column name to use in case n_rows > 1. If None (default) and
-        n_rows > 1, the name will be 'index'.
-
-    Returns
-    -------
-    md5_hash: str
-        The md5 hash of the meta
-    meta : dict
-        The metadata processed for storage
-    idx : pd.MultiIndex
-        The pandas index (if return_idx is True)
-    """
-    if meta is None:
-        raise ValueError('Meta must be a dict (currently is None)')
-    t_meta = meta.copy()
-    element = t_meta.pop('element', None)
-    if element is None:
-        if '_element_keys' not in t_meta:
-            raise ValueError(
-                'Meta must contain the key "element" or "_element_keys"')
-    else:
-        if isinstance(element, dict):
-            t_meta['_element_keys'] = list(element.keys())
-        else:
-            t_meta['_element_keys'] = ['element']
-    md5_hash = _meta_hash(t_meta)
-    return md5_hash, t_meta
-
-
-def _meta_hash(meta):
-    """Compute the md5 hash of the meta.
-
-    Parameters
-    ----------
-    meta: dict
-        The metadata. Must contain the key 'element'
-
-    Returns
-    -------
-    md5: str
-        The md5 hash of the meta
-    """
-    logger.debug(f'Hashing meta {meta}')
-    meta_md5 = hashlib.md5(
-        json.dumps(meta, sort_keys=True).encode('utf-8')).hexdigest()
-    logger.debug(f'Hash computed: {meta_md5}')
-    return meta_md5
-
-
-def element_to_index(meta, n_rows=1, rows_col_name=None):
-    """Convert the element meta to index.
-
-    Parameters
-    ----------
-    meta: dict
-        The metadata. Must contain the key 'element'
-    n_rows: int
-        Number of rows to create. Defaults to 1.
-    rows_col_name: str
-        The column name to use in case n_rows > 1. If None (default) and
-        n_rows > 1, the name will be 'index'.
-
-    Returns
-    -------
-    index: pd.MultiIndex
-        The index of the dataframe to store
-
-    Raises
-    ------
-    ValueError
-        If the meta does not contain the key 'element'
-    """
-    if 'element' not in meta:
-        raise ValueError(
-            'To create and index, meta must contain the key "element"')
-    element = meta['element']
-    if not isinstance(element, dict):
-        element = dict(element=element)
-    if rows_col_name is None:
-        rows_col_name = 'idx'
-    elem_idx = {
-        k: [v] * n_rows for k, v in element.items()
-    }
-    elem_idx[rows_col_name] = np.arange(n_rows)  # type: ignore
-    index = pd.MultiIndex.from_frame(
-        pd.DataFrame(elem_idx, index=range(n_rows)))
-    return index
-
-
-def element_to_prefix(element):
-    """Convert the element meta to prefix."""
-    logger.debug(f'Converting element {element} to prefix')
-    prefix = 'element'
-    if isinstance(element, tuple):
-        prefix = f"{prefix}_{'_'.join([f'{x}' for x in element])}"
-    elif isinstance(element, dict):
-        prefix = f"{prefix}_{'_'.join([f'{x}' for x in element.values()])}"
-    elif isinstance(element, (str, int)):
-        prefix = f'{prefix}_{element}'
-    else:
-        raise ValueError(f'Cannot convert element {element} to prefix. '
-                         'Must be a str, tuple or dict')
-    logger.debug(f'Converted prefix {prefix}')
-    return f'{prefix}_'
+from ..utils import raise_error
 
 
 class BaseFeatureStorage(ABC):
-    """Base class for feature storage."""
+    """Abstract base class for feature storage.
 
-    def __init__(self, uri, single_output=False):
+    For every interface that is required, one needs to provide a concrete
+    implementation of this abstract class.
+
+    Parameters
+    ----------
+    uri : str or pathlib.Path
+        The path to the storage.
+    single_output : bool, optional
+        Whether to have single output (default False).
+
+    """
+
+    def __init__(
+        self, uri: Union[str, Path], single_output: bool = False
+    ) -> None:
         """Initialize the class."""
         self.uri = uri
         self.single_output = single_output
 
-    def get_meta(self):
-        """Get metadata."""
+    def get_meta(self) -> Dict:
+        """Get metadata.
+
+        Returns
+        -------
+        meta : dict
+            The metadata as a dictionary.
+
+        """
         meta = {}
-        meta['versions'] = {
-            'junifer': __version__,
+        meta["versions"] = {
+            "junifer": __version__,
         }
         return meta
 
+    # TODO: is raising ValueError required?
     @abstractmethod
-    def validate(self, input):
+    def validate(self, input_: List[str]) -> bool:
         """Validate the input to the pipeline step.
 
         Parameters
         ----------
-        input : Junifer Data dictionary
+        input_ : list
             The input to the pipeline step.
+
+        Returns
+        -------
+        bool
+            Whether the `input` is valid or not.
 
         Raises
         ------
-        ValueError:
+        ValueError
             If the input does not have the required data.
+
         """
-        raise NotImplementedError('validate_input not implemented')
+        raise_error(
+            msg="Concrete classes need to implement validate_input().",
+            klass=NotImplementedError,
+        )
 
     @abstractmethod
-    def list_features(self, return_df=False):
+    def list_features(
+        self, return_df: bool = False
+    ) -> Union[Dict[str, Dict], pd.DataFrame]:
         """List the features in the storage.
 
         Parameters
         ----------
-            return_df : bool
-            If True, return a dataframe. If False, (default) return a
-            dictionary
-        Returns
-        -------
-        features: dict(str, dict) | pd.DataFrame
-            List of features in the storage. If dictionarly, the keys are the
-            feature names to be used in read_features. The values are the
-            metadata of each feature.
-        """
-        raise NotImplementedError('list_features not implemented')
-
-    @abstractmethod
-    def read_df(self, feature_name=None, feature_md5=None):
-        """Read the features from the storage.
+        return_df : bool, optional
+            If True, returns a pandas DataFrame. If False, returns a
+            dictionary (default False).
 
         Returns
         -------
-        out: pd.DataFrame
-            The features as a dataframe
+        dict or pandas.DataFrame
+            List of features in the storage. If dictionary is returned, the
+            keys are the feature names to be used in read_features() and the
+            values are the metadata of each feature.
+
         """
-        raise NotImplementedError('read_df not implemented')
+        raise_error(
+            msg="Concrete classes need to implement list_features().",
+            klass=NotImplementedError,
+        )
 
     @abstractmethod
-    def store_metadata(self, meta):
-        """Store metadata."""
-        raise NotImplementedError('store_metadata not implemented')
+    def read_df(
+        self,
+        feature_name: Optional[str] = None,
+        feature_md5: Optional[bool] = None,
+    ) -> pd.DataFrame:
+        """Read feature from the storage.
+
+        Parameters
+        ----------
+        feature_name : str, optional
+            Name of the feature to read (default None).
+        feature_md5 : str, optional
+            MD5 hash of the feature to read (default None).
+
+        Returns
+        -------
+        pandas.DataFrame
+            The features as a dataframe.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement read_df().",
+            klass=NotImplementedError,
+        )
 
     @abstractmethod
-    def store_matrix2d(self, data, meta, col_names=None, row_names=None):
-        """Store 2D matrix."""
-        raise NotImplementedError('store_matrix2d not implemented')
+    def store_metadata(self, meta: Dict) -> str:
+        """Store metadata.
+
+        Parameters
+        ----------
+        meta : dict
+            The metadata as a dictionary.
+
+        Returns
+        -------
+        str
+            The metadata column
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_metadata().",
+            klass=NotImplementedError,
+        )
+
+    # TODO: complete type annotations
+    @abstractmethod
+    def store_matrix2d(
+        self,
+        data,
+        meta: Dict,
+        col_names: Optional[Iterable[str]] = None,
+        row_names: Optional[Iterable[str]] = None,
+    ) -> None:
+        """Store 2D matrix.
+
+        Parameters
+        ----------
+        data
+        meta : dict
+            The metadata as a dictionary.
+        col_names : list or tuple of str, optional
+            The column names (default None).
+        row_names : list of tuple of str, optional
+            The row names (default None).
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_matrix2d().",
+            klass=NotImplementedError,
+        )
+
+    # TODO: complete type annotations
+    @abstractmethod
+    def store_table(
+        self,
+        data,
+        meta: Dict,
+        columns: Optional[Iterable[str]] = None,
+        rows_col_name: str = None,
+    ) -> None:
+        """Store table.
+
+        Parameters
+        ----------
+        data
+        meta : dict
+            The metadata as a dictionary.
+        columns : list or tuple of str, optional
+            The columns (default None).
+        rows_col_name : str, optional
+            The column name ot use in case number of rows greater than 1.
+            If None and number of rows greater than 1, then the name will be
+            "index" (default None).
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_table().",
+            klass=NotImplementedError,
+        )
 
     @abstractmethod
-    def store_table(self, data, meta, columns=None, rows_col_name=None):
-        """Store table."""
-        raise NotImplementedError('store_table not implemented')
+    def store_df(self, df: pd.DataFrame, meta: Dict) -> None:
+        """Store pandas DataFerame.
+
+        Parameters
+        ----------
+        df : pandas.DataFrame
+            The DataFrame to store.
+        meta : dict
+            The metadata as a dictionary.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_df().",
+            klass=NotImplementedError,
+        )
+
+    # TODO: complete type annotations
+    @abstractmethod
+    def store_timeseries(self, data, meta: Dict) -> None:
+        """Store timeseries.
+
+        Parameters
+        ----------
+        data
+        meta : dict
+            The metadata as a dictionary.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_timeseries().",
+            klass=NotImplementedError,
+        )
 
     @abstractmethod
-    def store_df(self, df, meta):
-        """Store dataframe."""
-        raise NotImplementedError('store_df not implemented')
-
-    @abstractmethod
-    def store_timeseries(self, data, meta):
-        """Store timeseries."""
-        raise NotImplementedError('store_timeseries not implemented')
-
-    @abstractmethod
-    def collect(self):
+    def collect(self) -> None:
         """Collect data."""
-        raise NotImplementedError('collect not implemented')
+        raise_error(
+            msg="Concrete classes need to implement collect().",
+            klass=NotImplementedError,
+        )
 
-    def __str__(self):
-        """Represent object as string."""
-        single = '(single output)' \
-            if self.single_output is True else '(multiple output)'
-        return f'<{self.__class__.__name__} @ {self.uri} {single}>'
+    def __str__(self) -> str:
+        """Represent object as string.
 
+        Returns
+        -------
+        str
+            The string representation.
 
-class PandasFeatureStoreage(BaseFeatureStorage):
-    """Store features via pandas."""
-
-    def _meta_row(self, meta, meta_md5):
-        """Convert the meta to a dataframe row."""
-        data_df = {}
-        for k, v in meta.items():
-            data_df[k] = json.dumps(v, sort_keys=True)
-        if 'marker' in meta:
-            data_df['name'] = meta['marker']['name']
-        df = pd.DataFrame(data_df, index=[meta_md5])
-        df.index.name = 'meta_md5'
-        return df
+        """
+        single = (
+            "(single output)"
+            if self.single_output is True
+            else "(multiple output)"
+        )
+        return f"<{self.__class__.__name__} @ {self.uri} {single}>"
