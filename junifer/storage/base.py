@@ -10,7 +10,7 @@ from typing import Dict, Iterable, List, Optional, Union
 
 import pandas as pd
 
-from .. import __version__
+from .._version import __version__
 from ..utils import raise_error
 
 
