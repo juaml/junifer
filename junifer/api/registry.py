@@ -2,106 +2,140 @@
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from ..utils.logging import raise_error, logger
+from typing import Dict, List, Optional
 
+from ..utils.logging import logger, raise_error
+
+
+# Define valid steps for operation
 _valid_steps = [
-    'datagrabber', 'datareader', 'preprocessing', 'marker', 'storage']
+    "datagrabber",
+    "datareader",
+    "preprocessing",
+    "marker",
+    "storage",
+]
 
+# Define registry for valid steps
 _registry = {x: {} for x in _valid_steps}
 
 
-def register(step, name, klass):
+def register(step: str, name: str, klass: type) -> None:
     """Register a function to be used in a pipeline step.
 
     Parameters
     ----------
     step : str
-        Name of the step
+        Name of the step.
     name : str
-        Name of the function
+        Name of the function.
     klass : class
-        Class to be registered
+        Class to be registered.
+
     """
+    # Verify step
     if step not in _valid_steps:
-        raise_error(f'Invalid step: {step}', ValueError)
-    logger.info(f'Registering {name} in {step}')
+        raise_error(msg=f"Invalid step: {step}", klass=ValueError)
+
+    logger.info(f"Registering {name} in {step}")
     _registry[step][name] = klass
 
 
-def get_step_names(step):
+def get_step_names(step: str) -> List:
     """Get the names of the registered functions for a given step.
 
     Parameters
     ----------
     step : str
-        Name of the step
+        Name of the step.
 
     Returns
     -------
     list
-        List of registered function names
+        List of registered function names.
+
     """
+    # Verify step
     if step not in _valid_steps:
-        raise_error(f'Invalid step: {step}', ValueError)
+        raise_error(msg=f"Invalid step: {step}", klass=ValueError)
+
     return list(_registry[step].keys())
 
 
-def get(step, name):
+def get_class(step: str, name: str) -> type:
     """Get the class of the registered function for a given step.
 
     Parameters
     ----------
     step : str
-        Name of the step
+        Name of the step.
     name : str
-        Name of the function
+        Name of the function.
 
     Returns
     -------
     class
-        Registered function class
+        Registered function class.
+
     """
+    # Verify step
     if step not in _valid_steps:
-        raise_error(f'Invalid step: {step}', ValueError)
+        raise_error(msg=f"Invalid step: {step}", klass=ValueError)
+    # Verify step name
     if name not in _registry[step]:
-        raise_error(f'Invalid name: {name}', ValueError)
+        raise_error(msg=f"Invalid name: {name}", klass=ValueError)
+
     return _registry[step][name]
 
 
-def build(step, name, baseclass, init_params=None):
+def build(
+    step: str,
+    name: str,
+    baseclass: type,
+    init_params: Optional[Dict] = None,
+) -> type:
     """Ensure that the given object is an instance of the given class.
 
     Parameters
     ----------
     step : str
-        Name of the step
+        Name of the step.
     name : str
         Name of the function.
     baseclass : class
-        Class to be checked against
-    init_parms : dict
-        Parameters to pass to the class constructor
+        Class to be checked against.
+    init_parms : dict, optional
+        Parameters to pass to the base class constructor (default None).
 
     Returns
     -------
     object
-        Object if it is an instance of the given class, otherwise a
-        ValueError is raised
+        An instance of the given base class.
 
     Raises
     ------
     ValueError
-        If the name is not a string or the object is not an instance of the
-        baseclass parameter.
+        If the created object with the given name is not an instance of the
+        base class.
+
     """
-    klass = get(step, name)
+    # Set default init parameters
     if init_params is None:
         init_params = {}
-    object = klass(**init_params)
-    if not isinstance(object, baseclass):
+    # Get class of the registered function
+    klass = get_class(step=step, name=name)
+    # Create instance of the class
+    object_ = klass(**init_params)
+    # Verify created instance belongs to the base class
+    if not isinstance(object_, baseclass):
         raise_error(
-            f'Invalid {step} ({object.__class__.__name__}). '
-            f'Must inherit from {baseclass.__name__}', ValueError)
-    return object
+            msg=(
+                f"Invalid {step} ({object_.__class__.__name__}). "
+                f"Must inherit from {baseclass.__name__}"
+            ),
+            klass=ValueError,
+        )
+    return object_
