@@ -8,8 +8,8 @@
 from .registry import register
 
 
-def register_datagrabber(klass):
-    """Datagrabber decorator.
+def register_datagrabber(klass: type) -> type:
+    """Datagrabber registration decorator.
 
     Registers the datagrabber so it can be used by name.
 
@@ -21,14 +21,19 @@ def register_datagrabber(klass):
     Returns
     -------
     klass: class
-        The unmodified input class
+        The unmodified input class.
+
     """
-    register('datagrabber', klass.__name__, klass)
+    register(
+        step="datagrabber",
+        name=klass.__name__,
+        klass=klass,
+    )
     return klass
 
 
-def register_marker(klass):
-    """Marker decorator.
+def register_marker(klass: type) -> type:
+    """Marker registration decorator.
 
     Registers the marker so it can be used by name.
 
@@ -40,14 +45,19 @@ def register_marker(klass):
     Returns
     -------
     klass: class
-        The unmodified input class
+        The unmodified input class.
+
     """
-    register('marker', klass.__name__, klass)
+    register(
+        step="marker",
+        name=klass.__name__,
+        klass=klass,
+    )
     return klass
 
 
 def register_storage(klass):
-    """Storage decorator.
+    """Storage registration decorator.
 
     Registers the storage so it can be used by name.
 
@@ -59,7 +69,12 @@ def register_storage(klass):
     Returns
     -------
     klass: class
-        The unmodified input class
+        The unmodified input class.
+
     """
-    register('storage', klass.__name__, klass)
+    register(
+        step="storage",
+        name=klass.__name__,
+        klass=klass,
+    )
     return klass
