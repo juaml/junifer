@@ -1,58 +1,136 @@
 """Provide tests for registry."""
 
-import pytest
+# Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Leonard Sasse <l.sasse@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
+# License: AGPL
+
+import logging
 from abc import ABC
 
-from junifer.api.registry import register, get_step_names, get, build
+import pytest
+
+from junifer.api.registry import build, get_class, get_step_names, register
+from junifer.datagrabber import PatternDataGrabber
+from junifer.storage import SQLiteFeatureStorage
 
 
-def test_register_error():
-    """Test register error."""
-    with pytest.raises(ValueError, match='Invalid ste'):
-        register('foo', 'bar', 'baz')
+def test_register_invalid_step():
+    """Test register invalid step name."""
+    with pytest.raises(ValueError, match="Invalid step:"):
+        register(step="foo", name="bar", klass="baz")
 
 
-def test_gets():
-    """Test get."""
-    with pytest.raises(ValueError, match='Invalid ste'):
-        get_step_names('foo')
+# TODO: improve paramterization
+@pytest.mark.parametrize(
+    "step, name, klass",
+    [
+        ("datagrabber", "pattern-dg", PatternDataGrabber),
+        ("storage", "sqlite-storage", SQLiteFeatureStorage),
+    ],
+)
+def test_register(
+    caplog: pytest.LogCaptureFixture, step: str, name: str, klass: str
+) -> None:
+    """Test register.
 
-    datagrabbers = get_step_names('datagrabber')
-    assert 'bar' not in datagrabbers
-    register('datagrabber', 'bar', 'baz')
-    datagrabbers = get_step_names('datagrabber')
-    assert 'bar' in datagrabbers
+    Parameters
+    ----------
+    caplog : pytest.LogCaptureFixture
+        A pytest fixture to capture logging.
+    step : str
+        The parametrized name of the step.
+    name : str
+        The parametrized name of the function.
+    klass : str
+        The parametrized name of the base class.
 
-    with pytest.raises(ValueError, match='Invalid ste'):
-        get('foo', 'bar')
-
-    with pytest.raises(ValueError, match='Invalid name'):
-        get('datagrabber', 'foo')
-
-    obj = get('datagrabber', 'bar')
-    assert obj == 'baz'
+    """
+    with caplog.at_level(logging.INFO):
+        # Register
+        register(step=step, name=name, klass=klass)
+        # Check logging message
+        assert "Registering" in caplog.text
 
 
+def test_get_step_names_invalid_step() -> None:
+    """Test get step name invalid step name."""
+    with pytest.raises(ValueError, match="Invalid step:"):
+        get_step_names(step="foo")
+
+
+def test_get_step_names_absent() -> None:
+    """Test get step names for absent name."""
+    # Get step names for datagrabber
+    datagrabbers = get_step_names(step="datagrabber")
+    # Check for datagrabber step name
+    assert "bar" not in datagrabbers
+
+
+def test_get_step_names() -> None:
+    """Test get step names."""
+    # Register datagrabber
+    register(step="datagrabber", name="bar", klass="baz")
+    # Get step names for datagrabber
+    datagrabbers = get_step_names(step="datagrabber")
+    # Check for datagrabber step name
+    assert "bar" in datagrabbers
+
+
+def test_get_class_invalid_step() -> None:
+    """Test get class invalid step name."""
+    with pytest.raises(ValueError, match="Invalid step:"):
+        get_class(step="foo", name="bar")
+
+
+def test_get_class_invalid_name() -> None:
+    """Test get class invalid function name."""
+    with pytest.raises(ValueError, match="Invalid name:"):
+        get_class(step="datagrabber", name="foo")
+
+
+# TODO: enable paramterization
+def test_get_class():
+    """Test get class."""
+    # Register datagrabber
+    register(step="datagrabber", name="bar", klass="baz")
+    # Get class
+    obj = get_class(step="datagrabber", name="bar")
+    assert obj == "baz"
+
+
+# TODO: possible parametrization?
 def test_build():
     """Test building objects from names."""
     import numpy as np
 
+    # Define abstract base class
     class SuperClass(ABC):
         pass
 
+    # Define concrete class
     class ConcreteClass(SuperClass):
         def __init__(self, value=1):
             self.value = value
 
-    register('datagrabber', 'concrete', ConcreteClass)
+    # Register
+    register(step="datagrabber", name="concrete", klass=ConcreteClass)
 
-    obj = build('datagrabber', 'concrete', SuperClass)
+    # Build
+    obj = build(step="datagrabber", name="concrete", baseclass=SuperClass)
     assert isinstance(obj, ConcreteClass)
     assert obj.value == 1
 
-    obj = build('datagrabber', 'concrete', SuperClass, {'value': 2})
+    # Build
+    obj = build(
+        step="datagrabber",
+        name="concrete",
+        baseclass=SuperClass,
+        init_params={"value": 2},
+    )
     assert isinstance(obj, ConcreteClass)
     assert obj.value == 2
 
-    with pytest.raises(ValueError, match='Must inherit'):
-        build('datagrabber', 'concrete', np.ndarray)
+    # Check error
+    with pytest.raises(ValueError, match="Must inherit"):
+        build(step="datagrabber", name="concrete", baseclass=np.ndarray)
