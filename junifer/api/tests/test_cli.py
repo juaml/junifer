@@ -1,62 +1,70 @@
 """Provide tests for cli."""
 
-from pathlib import Path
-import tempfile
-import yaml
-from junifer.api.cli import run, collect
+# Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
+# License: AGPL
 
+from pathlib import Path
+from typing import Tuple
+
+import pytest
+import yaml
 from click.testing import CliRunner
 
+from junifer.api.cli import collect, run
 
+
+# Create click test runner
 runner = CliRunner()
 
 
-def _modify_path(tmpdir, in_file):
-    """Modify the path to use the temporary directory."""
-    if not isinstance(tmpdir, Path):
-        tmpdir = Path(tmpdir)
-    with open(in_file, 'r') as f:
+# TODO: adapt elements to take arrays
+@pytest.mark.parametrize(
+    "elements",
+    [
+        ("sub-01", "sub-02", "sub-03"),
+        ("sub-01", "sub-02", "sub-04"),
+    ],
+)
+def test_run_and_collect_commands(
+    tmp_path: Path, elements: Tuple[str, ...]
+) -> None:
+    """Test run and collect commands."""
+    # Get test config
+    infile = Path(__file__).parent / "data" / "gmd_mean.yaml"
+    # Read test config
+    with open(infile, mode="r") as f:
         contents = yaml.safe_load(f)
-    outfile = tmpdir / 'in.yaml'
-    outdir = tmpdir / 'out'
-    workdir = tmpdir / 'work'
-    contents['storage']['uri'] = outdir.as_posix()
-    contents['workdir'] = workdir.as_posix()
-    with open(outfile, 'w') as f:
+    # Working directory
+    workdir = tmp_path / "workdir"
+    contents["workdir"] = str(workdir.absolute())
+    # Output directory
+    outdir = tmp_path / "outdir"
+    # Storage
+    contents["storage"]["uri"] = str(outdir.absolute())
+    # Write new test config
+    outfile = tmp_path / "in.yaml"
+    with open(outfile, mode="w") as f:
         yaml.dump(contents, f)
-    return outfile
-
-
-def test_run_collect():
-    """Test run and collect."""
-    infile = Path(__file__).parent / 'data' / 'gmd_mean.yaml'
-    with tempfile.TemporaryDirectory() as _tmpdir:
-        runfile = _modify_path(_tmpdir, infile)
-        run_args = [runfile.as_posix(), '--verbose', 'debug', '--element',
-                    'sub-01', '--element', 'sub-02', '--element', 'sub-03']
-        response = runner.invoke(run, run_args)
-        assert response.exit_code == 0
-
-        # TODO: Check that there are 3 files in the output directory
-
-        collect_args = [runfile.as_posix(), '--verbose', 'debug']
-        response = runner.invoke(collect, collect_args)
-        assert response.exit_code == 0
-
-        # TODO: Check that there are 4 files in the output directory
-        # TODO: Check that the collected file has the correct number of rows
-
-        run_args = [runfile.as_posix(), '--verbose', 'debug', '--element',
-                    'sub-01', '--element', 'sub-02', '--element', 'sub-04']
-        response = runner.invoke(run, run_args)
-        assert response.exit_code == 0
-
-        # TODO: Check that there are 5 files in the output directory
-        # TODO: Check that the collected file has 3 rows (sub-04 is not there)
-
-        collect_args = [runfile.as_posix(), '--verbose', 'debug']
-        response = runner.invoke(collect, collect_args)
-        assert response.exit_code == 0
-
-        # TODO: Check that there are 5 files in the output directory
-        # TODO: Check that the collected file has 4 rows (sub-04 is there)
+    # Run command arguments
+    run_args = [
+        str(outfile.absolute()),
+        "--verbose",
+        "debug",
+        "--element",
+        elements[0],
+        "--element",
+        elements[1],
+        "--element",
+        elements[2],
+    ]
+    # Invoke run command
+    run_result = runner.invoke(run, run_args)
+    # Check
+    assert run_result.exit_code == 0
+    # Collect command arguments
+    collect_args = [str(outfile.absolute()), "--verbose", "debug"]
+    # Invoke collect command
+    collect_result = runner.invoke(collect, collect_args)
+    # Check
+    assert collect_result.exit_code == 0
