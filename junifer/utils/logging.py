@@ -246,7 +246,8 @@ def configure_logging(
     if output_format is None:
         output_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
         # (
-        #     "%(asctime)s [%(levelname)s] %(message)s (%(filename)s:%(lineno)s)"
+        #     "%(asctime)s [%(levelname)s] %(message)s "
+        #     "(%(filename)s:%(lineno)s)"
         # )
     formatter = logging.Formatter(fmt=output_format)
 
