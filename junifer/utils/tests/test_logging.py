@@ -37,15 +37,15 @@ def test_log_versions(caplog: pytest.LogCaptureFixture) -> None:
 
     """
     # Set log capturing at INFO
-    caplog.set_level(logging.INFO)
-    # Log versions
-    log_versions()
-    # Check logging levels
-    for record in caplog.records:
-        assert record.levelname not in ("DEBUG", "WARNING", "ERROR")
-        assert record.levelname == "INFO"
-    # Check logging message
-    assert "junifer" in caplog.text
+    with caplog.at_level(logging.INFO):
+        # Log versions
+        log_versions()
+        # Check logging levels
+        for record in caplog.records:
+            assert record.levelname not in ("DEBUG", "WARNING", "ERROR")
+            assert record.levelname == "INFO"
+        # Check logging message
+        assert "junifer" in caplog.text
 
 
 def test_log_file(tmp_path: Path) -> None:
