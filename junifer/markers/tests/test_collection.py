@@ -1,43 +1,48 @@
 """Provide tests for marker collection."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 import pytest
-import tempfile
 from numpy.testing import assert_array_equal
+
 from junifer.datareader.default import DefaultDataReader
 from junifer.markers import MarkerCollection, ParcelAggregation
 from junifer.markers.base import PipelineStepMixin
-from junifer.testing.datagrabbers import OasisVBMTestingDatagrabber
 from junifer.storage import SQLiteFeatureStorage
+from junifer.testing.datagrabbers import OasisVBMTestingDatagrabber
 
 
-def test_MarkerCollection():
-    """Test MarkerCollection."""
+def test_marker_collection_incorrect_markers() -> None:
+    """Test incorrect markers for MarkerCollection."""
     wrong_markers = [
         ParcelAggregation(
-            atlas='Schaefer100x7', method='mean',
-            name='gmd_schaefer100x7_mean'),
+            atlas="Schaefer100x7", method="mean", name="gmd_schaefer100x7_mean"
+        ),
         ParcelAggregation(
-            atlas='Schaefer100x7', method='mean',
-            name='gmd_schaefer100x7_mean'),
+            atlas="Schaefer100x7", method="mean", name="gmd_schaefer100x7_mean"
+        ),
     ]
-
     with pytest.raises(ValueError, match=r"must have different names"):
         MarkerCollection(wrong_markers)
 
+
+def test_marker_collection():
+    """Test MarkerCollection."""
     markers = [
         ParcelAggregation(
-            atlas='Schaefer100x7', method='mean',
-            name='gmd_schaefer100x7_mean'),
+            atlas="Schaefer100x7", method="mean", name="gmd_schaefer100x7_mean"
+        ),
         ParcelAggregation(
-            atlas='Schaefer100x7', method='std',
-            name='gmd_schaefer100x7_std'),
+            atlas="Schaefer100x7", method="std", name="gmd_schaefer100x7_std"
+        ),
         ParcelAggregation(
-            atlas='Schaefer100x7', method='trim_mean',
-            method_params={'proportiontocut': 0.1},
-            name='gmd_schaefer100x7_trim_mean90')
+            atlas="Schaefer100x7",
+            method="trim_mean",
+            method_params={"proportiontocut": 0.1},
+            name="gmd_schaefer100x7_trim_mean90",
+        ),
     ]
     mc = MarkerCollection(markers=markers)
     assert mc._markers == markers
@@ -45,26 +50,27 @@ def test_MarkerCollection():
     assert mc._storage is None
     assert isinstance(mc._datareader, DefaultDataReader)
 
+    # Create testing datagrabber
     dg = OasisVBMTestingDatagrabber()
     mc.validate(dg)
 
     with dg:
-        input = dg['sub-01']
+        input = dg["sub-01"]
         out = mc.fit(input)
         assert out is not None
         assert isinstance(out, dict)
         assert len(out) == 3
-        assert 'gmd_schaefer100x7_mean' in out
-        assert 'gmd_schaefer100x7_std' in out
-        assert 'gmd_schaefer100x7_trim_mean90' in out
+        assert "gmd_schaefer100x7_mean" in out
+        assert "gmd_schaefer100x7_std" in out
+        assert "gmd_schaefer100x7_trim_mean90" in out
 
         for t_marker in markers:
             t_name = t_marker.name
-            assert 'VBM_GM' in out[t_name]
-            t_vbm = out[t_name]['VBM_GM']
-            assert 'data' in t_vbm
-            assert 'columns' in t_vbm
-            assert 'meta' in t_vbm
+            assert "VBM_GM" in out[t_name]
+            t_vbm = out[t_name]["VBM_GM"]
+            assert "data" in t_vbm
+            assert "columns" in t_vbm
+            assert "meta" in t_vbm
 
     # Test preprocessing
     class BypassPreprocessing(PipelineStepMixin):
@@ -72,74 +78,86 @@ def test_MarkerCollection():
             return input
 
     mc2 = MarkerCollection(
-        markers=markers, preprocessing=BypassPreprocessing(),
-        datareader=DefaultDataReader())
+        markers=markers,
+        preprocessing=BypassPreprocessing(),
+        datareader=DefaultDataReader(),
+    )
     assert isinstance(mc2._datareader, DefaultDataReader)
     with dg:
-        input = dg['sub-01']
+        input = dg["sub-01"]
         out2 = mc2.fit(input)
         for t_marker in markers:
             t_name = t_marker.name
-            assert_array_equal(out[t_name]['VBM_GM']['data'],
-                               out2[t_name]['VBM_GM']['data'])  # type: ignore
+            assert_array_equal(
+                out[t_name]["VBM_GM"]["data"], out2[t_name]["VBM_GM"]["data"]
+            )  # type: ignore
 
 
-def test_MarkerCollection_storage():
-    """Test marker collection with storage."""
+def test_MarkerCollection_storage(tmp_path) -> None:
+    """Test marker collection with storage.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     markers = [
         ParcelAggregation(
-            atlas='Schaefer100x7', method='mean',
-            name='gmd_schaefer100x7_mean'),
+            atlas="Schaefer100x7", method="mean", name="gmd_schaefer100x7_mean"
+        ),
         ParcelAggregation(
-            atlas='Schaefer100x7', method='std',
-            name='gmd_schaefer100x7_std'),
+            atlas="Schaefer100x7", method="std", name="gmd_schaefer100x7_std"
+        ),
         ParcelAggregation(
-            atlas='Schaefer100x7', method='trim_mean',
-            method_params={'proportiontocut': 0.1},
-            name='gmd_schaefer100x7_trim_mean90')
+            atlas="Schaefer100x7",
+            method="trim_mean",
+            method_params={"proportiontocut": 0.1},
+            name="gmd_schaefer100x7_trim_mean90",
+        ),
     ]
     # Test storage
     dg = OasisVBMTestingDatagrabber()
-    with tempfile.TemporaryDirectory() as tmpdir:
-        uri = f'{tmpdir}/test.db'
-        storage = SQLiteFeatureStorage(uri=uri, single_output=True)
-        mc = MarkerCollection(
-            markers=markers, storage=storage, datareader=DefaultDataReader())
-        mc.validate(dg)
-        assert mc._storage.uri == storage.uri
-        with dg:
-            input = dg['sub-01']
-            out = mc.fit(input)
-            assert out is None
 
-        mc2 = MarkerCollection(
-            markers=markers, datareader=DefaultDataReader())
-        mc2.validate(dg)
-        assert mc2._storage is None
+    uri = tmp_path / "test_marker_collection_storage.db"
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    mc = MarkerCollection(
+        markers=markers, storage=storage, datareader=DefaultDataReader()
+    )
+    mc.validate(dg)
+    assert mc._storage.uri == storage.uri
+    with dg:
+        input = dg["sub-01"]
+        out = mc.fit(input)
+        assert out is None
 
-        with dg:
-            input = dg['sub-01']
-            out = mc2.fit(input)
+    mc2 = MarkerCollection(markers=markers, datareader=DefaultDataReader())
+    mc2.validate(dg)
+    assert mc2._storage is None
 
-        features = storage.list_features()
-        assert len(features) == 3
-        feature_md5 = list(features.keys())[0]
-        t_feature = storage.read_df(feature_md5=feature_md5)
-        fname = 'gmd_schaefer100x7_mean'
-        t_data = out[fname]['VBM_GM']['data']  # type: ignore
-        cols = out[fname]['VBM_GM']['columns']  # type: ignore
-        assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
+    with dg:
+        input = dg["sub-01"]
+        out = mc2.fit(input)
 
-        feature_md5 = list(features.keys())[1]
-        t_feature = storage.read_df(feature_md5=feature_md5)
-        fname = 'gmd_schaefer100x7_std'
-        t_data = out[fname]['VBM_GM']['data']  # type: ignore
-        cols = out[fname]['VBM_GM']['columns']  # type: ignore
-        assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
+    features = storage.list_features()
+    assert len(features) == 3
+    feature_md5 = list(features.keys())[0]
+    t_feature = storage.read_df(feature_md5=feature_md5)
+    fname = "gmd_schaefer100x7_mean"
+    t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
+    cols = out[fname]["VBM_GM"]["columns"]  # type: ignore
+    assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
 
-        feature_md5 = list(features.keys())[2]
-        t_feature = storage.read_df(feature_md5=feature_md5)
-        fname = 'gmd_schaefer100x7_trim_mean90'
-        t_data = out[fname]['VBM_GM']['data']  # type: ignore
-        cols = out[fname]['VBM_GM']['columns']  # type: ignore
-        assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
+    feature_md5 = list(features.keys())[1]
+    t_feature = storage.read_df(feature_md5=feature_md5)
+    fname = "gmd_schaefer100x7_std"
+    t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
+    cols = out[fname]["VBM_GM"]["columns"]  # type: ignore
+    assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
+
+    feature_md5 = list(features.keys())[2]
+    t_feature = storage.read_df(feature_md5=feature_md5)
+    fname = "gmd_schaefer100x7_trim_mean90"
+    t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
+    cols = out[fname]["VBM_GM"]["columns"]  # type: ignore
+    assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
