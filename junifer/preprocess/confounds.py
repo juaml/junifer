@@ -1,25 +1,72 @@
-"""Provide classes for confound removal."""
+"""Provide base class for confound removal."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
-
 from nilearn._utils.niimg_conversions import check_niimg_4d
-from nilearn.masking import compute_brain_mask
 from nilearn.image import clean_img
+from nilearn.masking import compute_brain_mask
 
-from junifer.markers.base import PipelineStepMixin
-from ..utils.logging import logger, raise_error
+from ..markers import PipelineStepMixin
+from ..utils import logger, raise_error
+
+
+if TYPE_CHECKING:
+    from nibabel import Nifti1Image
 
 
 class BaseConfoundRemover(PipelineStepMixin):
-    """Base class for cofound removal.
+    """Base class for confound removal.
 
     Read confound files and select columns according to
     a pre-defined strategy.
+
+    Confound removal is based on `nilearn.image.clean_img`.
+
+    Parameters
+    -----------
+    strategy : dict, optional
+        The keys of the dictionary should correspond to names of noise
+        components to include:
+        - 'motion'
+        - 'wm_csf'
+        - 'global_signal'
+        The values of dictionary should correspond to types of confounds
+        extracted from each signal:
+        - 'basic': only the confounding time series
+        - 'power2': signal + quadratic term
+        - 'derivatives': signal + derivatives
+        - 'full': signal + deriv. + quadratic terms + power2 deriv.
+        (default None).
+    spike : float, optional
+        If None, no spike regressor is added. If spike is a float, it will
+        add a spike regressor for every point at which FD exceeds the
+        specified float (default None).
+    detrend : bool, Optional
+        If True, detrending will be applied on timeseries
+        (before confound removal) (default True).
+    standardize : bool, optional
+        If True, returned signals are set to unit variance (default True).
+    low_pass : float, optional
+        Low cutoff frequencies, in Hertz. If None, no filtering is applied
+        (default None).
+    high_pass : float, optional
+        High cutoff frequencies, in Hertz. If None, no filtering is
+        applied (default None).
+    t_r : float, optional
+        Repetition time, in second (sampling period).
+        If None, it will use t_r from nifti header (default None).
+    mask_img: Niimg-like object, optional
+        If provided, signal is only cleaned from voxels inside the mask.
+        If mask is provided, it should have same shape and affine as imgs.
+        If not provided, a mask is computed using
+        `nilearn.masking.compute_brain_mask` (default None).
 
     """
 
@@ -30,64 +77,23 @@ class BaseConfoundRemover(PipelineStepMixin):
     # TODO: Implement read_confounds for fmriprep data
 
     def __init__(
-            self,
-            strategy=None,
-            spike=None,
-            detrend=True,
-            standardize=True,
-            low_pass=None,
-            high_pass=None,
-            t_r=None,
-            mask_img=None,
-    ):
-        """Initialise a BaseConfoundReader object.
-
-        Confound removal is based on nilearn.image.clean_img
-
-        Parameters
-        -----------
-        strategy : dict[str -> str]
-            The keys of the dictionary should correspond to names of noise
-            components to include:
-            - 'motion'
-            - 'wm_csf'
-            - 'global_signal'
-            The values of dictionary should correspond to types of confounds
-            extracted from each signal:
-            - 'basic': only the confounding time series
-            - 'power2': signal + quadratic term
-            - 'derivatives': signal + derivatives
-            - 'full': signal + deriv. + quadratic terms + power2 deriv.
-        spike : float | None (default)
-            If None, no spike regressor is added. If spike is a float, it will
-            add a spike regressor for every point at which FD exceeds the
-            specified float.
-        detrend : bool
-            If True (default), detrending will be applied on timeseries
-            (before confound removal).
-        standardize : bool
-            If True (default), returned signals are set to unit variance.
-        low_pass : float | None (default)
-            Low cutoff frequencies, in Hertz. If None, no filtering is applied.
-        high_pass : float | None (default)
-            High cutoff frequencies, in Hertz. If None, no filtering is
-            applied.
-        t_r : float
-            Repetition time, in second (sampling period).
-            If None (default) it will use t_r from nifti header.
-        mask_img: Niimg-like object
-            If provided, signal is only cleaned from voxels inside the mask.
-            If mask is provided, it should have same shape and affine as imgs.
-            If not provided, a mask is computed using
-            nilearn.masking.compute_brain_mask
-        """
+        self,
+        strategy: Optional[Dict[str, str]] = None,
+        spike: Optional[float] = None,
+        detrend: bool = True,
+        standardize: bool = True,
+        low_pass: Optional[float] = None,
+        high_pass: Optional[float] = None,
+        t_r: Optional[float] = None,
+        mask_img: Optional["Nifti1Image"] = None,
+    ) -> None:
+        """Initialise the class."""
         if strategy is None:
             strategy = {
-                'motion': 'full',
-                'wm_csf': 'full',
-                'global_signal': 'full'
+                "motion": "full",
+                "wm_csf": "full",
+                "global_signal": "full",
             }
-
         self.strategy = strategy
         self.spike = spike
         self.detrend = detrend
@@ -97,87 +103,89 @@ class BaseConfoundRemover(PipelineStepMixin):
         self.t_r = t_r
         self.mask_img = mask_img
 
-        self._valid_components = ['motion', 'wm_csf', 'global_signal']
-        self._valid_confounds = ['basic', 'power2', 'derivatives', 'full']
+        self._valid_components = ["motion", "wm_csf", "global_signal"]
+        self._valid_confounds = ["basic", "power2", "derivatives", "full"]
 
         if any(not isinstance(k, str) for k in strategy.keys()):
-            raise_error(
-                'Strategy keys must be strings', ValueError
-            )
+            raise_error("Strategy keys must be strings", ValueError)
 
         if any(not isinstance(v, str) for v in strategy.values()):
-            raise_error(
-                'Strategy values must be strings', ValueError
-            )
+            raise_error("Strategy values must be strings", ValueError)
 
         if any(x not in self._valid_components for x in strategy.keys()):
             raise_error(
-                f'Invalid component names {list(strategy.keys())}. '
-                f'Valid components are {self._valid_components}.\n'
-                f'If any of them is a valid parameter in '
-                'nilearn.interfaces.fmriprep.load_confounds we may '
-                'include it in the future', ValueError
+                msg=f"Invalid component names {list(strategy.keys())}. "
+                f"Valid components are {self._valid_components}.\n"
+                f"If any of them is a valid parameter in "
+                "nilearn.interfaces.fmriprep.load_confounds we may "
+                "include it in the future",
+                klass=ValueError,
             )
 
         if any(x not in self._valid_confounds for x in strategy.values()):
             raise_error(
-                f'Invalid component names {list(strategy.values())}. '
-                f'Valid confound types are {self._valid_confounds}.\n'
-                f'If any of them is a valid parameter in '
-                'nilearn.interfaces.fmriprep.load_confounds we may '
-                'include it in the future', ValueError
+                msg=f"Invalid component names {list(strategy.values())}. "
+                f"Valid confound types are {self._valid_confounds}.\n"
+                f"If any of them is a valid parameter in "
+                "nilearn.interfaces.fmriprep.load_confounds we may "
+                "include it in the future",
+                klass=ValueError,
             )
 
-    def validate_input(self, input):
+    def validate_input(self, input: List[str]) -> None:
         """Validate the input to the pipeline step.
 
         Parameters
         ----------
-        input : list[str]
+        input : list of str
             The input to the pipeline step. The list must contain the
             available Junifer Data dictionary keys.
 
         Raises
         ------
-        ValueError:
+        ValueError
             If the input does not have the required data.
+
         """
-        _required_inputs = ['BOLD', 'confounds']
+        _required_inputs = ["BOLD", "confounds"]
         if any(x not in input for x in _required_inputs):
             raise_error(
-                'Input does not have the required data. \n'
-                f'Input: {input} \n'
-                f'Required (all off): {_required_inputs} \n', ValueError
+                msg="Input does not have the required data. \n"
+                f"Input: {input} \n"
+                f"Required (all off): {_required_inputs} \n",
+                klass=ValueError,
             )
 
-    def get_output_kind(self, input):
+    def get_output_kind(self, input: List[str]) -> List[str]:
         """Get the kind of the pipeline step.
 
         Parameters
         ----------
-        input : list[str]
+        input : list of str
             The input to the pipeline step. The list must contain the
             available Junifer Data dictionary keys.
 
         Returns
         -------
-        output : list[str]
+        list of str
             The updated list of available Junifer Data dictionary keys after
             the pipeline step.
+
         """
         # Does not add any new keys
         return input
 
+    # TODO: complete type annotations
     def _pick_confounds(self, input):
         """Select relevant confounds from the specified file."""
         to_select = []
-        confounds_df = input['data']
-        confounds_spec = input['names']['spec']
+        confounds_df = input["data"]
+        confounds_spec = input["names"]["spec"]
         # for every confound there is a derivative
         # and for every confound + derivative there should be squares
-        derivatives_to_compute = input['names'].get('derivatives', {})
-        squares_to_compute = input['names'].get('squares', {})
-        spike_name = input['names']['spike']
+        derivatives_to_compute = input["names"].get("derivatives", {})
+        squares_to_compute = input["names"].get("squares", {})
+        spike_name = input["names"]["spike"]
 
         # Get all the column names according to the strategy
         for comp, param in self.strategy.items():
@@ -189,7 +197,8 @@ class BaseConfoundRemover(PipelineStepMixin):
         if any(to_compute):
             for t_dst, t_src in derivatives_to_compute.items():
                 out_df[t_dst] = np.append(  # type: ignore
-                    np.diff(out_df[t_src]), 0)  # type: ignore
+                    np.diff(out_df[t_src]), 0
+                )  # type: ignore
 
         # Add squares (of base confounds and derivatives) if needed
         to_compute = [x in squares_to_compute.keys() for x in to_select]
@@ -203,13 +212,17 @@ class BaseConfoundRemover(PipelineStepMixin):
             fd = confounds_df[spike_name].copy()
             fd.loc[fd > self.spike] = 1
             fd.loc[fd != 1] = 0
-            out_df['spike'] = fd
+            out_df["spike"] = fd
 
         return out_df
 
-    def _remove_confounds(self, bold_img, confounds_df):
+    def _remove_confounds(
+        self, bold_img: "Nifti1Image", confounds_df: pd.DataFrame
+    ) -> "Nifti1Image":
         """Remove confounds from the BOLD image.
 
+        Parameters
+        ----------
         bold_img : Niimg-like object
             4D image. The signals in the last dimension are filtered
             (see http://nilearn.github.io/manipulating_images/input_output.html
@@ -218,24 +231,26 @@ class BaseConfoundRemover(PipelineStepMixin):
             Dataframe containing confounds to remove. Number of rows should
             correspond to number of volumes in the BOLD image.
 
-        returns
+        Returns
         --------
-        clean_bold : Niimg-like object
-            input image, cleaned.
+        Niimg-like object
+            Input image with confounds removed.
 
         """
         confounds_array = confounds_df.values
 
         t_r = self.t_r
         if t_r is None:
-            logger.info('No t_r specified, using t_r from nifti header!')
+            logger.info("No `t_r` specified, using t_r from nifti header")
             zooms = bold_img.header.get_zooms()
             t_r = zooms[3]
-            logger.info(f'Read t_r from nifti header: {t_r}', )
+            logger.info(
+                f"Read t_r from nifti header: {t_r}",
+            )
 
         mask_img = self.mask_img
         if mask_img is None:
-            logger.info('Computing brain mask from image')
+            logger.info("Computing brain mask from image")
             mask_img = compute_brain_mask(bold_img)
 
         clean_bold = clean_img(
@@ -246,28 +261,31 @@ class BaseConfoundRemover(PipelineStepMixin):
             low_pass=self.low_pass,
             high_pass=self.high_pass,
             t_r=t_r,
-            mask_img=mask_img
+            mask_img=mask_img,
         )
 
         return clean_bold
 
+    # TODO: complete type annotations
     def _validate_data(self, input):
+        """Validate input data."""
         # Bold must be 4D niimg
-        check_niimg_4d(input['BOLD']['data'])
+        check_niimg_4d(input["BOLD"]["data"])
 
         # Confounds must be a dataframe
-        if not isinstance(input['confounds']['data'], pd.DataFrame):
+        if not isinstance(input["confounds"]["data"], pd.DataFrame):
             raise_error(
-                'confounds data must be a pandas dataframe', ValueError
+                "confounds data must be a pandas dataframe", ValueError
             )
 
-        confound_df = input['confounds']['data']
-        bold_img = input['BOLD']['data']
+        confound_df = input["confounds"]["data"]
+        bold_img = input["BOLD"]["data"]
         if bold_img.get_fdata().shape[3] != len(confound_df):
             raise_error(
-                'Image time series and confounds have different length!\n'
-                f'\tImage time series: { bold_img.get_fdata().shape[3]}\n'
-                f'\tConfounds: {len(confound_df)}')
+                "Image time series and confounds have different length!\n"
+                f"\tImage time series: { bold_img.get_fdata().shape[3]}\n"
+                f"\tConfounds: {len(confound_df)}"
+            )
 
         # Check the column names of the dataframe and the spec
         # spec must be a dictionary:
@@ -290,72 +308,95 @@ class BaseConfoundRemover(PipelineStepMixin):
         # }
 
         # Check the columns in the dataframe
-        conf_spec = input['confounds']['names']['spec']
+        conf_spec = input["confounds"]["names"]["spec"]
         if any(x not in conf_spec.keys() for x in self._valid_components):
             raise_error(
-                'All of the component types must be in the confounds data '
-                'object `spec`. Please check your datagrabber.', ValueError)
+                "All of the component types must be in the confounds data "
+                "object `spec`. Please check your datagrabber.",
+                ValueError,
+            )
 
-        if any(x not in v.keys() for x in self._valid_confounds
-               for v in conf_spec.values()):
+        if any(
+            x not in v.keys()
+            for x in self._valid_confounds
+            for v in conf_spec.values()
+        ):
             raise_error(
-                'All of the confound types must be in the confounds data '
-                'object `spec`. Please check your datagrabber.', ValueError)
+                "All of the confound types must be in the confounds data "
+                "object `spec`. Please check your datagrabber.",
+                ValueError,
+            )
 
-        spike_name = input['confounds']['names']['spike']
+        spike_name = input["confounds"]["names"]["spike"]
 
-        derivatives_to_compute = input['confounds']['names'].get(
-            'derivatives', {})
-        if not(isinstance(derivatives_to_compute, dict)):
+        derivatives_to_compute = input["confounds"]["names"].get(
+            "derivatives", {}
+        )
+        if not (isinstance(derivatives_to_compute, dict)):
             raise_error(
                 'input["confounds"]["names"]["derivatives"] '
-                'must be a dictionary. Please check your datagrabber',
-                ValueError)
+                "must be a dictionary. Please check your datagrabber",
+                ValueError,
+            )
 
-        if any(not (isinstance(k, str) or isinstance(v, str))
-               for k, v in derivatives_to_compute.items()):
+        if any(
+            not (isinstance(k, str) or isinstance(v, str))
+            for k, v in derivatives_to_compute.items()
+        ):
             raise_error(
                 'input["confounds"]["names"]["derivatives"] '
-                'must be a dictionary with string keys and values. '
-                'Please check your datagrabber',
-                ValueError)
+                "must be a dictionary with string keys and values. "
+                "Please check your datagrabber",
+                ValueError,
+            )
 
         missing_derivatives = [
-            x for x in derivatives_to_compute.values()
-            if x not in confound_df.columns]
+            x
+            for x in derivatives_to_compute.values()
+            if x not in confound_df.columns
+        ]
         if len(missing_derivatives) > 0:
             raise_error(
-                'Some of the derivatives to calculate are not in the confounds'
-                f' dataframe: {missing_derivatives}.'
-                'Please check your data '
+                "Some of the derivatives to calculate are not in the confounds"
+                f" dataframe: {missing_derivatives}."
+                "Please check your data "
                 f'({input["confounds"]["path"].as_posix()}) '
-                'and the datagrabber.', ValueError)
+                "and the datagrabber.",
+                ValueError,
+            )
 
-        t_conf_spec = {k: input['confounds']['names']['spec'][k][v]
-                       for k, v in self.strategy.items()}
+        t_conf_spec = {
+            k: input["confounds"]["names"]["spec"][k][v]
+            for k, v in self.strategy.items()
+        }
 
         column_names = set([x for y in t_conf_spec.values() for x in y])
         column_names.add(spike_name)
 
         missing_columns = [
-            x for x in column_names
-            if x not in confound_df.columns and
-            x not in derivatives_to_compute.keys()]
+            x
+            for x in column_names
+            if x not in confound_df.columns
+            and x not in derivatives_to_compute.keys()
+        ]
 
         if len(missing_columns) > 0:
             raise_error(
-                'Some of the columns in the confound spec are not in the '
-                f'confounds dataframe: {missing_columns}. '
-                'Please check your data '
+                "Some of the columns in the confound spec are not in the "
+                f"confounds dataframe: {missing_columns}. "
+                "Please check your data "
                 f'({input["confounds"]["path"].as_posix()}) '
-                'and the datagrabber.', ValueError)
+                "and the datagrabber.",
+                ValueError,
+            )
 
+    # TODO: complete type annotations
     def fit_transform(self, input):
         """Fit and transform."""
         self._validate_data(input)
-        bold_img = input['BOLD']['data']
-        confounds_df = self._pick_confounds(input['confounds'])
-        input['BOLD']['data'] = self._remove_confounds(bold_img, confounds_df)
+        bold_img = input["BOLD"]["data"]
+        confounds_df = self._pick_confounds(input["confounds"])
+        input["BOLD"]["data"] = self._remove_confounds(bold_img, confounds_df)
 
         # TODO: Update meta
         return input
