@@ -1,4 +1,4 @@
-"""Provide abstract base class for metadata collection."""
+"""Provide abstract base class for multiple source datagrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -12,15 +12,15 @@ from .base import BaseDataGrabber
 
 
 class MultipleDataGrabber(BaseDataGrabber):
-    """Abstract base class for metadata fetch.
+    """Abstract base class for data fetching from multiple sources.
 
-    Defines a DataGrabber which can be used to fetch metadata from multiple
+    Defines a DataGrabber which can be used to fetch data from multiple
     sources.
 
     Parameters
     ----------
     datagrabbers : list of datagrabbers
-        The datagrabbers to use to fetch metadata using.
+        The datagrabbers to use to fetch data using.
     **kwargs
         Keyword arguments passed to superclass.
 
