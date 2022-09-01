@@ -7,6 +7,6 @@
 from .base import BaseDataGrabber
 from .datalad_base import DataladDataGrabber
 from .hcp import DataladHCP1200, HCP1200
-from .meta import MultipleDataGrabber
+from .multiple_base import MultipleDataGrabber
 from .pattern import PatternDataGrabber
 from .pattern_datalad_base import PatternDataladDataGrabber
