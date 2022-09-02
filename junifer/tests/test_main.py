@@ -9,4 +9,5 @@
 def test_import() -> None:
     """Test junifer import."""
     import junifer
+
     print(junifer.__version__)

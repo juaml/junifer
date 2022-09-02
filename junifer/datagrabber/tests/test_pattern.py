@@ -5,11 +5,11 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from junifer.datagrabber.pattern import PatternDataGrabber
-
 from pathlib import Path
 
 import pytest
+
+from junifer.datagrabber.pattern import PatternDataGrabber
 
 
 def test_PatternDataGrabber() -> None:
@@ -62,7 +62,7 @@ def test_PatternDataGrabber() -> None:
         )
 
     with pytest.raises(
-            ValueError, match=r"`patterns` must contain all `types`"
+        ValueError, match=r"`patterns` must contain all `types`"
     ):
         MyDataGrabber(
             datadir="/tmp",
