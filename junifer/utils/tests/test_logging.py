@@ -11,11 +11,11 @@ from pathlib import Path
 import pytest
 
 from junifer.utils.logging import (
-    logger,
     _close_handlers,
     configure_logging,
     get_versions,
     log_versions,
+    logger,
     raise_error,
     warn_with_log,
 )
