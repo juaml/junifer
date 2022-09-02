@@ -26,8 +26,8 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
     def __getitem__(self, element: str) -> Dict:
         """Implement indexing support.
 
-        Paramters
-        ---------
+        Parameters
+        ----------
         element : str
             The element to retrieve.
 
