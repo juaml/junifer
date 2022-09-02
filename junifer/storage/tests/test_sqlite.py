@@ -241,7 +241,7 @@ def test_upsert_update(tmp_path: Path) -> None:
 
 
 def test_upsert_invalid_option(tmp_path: Path) -> None:
-    """Test dataframe store wtih invalid option for upsert.
+    """Test dataframe store with invalid option for upsert.
 
     Parameters
     ----------

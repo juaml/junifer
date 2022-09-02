@@ -194,7 +194,7 @@ class BaseFeatureStorage(ABC):
         columns : list or tuple of str, optional
             The columns (default None).
         rows_col_name : str, optional
-            The column name ot use in case number of rows greater than 1.
+            The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
             "index" (default None).
 

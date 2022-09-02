@@ -21,7 +21,7 @@ def test_register_invalid_step():
         register(step="foo", name="bar", klass="baz")
 
 
-# TODO: improve paramterization
+# TODO: improve parametrization
 @pytest.mark.parametrize(
     "step, name, klass",
     [
@@ -89,7 +89,7 @@ def test_get_class_invalid_name() -> None:
         get_class(step="datagrabber", name="foo")
 
 
-# TODO: enable paramterization
+# TODO: enable parametrization
 def test_get_class():
     """Test get class."""
     # Register datagrabber
