@@ -4,4 +4,4 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .datagrabbers import datagrabbers
+from . import datagrabbers

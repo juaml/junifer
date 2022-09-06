@@ -559,6 +559,7 @@ def _retrieve_tian(
             )
     elif magneticfield == "7T":
         atlas_fname_base_7T = atlas_dir / "Tian2020MSA_v1.1" / "7T"
+        atlas_fname_base_7T.mkdir(exist_ok=True, parents=True)
         atlas_fname = (
             atlas_dir
             / "Tian2020MSA_v1.1"
