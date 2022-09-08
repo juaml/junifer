@@ -152,7 +152,7 @@ def test_upsert_replace(tmp_path: Path) -> None:
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
     # Save to database
-    storage.store_df(df1, meta)
+    storage.store_df(df=df1, meta=meta)
     # Store metadata
     table_name = storage.store_metadata(meta)
     # Read stored table
@@ -162,7 +162,7 @@ def test_upsert_replace(tmp_path: Path) -> None:
     # Check if dataframes are equal
     assert_frame_equal(df1, c_df1)
     # Upsert using replace
-    storage._save_upsert(df2, table_name, if_exist="replace")
+    storage._save_upsert(df=df2, name=table_name, if_exists="replace")
     # Read stored table
     c_df2 = _read_sql(
         table_name=table_name, uri=uri, index_col=["element", "pk2"]
@@ -188,9 +188,9 @@ def test_upsert_ignore(tmp_path: Path) -> None:
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
     # Save to database
-    storage.store_df(df1, meta)
+    storage.store_df(df=df1, meta=meta)
     # Store metadata
-    table_name = storage.store_metadata(meta)
+    table_name = storage.store_metadata(meta=meta)
     # Read stored table
     c_df1 = _read_sql(
         table_name=table_name, uri=uri, index_col=["element", "pk2"]
@@ -206,7 +206,7 @@ def test_upsert_ignore(tmp_path: Path) -> None:
     assert_frame_equal(c_dfignore, df_ignore)
     # Check for error
     with pytest.raises(ValueError, match=r"already exists"):
-        storage._save_upsert(df2, table_name, if_exist="fail")
+        storage._save_upsert(df2, table_name, if_exists="fail")
 
 
 def test_upsert_update(tmp_path: Path) -> None:
