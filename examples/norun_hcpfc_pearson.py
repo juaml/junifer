@@ -1,5 +1,4 @@
-"""extraction of FC from HCP data.
-
+"""
 HCP FC Extraction
 ======================
 

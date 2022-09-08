@@ -13,5 +13,5 @@ Data Grabbers
    :members:
 .. autoclass:: junifer.datagrabber.datalad_base.DataladDataGrabber
    :members:
-.. autoclass:: junifer.datagrabber.pattern_datalad_base.PatternDataladDataGrabber
+.. autoclass:: junifer.datagrabber.pattern_datalad.PatternDataladDataGrabber
    :members:
