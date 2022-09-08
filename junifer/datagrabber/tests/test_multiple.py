@@ -18,7 +18,7 @@ _testing_dataset = {
 
 
 def test_multiple() -> None:
-
+    """Test a multiple datagrabber."""
     repo_uri = _testing_dataset["example_bids_ses"]["uri"]
     rootdir = "example_bids_ses"
     replacements = ["subject", "session"]
@@ -56,7 +56,7 @@ def test_multiple() -> None:
 
 
 def test_multiple_no_intersection() -> None:
-
+    """Test a multiple datagrabber without intersection (0 elements)."""
     repo_uri1 = _testing_dataset["example_bids"]["uri"]
     repo_uri2 = _testing_dataset["example_bids_ses"]["uri"]
     rootdir = "example_bids_ses"
