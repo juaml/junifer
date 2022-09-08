@@ -39,10 +39,10 @@ class DataladDataGrabber(BaseDataGrabber):
 
     Methods
     -------
-    install
+    install:
         Installs (clones) the datalad dataset into the `datadir`. This method
         is called automatically when the datagrabber is used within a context.
-    remove
+    remove:
         Removes the datalad dataset from the `datadir`. This method is called
         automatically when the datagrabber is used within a context.
 
