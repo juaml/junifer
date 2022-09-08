@@ -8,10 +8,10 @@ Data Grabbers
 ^^^^^^^^^^^^^
 
 .. autoclass:: junifer.datagrabber.base.BaseDataGrabber
-   :members: 
-.. autoclass:: junifer.datagrabber.base.PatternDataGrabber
-   :members: 
-.. autoclass:: junifer.datagrabber.base.DataladDataGrabber
-   :members: 
-.. autoclass:: junifer.datagrabber.base.PatternDataladDataGrabber
-   :members: 
+   :members:
+.. autoclass:: junifer.datagrabber.pattern.PatternDataGrabber
+   :members:
+.. autoclass:: junifer.datagrabber.datalad_base.DataladDataGrabber
+   :members:
+.. autoclass:: junifer.datagrabber.pattern_datalad_base.PatternDataladDataGrabber
+   :members:
