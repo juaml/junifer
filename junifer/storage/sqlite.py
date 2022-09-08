@@ -391,7 +391,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Process metadata
         meta_md5, t_meta_row = process_meta(t_meta)
         # Get sqlalchemy engine
-        engine = self.get_engine(t_meta)
+        engine = self.get_engine(meta=t_meta)
         if meta_md5 not in inspect(engine).get_table_names():
             # Convert metadata to dataframe
             meta_df = self._meta_row(meta=t_meta_row, meta_md5=meta_md5)
@@ -553,7 +553,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 table_name = f"meta_{meta_md5}"
                 t_df = in_storage.read_df(feature_md5=meta_md5)
                 # Save data
-                out_storage._save_upsert(t_df, table_name, if_exist="nocheck")
+                out_storage._save_upsert(t_df, table_name, if_exists="nocheck")
 
 
 # TODO: refactor
