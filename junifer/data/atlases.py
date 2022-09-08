@@ -61,7 +61,7 @@ for scale in range(1, 5):
     }
     t_name = f"TianxS{scale}x3TxMNI6thgeneration"
     _available_atlases[t_name] = {
-        "family": "Tian",r
+        "family": "Tian",
         "scale": scale,
         "magneticfield": "3T",
         "space": "MNI6thgeneration",
