@@ -3,7 +3,8 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from junifer.datagrabber import PatternDataladDataGrabber, MultipleDataGrabber
+from junifer.datagrabber import MultipleDataGrabber, PatternDataladDataGrabber
+
 
 _testing_dataset = {
     "example_bids": {
@@ -34,14 +35,16 @@ def test_multiple() -> None:
         uri=repo_uri,
         types=["T1w"],
         patterns=pattern1,
-        replacements=replacements)
+        replacements=replacements,
+    )
 
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri,
         types=["bold"],
         patterns=pattern2,
-        replacements=replacements)
+        replacements=replacements,
+    )
 
     dg = MultipleDataGrabber([dg1, dg2])
     expected_subs = [
@@ -73,14 +76,16 @@ def test_multiple_no_intersection() -> None:
         uri=repo_uri1,
         types=["T1w"],
         patterns=pattern1,
-        replacements=replacements)
+        replacements=replacements,
+    )
 
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri2,
         types=["bold"],
         patterns=pattern2,
-        replacements=replacements)
+        replacements=replacements,
+    )
 
     dg = MultipleDataGrabber([dg1, dg2])
     expected_subs = set()
