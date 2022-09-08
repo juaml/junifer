@@ -63,21 +63,23 @@ def process_meta(meta: Dict) -> Tuple[str, Dict]:
     """
     if meta is None:
         raise_error(msg="`meta` must be a dict (currently is None)")
+    # Copy the metadata
+    t_meta = meta.copy()
     # Remove key "element"
-    element = meta.pop("element", None)
+    element = t_meta.pop("element", None)
     if element is None:
-        if "_element_keys" not in meta:
+        if "_element_keys" not in t_meta:
             raise_error(
                 msg="`meta` must contain the key 'element' or '_element_keys'"
             )
     else:
         if isinstance(element, dict):
-            meta["_element_keys"] = list(element.keys())
+            t_meta["_element_keys"] = list(element.keys())
         else:
-            meta["_element_keys"] = ["element"]
+            t_meta["_element_keys"] = ["element"]
     # MD5 hash of the metadata
-    md5_hash = _meta_hash(meta)
-    return md5_hash, meta
+    md5_hash = _meta_hash(t_meta)
+    return md5_hash, t_meta
 
 
 def element_to_prefix(element: Union[Tuple, Dict, str, int]) -> str:

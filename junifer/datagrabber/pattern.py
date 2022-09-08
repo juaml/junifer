@@ -86,8 +86,7 @@ class PatternDataGrabber(BaseDataGrabber):
         glob_pattern = pattern
         for t_r in self.replacements:
             # Replace the first of each with a named group definition
-            re_pattern = re_pattern.replace(
-                f"{{{t_r}}}", f"(?P<{t_r}>.*)", 1)
+            re_pattern = re_pattern.replace(f"{{{t_r}}}", f"(?P<{t_r}>.*)", 1)
 
         for t_r in self.replacements:
             # Replace the second appearance of each with the named group
