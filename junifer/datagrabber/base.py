@@ -59,7 +59,7 @@ class BaseDataGrabber(ABC):
             yield elem
 
     # TODO: element does nothing, check
-    def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:
+    def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Dict]:
         """Enable indexing support.
 
         Parameters

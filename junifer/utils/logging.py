@@ -9,7 +9,7 @@ import sys
 from distutils.version import LooseVersion
 from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
-from typing import Dict, NoReturn, Optional, Union
+from typing import Dict, NoReturn, Optional, Type, Union
 from warnings import warn
 
 
@@ -257,7 +257,7 @@ def configure_logging(
     log_versions()  # log versions of installed packages
 
 
-def raise_error(msg: str, klass: Exception = ValueError) -> NoReturn:
+def raise_error(msg: str, klass: Type[Exception] = ValueError) -> NoReturn:
     """Raise error, but first log it.
 
     Parameters

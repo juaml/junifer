@@ -119,60 +119,60 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
     #         )
 
 
-# def test_bids_datalad_PatternDataGrabber_session():
-#     """Test a subject and session-based BIDS datalad datagrabber."""
-#     types = ["T1w", "bold"]
-#     patterns = {
-#         "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-#         "bold": "{subject}/{session}/func/"
-#         "{subject}_{session}_task-rest_bold.nii.gz",
-#     }
-#     replacements = ["subject", "session"]
+def test_bids_PatternDataladDataGrabber_session():
+    """Test a subject and session-based BIDS datalad datagrabber."""
+    types = ["T1w", "bold"]
+    patterns = {
+        "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+        "bold": "{subject}/{session}/func/"
+        "{subject}_{session}_task-rest_bold.nii.gz",
+    }
+    replacements = ["subject", "session"]
 
-#     with pytest.raises(ValueError, match=r"`uri` must be provided"):
-#         PatternDataladDataGrabber(
-#             datadir=None,
-#             types=types,
-#             patterns=patterns,
-#             replacements=replacements,
-#         )
+    with pytest.raises(ValueError, match=r"`uri` must be provided"):
+        PatternDataladDataGrabber(
+            datadir=None,
+            types=types,
+            patterns=patterns,
+            replacements=replacements,
+        )
 
-#     repo_uri = _testing_dataset["example_bids_ses"]["uri"]
-#     rootdir = "example_bids_ses"
-#     # repo_commit =  _testing_dataset['example_bids_ses']['id']
+    repo_uri = _testing_dataset["example_bids_ses"]["uri"]
+    rootdir = "example_bids_ses"
+    # repo_commit =  _testing_dataset['example_bids_ses']['id']
 
-#     # With T1W and bold, only 2 sessions are available
-#     with PatternDataladDataGrabber(
-#         rootdir=rootdir,
-#         uri=repo_uri,
-#         types=types,
-#         patterns=patterns,
-#         replacements=replacements,
-#     ) as dg:
-#         subs = [x for x in dg]
-#         expected_subs = [
-#             (f"sub-{i:02d}", f"ses-{j:02d}")
-#             for j in range(1, 3)
-#             for i in range(1, 10)
-#         ]
-#         assert set(subs) == set(expected_subs)
+    # With T1W and bold, only 2 sessions are available
+    with PatternDataladDataGrabber(
+        rootdir=rootdir,
+        uri=repo_uri,
+        types=types,
+        patterns=patterns,
+        replacements=replacements,
+    ) as dg:
+        subs = [x for x in dg]
+        expected_subs = [
+            (f"sub-{i:02d}", f"ses-{j:02d}")
+            for j in range(1, 3)
+            for i in range(1, 10)
+        ]
+        assert set(subs) == set(expected_subs)
 
-#     # Test with a different T1w only, it should have 3 sessions
-#     types = ["T1w"]
-#     patterns = {
-#         "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-#     }
-#     with PatternDataladDataGrabber(
-#         rootdir=rootdir,
-#         uri=repo_uri,
-#         types=types,
-#         patterns=patterns,
-#         replacements=replacements,
-#     ) as dg:
-#         subs = [x for x in dg]
-#         expected_subs = [
-#             (f"sub-{i:02d}", f"ses-{j:02d}")
-#             for j in range(1, 4)
-#             for i in range(1, 10)
-#         ]
-#         assert set(subs) == set(expected_subs)
+    # Test with a different T1w only, it should have 3 sessions
+    types = ["T1w"]
+    patterns = {
+        "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+    }
+    with PatternDataladDataGrabber(
+        rootdir=rootdir,
+        uri=repo_uri,
+        types=types,
+        patterns=patterns,
+        replacements=replacements,
+    ) as dg:
+        subs = [x for x in dg]
+        expected_subs = [
+            (f"sub-{i:02d}", f"ses-{j:02d}")
+            for j in range(1, 4)
+            for i in range(1, 10)
+        ]
+        assert set(subs) == set(expected_subs)

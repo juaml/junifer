@@ -14,13 +14,9 @@ from junifer.datagrabber.pattern import PatternDataGrabber
 
 def test_PatternDataGrabber() -> None:
     """Test PatternDataGrabber."""
-    # Create concrete class
-    class MyDataGrabber(PatternDataGrabber):
-        def get_elements(self):
-            return super().get_elements()
 
     with pytest.raises(TypeError, match=r"`types` must be a list"):
-        MyDataGrabber(
+        PatternDataGrabber(
             datadir="/tmp",
             types="wrong",
             patterns={"wrong": "pattern"},
@@ -28,7 +24,7 @@ def test_PatternDataGrabber() -> None:
         )
 
     with pytest.raises(TypeError, match=r"`types` must be a list of strings"):
-        MyDataGrabber(
+        PatternDataGrabber(
             datadir="/tmp",
             types=[1, 2, 3],
             patterns={"1": "pattern", "2": "pattern", "3": "pattern"},
@@ -36,7 +32,7 @@ def test_PatternDataGrabber() -> None:
         )
 
     with pytest.raises(ValueError, match=r"must have the same length"):
-        MyDataGrabber(
+        PatternDataGrabber(
             datadir="/tmp",
             types=["func", "anat"],
             patterns={"1": "pattern", "2": "pattern", "3": "pattern"},
@@ -44,7 +40,7 @@ def test_PatternDataGrabber() -> None:
         )
 
     with pytest.raises(TypeError, match=r"`patterns` must be a dict"):
-        MyDataGrabber(
+        PatternDataGrabber(
             datadir="/tmp",
             types=["func", "anat"],
             patterns="wrong",
@@ -54,7 +50,7 @@ def test_PatternDataGrabber() -> None:
     with pytest.raises(
         ValueError, match=r"`patterns` must have the same length"
     ):
-        MyDataGrabber(
+        PatternDataGrabber(
             datadir="/tmp",
             types=["func", "anat"],
             patterns={"wrong": "pattern"},
@@ -64,7 +60,7 @@ def test_PatternDataGrabber() -> None:
     with pytest.raises(
         ValueError, match=r"`patterns` must contain all `types`"
     ):
-        MyDataGrabber(
+        PatternDataGrabber(
             datadir="/tmp",
             types=["func", "anat"],
             patterns={"wrong": "pattern", "func": "pattern"},
@@ -72,7 +68,7 @@ def test_PatternDataGrabber() -> None:
         )
 
     with pytest.raises(TypeError, match=r"must be a list of strings"):
-        MyDataGrabber(
+        PatternDataGrabber(
             datadir="/tmp",
             types=["func", "anat"],
             patterns={"func": "func/test", "anat": "anat/test"},
@@ -80,7 +76,7 @@ def test_PatternDataGrabber() -> None:
         )
 
     with pytest.warns(RuntimeWarning, match=r"not part of any pattern"):
-        MyDataGrabber(
+        PatternDataGrabber(
             datadir="/tmp",
             types=["func", "anat"],
             patterns={
@@ -90,7 +86,7 @@ def test_PatternDataGrabber() -> None:
             replacements=["subject", "wrong"],
         )
 
-    datagrabber = MyDataGrabber(
+    datagrabber = PatternDataGrabber(
         datadir="/tmp/data",
         types=["func", "anat"],
         patterns={"func": "func/{subject}.nii", "anat": "anat/{subject}.nii"},
@@ -100,7 +96,7 @@ def test_PatternDataGrabber() -> None:
     assert datagrabber.types == ["func", "anat"]
     assert datagrabber.replacements == ["subject"]
 
-    datagrabber = MyDataGrabber(
+    datagrabber = PatternDataGrabber(
         datadir=Path("/tmp/data"),
         types=["func", "anat"],
         patterns={

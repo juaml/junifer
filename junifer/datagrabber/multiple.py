@@ -12,10 +12,10 @@ from .base import BaseDataGrabber
 
 
 class MultipleDataGrabber(BaseDataGrabber):
-    """Abstract base class for data fetching from multiple sources.
+    """Datagrabber class for data fetching from multiple sources.
 
     Defines a DataGrabber which can be used to fetch data from multiple
-    sources.
+    datagrabbers.
 
     Parameters
     ----------
@@ -61,13 +61,30 @@ class MultipleDataGrabber(BaseDataGrabber):
         """Implement context entry."""
         for dg in self._datagrabbers:
             dg.__enter__()
+        return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback) -> None:
         """Implement context exit."""
         for dg in self._datagrabbers:
             dg.__exit__(exc_type, exc_value, exc_traceback)
 
-    def get_types(self) -> List[List[str]]:
+    def get_elements(self) -> List:
+        """Get elements.
+
+        Returns
+        -------
+        elements : list
+            The list of elements that can be grabbed in the dataset. It
+            corresponds to the elements that are present in all the
+            related datagrabbers.
+        """
+        all_elements = [dg.get_elements() for dg in self._datagrabbers]
+        elements = set(all_elements[0])
+        for s in all_elements[1:]:
+            elements.intersection_update(s)
+        return list(elements)
+
+    def get_types(self) -> List[str]:
         """Get types.
 
         Returns
@@ -91,3 +108,4 @@ class MultipleDataGrabber(BaseDataGrabber):
         t_meta = {}
         t_meta["class"] = self.__class__.__name__
         t_meta["datagrabbers"] = [dg.get_meta() for dg in self._datagrabbers]
+        return t_meta

@@ -1,4 +1,4 @@
-"""Provide abstract base class for pattern-based datalad datagrabber."""
+"""Provide base class for pattern-based datalad datagrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -15,7 +15,7 @@ from .utils import validate_patterns
 
 @register_datagrabber
 class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
-    """Abstract base class for pattern-based data fetching via Datalad.
+    """Base class for pattern-based data fetching via Datalad.
 
     Defines a DataGrabber that gets data from a datalad sibling,
     interpreting patterns.

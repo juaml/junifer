@@ -6,8 +6,7 @@
 # License: AGPL
 
 import re
-from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 from ..api.decorators import register_datagrabber
 from ..utils import logger, raise_error
@@ -23,13 +22,12 @@ class PatternDataGrabber(BaseDataGrabber):
 
     Parameters
     ----------
-    types : list of str, optional
+    types : list of str
         The types of data to be grabbed (default None).
-    patterns : dict, optional
+    patterns : dict
         Patterns for each type of data as a dictionary. The keys are the types
         and the values are the patterns. Each occurrence of the string
-        `{subject}` in the pattern will be replaced by the indexed element
-        (default None).
+        `{subject}` in the pattern will be replaced by the indexed element.
     replacements: list of str
         Replacements in the patterns for each item in the "element" tuple.
     datadir : str or pathlib.Path
@@ -45,9 +43,9 @@ class PatternDataGrabber(BaseDataGrabber):
 
     def __init__(
         self,
-        types: Optional[List[str]] = None,
-        patterns: Optional[Dict[str, str]] = None,
-        replacements: Optional[List[str]] = None,
+        types: List[str],
+        patterns: Dict[str, str],
+        replacements: List[str],
         **kwargs,
     ) -> None:
         """Initialize the class."""
@@ -84,24 +82,20 @@ class PatternDataGrabber(BaseDataGrabber):
             The search pattern to be used with glob.
 
         """
-        # re_pattern = pattern
-        # glob_pattern = pattern
+        re_pattern = pattern
+        glob_pattern = pattern
         for t_r in self.replacements:
-            # Replace the first appearance of each with a named group
-            # definition and the second appearance of each with the named group
+            # Replace the first of each with a named group definition
+            re_pattern = re_pattern.replace(
+                f"{{{t_r}}}", f"(?P<{t_r}>.*)", 1)
+
+        for t_r in self.replacements:
+            # Replace the second appearance of each with the named group
             # back reference
-            re_pattern = pattern.replace(
-                f"{{{t_r}}}", f"(?P<{t_r}>.*)", 1
-            ).replace(f"{{{t_r}}}", f"(?P={t_r})")
-            glob_pattern = pattern.replace(f"{{{t_r}}}", "*")
+            re_pattern = re_pattern.replace(f"{{{t_r}}}", f"(?P={t_r})")
 
-        # for t_r in self.replacements:
-        #     # Replace the second appearance of each with the named group
-        #     # back reference
-        #     re_pattern = pattern.replace(f"{{{t_r}}}", f"(?P={t_r})")
-
-        # for t_r in self.replacements:
-        #     glob_pattern = glob_pattern.replace(f"{{{t_r}}}", "*")
+        for t_r in self.replacements:
+            glob_pattern = glob_pattern.replace(f"{{{t_r}}}", "*")
         return re_pattern, glob_pattern
 
     def _replace_patterns_glob(self, element: Tuple, pattern: str) -> str:
@@ -128,7 +122,7 @@ class PatternDataGrabber(BaseDataGrabber):
         to_replace = dict(zip(self.replacements, element))
         return pattern.format(**to_replace)
 
-    def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:
+    def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Dict]:
         """Implement single element indexing in the database.
 
         Each occurrence of the strings in "replacements" is replaced by the
@@ -145,7 +139,7 @@ class PatternDataGrabber(BaseDataGrabber):
         Returns
         -------
         dict
-            Dictionary of paths for each type of data required for the
+            Dictionary of dictionaries for each type of data required for the
             specified element.
 
         """
@@ -194,7 +188,7 @@ class PatternDataGrabber(BaseDataGrabber):
             # Replace the pattern
             re_pattern, glob_pattern = self._replace_patterns_regex(t_pattern)
             for fname in self.datadir.glob(glob_pattern):
-                suffix = str(fname.relative_to(self.datadir).absolute())
+                suffix = fname.relative_to(self.datadir).as_posix()
                 m = re.match(re_pattern, suffix)
                 if m is not None:
                     t_element = tuple(m.group(k) for k in self.replacements)
@@ -206,5 +200,6 @@ class PatternDataGrabber(BaseDataGrabber):
                 elements = types_element
             else:
                 elements = elements.intersection(types_element)
-
+        if elements is None:
+            elements = set()
         return list(elements)
