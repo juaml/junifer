@@ -375,39 +375,23 @@ def test_store_table(tmp_path: Path) -> None:
     # Check if dataframes are equal
     assert_frame_equal(df, c_df)
 
-
-def test_store_table_check_warning(tmp_path: Path) -> None:
-    """Test table store and check warning.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
-    uri = tmp_path / "test_store_table_check_warning.db"
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
-    # Metadata to store
-    meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
-    # Data to store
-    data = [[1, 10], [2, 20], [3, 300], [4, 40], [5, 50], [6, 600]]
+    # New data to store
+    data_new = [[1, 10], [2, 20], [3, 300], [4, 40], [5, 50], [6, 600]]
     # Convert element to index
-    idx = element_to_index(meta, n_rows=6, rows_col_name="scan")
+    idx_new = element_to_index(meta, n_rows=6, rows_col_name="scan")
     # Create dataframe
-    df = pd.DataFrame(data, columns=["f1", "f2"], index=idx)
+    df_new = pd.DataFrame(data_new, columns=["f1", "f2"], index=idx_new)
     # Check warning
     with pytest.warns(RuntimeWarning, match=r"Some rows"):
         storage.store_table(
-            data, meta, columns=["f1", "f2"], rows_col_name="scan"
+            data_new, meta, columns=["f1", "f2"], rows_col_name="scan"
         )
-    # Store metadata
-    table_name = storage.store_metadata(meta)
     # Read stored table
-    c_df = _read_sql(
+    c_df_new = _read_sql(
         table_name=table_name, uri=uri, index_col=["element", "scan"]
     )
     # Check if dataframes are equal
-    assert_frame_equal(df, c_df)
+    assert_frame_equal(df_new, c_df_new)
 
 
 # TODO: can the test be parametrized?
