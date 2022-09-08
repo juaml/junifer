@@ -10,7 +10,7 @@ Authors: Federico Raimondo
 License: BSD 3 clause
 """
 
-from junifer.datagrabber.base import PatternDataladDataGrabber
+from junifer.datagrabber import PatternDataladDataGrabber
 from junifer.utils import configure_logging
 
 ###############################################################################
