@@ -5,10 +5,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from ..utils.logging import logger, raise_error
-
+if TYPE_CHECKING:
+    from ..datagrabber.base import BaseDataGrabber
+    from ..markers.base import PipelineStepMixin
+    from ..storage.base import BaseFeatureStorage
 
 # Define valid steps for operation
 _valid_steps = [
@@ -96,7 +99,7 @@ def build(
     name: str,
     baseclass: type,
     init_params: Optional[Dict] = None,
-) -> type:
+) -> Union["BaseDataGrabber", "PipelineStepMixin", "BaseFeatureStorage"]:
     """Ensure that the given object is an instance of the given class.
 
     Parameters

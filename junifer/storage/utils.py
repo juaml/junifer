@@ -4,6 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from typing import Any
+
 import hashlib
 import json
 from typing import Dict, Optional, Tuple, Union
@@ -155,7 +157,7 @@ def element_to_index(
     # Check rows_col_name
     if rows_col_name is None:
         rows_col_name = "idx"
-    elem_idx = {k: [v] * n_rows for k, v in element.items()}
+    elem_idx: Dict[Any, Any] = {k: [v] * n_rows for k, v in element.items()}
     elem_idx[rows_col_name] = np.arange(n_rows)
     # Create index
     index = pd.MultiIndex.from_frame(

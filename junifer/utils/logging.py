@@ -23,7 +23,7 @@ _logging_types = {
 }
 
 
-class WrapStdOut:
+class WrapStdOut(logging.StreamHandler):
     """
     Dynamically wrap to sys.stdout.
 
@@ -67,7 +67,7 @@ def _get_git_head(path: Path) -> str:
     )
     try:
         stdout, _ = process.communicate(timeout=10)
-        proc_stdout = stdout.strip()
+        proc_stdout = stdout.strip().decode()
     except TimeoutExpired:
         process.kill()
         proc_stdout = ""
@@ -95,7 +95,7 @@ def get_versions() -> Dict:
         if module_version is None:
             module_version = None
         elif "git" in module_version:
-            git_path = Path(module.__file__).resolve().parent
+            git_path = Path(module.__file__).resolve().parent  # type: ignore
             head = _get_git_head(git_path)
             module_version += f"-HEAD:{head}"
 
@@ -240,7 +240,7 @@ def configure_logging(
         mode = "w" if overwrite else "a"
         lh = logging.FileHandler(fname, mode=mode)
     else:
-        lh = logging.StreamHandler(WrapStdOut())
+        lh = logging.StreamHandler(WrapStdOut())  # type: ignore
 
     # Set logging format
     if output_format is None:
@@ -272,7 +272,9 @@ def raise_error(msg: str, klass: Type[Exception] = ValueError) -> NoReturn:
     raise klass(msg)
 
 
-def warn_with_log(msg: str, category: Warning = RuntimeWarning) -> None:
+def warn_with_log(
+        msg: str, 
+        category: Optional[Type[Warning]] = RuntimeWarning) -> None:
     """Warn, but first log it.
 
     Parameters

@@ -19,7 +19,7 @@ def test_process_meta_invalid_metadata_type() -> None:
     """Test invalid metadata type check for metadata hash processing."""
     meta = None
     with pytest.raises(ValueError, match=r"`meta` must be a dict"):
-        process_meta(meta)
+        process_meta(meta)  # type: ignore
 
 
 # TODO: parameterize

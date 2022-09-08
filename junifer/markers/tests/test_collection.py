@@ -86,11 +86,13 @@ def test_marker_collection():
     with dg:
         input = dg["sub-01"]
         out2 = mc2.fit(input)
+        assert out2 is not None
         for t_marker in markers:
             t_name = t_marker.name
             assert_array_equal(
-                out[t_name]["VBM_GM"]["data"], out2[t_name]["VBM_GM"]["data"]
-            )  # type: ignore
+                out[t_name]["VBM_GM"]["data"],
+                out2[t_name]["VBM_GM"]["data"]
+            )
 
 
 def test_MarkerCollection_storage(tmp_path) -> None:
@@ -125,6 +127,7 @@ def test_MarkerCollection_storage(tmp_path) -> None:
         markers=markers, storage=storage, datareader=DefaultDataReader()
     )
     mc.validate(dg)
+    assert mc._storage is not None
     assert mc._storage.uri == storage.uri
     with dg:
         input = dg["sub-01"]

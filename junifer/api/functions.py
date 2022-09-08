@@ -8,7 +8,8 @@
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Union
+from typing import Dict, List, Optional, Union, Tuple
+import typing
 
 import yaml
 
@@ -21,7 +22,7 @@ from ..utils.fs import make_executable
 from .registry import build
 
 
-def _get_datagrabber(datagrabber_config: Dict) -> Dict:
+def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
     """Get datagrabber.
 
     Parameters
@@ -43,6 +44,7 @@ def _get_datagrabber(datagrabber_config: Dict) -> Dict:
         baseclass=BaseDataGrabber,
         init_params=datagrabber_params,
     )
+    datagrabber = typing.cast(BaseDataGrabber, datagrabber)
     return datagrabber
 
 
@@ -51,7 +53,7 @@ def run(
     datagrabber: Dict,
     markers: List[Dict],
     storage: Dict,
-    elements: Union[str, Sequence, None] = None,
+    elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
 ) -> None:
     """Run the pipeline on the selected element.
 
@@ -81,8 +83,10 @@ def run(
     # Convert str to Path
     if isinstance(workdir, str):
         workdir = Path(workdir)
+    if not isinstance(elements, List) and elements is not None:
+        elements = [elements]
     # Get datagrabber to use
-    datagrabber = _get_datagrabber(datagrabber)
+    datagrabber_object = _get_datagrabber(datagrabber)
     # Copy to avoid changing the original dict
     _markers = [x.copy() for x in markers]
     built_markers = []
@@ -98,22 +102,23 @@ def run(
     # Get storage engine to use
     storage_params = storage.copy()
     storage_kind = storage_params.pop("kind")
-    storage = build(
+    storage_object = build(
         step="storage",
         name=storage_kind,
         baseclass=BaseFeatureStorage,
         init_params=storage_params,
     )
+    storage_object = typing.cast(BaseFeatureStorage, storage_object)
     # Create new marker collection
-    mc = MarkerCollection(markers=built_markers, storage=storage)
+    mc = MarkerCollection(markers=built_markers, storage=storage_object)
     # Fit elements
-    with datagrabber:
+    with datagrabber_object:
         if elements is not None:
             for t_element in elements:
-                mc.fit(datagrabber[t_element])
+                mc.fit(datagrabber_object[t_element])
         else:
-            for t_element in datagrabber:
-                mc.fit(datagrabber[t_element])
+            for t_element in datagrabber_object:
+                mc.fit(datagrabber_object[t_element])
 
 
 def collect(storage: Dict) -> None:
@@ -131,14 +136,15 @@ def collect(storage: Dict) -> None:
     storage_kind = storage_params.pop("kind")
     logger.info(f"Collecting data using {storage_kind}")
     logger.debug(f"\tStorage params: {storage_params}")
-    storage = build(
+    storage_object = build(
         step="storage",
         name=storage_kind,
         baseclass=BaseFeatureStorage,
         init_params=storage_params,
     )
+    storage_object = typing.cast(BaseFeatureStorage, storage_object)
     logger.debug("Running storage.collect()")
-    storage.collect()
+    storage_object.collect()
     logger.info("Collect done")
 
 
@@ -147,7 +153,7 @@ def queue(
     kind: str,
     jobname: str = "junifer_job",
     overwrite: bool = False,
-    elements: Union[str, Sequence, None] = None,
+    elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
     **kwargs: Union[str, int, bool],
 ) -> None:  # pragma : no cover
     """Queue a job to be executed later.
@@ -209,12 +215,19 @@ def queue(
             datagrabber = _get_datagrabber(config["datagrabber"])
             with datagrabber as dg:
                 elements = dg.get_elements()
+
+    # TODO: Fix typing of elements
+    if not isinstance(elements, List):
+        elements = [elements]  # type: ignore
+
+    typing.cast(List[Union[str, Tuple]], elements)
+
     if kind == "HTCondor":
         _queue_condor(
             jobname=jobname,
             jobdir=jobdir,
             yaml_config=yaml_config,
-            elements=elements,
+            elements=elements,  # type: ignore
             **kwargs,
         )
     elif kind == "SLURM":
@@ -222,7 +235,7 @@ def queue(
             jobname=jobname,
             jobdir=jobdir,
             yaml_config=yaml_config,
-            elements=elements,
+            elements=elements,  # type: ignore
             **kwargs,
         )
     else:
@@ -235,7 +248,7 @@ def _queue_condor(
     jobname: str,
     jobdir: Path,
     yaml_config: Path,
-    elements: Union[str, Sequence, None] = None,
+    elements: List[Union[str, Tuple]],
     env: Optional[Dict[str, str]] = None,
     mem: str = "8G",
     cpus: int = 1,
@@ -255,9 +268,8 @@ def _queue_condor(
         The path to the job directory.
     yaml_config : pathlib.Path
         The path to the YAML config file.
-    elements : str or tuple or list of str or tuple, optional
-        Element(s) to process. Will be used to index the datagrabber
-        (default None).
+    elements : list of str or tuple
+        Element(s) to process. Will be used to index the datagrabber.
     env : dict, optional
         The environment variables passed as dictionary (default None).
     mem : str, optional
@@ -411,7 +423,7 @@ def _queue_slurm(
     jobname: str,
     jobdir: Path,
     yaml_config: Path,
-    elements: Union[str, Sequence, None] = None,
+    elements: List[Union[str, Tuple]],
 ) -> None:
     """Submit job to SLURM.
 

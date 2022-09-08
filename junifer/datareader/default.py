@@ -5,7 +5,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import nibabel as nib
 import pandas as pd
@@ -33,7 +33,7 @@ class DefaultDataReader(PipelineStepMixin):
     """Mixin class for default data reader."""
 
     # TODO: complete type annotations
-    def validate_input(self, input):
+    def validate_input(self, input: List[str]) -> None:
         """Validate input.
 
         Parameters

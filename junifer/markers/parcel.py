@@ -42,7 +42,7 @@ class ParcelAggregation(BaseMarker):
             on = ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
         super().__init__(on=on, name=name)
 
-    def get_output_kind(self, input: List[str]) -> str:
+    def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
 
         Parameters
@@ -56,13 +56,18 @@ class ParcelAggregation(BaseMarker):
             The kind of output.
 
         """
-        if input in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
-            return "table"
-        if input in ["BOLD"]:
-            return "timeseries"
+        outputs = []
+        for t_input in input:
+            if t_input in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
+                outputs.append("table")
+            elif input in ["BOLD"]:
+                outputs.append("timeseries")
+            else:
+                raise ValueError(f"Unknown input kind for {t_input}")
+        return outputs
 
     # TODO: complete type annotations
-    def store(self, kind: List[str], out, storage) -> None:
+    def store(self, kind: str, out, storage) -> None:
         """Store.
 
         Parameters
@@ -98,7 +103,7 @@ class ParcelAggregation(BaseMarker):
             self.method, func_params=self.method_params
         )
         # Get the min of the voxels sizes and use it as the resolution
-        resolution = np.min(t_input.header.get_zooms()[:3])
+        resolution = np.min(t_input.header.get_zooms()[:3])  # type: ignore
         t_atlas, t_labels, _ = load_atlas(self.atlas, resolution=resolution)
         atlas_img_res = resample_to_img(
             t_atlas,
@@ -110,7 +115,8 @@ class ParcelAggregation(BaseMarker):
             img=atlas_img_res,
         )
         logger.debug("Masking")
-        masker = NiftiMasker(atlas_bin, target_affine=t_input.affine)
+        masker = NiftiMasker(
+            atlas_bin, target_affine=t_input.affine)  # type: ignore
 
         # Mask the input data and the atlas
         data = masker.fit_transform(t_input)

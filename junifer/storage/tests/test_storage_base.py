@@ -12,7 +12,7 @@ from junifer.storage.base import BaseFeatureStorage
 def test_BaseFeatureStorage_abstractness() -> None:
     """Test BaseFeatureStorage is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
-        BaseFeatureStorage(uri="/tmp")
+        BaseFeatureStorage(uri="/tmp")  # type: ignore
 
 
 def test_BaseFeatureStorage() -> None:
@@ -74,7 +74,7 @@ def test_BaseFeatureStorage() -> None:
         st.store_table(None, None)
 
     with pytest.raises(NotImplementedError):
-        st.store_df(None, None)
+        st.store_df(None, None)  # type: ignore
 
     with pytest.raises(NotImplementedError):
         st.store_timeseries(None, None)

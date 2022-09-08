@@ -4,6 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from typing import Union, List
+
 from pathlib import Path
 
 import numpy as np
@@ -57,7 +59,8 @@ df_ignore = pd.DataFrame(
 ).set_index(["element", "pk2"])
 
 
-def _read_sql(table_name: str, uri: str, index_col: str) -> pd.DataFrame:
+def _read_sql(table_name: str, uri: str,
+              index_col: Union[str, List[str]]) -> pd.DataFrame:
     """Read database table into a pandas DataFrame.
 
     Parameters
@@ -157,7 +160,8 @@ def test_upsert_replace(tmp_path: Path) -> None:
     table_name = storage.store_metadata(meta)
     # Read stored table
     c_df1 = _read_sql(
-        table_name=table_name, uri=uri, index_col=["element", "pk2"]
+        table_name=table_name, uri=uri.as_posix(),
+        index_col=["element", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df1, c_df1)
@@ -165,7 +169,8 @@ def test_upsert_replace(tmp_path: Path) -> None:
     storage._save_upsert(df=df2, name=table_name, if_exists="replace")
     # Read stored table
     c_df2 = _read_sql(
-        table_name=table_name, uri=uri, index_col=["element", "pk2"]
+        table_name=table_name, uri=uri.as_posix(),
+        index_col=["element", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df2, c_df2)
@@ -193,7 +198,9 @@ def test_upsert_ignore(tmp_path: Path) -> None:
     table_name = storage.store_metadata(meta=meta)
     # Read stored table
     c_df1 = _read_sql(
-        table_name=table_name, uri=uri, index_col=["element", "pk2"]
+        table_name=table_name,
+        uri=uri.as_posix(),
+        index_col=["element", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df1, c_df1)
@@ -201,7 +208,8 @@ def test_upsert_ignore(tmp_path: Path) -> None:
     with pytest.warns(RuntimeWarning, match="are already present"):
         storage.store_df(df2, meta)
     # Read stored table
-    c_dfignore = _read_sql(table_name, uri=uri, index_col=["element", "pk2"])
+    c_dfignore = _read_sql(
+        table_name, uri=uri.as_posix(), index_col=["element", "pk2"])
     # Check if dataframes are equal
     assert_frame_equal(c_dfignore, df_ignore)
     # Check for error
@@ -228,14 +236,17 @@ def test_upsert_update(tmp_path: Path) -> None:
     table_name = storage.store_metadata(meta)
     # Read stored table
     c_df1 = _read_sql(
-        table_name=table_name, uri=uri, index_col=["element", "pk2"]
+        table_name=table_name, uri=uri.as_posix(),
+        index_col=["element", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df1, c_df1)
     # Save to database
     storage.store_df(df2, meta)
     # Read stored table
-    c_dfupdate = _read_sql(table_name, uri=uri, index_col=["element", "pk2"])
+    c_dfupdate = _read_sql(
+        table_name, uri=uri.as_posix(),
+        index_col=["element", "pk2"])
     # Check if dataframes are equal
     assert_frame_equal(c_dfupdate, df_update)
 
@@ -370,7 +381,8 @@ def test_store_table(tmp_path: Path) -> None:
     table_name = storage.store_metadata(meta)
     # Read stored table
     c_df = _read_sql(
-        table_name=table_name, uri=uri, index_col=["element", "scan"]
+        table_name=table_name, uri=uri.as_posix(),
+        index_col=["element", "scan"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df, c_df)
@@ -388,7 +400,8 @@ def test_store_table(tmp_path: Path) -> None:
         )
     # Read stored table
     c_df_new = _read_sql(
-        table_name=table_name, uri=uri, index_col=["element", "scan"]
+        table_name=table_name, uri=uri.as_posix(),
+        index_col=["element", "scan"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df_new, c_df_new)
@@ -484,9 +497,9 @@ def test_store_multiple_output(tmp_path: Path):
     # Set index columns
     cols = ["subject", "session", "scan"]
     # Read stored tables
-    cdf1 = _read_sql(table_name, uri1, index_col=cols)
-    cdf2 = _read_sql(table_name, uri2, index_col=cols)
-    cdf3 = _read_sql(table_name, uri3, index_col=cols)
+    cdf1 = _read_sql(table_name, uri1.as_posix(), index_col=cols)
+    cdf2 = _read_sql(table_name, uri2.as_posix(), index_col=cols)
+    cdf3 = _read_sql(table_name, uri3.as_posix(), index_col=cols)
     # Check if dataframes are equal
     assert_frame_equal(df1, cdf1)
     assert_frame_equal(df2, cdf2)
@@ -566,10 +579,10 @@ def test_collect(tmp_path: Path) -> None:
     # Store metadata
     table_name = storage.store_metadata(meta1)
     # Read stored tables
-    all_df = _read_sql(table_name, uri, index_col=cols)
-    cdf1 = _read_sql(table_name, uri1, index_col=cols)
-    cdf2 = _read_sql(table_name, uri2, index_col=cols)
-    cdf3 = _read_sql(table_name, uri3, index_col=cols)
+    all_df = _read_sql(table_name, uri.as_posix(), index_col=cols)
+    cdf1 = _read_sql(table_name, uri1.as_posix(), index_col=cols)
+    cdf2 = _read_sql(table_name, uri2.as_posix(), index_col=cols)
+    cdf3 = _read_sql(table_name, uri3.as_posix(), index_col=cols)
     # Operate on retrieved tables
     all_cdf = pd.concat([cdf1, cdf2, cdf3])
     all_df.sort_index(level=cols, inplace=True)

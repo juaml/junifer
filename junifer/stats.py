@@ -5,7 +5,7 @@
 # License: AGPL
 
 from functools import partial
-from typing import Callable, Dict
+from typing import Callable, Dict, Any, Optional
 
 import numpy as np
 from scipy.stats import trim_mean
@@ -14,7 +14,9 @@ from scipy.stats.mstats import winsorize
 from .utils import logger, raise_error
 
 
-def get_aggfunc_by_name(name: str, func_params: Dict) -> Callable:
+def get_aggfunc_by_name(
+        name: str,
+        func_params: Optional[Dict[str, Any]]) -> Callable:
     """Get an aggregation function by its name.
 
     Parameters
@@ -38,11 +40,24 @@ def get_aggfunc_by_name(name: str, func_params: Dict) -> Callable:
     """
     # check validity of names
     _valid_func_names = {"winsorized_mean", "mean", "std", "trim_mean"}
-
+    if func_params is None:
+        func_params = {}
     # apply functions
     if name == "winsorized_mean":
         # check validity of func_params
         limits = func_params.get("limits")
+        if limits is None or not isinstance(limits, list):
+            raise_error(
+                "func_params must contain a list of limits for "
+                "winsorized_mean",
+                ValueError,
+            )
+        if len(limits) != 2:
+            raise_error(
+                "func_params must contain a list of two limits for "
+                "winsorized_mean",
+                ValueError,
+            )
         if all((lim >= 0.0 and lim <= 1) for lim in limits):
             logger.info(f"Limits for winsorized mean are set to {limits}.")
         else:
@@ -69,7 +84,7 @@ def get_aggfunc_by_name(name: str, func_params: Dict) -> Callable:
 
 
 def winsorized_mean(
-    data: np.ndarray, axis: int = None, **win_params
+    data: np.ndarray, axis: Optional[int] = None, **win_params
 ) -> np.ndarray:
     """Compute a winsorized mean by chaining winsorization and mean.
 

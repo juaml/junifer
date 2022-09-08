@@ -20,7 +20,7 @@ from .utils import element_to_index, element_to_prefix, process_meta
 
 
 if TYPE_CHECKING:
-    from sqlalchemy import Engine
+    from sqlalchemy.engine import Engine
 
 
 @register_storage
@@ -103,17 +103,18 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             meta = {}
         # Retrieve element key from metadata
         element = meta.get("element", None)
-        # Functionality check
-        if self.single_output is False and element is None:
-            raise_error(
-                msg="element must be specified when single_output is False."
-            )
         # Prefixed elements
         prefix = ""
         if self.single_output is False:
+            if element is None:
+                raise_error(
+                    msg="element must be specified when"
+                    "single_output is False."
+                )
             prefix = element_to_prefix(element)
         # Format URI for engine creation
-        uri = f"sqlite:///{self.uri.parent}/{prefix}{self.uri.name}"
+        uri = "sqlite:///" \
+            f"{self.uri.parent}/{prefix}{self.uri.name}"  # type: ignore
         return create_engine(uri, echo=False)
 
     def _save_upsert(
@@ -211,7 +212,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         data,
         meta: Dict,
         columns: Optional[Iterable[str]] = None,
-        rows_col_name: str = None,
+        rows_col_name: Optional[str] = None,
     ) -> None:
         """Store 2D dataframe.
 
@@ -234,7 +235,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             meta=meta, n_rows=n_rows, rows_col_name=rows_col_name
         )
         # Prepare new dataframe
-        data_df = pd.DataFrame(data, columns=columns, index=idx)
+        data_df = pd.DataFrame(
+            data, columns=columns, index=idx)  # type: ignore
         # Store dataframe
         self.store_df(df=data_df, meta=meta)
 
@@ -405,7 +407,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         data,
         meta: Dict,
         col_names: Optional[Iterable[str]] = None,
-        rows_col_name: str = None,
+        rows_col_name: Optional[str] = None,
     ) -> None:
         """Implement 2D matrix storing.
 
@@ -433,7 +435,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         data,
         meta: Dict,
         columns: Optional[Iterable[str]] = None,
-        rows_col_name: str = None,
+        rows_col_name: Optional[str] = None,
     ) -> None:
         """Implement table storing.
 
@@ -528,13 +530,14 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         """
         if self.single_output is True:
             raise_error(msg="collect() is not implemented for single output.")
-        logger.info(f"Collecting data from {self.uri.parent}/*{self.uri.name}")
+        logger.info("Collecting data from "
+                    f"{self.uri.parent}/*{self.uri.name}")  # type: ignore
         # Create new instance
         out_storage = SQLiteFeatureStorage(
             uri=self.uri, single_output=True, upsert="ignore"
         )
         # Glob files
-        files = self.uri.parent.glob(f"*{self.uri.name}")
+        files = self.uri.parent.glob(f"*{self.uri.name}")  # type: ignore
         for elem in tqdm(files, desc="file"):
             logger.debug(f"Reading from {str(elem.absolute())}")
             in_storage = SQLiteFeatureStorage(uri=elem, single_output=True)

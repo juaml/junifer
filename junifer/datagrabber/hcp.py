@@ -55,18 +55,19 @@ class HCP1200(PatternDataGrabber):
         ]
         # Set default tasks
         if tasks is None:
-            self.tasks = all_tasks
+            self.tasks: List[str] = all_tasks
         # Convert single task into list
-        if isinstance(tasks, str):
-            tasks = [tasks]
-        # Check for invalid task(s)
-        for task in tasks:
-            if task not in all_tasks:
-                raise_error(
-                    f"'{task}' is not a valid HCP-YA fMRI task input. "
-                    f"Valid task values can be any or all of {all_tasks}."
-                )
-
+        else:
+            if not isinstance(tasks, List):
+                tasks = [tasks]
+            # Check for invalid task(s)
+            for task in tasks:
+                if task not in all_tasks:
+                    raise_error(
+                        f"'{task}' is not a valid HCP-YA fMRI task input. "
+                        f"Valid task values can be any or all of {all_tasks}."
+                    )
+            self.tasks: List[str] = tasks
         # All phase encodings
         all_phase_encodings = ["LR", "RL"]
         # Set phase encodings
@@ -102,7 +103,6 @@ class HCP1200(PatternDataGrabber):
             patterns=patterns,
             replacements=replacements,
         )
-        self.tasks = tasks
         self.phase_encodings = phase_encodings
 
     def __getitem__(self, element: Tuple[str, str, str]) -> Dict[str, Path]:

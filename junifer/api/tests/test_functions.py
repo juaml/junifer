@@ -59,7 +59,7 @@ def test_run_single_element(tmp_path: Path) -> None:
     outdir.mkdir()
     # Create storage
     uri = outdir / "test.db"
-    storage["uri"] = uri
+    storage["uri"] = uri  # type: ignore
     # Run operations
     run(
         workdir=workdir,
@@ -90,7 +90,7 @@ def test_run_multi_element(tmp_path: Path) -> None:
     outdir.mkdir()
     # Create storage
     uri = outdir / "test.db"
-    storage["uri"] = uri
+    storage["uri"] = uri  # type: ignore
     # Run operations
     run(
         workdir=workdir,
@@ -121,7 +121,7 @@ def test_run_and_collect(tmp_path: Path) -> None:
     outdir.mkdir()
     # Create storage
     uri = outdir / "test.db"
-    storage["uri"] = uri
+    storage["uri"] = uri  # type: ignore
     # Run operations
     run(
         workdir=workdir,
@@ -133,7 +133,7 @@ def test_run_and_collect(tmp_path: Path) -> None:
     dg = build(
         step="datagrabber", name=datagrabber["kind"], baseclass=BaseDataGrabber
     )
-    elements = dg.get_elements()
+    elements = dg.get_elements()  # type: ignore
     # This should create 10 files
     files = list(outdir.glob("*.db"))
     assert len(files) == len(elements)

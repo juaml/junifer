@@ -140,8 +140,8 @@ def test_baseconfoundremover() -> None:
     cr = BaseConfoundRemover(
         strategy=strat1, spike=None, mask_img=simsk, t_r=0.75
     )
-    cr.validate_input(input_data_obj.keys())
-    out_type = cr.get_output_kind(input_data_obj.keys())
+    cr.validate_input(list(input_data_obj.keys()))
+    out_type = cr.get_output_kind(list(input_data_obj.keys()))
 
     assert "BOLD" in out_type
 
@@ -175,8 +175,8 @@ def test_baseconfoundremover() -> None:
     cr = BaseConfoundRemover(
         strategy=strat2, spike=None, mask_img=simsk, t_r=0.75
     )
-    cr.validate_input(input_data_obj.keys())
-    out_type = cr.get_output_kind(input_data_obj.keys())
+    cr.validate_input(list(input_data_obj.keys()))
+    out_type = cr.get_output_kind(list(input_data_obj.keys()))
 
     assert "BOLD" in out_type
 
@@ -207,8 +207,8 @@ def test_baseconfoundremover() -> None:
     cr = BaseConfoundRemover(
         strategy=strat3, spike=None, mask_img=simsk, t_r=0.75
     )
-    cr.validate_input(input_data_obj.keys())
-    out_type = cr.get_output_kind(input_data_obj.keys())
+    cr.validate_input(list(input_data_obj.keys()))
+    out_type = cr.get_output_kind(list(input_data_obj.keys()))
 
     assert "BOLD" in out_type
 
@@ -240,8 +240,8 @@ def test_baseconfoundremover() -> None:
     cr = BaseConfoundRemover(
         strategy=strat4, spike=None, mask_img=simsk, t_r=0.75
     )
-    cr.validate_input(input_data_obj.keys())
-    out_type = cr.get_output_kind(input_data_obj.keys())
+    cr.validate_input(list(input_data_obj.keys()))
+    out_type = cr.get_output_kind(list(input_data_obj.keys()))
 
     assert "BOLD" in out_type
 
@@ -273,8 +273,8 @@ def test_baseconfoundremover() -> None:
     cr = BaseConfoundRemover(
         strategy=strat5, spike=None, mask_img=simsk, t_r=0.75
     )
-    cr.validate_input(input_data_obj.keys())
-    out_type = cr.get_output_kind(input_data_obj.keys())
+    cr.validate_input(list(input_data_obj.keys()))
+    out_type = cr.get_output_kind(list(input_data_obj.keys()))
 
     assert "BOLD" in out_type
 
@@ -320,8 +320,8 @@ def test_baseconfoundremover() -> None:
     cr = BaseConfoundRemover(
         strategy=strat6, spike=0.75, mask_img=simsk, t_r=0.75
     )
-    cr.validate_input(input_data_obj.keys())
-    out_type = cr.get_output_kind(input_data_obj.keys())
+    cr.validate_input(list(input_data_obj.keys()))
+    out_type = cr.get_output_kind(list(input_data_obj.keys()))
 
     assert "BOLD" in out_type
 

@@ -15,7 +15,7 @@ from junifer.datagrabber.base import BaseDataGrabber
 def test_BaseDataGrabber_abstractness() -> None:
     """Test BaseDataGrabber is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
-        BaseDataGrabber(datadir="/tmp", types=["func"])
+        BaseDataGrabber(datadir="/tmp", types=["func"])  # type: ignore
 
 
 def test_BaseDataGrabber() -> None:

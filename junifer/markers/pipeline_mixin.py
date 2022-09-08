@@ -91,7 +91,7 @@ class PipelineStepMixin:
         self.validate_input(input=input)
         return self.get_output_kind(input=input)
 
-    def fit_transform(self, input: List[str]) -> None:
+    def fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
         """Fit and transform.
 
         Parameters

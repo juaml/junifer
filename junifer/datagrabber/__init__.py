@@ -9,4 +9,4 @@ from .datalad_base import DataladDataGrabber
 from .hcp import DataladHCP1200, HCP1200
 from .multiple import MultipleDataGrabber
 from .pattern import PatternDataGrabber
-from .pattern_datalad_base import PatternDataladDataGrabber
+from .pattern_datalad import PatternDataladDataGrabber

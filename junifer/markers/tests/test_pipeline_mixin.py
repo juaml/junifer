@@ -13,11 +13,11 @@ def test_PipelineStepMixin() -> None:
     """Test PipelineStepMixin."""
     mixin = PipelineStepMixin()
     with pytest.raises(NotImplementedError):
-        mixin.validate_input(None)
+        mixin.validate_input([])
     with pytest.raises(NotImplementedError):
-        mixin.get_output_kind(None)
+        mixin.get_output_kind([])
     with pytest.raises(NotImplementedError):
-        mixin.fit_transform(None)
+        mixin.fit_transform({})
 
 
 def test_pipeline_step_mixin_meta():

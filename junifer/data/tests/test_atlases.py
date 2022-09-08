@@ -166,7 +166,7 @@ def test_schaefer_atlas(tmp_path: Path) -> None:
     assert img is not None
     assert fname.name == fname1
     assert len(lbl) == 100
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])
+    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
     # Test with Path
     img, lbl, fname = load_atlas(name="Schaefer100x7", atlas_dir=tmp_path)
@@ -180,7 +180,7 @@ def test_schaefer_atlas(tmp_path: Path) -> None:
     assert fname.name == fname2
     assert len(lbl) == 100
     assert img2 is not None
-    assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])
+    assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
     # Load atlas
     img2, lbl, fname = load_atlas(
         "Schaefer100x7",
@@ -191,7 +191,7 @@ def test_schaefer_atlas(tmp_path: Path) -> None:
     assert fname.name == fname2
     assert len(lbl) == 100
     assert img2 is not None
-    assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])
+    assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
     # Load atlas
     img2, lbl, fname = load_atlas(
         "Schaefer100x7",
@@ -202,7 +202,7 @@ def test_schaefer_atlas(tmp_path: Path) -> None:
     assert fname.name == fname1
     assert len(lbl) == 100
     assert img2 is not None
-    assert_array_equal(img2.header["pixdim"][1:4], [1, 1, 1])
+    assert_array_equal(img2.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
     # Load atlas
     img2, lbl, fname = load_atlas(
         "Schaefer100x7",
@@ -213,7 +213,7 @@ def test_schaefer_atlas(tmp_path: Path) -> None:
     assert fname.name == fname1
     assert len(lbl) == 100
     assert img2 is not None
-    assert_array_equal(img2.header["pixdim"][1:4], [1, 1, 1])
+    assert_array_equal(img2.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
 
 def test_load_atlas_schaefer() -> None:
@@ -274,7 +274,7 @@ def test_suit(tmp_path: Path) -> None:
     assert img is not None
     assert fname.name == fname1
     assert len(lbl) == 34
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])
+    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
     # Load atlas
     img, lbl, fname = load_atlas(name="SUITxSUIT", atlas_dir=tmp_path)
@@ -282,7 +282,7 @@ def test_suit(tmp_path: Path) -> None:
     assert img is not None
     assert fname.name == fname1
     assert len(lbl) == 34
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])
+    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
     # Load atlas
     img, lbl, fname = load_atlas(name="SUITxMNI", atlas_dir=tmp_path)
@@ -290,7 +290,7 @@ def test_suit(tmp_path: Path) -> None:
     assert img is not None
     assert fname.name == fname1
     assert len(lbl) == 34
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])
+    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
 
 def test_retrieve_suit_incorrect_space(tmp_path: Path) -> None:
@@ -346,7 +346,7 @@ def test_tian_3T_6thgeneration(
     assert img is not None
     assert fname.name == fname1
     assert len(lbl) == n_label
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])
+    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
     # Load atlas
     img, lbl, fname = load_atlas(
         name=f"TianxS{scale}x3TxMNI6thgeneration",
@@ -357,7 +357,7 @@ def test_tian_3T_6thgeneration(
     assert img is not None
     assert fname.name == fname1
     assert len(lbl) == n_label
-    assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])
+    assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
 
 
 @pytest.mark.parametrize(
@@ -400,7 +400,7 @@ def test_tian_3T_nonlinear2009cAsym(
     assert img is not None
     assert fname.name == fname1
     assert len(lbl) == n_label
-    assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])
+    assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
 
 
 @pytest.mark.parametrize(
@@ -442,7 +442,8 @@ def test_tian_7T_6thgeneration(
     assert img is not None
     assert fname.name == fname1
     assert len(lbl) == n_label
-    assert_array_almost_equal(img.header["pixdim"][1:4], [1.6, 1.6, 1.6])
+    assert_array_almost_equal(
+        img.header["pixdim"][1:4], [1.6, 1.6, 1.6])  # type: ignore
 
 
 def test_retrieve_tian_incorrect_space(tmp_path: Path) -> None:

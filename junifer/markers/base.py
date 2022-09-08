@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from ..utils import logger, raise_error
 from .pipeline_mixin import PipelineStepMixin
@@ -22,7 +22,11 @@ class BaseMarker(PipelineStepMixin):
 
     """
 
-    def __init__(self, on: List, name: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        on: Union[List[str], str],
+        name: Optional[str] = None
+    ) -> None:
         """Initialize the class."""
         if not isinstance(on, list):
             on = [on]
@@ -78,24 +82,23 @@ class BaseMarker(PipelineStepMixin):
         Parameters
         ----------
         input : list of str
-            The input to the pipeline step. The list must contain the
+            The input to the marker. The list must contain the
             available Junifer Data dictionary keys.
 
         Returns
         -------
         list of str
-            The updated list of available Junifer Data dictionary keys after
-            the pipeline step.
+            The updated list of output kinds, as storage possibilities.
 
         """
-        pass
+        raise_error(msg="compute() not implemented", klass=NotImplementedError)
 
-    def compute(self, input: List[str]) -> Dict:
+    def compute(self, input: Dict) -> Dict:
         """Compute.
 
         Parameters
         ----------
-        input : list of str
+        input : Dict[str, Dict]
             The input to the pipeline step. The list must contain the
             available Junifer Data dictionary keys.
 
@@ -108,7 +111,7 @@ class BaseMarker(PipelineStepMixin):
         raise_error(msg="compute() not implemented", klass=NotImplementedError)
 
     # TODO: complete type annotations
-    def store(self, input: List[str], out: Dict, storage) -> None:
+    def store(self, kind: str, out: Dict, storage) -> None:
         """Store.
 
         Parameters
@@ -120,7 +123,7 @@ class BaseMarker(PipelineStepMixin):
         raise_error(msg="store() not implemented", klass=NotImplementedError)
 
     # TODO: complete type annotations
-    def fit_transform(self, input: List[str], storage=None) -> Dict:
+    def fit_transform(self, input: Dict[str, Dict], storage=None) -> Dict:
         """Fit and transform.
 
         Parameters

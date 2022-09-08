@@ -51,19 +51,19 @@ def test_BaseMarker() -> None:
     """Test base class."""
     base = BaseMarker(on=["bold", "dwi"], name="mymarker")
     input_ = {"bold": {"path": "test"}, "t2": {"path": "test"}}
-    base.validate_input(input_)
+    base.validate_input(list(input_.keys()))
 
     wrong_input = {"t2": {"path": "test"}}
     with pytest.raises(ValueError):
-        base.validate_input(wrong_input)
+        base.validate_input(list(wrong_input.keys()))
 
-    output = base.get_output_kind(input_)
-    assert output is None
+    with pytest.raises(NotImplementedError):
+        base.get_output_kind(list(wrong_input.keys()))
 
     with pytest.raises(NotImplementedError):
         base.fit_transform(input_)
 
-    base.compute = lambda x: {"data": 1}
+    base.compute = lambda x: {"data": 1}  # type: ignore
 
     out = base.fit_transform(input_)
     assert out["bold"]["data"] == 1
@@ -71,7 +71,7 @@ def test_BaseMarker() -> None:
     assert out["bold"]["meta"]["marker"]["class"] == "BaseMarker"
 
     base2 = BaseMarker(on="bold", name="mymarker")
-    base2.compute = lambda x: {"data": 1}
+    base2.compute = lambda x: {"data": 1}  # type: ignore
     out2 = base2.fit_transform(input_)
     assert out2["bold"]["data"] == 1
     assert out2["bold"]["meta"]["marker"]["name"] == "bold_mymarker"

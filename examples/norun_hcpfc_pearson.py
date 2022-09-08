@@ -1,6 +1,8 @@
-"""
+"""extraction of FC from HCP data.
+
 HCP FC Extraction
 ======================
+
 Authors: Leonard Sasse
 License: BSD 3 clause
 """

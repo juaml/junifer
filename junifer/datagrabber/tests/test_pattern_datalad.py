@@ -1,4 +1,4 @@
-"""Provide tests for pattern_datalad_base."""
+"""Provide tests for pattern_datalad."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from junifer.datagrabber.pattern_datalad_base import PatternDataladDataGrabber
+from junifer.datagrabber.pattern_datalad import PatternDataladDataGrabber
 
 
 _testing_dataset = {

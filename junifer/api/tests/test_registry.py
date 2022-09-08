@@ -4,6 +4,7 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+from typing import Type
 
 import logging
 from abc import ABC
@@ -18,7 +19,7 @@ from junifer.storage import SQLiteFeatureStorage
 def test_register_invalid_step():
     """Test register invalid step name."""
     with pytest.raises(ValueError, match="Invalid step:"):
-        register(step="foo", name="bar", klass="baz")
+        register(step="foo", name="bar", klass=str)
 
 
 # TODO: improve parametrization
@@ -30,7 +31,7 @@ def test_register_invalid_step():
     ],
 )
 def test_register(
-    caplog: pytest.LogCaptureFixture, step: str, name: str, klass: str
+    caplog: pytest.LogCaptureFixture, step: str, name: str, klass: Type
 ) -> None:
     """Test register.
 
@@ -70,7 +71,7 @@ def test_get_step_names_absent() -> None:
 def test_get_step_names() -> None:
     """Test get step names."""
     # Register datagrabber
-    register(step="datagrabber", name="bar", klass="baz")
+    register(step="datagrabber", name="bar", klass=str)
     # Get step names for datagrabber
     datagrabbers = get_step_names(step="datagrabber")
     # Check for datagrabber step name
@@ -93,10 +94,10 @@ def test_get_class_invalid_name() -> None:
 def test_get_class():
     """Test get class."""
     # Register datagrabber
-    register(step="datagrabber", name="bar", klass="baz")
+    register(step="datagrabber", name="bar", klass=str)
     # Get class
     obj = get_class(step="datagrabber", name="bar")
-    assert obj == "baz"
+    assert obj == str
 
 
 # TODO: possible parametrization?

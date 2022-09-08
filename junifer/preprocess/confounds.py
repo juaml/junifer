@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -18,7 +18,7 @@ from ..utils import logger, raise_error
 
 
 if TYPE_CHECKING:
-    from nibabel import Nifti1Image
+    from nibabel import Nifti1Image, Nifti2Image, MGHImage
 
 
 class BaseConfoundRemover(PipelineStepMixin):
@@ -218,7 +218,8 @@ class BaseConfoundRemover(PipelineStepMixin):
 
     def _remove_confounds(
         self, bold_img: "Nifti1Image", confounds_df: pd.DataFrame
-    ) -> "Nifti1Image":
+    ) -> Union["Nifti1Image", "Nifti2Image", "MGHImage", List]:
+        """Remove confounds from the BOLD data."""
         """Remove confounds from the BOLD image.
 
         Parameters
@@ -242,7 +243,7 @@ class BaseConfoundRemover(PipelineStepMixin):
         t_r = self.t_r
         if t_r is None:
             logger.info("No `t_r` specified, using t_r from nifti header")
-            zooms = bold_img.header.get_zooms()
+            zooms = bold_img.header.get_zooms()  # type: ignore
             t_r = zooms[3]
             logger.info(
                 f"Read t_r from nifti header: {t_r}",

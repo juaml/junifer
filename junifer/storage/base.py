@@ -182,7 +182,7 @@ class BaseFeatureStorage(ABC):
         data,
         meta: Dict,
         columns: Optional[Iterable[str]] = None,
-        rows_col_name: str = None,
+        rows_col_name: Optional[str] = None,
     ) -> None:
         """Store table.
 

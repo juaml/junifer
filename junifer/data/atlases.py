@@ -10,7 +10,7 @@ import shutil
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, List, Optional, Tuple, Union, Any, Dict
 
 import nibabel as nib
 import numpy as np
@@ -37,10 +37,11 @@ Optional keys:
 
 """
 # TODO: have separate dictionary for built-in
-_available_atlases = {
+_available_atlases: Dict[str, Dict[Any, Any]] = {
     "SUITxSUIT": {"family": "SUIT", "space": "SUIT"},
     "SUITxMNI": {"family": "SUIT", "space": "MNI"},
 }
+
 # Add Schaefer atlas info
 for n_rois in range(100, 1001, 100):
     for t_net in [7, 17]:
@@ -150,7 +151,7 @@ def list_atlases() -> List[str]:
 def load_atlas(
     name: str,
     atlas_dir: Union[str, Path, None] = None,
-    resolution: Optional[int] = None,
+    resolution: Optional[float] = None,
     path_only: bool = False,
 ) -> Tuple[Optional["Nifti1Image"], List[str], Path]:
     """Load a brain atlas (including a label file).
@@ -165,7 +166,7 @@ def load_atlas(
     atlas_dir : str or pathlib.Path, optional
         Path where the atlas files are stored. The default location is
         "$HOME/junifer/data/atlas" (default None).
-    resolution : int, optional
+    resolution : float, optional
         The desired resolution of the atlas to load. If it is not available,
         the closest resolution will be loaded. Preferably, use a resolution
         higher than the desired one. By default, will load the highest one
@@ -238,7 +239,7 @@ def load_atlas(
 def _retrieve_atlas(
     family: str,
     atlas_dir: Union[str, Path, None] = None,
-    resolution: Optional[int] = None,
+    resolution: Optional[float] = None,
     **kwargs,
 ) -> Tuple[Path, List[str]]:
     """Retrieve a brain atlas object from nilearn or a specified online source.
@@ -254,7 +255,7 @@ def _retrieve_atlas(
     atlas_dir : str or pathlib.Path, optional
         Path where the retrieved atlas file is stored. The default location is
         "$HOME/junifer/data/atlas" (default None).
-    resolution : int, optional
+    resolution : float, optional
         The desired resolution of the atlas to load. If it is not available,
         the closest resolution will be loaded. Preferably, use a resolution
         higher than the desired one. By default, will load the highest one
@@ -326,21 +327,21 @@ def _retrieve_atlas(
 
 
 def _closest_resolution(
-    resolution: int,
-    valid_resolution: Union[List[int], np.ndarray],
-) -> int:
+    resolution: Optional[float],
+    valid_resolution: Union[List[float], List[int], np.ndarray],
+) -> Union[float, int]:
     """Find the closest resolution.
 
     Parameters
     ----------
-    resolution : int
+    resolution : float
         The given resolution.
-    valid_resolution : list of int or np.ndarray
+    valid_resolution : list of float or np.ndarray
         The array of valid resolutions.
 
     Returns
     -------
-    int
+    float
         The closest valid resolution.
 
     """
@@ -363,7 +364,7 @@ def _closest_resolution(
 
 def _retrieve_schaefer(
     atlas_dir: Path,
-    resolution: int,
+    resolution: Optional[float] = None,
     n_rois: Optional[int] = None,
     yeo_networks: int = 7,
 ) -> Tuple[Path, List[str]]:
@@ -373,8 +374,11 @@ def _retrieve_schaefer(
     ----------
     atlas_dir : pathlib.Path
         The path to the atlas data directory.
-    resolution : {1, 2}
-        The resolution of the atlas to load.
+    resolution : float, optional
+        The desired resolution of the atlas to load. If it is not available,
+        the closest resolution will be loaded. Preferably, use a resolution
+        higher than the desired one. By default, will load the highest one
+        (default None). Available resolutions for this atlas are 1mm and 2mm.
     n_rois : {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}, optional
         Granularity of the atlas to be used (default None).
     yeo_networks : {7, 17}, optional
@@ -440,7 +444,7 @@ def _retrieve_schaefer(
         datasets.fetch_atlas_schaefer_2018(
             n_rois=n_rois,
             yeo_networks=yeo_networks,
-            resolution_mm=resolution,
+            resolution_mm=resolution,  # type: ignore we know it's 1 or 2
             data_dir=str(atlas_dir.absolute()),
         )
 
@@ -462,7 +466,7 @@ def _retrieve_schaefer(
 
 def _retrieve_tian(
     atlas_dir: Path,
-    resolution: int,
+    resolution: Optional[float] = None,
     scale: Optional[int] = None,
     space: str = "MNI6thgeneration",
     magneticfield: str = "3T",
@@ -473,8 +477,12 @@ def _retrieve_tian(
     ----------
     atlas_dir : pathlib.Path
         The path to the atlas data directory.
-    resolution : {1, 2}
-        The resolution of the atlas to load.
+    resolution : float, optional
+        The desired resolution of the atlas to load. If it is not available,
+        the closest resolution will be loaded. Preferably, use a resolution
+        higher than the desired one. By default, will load the highest one
+        (default None). Available resolutions for this atlas depend on the
+        space and magnetic field.
     scale : {1, 2, 3, 4}, optional
         Scale of atlas (defines granularity) (default None).
     space : {"MNI6thgeneration", "MNInonlinear2009cAsym"}, optional
@@ -505,32 +513,34 @@ def _retrieve_tian(
     logger.info(f"\tresolution: {resolution}")
     # check validity of atlas parameters
     _valid_scales = [1, 2, 3, 4]
-    _valid_fields = ["3T", "7T"]
     if scale not in _valid_scales:
         raise_error(
             f"The parameter `scale` ({scale}) needs to be one of the "
             f"following: {_valid_scales}"
         )
-    if magneticfield not in _valid_fields:
-        raise_error(
-            f"The parameter `magneticfield` ({magneticfield}) needs to be "
-            f"one of the following: {_valid_fields}"
-        )
 
+    _valid_resolutions = []  # avoid pylance error
     if magneticfield == "3T":
         _valid_spaces = ["MNI6thgeneration", "MNInonlinear2009cAsym"]
         if space == "MNI6thgeneration":
             _valid_resolutions = [1, 2]
         elif space == "MNInonlinear2009cAsym":
             _valid_resolutions = [2]
+        else:
+            raise_error(
+                f"The parameter `space` ({space}) for 3T needs to be one of "
+                f"the following: {_valid_spaces}"
+            )
     elif magneticfield == "7T":
-        _valid_spaces = ["MNI6thgeneration"]
         _valid_resolutions = [1.6]
-
-    if space not in _valid_spaces:
+        if space != "MNI6thgeneration":
+            raise_error(
+                f"The parameter `space` ({space}) for 7T needs to be "
+                f"MNI6thgeneration")
+    else:
         raise_error(
-            f"The parameter `space` ({space}) needs to be one of "
-            f"the following: {_valid_spaces}"
+            f"The parameter `magneticfield` ({magneticfield}) needs to be "
+            f"one of the following: 3T or 7T"
         )
 
     resolution = _closest_resolution(resolution, _valid_resolutions)
@@ -581,6 +591,8 @@ def _retrieve_tian(
             "Currently there are no labels provided for the 7T Tian atlas. "
             "A simple numbering scheme for distinction was therefore used."
         )
+    else:  # pragma: no cover
+        raise_error('This should not happen. Please report this error.')
 
     # check existence of atlas
     if not (atlas_fname.exists() and atlas_lname.exists()):
@@ -613,7 +625,9 @@ def _retrieve_tian(
 
 
 def _retrieve_suit(
-    atlas_dir: Path, resolution: int, space: str = "MNI"
+    atlas_dir: Path,
+    resolution: Optional[float],
+    space: str = "MNI"
 ) -> Tuple[Path, List[str]]:
     """Retrieve SUIT atlas.
 
@@ -621,8 +635,11 @@ def _retrieve_suit(
     ----------
     atlas_dir : pathlib.Path
         The path to the atlas data directory.
-    resolution : {1, 2}
-        The resolution of the atlas to load.
+    resolution : float, optional
+        The desired resolution of the atlas to load. If it is not available,
+        the closest resolution will be loaded. Preferably, use a resolution
+        higher than the desired one. By default, will load the highest one
+        (default None). Available resolutions for this atlas are 1mm and 2mm.
     space : {"MNI", "SUIT"}, optional
         Space of atlas (default "MNI"). (For more information
         see http://www.diedrichsenlab.org/imaging/suit.htm).

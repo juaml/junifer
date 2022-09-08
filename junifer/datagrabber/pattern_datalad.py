@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from ..api.decorators import register_datagrabber
 from .datalad_base import DataladDataGrabber
@@ -22,8 +22,8 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
 
     Parameters
     ----------
-    types : list of str, optional
-        The types of data to be grabbed (default None).
+    types : list of str
+        The types of data to be grabbed.
     patterns : dict, optional
         Patterns for each type of data as a dictionary. The keys are the types
         and the values are the patterns. Each occurrence of the string
@@ -41,8 +41,8 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
 
     def __init__(
         self,
-        types: Optional[List[str]] = None,
-        patterns: Optional[Dict[str, str]] = None,
+        types: List[str],
+        patterns: Dict[str, str],
         **kwargs,
     ) -> None:
         """Initialize the class."""
