@@ -57,8 +57,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         upsert: str = "update",
         **kwargs: str,
     ) -> None:
-        """Initialize the class.
-        """
+        """Initialize the class."""
         if upsert not in ["update", "ignore"]:
             raise_error(
                 msg=(
