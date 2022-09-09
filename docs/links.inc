@@ -30,4 +30,4 @@
 .. _`setuptools_scm`: https://github.com/pypa/setuptools_scm/
 
 .. _`sphinx gallery`: https://sphinx-gallery.github.io/stable/index.html
-.. _`sphinx RST reference`: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#inline-markup
+.. _`sphinx reST reference`: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#inline-markup
