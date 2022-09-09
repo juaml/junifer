@@ -21,6 +21,7 @@ enabling others to extend it easily.
    data
    api
    auto_examples/index.rst
+   contribution
    maintaining
    whats_new
 
