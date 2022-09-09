@@ -18,9 +18,9 @@ enabling others to extend it easily.
    :caption: Contents:
 
    installation
-   data
-   api
+   understanding/index.rst
    auto_examples/index.rst
+   api/index.rst
    contribution
    maintaining
    whats_new

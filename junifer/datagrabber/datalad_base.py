@@ -56,7 +56,6 @@ class DataladDataGrabber(BaseDataGrabber):
     See Also
     --------
     BaseDataGrabber
-    BIDSDataladDataGrabber
 
     """
 

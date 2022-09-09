@@ -11,6 +11,7 @@
 
 .. _`AML`: https://www.fz-juelich.de/inm/inm-7/EN/Forschung/Applied%20Machine%20Learning/_node.html
 .. _`INM-7`: https://www.fz-juelich.de/inm/inm-7/EN/Home/home_node.html
+.. _`julearn`: https://juaml.github.io/julearn
 
 .. _`pandas`: https://pandas.pydata.org
 .. _`pandas.DataFrame` : https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html

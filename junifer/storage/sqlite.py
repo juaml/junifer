@@ -41,6 +41,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     upsert : {"ignore", "update"}, optional
         Upsert mode. If "ignore" is used, the existing elements are ignored.
         If "update", the existing elements are updated (default "update").
+    **kwargs : dict
+            The keyword arguments passed to the superclass.
 
     See Also
     --------
@@ -56,12 +58,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         **kwargs: str,
     ) -> None:
         """Initialize the class.
-
-        Extra Parameters
-        ----------------
-        **kwargs : dict
-            The keyword arguments passed to the superclass.
-
         """
         if upsert not in ["update", "ignore"]:
             raise_error(
@@ -373,7 +369,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         return df
 
     def store_metadata(self, meta: Dict) -> str:
-        """Implement metadata storing in the storage.
+        r"""Implement metadata storing in the storage.
 
         Parameters
         ----------
@@ -383,7 +379,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         Returns
         -------
         str
-            The MD5 hash of the metadata prefixed with "meta_" .
+            The MD5 hash of the metadata prefixed with "meta\_".
 
         """
         # Copy metadata

@@ -30,7 +30,7 @@ class BaseConfoundRemover(PipelineStepMixin):
     Confound removal is based on `nilearn.image.clean_img`.
 
     Parameters
-    -----------
+    ----------
     strategy : dict, optional
         The keys of the dictionary should correspond to names of noise
         components to include:
