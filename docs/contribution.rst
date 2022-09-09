@@ -80,8 +80,8 @@ Before you submit a pull request, check that it meets these guidelines:
 3. The pull request should also include a short one-liner of your contribution
    in `docs/changes/latest.inc`. If it's your first contribution, also add
    yourself to `docs/changes/contributors.inc`.
-3. The pull request will be tested for several different Python versions.
-4. Someone from the core team will review your work and guide you to a successful
+4. The pull request will be tested against several Python versions.
+5. Someone from the core team will review your work and guide you to a successful
    contribution.
 
 
