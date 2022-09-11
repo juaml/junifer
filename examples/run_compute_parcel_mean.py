@@ -12,12 +12,13 @@ License: BSD 3 clause
 
 import nilearn
 
-from junifer.utils import configure_logging
 from junifer.markers.parcel import ParcelAggregation
+from junifer.utils import configure_logging
+
 
 ###############################################################################
 # Set the logging level to info to see extra information
-configure_logging(level='INFO')
+configure_logging(level="INFO")
 
 
 ###############################################################################
@@ -36,14 +37,11 @@ fmri_img = nilearn.image.concat_imgs(s_func_data.func)
 
 ###############################################################################
 # Define the marker
-marker = ParcelAggregation(atlas='Schaefer100x7', method='mean')
+marker = ParcelAggregation(atlas="Schaefer100x7", method="mean")
 
 ###############################################################################
 # Prepare the input
-input = {
-    'BOLD': {'data': fmri_img},
-    'VBM_GM': {'data': vbm_img}
-}
+input = {"BOLD": {"data": fmri_img}, "VBM_GM": {"data": vbm_img}}
 
 ###############################################################################
 # Fit transform the data
@@ -53,7 +51,7 @@ out = marker.fit_transform(input)
 # Check the results
 
 print(out.keys())
-print(out['VBM_GM']['data'].shape)  # Shape is (1 x parcels)
+print(out["VBM_GM"]["data"].shape)  # Shape is (1 x parcels)
 
 print(out.keys())
-print(out['BOLD']['data'].shape)  # Shape is (timepoints x parcels)
+print(out["BOLD"]["data"].shape)  # Shape is (timepoints x parcels)
