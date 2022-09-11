@@ -42,7 +42,7 @@ Use ``pip`` to install julearn from `PyPI <https://pypi.org>`_, like so:
 
 .. code-block:: bash
 
-    pip install -U junifer
+    pip install junifer
 
 
 .. _install_development_git:
