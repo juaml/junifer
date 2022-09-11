@@ -138,15 +138,16 @@ The following is an example of how to start an example
 .. code-block:: python
 
     """
-    Simple Binary Classification
-    ============================
+    Generic BIDS datagrabber for datalad.
+    =====================================
 
-    This example uses the 'iris' dataset and performs a simple binary
-    classification using a Support Vector Machine classifier.
+    This example uses a generic BIDS datagraber to get the data from a BIDS dataset
+    store in a datalad remote sibling.
 
-    .. include:: ../../links.inc
+    Authors: Federico Raimondo
+
+    License: BSD 3 clause
     """
-
 
 The rest of the script will be executed as normal Python code. In order to
 render the output and embed formatted text within the code, you need to add
@@ -159,22 +160,58 @@ texts.
 
 .. code-block:: python
 
-    ###############################################################################
-    # Imports needed for the example
-    from seaborn import load_dataset
-    from julearn import run_cross_validation
-    from julearn.utils import configure_logging
+    from junifer.datagrabber import PatternDataladDataGrabber
+    from junifer.utils import configure_logging
+
 
     ###############################################################################
-    df_iris = load_dataset('iris')
+    # Set the logging level to info to see extra information
+    configure_logging(level="INFO")
+
 
     ###############################################################################
-    # The dataset has three kind of species. We will keep two to perform a binary
-    # classification.
-    df_iris = df_iris[df_iris['species'].isin(['versicolor', 'virginica'])]
+    # The BIDS datagrabber requires three parameters: the types of data we want,
+    # the specific pattern that matches each type, and the variables that will be
+    # replaced int he patterns.
+    types = ["T1w", "bold"]
+    patterns = {
+        "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
+        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+    }
+    replacements = ["subject"]
+    ###############################################################################
+    # Additionally, a datalad datagrabber requires the URI of the remote sibling
+    # and the location of the dataset within the remote sibling.
+    repo_uri = "https://gin.g-node.org/juaml/datalad-example-bids"
+    rootdir = "example_bids"
 
+    ###############################################################################
+    # Now we can use the datagrabber within a `with` context
+    # One thing we can do with any datagrabber is iterate over the elements.
+    # In this case, each element of the datagrabber is one session.
+    with PatternDataladDataGrabber(
+        rootdir=rootdir,
+        types=types,
+        patterns=patterns,
+        uri=repo_uri,
+        replacements=replacements,
+    ) as dg:
+        for elem in dg:
+            print(elem)
 
-Finally, when the example is done, you can run as a normal Python script.
-To generate the HTML, just build the docs:
+    ###############################################################################
+    # Another feature of the datagrabber is the ability to get a specific
+    # element by its name. In this case, we index `sub-01` and we get the file
+    # paths for the two types of data we want (T1w and bold).
+    with PatternDataladDataGrabber(
+        rootdir=rootdir,
+        types=types,
+        patterns=patterns,
+        uri=repo_uri,
+        replacements=replacements,
+    ) as dg:
+        sub01 = dg["sub-01"]
+        print(sub01)
 
-
+Finally, when the example is done, you can run it as a normal Python script.
+To generate the HTML, just build the docs.
