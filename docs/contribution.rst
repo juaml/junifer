@@ -48,7 +48,7 @@ Setting up the local development environment
 
        tox
 
-   You can also run all ``tox`` tests in parallel. As of ``tox 3.7``, you can run::
+   You can also run all ``tox`` tests in parallel. As of ``tox 3.7``, you can run
 
    .. code-block:: console
 
@@ -76,10 +76,10 @@ Before you submit a pull request, check that it meets these guidelines:
    by codecov which runs automatically when you submit your pull request).
 2. If the pull request adds functionality, the docs should be
    updated. Consider creating a Python file that demonstrates the usage in
-   ``examples`` directory.
+   ``examples/`` directory.
 3. The pull request should also include a short one-liner of your contribution
-   in `docs/changes/latest.inc`. If it's your first contribution, also add
-   yourself to `docs/changes/contributors.inc`.
+   in ``docs/changes/latest.inc``. If it's your first contribution, also add
+   yourself to ``docs/changes/contributors.inc``.
 4. The pull request will be tested against several Python versions.
 5. Someone from the core team will review your work and guide you to a successful
    contribution.
@@ -92,7 +92,7 @@ junifer uses `pytest <http://docs.pytest.org/en/latest/>`_ for its
 unit-tests and new features should in general always come with new
 tests that make sure that the code runs as intended.
 
-To run all tests::
+To run all tests
 
 .. code-block:: console
 
@@ -102,20 +102,20 @@ To run all tests::
 Adding and building documentation
 ---------------------------------
 
-Building the documentation requires some extra packages and can be installed by::
+Building the documentation requires some extra packages and can be installed by
 
 .. code-block:: console
 
     pip install -e ".[docs]"
 
-To build the docs::
+To build the docs
 
 .. code-block:: bash
 
     cd docs
     make html
 
-To view the documentation, open `docs/_build/html/index.html`.
+To view the documentation, open ``docs/_build/html/index.html``.
 
 In case you remove some files or change their filenames, you can run into
 errors when using ``make html``. In this situation you can use ``make clean``
@@ -125,19 +125,15 @@ to clean up the already build files and then re-run ``make html``.
 Writing Examples
 ----------------
 
-Examples are run and displayed in HTML format using `sphinx gallery`_. To add an
+The format used for text is reST. Check the `sphinx reST reference`_ for more
+details. The examples are run and displayed in HTML format using `sphinx gallery`_. To add an
 example, just create a ``.py`` file that starts either with ``plot_`` or ``run_``,
 dependending on whether the example generates a figure or not.
 
-The first lines of the example should be a python block comment with a title,
-a description of the example an the following include directive to be able to
-use the links.
+The first lines of the example should be a Python block comment with a title,
+a description of the example, authors and license name.
 
-The format used for text is reST. Check the `sphinx reST reference`_ for more
-details.
-
-Example of the first lines:
-
+The following is an example of how to start an example
 
 .. code-block:: python
 
@@ -158,7 +154,7 @@ a 79 ``#`` (a full line) at the point in which you want to render and add text.
 Each line of text shall be preceded with ``#``. The code that is not
 commented will be executed.
 
-The following example will create 3 texts and render the output between the
+The following example will create texts and render the output between the
 texts.
 
 .. code-block:: python
@@ -181,7 +177,4 @@ texts.
 Finally, when the example is done, you can run as a normal Python script.
 To generate the HTML, just build the docs:
 
-.. code-block:: bash
 
-    cd docs
-    make html
