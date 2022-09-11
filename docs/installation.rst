@@ -22,11 +22,11 @@ Depending on the installation method, these packages might be installed automati
 
 Installation
 ^^^^^^^^^^^^
-Depending on your use-case, junifer can be installed differently.
+Depending on your use-case, junifer can be installed differently:
 
 * Install the :ref:`install_latest_release`. This is the most suitable approach
   for end users.
-* Install from :ref:`install_development_git`. This is mostly suitable approach
+* Install from :ref:`install_development_git`. This is the most suitable approach
   for developers.
 
 
@@ -38,7 +38,7 @@ Either way, we strongly recommend using `virtual environments <https://realpytho
 Stable release
 --------------
 
-Use `pip` to install julearn from PyPI, like so:
+Use ``pip`` to install julearn from `PyPI <https://pypi.org>`_, like so:
 
 .. code-block:: bash
 
