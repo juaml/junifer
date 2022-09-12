@@ -1,4 +1,3 @@
-
 .. include:: ../links.inc
 
 The Data Object
@@ -8,18 +7,20 @@ Description
 ^^^^^^^^^^^
 
 This is the *object* that traverses the steps of the pipeline. It is indeed a
-dictionary of dictionaries. The first level of keys are the *data types* and a
-special key named 'meta' that contains all the information on the data object
-including source and previous transformation steps.
+dictionary of dictionaries. The first level of keys are the :ref:`data_types`
+and a special key named ``meta`` that contains all the information on the data
+object including source and previous transformation steps.
 
 The second level of keys are the actual data. So far, there are two keys used:
-- `path`: path to the file containing the data.
-- `data`: the data loaded in memory.
 
-The *DataGrabber* step will only fill the `path` value. The `data` value will
-be filled by the *DataReader* step, if it is one of the possible file types 
+- ``path``: path to the file containing the data.
+- ``data``: the data loaded in memory.
+
+The :ref:`datagrabber` step will only fill the ``path`` value.
+The ``data`` value will be filled by the :ref:`datareader` step, if it is one of the possible file types
 that the datareader can read.
 
+.. _data_types:
 
 Data types
 ^^^^^^^^^^
@@ -30,17 +31,16 @@ Data types
 
    * - Name
      - Description
-     - Example 
-   * - `T1w`
+     - Example
+   * - ``T1w``
      - T1w image (3D)
      - Preprocessed or Raw T1w image
-   * - `BOLD`
+   * - ``BOLD``
      - BOLD image (4D)
      - Preprocessed/Denoised BOLD image (fmriprep output)
-   * - `VBM_GM`
+   * - ``VBM_GM``
      - VBM Gray Matter segmentation (3D)
      - CAT output (`m0wp1` images)
-   * - `VBM_WM`
+   * - ``VBM_WM``
      - VBM White Matter segmentation (3D)
      - CAT output (`m0wp2` images)
-
