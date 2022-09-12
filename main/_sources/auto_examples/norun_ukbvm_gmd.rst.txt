@@ -25,36 +25,44 @@ Authors: Federico Raimondo
 
 License: BSD 3 clause
 
-.. GENERATED FROM PYTHON SOURCE LINES 9-36
+.. GENERATED FROM PYTHON SOURCE LINES 9-44
 
 .. code-block:: default
 
 
 
-    from junifer.api import run_pipeline
+    from junifer.api import run
+
 
     markers = [
-        {'name': 'Schaefer1000x7_TrimMean80',
-         'kind': 'ParcelAggregation',
-         'atlas': 'Schaefer1000x7',
-         'method': 'trimmean80'},
-        {'name': 'Schaefer1000x7_Mean',
-         'kind': 'ParcelAggregation',
-         'atlas': 'Schaefer1000x7',
-         'method': 'mean'},
-        {'name': 'Schaefer1000x7_Std',
-         'kind': 'ParcelAggregation',
-         'atlas': 'Schaefer1000x7',
-         'method': 'std'}
+        {
+            "name": "Schaefer1000x7_TrimMean80",
+            "kind": "ParcelAggregation",
+            "atlas": "Schaefer1000x7",
+            "method": "trim_mean",
+            "method_params": {"proportiontocut": 0.2},
+        },
+        {
+            "name": "Schaefer1000x7_Mean",
+            "kind": "ParcelAggregation",
+            "atlas": "Schaefer1000x7",
+            "method": "mean",
+        },
+        {
+            "name": "Schaefer1000x7_Std",
+            "kind": "ParcelAggregation",
+            "atlas": "Schaefer1000x7",
+            "method": "std",
+        },
     ]
 
-    run_pipeline(
-        workdir='/tmp',
-        datagrabber='JuselessUKBVBM',
-        element=('sub-1627474', 'ses-2'),
+    run(
+        workdir="/tmp",
+        datagrabber="JuselessUKBVBM",
+        elements=("sub-1627474", "ses-2"),
         markers=markers,
-        storage='SQLDataFrameStorage',
-        storage_params={'outpath': '/data/project/juniferexample'},
+        storage="SQLDataFrameStorage",
+        storage_params={"outpath": "/data/project/juniferexample"},
     )
 
 
@@ -65,18 +73,23 @@ License: BSD 3 clause
 
 .. _sphx_glr_download_auto_examples_norun_ukbvm_gmd.py:
 
-.. only:: html
 
-  .. container:: sphx-glr-footer sphx-glr-footer-example
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
 
 
-    .. container:: sphx-glr-download sphx-glr-download-python
 
-      :download:`Download Python source code: norun_ukbvm_gmd.py <norun_ukbvm_gmd.py>`
+  .. container:: sphx-glr-download sphx-glr-download-python
 
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
+     :download:`Download Python source code: norun_ukbvm_gmd.py <norun_ukbvm_gmd.py>`
 
-      :download:`Download Jupyter notebook: norun_ukbvm_gmd.ipynb <norun_ukbvm_gmd.ipynb>`
+
+
+  .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+     :download:`Download Jupyter notebook: norun_ukbvm_gmd.ipynb <norun_ukbvm_gmd.ipynb>`
 
 
 .. only:: html
