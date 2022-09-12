@@ -5,14 +5,13 @@
 # License: AGPL
 
 from collections import Counter
-from typing import Dict, Optional, List
+from typing import Dict, List, Optional
 
-from junifer.markers.pipeline_mixin import PipelineStepMixin
-
-from ..datareader import DefaultDataReader
-from ..utils import logger
-from .base import BaseMarker
+from ..datareader.default import DefaultDataReader
+from ..markers.base import BaseMarker
+from ..pipeline import PipelineStepMixin
 from ..storage.base import BaseFeatureStorage
+from ..utils import logger
 
 
 class MarkerCollection:
@@ -32,7 +31,7 @@ class MarkerCollection:
         markers: List[BaseMarker],
         datareader: Optional[PipelineStepMixin] = None,
         preprocessing: Optional[PipelineStepMixin] = None,
-        storage: Optional[BaseFeatureStorage] = None
+        storage: Optional[BaseFeatureStorage] = None,
     ):
         """Initialize the class."""
         # Check that the markers have different names
