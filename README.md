@@ -18,15 +18,17 @@ The documentation is available at [https://juaml.github.io/junifer](https://juam
 
 * `docs`: Documentation, built using sphinx.
 * `examples`: Examples, using sphinx-gallery. File names of examples that create visual output must start with `plot_`, otherwise, with `run_`.
-* `junifer`: Main library directory
-  * `api`: User API module
-  * `data`: Module that handles data required for the library to work (e.g. atlases)
+* `junifer`: Main library directory.
+  * `api`: User API module.
+  * `configs`: Module for pre-defined configs for most used computing clusters.
+  * `data`: Module that handles data required for the library to work (e.g. atlases).
   * `datagrabber`: DataGrabber module.
   * `datareader`: DataReader module.
   * `markers`: Markers module.
   * `pipeline`: Pipeline module.
   * `preprocess`: Preprocessing module.
   * `storage`: Storage module.
+  * `testing`: Testing components module.
   * `utils`: Utilities module (e.g. logging)
 
 
