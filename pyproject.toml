@@ -1,9 +1,85 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+requires = [
+  "setuptools >= 61.0.0",
+  "wheel",
+  "setuptools_scm[toml] >= 6.2"
+]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "junifer"
+description = "JUelich NeuroImaging FEature extractoR"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE.md"}
+authors = [
+    {email = "f.raimondo@fz-juelich.de"},
+    {name = "Fede Raimondo"}
+]
+maintainers = [
+    {email = "s.mandal@fz-juelich.de"},
+    {name = "Synchon Mandal"}
+]
+keywords = [
+    "neuroimaging",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved",
+    "Natural Language :: English",
+    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+    "click>=8.1.3,<8.2",
+    "numpy>=1.22,<1.23",
+    "datalad>=0.15.4,<0.18",
+    "pandas>=1.4.0,<1.5",
+    "nibabel>=3.2.0,<4.1",
+    "nilearn>=0.9.0,<1.0",
+    "sqlalchemy>=1.4.27,<= 1.5.0",
+    "pyyaml>=5.1.2,<7.0",
+]
+dynamic = ["version"]
+
+[project.urls]
+homepage = "https://juaml.github.io/junifer"
+documentation = "https://juaml.github.io/junifer"
+repository = "https://github.com/juaml/junifer"
+
+[project.scripts]
+junifer = "junifer.api.cli:cli"
+
+[project.optional-dependencies]
+dev = ["tox"]
+docs = [
+    "seaborn>=0.11.2,<0.12",
+    "Sphinx>=5.0.2,<5.1",
+    "sphinx-gallery>=0.10.1,<0.11",
+    "sphinx-rtd-theme>=1.0.0,<1.1",
+    "sphinx-multiversion>=0.2.4,<0.3",
+    "numpydoc>=1.4.0,<1.5",
+]
+
+################
+# Tool configs #
+################
+
+[tool.setuptools]
+packages = ["junifer"]
 
 [tool.setuptools_scm]
 version_scheme = "python-simplified-semver"
 local_scheme = "no-local-version"
 write_to = "junifer/_version.py"
-write_to_template = "__version__ = '{version}'\n"
+
+[tool.black]
+line-length = 79
+target-version = ["py38"]

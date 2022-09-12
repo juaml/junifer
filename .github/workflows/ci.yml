@@ -4,52 +4,36 @@ on: [push, pull_request]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: ['3.8', '3.9', '3.10']
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Check for sudo
-      shell: bash
+    - name: Set up system
       run: |
-        if type sudo >/dev/null 2>&1; then SUDO="sudo"; else SUDO=""; fi
-        echo "SUDO=$SUDO" >> $GITHUB_ENV
-    - name: Install dependencies
-      run: |
-        $SUDO bash -c "$(curl -fsSL http://neuro.debian.net/_files/neurodebian-travis.sh)"
-        $SUDO apt-get update -qq
-        $SUDO apt-get install git-annex-standalone
-        python -m pip install --upgrade pip
-        pip install -r test-requirements.txt
-        pip install -r requirements.txt
+        bash -c "$(curl -fsSL http://neuro.debian.net/_files/neurodebian-travis.sh)"
+        sudo apt-get update -qq
+        sudo apt-get install git-annex-standalone
     - name: Configure git for datalad
       run: |
         git config --global user.email "runner@github.com"
-        git config --global user.name "GITHUB CI Runner"
-    - name: Install junifer
-      shell: bash -el {0}
+        git config --global user.name "GitHub Runner"
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
       run: |
-          python setup.py build
-          python setup.py install
-    - name: Lint with flake8
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install tox tox-gh-actions
+    - name: Test with tox
       run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count  --show-source --statistics
-    - name: Spell check
-      run: |
-        codespell junifer/ docs/ examples/
-    - name: Test with pytest
-      run: |
-        PYTHONPATH="." pytest --cov=junifer --cov-report xml -vv junifer/
-    - name: 'Upload coverage to CodeCov'
-      uses: codecov/codecov-action@master
+        tox
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-      if: success() && matrix.python-version == 3.8
+      if: success() && matrix.python-version == 3.9

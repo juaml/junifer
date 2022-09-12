@@ -1,0 +1,20 @@
+with: junifer.testing.registry
+workdir: /tmp
+
+datagrabber:
+  kind: OasisVBMTestingDatagrabber
+markers:
+  - name: Schaefer1000x7_Mean
+    kind: ParcelAggregation
+    atlas: Schaefer1000x7
+    method: mean
+storage: 
+  kind: SQLiteFeatureStorage
+  uri: /Users/fraimondo/dev/tbox/junifer/scratch/db/test.db
+queue:
+  jobname: TestHTCondorQueue
+  kind: HTCondor
+  env:
+    kind: conda
+    name: junifer
+  mem: 8G
