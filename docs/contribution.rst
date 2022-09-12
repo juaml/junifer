@@ -113,13 +113,13 @@ To build the docs
 .. code-block:: bash
 
     cd docs
-    make html
+    make local
 
 To view the documentation, open ``docs/_build/html/index.html``.
 
 In case you remove some files or change their filenames, you can run into
-errors when using ``make html``. In this situation you can use ``make clean``
-to clean up the already build files and then re-run ``make html``.
+errors when using ``make local``. In this situation you can use ``make clean``
+to clean up the already build files and then re-run ``make local``.
 
 
 Writing Examples
