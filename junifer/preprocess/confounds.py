@@ -13,7 +13,7 @@ from nilearn._utils.niimg_conversions import check_niimg_4d
 from nilearn.image import clean_img
 from nilearn.masking import compute_brain_mask
 
-from ..markers import PipelineStepMixin
+from ..pipeline import PipelineStepMixin
 from ..utils import logger, raise_error
 
 

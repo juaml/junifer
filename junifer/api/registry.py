@@ -8,9 +8,11 @@
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from ..utils.logging import logger, raise_error
+
+
 if TYPE_CHECKING:
     from ..datagrabber.base import BaseDataGrabber
-    from ..markers.base import PipelineStepMixin
+    from ..pipeline import PipelineStepMixin
     from ..storage.base import BaseFeatureStorage
 
 # Define valid steps for operation
