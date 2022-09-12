@@ -20,6 +20,7 @@ enabling others to extend it easily.
 
    installation
    understanding/index.rst
+   builtin
    auto_examples/index.rst
    api/index.rst
    contribution
