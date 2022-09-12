@@ -108,8 +108,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 )
             prefix = element_to_prefix(element)
         # Format URI for engine creation
-        uri = "sqlite:///" \
-            f"{self.uri.parent}/{prefix}{self.uri.name}"  # type: ignore
+        uri = (
+            "sqlite:///" f"{self.uri.parent}/{prefix}{self.uri.name}"
+        )  # type: ignore
         return create_engine(uri, echo=False)
 
     def _save_upsert(
@@ -231,7 +232,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         )
         # Prepare new dataframe
         data_df = pd.DataFrame(
-            data, columns=columns, index=idx)  # type: ignore
+            data, columns=columns, index=idx
+        )  # type: ignore
         # Store dataframe
         self.store_df(df=data_df, meta=meta)
 
@@ -525,8 +527,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         """
         if self.single_output is True:
             raise_error(msg="collect() is not implemented for single output.")
-        logger.info("Collecting data from "
-                    f"{self.uri.parent}/*{self.uri.name}")  # type: ignore
+        logger.info(
+            "Collecting data from " f"{self.uri.parent}/*{self.uri.name}"
+        )  # type: ignore
         # Create new instance
         out_storage = SQLiteFeatureStorage(
             uri=self.uri, single_output=True, upsert="ignore"

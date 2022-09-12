@@ -7,9 +7,9 @@
 
 import shutil
 import subprocess
-from pathlib import Path
-from typing import Dict, List, Optional, Union, Tuple
 import typing
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple, Union
 
 import yaml
 

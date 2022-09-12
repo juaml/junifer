@@ -443,7 +443,8 @@ def test_tian_7T_6thgeneration(
     assert fname.name == fname1
     assert len(lbl) == n_label
     assert_array_almost_equal(
-        img.header["pixdim"][1:4], [1.6, 1.6, 1.6])  # type: ignore
+        img.header["pixdim"][1:4], [1.6, 1.6, 1.6]
+    )  # type: ignore
 
 
 def test_retrieve_tian_incorrect_space(tmp_path: Path) -> None:

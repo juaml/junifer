@@ -4,10 +4,9 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
-from typing import Type
-
 import logging
 from abc import ABC
+from typing import Type
 
 import pytest
 

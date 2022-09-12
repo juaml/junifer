@@ -23,9 +23,7 @@ class BaseMarker(PipelineStepMixin):
     """
 
     def __init__(
-        self,
-        on: Union[List[str], str],
-        name: Optional[str] = None
+        self, on: Union[List[str], str], name: Optional[str] = None
     ) -> None:
         """Initialize the class."""
         if not isinstance(on, list):

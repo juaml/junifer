@@ -18,7 +18,7 @@ from ..utils import logger, raise_error
 
 
 if TYPE_CHECKING:
-    from nibabel import Nifti1Image, Nifti2Image, MGHImage
+    from nibabel import MGHImage, Nifti1Image, Nifti2Image
 
 
 class BaseConfoundRemover(PipelineStepMixin):
