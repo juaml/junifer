@@ -25,6 +25,7 @@ enabling others to extend it easily.
    api/index.rst
    contribution
    maintaining
+   faq
    whats_new
 
 
