@@ -6,7 +6,7 @@
 
 import pytest
 
-from junifer.markers.pipeline_mixin import PipelineStepMixin
+from junifer.pipeline.pipeline_mixin import PipelineStepMixin
 
 
 def test_PipelineStepMixin() -> None:

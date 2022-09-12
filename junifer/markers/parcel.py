@@ -116,7 +116,8 @@ class ParcelAggregation(BaseMarker):
         )
         logger.debug("Masking")
         masker = NiftiMasker(
-            atlas_bin, target_affine=t_input.affine)  # type: ignore
+            atlas_bin, target_affine=t_input.affine
+        )  # type: ignore
 
         # Mask the input data and the atlas
         data = masker.fit_transform(t_input)

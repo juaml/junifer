@@ -6,8 +6,8 @@
 
 from typing import Dict, List, Optional, Union
 
+from ..pipeline.pipeline_mixin import PipelineStepMixin
 from ..utils import logger, raise_error
-from .pipeline_mixin import PipelineStepMixin
 
 
 class BaseMarker(PipelineStepMixin):
@@ -23,9 +23,7 @@ class BaseMarker(PipelineStepMixin):
     """
 
     def __init__(
-        self,
-        on: Union[List[str], str],
-        name: Optional[str] = None
+        self, on: Union[List[str], str], name: Optional[str] = None
     ) -> None:
         """Initialize the class."""
         if not isinstance(on, list):

@@ -10,7 +10,7 @@ import shutil
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional, Tuple, Union, Any, Dict
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 import nibabel as nib
 import numpy as np
@@ -536,7 +536,8 @@ def _retrieve_tian(
         if space != "MNI6thgeneration":
             raise_error(
                 f"The parameter `space` ({space}) for 7T needs to be "
-                f"MNI6thgeneration")
+                f"MNI6thgeneration"
+            )
     else:
         raise_error(
             f"The parameter `magneticfield` ({magneticfield}) needs to be "
@@ -592,7 +593,7 @@ def _retrieve_tian(
             "A simple numbering scheme for distinction was therefore used."
         )
     else:  # pragma: no cover
-        raise_error('This should not happen. Please report this error.')
+        raise_error("This should not happen. Please report this error.")
 
     # check existence of atlas
     if not (atlas_fname.exists() and atlas_lname.exists()):
@@ -625,9 +626,7 @@ def _retrieve_tian(
 
 
 def _retrieve_suit(
-    atlas_dir: Path,
-    resolution: Optional[float],
-    space: str = "MNI"
+    atlas_dir: Path, resolution: Optional[float], space: str = "MNI"
 ) -> Tuple[Path, List[str]]:
     """Retrieve SUIT atlas.
 

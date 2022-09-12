@@ -9,7 +9,7 @@ from numpy.testing import assert_array_equal
 
 from junifer.datareader.default import DefaultDataReader
 from junifer.markers import MarkerCollection, ParcelAggregation
-from junifer.markers.base import PipelineStepMixin
+from junifer.pipeline import PipelineStepMixin
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import OasisVBMTestingDatagrabber
 
@@ -90,8 +90,7 @@ def test_marker_collection():
         for t_marker in markers:
             t_name = t_marker.name
             assert_array_equal(
-                out[t_name]["VBM_GM"]["data"],
-                out2[t_name]["VBM_GM"]["data"]
+                out[t_name]["VBM_GM"]["data"], out2[t_name]["VBM_GM"]["data"]
             )
 
 

@@ -7,4 +7,3 @@
 from .base import BaseMarker
 from .collection import MarkerCollection
 from .parcel import ParcelAggregation
-from .pipeline_mixin import PipelineStepMixin

@@ -5,7 +5,7 @@
 # License: AGPL
 
 from functools import partial
-from typing import Callable, Dict, Any, Optional
+from typing import Any, Callable, Dict, Optional
 
 import numpy as np
 from scipy.stats import trim_mean
@@ -15,8 +15,8 @@ from .utils import logger, raise_error
 
 
 def get_aggfunc_by_name(
-        name: str,
-        func_params: Optional[Dict[str, Any]]) -> Callable:
+    name: str, func_params: Optional[Dict[str, Any]]
+) -> Callable:
     """Get an aggregation function by its name.
 
     Parameters
