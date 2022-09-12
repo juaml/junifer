@@ -20,7 +20,7 @@ Setting up the local development environment
 
        pip install -e ".[dev]"
 
-4. Create a branch for local development using the ``dev`` branch as a
+4. Create a branch for local development using the ``main`` branch as a
    starting point. Use ``fix``, ``refactor``, or ``feat`` as a prefix.
 
    .. code-block:: console
