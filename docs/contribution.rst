@@ -25,7 +25,7 @@ Setting up the local development environment
 
    .. code-block:: console
 
-       git checkout dev
+       git checkout main
        git checkout -b <prefix>/<name-of-your-branch>
 
    Now you can make your changes locally.
