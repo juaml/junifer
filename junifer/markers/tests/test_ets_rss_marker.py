@@ -5,12 +5,13 @@
 #          Sami Hamdan <s.hamdan@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+
 from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
-from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
-from junifer.markers.etsrss import RSSETSMarker
+
 from junifer.data import load_atlas
-import pytest
+from junifer.markers.etsrss import RSSETSMarker
+from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
 
 def test_RSSETS() -> None:
@@ -19,26 +20,20 @@ def test_RSSETS() -> None:
     test_atlas, _, _ = load_atlas(atlas)
 
     with SPMAuditoryTestingDatagrabber() as dg:
-        out = dg['sub001']
-        niimg = image.load_img(out["BOLD"]["path"])
-        input_dict = {
-            "BOLD": niimg,
-            "path": out["BOLD"]["path"]
-        }
-
-        ets_rss = RSSETSMarker(atlas=atlas)
-        new_out = ets_rss.compute(input_dict)
-
+        out = dg["sub001"]
+        niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
+        input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
+        # Compute the RSSETSMarker
+        ets_rss_marker = RSSETSMarker(atlas=atlas)
+        new_out = ets_rss_marker.compute(input_dict)
+        # Compute the NiftiLabelsMasker
         test_masker = NiftiLabelsMasker(test_atlas)
         test_ts = test_masker.fit_transform(niimg)
-
+        # Assert the dimension of timeseries
         n_time, _ = test_ts.shape
-        assert n_time == len(new_out["RSS"])
-
-
-def test_get_output_kind():
-    with pytest.raises(ValueError, match="Unknown input kind for"):
-        atlas = "Schaefer100x17"
-        input_dict = {"THIS_IS_NOT_BOLD": "THIS_IS_NOT_A_NIFTI_FILE"}
-        ets_rss = RSSETSMarker(atlas=atlas)
-        ets_rss.get_output_kind(input_dict)
+        assert n_time == len(new_out["data"])
+        # Assert the meta
+        meta = ets_rss_marker.get_meta("BOLD")["marker"]
+        assert meta["atlas"] == "Schaefer100x17"
+        assert meta["aggregation_method"] == "mean"
+        assert meta["class"] == "RSSETSMarker"
