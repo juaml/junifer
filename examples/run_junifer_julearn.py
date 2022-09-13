@@ -46,8 +46,16 @@ marker_dicts = [
     }
 ]
 
+
+###############################################################################
+# define target and confounds for julearn machine learning
 y = 'age'
 confound = 'sex'
+
+
+###############################################################################
+# Load the VBM phenotype data for machine learning data:
+# - Fetch the Oasis dataset
 oasis_dataset = nilearn.datasets.fetch_oasis_vbm()
 age = oasis_dataset.ext_vars[y][:10]
 sex = (
@@ -55,11 +63,16 @@ sex = (
     .map(lambda x: 1 if x == 'F' else 0)
     .values
 )
+
+
+###############################################################################
+# create a temporary directory for junifer feature extraction
 with tempfile.TemporaryDirectory() as tmpdir:
 
     storage = {'kind': 'SQLiteFeatureStorage',
                'uri': f'{tmpdir}/test.db'
                }
+    # run the defined junifer feature extraction pipeline
     run(
         workdir="/tmp",
         datagrabber={'kind': 'OasisVBMTestingDatagrabber'},
@@ -67,8 +80,9 @@ with tempfile.TemporaryDirectory() as tmpdir:
         storage=storage,
     )
 
+    # read in extracted features and add confounds and targets
+    # for julearn run cross validation
     collect(storage)
-
     db = SQLiteFeatureStorage(uri=storage['uri'], single_output=True)
 
     df_vbm = db.read_df(feature_name='VBM_GM_Schaefer200x17_Mean')
