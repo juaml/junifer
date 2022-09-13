@@ -3,9 +3,8 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-import pytest
-
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
+
 
 def test_SPMAuditoryTestingDatagrabber() -> None:
     """Test SPM Auditory datagrabber."""

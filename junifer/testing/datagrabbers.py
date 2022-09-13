@@ -110,8 +110,8 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
         out = super().__getitem__(element)
 
         nilearn_data = datasets.fetch_spm_auditory(subject_id=element)
-        fmri_img = image.concat_imgs(nilearn_data.func)
-        anat_img = image.concat_imgs(nilearn_data.anat)
+        fmri_img = image.concat_imgs(nilearn_data.func)  # type: ignore
+        anat_img = image.concat_imgs(nilearn_data.anat)  # type: ignore
 
         fmri_fname = self.datadir / f"{element}_bold.nii.gz"
         anat_fname = self.datadir / f"{element}_T1w.nii.gz"
