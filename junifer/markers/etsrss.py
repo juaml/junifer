@@ -1,5 +1,6 @@
 from scipy.stats import zscore
 import numpy as np
+from nilearn.maskers import NiftiLabelsMasker
 
 from ..data import load_atlas
 from ..utils import logger
@@ -10,7 +11,7 @@ class RSSETSMarker(BaseMarker):
     def __init__(self, atlas):
         self.atlas = atlas
         on = ["BOLD"]
-        super().__init__(self, on=on)
+        super().__init__(on=on)
 
     def get_output_kind(self, input):
         """Get output kind.
@@ -65,15 +66,14 @@ class RSSETSMarker(BaseMarker):
 
         Returns
         -------
-        ets : tuple (np.array, np.array)
-                Edge-timeseries with rows corresponding to time points and columns
-                corresponding to unique edges
+        output : dict
+            "RSS" contains the root sum of squares of the edge-wise time series
         """
-        niimg = input["data"]
-
-        t_atlas, _, _ = load_atlas(self.atlas, resolution=resolution) 
+        niimg = input["BOLD"]
+        t_atlas, _, _ = load_atlas(self.atlas)
         masker = NiftiLabelsMasker(t_atlas)
         timeseries = zscore(masker.fit_transform(niimg))
+        out = {}
 
         _, n_roi = timeseries.shape
 
@@ -81,4 +81,6 @@ class RSSETSMarker(BaseMarker):
         u, v = np.tril_indices(n_roi, k=-1)
 
         ets = timeseries[:, u] * timeseries[:, v]
-        return np.sum(ets**2, 1) ** 0.5
+        out["RSS"] = np.sum(ets**2, 1) ** 0.5
+
+        return out
