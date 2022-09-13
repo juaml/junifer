@@ -4,32 +4,44 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional, Union
+from typing import Dict, List
+from nilearn.connectome import ConnectivityMeasure
+import numpy as np
 
-from ..pipeline.pipeline_mixin import PipelineStepMixin
+from ..api.decorators import register_marker
 from ..utils import logger, raise_error
+from .base import BaseMarker, ParcelAggregation
 
 
-class FunctionalConnectivity(PipelineStepMixin):
-    """Base class for all markers.
+@register_marker
+class FunctionalConnectivityAtlas(BaseMarker):
+    """Class for functional connectivity.
 
-    Parameters
+     Parameters
     ----------
-    on : list of str
-        The kind of data to work on.
-    name : str, optional
-        The name of the marker (default None).
+    atlas
+    agg_method
+    agg_method_params
+    cor_method
+    cor_method_params
+    name
 
     """
 
     def __init__(
-        self, on: Union[List[str], str], name: Optional[str] = None
+        self, atlas, agg_method='mean', agg_method_params=None,
+        cor_method='cov', cor_method_params=None, name=None
     ) -> None:
         """Initialize the class."""
-        if not isinstance(on, list):
-            on = [on]
-        self._valid_inputs = on
-        self.name = self.__class__.__name__ if name is None else name
+        self.atlas = atlas
+        self.agg_method = agg_method
+        self.agg_method_params = {} if agg_method_params is None \
+            else agg_method_params
+        self.cor_method = cor_method
+        self.cor_method_params = {} if cor_method_params is None \
+            else cor_method_params
+        on = ["BOLD"]
+        super().__init__(on=on, name=name)
 
     def get_meta(self, kind: str) -> Dict:
         """Get metadata.
@@ -89,7 +101,8 @@ class FunctionalConnectivity(PipelineStepMixin):
             The updated list of output kinds, as storage possibilities.
 
         """
-        raise_error(msg="compute() not implemented", klass=NotImplementedError)
+        outputs = ["table"]
+        return outputs
 
     def compute(self, input: Dict) -> Dict:
         """Compute.
@@ -102,11 +115,19 @@ class FunctionalConnectivity(PipelineStepMixin):
 
         Returns
         -------
-        dict
-            The computed result as dictionary.
+        1D numpy array
+            The lower traingle of the FC matrix as a 1D numpy array.
 
         """
-        raise_error(msg="compute() not implemented", klass=NotImplementedError)
+        pa = ParcelAggregation(atlas=self.atlas, method=self.agg_method,
+                               method_params=self.agg_method_params,
+                               on="BOLD")
+        # get the 2D timeseries after parcel aggregation
+        ts = pa.compute()
+        cm = ConnectivityMeasure(kind=self.cor_method)
+        out = cm.fit_transform(ts)
+        out = out[np.tril_indices(3, k=-1)]
+        return out
 
     # TODO: complete type annotations
     def store(self, kind: str, out: Dict, storage) -> None:
@@ -118,38 +139,6 @@ class FunctionalConnectivity(PipelineStepMixin):
         out
 
         """
-        raise_error(msg="store() not implemented", klass=NotImplementedError)
+        logger.debug(f"Storing {kind} in {storage}")
+        storage.store_table(**out)
 
-    # TODO: complete type annotations
-    def fit_transform(self, input: Dict[str, Dict], storage=None) -> Dict:
-        """Fit and transform.
-
-        Parameters
-        ----------
-        input
-        storage
-
-        Returns
-        -------
-        dict
-
-        """
-        out = {}
-        meta = input.get("meta", {})
-        for kind in self._valid_inputs:
-            if kind in input.keys():
-                logger.info(f"Computing {kind}")
-                t_input = input[kind]
-                t_meta = meta.copy()
-                t_meta.update(t_input.get("meta", {}))
-                t_meta.update(self.get_meta(kind))
-                t_out = self.compute(t_input)
-                t_out.update(meta=t_meta)
-                if storage is not None:
-                    logger.info(f"Storing in {storage}")
-                    self.store(kind, t_out, storage)
-                else:
-                    logger.info("No storage specified, returning dictionary")
-                    out[kind] = t_out
-
-        return out
