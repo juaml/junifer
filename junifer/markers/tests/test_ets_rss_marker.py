@@ -1,3 +1,10 @@
+"""Provide test for root sum of squares of edgewise timeseries."""
+
+# Authors: Leonard Sasse <l.sasse@fz-juelich.de>
+#          Nicolás Nieto <n.nieto@fz-juelich.de>
+#          Sami Hamdan <s.hamdan@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
+# License: AGPL
 from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
@@ -6,7 +13,8 @@ from junifer.data import load_atlas
 import pytest
 
 
-def test_RSSETS():
+def test_RSSETS() -> None:
+    """Test RSS ETS."""
     atlas = "Schaefer100x17"
     test_atlas, _, _ = load_atlas(atlas)
 
