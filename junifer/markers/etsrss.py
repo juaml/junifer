@@ -1,4 +1,3 @@
-from scipy.stats import zscore
 """Provide class for root sum of squares of edgewise timeseries."""
 
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
@@ -10,13 +9,15 @@ from scipy.stats import zscore
 from typing import Dict, List
 
 import numpy as np
-from nilearn.maskers import NiftiLabelsMasker
+from scipy.stats import zscore
 
-from ..data import load_atlas
+from ..api.decorators import register_marker
 from ..utils import logger
 from .base import BaseMarker
+from .parcel import ParcelAggregation
 
 
+@register_marker
 class RSSETSMarker(BaseMarker):
     """Class for root sum of squares of edgewise timeseries.
 
@@ -32,8 +33,8 @@ class RSSETSMarker(BaseMarker):
     def __init__(self, atlas: str, aggregation_method: str = "mean") -> None:
         """Initialize the class."""
         self.atlas = atlas
-        on = ["BOLD"]
-        super().__init__(on=on)
+        self.aggregation_method = aggregation_method
+        super().__init__(on=["BOLD"])
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
@@ -98,10 +99,23 @@ class RSSETSMarker(BaseMarker):
                doi: 10.1073/pnas.2005531117
 
         """
+        logger.debug("Calculating root sum of squares of edgewise timeseries.")
+        # Initialize a ParcelAggregation
+        parcel_aggregation = ParcelAggregation(
+            atlas=self.atlas,
+            method=self.aggregation_method,
+        )
+        # Compute the parcel aggregation
+        out = parcel_aggregation.compute(input)
+        # Compute the z-score for each brain region's timeseries
+        timeseries = zscore(out["data"])
+        # Get the number of ROIs
+        _, n_roi = timeseries.shape
         # indices of unique edges (lower triangle)
         u, v = np.tril_indices(n_roi, k=-1)
-
+        # Compute the ETS
         ets = timeseries[:, u] * timeseries[:, v]
-        out["RSS"] = np.sum(ets**2, 1) ** 0.5
+        # Compute the RSS
+        out["data"] = np.sum(ets**2, 1) ** 0.5
 
         return out
