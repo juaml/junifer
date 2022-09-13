@@ -105,6 +105,11 @@ class DataladDataGrabber(BaseDataGrabber):
         for _, v in out.items():
             if "path" in v:
                 logger.debug(f"Getting {v['path']}")
+                # Note, that `self._dataset.get` without an option would get
+                # the content of all files in a (sub-dataset) if `v["path"]`
+                # was to point to a subdataset rather than a file. This may be
+                # a source of confusion (+ performance/storage issue) when
+                # implementing a grabber.
                 self._dataset.get(v["path"])
                 logger.debug("Get done")
 
@@ -119,13 +124,15 @@ class DataladDataGrabber(BaseDataGrabber):
     def install(self) -> None:
         """Install the datalad dataset into the datadir."""
         logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
-        self._dataset = dl.install(  # type: ignore because of datalad
-            self._datadir, source=self.uri
+        self._dataset: dl.Dataset = dl.clone(
+            self.uri, self._datadir
         )
         logger.debug("Dataset installed")
 
     def remove(self):
         """Remove the datalad dataset from the datadir."""
+        # This probably wants to use `reckless='kill'` or similar.
+        # See issue #53
         self._dataset.remove(recursive=True)
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:

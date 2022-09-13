@@ -22,6 +22,8 @@ Enhancements
 - Implemented SPM Auditory testing datagrabber X (:gh:`52` by `Fede Raimondo`_).
 
 - Created a the repository based on the mockup by by `Fede Raimondo`_.
+- Added comments to datalad grabber and changed to use datalad-clone instead of
+  datalad-install (:gh: `55` by `Benjamin Poldrack`_).
 
 Bugs
 ~~~~
