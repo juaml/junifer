@@ -117,4 +117,4 @@ class RSSETSMarker(BaseMarker):
         # Compute the RSS
         out["data"] = np.sum(ets**2, 1) ** 0.5
 
-        return out
+    return out
