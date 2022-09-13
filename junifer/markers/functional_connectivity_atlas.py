@@ -116,7 +116,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
         Returns
         -------
         1D numpy array
-            The lower traingle of the FC matrix as a 1D numpy array.
+            The lower triangle of the FC matrix as a 1D numpy array.
 
         """
         pa = ParcelAggregation(atlas=self.atlas, method=self.agg_method,
