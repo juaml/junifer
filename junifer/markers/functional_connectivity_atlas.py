@@ -6,6 +6,7 @@
 
 from typing import Dict, List
 from nilearn.connectome import ConnectivityMeasure
+from sklearn.covariance import EmpiricalCovariance
 
 from ..api.decorators import register_marker
 from ..utils import logger, raise_error
@@ -41,6 +42,9 @@ class FunctionalConnectivityAtlas(BaseMarker):
         self.cor_method_params = {} if cor_method_params is None \
             else cor_method_params
         on = ["BOLD"]
+        # default to nilearn behavior
+        self.cor_method_params['empirical'] = self.cor_method_params.get('empirical', False)
+
         super().__init__(on=on, name=name)
 
     def get_meta(self, kind: str) -> Dict:
@@ -101,7 +105,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
             The updated list of output kinds, as storage possibilities.
 
         """
-        outputs = ["table"]
+        outputs = ["matrix"]
         return outputs
 
     def compute(self, input: Dict) -> Dict:
@@ -115,8 +119,10 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
         Returns
         -------
-        1D numpy array
-            The lower triangle of the FC matrix as a 1D numpy array.
+        A dict with 
+            FC matrix as a 2D numpy array.
+            Row names as a list.
+            Col names as a list.
 
         """
         pa = ParcelAggregation(atlas=self.atlas, method=self.agg_method,
@@ -124,7 +130,12 @@ class FunctionalConnectivityAtlas(BaseMarker):
                                on="BOLD")
         # get the 2D timeseries after parcel aggregation
         ts = pa.compute(input)
-        cm = ConnectivityMeasure(kind=self.cor_method)
+
+        if self.cor_method_params['empirical']:
+            cm = ConnectivityMeasure(cov_estimator=EmpiricalCovariance(),
+                                          kind=self.cor_method)
+        else:
+            cm = ConnectivityMeasure(kind=self.cor_method)
         out = {}
         out["data"] = cm.fit_transform([ts["data"]])[0]
         # create column names
