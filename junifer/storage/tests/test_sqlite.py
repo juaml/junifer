@@ -407,6 +407,14 @@ def test_store_table(tmp_path: Path) -> None:
 
 
 def test_store_matrix2d(tmp_path: Path) -> None:
+    """Test 2D Matrix store.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     uri = tmp_path / "test_store_table.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
     # Metadata to store
