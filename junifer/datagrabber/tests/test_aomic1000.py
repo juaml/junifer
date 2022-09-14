@@ -7,9 +7,9 @@
 
 from junifer.datagrabber.aomic1000 import DataladAOMIC1000
 from junifer.utils import configure_logging
-# import pytest
 
-uri = 'git@gin.g-node.org:/juaml/datalad-example-aomic1000.git'
+
+uri = "git@gin.g-node.org:/juaml/datalad-example-aomic1000.git"
 
 
 def test_aomic1000_datagrabber() -> None:
@@ -29,7 +29,7 @@ def test_aomic1000_datagrabber() -> None:
         assert (
             out["BOLD"]["path"].name
             == f"sub-{test_element}_task-moviewatching_"
-               "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
+            "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
         )
 
         assert out["BOLD"]["path"].exists()
@@ -41,7 +41,7 @@ def test_aomic1000_datagrabber() -> None:
         assert (
             out["BOLD_confounds"]["path"].name
             == f"sub-{test_element}_task-moviewatching_"
-               "desc-confounds_regressors.tsv"
+            "desc-confounds_regressors.tsv"
         )
 
         assert out["BOLD_confounds"]["path"].exists()
@@ -53,7 +53,7 @@ def test_aomic1000_datagrabber() -> None:
         assert (
             out["ANAT"]["path"].name
             == f"sub-{test_element}_space-MNI152NLin2009cAsym_"
-               "desc-preproc_T1w.nii.gz"
+            "desc-preproc_T1w.nii.gz"
         )
 
         assert out["ANAT"]["path"].exists()
@@ -65,7 +65,7 @@ def test_aomic1000_datagrabber() -> None:
         assert (
             out["ANAT_probseg_CSF"]["path"].name
             == f"sub-{test_element}_space-MNI152NLin2009cAsym_label-"
-               "CSF_probseg.nii.gz"
+            "CSF_probseg.nii.gz"
         )
 
         assert out["ANAT_probseg_CSF"]["path"].exists()
@@ -77,7 +77,7 @@ def test_aomic1000_datagrabber() -> None:
         assert (
             out["ANAT_probseg_GM"]["path"].name
             == f"sub-{test_element}_space-MNI152NLin2009cAsym_label-"
-               "GM_probseg.nii.gz"
+            "GM_probseg.nii.gz"
         )
 
         assert out["ANAT_probseg_GM"]["path"].exists()
@@ -89,7 +89,7 @@ def test_aomic1000_datagrabber() -> None:
         assert (
             out["ANAT_probseg_WM"]["path"].name
             == f"sub-{test_element}_space-MNI152NLin2009cAsym_label-"
-               "WM_probseg.nii.gz"
+            "WM_probseg.nii.gz"
         )
 
         assert out["ANAT_probseg_WM"]["path"].exists()
@@ -111,20 +111,4 @@ def test_aomic1000_datagrabber() -> None:
         meta = out["meta"]
         assert "element" in meta
         assert "subject" in meta["element"]
-        # assert "task" in meta["element"]
         assert test_element == meta["element"]["subject"]
-        # assert test_element[1] == meta["element"]["task"]
-
-
-# # test replacements (subject, tasks)
-# # task = moviewatching, none
-# def test_aomic1000_errors() -> None:
-#     """Test AOMIC1000 errors."""
-
-#     # test if value errro raised with wrong task input
-#     with pytest.raises(ValueError, match=r"not a valid AOMIC fMRI"):
-#         DataladAOMIC1000(task="onewrong")
-
-#     # test if value errro raised with wrong task input
-#     with pytest.raises(ValueError, match=r"not a valid AOMIC fMRI"):
-#         DataladAOMIC1000(task=["onewrong", "twowrong"])
