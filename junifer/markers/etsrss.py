@@ -30,11 +30,15 @@ class RSSETSMarker(BaseMarker):
 
     """
 
-    def __init__(self, atlas: str, aggregation_method: str = "mean") -> None:
+    def __init__(
+            self, atlas: str,
+            aggregation_method: str = "mean",
+            name: str = None,
+    ) -> None:
         """Initialize the class."""
         self.atlas = atlas
         self.aggregation_method = aggregation_method
-        super().__init__(on=["BOLD"])
+        super().__init__(on=["BOLD"], name=name)
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.

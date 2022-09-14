@@ -6,5 +6,6 @@
 
 from .base import BaseMarker
 from .collection import MarkerCollection
+from .etsrss import RSSETSMarker
 from .parcel import ParcelAggregation
 from .sphere_aggregation import SphereAggregation
