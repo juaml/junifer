@@ -31,6 +31,9 @@ Enhancements
 
 - Implement matrix storage in SQliteFeatureStorage (:gh:`42` by `Fede Raimondo`_).
 
+- Added documentation for the datagrabbers (by `Leonard Sasse_`, 
+    `Nicolas Nieto_`, and `Sami Hamdan_`)
+
 Bugs
 ~~~~
 
