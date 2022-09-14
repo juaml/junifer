@@ -42,7 +42,7 @@ def test_compute() -> None:
 
 
 def test_get_output_kind() -> None:
-    """ Test get_output_kind."""
+    """Test get_output_kind."""
 
     atlas = "Schaefer100x17"
     ets_rss_marker = RSSETSMarker(atlas=atlas)
@@ -65,6 +65,6 @@ def test_store(tmp_path: Path) -> None:
         new_out = ets_rss_marker.compute(input_dict)
         storage = {
             "kind": "SQLiteFeatureStorage",
-            "uri": str((tmp_path / "test.db").absolute())
+            "uri": str((tmp_path / "test.db").absolute()),
         }
         ets_rss_marker.store("SQLiteFeatureStorage", new_out, storage)
