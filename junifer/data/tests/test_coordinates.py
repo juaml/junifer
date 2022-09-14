@@ -60,12 +60,14 @@ def test_register_coordinates_valid_input() -> None:
             name="MyList",
             coordinates=[1, 2],
             voi_names=["roi1", "roi2"],
+            overwrite=True,
         )
     with pytest.raises(ValueError, match=r"2D array"):
         register_coordinates(
             name="MyList",
             coordinates=np.zeros((2, 3, 4)),
             voi_names=["roi1", "roi2"],
+            overwrite=True,
         )
 
     with pytest.raises(ValueError, match=r"3 values"):
@@ -73,12 +75,14 @@ def test_register_coordinates_valid_input() -> None:
             name="MyList",
             coordinates=np.zeros((2, 4)),
             voi_names=["roi1", "roi2"],
+            overwrite=True,
         )
     with pytest.raises(ValueError, match=r"voi_names"):
         register_coordinates(
             name="MyList",
             coordinates=np.zeros((2, 3)),
             voi_names=["roi1", "roi2", "roi3"],
+            overwrite=True,
         )
 
 
