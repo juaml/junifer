@@ -10,7 +10,7 @@ from typing import Dict, List
 import nibabel as nib
 import pandas as pd
 
-from ..pipeline.pipeline_mixin import PipelineStepMixin
+from ..pipeline import PipelineStepMixin
 from ..utils.logging import logger, warn_with_log
 
 
