@@ -88,8 +88,7 @@ class RSSETSMarker(BaseMarker):
         Returns
         -------
         dict
-            The computed result as dictionary. The key "RSS" contains the root
-            sum of squares of the edge-wise time series.
+            The computed result as dictionary.
 
         References
         ----------
