@@ -13,7 +13,7 @@ from sklearn.covariance import EmpiricalCovariance
 from ..api.decorators import register_marker
 from ..utils import logger, raise_error
 from .base import BaseMarker
-from ..data.coo
+from ..data.coordinates import load_coordinates
 
 
 @register_marker
@@ -41,6 +41,7 @@ class FunctionalConnectivitySpheres(BaseMarker):
         agg_method_params=None,
         cor_method="covariance",
         cor_method_params=None,
+        preproc_params=None,
         name=None,
     ) -> None:
         """Initialize the class."""
@@ -55,6 +56,9 @@ class FunctionalConnectivitySpheres(BaseMarker):
         self.cor_method = cor_method
         self.cor_method_params = (
             {} if cor_method_params is None else cor_method_params
+        )
+        self.preproc_params = (
+            {} if preproc_params is None else preproc_params
         )
         on = ["BOLD"]
         # default to nilearn behavior
@@ -100,13 +104,47 @@ class FunctionalConnectivitySpheres(BaseMarker):
             Col names as a list.
 
         """
-        coords, labels = load_coordinates 
+        coords, labels = load_coordinates(self.coords)
+
+        # allow_overlap=False, smoothing_fwhm=None, standardize=False, 
+        # standardize_confounds=True, high_variance_confounds=False, 
+        # detrend=False, low_pass=None, high_pass=None, t_r=None
+        mask_img = (None if self.preproc_params['mask_img'] 
+                        is None else self.preproc_params['mask_img'])
+        allow_overlap = (True if self.preproc_params['allow_overlap'] 
+                        is None else self.preproc_params['allow_overlap'])
+        smoothing_fwhm = (None if self.preproc_params['smoothing_fwhm'] 
+                        is None else self.preproc_params['smoothing_fwhm'])
+        standardize = (False if self.preproc_params['standardize'] 
+                        is None else self.preproc_params['standardize'])
+        standardize_confounds = (True if self.preproc_params['standardize_confounds'] 
+                        is None else self.preproc_params['standardize_confounds'])
+        high_variance_confounds = (False if self.preproc_params['high_variance_confounds'] 
+                        is None else self.preproc_params['high_variance_confounds'])
+        detrend = (False if self.preproc_params['detrend'] 
+                        is None else self.preproc_params['detrend'])
+        low_pass = (None if self.preproc_params['low_pass'] 
+                        is None else self.preproc_params['low_pass'])
+        high_pass = (None if self.preproc_params['high_pass'] 
+                        is None else self.preproc_params['high_pass'])
+        t_r = (None if self.preproc_params['t_r'] 
+                        is None else self.preproc_params['t_r'])
+        # params for fit_transform
+        confounds = (None if self.preproc_params['confounds'] 
+                        is None else self.preproc_params['confounds'])
+        sample_mask = (None if self.preproc_params['sample_mask'] 
+                        is None else self.preproc_params['sample_mask'])
+
         masker = NiftiSpheresMasker(
-        self.coords, self.radius=8, detrend=True, standardize=True,
-        low_pass=0.1, high_pass=0.01, t_r=2,
-        memory='nilearn_cache', memory_level=1, verbose=2)
-        # get the 2D timeseries after parcel aggregation
-        ts = pa.compute(input)
+        coords, self.radius, 
+        mask_img=mask_img, allow_overlap=allow_overlap, 
+        smoothing_fwhm=smoothing_fwhm, detrend=detrend, standardize=standardize,
+        standardize_confounds=standardize_confounds, high_variance_confounds=high_variance_confounds,
+        detrend=detrend, low_pass=low_pass, high_pass=high_pass, t_r=t_r
+        )
+        # get the 2D timeseries
+        ts = masker.fit_transform(input['data'],
+                                   confounds=[confounds])[0]
 
         if self.cor_method_params["empirical"]:
             cm = ConnectivityMeasure(
@@ -115,7 +153,7 @@ class FunctionalConnectivitySpheres(BaseMarker):
         else:
             cm = ConnectivityMeasure(kind=self.cor_method)
         out = {}
-        out["data"] = cm.fit_transform([ts["data"]])[0]
+        out["data"] = cm.fit_transform([ts])[0]
         # create column names
         out["row_names"] = ts["columns"]
         out["col_names"] = ts["columns"]
