@@ -4,7 +4,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from itertools import product
 from pathlib import Path
 from typing import TYPE_CHECKING, Dict, Iterable, List, Optional, Union
 
