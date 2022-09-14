@@ -53,7 +53,7 @@ class RSSETSMarker(BaseMarker):
         """
         outputs = []
         for t_input in input:
-            if input in ["BOLD"]:
+            if t_input in ["BOLD"]:
                 outputs.append("timeseries")
             else:
                 raise ValueError(f"Unknown input kind for {t_input}")
