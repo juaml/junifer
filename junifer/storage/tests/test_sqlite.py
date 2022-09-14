@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import List, Union
 
 import numpy as np
+from numpy.testing import assert_array_equal
 import pandas as pd
 import pytest
 from pandas.testing import assert_frame_equal
@@ -403,6 +404,63 @@ def test_store_table(tmp_path: Path) -> None:
     )
     # Check if dataframes are equal
     assert_frame_equal(df_new, c_df_new)
+
+
+def test_store_matrix2d(tmp_path: Path) -> None:
+    uri = tmp_path / "test_store_table.db"
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    # Metadata to store
+    meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
+
+    # Store 4 x 3 full matrix
+    data = np.array(
+        [[1, 2, 3], [11, 22, 33], [111, 222, 333], [1111, 2222, 3333]]
+    )
+    row_names = ["row1", "row2", "row3", "row4"]
+    col_names = ["col1", "col2", "col3"]
+
+    # Store table
+    storage.store_matrix2d(
+        data, meta, row_names=row_names, col_names=col_names
+    )
+
+    stored_names = [f"{i}~{j}" for i in row_names for j in col_names]
+
+    features = storage.list_features()
+    feature_md5 = list(features.keys())[0]
+    assert "fc" == features[feature_md5]["name"]
+
+    read_df = storage.read_df(feature_md5=feature_md5)
+    assert read_df.shape == (1, 12)
+    assert_array_equal(read_df.values[0], data.flatten())
+    assert list(read_df.columns) == stored_names
+    # Store without row and column names
+    uri = tmp_path / "test_store_table_nonames.db"
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage.store_matrix2d(data, meta)
+    stored_names = [f"r{i}~c{j}" for i in range(data.shape[0])
+                    for j in range(data.shape[1])]
+    features = storage.list_features()
+    feature_md5 = list(features.keys())[0]
+    assert "fc" == features[feature_md5]["name"]
+    read_df = storage.read_df(feature_md5=feature_md5)
+    assert list(read_df.columns) == stored_names
+
+    with pytest.raises(ValueError, match='Invalid kind'):
+        storage.store_matrix2d(data, meta, kind='wrong')
+
+    with pytest.raises(ValueError, match='non-square'):
+        storage.store_matrix2d(data, meta, kind='triu')
+
+    with pytest.raises(ValueError, match='cannot be False'):
+        storage.store_matrix2d(data, meta, kind='full', diagonal=False)
+
+    # Store upper triangular matrix
+    data = np.array(
+        [[1, 2, 3], [11, 22, 33], [111, 222, 333]]
+    )
+    row_names = ["row1", "row2", "row3"]
+    col_names = ["col1", "col2", "col3"]
 
 
 # TODO: can the test be parametrized?

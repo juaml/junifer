@@ -156,6 +156,8 @@ class BaseFeatureStorage(ABC):
         meta: Dict,
         col_names: Optional[Iterable[str]] = None,
         row_names: Optional[Iterable[str]] = None,
+        kind: Optional[str] = 'full',
+        diagonal: bool = True
     ) -> None:
         """Store 2D matrix.
 
@@ -168,6 +170,15 @@ class BaseFeatureStorage(ABC):
             The column names (default None).
         row_names : list of tuple of str, optional
             The row names (default None).
+        kind : str, optional
+            The kind of matrix:
+            - 'triu: store upper triangular only.
+            - 'tril': store lower triangular.
+            - 'full': full matrix (default 'full').
+        diagonal : bool, optional
+            Whether to store the diagonal (default True).
+            If kind == 'full', setting this to false will raise
+            an error
 
         """
         raise_error(
