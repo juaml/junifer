@@ -2,7 +2,7 @@
 
 # from itertools import product
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Union
 
 from junifer.datagrabber import PatternDataladDataGrabber
 
