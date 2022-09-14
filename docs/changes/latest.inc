@@ -31,6 +31,8 @@ Enhancements
 
 - Implement matrix storage in SQliteFeatureStorage (:gh:`42` by `Fede Raimondo`_).
 
+- Implement coordinate register, list and load (:gh:`11` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
