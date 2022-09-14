@@ -7,8 +7,8 @@
 import tempfile
 from typing import Dict, List
 
-from nilearn import datasets, image
 import nibabel as nib
+from nilearn import datasets, image
 
 from ..datagrabber.base import BaseDataGrabber
 

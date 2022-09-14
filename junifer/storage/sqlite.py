@@ -445,10 +445,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                     klass=ValueError,
                 )
 
-        n_rows = 1
-        # Convert element metadata to index
-        idx = element_to_index(meta=meta, n_rows=n_rows, rows_col_name=None)
-
         if kind == "triu":
             k = 0 if diagonal is True else 1
             data_idx = np.triu_indices(data.shape[0], k=k)
@@ -483,12 +479,20 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             f"{row_names[i]}~{col_names[j]}"
             for i, j in zip(data_idx[0], data_idx[1])
         ]
+
+        # Convert element metadata to index
+        n_rows = 1
+        idx = element_to_index(meta=meta, n_rows=n_rows, rows_col_name=None)
         # Prepare new dataframe
-        data_df = pd.DataFrame(
-            flat_data[None, :], columns=columns, index=idx
-        )  # type: ignore
+        data_df = pd.DataFrame(flat_data[None, :], columns=columns, index=idx)
+
+        if len(columns) > 2000:  # TODO: check SQLITE_MAX_COLUMN
+            data_df = data_df.stack()
+            new_names = [x for x in data_df.index.names[:-1]]
+            new_names.append("pair")
+            data_df.index.names = new_names
         # Store dataframe
-        self.store_df(df=data_df, meta=meta)
+        self.store_df(df=data_df, meta=meta)  # type: ignore
 
     # TODO: complete type annotations
     def store_table(
