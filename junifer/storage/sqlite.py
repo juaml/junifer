@@ -457,7 +457,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             data_idx = np.triu_indices(data.shape[0], k=k)
         elif kind == 'tril':
             k = 0 if diagonal is True else -1
-            data_idx = np.tril(data, k=k)
+            data_idx = np.tril_indices(data.shape[0], k=k)
         elif kind == 'full':
             data_idx = (
                 np.repeat(np.arange(data.shape[0]), data.shape[1]),
