@@ -59,6 +59,6 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # read in extracted features and add confounds and targets
     # for julearn run cross validation
     # This will not run for now as store_timeseries() is not implemented yet
-    collect(storage)
-    db = SQLiteFeatureStorage(uri=storage["uri"], single_output=True)
-    df_vbm = db.read_df(feature_name="Schaefer100x17")
+    # collect(storage)
+    # db = SQLiteFeatureStorage(uri=storage["uri"], single_output=True)
+    # df_vbm = db.read_df(feature_name="Schaefer100x17")
