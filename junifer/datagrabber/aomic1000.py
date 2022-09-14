@@ -61,6 +61,9 @@ class DataladAOMIC1000(PatternDataladDataGrabber):
             "BOLD",
             "BOLD_confounds",
             "ANAT",
+            "ANAT_probseg_CSF",
+            "ANAT_probseg_GM",
+            "ANAT_probseg_WM",
             "DWI",
         ]
         # The patterns
@@ -79,6 +82,21 @@ class DataladAOMIC1000(PatternDataladDataGrabber):
                 "derivatives/fmriprep/sub-{subject}/anat/"
                 "sub-{subject}_space-MNI152NLin2009cAsym_"
                 "desc-preproc_T1w.nii.gz"
+            ),
+            "ANAT_probseg_CSF": (
+                "derivatives/fmriprep/sub-{subject}/anat/"
+                "sub-{subject}_space-MNI152NLin2009cAsym_label-"
+                "CSF_probseg.nii.gz"
+            ),
+            "ANAT_probseg_GM": (
+                "derivatives/fmriprep/sub-{subject}/anat/"
+                "sub-{subject}_space-MNI152NLin2009cAsym_label-"
+                "GM_probseg.nii.gz"
+            ),
+            "ANAT_probseg_WM": (
+                "derivatives/fmriprep/sub-{subject}/anat/"
+                "sub-{subject}_space-MNI152NLin2009cAsym_label-"
+                "WM_probseg.nii.gz"
             ),
             "DWI": (
                 "derivatives/dwipreproc/sub-{subject}/dwi/"
