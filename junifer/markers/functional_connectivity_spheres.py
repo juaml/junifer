@@ -109,43 +109,45 @@ class FunctionalConnectivitySpheres(BaseMarker):
         # allow_overlap=False, smoothing_fwhm=None, standardize=False, 
         # standardize_confounds=True, high_variance_confounds=False, 
         # detrend=False, low_pass=None, high_pass=None, t_r=None
-        mask_img = (None if self.preproc_params['mask_img'] 
+        mask_img = (None if self.preproc_params.get('mask_img') 
                         is None else self.preproc_params['mask_img'])
-        allow_overlap = (True if self.preproc_params['allow_overlap'] 
+        allow_overlap = (True if self.preproc_params.get('allow_overlap') 
                         is None else self.preproc_params['allow_overlap'])
-        smoothing_fwhm = (None if self.preproc_params['smoothing_fwhm'] 
+        smoothing_fwhm = (None if self.preproc_params.get('smoothing_fwhm')
                         is None else self.preproc_params['smoothing_fwhm'])
-        standardize = (False if self.preproc_params['standardize'] 
+        standardize = (False if self.preproc_params.get('standardize') 
                         is None else self.preproc_params['standardize'])
-        standardize_confounds = (True if self.preproc_params['standardize_confounds'] 
+        standardize_confounds = (True if self.preproc_params.get('standardize_confounds')
                         is None else self.preproc_params['standardize_confounds'])
-        high_variance_confounds = (False if self.preproc_params['high_variance_confounds'] 
+        high_variance_confounds = (False if self.preproc_params.get('high_variance_confounds')
                         is None else self.preproc_params['high_variance_confounds'])
-        detrend = (False if self.preproc_params['detrend'] 
+        detrend = (False if self.preproc_params.get('detrend')
                         is None else self.preproc_params['detrend'])
-        low_pass = (None if self.preproc_params['low_pass'] 
+        low_pass = (None if self.preproc_params.get('low_pass')
                         is None else self.preproc_params['low_pass'])
-        high_pass = (None if self.preproc_params['high_pass'] 
+        high_pass = (None if self.preproc_params.get('high_pass')
                         is None else self.preproc_params['high_pass'])
-        t_r = (None if self.preproc_params['t_r'] 
+        t_r = (None if self.preproc_params.get('t_r')
                         is None else self.preproc_params['t_r'])
         # params for fit_transform
-        confounds = (None if self.preproc_params['confounds'] 
+        confounds = (None if self.preproc_params.get('confounds')
                         is None else self.preproc_params['confounds'])
-        sample_mask = (None if self.preproc_params['sample_mask'] 
+        sample_mask = (None if self.preproc_params.get('sample_mask')
                         is None else self.preproc_params['sample_mask'])
 
         masker = NiftiSpheresMasker(
         coords, self.radius, 
         mask_img=mask_img, allow_overlap=allow_overlap, 
-        smoothing_fwhm=smoothing_fwhm, detrend=detrend, standardize=standardize,
+        smoothing_fwhm=smoothing_fwhm, standardize=standardize,
         standardize_confounds=standardize_confounds, high_variance_confounds=high_variance_confounds,
         detrend=detrend, low_pass=low_pass, high_pass=high_pass, t_r=t_r
         )
         # get the 2D timeseries
-        ts = masker.fit_transform(input['data'],
-                                   confounds=[confounds])[0]
-
+        if confounds is None:
+            ts = masker.fit_transform(input['data'], sample_mask=sample_mask)
+        else:
+            ts = masker.fit_transform(input['data'], sample_mask=sample_mask,
+                                      confounds=[confounds])[0]
         if self.cor_method_params["empirical"]:
             cm = ConnectivityMeasure(
                 cov_estimator=EmpiricalCovariance(), kind=self.cor_method
