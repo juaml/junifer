@@ -142,6 +142,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
         # create column names
         out["row_names"] = ts["columns"]
         out["col_names"] = ts["columns"]
+        out["kind"] = "tril"
         return out
 
     # TODO: complete type annotations
@@ -155,4 +156,4 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
         """
         logger.debug(f"Storing {kind} in {storage}")
-        # storage.store_table(**out)
+        storage.store_matrix2d(**out)
