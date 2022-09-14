@@ -34,6 +34,9 @@ Enhancements
 
 - Marker for functional connectivity using an atlas (:gh:`41` by `Amir Omidvarnia`_ and `Kaustubh R. Patil`_)
 
+- Added documentation for the datagrabbers (by `Leonard Sasse_`, 
+    `Nicolas Nieto_`, and `Sami Hamdan_`)
+
 - Implement coordinate register, list and load (:gh:`11` by `Fede Raimondo`_).
 
 
