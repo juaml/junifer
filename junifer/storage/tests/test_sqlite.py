@@ -494,7 +494,7 @@ def test_store_matrix2d(tmp_path: Path) -> None:
         read_df.values, data[np.triu_indices(n=data.shape[0])][None, :]
     )
 
-    # Store upper triangular matrix without diagnoal
+    # Store upper triangular matrix without diagonal
     uri = tmp_path / "test_store_table_triu_nodiagonal.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
     storage.store_matrix2d(
@@ -549,7 +549,7 @@ def test_store_matrix2d(tmp_path: Path) -> None:
         read_df.values, data[np.tril_indices(n=data.shape[0])][None, :]
     )
 
-    # Store lower triangular matrix without diagnoal
+    # Store lower triangular matrix without diagonal
     uri = tmp_path / "test_store_table_tril_nodiagonal.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
     storage.store_matrix2d(
