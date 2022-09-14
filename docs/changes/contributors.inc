@@ -5,3 +5,4 @@
 .. _Synchon Mandal: https://github.com/synchon
 .. _Benjamin Poldrack: https://github.com/bpoldrack
 .. _Vera Komeyer: https://github.com/verakye
+.. _Xuan Li: https://github.com/xuanli-ac
