@@ -34,6 +34,8 @@ Enhancements
 - Added documentation for the datagrabbers (by `Leonard Sasse_`, 
     `Nicolas Nieto_`, and `Sami Hamdan_`)
 
+- Implement coordinate register, list and load (:gh:`11` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
