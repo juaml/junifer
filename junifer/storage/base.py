@@ -156,8 +156,8 @@ class BaseFeatureStorage(ABC):
         meta: Dict,
         col_names: Optional[Iterable[str]] = None,
         row_names: Optional[Iterable[str]] = None,
-        kind: Optional[str] = 'full',
-        diagonal: bool = True
+        kind: Optional[str] = "full",
+        diagonal: bool = True,
     ) -> None:
         """Store 2D matrix.
 

@@ -406,8 +406,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         meta: Dict,
         col_names: Optional[List[str]] = None,
         row_names: Optional[List[str]] = None,
-        kind: Optional[str] = 'full',
-        diagonal: bool = True
+        kind: Optional[str] = "full",
+        diagonal: bool = True,
     ) -> None:
         """Implement 2D matrix storing.
 
@@ -432,60 +432,57 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             If kind == 'full', setting this to false will raise
             an error
         """
-        if diagonal is False and kind not in ['triu', 'tril']:
+        if diagonal is False and kind not in ["triu", "tril"]:
             raise_error(
-                msg='Diagonal cannot be False if kind is not full',
-                klass=ValueError
+                msg="Diagonal cannot be False if kind is not full",
+                klass=ValueError,
             )
 
-        if kind in ['triu', 'tril']:
+        if kind in ["triu", "tril"]:
             if data.shape[0] != data.shape[1]:
                 raise_error(
-                    'Cannot store a non-square matrix as a triangular matrix',
-                    klass=ValueError
+                    "Cannot store a non-square matrix as a triangular matrix",
+                    klass=ValueError,
                 )
 
         n_rows = 1
         # Convert element metadata to index
-        idx = element_to_index(
-            meta=meta, n_rows=n_rows, rows_col_name=None
-        )
+        idx = element_to_index(meta=meta, n_rows=n_rows, rows_col_name=None)
 
-        if kind == 'triu':
+        if kind == "triu":
             k = 0 if diagonal is True else 1
             data_idx = np.triu_indices(data.shape[0], k=k)
-        elif kind == 'tril':
+        elif kind == "tril":
             k = 0 if diagonal is True else -1
             data_idx = np.tril_indices(data.shape[0], k=k)
-        elif kind == 'full':
+        elif kind == "full":
             data_idx = (
                 np.repeat(np.arange(data.shape[0]), data.shape[1]),
-                np.tile(np.arange(data.shape[1]), data.shape[0])
+                np.tile(np.arange(data.shape[1]), data.shape[0]),
             )
         else:
-            raise_error(
-                msg=f'Invalid kind {kind}',
-                klass=ValueError
-            )
+            raise_error(msg=f"Invalid kind {kind}", klass=ValueError)
         if row_names is None:
             row_names = [f"r{i}" for i in range(data.shape[0])]
         elif len(row_names) != data.shape[0]:
             raise_error(
-                msg='Number of row names does not match number of rows',
-                klass=ValueError
+                msg="Number of row names does not match number of rows",
+                klass=ValueError,
             )
 
         if col_names is None:
             col_names = [f"c{i}" for i in range(data.shape[1])]
         elif len(col_names) != data.shape[1]:
             raise_error(
-                msg='Number of column names does not match number of columns',
-                klass=ValueError
+                msg="Number of column names does not match number of columns",
+                klass=ValueError,
             )
 
         flat_data = data[data_idx]
-        columns = [f"{row_names[i]}~{col_names[j]}"
-                   for i, j in zip(data_idx[0], data_idx[1])]
+        columns = [
+            f"{row_names[i]}~{col_names[j]}"
+            for i, j in zip(data_idx[0], data_idx[1])
+        ]
         # Prepare new dataframe
         data_df = pd.DataFrame(
             flat_data[None, :], columns=columns, index=idx
