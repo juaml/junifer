@@ -10,7 +10,7 @@
 
 .. NOTE: add the contributors and reference to the github issue/PR at the end
    Example:
-      - Implemented feature X (:gh:`151` by `Sami Hamdan`_).
+   - Implemented feature X (:gh:`151` by `Sami Hamdan`_).
 
 .. _current:
 
