@@ -5,9 +5,10 @@
 # License: AGPL
 
 from nilearn import datasets, image
-from numpy.testing import assert_array_almost_equal, assert_array_equal
 
-from junifer.markers.functional_connectivity_spheres import FunctionalConnectivitySpheres
+from junifer.markers.functional_connectivity_spheres import (
+    FunctionalConnectivitySpheres,
+)
 
 
 def test_FunctionalConnectivitySpheres() -> None:
@@ -17,7 +18,9 @@ def test_FunctionalConnectivitySpheres() -> None:
     ni_data = datasets.fetch_spm_auditory(subject_id="sub001")
     fmri_img = image.concat_imgs(ni_data.func)  # type: ignore
 
-    fc = FunctionalConnectivitySpheres(coords="DMNBuckner", radius=5.0, cor_method='correlation')
+    fc = FunctionalConnectivitySpheres(
+        coords="DMNBuckner", radius=5.0, cor_method="correlation"
+    )
     out = fc.compute({"data": fmri_img})
 
     assert "data" in out
