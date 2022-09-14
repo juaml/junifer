@@ -5,7 +5,10 @@
 # License: AGPL
 
 from ..api.registry import register
-from .datagrabbers import OasisVBMTestingDatagrabber
+from .datagrabbers import (
+    OasisVBMTestingDatagrabber,
+    SPMAuditoryTestingDatagrabber,
+)
 
 
 # Register testing datagrabber
@@ -13,4 +16,10 @@ register(
     step="datagrabber",
     name="OasisVBMTestingDatagrabber",
     klass=OasisVBMTestingDatagrabber,
+)
+
+register(
+    step="datagrabber",
+    name="SPMAuditoryTestingDatagrabber",
+    klass=SPMAuditoryTestingDatagrabber,
 )
