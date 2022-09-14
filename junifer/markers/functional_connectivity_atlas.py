@@ -43,7 +43,8 @@ class FunctionalConnectivityAtlas(BaseMarker):
             else cor_method_params
         on = ["BOLD"]
         # default to nilearn behavior
-        self.cor_method_params['empirical'] = self.cor_method_params.get('empirical', False)
+        self.cor_method_params['empirical'] = self.cor_method_params.get(
+            'empirical', False)
 
         super().__init__(on=on, name=name)
 
@@ -133,7 +134,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
         if self.cor_method_params['empirical']:
             cm = ConnectivityMeasure(cov_estimator=EmpiricalCovariance(),
-                                          kind=self.cor_method)
+                                     kind=self.cor_method)
         else:
             cm = ConnectivityMeasure(kind=self.cor_method)
         out = {}
