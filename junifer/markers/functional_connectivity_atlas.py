@@ -6,11 +6,11 @@
 
 from typing import Dict, List
 from nilearn.connectome import ConnectivityMeasure
-import numpy as np
 
 from ..api.decorators import register_marker
 from ..utils import logger, raise_error
-from .base import BaseMarker, ParcelAggregation
+from .base import BaseMarker
+from .parcel import ParcelAggregation
 
 
 @register_marker
@@ -30,7 +30,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
     def __init__(
         self, atlas, agg_method='mean', agg_method_params=None,
-        cor_method='cov', cor_method_params=None, name=None
+        cor_method='covariance', cor_method_params=None, name=None
     ) -> None:
         """Initialize the class."""
         self.atlas = atlas
@@ -123,10 +123,13 @@ class FunctionalConnectivityAtlas(BaseMarker):
                                method_params=self.agg_method_params,
                                on="BOLD")
         # get the 2D timeseries after parcel aggregation
-        ts = pa.compute()
+        ts = pa.compute(input)
         cm = ConnectivityMeasure(kind=self.cor_method)
-        out = cm.fit_transform(ts)
-        out = out[np.tril_indices(3, k=-1)]
+        out = {}
+        out["data"] = cm.fit_transform([ts["data"]])[0]
+        # create column names
+        out["row_names"] = ts["columns"]
+        out["col_names"] = ts["columns"]
         return out
 
     # TODO: complete type annotations
@@ -140,5 +143,4 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
         """
         logger.debug(f"Storing {kind} in {storage}")
-        storage.store_table(**out)
-
+        # storage.store_table(**out)
