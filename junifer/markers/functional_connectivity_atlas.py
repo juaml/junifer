@@ -10,7 +10,7 @@ from nilearn.connectome import ConnectivityMeasure
 from sklearn.covariance import EmpiricalCovariance
 
 from ..api.decorators import register_marker
-from ..utils import logger, raise_error
+from ..utils import logger
 from .base import BaseMarker
 from .parcel import ParcelAggregation
 
