@@ -172,7 +172,7 @@ class BaseFeatureStorage(ABC):
             The row names (default None).
         kind : str, optional
             The kind of matrix:
-            - 'triu: store upper triangular only.
+            - 'triu': store upper triangular only.
             - 'tril': store lower triangular.
             - 'full': full matrix (default 'full').
         diagonal : bool, optional
