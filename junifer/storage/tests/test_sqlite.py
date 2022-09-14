@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import List, Union
 
 import numpy as np
+from numpy.testing import assert_array_equal
 import pandas as pd
 import pytest
 from pandas.testing import assert_frame_equal
@@ -403,6 +404,177 @@ def test_store_table(tmp_path: Path) -> None:
     )
     # Check if dataframes are equal
     assert_frame_equal(df_new, c_df_new)
+
+
+def test_store_matrix2d(tmp_path: Path) -> None:
+    """Test 2D Matrix store.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_store_table.db"
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    # Metadata to store
+    meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
+
+    # Store 4 x 3 full matrix
+    data = np.array(
+        [[1, 2, 3], [11, 22, 33], [111, 222, 333], [1111, 2222, 3333]]
+    )
+    row_names = ["row1", "row2", "row3", "row4"]
+    col_names = ["col1", "col2", "col3"]
+
+    # Store table
+    storage.store_matrix2d(
+        data, meta, row_names=row_names, col_names=col_names
+    )
+
+    stored_names = [f"{i}~{j}" for i in row_names for j in col_names]
+
+    features = storage.list_features()
+    feature_md5 = list(features.keys())[0]
+    assert "fc" == features[feature_md5]["name"]
+
+    read_df = storage.read_df(feature_md5=feature_md5)
+    assert read_df.shape == (1, 12)
+    assert_array_equal(read_df.values[0], data.flatten())
+    assert list(read_df.columns) == stored_names
+    # Store without row and column names
+    uri = tmp_path / "test_store_table_nonames.db"
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage.store_matrix2d(data, meta)
+    stored_names = [
+        f"r{i}~c{j}"
+        for i in range(data.shape[0])
+        for j in range(data.shape[1])
+    ]
+    features = storage.list_features()
+    feature_md5 = list(features.keys())[0]
+    assert "fc" == features[feature_md5]["name"]
+    read_df = storage.read_df(feature_md5=feature_md5)
+    assert list(read_df.columns) == stored_names
+
+    with pytest.raises(ValueError, match="Invalid kind"):
+        storage.store_matrix2d(data, meta, kind="wrong")
+
+    with pytest.raises(ValueError, match="non-square"):
+        storage.store_matrix2d(data, meta, kind="triu")
+
+    with pytest.raises(ValueError, match="cannot be False"):
+        storage.store_matrix2d(data, meta, kind="full", diagonal=False)
+
+    # Store upper triangular matrix
+    data = np.array([[1, 2, 3], [11, 22, 33], [111, 222, 333]])
+    row_names = ["row1", "row2", "row3"]
+    col_names = ["col1", "col2", "col3"]
+    uri = tmp_path / "test_store_table_triu.db"
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage.store_matrix2d(
+        data, meta, kind="triu", row_names=row_names, col_names=col_names
+    )
+
+    stored_names = [
+        "row1~col1",
+        "row1~col2",
+        "row1~col3",
+        "row2~col2",
+        "row2~col3",
+        "row3~col3",
+    ]
+
+    features = storage.list_features()
+    feature_md5 = list(features.keys())[0]
+    assert "fc" == features[feature_md5]["name"]
+    read_df = storage.read_df(feature_md5=feature_md5)
+    assert list(read_df.columns) == stored_names
+    assert_array_equal(
+        read_df.values, data[np.triu_indices(n=data.shape[0])][None, :]
+    )
+
+    # Store upper triangular matrix without diagonal
+    uri = tmp_path / "test_store_table_triu_nodiagonal.db"
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage.store_matrix2d(
+        data,
+        meta,
+        kind="triu",
+        row_names=row_names,
+        col_names=col_names,
+        diagonal=False,
+    )
+
+    stored_names = [
+        "row1~col2",
+        "row1~col3",
+        "row2~col3",
+    ]
+
+    features = storage.list_features()
+    feature_md5 = list(features.keys())[0]
+    assert "fc" == features[feature_md5]["name"]
+    read_df = storage.read_df(feature_md5=feature_md5)
+    assert list(read_df.columns) == stored_names
+    assert_array_equal(
+        read_df.values, data[np.triu_indices(n=data.shape[0], k=1)][None, :]
+    )
+
+    # Store lower triangular matrix
+    data = np.array([[1, 2, 3], [11, 22, 33], [111, 222, 333]])
+    row_names = ["row1", "row2", "row3"]
+    col_names = ["col1", "col2", "col3"]
+    uri = tmp_path / "test_store_table_tril.db"
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage.store_matrix2d(
+        data, meta, kind="tril", row_names=row_names, col_names=col_names
+    )
+
+    stored_names = [
+        "row1~col1",
+        "row2~col1",
+        "row2~col2",
+        "row3~col1",
+        "row3~col2",
+        "row3~col3",
+    ]
+
+    features = storage.list_features()
+    feature_md5 = list(features.keys())[0]
+    assert "fc" == features[feature_md5]["name"]
+    read_df = storage.read_df(feature_md5=feature_md5)
+    assert list(read_df.columns) == stored_names
+    assert_array_equal(
+        read_df.values, data[np.tril_indices(n=data.shape[0])][None, :]
+    )
+
+    # Store lower triangular matrix without diagonal
+    uri = tmp_path / "test_store_table_tril_nodiagonal.db"
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage.store_matrix2d(
+        data,
+        meta,
+        kind="tril",
+        row_names=row_names,
+        col_names=col_names,
+        diagonal=False,
+    )
+
+    stored_names = [
+        "row2~col1",
+        "row3~col1",
+        "row3~col2",
+    ]
+
+    features = storage.list_features()
+    feature_md5 = list(features.keys())[0]
+    assert "fc" == features[feature_md5]["name"]
+    read_df = storage.read_df(feature_md5=feature_md5)
+    assert list(read_df.columns) == stored_names
+    assert_array_equal(
+        read_df.values, data[np.tril_indices(n=data.shape[0], k=-1)][None, :]
+    )
 
 
 # TODO: can the test be parametrized?

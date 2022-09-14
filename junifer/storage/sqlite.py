@@ -7,6 +7,7 @@
 from pathlib import Path
 from typing import TYPE_CHECKING, Dict, Iterable, List, Optional, Union
 
+import numpy as np
 import pandas as pd
 from pandas.core.base import NoNewAttributesMixin
 from pandas.io.sql import pandasSQL_builder
@@ -77,7 +78,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             uri.parent.mkdir(parents=True, exist_ok=True)
         super().__init__(uri=uri, single_output=single_output, **kwargs)
         self._upsert = upsert
-        self._valid_inputs = ["table", "timeseries"]
+        self._valid_inputs = ["table", "timeseries", "matrix"]
 
     def get_engine(self, meta: Optional[Dict] = None) -> "Engine":
         """Get engine.
@@ -403,8 +404,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         self,
         data,
         meta: Dict,
-        col_names: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
+        col_names: Optional[List[str]] = None,
+        row_names: Optional[List[str]] = None,
+        kind: Optional[str] = "full",
+        diagonal: bool = True,
     ) -> None:
         """Implement 2D matrix storing.
 
@@ -415,16 +418,77 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The metadata as a dictionary.
         col_names : list or tuple of str, optional
             The column names (default None).
-        rows_col_name : str, optional
+        row_names : str, optional
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
             "index" (default None).
-
+        kind : str, optional
+            The kind of matrix:
+            - 'triu: store upper triangular only.
+            - 'tril': store lower triangular.
+            - 'full': full matrix (default 'full').
+        diagonal : bool, optional
+            Whether to store the diagonal (default True).
+            If kind == 'full', setting this to false will raise
+            an error
         """
-        # Same as store_2d, but order is important
-        raise_error(
-            msg="store_matrix2d() not implemented", klass=NotImplementedError
-        )
+        if diagonal is False and kind not in ["triu", "tril"]:
+            raise_error(
+                msg="Diagonal cannot be False if kind is not full",
+                klass=ValueError,
+            )
+
+        if kind in ["triu", "tril"]:
+            if data.shape[0] != data.shape[1]:
+                raise_error(
+                    "Cannot store a non-square matrix as a triangular matrix",
+                    klass=ValueError,
+                )
+
+        n_rows = 1
+        # Convert element metadata to index
+        idx = element_to_index(meta=meta, n_rows=n_rows, rows_col_name=None)
+
+        if kind == "triu":
+            k = 0 if diagonal is True else 1
+            data_idx = np.triu_indices(data.shape[0], k=k)
+        elif kind == "tril":
+            k = 0 if diagonal is True else -1
+            data_idx = np.tril_indices(data.shape[0], k=k)
+        elif kind == "full":
+            data_idx = (
+                np.repeat(np.arange(data.shape[0]), data.shape[1]),
+                np.tile(np.arange(data.shape[1]), data.shape[0]),
+            )
+        else:
+            raise_error(msg=f"Invalid kind {kind}", klass=ValueError)
+        if row_names is None:
+            row_names = [f"r{i}" for i in range(data.shape[0])]
+        elif len(row_names) != data.shape[0]:
+            raise_error(
+                msg="Number of row names does not match number of rows",
+                klass=ValueError,
+            )
+
+        if col_names is None:
+            col_names = [f"c{i}" for i in range(data.shape[1])]
+        elif len(col_names) != data.shape[1]:
+            raise_error(
+                msg="Number of column names does not match number of columns",
+                klass=ValueError,
+            )
+
+        flat_data = data[data_idx]
+        columns = [
+            f"{row_names[i]}~{col_names[j]}"
+            for i, j in zip(data_idx[0], data_idx[1])
+        ]
+        # Prepare new dataframe
+        data_df = pd.DataFrame(
+            flat_data[None, :], columns=columns, index=idx
+        )  # type: ignore
+        # Store dataframe
+        self.store_df(df=data_df, meta=meta)
 
     # TODO: complete type annotations
     def store_table(

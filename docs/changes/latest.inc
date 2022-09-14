@@ -22,11 +22,14 @@ Enhancements
 - Implemented SPM Auditory testing datagrabber X (:gh:`52` by `Fede Raimondo`_).
 
 - Created a the repository based on the mockup by by `Fede Raimondo`_.
+
 - Added comments to datalad grabber and changed to use datalad-clone instead of
   datalad-install (:gh: `55` by `Benjamin Poldrack`_).
 - Added an example how to use junifer and julearn (:gh: `40` by `Leonard Sasse_`, 
   `Nicolas Nieto_`, and `Sami Hamdan_`) in one pipeline to extract features 
   and do machine learning
+
+- Implement matrix storage in SQliteFeatureStorage (:gh:`42` by `Fede Raimondo`_).
 
 Bugs
 ~~~~
