@@ -8,9 +8,9 @@ from pathlib import Path
 from typing import List, Union
 
 import numpy as np
-from numpy.testing import assert_array_equal
 import pandas as pd
 import pytest
+from numpy.testing import assert_array_equal
 from pandas.testing import assert_frame_equal
 from sqlalchemy import create_engine
 

@@ -124,9 +124,7 @@ class DataladDataGrabber(BaseDataGrabber):
     def install(self) -> None:
         """Install the datalad dataset into the datadir."""
         logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
-        self._dataset: dl.Dataset = dl.clone(
-            self.uri, self._datadir
-        )
+        self._dataset: dl.Dataset = dl.clone(self.uri, self._datadir)
         logger.debug("Dataset installed")
 
     def remove(self):
