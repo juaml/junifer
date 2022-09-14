@@ -30,10 +30,9 @@ class DataladAOMIC1000(PatternDataladDataGrabber):
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
-        # tasks: Union[str, List[str], None] = None,
         **kwargs,
     ) -> None:
-
+        """Initialize the class."""
         # The types of data
         types = [
             "BOLD",
