@@ -38,6 +38,12 @@ with TemporaryDirectory() as tmpdir_name:
                 fnames = [
                     (f'anat/{t_sub}_space-MNI152NLin2009cAsym_desc-preproc'
                      '_T1w.nii.gz'),
+                    (f'anat/{t_sub}_space-MNI152NLin2009cAsym_label-'
+                     'CSF_probseg.nii.gz'),
+                    (f'anat/{t_sub}_space-MNI152NLin2009cAsym_label-'
+                     'GM_probseg.nii.gz'),
+                    (f'anat/{t_sub}_space-MNI152NLin2009cAsym_label-'
+                     'WM_probseg.nii.gz'),
                     (f'func/{t_sub}_task-moviewatching_space-'
                      'MNI152NLin2009cAsym_desc-preproc_bold.nii.gz'),
                     (f'func/{t_sub}_task-moviewatching_space-'
