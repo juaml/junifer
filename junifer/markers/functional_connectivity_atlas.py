@@ -57,49 +57,6 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
         super().__init__(on=on, name=name)
 
-    def get_meta(self, kind: str) -> Dict:
-        """Get metadata.
-
-        Parameters
-        ----------
-        kind : str
-            The kind of pipeline step.
-
-        Returns
-        -------
-        dict
-            The metadata as a dictionary.
-
-        """
-        s_meta = super().get_meta()
-        # same marker can be "fit"ted into different kinds, so the name
-        # is created from the kind and the name of the marker
-        s_meta["name"] = f"{kind}_{self.name}"
-        s_meta["kind"] = kind
-        return {"marker": s_meta}
-
-    def validate_input(self, input: List[str]) -> None:
-        """Validate input.
-
-        Parameters
-        ----------
-        input : list of str
-            The input to the pipeline step. The list must contain the
-            available Junifer Data dictionary keys.
-
-        Raises
-        ------
-        ValueError
-            If the input does not have the required data.
-
-        """
-        if not any(x in input for x in self._valid_inputs):
-            raise_error(
-                "Input does not have the required data."
-                f"\t Input: {input}"
-                f"\t Required (any of): {self._valid_inputs}"
-            )
-
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
 
