@@ -154,9 +154,8 @@ class FunctionalConnectivitySpheres(BaseMarker):
             cm = ConnectivityMeasure(kind=self.cor_method)
         out = {}
         out["data"] = cm.fit_transform([ts])[0]
-        # create column names
-        out["row_names"] = ts["columns"]
-        out["col_names"] = ts["columns"]
+        out["row_names"] = labels
+        out["col_names"] = labels
         out["kind"] = "tril"
         return out
 

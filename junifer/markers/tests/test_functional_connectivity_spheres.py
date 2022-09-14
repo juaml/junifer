@@ -9,9 +9,7 @@ from nilearn.connectome import ConnectivityMeasure
 from nilearn.maskers import NiftiLabelsMasker
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
-from junifer.markers.functional_connectivity_spheres import (
-    FunctionalConnectivitySpheres,
-)
+from junifer.markers.functional_connectivity_spheres import FunctionalConnectivitySpheres
 
 
 def test_FunctionalConnectivitySpheres() -> None:
@@ -22,7 +20,7 @@ def test_FunctionalConnectivitySpheres() -> None:
     fmri_img = image.concat_imgs(ni_data.func)  # type: ignore
 
     fc = FunctionalConnectivitySpheres(coords="DMNBuckner")
-    out = fc.compute({"data": fmri_img})
+    out = fc.compute({"data": fmri_img}, radius=5.0)
 
     assert "data" in out
     assert "row_names" in out
@@ -31,23 +29,3 @@ def test_FunctionalConnectivitySpheres() -> None:
     assert out["data"].shape[1] == 100
     assert len(set(out["row_names"])) == 100
     assert len(set(out["col_names"])) == 100
-
-    # get the timeseries using pa
-    pa = ParcelAggregation(atlas="Schaefer100x7", method="mean", on="BOLD")
-    ts = pa.compute({"data": fmri_img})
-
-    # compare with nilearn
-    # Get the testing atlas (for nilearn)
-    atlas = datasets.fetch_atlas_schaefer_2018(
-        n_rois=100, yeo_networks=7, resolution_mm=2
-    )
-    masker = NiftiLabelsMasker(labels_img=atlas["maps"], standardize=False)
-    ts_ni = masker.fit_transform(fmri_img)
-
-    # check the TS are almost equal
-    assert_array_equal(ts_ni, ts["data"])
-
-    # Check that FC are almost equal
-    cm = ConnectivityMeasure(kind="covariance")
-    out_ni = cm.fit_transform([ts_ni])[0]
-    assert_array_almost_equal(out_ni, out["data"], decimal=3)
