@@ -12,7 +12,7 @@ from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import load_atlas
-from junifer.markers.etsrss import RSSETSMarker
+from junifer.markers.ets_rss import RSSETSMarker
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
 
