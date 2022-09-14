@@ -1,14 +1,15 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Vera Komeyer <v.komeyer@fz-juelich.de>
 # License: AGPL
 from tempfile import TemporaryDirectory
 from pathlib import Path
 
 import datalad.api as dl
 
-# repo has to be created on gin manually if not owner
+# repo has to be created on gin manually beforehand if not owner
 dst = 'git@gin.g-node.org:/juaml/datalad-example-aomic1000.git'
 
-# Use this if you create repo directly (See below)
+# Use this if you create repo directly when pushing (see below)
 # dst_api = 'git@gin.g-node.org'
 # org_name = PurePosixPath('juaml')
 # repo_basename = PurePosixPath('datalad-example-aomic1000.git')
