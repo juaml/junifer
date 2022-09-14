@@ -24,14 +24,13 @@ from junifer.utils import configure_logging
 
 
 ###############################################################################
-# Set the logging level to info to see extra information
+# Set the logging level to info to see extra information:
 configure_logging(level="INFO")
 
 
 ###############################################################################
-# Define the markers you want
+# Define the markers you want:
 
-# register(step='datagrabber', name='Oasis', klass=OasisVBMTestingDatagrabber)
 marker_dicts = [
     {
         "name": "Schaefer100x17_TrimMean80",
@@ -50,7 +49,7 @@ marker_dicts = [
 
 
 ###############################################################################
-# define target and confounds for julearn machine learning
+# Define target and confounds for julearn machine learning:
 y = "age"
 confound = "sex"
 
@@ -68,7 +67,7 @@ sex = (
 
 
 ###############################################################################
-# create a temporary directory for junifer feature extraction
+# Create a temporary directory for junifer feature extraction:
 with tempfile.TemporaryDirectory() as tmpdir:
 
     storage = {"kind": "SQLiteFeatureStorage", "uri": f"{tmpdir}/test.db"}
@@ -91,8 +90,8 @@ with tempfile.TemporaryDirectory() as tmpdir:
 
 
 ###############################################################################
-# using julearn for machine learning
-# we predict the age given our vbm features and sex as a confound
+# Using julearn for machine learning:
+# We predict the age given our vbm features and sex as a confound.
 X = list(df_vbm.columns)
 df_vbm[y] = age
 df_vbm[confound] = sex
@@ -108,3 +107,9 @@ scores = run_cross_validation(
     preprocess_X=["zscore", "remove_confound"],
 )
 print(scores)
+
+###############################################################################
+# Interpretation of results:
+# Doing machine learning with only 10 datapoints is not meaningful.
+# This explains the big variation in scores
+# for different cross-validation folds.
