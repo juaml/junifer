@@ -5,3 +5,8 @@
 # License: AGPL
 
 from .atlases import list_atlases, register_atlas, load_atlas
+from .coordinates import (
+    list_coordinates,
+    register_coordinates,
+    load_coordinates,
+)
