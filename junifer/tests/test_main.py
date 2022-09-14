@@ -5,9 +5,12 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import importlib
+
 
 def test_import() -> None:
     """Test junifer import."""
     import junifer
 
+    importlib.reload(junifer)
     print(junifer.__version__)
