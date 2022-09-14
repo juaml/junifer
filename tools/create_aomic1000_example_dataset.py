@@ -1,5 +1,6 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
+#          Xuan Li <xu.li@fz-juelich.de>
 # License: AGPL
 from tempfile import TemporaryDirectory
 from pathlib import Path
@@ -18,8 +19,8 @@ with TemporaryDirectory() as tmpdir_name:
     tmpdir = Path(tmpdir_name)
     ds = dl.create(tmpdir)  # type: ignore
 
-    base_dir = tmpdir / 'example_aomic1000'
-    base_dir.mkdir()
+    base_dir = tmpdir / 'derivatives'
+    base_dir.mkdir(exist_ok=True, parents=True)
 
     for dtype in ['dwipreproc', 'fmriprep']:
         dtype_dir = base_dir / dtype
@@ -37,10 +38,10 @@ with TemporaryDirectory() as tmpdir_name:
                 fnames = [
                     (f'anat/{t_sub}_space-MNI152NLin2009cAsym_desc-preproc'
                      '_T1w.nii.gz'),
-                    (f'func/{t_sub}_task-moviewatching_space-T1w_desc-preproc'
-                     '_bold.nii.gz'),
-                    (f'func/{t_sub}_task-moviewatching_space-T1w_desc-preproc'
-                     '_bold.json'),
+                    (f'func/{t_sub}_task-moviewatching_space-'
+                     'MNI152NLin2009cAsym_desc-preproc_bold.nii.gz'),
+                    (f'func/{t_sub}_task-moviewatching_space-'
+                     'MNI152NLin2009cAsym_desc-preproc_bold.json'),
                     (f'func/{t_sub}_task-moviewatching_desc-confounds'
                      '_regressors.tsv'),
                     (f'func/{t_sub}_task-moviewatching_desc-confounds'
