@@ -2,15 +2,22 @@
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
+#          Xuan Li <xu.li@fz-juelich.de>
 # License: AGPL
 
 from junifer.datagrabber.aomic1000 import DataladAOMIC1000
+from junifer.utils import configure_logging
 # import pytest
+
+uri = 'git@gin.g-node.org:/juaml/datalad-example-aomic1000.git'
 
 
 def test_aomic1000_datagrabber() -> None:
     """Test datalad AOMIC1000 datagrabber."""
-    with DataladAOMIC1000() as dg:
+    configure_logging(level="DEBUG")
+    dg = DataladAOMIC1000()
+    dg.uri = uri  # change uri here to use fake data instead of real dataset
+    with dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
 
