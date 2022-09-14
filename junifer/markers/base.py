@@ -6,7 +6,7 @@
 
 from typing import Dict, List, Optional, Union
 
-from ..pipeline.pipeline_mixin import PipelineStepMixin
+from ..pipeline import PipelineStepMixin
 from ..utils import logger, raise_error
 
 
