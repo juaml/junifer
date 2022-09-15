@@ -47,6 +47,19 @@ def test_base_marker_meta(
     assert t_meta["marker"]["name"] == expected_name
 
 
+def test_compute_parameters() -> None:
+    """Test compute parameters."""
+    base = BaseMarker(on=["bold", "dwi"], name="mymarker")
+    base.compute = lambda x, y: {  # type: ignore
+        "data": x.keys(), "extra": y.keys()}
+    input_ = {"bold": {"path": "test"}, "t2": {"path": "test"}}
+    out = base.fit_transform(
+        input_,
+    )
+    assert list(out["bold"]["data"]) == ["path"]
+    assert list(out["bold"]["extra"]) == ["t2"]
+
+
 def test_BaseMarker() -> None:
     """Test base class."""
     base = BaseMarker(on=["bold", "dwi"], name="mymarker")
@@ -63,15 +76,16 @@ def test_BaseMarker() -> None:
     with pytest.raises(NotImplementedError):
         base.fit_transform(input_)
 
-    base.compute = lambda x: {"data": 1}  # type: ignore
+    base.compute = lambda x, y: {"data": 1}  # type: ignore
 
     out = base.fit_transform(input_)
     assert out["bold"]["data"] == 1
     assert out["bold"]["meta"]["marker"]["name"] == "bold_mymarker"
     assert out["bold"]["meta"]["marker"]["class"] == "BaseMarker"
+    assert "dwi" not in out
 
     base2 = BaseMarker(on="bold", name="mymarker")
-    base2.compute = lambda x: {"data": 1}  # type: ignore
+    base2.compute = lambda x, y: {"data": 1}  # type: ignore
     out2 = base2.fit_transform(input_)
     assert out2["bold"]["data"] == 1
     assert out2["bold"]["meta"]["marker"]["name"] == "bold_mymarker"

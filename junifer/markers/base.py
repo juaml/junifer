@@ -16,7 +16,8 @@ class BaseMarker(PipelineStepMixin):
     Parameters
     ----------
     on : list of str
-        The kind of data to work on.
+        The kind of data to work on. Defaults to None, which means
+        to work on all available data.
     name : str, optional
         The name of the marker (default None).
 
@@ -89,21 +90,30 @@ class BaseMarker(PipelineStepMixin):
             The updated list of output kinds, as storage possibilities.
 
         """
-        raise_error(msg="compute() not implemented", klass=NotImplementedError)
+        raise_error(
+            msg="get_output_kinds() not implemented", klass=NotImplementedError
+        )
 
-    def compute(self, input: Dict) -> Dict:
+    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
         Parameters
         ----------
         input : Dict[str, Dict]
-            The input to the pipeline step. The list must contain the
-            available Junifer Data dictionary keys.
+            A single input from the pipeline data object in which to compute
+            the marker.
+        extra_input : Dict, optional
+            The other fields in the pipeline data object. Useful for accessing
+            other data kind that needs to be used in the computation. For
+            example, the functional connectivity markers can make use of the
+            confounds if available.
 
         Returns
         -------
         dict
-            The computed result as dictionary.
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter.
 
         """
         raise_error(msg="compute() not implemented", klass=NotImplementedError)
@@ -140,10 +150,12 @@ class BaseMarker(PipelineStepMixin):
             if kind in input.keys():
                 logger.info(f"Computing {kind}")
                 t_input = input[kind]
+                extra_input = input.copy()
+                extra_input.pop(kind)
                 t_meta = meta.copy()
                 t_meta.update(t_input.get("meta", {}))
                 t_meta.update(self.get_meta(kind))
-                t_out = self.compute(t_input)
+                t_out = self.compute(t_input, extra_input)
                 t_out.update(meta=t_meta)
                 if storage is not None:
                     logger.info(f"Storing in {storage}")
