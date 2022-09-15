@@ -74,7 +74,9 @@ html_static_path = []
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
-    'sklearn': ('https://scikit-learn.org/stable', None)
+    'sklearn': ('https://scikit-learn.org/stable', None),
+    'nilearn': ('https://nilearn.github.io/stable/', None),
+    'julearn': ('https://juaml.github.io/julearn/main', None)
 }
 
 sphinx_gallery_conf = {
