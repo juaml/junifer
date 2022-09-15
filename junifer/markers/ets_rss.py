@@ -9,10 +9,10 @@
 from typing import Dict, List
 
 import numpy as np
-from scipy.stats import zscore
 
 from ..api.decorators import register_marker
 from ..utils import logger
+from .utils import _ets
 from .base import BaseMarker
 from .parcel import ParcelAggregation
 
@@ -55,13 +55,7 @@ class RSSETSMarker(BaseMarker):
             The updated list of output kinds, as storage possibilities.
 
         """
-        outputs = []
-        for t_input in input:
-            if t_input in ["BOLD"]:
-                outputs.append("timeseries")
-            else:
-                raise ValueError(f"Unknown input kind for {t_input}")
-        return outputs
+        return ["timeseries"]
 
     # TODO: complete type annotations
     def store(self, kind: str, out, storage) -> None:
@@ -110,15 +104,8 @@ class RSSETSMarker(BaseMarker):
         )
         # Compute the parcel aggregation
         out = parcel_aggregation.compute(input)
-        # Compute the z-score for each brain region's timeseries
-        timeseries = zscore(out["data"])
-        # Get the number of ROIs
-        _, n_roi = timeseries.shape
-        # indices of unique edges (lower triangle)
-        u, v = np.tril_indices(n_roi, k=-1)
-        # Compute the ETS
-        ets = timeseries[:, u] * timeseries[:, v]
+        edge_ts = _ets(out["data"])
         # Compute the RSS
-        out["data"] = np.sum(ets**2, 1) ** 0.5
+        out["data"] = np.sum(edge_ts**2, 1) ** 0.5
 
         return out
