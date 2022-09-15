@@ -3,6 +3,7 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
 import pytest
 
 import nibabel as nib
@@ -13,6 +14,7 @@ from numpy.testing import assert_array_equal
 
 from junifer.data import load_coordinates
 from junifer.markers.sphere_aggregation import SphereAggregation
+from junifer.storage import SQLiteFeatureStorage
 
 
 def test_SphereAggregation_input_output() -> None:
@@ -104,3 +106,43 @@ def test_SphereAggregation_4D() -> None:
     assert meta["class"] == "SphereAggregation"
     assert meta["kind"] == "BOLD"
     assert meta["method_params"] == {}
+
+
+def test_SphereAggregation_storage(tmp_path: Path) -> None:
+    # Get the oasis VBM data
+    oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
+    vbm = oasis_dataset.gray_matter_maps[0]
+    img = nib.load(vbm)
+    uri = tmp_path / "test_sphere_storage_3D.db"
+
+    storage = SQLiteFeatureStorage(
+        uri=uri, single_output=True, upsert="ignore"
+    )
+    meta = {
+        "element": "test",
+        "version": "0.0.1",
+        "marker": {"name": "fcname"},
+    }
+    input = {"VBM_GM": {"data": img}, "meta": meta}
+    marker = SphereAggregation(
+        coords="DMNBuckner", method="mean", radius=8, on="VBM_GM"
+    )
+
+    marker.fit_transform(input, storage=storage)
+
+    # TODO: Needs store_timeseries implemented for SQLiteFeatureStorage
+
+    # meta = {
+    #     "element": "test",
+    #     "version": "0.0.1",
+    #     "marker": {"name": "BOLD_fcname"},
+    # }
+    # # Get the SPM auditory data:
+    # subject_data = datasets.fetch_spm_auditory()
+    # fmri_img = concat_imgs(subject_data.func)  # type: ignore
+    # input = {"BOLD": {"data": fmri_img}, "meta": meta}
+    # marker = SphereAggregation(
+    #     coords="DMNBuckner", method="mean", radius=8, on="BOLD"
+    # )
+
+    # marker.fit_transform(input, storage=storage)
