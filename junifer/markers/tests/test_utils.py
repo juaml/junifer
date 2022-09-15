@@ -1,4 +1,4 @@
-"""Provide test for marker utility funcitons."""
+"""Provide test for marker utility functions."""
 
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
 #          Nicolás Nieto <n.nieto@fz-juelich.de>
@@ -22,7 +22,7 @@ def test_ets():
     ).T
 
     n_time, n_rois = bold_ts.shape
-    n_edges = n_rois * (n_rois - 1) / 2
+    n_edges = int(n_rois * (n_rois - 1) / 2)
 
     edge_ts = _ets(bold_ts)
     assert edge_ts.shape == (n_time, n_edges)
