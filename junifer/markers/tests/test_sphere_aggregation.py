@@ -109,6 +109,7 @@ def test_SphereAggregation_4D() -> None:
 
 
 def test_SphereAggregation_storage(tmp_path: Path) -> None:
+    """Test SphereAggregation storahe."""
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
     vbm = oasis_dataset.gray_matter_maps[0]
