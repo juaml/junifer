@@ -42,6 +42,8 @@ Enhancements
 - Added datagrabber for AOMIC1000 dataset including tests and creation of mock
   dataset for testing (:gh:`60` by `Vera Komeyer`_, `Xuan Li`_).
 
+- Added support to access other input in the data object in the `compute` method (by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 

@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from nilearn.connectome import ConnectivityMeasure
 from sklearn.covariance import EmpiricalCovariance
@@ -75,22 +75,29 @@ class FunctionalConnectivityAtlas(BaseMarker):
         outputs = ["matrix"]
         return outputs
 
-    def compute(self, input: Dict) -> Dict:
+    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
         Parameters
         ----------
         input : Dict[str, Dict]
-            The input to the pipeline step. The list must contain the
-            available Junifer Data dictionary keys.
+            A single input from the pipeline data object in which to compute
+            the marker.
+        extra_input : Dict, optional
+            The other fields in the pipeline data object. Useful for accessing
+            other data kind that needs to be used in the computation. For
+            example, the functional connectivity markers can make use of the
+            confounds if available.
 
         Returns
         -------
-        A dict with
-            FC matrix as a 2D numpy array.
-            Row names as a list.
-            Col names as a list.
-
+        dict
+            The computed result as dictionary. The following data will be
+            included in the dictionary:
+            - 'data': FC matrix as a 2D numpy array.
+            - 'row_names': Row names as a list.
+            - 'col_names': Col names as a list.
+            - 'kind': The kind of matrix (tril, triu or full)
         """
         pa = ParcelAggregation(
             atlas=self.atlas,
@@ -103,7 +110,8 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
         if self.cor_method_params["empirical"]:
             cm = ConnectivityMeasure(
-                cov_estimator=EmpiricalCovariance(), kind=self.cor_method
+                cov_estimator=EmpiricalCovariance(),  # type: ignore
+                kind=self.cor_method
             )
         else:
             cm = ConnectivityMeasure(kind=self.cor_method)

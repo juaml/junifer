@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import numpy as np
 from nilearn.image import math_img, resample_to_img
@@ -83,18 +83,26 @@ class ParcelAggregation(BaseMarker):
         if kind in ["BOLD"]:
             storage.store_timeseries(**out)
 
-    # TODO: complete type annotations
-    def compute(self, input) -> Dict:
+    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
         Parameters
         ----------
-        input
+        input : Dict[str, Dict]
+            A single input from the pipeline data object in which to compute
+            the marker.
+        extra_input : Dict, optional
+            The other fields in the pipeline data object. Useful for accessing
+            other data kind that needs to be used in the computation. For
+            example, the functional connectivity markers can make use of the
+            confounds if available.
 
         Returns
         -------
         dict
-            The computed result as dictionary.
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter.
 
         """
         t_input = input["data"]
