@@ -19,9 +19,6 @@ class DataladAOMIC1000(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    tasks : {"moviewatching"} AOMIC 1000 tasks.
-        If None, moviewatching is selected.
-        (default None).
     **kwargs
         Keyword arguments passed to superclass.
 
