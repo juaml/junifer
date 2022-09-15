@@ -44,7 +44,7 @@ Enhancements
 
 - Added support to access other input in the data object in the `compute` method (by `Fede Raimondo`_).
 
-- Implement SphereAggegation marker (by `Fede Raimondo`_).
+- Implement SphereAggregation marker (by `Fede Raimondo`_).
 
 Bugs
 ~~~~
