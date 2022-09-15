@@ -21,7 +21,8 @@ class SphereAggregation(BaseMarker):
     Parameters
     ----------
     coords: str
-        The name of the coordinates list to use. See junifer.data.coordinates
+        The name of the coordinates list to use. See
+        :mod:`junifer.data.coordinates`
     radius: float
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
@@ -29,12 +30,14 @@ class SphereAggregation(BaseMarker):
     method: str
         The aggregation method to use.
         See :func:`junifer.stats.get_aggfunc_by_name`
-    method_params: str
+    method_params: Dict, optional
         The parameters to pass to the aggregation method.
-    on: list of str
-        The kind of data to apply the marker to. Defaults to None, which
-        means that the marker will be applied to all data.
-    name
+    on: list of str, optional
+        The kind of data to apply the marker to. By default, will work on all
+        available data (default None).
+    name : str, optional
+        The name of the marker. By default, it will use KIND_SphereAggregation
+        where KIND is the kind of data it was applied to (default None).
 
     """
 

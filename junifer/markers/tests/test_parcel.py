@@ -16,8 +16,8 @@ from scipy.stats import trim_mean
 from junifer.markers.parcel import ParcelAggregation
 
 
-def test_ParcelAggregation_input_output():
-    """Test ParcelAggregation input and output types"""
+def test_ParcelAggregation_input_output() -> None:
+    """Test ParcelAggregation input and output types."""
     marker = ParcelAggregation(
         coords="DMNBuckner", method="mean", radius=8, on="VBM_GM"
     )

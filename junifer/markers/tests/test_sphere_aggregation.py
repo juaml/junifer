@@ -15,8 +15,8 @@ from junifer.data import load_coordinates
 from junifer.markers.sphere_aggregation import SphereAggregation
 
 
-def test_SphereAggregation_input_output():
-    """Test SphereAggregation input and output types"""
+def test_SphereAggregation_input_output() -> None:
+    """Test SphereAggregation input and output types."""
     marker = SphereAggregation(
         coords="DMNBuckner", method="mean", radius=8, on="VBM_GM"
     )
@@ -28,7 +28,7 @@ def test_SphereAggregation_input_output():
         marker.get_output_kind(["VBM_GM", "BOLD", "unknown"])
 
 
-def test_SphereAggregation_3D():
+def test_SphereAggregation_3D() -> None:
     """Test SphereAggregation object on 3D images."""
     # Get the testing coordinates (for nilearn)
     coord_names = "DMNBuckner"
@@ -48,7 +48,7 @@ def test_SphereAggregation_3D():
     marker = SphereAggregation(
         coords=coord_names, method="mean", radius=radius, on="VBM_GM"
     )
-    input = dict(VBM_GM=dict(data=img))
+    input = {"VBM_GM": {"data": img}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values4d.ndim == 2
@@ -70,7 +70,7 @@ def test_SphereAggregation_3D():
         )
 
 
-def test_SphereAggregation_4D():
+def test_SphereAggregation_4D() -> None:
     """Test SphereAggregation object on 4D images."""
     # Get the testing coordinates (for nilearn)
     coord_names = "DMNBuckner"
@@ -89,7 +89,7 @@ def test_SphereAggregation_4D():
     marker = SphereAggregation(
         coords=coord_names, method="mean", radius=radius
     )
-    input = dict(BOLD=dict(data=fmri_img))
+    input = {"BOLD": {"data": fmri_img}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
     assert jun_values4d.ndim == 2
