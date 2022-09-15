@@ -60,7 +60,7 @@ class ParcelAggregation(BaseMarker):
         for t_input in input:
             if t_input in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
                 outputs.append("table")
-            elif input in ["BOLD"]:
+            elif t_input in ["BOLD"]:
                 outputs.append("timeseries")
             else:
                 raise ValueError(f"Unknown input kind for {t_input}")

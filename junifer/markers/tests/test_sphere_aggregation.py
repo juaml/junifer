@@ -15,6 +15,19 @@ from junifer.data import load_coordinates
 from junifer.markers.sphere_aggregation import SphereAggregation
 
 
+def test_SphereAggregation_input_output():
+    """Test SphereAggregation input and output types"""
+    marker = SphereAggregation(
+        coords="DMNBuckner", method="mean", radius=8, on="VBM_GM"
+    )
+
+    output = marker.get_output_kind(["VBM_GM", "BOLD"])
+    assert output == ["table", "timeseries"]
+
+    with pytest.raises(ValueError, match="Unknown input"):
+        marker.get_output_kind(["VBM_GM", "BOLD", "unknown"])
+
+
 def test_SphereAggregation_3D():
     """Test SphereAggregation object on 3D images."""
     # Get the testing coordinates (for nilearn)
