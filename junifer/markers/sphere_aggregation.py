@@ -6,13 +6,10 @@
 
 from typing import Dict, List, Optional
 
-import numpy as np
-from nilearn.image import math_img, resample_to_img
 from nilearn.maskers import NiftiSpheresMasker
 
 from ..api.decorators import register_marker
 from ..data import load_coordinates
-from ..stats import get_aggfunc_by_name
 from ..utils import logger, raise_error
 from .base import BaseMarker
 
@@ -34,9 +31,6 @@ class SphereAggregation(BaseMarker):
         See :func:`junifer.stats.get_aggfunc_by_name`
     method_params: str
         The parameters to pass to the aggregation method.
-    masker_params: dict
-        Additional parameters to pass to the masker (
-        :class:`nilearn.maskers.NiftiSpheresMasker`).
     on: list of str
         The kind of data to apply the marker to. Defaults to None, which
         means that the marker will be applied to all data.
@@ -50,7 +44,6 @@ class SphereAggregation(BaseMarker):
         radius: float,
         method: str,
         method_params: Optional[Dict] = None,
-        masker_params: Optional[Dict] = None,
         on: Optional[List[str]] = None,
         name: Optional[str] = None,
     ) -> None:
@@ -68,7 +61,6 @@ class SphereAggregation(BaseMarker):
 
         self.method = method
         self.method_params = {} if method_params is None else method_params
-        self.masker_params = {} if masker_params is None else masker_params
         if on is None:
             on = ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
         super().__init__(on=on, name=name)
@@ -113,12 +105,19 @@ class SphereAggregation(BaseMarker):
         if kind in ["BOLD"]:
             storage.store_timeseries(**out)
 
-    def compute(self, input) -> Dict:
+    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
         Parameters
         ----------
-        input
+        input : Dict[str, Dict]
+            A single input from the pipeline data object in which to compute
+            the marker.
+        extra_input : Dict, optional
+            The other fields in the pipeline data object. Useful for accessing
+            other data kind that needs to be used in the computation. For
+            example, the functional connectivity markers can make use of the
+            confounds if available (default None).
 
         Returns
         -------
@@ -128,13 +127,18 @@ class SphereAggregation(BaseMarker):
         """
         t_input = input["data"]
         logger.debug(f"Sphere aggregation using {self.method}")
-        agg_func = get_aggfunc_by_name(
-            self.method, func_params=self.method_params
-        )
-        coords, labels = load_coordinates(self.coords)
+        # agg_func = get_aggfunc_by_name(
+        #     self.method, func_params=self.method_params
+        # )
+        coords, out_labels = load_coordinates(self.coords)
         masker = NiftiSpheresMasker(
             coords,
             self.radius,
             mask_img=None,  # TODO: support this (needs #79)
-            **self.masker_params
         )
+
+        out_values = masker.fit_transform(t_input)
+        out = {"data": out_values, "columns": out_labels}
+        if out_values.shape[0] > 1:
+            out["row_names"] = "scan"
+        return out

@@ -7,4 +7,4 @@
 from .base import BaseMarker
 from .collection import MarkerCollection
 from .parcel import ParcelAggregation
-from .sphere_aggregator import SphereAggregation
+from .sphere_aggregation import SphereAggregation
