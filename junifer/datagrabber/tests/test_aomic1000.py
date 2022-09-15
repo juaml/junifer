@@ -9,7 +9,7 @@ from junifer.datagrabber.aomic1000 import DataladAOMIC1000
 from junifer.utils import configure_logging
 
 
-uri = "git@gin.g-node.org:/juaml/datalad-example-aomic1000.git"
+uri = "https://gin.g-node.org/juaml/datalad-example-aomic1000"
 
 
 def test_aomic1000_datagrabber() -> None:
