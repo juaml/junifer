@@ -34,10 +34,10 @@ class DataladAOMIC1000(PatternDataladDataGrabber):
         types = [
             "BOLD",
             "BOLD_confounds",
-            "ANAT",
-            "ANAT_probseg_CSF",
-            "ANAT_probseg_GM",
-            "ANAT_probseg_WM",
+            "T1w",
+            "probseg_CSF",
+            "probseg_GM",
+            "probseg_WM",
             "DWI",
         ]
         # The patterns
@@ -52,22 +52,22 @@ class DataladAOMIC1000(PatternDataladDataGrabber):
                 "sub-{subject}_task-moviewatching_"
                 "desc-confounds_regressors.tsv"
             ),
-            "ANAT": (
+            "T1w": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
                 "sub-{subject}_space-MNI152NLin2009cAsym_"
                 "desc-preproc_T1w.nii.gz"
             ),
-            "ANAT_probseg_CSF": (
+            "probseg_CSF": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
                 "sub-{subject}_space-MNI152NLin2009cAsym_label-"
                 "CSF_probseg.nii.gz"
             ),
-            "ANAT_probseg_GM": (
+            "probseg_GM": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
                 "sub-{subject}_space-MNI152NLin2009cAsym_label-"
                 "GM_probseg.nii.gz"
             ),
-            "ANAT_probseg_WM": (
+            "probseg_WM": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
                 "sub-{subject}_space-MNI152NLin2009cAsym_label-"
                 "WM_probseg.nii.gz"
