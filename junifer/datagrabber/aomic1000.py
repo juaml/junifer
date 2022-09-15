@@ -1,4 +1,4 @@
-"""Provide concrete implementations for HCP data access."""
+"""Provide concrete implementations for AOMIC1000 data access."""
 
 # from itertools import product
 from pathlib import Path
