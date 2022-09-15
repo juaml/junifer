@@ -39,6 +39,8 @@ Enhancements
 
 - Implement coordinate register, list and load (:gh:`11` by `Fede Raimondo`_).
 
+- Added datagrabber for AOMIC1000 dataset including tests and creation of mock
+  dataset for testing (:gh:`60` by `Vera Komeyer`_, `Xuan Li`_).
 
 Bugs
 ~~~~
