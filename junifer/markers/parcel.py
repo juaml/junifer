@@ -95,7 +95,7 @@ class ParcelAggregation(BaseMarker):
             The other fields in the pipeline data object. Useful for accessing
             other data kind that needs to be used in the computation. For
             example, the functional connectivity markers can make use of the
-            confounds if available.
+            confounds if available (default None).
 
         Returns
         -------

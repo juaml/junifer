@@ -16,8 +16,8 @@ class BaseMarker(PipelineStepMixin):
     Parameters
     ----------
     on : list of str
-        The kind of data to work on. Defaults to None, which means
-        to work on all available data.
+        The kind of data to apply the marker to. By default, will work on all
+        available data (default None).
     name : str, optional
         The name of the marker (default None).
 
@@ -91,7 +91,7 @@ class BaseMarker(PipelineStepMixin):
 
         """
         raise_error(
-            msg="get_output_kinds() not implemented", klass=NotImplementedError
+            msg="get_output_kind() not implemented", klass=NotImplementedError
         )
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
