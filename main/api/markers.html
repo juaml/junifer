@@ -102,7 +102,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>on</strong><span class="classifier">list of str</span></dt><dd><p>The kind of data to work on.</p>
+<dt><strong>on</strong><span class="classifier">list of str</span></dt><dd><p>The kind of data to apply the marker to. By default, will work on all
+available data (default None).</p>
 </dd>
 <dt><strong>name</strong><span class="classifier">str, optional</span></dt><dd><p>The name of the marker (default None).</p>
 </dd>
@@ -112,19 +113,26 @@
 <p>Initialize the class.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.markers.BaseMarker.compute">
-<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span></span><a class="headerlink" href="#junifer.markers.BaseMarker.compute" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span></span><a class="headerlink" href="#junifer.markers.BaseMarker.compute" title="Permalink to this definition"></a></dt>
 <dd><p>Compute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>input</strong><span class="classifier">Dict[str, Dict]</span></dt><dd><p>The input to the pipeline step. The list must contain the
-available Junifer Data dictionary keys.</p>
+<dt><strong>input</strong><span class="classifier">Dict[str, Dict]</span></dt><dd><p>A single input from the pipeline data object in which to compute
+the marker.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier">Dict, optional</span></dt><dd><p>The other fields in the pipeline data object. Useful for accessing
+other data kind that needs to be used in the computation. For
+example, the functional connectivity markers can make use of the
+confounds if available (default None).</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>dict</dt><dd><p>The computed result as dictionary.</p>
+<dt>dict</dt><dd><p>The computed result as dictionary. This will be either returned
+to the user or stored in the storage by calling the store method
+with this as a parameter.</p>
 </dd>
 </dl>
 </dd>
@@ -303,17 +311,26 @@ check that the storage can handle the markers output.</p>
 <p>Initialize the class.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.markers.ParcelAggregation.compute">
-<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span></span><a class="headerlink" href="#junifer.markers.ParcelAggregation.compute" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.10)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.10)"><span class="pre">Dict</span></a></span></span><a class="headerlink" href="#junifer.markers.ParcelAggregation.compute" title="Permalink to this definition"></a></dt>
 <dd><p>Compute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>input</strong></dt><dd></dd>
+<dt><strong>input</strong><span class="classifier">Dict[str, Dict]</span></dt><dd><p>A single input from the pipeline data object in which to compute
+the marker.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier">Dict, optional</span></dt><dd><p>The other fields in the pipeline data object. Useful for accessing
+other data kind that needs to be used in the computation. For
+example, the functional connectivity markers can make use of the
+confounds if available (default None).</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><dl class="simple">
-<dt>dict</dt><dd><p>The computed result as dictionary.</p>
+<dt>dict</dt><dd><p>The computed result as dictionary. This will be either returned
+to the user or stored in the storage by calling the store method
+with this as a parameter.</p>
 </dd>
 </dl>
 </dd>

@@ -111,14 +111,14 @@ using the Schaefer atlas (100 rois, 7 Yeo networks) for both a 3D and 4D nifti</
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-09-15 14:22:12,484 - JUNIFER - INFO - ===== Lib Versions =====
-2022-09-15 14:22:12,484 - JUNIFER - INFO - numpy: 1.22.4
-2022-09-15 14:22:12,484 - JUNIFER - INFO - scipy: 1.9.1
-2022-09-15 14:22:12,484 - JUNIFER - INFO - pandas: 1.4.4
-2022-09-15 14:22:12,484 - JUNIFER - INFO - nilearn: 0.9.2
-2022-09-15 14:22:12,484 - JUNIFER - INFO - nibabel: 4.0.2
-2022-09-15 14:22:12,484 - JUNIFER - INFO - junifer: 0.0.1.dev424
-2022-09-15 14:22:12,485 - JUNIFER - INFO - ========================
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-09-15 14:34:02,866 - JUNIFER - INFO - ===== Lib Versions =====
+2022-09-15 14:34:02,867 - JUNIFER - INFO - numpy: 1.22.4
+2022-09-15 14:34:02,867 - JUNIFER - INFO - scipy: 1.9.1
+2022-09-15 14:34:02,867 - JUNIFER - INFO - pandas: 1.4.4
+2022-09-15 14:34:02,867 - JUNIFER - INFO - nilearn: 0.9.2
+2022-09-15 14:34:02,867 - JUNIFER - INFO - nibabel: 4.0.2
+2022-09-15 14:34:02,867 - JUNIFER - INFO - junifer: 0.0.1.dev427
+2022-09-15 14:34:02,867 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>Load the VBM GM data (3d):
@@ -133,16 +133,279 @@ using the Schaefer atlas (100 rois, 7 Yeo networks) for both a 3D and 4D nifti</
 
 Downloading data from https://www.nitrc.org/frs/download.php/6364/archive_dartel.tgz ...
 
-Downloaded 65896448 of 905208634 bytes (7.3%,   12.7s remaining)
-Downloaded 151994368 of 905208634 bytes (16.8%,   10.0s remaining)
-Downloaded 238403584 of 905208634 bytes (26.3%,    8.4s remaining)
-Downloaded 323731456 of 905208634 bytes (35.8%,    7.2s remaining)
-Downloaded 404488192 of 905208634 bytes (44.7%,    6.2s remaining)
-Downloaded 489177088 of 905208634 bytes (54.0%,    5.1s remaining)
-Downloaded 571473920 of 905208634 bytes (63.1%,    4.1s remaining)
-Downloaded 658677760 of 905208634 bytes (72.8%,    3.0s remaining)
-Downloaded 747143168 of 905208634 bytes (82.5%,    1.9s remaining)
-Downloaded 835518464 of 905208634 bytes (92.3%,    0.8s remaining) ...done. (11 seconds, 0 min)
+Downloaded 7069696 of 905208634 bytes (0.8%,  2.1min remaining)
+Downloaded 17899520 of 905208634 bytes (2.0%,  1.7min remaining)
+Downloaded 24788992 of 905208634 bytes (2.7%,  1.8min remaining)
+Downloaded 32038912 of 905208634 bytes (3.5%,  1.8min remaining)
+Downloaded 39632896 of 905208634 bytes (4.4%,  1.8min remaining)
+Downloaded 47398912 of 905208634 bytes (5.2%,  1.8min remaining)
+Downloaded 54935552 of 905208634 bytes (6.1%,  1.8min remaining)
+Downloaded 59146240 of 905208634 bytes (6.5%,  1.9min remaining)
+Downloaded 63537152 of 905208634 bytes (7.0%,  2.0min remaining)
+Downloaded 66273280 of 905208634 bytes (7.3%,  2.1min remaining)
+Downloaded 68845568 of 905208634 bytes (7.6%,  2.2min remaining)
+Downloaded 71532544 of 905208634 bytes (7.9%,  2.3min remaining)
+Downloaded 74301440 of 905208634 bytes (8.2%,  2.4min remaining)
+Downloaded 77225984 of 905208634 bytes (8.5%,  2.5min remaining)
+Downloaded 80330752 of 905208634 bytes (8.9%,  2.6min remaining)
+Downloaded 83599360 of 905208634 bytes (9.2%,  2.6min remaining)
+Downloaded 87031808 of 905208634 bytes (9.6%,  2.7min remaining)
+Downloaded 90644480 of 905208634 bytes (10.0%,  2.7min remaining)
+Downloaded 94683136 of 905208634 bytes (10.5%,  2.7min remaining)
+Downloaded 98369536 of 905208634 bytes (10.9%,  2.8min remaining)
+Downloaded 102342656 of 905208634 bytes (11.3%,  2.8min remaining)
+Downloaded 106676224 of 905208634 bytes (11.8%,  2.8min remaining)
+Downloaded 111222784 of 905208634 bytes (12.3%,  2.8min remaining)
+Downloaded 115843072 of 905208634 bytes (12.8%,  2.7min remaining)
+Downloaded 120463360 of 905208634 bytes (13.3%,  2.7min remaining)
+Downloaded 125075456 of 905208634 bytes (13.8%,  2.7min remaining)
+Downloaded 129728512 of 905208634 bytes (14.3%,  2.7min remaining)
+Downloaded 133750784 of 905208634 bytes (14.8%,  2.7min remaining)
+Downloaded 137789440 of 905208634 bytes (15.2%,  2.7min remaining)
+Downloaded 142237696 of 905208634 bytes (15.7%,  2.7min remaining)
+Downloaded 146907136 of 905208634 bytes (16.2%,  2.7min remaining)
+Downloaded 151674880 of 905208634 bytes (16.8%,  2.7min remaining)
+Downloaded 155426816 of 905208634 bytes (17.2%,  2.7min remaining)
+Downloaded 159539200 of 905208634 bytes (17.6%,  2.7min remaining)
+Downloaded 162414592 of 905208634 bytes (17.9%,  2.7min remaining)
+Downloaded 164331520 of 905208634 bytes (18.2%,  2.7min remaining)
+Downloaded 166322176 of 905208634 bytes (18.4%,  2.8min remaining)
+Downloaded 168411136 of 905208634 bytes (18.6%,  2.8min remaining)
+Downloaded 170647552 of 905208634 bytes (18.9%,  2.8min remaining)
+Downloaded 173080576 of 905208634 bytes (19.1%,  2.8min remaining)
+Downloaded 175611904 of 905208634 bytes (19.4%,  2.9min remaining)
+Downloaded 178364416 of 905208634 bytes (19.7%,  2.9min remaining)
+Downloaded 181288960 of 905208634 bytes (20.0%,  2.9min remaining)
+Downloaded 183664640 of 905208634 bytes (20.3%,  2.9min remaining)
+Downloaded 186351616 of 905208634 bytes (20.6%,  2.9min remaining)
+Downloaded 188882944 of 905208634 bytes (20.9%,  2.9min remaining)
+Downloaded 191193088 of 905208634 bytes (21.1%,  2.9min remaining)
+Downloaded 193650688 of 905208634 bytes (21.4%,  3.0min remaining)
+Downloaded 196182016 of 905208634 bytes (21.7%,  3.0min remaining)
+Downloaded 198860800 of 905208634 bytes (22.0%,  3.0min remaining)
+Downloaded 201736192 of 905208634 bytes (22.3%,  3.0min remaining)
+Downloaded 204759040 of 905208634 bytes (22.6%,  3.0min remaining)
+Downloaded 207953920 of 905208634 bytes (23.0%,  3.0min remaining)
+Downloaded 211197952 of 905208634 bytes (23.3%,  3.0min remaining)
+Downloaded 213925888 of 905208634 bytes (23.6%,  3.0min remaining)
+Downloaded 217022464 of 905208634 bytes (24.0%,  3.0min remaining)
+Downloaded 219824128 of 905208634 bytes (24.3%,  3.0min remaining)
+Downloaded 222470144 of 905208634 bytes (24.6%,  3.0min remaining)
+Downloaded 225247232 of 905208634 bytes (24.9%,  3.0min remaining)
+Downloaded 228081664 of 905208634 bytes (25.2%,  3.0min remaining)
+Downloaded 231055360 of 905208634 bytes (25.5%,  3.0min remaining)
+Downloaded 234217472 of 905208634 bytes (25.9%,  3.0min remaining)
+Downloaded 237248512 of 905208634 bytes (26.2%,  3.0min remaining)
+Downloaded 240099328 of 905208634 bytes (26.5%,  3.0min remaining)
+Downloaded 243212288 of 905208634 bytes (26.9%,  3.0min remaining)
+Downloaded 246480896 of 905208634 bytes (27.2%,  3.0min remaining)
+Downloaded 249823232 of 905208634 bytes (27.6%,  2.9min remaining)
+Downloaded 253149184 of 905208634 bytes (28.0%,  2.9min remaining)
+Downloaded 256491520 of 905208634 bytes (28.3%,  2.9min remaining)
+Downloaded 259948544 of 905208634 bytes (28.7%,  2.9min remaining)
+Downloaded 262701056 of 905208634 bytes (29.0%,  2.9min remaining)
+Downloaded 265846784 of 905208634 bytes (29.4%,  2.9min remaining)
+Downloaded 269246464 of 905208634 bytes (29.7%,  2.9min remaining)
+Downloaded 272834560 of 905208634 bytes (30.1%,  2.9min remaining)
+Downloaded 276422656 of 905208634 bytes (30.5%,  2.9min remaining)
+Downloaded 279240704 of 905208634 bytes (30.8%,  2.9min remaining)
+Downloaded 282370048 of 905208634 bytes (31.2%,  2.8min remaining)
+Downloaded 285777920 of 905208634 bytes (31.6%,  2.8min remaining)
+Downloaded 289300480 of 905208634 bytes (32.0%,  2.8min remaining)
+Downloaded 292921344 of 905208634 bytes (32.4%,  2.8min remaining)
+Downloaded 296419328 of 905208634 bytes (32.7%,  2.8min remaining)
+Downloaded 299991040 of 905208634 bytes (33.1%,  2.8min remaining)
+Downloaded 303702016 of 905208634 bytes (33.6%,  2.8min remaining)
+Downloaded 307601408 of 905208634 bytes (34.0%,  2.7min remaining)
+Downloaded 311853056 of 905208634 bytes (34.5%,  2.7min remaining)
+Downloaded 316694528 of 905208634 bytes (35.0%,  2.7min remaining)
+Downloaded 321118208 of 905208634 bytes (35.5%,  2.7min remaining)
+Downloaded 325763072 of 905208634 bytes (36.0%,  2.6min remaining)
+Downloaded 330858496 of 905208634 bytes (36.6%,  2.6min remaining)
+Downloaded 335773696 of 905208634 bytes (37.1%,  2.6min remaining)
+Downloaded 339853312 of 905208634 bytes (37.5%,  2.5min remaining)
+Downloaded 344227840 of 905208634 bytes (38.0%,  2.5min remaining)
+Downloaded 348749824 of 905208634 bytes (38.5%,  2.5min remaining)
+Downloaded 353198080 of 905208634 bytes (39.0%,  2.5min remaining)
+Downloaded 356753408 of 905208634 bytes (39.4%,  2.4min remaining)
+Downloaded 360816640 of 905208634 bytes (39.9%,  2.4min remaining)
+Downloaded 365182976 of 905208634 bytes (40.3%,  2.4min remaining)
+Downloaded 369704960 of 905208634 bytes (40.8%,  2.4min remaining)
+Downloaded 374259712 of 905208634 bytes (41.3%,  2.4min remaining)
+Downloaded 378290176 of 905208634 bytes (41.8%,  2.3min remaining)
+Downloaded 382050304 of 905208634 bytes (42.2%,  2.3min remaining)
+Downloaded 386228224 of 905208634 bytes (42.7%,  2.3min remaining)
+Downloaded 390668288 of 905208634 bytes (43.2%,  2.3min remaining)
+Downloaded 395198464 of 905208634 bytes (43.7%,  2.2min remaining)
+Downloaded 399745024 of 905208634 bytes (44.2%,  2.2min remaining)
+Downloaded 404307968 of 905208634 bytes (44.7%,  2.2min remaining)
+Downloaded 408903680 of 905208634 bytes (45.2%,  2.2min remaining)
+Downloaded 413597696 of 905208634 bytes (45.7%,  2.1min remaining)
+Downloaded 418398208 of 905208634 bytes (46.2%,  2.1min remaining)
+Downloaded 422322176 of 905208634 bytes (46.7%,  2.1min remaining)
+Downloaded 426778624 of 905208634 bytes (47.1%,  2.1min remaining)
+Downloaded 430727168 of 905208634 bytes (47.6%,  2.1min remaining)
+Downloaded 434462720 of 905208634 bytes (48.0%,  2.1min remaining)
+Downloaded 438419456 of 905208634 bytes (48.4%,  2.0min remaining)
+Downloaded 442458112 of 905208634 bytes (48.9%,  2.0min remaining)
+Downloaded 445800448 of 905208634 bytes (49.2%,  2.0min remaining)
+Downloaded 448151552 of 905208634 bytes (49.5%,  2.0min remaining)
+Downloaded 450691072 of 905208634 bytes (49.8%,  2.0min remaining)
+Downloaded 453320704 of 905208634 bytes (50.1%,  2.0min remaining)
+Downloaded 455974912 of 905208634 bytes (50.4%,  2.0min remaining)
+Downloaded 458309632 of 905208634 bytes (50.6%,  2.0min remaining)
+Downloaded 460865536 of 905208634 bytes (50.9%,  2.0min remaining)
+Downloaded 463634432 of 905208634 bytes (51.2%,  2.0min remaining)
+Downloaded 466460672 of 905208634 bytes (51.5%,  2.0min remaining)
+Downloaded 469295104 of 905208634 bytes (51.8%,  1.9min remaining)
+Downloaded 472244224 of 905208634 bytes (52.2%,  1.9min remaining)
+Downloaded 474628096 of 905208634 bytes (52.4%,  1.9min remaining)
+Downloaded 476618752 of 905208634 bytes (52.7%,  1.9min remaining)
+Downloaded 478232576 of 905208634 bytes (52.8%,  1.9min remaining)
+Downloaded 479887360 of 905208634 bytes (53.0%,  1.9min remaining)
+Downloaded 481673216 of 905208634 bytes (53.2%,  1.9min remaining)
+Downloaded 483622912 of 905208634 bytes (53.4%,  1.9min remaining)
+Downloaded 485244928 of 905208634 bytes (53.6%,  1.9min remaining)
+Downloaded 487055360 of 905208634 bytes (53.8%,  1.9min remaining)
+Downloaded 488562688 of 905208634 bytes (54.0%,  1.9min remaining)
+Downloaded 490102784 of 905208634 bytes (54.1%,  1.9min remaining)
+Downloaded 491798528 of 905208634 bytes (54.3%,  1.9min remaining)
+Downloaded 493625344 of 905208634 bytes (54.5%,  1.9min remaining)
+Downloaded 495632384 of 905208634 bytes (54.8%,  1.9min remaining)
+Downloaded 497704960 of 905208634 bytes (55.0%,  1.9min remaining)
+Downloaded 499990528 of 905208634 bytes (55.2%,  1.9min remaining)
+Downloaded 502398976 of 905208634 bytes (55.5%,  1.9min remaining)
+Downloaded 505266176 of 905208634 bytes (55.8%,  1.9min remaining)
+Downloaded 508960768 of 905208634 bytes (56.2%,  1.9min remaining)
+Downloaded 513777664 of 905208634 bytes (56.8%,  1.9min remaining)
+Downloaded 519626752 of 905208634 bytes (57.4%,  1.8min remaining)
+Downloaded 524861440 of 905208634 bytes (58.0%,  1.8min remaining)
+Downloaded 530636800 of 905208634 bytes (58.6%,  1.8min remaining)
+Downloaded 534020096 of 905208634 bytes (59.0%,  1.7min remaining)
+Downloaded 537657344 of 905208634 bytes (59.4%,  1.7min remaining)
+Downloaded 541442048 of 905208634 bytes (59.8%,  1.7min remaining)
+Downloaded 545300480 of 905208634 bytes (60.2%,  1.7min remaining)
+Downloaded 549044224 of 905208634 bytes (60.7%,  1.7min remaining)
+Downloaded 551698432 of 905208634 bytes (60.9%,  1.7min remaining)
+Downloaded 554172416 of 905208634 bytes (61.2%,  1.7min remaining)
+Downloaded 556752896 of 905208634 bytes (61.5%,  1.6min remaining)
+Downloaded 559431680 of 905208634 bytes (61.8%,  1.6min remaining)
+Downloaded 562184192 of 905208634 bytes (62.1%,  1.6min remaining)
+Downloaded 565018624 of 905208634 bytes (62.4%,  1.6min remaining)
+Downloaded 568090624 of 905208634 bytes (62.8%,  1.6min remaining)
+Downloaded 571138048 of 905208634 bytes (63.1%,  1.6min remaining)
+Downloaded 573890560 of 905208634 bytes (63.4%,  1.6min remaining)
+Downloaded 576831488 of 905208634 bytes (63.7%,  1.6min remaining)
+Downloaded 579960832 of 905208634 bytes (64.1%,  1.5min remaining)
+Downloaded 583229440 of 905208634 bytes (64.4%,  1.5min remaining)
+Downloaded 586522624 of 905208634 bytes (64.8%,  1.5min remaining)
+Downloaded 589766656 of 905208634 bytes (65.2%,  1.5min remaining)
+Downloaded 593084416 of 905208634 bytes (65.5%,  1.5min remaining)
+Downloaded 596525056 of 905208634 bytes (65.9%,  1.5min remaining)
+Downloaded 600137728 of 905208634 bytes (66.3%,  1.5min remaining)
+Downloaded 603422720 of 905208634 bytes (66.7%,  1.4min remaining)
+Downloaded 606797824 of 905208634 bytes (67.0%,  1.4min remaining)
+Downloaded 610574336 of 905208634 bytes (67.5%,  1.4min remaining)
+Downloaded 614514688 of 905208634 bytes (67.9%,  1.4min remaining)
+Downloaded 618520576 of 905208634 bytes (68.3%,  1.4min remaining)
+Downloaded 622575616 of 905208634 bytes (68.8%,  1.3min remaining)
+Downloaded 626622464 of 905208634 bytes (69.2%,  1.3min remaining)
+Downloaded 630661120 of 905208634 bytes (69.7%,  1.3min remaining)
+Downloaded 634888192 of 905208634 bytes (70.1%,  1.3min remaining)
+Downloaded 639410176 of 905208634 bytes (70.6%,  1.3min remaining)
+Downloaded 644366336 of 905208634 bytes (71.2%,  1.2min remaining)
+Downloaded 650051584 of 905208634 bytes (71.8%,  1.2min remaining)
+Downloaded 656850944 of 905208634 bytes (72.6%,  1.2min remaining)
+Downloaded 663838720 of 905208634 bytes (73.3%,  1.1min remaining)
+Downloaded 670597120 of 905208634 bytes (74.1%,  1.1min remaining)
+Downloaded 676937728 of 905208634 bytes (74.8%,  1.1min remaining)
+Downloaded 682614784 of 905208634 bytes (75.4%,  1.0min remaining)
+Downloaded 688783360 of 905208634 bytes (76.1%,   59.7s remaining)
+Downloaded 693886976 of 905208634 bytes (76.7%,   58.1s remaining)
+Downloaded 698490880 of 905208634 bytes (77.2%,   56.8s remaining)
+Downloaded 702324736 of 905208634 bytes (77.6%,   55.8s remaining)
+Downloaded 706256896 of 905208634 bytes (78.0%,   54.7s remaining)
+Downloaded 710557696 of 905208634 bytes (78.5%,   53.4s remaining)
+Downloaded 714678272 of 905208634 bytes (79.0%,   52.3s remaining)
+Downloaded 719036416 of 905208634 bytes (79.4%,   51.0s remaining)
+Downloaded 723255296 of 905208634 bytes (79.9%,   49.8s remaining)
+Downloaded 727605248 of 905208634 bytes (80.4%,   48.6s remaining)
+Downloaded 732176384 of 905208634 bytes (80.9%,   47.3s remaining)
+Downloaded 736010240 of 905208634 bytes (81.3%,   46.2s remaining)
+Downloaded 739401728 of 905208634 bytes (81.7%,   45.3s remaining)
+Downloaded 742531072 of 905208634 bytes (82.0%,   44.5s remaining)
+Downloaded 745873408 of 905208634 bytes (82.4%,   43.6s remaining)
+Downloaded 749355008 of 905208634 bytes (82.8%,   42.7s remaining)
+Downloaded 752558080 of 905208634 bytes (83.1%,   41.8s remaining)
+Downloaded 755326976 of 905208634 bytes (83.4%,   41.1s remaining)
+Downloaded 758456320 of 905208634 bytes (83.8%,   40.3s remaining)
+Downloaded 761724928 of 905208634 bytes (84.1%,   39.4s remaining)
+Downloaded 764452864 of 905208634 bytes (84.5%,   38.7s remaining)
+Downloaded 767197184 of 905208634 bytes (84.8%,   38.0s remaining)
+Downloaded 770097152 of 905208634 bytes (85.1%,   37.3s remaining)
+Downloaded 772751360 of 905208634 bytes (85.4%,   36.6s remaining)
+Downloaded 775159808 of 905208634 bytes (85.6%,   36.0s remaining)
+Downloaded 777871360 of 905208634 bytes (85.9%,   35.3s remaining)
+Downloaded 780795904 of 905208634 bytes (86.3%,   34.5s remaining)
+Downloaded 783695872 of 905208634 bytes (86.6%,   33.7s remaining)
+Downloaded 786595840 of 905208634 bytes (86.9%,   32.9s remaining)
+Downloaded 789569536 of 905208634 bytes (87.2%,   32.1s remaining)
+Downloaded 792657920 of 905208634 bytes (87.6%,   31.3s remaining)
+Downloaded 795836416 of 905208634 bytes (87.9%,   30.4s remaining)
+Downloaded 799399936 of 905208634 bytes (88.3%,   29.4s remaining)
+Downloaded 803479552 of 905208634 bytes (88.8%,   28.3s remaining)
+Downloaded 808296448 of 905208634 bytes (89.3%,   26.9s remaining)
+Downloaded 813752320 of 905208634 bytes (89.9%,   25.3s remaining)
+Downloaded 818593792 of 905208634 bytes (90.4%,   24.0s remaining)
+Downloaded 824147968 of 905208634 bytes (91.0%,   22.4s remaining)
+Downloaded 827629568 of 905208634 bytes (91.4%,   21.4s remaining)
+Downloaded 830930944 of 905208634 bytes (91.8%,   20.5s remaining)
+Downloaded 834437120 of 905208634 bytes (92.2%,   19.6s remaining)
+Downloaded 837541888 of 905208634 bytes (92.5%,   18.7s remaining)
+Downloaded 839753728 of 905208634 bytes (92.8%,   18.1s remaining)
+Downloaded 842014720 of 905208634 bytes (93.0%,   17.5s remaining)
+Downloaded 844464128 of 905208634 bytes (93.3%,   16.9s remaining)
+Downloaded 846454784 of 905208634 bytes (93.5%,   16.4s remaining)
+Downloaded 847831040 of 905208634 bytes (93.7%,   16.0s remaining)
+Downloaded 849117184 of 905208634 bytes (93.8%,   15.7s remaining)
+Downloaded 850436096 of 905208634 bytes (93.9%,   15.4s remaining)
+Downloaded 851795968 of 905208634 bytes (94.1%,   15.0s remaining)
+Downloaded 853049344 of 905208634 bytes (94.2%,   14.7s remaining)
+Downloaded 854499328 of 905208634 bytes (94.4%,   14.4s remaining)
+Downloaded 855703552 of 905208634 bytes (94.5%,   14.1s remaining)
+Downloaded 857030656 of 905208634 bytes (94.7%,   13.7s remaining)
+Downloaded 858275840 of 905208634 bytes (94.8%,   13.4s remaining)
+Downloaded 859455488 of 905208634 bytes (94.9%,   13.1s remaining)
+Downloaded 860758016 of 905208634 bytes (95.1%,   12.8s remaining)
+Downloaded 862117888 of 905208634 bytes (95.2%,   12.4s remaining)
+Downloaded 863387648 of 905208634 bytes (95.4%,   12.1s remaining)
+Downloaded 864870400 of 905208634 bytes (95.5%,   11.7s remaining)
+Downloaded 866344960 of 905208634 bytes (95.7%,   11.3s remaining)
+Downloaded 867598336 of 905208634 bytes (95.8%,   10.9s remaining)
+Downloaded 869048320 of 905208634 bytes (96.0%,   10.5s remaining)
+Downloaded 870547456 of 905208634 bytes (96.2%,   10.1s remaining)
+Downloaded 872136704 of 905208634 bytes (96.3%,    9.7s remaining)
+Downloaded 873496576 of 905208634 bytes (96.5%,    9.3s remaining)
+Downloaded 875044864 of 905208634 bytes (96.7%,    8.9s remaining)
+Downloaded 876716032 of 905208634 bytes (96.9%,    8.4s remaining)
+Downloaded 878403584 of 905208634 bytes (97.0%,    7.9s remaining)
+Downloaded 879828992 of 905208634 bytes (97.2%,    7.5s remaining)
+Downloaded 881377280 of 905208634 bytes (97.4%,    7.1s remaining)
+Downloaded 882712576 of 905208634 bytes (97.5%,    6.7s remaining)
+Downloaded 883941376 of 905208634 bytes (97.7%,    6.3s remaining)
+Downloaded 885071872 of 905208634 bytes (97.8%,    6.0s remaining)
+Downloaded 886300672 of 905208634 bytes (97.9%,    5.7s remaining)
+Downloaded 887726080 of 905208634 bytes (98.1%,    5.2s remaining)
+Downloaded 889094144 of 905208634 bytes (98.2%,    4.8s remaining)
+Downloaded 890454016 of 905208634 bytes (98.4%,    4.4s remaining)
+Downloaded 891977728 of 905208634 bytes (98.5%,    4.0s remaining)
+Downloaded 893575168 of 905208634 bytes (98.7%,    3.5s remaining)
+Downloaded 895238144 of 905208634 bytes (98.9%,    3.0s remaining)
+Downloaded 897064960 of 905208634 bytes (99.1%,    2.5s remaining)
+Downloaded 899055616 of 905208634 bytes (99.3%,    1.9s remaining)
+Downloaded 901185536 of 905208634 bytes (99.6%,    1.2s remaining)
+Downloaded 902488064 of 905208634 bytes (99.7%,    0.8s remaining)
+Downloaded 903823360 of 905208634 bytes (99.8%,    0.4s remaining) ...done. (278 seconds, 4 min)
 Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8baa05152/archive_dartel.tgz..... done.
 /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/nilearn/datasets/struct.py:774: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
   warnings.warn(_LEGACY_FORMAT_MSG)
@@ -161,8 +424,8 @@ Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8ba
 Data absent, downloading...
 Downloading data from http://www.fil.ion.ucl.ac.uk/spm/download/data/MoAEpilot/MoAEpilot.zip ...
 
-Downloaded 5849088 of 34212021 bytes (17.1%,    5.1s remaining)
-Downloaded 25722880 of 34212021 bytes (75.2%,    0.7s remaining) ...done. (4 seconds, 0 min)
+Downloaded 1622016 of 34212021 bytes (4.7%,   20.3s remaining)
+Downloaded 20176896 of 34212021 bytes (59.0%,    1.4s remaining) ...done. (4 seconds, 0 min)
 Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip..... done.
 </pre></div>
 </div>
@@ -179,13 +442,13 @@ Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-09-15 14:22:38,266 - JUNIFER - INFO - Computing BOLD
-2022-09-15 14:22:38,267 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-09-15 14:22:38,267 - JUNIFER - INFO - Atlas parameters:
-2022-09-15 14:22:38,267 - JUNIFER - INFO -      n_rois: 100
-2022-09-15 14:22:38,267 - JUNIFER - INFO -      yeo_networks: 7
-2022-09-15 14:22:38,267 - JUNIFER - INFO -      resolution: 3.0
-2022-09-15 14:22:38,267 - JUNIFER - INFO - At least one of the atlas files is missing. Fetching using nilearn.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-09-15 14:38:55,065 - JUNIFER - INFO - Computing BOLD
+2022-09-15 14:38:55,066 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-09-15 14:38:55,066 - JUNIFER - INFO - Atlas parameters:
+2022-09-15 14:38:55,066 - JUNIFER - INFO -      n_rois: 100
+2022-09-15 14:38:55,066 - JUNIFER - INFO -      yeo_networks: 7
+2022-09-15 14:38:55,066 - JUNIFER - INFO -      resolution: 3.0
+2022-09-15 14:38:55,066 - JUNIFER - INFO - At least one of the atlas files is missing. Fetching using nilearn.
 
 Dataset created in /home/runner/junifer/data/atlas/schaefer_2018
 
@@ -193,16 +456,16 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2022-09-15 14:22:38,724 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-09-15 14:22:40,244 - JUNIFER - INFO - No storage specified, returning dictionary
-2022-09-15 14:22:40,244 - JUNIFER - INFO - Computing VBM_GM
-2022-09-15 14:22:40,244 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-09-15 14:22:40,244 - JUNIFER - INFO - Atlas parameters:
-2022-09-15 14:22:40,244 - JUNIFER - INFO -      n_rois: 100
-2022-09-15 14:22:40,244 - JUNIFER - INFO -      yeo_networks: 7
-2022-09-15 14:22:40,244 - JUNIFER - INFO -      resolution: 2.0
-2022-09-15 14:22:40,247 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-09-15 14:22:40,910 - JUNIFER - INFO - No storage specified, returning dictionary
+2022-09-15 14:38:55,586 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-09-15 14:38:57,648 - JUNIFER - INFO - No storage specified, returning dictionary
+2022-09-15 14:38:57,648 - JUNIFER - INFO - Computing VBM_GM
+2022-09-15 14:38:57,649 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-09-15 14:38:57,649 - JUNIFER - INFO - Atlas parameters:
+2022-09-15 14:38:57,649 - JUNIFER - INFO -      n_rois: 100
+2022-09-15 14:38:57,649 - JUNIFER - INFO -      yeo_networks: 7
+2022-09-15 14:38:57,649 - JUNIFER - INFO -      resolution: 2.0
+2022-09-15 14:38:57,652 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-09-15 14:38:58,424 - JUNIFER - INFO - No storage specified, returning dictionary
 </pre></div>
 </div>
 <p>Check the results</p>
@@ -220,7 +483,7 @@ dict_keys([&#39;BOLD&#39;, &#39;VBM_GM&#39;])
 (96, 100)
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  28.432 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 4 minutes  55.565 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-compute-parcel-mean-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/c1da12f6e22b8ea8de3cd5add55a3fa8/run_compute_parcel_mean.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_compute_parcel_mean.py</span></code></a></p>
