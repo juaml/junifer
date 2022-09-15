@@ -19,7 +19,7 @@ from junifer.markers.parcel import ParcelAggregation
 def test_ParcelAggregation_input_output() -> None:
     """Test ParcelAggregation input and output types."""
     marker = ParcelAggregation(
-        coords="DMNBuckner", method="mean", radius=8, on="VBM_GM"
+        atlas="Schaefer100x7", method="mean", on="VBM_GM"
     )
 
     output = marker.get_output_kind(["VBM_GM", "BOLD"])
