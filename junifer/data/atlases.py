@@ -21,8 +21,8 @@ from nilearn import datasets
 from ..utils.logging import logger, raise_error
 
 
-if TYPE_CHECKING:
-    from nibabel import Nifti1Image
+if TYPE_CHECKING:  # pragma: no cover
+    from nibabel import Nifti1Image  # pragma: no cover
 
 
 """
