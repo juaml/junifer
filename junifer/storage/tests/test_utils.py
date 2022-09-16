@@ -139,7 +139,7 @@ def test_element_to_prefix_invalid_type() -> None:
     """Test element to prefix type checking."""
     element = 2.3
     with pytest.raises(ValueError, match=r"convert element of type"):
-        element_to_prefix(element)  #  type: ignore
+        element_to_prefix(element)  # type: ignore
 
 
 def test_element_to_index_check_meta_invalid_key() -> None:
