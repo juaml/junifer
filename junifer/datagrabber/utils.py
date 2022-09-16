@@ -54,7 +54,7 @@ def validate_replacements(
 
     # Check that at least one pattern has all the replacements
     at_least_one = False
-    for k, v in patterns.items():
+    for _, v in patterns.items():
         if all(x in v for x in replacements):
             at_least_one = True
     if at_least_one is False:
