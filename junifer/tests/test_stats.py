@@ -23,7 +23,16 @@ from junifer.stats import get_aggfunc_by_name, winsorized_mean
     ],
 )
 def test_get_aggfunc_by_name(name: str, params: Optional[Dict]) -> None:
-    """Test aggregation function retrieval by name."""
+    """Test aggregation function retrieval by name.
+
+    Parameters
+    ----------
+    name : str
+        The paramterized name of the method name.
+    params : dict
+        The parametrized parameters passed to the method.
+
+    """
     get_aggfunc_by_name(name=name, func_params=params)
 
 
