@@ -93,11 +93,16 @@ def test_process_meta_element(meta: Dict, elements: List[str]) -> None:
         The parametrized elements to assert against.
 
     """
-    _, processed_meta = process_meta(meta)
+    hash1, processed_meta = process_meta(meta)
     assert "_element_keys" in processed_meta
     assert processed_meta["_element_keys"] == elements
     assert "A" in processed_meta
     assert "B" in processed_meta
+    assert "element" not in processed_meta
+    hash2, processed_meta2 = process_meta(processed_meta)
+
+    assert hash1, hash2
+    assert processed_meta == processed_meta2
 
 
 @pytest.mark.parametrize(
@@ -128,6 +133,13 @@ def test_element_to_prefix(
     """
     prefix_generated = element_to_prefix(element)
     assert prefix_generated == prefix
+
+
+def test_element_to_prefix_invalid_type() -> None:
+    """Test element to prefix type checking."""
+    element = 2.3
+    with pytest.raises(ValueError, match=r"convert element of type"):
+        element_to_prefix(element)  #  type: ignore
 
 
 def test_element_to_index_check_meta_invalid_key() -> None:
