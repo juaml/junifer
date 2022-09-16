@@ -28,9 +28,10 @@ def get_aggfunc_by_name(
         - 'mean' -> numpy.mean
         - 'std' -> numpy.std
         - 'trim_mean' -> scipy.stats.trim_mean
-    func_params : dict
+    func_params : dict, optional
         Parameters to pass to the function.
         E.g. for 'winsorized_mean': func_params = {'limits': [0.1, 0.1]}
+        (default None).
 
     Returns
     -------
