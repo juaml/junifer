@@ -38,7 +38,7 @@ def test_get_aggfunc_by_name(name: str, params: Optional[Dict]) -> None:
 
 def test_get_aggfunc_by_name_errors() -> None:
     """Test aggregation function retrieval using wrong name."""
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="unknown. Please provide any of"):
         get_aggfunc_by_name(name="invalid", func_params=None)
 
     with pytest.raises(ValueError, match="list of limits"):
