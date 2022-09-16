@@ -12,8 +12,8 @@ import pytest
 from junifer.datagrabber.pattern import PatternDataGrabber
 
 
-def test_PatternDataGrabber() -> None:
-    """Test PatternDataGrabber."""
+def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
+    """Test PatternDataGrabber errors."""
 
     with pytest.raises(TypeError, match=r"`types` must be a list"):
         PatternDataGrabber(
@@ -85,6 +85,64 @@ def test_PatternDataGrabber() -> None:
             },
             replacements=["subject", "wrong"],
         )
+
+    tmpdir = tmp_path / 'pattern_dg_test'
+
+    datagrabber = PatternDataGrabber(
+        datadir=tmpdir,
+        types=["func", "anat"],
+        patterns={
+            "func": "func/{subject}.nii",
+            "anat": "anat/{subject}_{session}.nii",
+        },
+        replacements=["subject", "session"],
+    )
+
+    with pytest.raises(ValueError, match="element length must be"):
+        datagrabber["sub001"]
+
+    # This should not work, file does not exists
+    with pytest.raises(ValueError, match="Cannot access"):
+        datagrabber["sub001", "ses001"]
+
+    (tmpdir / "func").mkdir(exist_ok=True, parents=True)
+    (tmpdir / "anat").mkdir(exist_ok=True, parents=True)
+    for t_subject in range(3):
+        for t_session in range(2):
+            subject = f"sub{t_subject:03d}"
+            session = f"ses{t_session:03d}"
+            (tmpdir / "func" / f"{subject}.nii").touch()
+            if t_subject == 2:
+                (tmpdir / "func" / f"{subject}_extra.nii").touch()
+            (tmpdir / "anat" / f"{subject}_{session}.nii").touch()
+
+    # This should work, file now exists
+    datagrabber["sub001", "ses001"]
+
+    datagrabber = PatternDataGrabber(
+        datadir=tmpdir,
+        types=["func", "anat"],
+        patterns={
+            "func": "func/{subject}*.nii",
+            "anat": "anat/{subject}_{session}*.nii",
+        },
+        replacements=["subject", "session"],
+    )
+
+    # access a subject with a missing session
+    with pytest.raises(ValueError, match="No file matches"):
+        datagrabber["sub001", "ses004"]
+
+    # access a subject with two matching files
+    with pytest.raises(ValueError, match="More than one"):
+        datagrabber["sub002", "ses001"]
+
+    # access the right one
+    datagrabber["sub001", "ses001"]
+
+
+def test_PatternDataGrabber() -> None:
+    """Test PatternDataGrabber."""
 
     datagrabber = PatternDataGrabber(
         datadir="/tmp/data",

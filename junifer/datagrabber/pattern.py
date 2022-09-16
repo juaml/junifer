@@ -160,6 +160,11 @@ class PatternDataGrabber(BaseDataGrabber):
                 t_out = t_matches[0]
             else:
                 t_out = self.datadir / t_replace
+                if not t_out.exists():
+                    raise_error(
+                        f"Cannot access {t_type} for {element}: "
+                        f"File {t_out} does not exist"
+                    )
             out[t_type] = {"path": t_out}
         # Meta here is element and types
         out["meta"]["element"] = dict(zip(self.replacements, element))
