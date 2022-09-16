@@ -86,7 +86,7 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
             replacements=["subject", "wrong"],
         )
 
-    tmpdir = tmp_path / 'pattern_dg_test'
+    tmpdir = tmp_path / "pattern_dg_test"
 
     datagrabber = PatternDataGrabber(
         datadir=tmpdir,
