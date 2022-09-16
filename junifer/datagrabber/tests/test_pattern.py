@@ -75,7 +75,7 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
             replacements=1,
         )
 
-    with pytest.warns(RuntimeWarning, match=r"not part of any pattern"):
+    with pytest.raises(ValueError, match=r"not part of any pattern"):
         PatternDataGrabber(
             datadir="/tmp",
             types=["func", "anat"],
@@ -86,14 +86,14 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
             replacements=["subject", "wrong"],
         )
 
-    tmpdir = tmp_path / "pattern_dg_test"
+    tmpdir = tmp_path / "pattern_dg_test_errors"
 
     datagrabber = PatternDataGrabber(
         datadir=tmpdir,
         types=["func", "anat"],
         patterns={
-            "func": "func/{subject}.nii",
-            "anat": "anat/{subject}_{session}.nii",
+            "func": "func/{subject}_single.nii",
+            "anat": "anat/{subject}_{session}_ses.nii",
         },
         replacements=["subject", "session"],
     )
@@ -111,10 +111,10 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
         for t_session in range(2):
             subject = f"sub{t_subject:03d}"
             session = f"ses{t_session:03d}"
-            (tmpdir / "func" / f"{subject}.nii").touch()
+            (tmpdir / "func" / f"{subject}_single.nii").touch()
             if t_subject == 2:
                 (tmpdir / "func" / f"{subject}_extra.nii").touch()
-            (tmpdir / "anat" / f"{subject}_{session}.nii").touch()
+            (tmpdir / "anat" / f"{subject}_{session}_ses.nii").touch()
 
     # This should work, file now exists
     datagrabber["sub001", "ses001"]
@@ -123,8 +123,8 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
         datadir=tmpdir,
         types=["func", "anat"],
         patterns={
-            "func": "func/{subject}*.nii",
-            "anat": "anat/{subject}_{session}*.nii",
+            "func": "func/{subject}_*.nii",
+            "anat": "anat/{subject}_{session}_*.nii",
         },
         replacements=["subject", "session"],
     )
@@ -140,8 +140,19 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
     # access the right one
     datagrabber["sub001", "ses001"]
 
+    datagrabber = PatternDataGrabber(
+        datadir=tmpdir,
+        types=["func", "anat2"],
+        patterns={
+            "func": "func/{subject}_single.nii",
+            "anat2": "anat2/{subject}_{session}_ses.nii",
+        },
+        replacements=["subject", "session"],
+    )
+    assert len(datagrabber.get_elements()) == 0
 
-def test_PatternDataGrabber() -> None:
+
+def test_PatternDataGrabber(tmp_path: Path) -> None:
     """Test PatternDataGrabber."""
 
     datagrabber = PatternDataGrabber(
@@ -166,3 +177,71 @@ def test_PatternDataGrabber() -> None:
     assert datagrabber.datadir == Path("/tmp/data")
     assert datagrabber.types == ["func", "anat"]
     assert datagrabber.replacements == ["subject", "session"]
+
+    tmpdir = tmp_path / "pattern_dg_test"
+    (tmpdir / "func").mkdir(exist_ok=True, parents=True)
+    (tmpdir / "anat").mkdir(exist_ok=True, parents=True)
+    (tmpdir / "vbm").mkdir(exist_ok=True, parents=True)
+    for t_subject in range(3):
+        for t_session in range(2):
+            for t_task in range(2, 4):
+                subject = f"sub{t_subject:03d}"
+                session = f"ses{t_session:03d}"
+                task = f"task{t_task:03d}"
+                if t_subject != 2:
+                    (tmpdir / "func" / f"{subject}.nii").touch()
+                (tmpdir / "anat" / f"{subject}_{session}.nii").touch()
+                (tmpdir / "vbm" / f"{subject}_{task}_{session}.nii").touch()
+
+    expected_elements = [
+        ("sub000", "ses000"),
+        ("sub000", "ses001"),
+        ("sub001", "ses000"),
+        ("sub001", "ses001"),
+        ("sub002", "ses000"),
+        ("sub002", "ses001"),
+    ]
+
+    datagrabber = PatternDataGrabber(
+        datadir=tmpdir,
+        types=["anat"],
+        patterns={
+            "anat": "anat/{subject}_{session}.nii",
+        },
+        replacements=["subject", "session"],
+    )
+
+    elements = datagrabber.get_elements()
+    assert set(elements) == set(expected_elements)
+
+    expected_elements = [
+        ("sub000", "ses000", "task002"),
+        ("sub000", "ses000", "task003"),
+        ("sub000", "ses001", "task002"),
+        ("sub000", "ses001", "task003"),
+        ("sub001", "ses000", "task002"),
+        ("sub001", "ses000", "task003"),
+        ("sub001", "ses001", "task002"),
+        ("sub001", "ses001", "task003"),
+    ]
+
+    datagrabber = PatternDataGrabber(
+        datadir=tmpdir,
+        types=["func", "anat", "vbm"],
+        patterns={
+            "func": "func/{subject}.nii",
+            "anat": "anat/{subject}_{session}.nii",
+            "vbm": "vbm/{subject}_{task}_{session}.nii",
+        },
+        replacements=["subject", "session", "task"],
+    )
+
+    elements = datagrabber.get_elements()
+    assert set(elements) == set(expected_elements)
+
+    out1 = datagrabber[("sub000", "ses000", "task002")]
+    out2 = datagrabber[("sub000", "ses000", "task003")]
+
+    assert out1['func'] == out2['func']
+    assert out1['anat'] == out2['anat']
+    assert out1['vbm'] != out2['vbm']

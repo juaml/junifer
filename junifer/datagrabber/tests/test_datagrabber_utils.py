@@ -37,8 +37,16 @@ def test_validate_replacements() -> None:
     with pytest.raises(TypeError, match="must be a list of strings"):
         validate_replacements([1], patterns)  # type: ignore
 
-    with pytest.warns(RuntimeWarning, match="is not part of"):
+    with pytest.raises(ValueError, match="is not part of"):
         validate_replacements(["session"], patterns)
+
+    wrong_patterns = {
+        "T1w": "{subject}/anat/_T1w.nii.gz",
+        "bold": "{session}/func/_task-rest_bold.nii.gz",
+    }
+
+    with pytest.raises(ValueError, match="At least one pattern"):
+        validate_replacements(["subject", "session"], wrong_patterns)
 
     validate_replacements(["subject"], patterns)
 
@@ -68,5 +76,13 @@ def test_validate_patterns() -> None:
         "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
         "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
     }
+
+    wrongpatterns = {
+        "T1w": "{subject}/anat/{subject}*.nii",
+        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+    }
+
+    with pytest.raises(ValueError, match="following a replacement"):
+        validate_patterns(types, wrongpatterns)
 
     validate_patterns(types, patterns)

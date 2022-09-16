@@ -8,6 +8,8 @@
 import re
 from typing import Dict, List, Tuple, Union
 
+import numpy as np
+
 from ..api.decorators import register_datagrabber
 from ..utils import logger, raise_error
 from .base import BaseDataGrabber
@@ -64,7 +66,9 @@ class PatternDataGrabber(BaseDataGrabber):
         self.patterns = patterns
         self.replacements = replacements
 
-    def _replace_patterns_regex(self, pattern: str) -> Tuple[str, str]:
+    def _replace_patterns_regex(
+        self, pattern: str
+    ) -> Tuple[str, str, List[str]]:
         """Replace the patterns in `pattern` with the named groups.
 
         It allows elements to be obtained from the filesystem.
@@ -80,22 +84,28 @@ class PatternDataGrabber(BaseDataGrabber):
             The regular expression with the named groups.
         glob_pattern : str
             The search pattern to be used with glob.
+        replacements : list of str
+            The replacements present in the pattern.
 
         """
         re_pattern = pattern
         glob_pattern = pattern
-        for t_r in self.replacements:
+        t_replacements = [
+            x for x in self.replacements if f"{{{x}}}" in pattern
+        ]
+
+        for t_r in t_replacements:
             # Replace the first of each with a named group definition
             re_pattern = re_pattern.replace(f"{{{t_r}}}", f"(?P<{t_r}>.*)", 1)
 
-        for t_r in self.replacements:
+        for t_r in t_replacements:
             # Replace the second appearance of each with the named group
             # back reference
             re_pattern = re_pattern.replace(f"{{{t_r}}}", f"(?P={t_r})")
 
-        for t_r in self.replacements:
+        for t_r in t_replacements:
             glob_pattern = glob_pattern.replace(f"{{{t_r}}}", "*")
-        return re_pattern, glob_pattern
+        return re_pattern, glob_pattern, t_replacements
 
     def _replace_patterns_glob(self, element: Tuple, pattern: str) -> str:
         """Replace patterns with the element so it can be globbed.
@@ -185,17 +195,36 @@ class PatternDataGrabber(BaseDataGrabber):
 
         """
         elements = None
-        for t_type in self.types:
+
+        # Iterate by number of replacements. At least one pattern must have
+        # all of them.
+        replacement_in_patterns = [
+            np.sum([x in self.patterns[t_type] for x in self.replacements])
+            for t_type in self.types
+        ]
+        order = np.argsort(replacement_in_patterns)
+
+        # Start from the one with the most replacements and then
+        # filter out elements based on the ones with less replacements.
+        for t_idx in reversed(order):
+            t_type = self.types[t_idx]
             types_element = set()
             # Get the pattern
             t_pattern = self.patterns[t_type]
             # Replace the pattern
-            re_pattern, glob_pattern = self._replace_patterns_regex(t_pattern)
+            (
+                re_pattern,
+                glob_pattern,
+                t_replacements,
+            ) = self._replace_patterns_regex(t_pattern)
             for fname in self.datadir.glob(glob_pattern):
                 suffix = fname.relative_to(self.datadir).as_posix()
                 m = re.match(re_pattern, suffix)
                 if m is not None:
-                    t_element = tuple(m.group(k) for k in self.replacements)
+                    # Find the groups of replacements present in the pattern
+                    # If one replacement is not present, set it to None.
+                    # We will take care of this in the intersection
+                    t_element = tuple([m.group(k) for k in t_replacements])
                     if len(self.replacements) == 1:
                         t_element = t_element[0]
                     types_element.add(t_element)
@@ -203,7 +232,24 @@ class PatternDataGrabber(BaseDataGrabber):
             if elements is None:
                 elements = types_element
             else:
-                elements = elements.intersection(types_element)
+                # Do the intersection by filtering out elements in which
+                # the replacements are not None
+                if t_replacements == self.replacements:
+                    elements.intersection(types_element)
+                else:
+                    t_repl_idx = [
+                        i
+                        for i, v in enumerate(self.replacements)
+                        if v in t_replacements
+                    ]
+                    new_elements = set()
+                    for t_element in elements:
+                        if (
+                            tuple(np.array(t_element)[t_repl_idx])
+                            in types_element
+                        ):
+                            new_elements.add(t_element)
+                    elements = new_elements
         if elements is None:
             elements = set()
         return list(elements)

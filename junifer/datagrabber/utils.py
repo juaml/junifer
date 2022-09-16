@@ -50,7 +50,17 @@ def validate_replacements(
 
     for x in replacements:
         if all(x not in y for y in patterns.values()):
-            warn_with_log(msg=f"Replacement {x} is not part of any pattern.")
+            raise_error(msg=f"Replacement {x} is not part of any pattern.")
+
+    # Check that at least one pattern has all the replacements
+    at_least_one = False
+    for k, v in patterns.items():
+        if all(x in v for x in replacements):
+            at_least_one = True
+    if at_least_one is False:
+        raise_error(
+            msg="At least one pattern must contain all replacements."
+        )
 
 
 def validate_patterns(types: List[str], patterns: Dict[str, str]) -> None:
@@ -78,4 +88,10 @@ def validate_patterns(types: List[str], patterns: Dict[str, str]) -> None:
     if any(x not in patterns for x in types):
         raise_error(
             msg="`patterns` must contain all `types`", klass=ValueError
+        )
+
+    if any("}*" in pattern for pattern in patterns.values()):
+        raise_error(
+            msg="`patterns` must not contain `*` following a replacement",
+            klass=ValueError
         )
