@@ -6,7 +6,7 @@
 
 from typing import Dict, List
 
-from ..utils import raise_error, warn_with_log
+from ..utils import raise_error
 
 
 def validate_types(types: List[str]) -> None:
