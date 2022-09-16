@@ -160,7 +160,7 @@ class PatternDataGrabber(BaseDataGrabber):
                 t_out = t_matches[0]
             else:
                 t_out = self.datadir / t_replace
-                if not t_out.exists():
+                if not t_out.exists() and not t_out.is_symlink():
                     raise_error(
                         f"Cannot access {t_type} for {element}: "
                         f"File {t_out} does not exist"
