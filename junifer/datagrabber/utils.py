@@ -39,6 +39,10 @@ def validate_replacements(
     """
     if not isinstance(replacements, list):
         raise_error(msg="`replacements` must be a list.", klass=TypeError)
+
+    if not isinstance(patterns, dict):
+        raise_error(msg="`patterns` must be a dict.", klass=TypeError)
+
     if any(not isinstance(x, str) for x in replacements):
         raise_error(
             msg="`replacements` must be a list of strings.", klass=TypeError

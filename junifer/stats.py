@@ -15,7 +15,7 @@ from .utils import logger, raise_error
 
 
 def get_aggfunc_by_name(
-    name: str, func_params: Optional[Dict[str, Any]]
+    name: str, func_params: Optional[Dict[str, Any]] = None
 ) -> Callable:
     """Get an aggregation function by its name.
 
@@ -58,12 +58,11 @@ def get_aggfunc_by_name(
                 "winsorized_mean",
                 ValueError,
             )
-        if all((lim >= 0.0 and lim <= 1) for lim in limits):
-            logger.info(f"Limits for winsorized mean are set to {limits}.")
-        else:
+        if any((lim < 0.0 or lim > 1) for lim in limits):
             raise_error(
                 "Limits for the winsorized mean must be between 0 and 1."
             )
+        logger.info(f"Limits for winsorized mean are set to {limits}.")
         # partially interpret func_params
         func = partial(winsorized_mean, **func_params)
     elif name == "mean":
@@ -71,10 +70,7 @@ def get_aggfunc_by_name(
     elif name == "std":
         func = np.std
     elif name == "trim_mean":
-        if func_params is None:
-            func = trim_mean
-        else:
-            func = partial(trim_mean, **func_params)
+        func = partial(trim_mean, **func_params)
     else:
         raise_error(
             f"Function {name} unknown. Please provide any of "

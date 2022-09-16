@@ -1,0 +1,72 @@
+"""Provide tests for utils."""
+
+# Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+# License: AGPL
+
+import pytest
+
+from junifer.datagrabber.utils import (
+    validate_replacements,
+    validate_types,
+    validate_patterns,
+)
+
+
+def test_validate_types() -> None:
+    """Test validation of types."""
+    with pytest.raises(TypeError, match="must be a list"):
+        validate_types("wrong")  # type: ignore
+    with pytest.raises(TypeError, match="must be a list of strings"):
+        validate_types([1])  # type: ignore
+
+    validate_types(["T1w", "bold"])
+
+
+def test_validate_replacements() -> None:
+    """Test validation of replacements."""
+    with pytest.raises(TypeError, match="must be a list"):
+        validate_replacements("wrong", "also wrong")  # type: ignore
+    with pytest.raises(TypeError, match="must be a dict"):
+        validate_replacements(["correct"], "wrong")  # type: ignore
+
+    patterns = {
+        "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
+        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+    }
+
+    with pytest.raises(TypeError, match="must be a list of strings"):
+        validate_replacements([1], patterns)  # type: ignore
+
+    with pytest.warns(RuntimeWarning, match="is not part of"):
+        validate_replacements(["session"], patterns)
+
+    validate_replacements(["subject"], patterns)
+
+
+def test_validate_patterns() -> None:
+    """Test validation of patterns."""
+    types = ["T1w", "bold"]
+    with pytest.raises(TypeError, match="must be a dict"):
+        validate_patterns(types, "wrong")  # type: ignore
+
+    wrongpatterns = {
+        "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
+    }
+
+    with pytest.raises(ValueError, match="same length"):
+        validate_patterns(types, wrongpatterns)  # type: ignore
+
+    wrongpatterns = {
+        "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
+        "T2": "{subject}/anat/{subject}_T2.nii.gz",
+    }
+
+    with pytest.raises(ValueError, match="contain all"):
+        validate_patterns(types, wrongpatterns)  # type: ignore
+
+    patterns = {
+        "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
+        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+    }
+
+    validate_patterns(types, patterns)
