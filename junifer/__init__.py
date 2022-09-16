@@ -15,3 +15,4 @@ from . import pipeline
 from . import preprocess
 from . import storage
 from . import utils
+from . import stats
