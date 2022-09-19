@@ -13,7 +13,14 @@ from junifer.datagrabber.pattern import PatternDataGrabber
 
 
 def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
-    """Test PatternDataGrabber errors."""
+    """Test PatternDataGrabber errors.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
 
     with pytest.raises(TypeError, match=r"`types` must be a list"):
         PatternDataGrabber(
@@ -153,7 +160,14 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
 
 
 def test_PatternDataGrabber(tmp_path: Path) -> None:
-    """Test PatternDataGrabber."""
+    """Test PatternDataGrabber.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
 
     datagrabber = PatternDataGrabber(
         datadir="/tmp/data",
