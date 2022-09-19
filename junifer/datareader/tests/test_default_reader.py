@@ -111,6 +111,10 @@ def test_read_unknown() -> None:
     assert "data" in output["whatever"]
     assert output["whatever"]["data"] is None
 
+    input = {"whatever": {"nopath": whatever_path}}
+    with pytest.warns(RuntimeWarning, match="does not provide a path"):
+        reader.fit_transform(input)
+
 
 def test_read_csv(tmp_path: Path) -> None:
     """Test reading CSV files.

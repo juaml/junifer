@@ -47,6 +47,10 @@ def test_register_atlas_already_registered() -> None:
         atlas_path="testatlas.nii.gz",
         atl_labels=["1", "2", "3"],
     )
+    assert (
+        load_atlas("testatlas", path_only=True)[2].name == "testatlas.nii.gz"
+    )
+
     # Try registering again
     with pytest.raises(ValueError, match=r"already registered."):
         register_atlas(
@@ -54,6 +58,16 @@ def test_register_atlas_already_registered() -> None:
             atlas_path="testatlas.nii.gz",
             atl_labels=["1", "2", "3"],
         )
+    register_atlas(
+        name="testatlas",
+        atlas_path="testatlas2.nii.gz",
+        atl_labels=["1", "2", "3"],
+        overwrite=True,
+    )
+
+    assert (
+        load_atlas("testatlas", path_only=True)[2].name == "testatlas2.nii.gz"
+    )
 
 
 @pytest.mark.parametrize(
@@ -443,8 +457,8 @@ def test_tian_7T_6thgeneration(
     assert fname.name == fname1
     assert len(lbl) == n_label
     assert_array_almost_equal(
-        img.header["pixdim"][1:4], [1.6, 1.6, 1.6]
-    )  # type: ignore
+        img.header["pixdim"][1:4], [1.6, 1.6, 1.6]  # type: ignore
+    )
 
 
 def test_retrieve_tian_incorrect_space(tmp_path: Path) -> None:
@@ -464,6 +478,15 @@ def test_retrieve_tian_incorrect_space(tmp_path: Path) -> None:
             space="wrong",
         )
 
+    with pytest.raises(ValueError, match=r"MNI6thgeneration"):
+        _retrieve_tian(
+            atlas_dir=tmp_path,
+            resolution=1,
+            scale=1,
+            magneticfield="7T",
+            space="MNInonlinear2009cAsym",
+        )
+
 
 def test_retrieve_tian_incorrect_magneticfield(tmp_path: Path) -> None:
     """Test retrieve tian with incorrect magneticfield.
@@ -480,4 +503,22 @@ def test_retrieve_tian_incorrect_magneticfield(tmp_path: Path) -> None:
             resolution=1,
             scale=1,
             magneticfield="wrong",
+        )
+
+
+def test_retrieve_tian_incorrect_scale(tmp_path: Path) -> None:
+    """Test retrieve tian with incorrect scale.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    with pytest.raises(ValueError, match=r"The parameter `scale`"):
+        _retrieve_tian(
+            atlas_dir=tmp_path,
+            resolution=1,
+            scale=5,
+            space="MNI6thgeneration",
         )

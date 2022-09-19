@@ -100,3 +100,9 @@ def test_load_coordinates() -> None:
     coord, names = load_coordinates("DMNBuckner")
     assert coord.shape == (6, 3)  # type: ignore
     assert names == ["PCC", "MPFC", "lAG", "rAG", "lHF", "rHF"]
+
+
+def test_load_coordinates_nonexisting() -> None:
+    """Test loading coordinates that not exist."""
+    with pytest.raises(ValueError, match=r"not found"):
+        load_coordinates("NonExisting")

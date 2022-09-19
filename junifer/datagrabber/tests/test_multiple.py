@@ -47,6 +47,11 @@ def test_multiple() -> None:
     )
 
     dg = MultipleDataGrabber([dg1, dg2])
+
+    types = dg.get_types()
+    assert "T1w" in types
+    assert "bold" in types
+
     expected_subs = [
         (f"sub-{i:02d}", f"ses-{j:02d}")
         for j in range(1, 3)
@@ -56,6 +61,18 @@ def test_multiple() -> None:
     with dg:
         subs = [x for x in dg]
         assert set(subs) == set(expected_subs)
+
+        data = dg[("sub-01", "ses-01")]
+        assert "T1w" in data
+        assert "bold" in data
+
+    meta = dg.get_meta()
+    assert "class" in meta
+    assert meta["class"] == "MultipleDataGrabber"
+    assert "datagrabbers" in meta
+    assert len(meta["datagrabbers"]) == 2
+    assert meta["datagrabbers"][0]["class"] == "PatternDataladDataGrabber"
+    assert meta["datagrabbers"][1]["class"] == "PatternDataladDataGrabber"
 
 
 def test_multiple_no_intersection() -> None:

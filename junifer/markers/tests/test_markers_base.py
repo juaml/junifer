@@ -76,6 +76,9 @@ def test_BaseMarker() -> None:
     with pytest.raises(NotImplementedError):
         base.fit_transform(input_)
 
+    with pytest.raises(NotImplementedError):
+        base.store("bold", {}, None)
+
     base.compute = lambda x, y: {"data": 1}  # type: ignore
 
     out = base.fit_transform(input_)
