@@ -155,7 +155,7 @@ def queue(
     overwrite: bool = False,
     elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
     **kwargs: Union[str, int, bool],
-) -> None:  # pragma : no cover
+) -> None:
     """Queue a job to be executed later.
 
     Parameters
