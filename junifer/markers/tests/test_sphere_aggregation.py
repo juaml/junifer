@@ -18,14 +18,7 @@ from junifer.storage import SQLiteFeatureStorage
 
 
 def test_SphereAggregation_input_output() -> None:
-    """Test SphereAggregation input and output types.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+    """Test SphereAggregation input and output types."""
     marker = SphereAggregation(
         coords="DMNBuckner", method="mean", radius=8, on="VBM_GM"
     )
@@ -116,7 +109,14 @@ def test_SphereAggregation_4D() -> None:
 
 
 def test_SphereAggregation_storage(tmp_path: Path) -> None:
-    """Test SphereAggregation storahe."""
+    """Test SphereAggregation storage.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
     vbm = oasis_dataset.gray_matter_maps[0]
