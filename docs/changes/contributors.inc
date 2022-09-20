@@ -7,4 +7,4 @@
 .. _Vera Komeyer: https://github.com/verakye
 .. _Xuan Li: https://github.com/xuanli-ac
 .. _Sami Hamdan: https://github.com/samihamdan
-.. _Nicolas Nieto: https://github.com/N-Nieto
+.. _Nicolás Nieto: https://github.com/N-Nieto
