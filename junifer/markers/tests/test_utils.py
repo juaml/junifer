@@ -11,7 +11,8 @@ import numpy as np
 from junifer.markers.utils import _ets
 
 
-def test_ets():
+def test_ets() -> None:
+    """Test edge-wise timeseries computing function."""
     bold_ts = np.array(
         [
             [x + 1 for x in range(20)],
