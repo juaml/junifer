@@ -1,4 +1,4 @@
-"""Provide class for parcel aggregation."""
+"""Provide class for sphere aggregation."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -6,36 +6,62 @@
 
 from typing import Dict, List, Optional
 
-import numpy as np
-from nilearn.image import math_img, resample_to_img
-from nilearn.maskers import NiftiMasker
+from nilearn.maskers import NiftiSpheresMasker
 
 from ..api.decorators import register_marker
-from ..data import load_atlas
-from ..stats import get_aggfunc_by_name
-from ..utils import logger
+from ..data import load_coordinates
+from ..utils import logger, raise_error
 from .base import BaseMarker
 
 
 @register_marker
-class ParcelAggregation(BaseMarker):
-    """Class for parcel aggregation.
+class SphereAggregation(BaseMarker):
+    """Class for sphere aggregation.
 
     Parameters
     ----------
-    atlas
-    method
-    method_params
-    on
-    name
+    coords: str
+        The name of the coordinates list to use. See
+        :mod:`junifer.data.coordinates`
+    radius: float
+        The radius of the sphere in mm. If None, the signal will be extracted
+        from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
+        for more information.
+    method: str
+        The aggregation method to use.
+        See :func:`junifer.stats.get_aggfunc_by_name` for more information.
+    method_params: Dict, optional
+        The parameters to pass to the aggregation method.
+    on: list of str, optional
+        The kind of data to apply the marker to. By default, will work on all
+        available data (default None).
+    name : str, optional
+        The name of the marker. By default, it will use KIND_SphereAggregation
+        where KIND is the kind of data it was applied to (default None).
 
     """
 
     def __init__(
-        self, atlas, method, method_params=None, on=None, name=None
+        self,
+        coords: str,
+        radius: float,
+        method: str,
+        method_params: Optional[Dict] = None,
+        on: Optional[List[str]] = None,
+        name: Optional[str] = None,
     ) -> None:
         """Initialize the class."""
-        self.atlas = atlas
+        self.coords = coords
+        self.radius = radius
+
+        if method != "mean":
+            raise_error(
+                "Only mean aggregation is supported for sphere aggregation. "
+                "If you need other aggregation methods, please open an issue "
+                "on `junifer github`_.",
+                NotImplementedError,
+            )
+
         self.method = method
         self.method_params = {} if method_params is None else method_params
         if on is None:
@@ -52,7 +78,7 @@ class ParcelAggregation(BaseMarker):
 
         Returns
         -------
-        str
+        list of str
             The kind of output.
 
         """
@@ -66,7 +92,6 @@ class ParcelAggregation(BaseMarker):
                 raise ValueError(f"Unknown input kind for {t_input}")
         return outputs
 
-    # TODO: complete type annotations
     def store(self, kind: str, out, storage) -> None:
         """Store.
 
@@ -80,7 +105,7 @@ class ParcelAggregation(BaseMarker):
         logger.debug(f"Storing {kind} in {storage}")
         if kind in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
             storage.store_table(**out)
-        if kind in ["BOLD"]:
+        elif kind in ["BOLD"]:
             storage.store_timeseries(**out)
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
@@ -100,52 +125,22 @@ class ParcelAggregation(BaseMarker):
         Returns
         -------
         dict
-            The computed result as dictionary. This will be either returned
-            to the user or stored in the storage by calling the store method
-            with this as a parameter.
+            The computed result as dictionary.
 
         """
         t_input = input["data"]
-        logger.debug(f"Parcel aggregation using {self.method}")
-        agg_func = get_aggfunc_by_name(
-            self.method, func_params=self.method_params
+        logger.debug(f"Sphere aggregation using {self.method}")
+        # agg_func = get_aggfunc_by_name(
+        #     self.method, func_params=self.method_params
+        # )
+        coords, out_labels = load_coordinates(self.coords)
+        masker = NiftiSpheresMasker(
+            coords,
+            self.radius,
+            mask_img=None,  # TODO: support this (needs #79)
         )
-        # Get the min of the voxels sizes and use it as the resolution
-        resolution = np.min(t_input.header.get_zooms()[:3])  # type: ignore
-        t_atlas, t_labels, _ = load_atlas(self.atlas, resolution=resolution)
-        atlas_img_res = resample_to_img(
-            t_atlas,
-            t_input,
-            interpolation="nearest",
-        )
-        atlas_bin = math_img(
-            "img != 0",
-            img=atlas_img_res,
-        )
-        logger.debug("Masking")
-        masker = NiftiMasker(
-            atlas_bin, target_affine=t_input.affine
-        )  # type: ignore
 
-        # Mask the input data and the atlas
-        data = masker.fit_transform(t_input)
-        atlas_values = masker.transform(atlas_img_res)
-        atlas_values = np.squeeze(atlas_values).astype(int)
-
-        # Get the values for each parcel and apply agg function
-        logger.debug("Computing ROI means")
-        atlas_roi_vals = sorted(np.unique(atlas_values))
-        out_labels = []
-        out_values = []
-        # Iterate over the parcels (existing)
-        for t_v in atlas_roi_vals:
-            t_values = agg_func(data[:, atlas_values == t_v], axis=-1)
-            out_values.append(t_values)
-            # Update the labels just in case a parcel has no voxels
-            # in it
-            out_labels.append(t_labels[t_v - 1])
-
-        out_values = np.array(out_values).T
+        out_values = masker.fit_transform(t_input)
         out = {"data": out_values, "columns": out_labels}
         if out_values.shape[0] > 1:
             out["row_names"] = "scan"

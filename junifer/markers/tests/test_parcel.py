@@ -3,6 +3,7 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+import pytest
 
 import nibabel as nib
 import numpy as np
@@ -13,6 +14,19 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 from scipy.stats import trim_mean
 
 from junifer.markers.parcel import ParcelAggregation
+
+
+def test_ParcelAggregation_input_output() -> None:
+    """Test ParcelAggregation input and output types."""
+    marker = ParcelAggregation(
+        atlas="Schaefer100x7", method="mean", on="VBM_GM"
+    )
+
+    output = marker.get_output_kind(["VBM_GM", "BOLD"])
+    assert output == ["table", "timeseries"]
+
+    with pytest.raises(ValueError, match="Unknown input"):
+        marker.get_output_kind(["VBM_GM", "BOLD", "unknown"])
 
 
 def test_ParcelAggregation_3D() -> None:
@@ -106,8 +120,10 @@ def test_ParcelAggregation_3D() -> None:
     manual = []
     for t_v in sorted(np.unique(atlas_values)):
         t_values = trim_mean(
-            data[:, atlas_values == t_v], proportiontocut=0.1, axis=None
-        )  # type: ignore
+            data[:, atlas_values == t_v],
+            proportiontocut=0.1,
+            axis=None,  # type: ignore
+        )
         manual.append(t_values)
     manual = np.array(manual)[np.newaxis, :]
 

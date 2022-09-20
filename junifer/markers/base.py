@@ -19,7 +19,8 @@ class BaseMarker(PipelineStepMixin):
         The kind of data to apply the marker to. By default, will work on all
         available data (default None).
     name : str, optional
-        The name of the marker (default None).
+        The name of the marker. By default, it will use the class name as the
+        name of the marker (default None).
 
     """
 
