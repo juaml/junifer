@@ -4,7 +4,7 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/junifer?style=flat-square)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/junifer?style=flat-square)
 ![GitHub](https://img.shields.io/github/license/juaml/junifer?style=flat-square)
-[![codecov](https://codecov.io/gh/juaml/junifer/branch/main/graph/badge.svg?token=5H21JuZXMw)](https://codecov.io/gh/juaml/junifer)
+![Codecov](https://img.shields.io/codecov/c/github/juaml/junifer?style=flat-square)
 
 ## About
 
