@@ -68,9 +68,8 @@ class RSSETSMarker(BaseMarker):
         storage
 
         """
-        logger.debug(f"Storing {kind} in {storage}")
-        if kind in ["BOLD"]:
-            storage.store_timeseries(**out)
+        logger.debug(f"Storing BOLD in {storage}")
+        storage.store_timeseries(**out)
 
     def compute(self, input: Dict) -> Dict:
         """Compute.
