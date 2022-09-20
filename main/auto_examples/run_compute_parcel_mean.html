@@ -111,21 +111,21 @@ using the Schaefer atlas (100 rois, 7 Yeo networks) for both a 3D and 4D nifti</
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-09-19 10:08:40,738 - JUNIFER - INFO - ===== Lib Versions =====
-2022-09-19 10:08:40,738 - JUNIFER - INFO - numpy: 1.22.4
-2022-09-19 10:08:40,738 - JUNIFER - INFO - scipy: 1.9.1
-2022-09-19 10:08:40,738 - JUNIFER - INFO - pandas: 1.4.4
-2022-09-19 10:08:40,738 - JUNIFER - INFO - nilearn: 0.9.2
-2022-09-19 10:08:40,738 - JUNIFER - INFO - nibabel: 4.0.2
-2022-09-19 10:08:40,738 - JUNIFER - INFO - junifer: 0.0.1.dev448
-2022-09-19 10:08:40,738 - JUNIFER - INFO - ========================
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-09-20 08:05:31,329 - JUNIFER - INFO - ===== Lib Versions =====
+2022-09-20 08:05:31,330 - JUNIFER - INFO - numpy: 1.22.4
+2022-09-20 08:05:31,330 - JUNIFER - INFO - scipy: 1.9.1
+2022-09-20 08:05:31,330 - JUNIFER - INFO - pandas: 1.4.4
+2022-09-20 08:05:31,330 - JUNIFER - INFO - nilearn: 0.9.2
+2022-09-20 08:05:31,330 - JUNIFER - INFO - nibabel: 4.0.2
+2022-09-20 08:05:31,330 - JUNIFER - INFO - junifer: 0.0.1.dev463
+2022-09-20 08:05:31,330 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>Load the VBM GM data (3d):
 - Fetch the Oasis dataset</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span></a> <span class="o">=</span> <span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_oasis_vbm</span><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_oasis_vbm.html#nilearn.datasets.fetch_oasis_vbm" title="nilearn.datasets.fetch_oasis_vbm" class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_oasis_vbm</span></a><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_fname</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">gray_matter_maps</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">vbm_img</span> <span class="o">=</span> <span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load_img</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_fname</span></a><span class="p">)</span>
+<span class="n">vbm_img</span> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.image.load_img.html#nilearn.image.load_img" title="nilearn.image.load_img" class="sphx-glr-backref-module-nilearn-image sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load_img</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_fname</span></a><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -133,10 +133,10 @@ using the Schaefer atlas (100 rois, 7 Yeo networks) for both a 3D and 4D nifti</
 
 Downloading data from https://www.nitrc.org/frs/download.php/6364/archive_dartel.tgz ...
 
-Downloaded 196665344 of 905208634 bytes (21.7%,    3.6s remaining)
-Downloaded 384466944 of 905208634 bytes (42.5%,    2.7s remaining)
-Downloaded 574275584 of 905208634 bytes (63.4%,    1.7s remaining)
-Downloaded 767033344 of 905208634 bytes (84.7%,    0.7s remaining) ...done. (5 seconds, 0 min)
+Downloaded 223207424 of 905208634 bytes (24.7%,    3.1s remaining)
+Downloaded 465575936 of 905208634 bytes (51.4%,    1.9s remaining)
+Downloaded 705249280 of 905208634 bytes (77.9%,    0.9s remaining)
+Downloaded 890650624 of 905208634 bytes (98.4%,    0.1s remaining) ...done. (4 seconds, 0 min)
 Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8baa05152/archive_dartel.tgz..... done.
 /opt/hostedtoolcache/Python/3.9.13/x64/lib/python3.9/site-packages/nilearn/datasets/struct.py:774: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
   warnings.warn(_LEGACY_FORMAT_MSG)
@@ -145,8 +145,8 @@ Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8ba
 <p>Load the functional data (4d):
 - Fetch the SPM auditory dataset
 - Concatenate the functional data into one 4D image</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s_func_data</span></a> <span class="o">=</span> <span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_spm_auditory</span><span class="p">()</span>
-<span class="n">fmri_img</span> <span class="o">=</span> <span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">concat_imgs</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s_func_data</span><span class="o">.</span><span class="n">func</span></a><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s_func_data</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_spm_auditory.html#nilearn.datasets.fetch_spm_auditory" title="nilearn.datasets.fetch_spm_auditory" class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_spm_auditory</span></a><span class="p">()</span>
+<span class="n">fmri_img</span> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.image.concat_imgs.html#nilearn.image.concat_imgs" title="nilearn.image.concat_imgs" class="sphx-glr-backref-module-nilearn-image sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">concat_imgs</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s_func_data</span><span class="o">.</span><span class="n">func</span></a><span class="p">)</span>
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
@@ -155,7 +155,7 @@ Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8ba
 Data absent, downloading...
 Downloading data from http://www.fil.ion.ucl.ac.uk/spm/download/data/MoAEpilot/MoAEpilot.zip ...
 
-Downloaded 12312576 of 34212021 bytes (36.0%,    1.8s remaining) ...done. (3 seconds, 0 min)
+Downloaded 11960320 of 34212021 bytes (35.0%,    1.9s remaining) ...done. (3 seconds, 0 min)
 Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip..... done.
 </pre></div>
 </div>
@@ -172,13 +172,13 @@ Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip
 </pre></div>
 </div>
 <p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-09-19 10:09:01,130 - JUNIFER - INFO - Computing BOLD
-2022-09-19 10:09:01,131 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-09-19 10:09:01,131 - JUNIFER - INFO - Atlas parameters:
-2022-09-19 10:09:01,131 - JUNIFER - INFO -      n_rois: 100
-2022-09-19 10:09:01,131 - JUNIFER - INFO -      yeo_networks: 7
-2022-09-19 10:09:01,131 - JUNIFER - INFO -      resolution: 3.0
-2022-09-19 10:09:01,131 - JUNIFER - INFO - At least one of the atlas files is missing. Fetching using nilearn.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-09-20 08:05:48,550 - JUNIFER - INFO - Computing BOLD
+2022-09-20 08:05:48,551 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-09-20 08:05:48,551 - JUNIFER - INFO - Atlas parameters:
+2022-09-20 08:05:48,551 - JUNIFER - INFO -      n_rois: 100
+2022-09-20 08:05:48,551 - JUNIFER - INFO -      yeo_networks: 7
+2022-09-20 08:05:48,551 - JUNIFER - INFO -      resolution: 3.0
+2022-09-20 08:05:48,551 - JUNIFER - INFO - At least one of the atlas files is missing. Fetching using nilearn.
 
 Dataset created in /home/runner/junifer/data/atlas/schaefer_2018
 
@@ -186,16 +186,16 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2022-09-19 10:09:01,192 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-09-19 10:09:02,639 - JUNIFER - INFO - No storage specified, returning dictionary
-2022-09-19 10:09:02,639 - JUNIFER - INFO - Computing VBM_GM
-2022-09-19 10:09:02,640 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-09-19 10:09:02,640 - JUNIFER - INFO - Atlas parameters:
-2022-09-19 10:09:02,640 - JUNIFER - INFO -      n_rois: 100
-2022-09-19 10:09:02,640 - JUNIFER - INFO -      yeo_networks: 7
-2022-09-19 10:09:02,640 - JUNIFER - INFO -      resolution: 2.0
-2022-09-19 10:09:02,642 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-09-19 10:09:03,227 - JUNIFER - INFO - No storage specified, returning dictionary
+2022-09-20 08:05:48,606 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-09-20 08:05:49,762 - JUNIFER - INFO - No storage specified, returning dictionary
+2022-09-20 08:05:49,762 - JUNIFER - INFO - Computing VBM_GM
+2022-09-20 08:05:49,762 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-09-20 08:05:49,762 - JUNIFER - INFO - Atlas parameters:
+2022-09-20 08:05:49,762 - JUNIFER - INFO -      n_rois: 100
+2022-09-20 08:05:49,762 - JUNIFER - INFO -      yeo_networks: 7
+2022-09-20 08:05:49,762 - JUNIFER - INFO -      resolution: 2.0
+2022-09-20 08:05:49,764 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-09-20 08:05:50,202 - JUNIFER - INFO - No storage specified, returning dictionary
 </pre></div>
 </div>
 <p>Check the results</p>
@@ -213,7 +213,7 @@ dict_keys([&#39;BOLD&#39;, &#39;VBM_GM&#39;])
 (96, 100)
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  22.495 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  18.878 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-compute-parcel-mean-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/c1da12f6e22b8ea8de3cd5add55a3fa8/run_compute_parcel_mean.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_compute_parcel_mean.py</span></code></a></p>
