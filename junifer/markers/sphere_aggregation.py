@@ -29,7 +29,7 @@ class SphereAggregation(BaseMarker):
         for more information.
     method: str
         The aggregation method to use.
-        See :func:`junifer.stats.get_aggfunc_by_name`
+        See :func:`junifer.stats.get_aggfunc_by_name` for more information.
     method_params: Dict, optional
         The parameters to pass to the aggregation method.
     on: list of str, optional
@@ -78,7 +78,7 @@ class SphereAggregation(BaseMarker):
 
         Returns
         -------
-        str
+        list of str
             The kind of output.
 
         """
