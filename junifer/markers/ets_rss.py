@@ -12,9 +12,9 @@ import numpy as np
 
 from ..api.decorators import register_marker
 from ..utils import logger
-from .utils import _ets
 from .base import BaseMarker
 from .parcel import ParcelAggregation
+from .utils import _ets
 
 
 @register_marker
@@ -31,9 +31,10 @@ class RSSETSMarker(BaseMarker):
     """
 
     def __init__(
-            self, atlas: str,
-            aggregation_method: str = "mean",
-            name: str = None,
+        self,
+        atlas: str,
+        aggregation_method: str = "mean",
+        name: str = None,
     ) -> None:
         """Initialize the class."""
         self.atlas = atlas

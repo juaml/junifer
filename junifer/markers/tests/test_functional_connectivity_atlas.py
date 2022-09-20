@@ -6,7 +6,6 @@
 
 from pathlib import Path
 
-
 from nilearn import datasets, image
 from nilearn.connectome import ConnectivityMeasure
 from nilearn.maskers import NiftiLabelsMasker
@@ -64,8 +63,8 @@ def test_FunctionalConnectivityAtlas(tmp_path: Path) -> None:
 
     # Check empirical correlation method parameters
     fc = FunctionalConnectivityAtlas(
-        atlas="Schaefer100x7",
-        cor_method_params={"empirical": True})
+        atlas="Schaefer100x7", cor_method_params={"empirical": True}
+    )
 
     all_out = fc.fit_transform({"BOLD": {"data": fmri_img}})
 

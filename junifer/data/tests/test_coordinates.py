@@ -3,9 +3,8 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-import pytest
-
 import numpy as np
+import pytest
 from numpy.testing import assert_array_equal
 
 from junifer.data.coordinates import (

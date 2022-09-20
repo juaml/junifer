@@ -3,12 +3,12 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from pathlib import Path
-from typing import Dict, List, Union, Optional, Tuple
 import typing
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple, Union
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 from numpy.typing import ArrayLike
 
 from ..utils.logging import logger, raise_error

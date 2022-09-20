@@ -111,7 +111,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
         if self.cor_method_params["empirical"]:
             cm = ConnectivityMeasure(
                 cov_estimator=EmpiricalCovariance(),  # type: ignore
-                kind=self.cor_method
+                kind=self.cor_method,
             )
         else:
             cm = ConnectivityMeasure(kind=self.cor_method)

@@ -6,9 +6,9 @@
 import pytest
 
 from junifer.datagrabber.utils import (
+    validate_patterns,
     validate_replacements,
     validate_types,
-    validate_patterns,
 )
 
 
