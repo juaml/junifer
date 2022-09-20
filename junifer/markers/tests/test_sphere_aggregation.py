@@ -18,7 +18,14 @@ from junifer.storage import SQLiteFeatureStorage
 
 
 def test_SphereAggregation_input_output() -> None:
-    """Test SphereAggregation input and output types."""
+    """Test SphereAggregation input and output types.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     marker = SphereAggregation(
         coords="DMNBuckner", method="mean", radius=8, on="VBM_GM"
     )
