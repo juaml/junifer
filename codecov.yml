@@ -1,21 +1,21 @@
-comment: false
-
 codecov:
-  notify:
-    require_ci_to_pass: no
+  notify: {}
+  require_ci_to_pass: false
+
+comment: true
 
 coverage:
   status:
     patch:
       default:
-        target: 95%
+        if_ci_failed: failure
         if_no_uploads: error
         if_not_found: success
-        if_ci_failed: failure
+        target: 95.0
     project:
       default: false
       library:
-        target: 90%
+        if_ci_failed: failure
         if_no_uploads: error
         if_not_found: success
-        if_ci_failed: failure
+        target: 90.0
