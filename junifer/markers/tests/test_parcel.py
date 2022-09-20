@@ -3,10 +3,9 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
-import pytest
-
 import nibabel as nib
 import numpy as np
+import pytest
 from nilearn import datasets
 from nilearn.image import concat_imgs, math_img, resample_to_img
 from nilearn.maskers import NiftiLabelsMasker, NiftiMasker

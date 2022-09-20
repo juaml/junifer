@@ -4,9 +4,9 @@
 # License: AGPL
 
 from pathlib import Path
-import pytest
 
 import nibabel as nib
+import pytest
 from nilearn import datasets
 from nilearn.image import concat_imgs
 from nilearn.maskers import NiftiSpheresMasker

@@ -51,7 +51,9 @@ def test_compute_parameters() -> None:
     """Test compute parameters."""
     base = BaseMarker(on=["bold", "dwi"], name="mymarker")
     base.compute = lambda x, y: {  # type: ignore
-        "data": x.keys(), "extra": y.keys()}
+        "data": x.keys(),
+        "extra": y.keys(),
+    }
     input_ = {"bold": {"path": "test"}, "t2": {"path": "test"}}
     out = base.fit_transform(
         input_,

@@ -1,12 +1,14 @@
 """Provide tests for testing registry."""
 
-from junifer.api.registry import get_step_names
 import importlib
+
+from junifer.api.registry import get_step_names
 
 
 def test_testing_registry() -> None:
     """Test testing registry."""
     import junifer
+
     importlib.reload(junifer.api.registry)
     importlib.reload(junifer)
 

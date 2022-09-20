@@ -5,9 +5,8 @@
 
 from typing import Dict, Optional
 
-import pytest
-
 import numpy as np
+import pytest
 
 from junifer.stats import get_aggfunc_by_name, winsorized_mean
 
