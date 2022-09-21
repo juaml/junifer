@@ -8,37 +8,24 @@ How do I contribute to junifer?
 Please follow the `contribution guidelines <https://juaml.github.io/junifer/main/contribution.html>`_.
 
 
-What is the easiest setup to contribute to junifer?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* Use VScode (or any other IDE (interactive developer environment) of your choice) with which you can fork the repository and git.
+How do I set up VSCode for contribution?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We followed the following steps to get started with contributing:
+The `contribution guidelines <https://juaml.github.io/junifer/main/contribution.html>`_
+apply in general when using VSCode as your IDE as well.
 
-1. Fork the repository
+The following steps are specific to VSCode and you can choose to go with it:
 
-   * copy the link and do ``git-clone``
+1. After forking the repository on GitHub, you can clone the forked repository
+   using the internal version control tool.
 
-2. Create the development environment
+2. We recommend using ``conda`` to create your virtual environment
 
-   * create the environment using conda ``conda env create -n {NameOfEnvironment} python=3.9``
-   * update the environment ``conda env update -n {NameOfEnvironment} --file=conda-env.yml``. The relevant file is within the junifer directory.
-   * activate the environment ``conda activate {NameOfEnvironment}``
+   .. code-block:: console
 
-3. install junifer
+       conda env create -n <your-environment-name> -f conda-env.yml python=3.9
+       conda activate <your-environment-name>
 
-   * go to your junifer-directory ``cd {junifer-directory}`` and ``pip install -e .``
+   The ``conda-env.yml`` can be found at the root of the repository.
 
-4. open VS code and start contributing
-
-
-P.S.: if you want to contribute to the documentation go to
-`7.4 <file:///Users/pat/Desktop/junifer/junifer_BH/docs/_build/contribution.html#adding-and-building-documentation>`_ and build the packages required for documentation
-``pip install -e ".[docs]"
-cd docs
-make local``
-You can change the content of the html sites by changing the related .rst-files.
-to check how your chagnes look like in your browser, save the .rst-file after changing and type ``make local``. 
-Afterwards, open the index.html file or other related html file in your browser
-
-
-
+The required development tools should be installed and you should be good to go.
