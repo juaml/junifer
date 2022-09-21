@@ -103,9 +103,9 @@ Planned
 Markers
 ^^^^^^^
 
-.. 
+..
     Provide a list of the Markers that are implemented or planned.
-    
+
     State: this should indicate the state of the dataset. Valid options are
     - Planned
     - In Progress
@@ -116,7 +116,10 @@ Markers
     implementing the dataset. Links to github can be added by using the
     following syntax: :gh:`<issue number>`
 
-.. list-table:: Available data grabbers
+Available
+---------
+
+.. list-table::
    :widths: auto
    :header-rows: 1
 
@@ -128,13 +131,51 @@ Markers
      - Apply parcellation and perform aggregation function
      - Done
      - 0.0.1
+   * - :class:`junifer.markers.FunctionalConnectivityAtlas`
+     - Compute functional connectivity
+     - Done
+     - 0.0.1
+   * - :class:`junifer.markers.SphereAggregation`
+     - Spherical aggregation using mean
+     - Done
+     - 0.0.1
+   * - :class:`junifer.markers.RSSETSMarker`
+     - Compute root sum of squares of edgewise timeseries
+     - Done
+     - 0.0.1
 
 
+Planned
+-------
 
 Available Atlases and Coordinates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. list-table::
+   :widths: auto
+   :header-rows: 1
 
+   * - Name
+     - Description
+     - Reference
+   * - Connectedness
+     - Compute connectedness
+     - :gh:`34`
+   * - ALFF and (f)ALFF
+     - Detect amplitude of low-frequency fluctuation (ALFF) for resting-state fMRI
+     - :gh:`35`
+   * - ReHo
+     - Calculate regional homogeneity
+     - :gh:`36`
+   * - Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent
+     - Calculate Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent
+     - :gh:`61`
+   * - EdgeCentricFC
+     - Calculate edge-centric functional connectivity
+     - :gh:`64`
+   * - CrossAtlasFC
+     - Calculate cross-atlas functional connectivity
+     - :gh:`85`
 
 ========  =============  =================================================================  =============
 Name      Options        Keys                                                               Version added
