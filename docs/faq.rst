@@ -3,9 +3,9 @@
 FAQs
 ====
 
-What are the first steps to contribute to junifer?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* go to `contribution <https://juaml.github.io/junifer/main/contribution.html>`_ and follow the steps written here.
+How do I contribute to junifer?
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Please follow the `contribution guidelines <https://juaml.github.io/junifer/main/contribution.html>`_.
 
 
 What is the easiest setup to contribute to junifer?
