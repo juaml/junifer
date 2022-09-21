@@ -1,6 +1,7 @@
+.. include:: links.inc
 
-Available pipeline and atlases
-==============================
+Pipeline steps and atlases
+==========================
 
 
 Data Grabbers
