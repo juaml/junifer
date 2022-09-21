@@ -6,13 +6,13 @@ Available pipeline and atlases
 Data Grabbers
 ^^^^^^^^^^^^^
 
-.. 
+..
     Provide a list of the DataGrabbers that are implemented or planned.
     Access: Valid options are
         - Open
         - Open with registration
         - Restricted
-    
+
     Type/config: this should mention weather the class is built-in in the
     core of junifer or needs to be imported from a specific configuration in
     the `junifer.configs` module.
@@ -27,7 +27,10 @@ Data Grabbers
     implementing the dataset. Links to github can be added by using the
     following syntax: :gh:`<issue number>`
 
-.. list-table:: Available data grabbers
+Available
+---------
+
+.. list-table::
    :widths: auto
    :header-rows: 1
 
@@ -37,19 +40,64 @@ Data Grabbers
      - Type/Config
      - State
      - Version Added
-   * - `DataladHCP1200`
+   * - :class:`junifer.markers.DataladHCP1200`
      - `HCP OpenAccess dataset <https://github.com/datalad-datasets/human-connectome-project-openaccess>`_
      - Open with registration
      - Built-in
      - In Progress
      - :gh:`4`
-   * - `JuselessDataladUKBVBM`
-     - UKB VBM dataset preprocessed with CAT. Available for Juseless only
+   * - :class:`junifer.configs.juseless.JuselessDataladUKBVBM`
+     - UKB VBM dataset preprocessed with CAT. Available for Juseless only.
      - Restricted
-     - `junifer.configs.juseless`
+     - ``junifer.configs.juseless``
      - Done
      - 0.0.1
+   * - :class:`junifer.markers.DataladAOMIC1000`
+     - `AOMIC 1000 dataset <https://github.com/OpenNeuroDatasets/ds003097>`_
+     - Open without registration
+     - Built-in
+     - Done
+     - 0.0.1
+   * - :class:`junifer.configs.juseless.JuselessDataladAOMICVBM`
+     - AOMIC VBM dataset. Available for Juseless only.
+     - Restricted
+     - ``junifer.configs.juseless``
+     - In Progress
+     - :gh:`57`
 
+
+Planned
+-------
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Name
+     - Description
+     - Access
+     - Type/Config
+     - Reference
+   * - CamCAN
+     - CamCAN dataset for Juseless
+     - Restricted
+     - ``junifer.configs.juseless``
+     - :gh:`46`
+   * - ENKI
+     - ENKI dataset for Juseless
+     - Restricted
+     - ``junifer.configs.juseless``
+     - :gh:`47`
+   * - IXI
+     - IXI dataset for Juseless
+     - Restricted
+     - ``junifer.configs.juseless``
+     - :gh:`48`
+   * - UCLA
+     - UCLA dataset for Juseless
+     - Restricted
+     - ``junifer.configs.juseless``
+     - :gh:`88`
 
 
 Markers
