@@ -1,4 +1,4 @@
-"""Provide base class for markers."""
+"""Provide class for functional connectivity."""
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
@@ -19,7 +19,7 @@ from .parcel import ParcelAggregation
 class FunctionalConnectivityAtlas(BaseMarker):
     """Class for functional connectivity.
 
-     Parameters
+    Parameters
     ----------
     atlas
     agg_method

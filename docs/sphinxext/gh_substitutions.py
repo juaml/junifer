@@ -1,7 +1,8 @@
-# -*- coding: utf-8 -*-
+"""Provide GitHub substitutions in Sphinx."""
 
 from docutils.nodes import reference
 from docutils.parsers.rst.roles import set_classes
+
 
 # Taken from MNE-Python
 # adapted from
@@ -17,14 +18,14 @@ def gh_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
         # direct link mode
         slug = text
     else:
-        slug = 'issues/' + text
-    text = '#' + text
-    ref = 'https://github.com/juaml/junifer/' + slug
+        slug = "issues/" + text
+    text = "#" + text
+    ref = "https://github.com/juaml/junifer/" + slug
     set_classes(options)
     node = reference(rawtext, text, refuri=ref, **options)
     return [node], []
 
 
 def setup(app):
-    app.add_role('gh', gh_role)
+    app.add_role("gh", gh_role)
     return
