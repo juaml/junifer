@@ -7,6 +7,7 @@
 # License: AGPL
 
 import numpy as np
+import pandas as pd
 from scipy.stats import zscore
 
 
@@ -44,3 +45,33 @@ def _ets(bold_ts: np.ndarray) -> np.ndarray:
     u, v = np.tril_indices(n_roi, k=-1)
     # Compute the ETS
     return timeseries[:, u] * timeseries[:, v]
+
+
+def _correlate_dataframes(df1, df2, method="pearson"):
+    """Column-wise correlations between two dataframes.
+
+    Correlates each column from dataframe 1 with each column from dataframe 2.
+    Output is a dataframe of shape (df2.shape[1], df1.shape[1]).
+    It is required that number of rows are matched.
+
+    Parameters
+    ----------
+    df1 : pd.DataFrame
+    df2 : pd.DataFrame
+    method : str or callable
+        any method that can be passed to:
+        https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
+
+    Returns :
+    ---------
+    df_corr : pd.DataFrame
+    """
+
+    assert (
+        df1.shape[0] == df2.shape[0]
+    ), "pd.DataFrames have unequal number of rows!"
+    return (
+        pd.concat([df1, df2], axis=1, keys=["df1", "df2"])
+        .corr(method=method)
+        .loc["df2", "df1"]
+    )

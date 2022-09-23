@@ -77,6 +77,8 @@ Enhancements
 
 - Add :class:`junifer.preprocess.fMRIPrepConfoundRemover` (:gh:`111` by `Fede Raimondo`_ and `Leonard Sasse`_).
 
+- Implement CrossAtlasFC marker ( :gh: `85` by `Leonard Sasse`_ and `Kaustubh R. Patil`_)
+
 Bugs
 ~~~~
 
