@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import pandas as pd
 
@@ -78,7 +78,7 @@ class CrossAtlasFC(BaseMarker):
         logger.debug(f"Storing {kind} in {storage}")
         storage.store_matrix2d(**out)
 
-    def compute(self, input: Dict) -> Dict:
+    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
         Take a timeseries, parcellate them with two different parcellation
@@ -112,6 +112,8 @@ class CrossAtlasFC(BaseMarker):
         parcellated_ts_two = atlas_two_dict["data"]
         # columns should be named after parcellation 1
         # rows should be named after parcellation 2
+        final_out_dict["col_names"] = final_out_dict["columns"]
+        del final_out_dict["columns"]
         final_out_dict["row_names"] = atlas_two_dict["columns"]
 
         final_out_dict["data"] = _correlate_dataframes(
