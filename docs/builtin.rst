@@ -96,7 +96,7 @@ Planned
      - :gh:`48`
    * - UCLA
      - UCLA dataset for Juseless
-     - Open without registration
+     - Built-in
      - ``junifer.configs.juseless``
      - :gh:`88`
 
