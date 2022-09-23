@@ -99,15 +99,20 @@ class CrossAtlasFC(BaseMarker):
 
         logger.debug("Aggregating time series in both atlases.")
         # Initialize a ParcelAggregation
-        parcellated_ts_one = ParcelAggregation(
+        final_out_dict = ParcelAggregation(
             atlas=self.atlas_one,
             method=self.aggregation_method,
-        ).compute(input)["data"]
-        final_out_dict = ParcelAggregation(
+        ).compute(input)
+        atlas_two_dict = ParcelAggregation(
             atlas=self.atlas_two,
             method=self.aggregation_method,
         ).compute(input)
-        parcellated_ts_two = final_out_dict["data"]
+
+        parcellated_ts_one = final_out_dict["data"]
+        parcellated_ts_two = atlas_two_dict["data"]
+        # columns should be named after parcellation 1
+        # rows should be named after parcellation 2
+        final_out_dict["row_names"] = atlas_two_dict["columns"]
 
         final_out_dict["data"] = _correlate_dataframes(
             pd.DataFrame(parcellated_ts_one),

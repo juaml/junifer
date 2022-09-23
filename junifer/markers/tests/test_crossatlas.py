@@ -27,10 +27,14 @@ def test_compute() -> None:
         )
         out = crossatlas.compute(input_dict)
         assert out["data"].shape == (200, 100)
+        assert len(out["columns"]) == 100
+        assert len(out["row_names"]) == 200
         meta = crossatlas.get_meta("BOLD")["marker"]
-        assert meta["atlas"] == "Schaefer100x17"
         assert meta["aggregation_method"] == "mean"
-        assert meta["class"] == "RSSETSMarker"
+        assert meta["class"] == "CrossAtlasFC"
+        assert meta["atlas_one"] == "Schaefer100x17"
+        assert meta["atlas_two"] == "Schaefer200x17"
+        assert meta["correlation_method"] == "spearman"
 
 
 def test_get_output_kind() -> None:
