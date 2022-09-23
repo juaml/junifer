@@ -41,7 +41,7 @@ Available
      - Type/Config
      - State
      - Version Added
-   * - :class:`junifer.markers.DataladHCP1200`
+   * - :class:`junifer.datagrabber.DataladHCP1200`
      - `HCP OpenAccess dataset <https://github.com/datalad-datasets/human-connectome-project-openaccess>`_
      - Open with registration
      - Built-in
@@ -53,7 +53,7 @@ Available
      - ``junifer.configs.juseless``
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.DataladAOMIC1000`
+   * - :class:`junifer.datagrabber.DataladAOMIC1000`
      - `AOMIC 1000 dataset <https://github.com/OpenNeuroDatasets/ds003097>`_
      - Open without registration
      - Built-in
@@ -96,7 +96,7 @@ Planned
      - :gh:`48`
    * - UCLA
      - UCLA dataset for Juseless
-     - Restricted
+     - Open without registration
      - ``junifer.configs.juseless``
      - :gh:`88`
 
