@@ -5,13 +5,13 @@ FAQs
 
 How do I contribute to junifer?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Please follow the `contribution guidelines <https://juaml.github.io/junifer/main/contribution.html>`_.
+Please follow the :ref:`contribution guidelines <contribution_guidelines>`.
 
 
 How do I set up VSCode for contribution?
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The `contribution guidelines <https://juaml.github.io/junifer/main/contribution.html>`_
+The :ref:`contribution guidelines <contribution_guidelines>`
 apply in general when using VSCode as your IDE as well.
 
 The following steps are specific to VSCode and you can choose to go with it:

@@ -1,5 +1,7 @@
 .. include:: links.inc
 
+.. _contribution_guidelines:
+
 Contributing to junifer
 =======================
 
