@@ -19,7 +19,7 @@ class JuselessDataladUKBVBM(PatternDataladDataGrabber):
     Implements a DataGrabber to access the UKB VBM data in Juseless.
 
     Parameters
-    -----------
+    ----------
     datadir : str or pathlib.Path, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory

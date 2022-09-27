@@ -28,7 +28,6 @@ enabling others to extend it easily.
    faq
    whats_new
 
-
 Indices and tables
 ==================
 

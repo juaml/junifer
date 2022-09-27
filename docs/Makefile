@@ -17,6 +17,7 @@ help:
 clean:
 	rm -rf $(BUILDDIR)/*
 	rm -rf auto_examples/
+	rm -rf autoapi/
 
 # For local build
 local:

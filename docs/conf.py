@@ -47,6 +47,7 @@ extensions = [
     "sphinx_multiversion",  # self-hosted versioned documentation
     "numpydoc",  # support for NumPy style docstrings
     "gh_substitutions",  # custom GitHub substitutions
+    # "autoapi.extension",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -95,6 +96,10 @@ autoclass_content = "both"
 
 # sphinx-multiversion options
 smv_rebuild_tags = False
-smv_tag_whitelist = r"^v\d+\.\d+.\d+$"
-smv_branch_whitelist = r"main"
-smv_released_pattern = r"^tags/v.*$"
+smv_tag_whitelist = r'^v\d+\.\d+.\d+$'
+smv_branch_whitelist = r'main'
+smv_released_pattern = r'^tags/v.*$'
+
+# Sphinx-AutoAPI configurations
+autoapi_dirs = ["../junifer"]
+suppress_warnings = ["autoapi.python_import_resolution"]
