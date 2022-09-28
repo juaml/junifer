@@ -644,7 +644,7 @@ def _retrieve_suit(
         see http://www.diedrichsenlab.org/imaging/suit.htm).
 
     Returns
-    -------
+    ------
     pathlib.Path
         File path to the atlas image.
     list of str
