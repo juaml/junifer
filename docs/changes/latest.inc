@@ -71,6 +71,8 @@ Enhancements
 
 - Implement JuselessDataladAOMICID1000VBM datagrabber for accessing AOMIC ID 1000 VBM from juseless (:gh:`57` by `Felix Hoffstaedter`_ and `Synchon Mandal`_)
 
+- Add test for DataladHCP1200 datagrabber (:gh: `93` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
