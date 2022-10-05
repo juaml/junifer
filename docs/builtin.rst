@@ -65,7 +65,7 @@ Available
      - Built-in
      - Done
      - 0.0.1
-    * - :class:`junifer.datagrabber.DataladAOMICPIOP2`
+   * - :class:`junifer.datagrabber.DataladAOMICPIOP2`
      - `AOMIC PIOP2 dataset <https://github.com/OpenNeuroDatasets/ds002790>`_
      - Open without registration
      - Built-in
