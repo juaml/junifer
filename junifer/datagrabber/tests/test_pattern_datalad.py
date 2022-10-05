@@ -93,30 +93,51 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
             with open(t_sub["T1w"]["path"], "r") as f:
                 assert f.readlines()[0] == "placeholder"
 
-    # datadir = tmp_path / "dataset"  # Need this for testing
-    # patterns = {
-    #     "T1w": "{subject}/anat/{subject}_T*w.nii.gz",
-    #     "bold": "{subject}/func/{subject}_task-rest_*.nii.gz",
-    # }
-    # with PatternDataladDataGrabber(
-    #     rootdir=rootdir,
-    #     uri=repo_uri,
-    #     types=types,
-    #     patterns=patterns,
-    #     datadir=datadir,
-    #     replacements=replacements,
-    # ) as dg:
-    #     assert dg.datadir == datadir / rootdir
-    #     for elem in dg:
-    #         t_sub = dg[elem]
-    #         assert "path" in t_sub["T1w"]
-    #         assert t_sub["T1w"]["path"] == (
-    #             dg.datadir / f"{elem}/anat/{elem}_T1w.nii.gz"
-    #         )
-    #         assert "path" in t_sub["bold"]
-    #         assert t_sub["bold"]["path"] == (
-    #             dg.datadir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
-    #         )
+
+def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:
+    """Test a datalad datagrabber with a datadir set to a relative path.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Define types
+    types = ["T1w", "bold"]
+    # Define patterns
+    patterns = {
+        "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
+        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+    }
+    # Define replacements
+    replacements = ["subject"]
+
+    repo_uri = _testing_dataset["example_bids"]["uri"]
+
+    datadir = "dataset"  # use string and not absolute path
+    patterns = {
+        "T1w": "example_bids/{subject}/anat/{subject}_T*w.nii.gz",
+        "bold": "example_bids/{subject}/func/{subject}_task-rest_*.nii.gz",
+    }
+    with PatternDataladDataGrabber(
+        uri=repo_uri,
+        types=types,
+        patterns=patterns,
+        datadir=datadir,
+        replacements=replacements,
+    ) as dg:
+        assert dg.datadir == Path(datadir)
+        for elem in dg:
+            t_sub = dg[elem]
+            assert "path" in t_sub["T1w"]
+            assert t_sub["T1w"]["path"] == (
+                dg.datadir / f"{elem}/anat/{elem}_T1w.nii.gz"
+            )
+            assert "path" in t_sub["bold"]
+            assert t_sub["bold"]["path"] == (
+                dg.datadir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
+            )
 
 
 def test_bids_PatternDataladDataGrabber_session():

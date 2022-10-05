@@ -40,6 +40,7 @@ class BaseDataGrabber(ABC):
         # Convert str to Path
         if not isinstance(datadir, Path):
             datadir = Path(datadir)
+
         logger.debug("Initializing BaseDataGrabber")
         logger.debug(f"\t_datadir = {datadir}")
         logger.debug(f"\ttypes = {types}")
