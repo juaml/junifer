@@ -95,8 +95,7 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
 
 
 def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:
-    """Test a subject-based BIDS datalad datagrabber with a datadir set to a
-    relative path.
+    """Test a datalad datagrabber with a datadir set to a relative path.
 
     Parameters
     ----------
@@ -128,7 +127,7 @@ def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:
         datadir=datadir,
         replacements=replacements,
     ) as dg:
-        assert dg.datadir == Path(datadir).absolute()
+        assert dg.datadir == Path(datadir)
         for elem in dg:
             t_sub = dg[elem]
             assert "path" in t_sub["T1w"]

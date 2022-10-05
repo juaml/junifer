@@ -159,7 +159,7 @@ class PatternDataGrabber(BaseDataGrabber):
             t_pattern = self.patterns[t_type]
             t_replace = self._replace_patterns_glob(element, t_pattern)
             if "*" in t_replace:
-                t_matches = list(self.datadir.glob(t_replace))
+                t_matches = list(self.datadir.absolute().glob(t_replace))
                 if len(t_matches) > 1:
                     raise_error(
                         f"More than one file matches for {element} / {t_type}:"

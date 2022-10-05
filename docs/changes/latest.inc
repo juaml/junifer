@@ -54,5 +54,8 @@ Enhancements
 Bugs
 ~~~~
 
+- Fix a bug in which a PatternDatagrabber would now work with relative `datadir` paths.
+  (:gh:`96` by `Leonard Sasse`_, fixed in :gh:`98` by `Fede Raimondo`_).
+
 API changes
 ~~~~~~~~~~~
