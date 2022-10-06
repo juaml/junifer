@@ -10,3 +10,4 @@ from .hcp import DataladHCP1200, HCP1200
 from .multiple import MultipleDataGrabber
 from .pattern import PatternDataGrabber
 from .pattern_datalad import PatternDataladDataGrabber
+from .aomic import DataladAOMICID1000, DataladAOMICPIOP1, DataladAOMICPIOP2
