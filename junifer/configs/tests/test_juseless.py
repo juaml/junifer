@@ -9,7 +9,10 @@ import socket
 
 import pytest
 
-from junifer.configs.juseless import JuselessDataladUKBVBM
+from junifer.configs.juseless import (
+    JuselessDataladCamCANVBM,
+    JuselessDataladUKBVBM,
+)
 from junifer.datagrabber.hcp import DataladHCP1200
 from junifer.utils.logging import configure_logging
 
@@ -45,3 +48,14 @@ def test_juselessdataladhcp_datagrabber() -> None:
 
         assert out["BOLD"]["path"].exists()
         assert out["BOLD"]["path"].isfile()
+
+
+def test_juselessdataladcamcanvbm_datagrabber() -> None:
+    """Test datalad CamCANVBM datagrabber."""
+    with JuselessDataladCamCANVBM() as dg:
+        all_elements = dg.get_elements()
+        test_element = all_elements[0]
+        out = dg[test_element]
+        assert "VBM_GM" in out
+        assert out["VBM_GM"]["path"].name == f"m0wp1sub-{test_element}.nii.gz"
+        assert out["VBM_GM"]["path"].exists()
