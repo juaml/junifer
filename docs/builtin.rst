@@ -53,12 +53,24 @@ Available
      - ``junifer.configs.juseless``
      - Done
      - 0.0.1
-   * - :class:`junifer.datagrabber.DataladAOMIC1000`
+   * - :class:`junifer.datagrabber.DataladAOMICID1000`
      - `AOMIC 1000 dataset <https://github.com/OpenNeuroDatasets/ds003097>`_
      - Open without registration
      - Built-in
      - Done
      - 0.0.1
+   * - :class:`junifer.datagrabber.DataladAOMICPIOP1`
+     - `AOMIC PIOP1 dataset <https://github.com/OpenNeuroDatasets/ds002785>`_
+     - Open without registration
+     - Built-in
+     - Done
+     - 0.0.1
+   * - :class:`junifer.datagrabber.DataladAOMICPIOP2`
+     - `AOMIC PIOP2 dataset <https://github.com/OpenNeuroDatasets/ds002790>`_
+     - Open without registration
+     - Built-in
+     - Done
+     - 0.0.1 
    * - :class:`junifer.configs.juseless.JuselessDataladAOMICVBM`
      - AOMIC VBM dataset. Available for Juseless only.
      - Restricted

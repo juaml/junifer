@@ -1,22 +1,26 @@
-"""Provide tests for aomic1000."""
+"""Provide tests for aomicid1000."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
 #          Xuan Li <xu.li@fz-juelich.de>
+#          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from junifer.datagrabber.aomic1000 import DataladAOMIC1000
+from junifer.datagrabber.aomic.id1000 import DataladAOMICID1000
 from junifer.utils import configure_logging
-
-
-uri = "https://gin.g-node.org/juaml/datalad-example-aomic1000"
 
 
 def test_aomic1000_datagrabber() -> None:
     """Test datalad AOMIC1000 datagrabber."""
+
+    uri_ID1000 = "https://gin.g-node.org/juaml/datalad-example-aomic1000"
     configure_logging(level="DEBUG")
-    dg = DataladAOMIC1000()
-    dg.uri = uri  # change uri here to use fake data instead of real dataset
+
+    dg = DataladAOMICID1000()
+
+    # change uri here to use fake data instead of real dataset
+    dg.uri = uri_ID1000
+
     with dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]

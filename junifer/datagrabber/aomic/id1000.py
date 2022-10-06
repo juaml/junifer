@@ -1,17 +1,22 @@
 """Provide concrete implementations for AOMIC1000 data access."""
 
-# from itertools import product
+# Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Vera Komeyer <v.komeyer@fz-juelich.de>
+#          Xuan Li <xu.li@fz-juelich.de>
+#          Leonard Sasse <l.sasse@fz-juelich.de>
+# License: AGPL
+
 from pathlib import Path
 from typing import Union
 
 from junifer.datagrabber import PatternDataladDataGrabber
 
-from ..api.decorators import register_datagrabber
+from ...api.decorators import register_datagrabber
 
 
 @register_datagrabber
-class DataladAOMIC1000(PatternDataladDataGrabber):
-    """Concrete implementation for pattern-based data fetching of AOMIC1000.
+class DataladAOMICID1000(PatternDataladDataGrabber):
+    """Concrete implementation for pattern-based data fetching of AOMICID1000.
 
     Parameters
     ----------

@@ -51,6 +51,9 @@ Enhancements
 
 - Implement SphereAggregation marker (by `Fede Raimondo`_).
 
+- Implement PIOP1 and PIOP2 AOMIC datasets and refactor AOMICID1000 slightly 
+  (:gh: `94` by `Leonard Sasse`_)
+
 Bugs
 ~~~~
 
