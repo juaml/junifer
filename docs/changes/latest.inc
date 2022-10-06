@@ -55,6 +55,7 @@ Enhancements
   (:gh: `94` by `Leonard Sasse`_)
 
 - Implement a JuselessDataladCamCANVBM datagrabber class
+
 Bugs
 ~~~~
 
