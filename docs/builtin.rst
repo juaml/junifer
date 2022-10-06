@@ -53,6 +53,12 @@ Available
      - ``junifer.configs.juseless``
      - Done
      - 0.0.1
+   * - :class:`junifer.configs.juseless.JuselessDataladCamCANVBM`
+     - CamCAN VBM dataset preprocessed with CAT. Available for Juseless only.
+     - Restricted
+     - ``junifer.configs.juseless``
+     - Done
+     - 0.0.1
    * - :class:`junifer.datagrabber.DataladAOMICID1000`
      - `AOMIC 1000 dataset <https://github.com/OpenNeuroDatasets/ds003097>`_
      - Open without registration
