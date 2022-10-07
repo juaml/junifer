@@ -15,7 +15,9 @@ from ....datagrabber import PatternDataladDataGrabber
 @register_datagrabber
 class JuselessDataladUKBVBM(PatternDataladDataGrabber):
     """Juseless UKB VBM DataGrabber class.
+
     Implements a DataGrabber to access the UKB VBM data in Juseless.
+
     Parameters
     -----------
     datadir : str or pathlib.Path, optional
