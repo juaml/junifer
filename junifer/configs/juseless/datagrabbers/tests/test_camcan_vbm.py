@@ -1,4 +1,4 @@
-"""Provide tests for juseless datagrabber."""
+"""Provide tests for CamCAN VBM juseless datagrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -9,7 +9,7 @@ import socket
 
 import pytest
 
-from junifer.datagrabber.hcp import DataladHCP1200
+from junifer.configs.juseless.datagrabbers import JuselessDataladCamCANVBM
 from junifer.utils.logging import configure_logging
 
 
@@ -20,13 +20,12 @@ if socket.gethostname() != "juseless":
 configure_logging(level="DEBUG")
 
 
-def test_juselessdataladhcp_datagrabber() -> None:
-    """Test datalad HCP datagrabber."""
-    with DataladHCP1200() as dg:
+def test_juselessdataladcamcanvbm_datagrabber() -> None:
+    """Test datalad CamCANVBM datagrabber."""
+    with JuselessDataladCamCANVBM() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
-
         out = dg[test_element]
-
-        assert out["BOLD"]["path"].exists()
-        assert out["BOLD"]["path"].isfile()
+        assert "VBM_GM" in out
+        assert out["VBM_GM"]["path"].name == f"m0wp1sub-{test_element}.nii.gz"
+        assert out["VBM_GM"]["path"].exists()
