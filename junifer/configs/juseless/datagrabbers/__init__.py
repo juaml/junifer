@@ -1,4 +1,4 @@
-"""Provide imports for markers sub-package."""
+"""Provide imports for datagrabbers sub-package."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
