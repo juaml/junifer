@@ -8,14 +8,8 @@
 from pathlib import Path
 from typing import Union, List
 
-<<<<<<< Updated upstream:junifer/configs/juseless/datagrabbers/ukb_vbm.py
 from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataladDataGrabber
-=======
-from ..api.decorators import register_datagrabber
-from ..datagrabber import PatternDataladDataGrabber
-from ..utils import raise_error
->>>>>>> Stashed changes:junifer/configs/juseless.py
 
 
 @register_datagrabber
