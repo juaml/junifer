@@ -22,7 +22,14 @@ from junifer.storage import SQLiteFeatureStorage
 
 
 def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
-    """Test FunctionalConnectivitySpheres."""
+    """Test FunctionalConnectivitySpheres.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
 
     # get a dataset
     ni_data = datasets.fetch_spm_auditory(subject_id="sub001")
@@ -72,7 +79,14 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
 
 
 def test_FunctionalConnectivitySpheres_empirical(tmp_path: Path) -> None:
-    """Test FunctionalConnectivitySpheres with empirical covariance."""
+    """Test FunctionalConnectivitySpheres with empirical covariance.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
 
     # get a dataset
     ni_data = datasets.fetch_spm_auditory(subject_id="sub001")
