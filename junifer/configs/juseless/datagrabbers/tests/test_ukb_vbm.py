@@ -9,7 +9,7 @@ import socket
 
 import pytest
 
-from junifer.datagrabber.hcp import DataladHCP1200
+from junifer.configs.juseless.datagrabbers import JuselessDataladUKBVBM
 from junifer.utils.logging import configure_logging
 
 
@@ -20,13 +20,16 @@ if socket.gethostname() != "juseless":
 configure_logging(level="DEBUG")
 
 
-def test_juselessdataladhcp_datagrabber() -> None:
-    """Test datalad HCP datagrabber."""
-    with DataladHCP1200() as dg:
+def test_juselessdataladukbvbm_datagrabber() -> None:
+    """Test datalad UKBVBM datagrabber."""
+    with JuselessDataladUKBVBM() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
-
         out = dg[test_element]
+        assert "VBM_GM" in out
+        assert (
+            out["VBM_GM"]["path"].name
+            == f"m0wp1sub-{test_element[0]}_ses-{test_element[1]}_T1w.nii.gz"
+        )
+        assert out["VBM_GM"]["path"].exists()
 
-        assert out["BOLD"]["path"].exists()
-        assert out["BOLD"]["path"].isfile()
