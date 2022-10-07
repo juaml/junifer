@@ -4,3 +4,4 @@
 # License: AGPL
 
 from .ukb_vbm import JuselessDataladUKBVBM
+from .camcan_vbm import JuselessDataladCamCANVBM
