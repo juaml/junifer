@@ -24,6 +24,7 @@ class JuselessDataladUKBVBM(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
+
     """
 
     def __init__(self, datadir: Union[str, Path, None] = None) -> None:
