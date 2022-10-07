@@ -77,6 +77,12 @@ Available
      - ``junifer.configs.juseless``
      - In Progress
      - :gh:`57`
+   * - :class:`junifer.configs.juseless.JuselessDataladIXIVBM`
+     - `IXI <https://brain-development.org/ixi-dataset/>` VBM dataset. Available for Juseless only.
+     - Restricted
+     - ``junifer.configs.juseless``
+     - In Progress
+     - :gh:`48`
 
 
 Planned
