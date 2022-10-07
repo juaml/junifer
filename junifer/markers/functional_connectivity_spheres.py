@@ -21,17 +21,17 @@ class FunctionalConnectivitySpheres(BaseMarker):
 
     Parameters
     ----------
-    coords: str
+    coords : str
         The name of the coordinates list to use. See
         :mod:`junifer.data.coordinates`
-    radius: float
+    radius : float
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
         for more information.
-    agg_method: str
+    agg_method : str
         The aggregation method to use.
         See :func:`junifer.stats.get_aggfunc_by_name` for more information.
-    agg_method_params: dict, optional
+    agg_method_params : dict, optional
         The parameters to pass to the aggregation method.
     name : str, optional
         The name of the marker. By default, it will use
@@ -111,6 +111,7 @@ class FunctionalConnectivitySpheres(BaseMarker):
             - 'row_names': Row names as a list.
             - 'col_names': Col names as a list.
             - 'kind': The kind of matrix (tril, triu or full)
+
         """
         sa = SphereAggregation(
             coords=self.coords,
