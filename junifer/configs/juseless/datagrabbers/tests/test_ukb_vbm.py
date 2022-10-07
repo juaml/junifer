@@ -32,4 +32,3 @@ def test_juselessdataladukbvbm_datagrabber() -> None:
             == f"m0wp1sub-{test_element[0]}_ses-{test_element[1]}_T1w.nii.gz"
         )
         assert out["VBM_GM"]["path"].exists()
-
