@@ -53,10 +53,10 @@ Available
      - ``junifer.configs.juseless``
      - Done
      - 0.0.1
-   * - :class:`junifer.configs.juseless.JuselessDataladCamCANVBM`
+   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladCamCANVBM`
      - CamCAN VBM dataset preprocessed with CAT. Available for Juseless only.
      - Restricted
-     - ``junifer.configs.juseless``
+     - ``junifer.configs.juseless.datagrabbers``
      - Done
      - 0.0.1
    * - :class:`junifer.datagrabber.DataladAOMICID1000`
