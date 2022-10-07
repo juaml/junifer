@@ -1,4 +1,4 @@
-"""Provide class for juseless datalad datagrabber."""
+"""Provide class for IXI VBM juseless datalad datagrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -46,7 +46,7 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         }
 
         # validate and/or transform 'site' input
-        all_sites = "HH", "Guys", "IOP"
+        all_sites = ["HH", "Guys", "IOP"]
         if sites is None:
             sites = all_sites
 

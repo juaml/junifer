@@ -77,11 +77,13 @@ Available
      - ``junifer.configs.juseless``
      - In Progress
      - :gh:`57`
-   * - :class:`junifer.configs.juseless.JuselessDataladIXIVBM`
-     - `IXI <https://brain-development.org/ixi-dataset/>` VBM dataset. Available for Juseless only.
+   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladIXIVBM`
+     - `IXI VBM dataset <https://brain-development.org/ixi-dataset/>`_
+     - Available for Juseless only.
      - Restricted
-     - ``junifer.configs.juseless``
-     - In Progress
+     - ``junifer.configs.juseless.datagrabbers``
+     - Done
+     - 0.0.1
      - :gh:`48`
 
 
@@ -107,11 +109,6 @@ Planned
      - Restricted
      - ``junifer.configs.juseless``
      - :gh:`47`
-   * - IXI
-     - IXI dataset for Juseless
-     - Restricted
-     - ``junifer.configs.juseless``
-     - :gh:`48`
    * - UCLA
      - UCLA dataset for Juseless
      - Built-in

@@ -54,7 +54,7 @@ Enhancements
 - Implement PIOP1 and PIOP2 AOMIC datasets and refactor AOMICID1000 slightly 
   (:gh: `94` by `Leonard Sasse`_)
 
-- Implement IXI cat output datagrabber for juseless (:gh: `48` by `Leonard Sasse`_).
+- Implement IXI CAT output datagrabber for juseless (:gh: `48` by `Leonard Sasse`_).
 
 Bugs
 ~~~~
