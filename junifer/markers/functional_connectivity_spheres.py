@@ -1,4 +1,4 @@
-"""Provide base class for markers."""
+"""Provide base class for functional connectivity using spheres."""
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
@@ -31,7 +31,7 @@ class FunctionalConnectivitySpheres(BaseMarker):
     agg_method: str
         The aggregation method to use.
         See :func:`junifer.stats.get_aggfunc_by_name` for more information.
-    agg_method_params: Dict, optional
+    agg_method_params: dict, optional
         The parameters to pass to the aggregation method.
     name : str, optional
         The name of the marker. By default, it will use
@@ -63,13 +63,12 @@ class FunctionalConnectivitySpheres(BaseMarker):
         self.cor_method_params = (
             {} if cor_method_params is None else cor_method_params
         )
-        on = ["BOLD"]
         # default to nilearn behavior
         self.cor_method_params["empirical"] = self.cor_method_params.get(
             "empirical", False
         )
 
-        super().__init__(on=on, name=name)
+        super().__init__(on=["BOLD"], name=name)
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
@@ -94,10 +93,10 @@ class FunctionalConnectivitySpheres(BaseMarker):
 
         Parameters
         ----------
-        input : Dict[str, Dict]
+        input : dict[str, dict]
             A single input from the pipeline data object in which to compute
             the marker.
-        extra_input : Dict, optional
+        extra_input : dict, optional
             The other fields in the pipeline data object. Useful for accessing
             other data kind that needs to be used in the computation. For
             example, the functional connectivity markers can make use of the
@@ -106,7 +105,7 @@ class FunctionalConnectivitySpheres(BaseMarker):
         Returns
         -------
         dict
-            The computed result as dictionary. The following data will be
+            The computed result as dictionary. The following keys will be
             included in the dictionary:
             - 'data': FC matrix as a 2D numpy array.
             - 'row_names': Row names as a list.
