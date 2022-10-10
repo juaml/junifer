@@ -30,7 +30,8 @@ class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
     def __init__(self, datadir: Union[str, Path, None] = None) -> None:
         """Initialize the class."""
         uri = (
-            "http://cat_12.5.ds.inm7.de/a13/9b26a-8406-11ea-8f94-a0369f287950"
+            "ria+http://cat_12.5.ds.inm7.de"
+            "#a139b26a-8406-11ea-8f94-a0369f287950"
         )
         types = ["VBM_GM"]
         replacements = ["subject"]
