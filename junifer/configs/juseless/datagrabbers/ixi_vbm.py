@@ -38,7 +38,8 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
     ) -> None:
         """Initialize the class."""
         uri = (
-            "http://cat_12.5.ds.inm7.de/b71/07c52-8408-11ea-89c6-a0369f287950"
+            "ria+http://cat_12.5.ds.inm7.de"
+            "#b7107c52-8408-11ea-89c6-a0369f287950"
         )
         types = ["VBM_GM"]
         replacements = ["site", "subject"]
