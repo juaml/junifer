@@ -3,6 +3,10 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from typing import Optional
+
+import pytest
+
 from junifer.datagrabber.hcp import DataladHCP1200
 from junifer.utils import configure_logging
 
@@ -10,10 +14,52 @@ from junifer.utils import configure_logging
 URI = "https://gin.g-node.org/juaml/datalad-example-hcp1200"
 
 
-def test_dataladhcp1200_datagrabber() -> None:
-    """Test datalad HCP1200 datagrabber."""
+@pytest.mark.parametrize(
+    "tasks, phase_encodings, expected_path_name",
+    [
+        (None, None, "rfMRI_REST1_LR_hp2000_clean.nii.gz"),
+        ("REST1", "LR", "rfMRI_REST1_LR_hp2000_clean.nii.gz"),
+        ("REST1", "RL", "rfMRI_REST1_RL_hp2000_clean.nii.gz"),
+        ("REST2", "LR", "rfMRI_REST2_LR_hp2000_clean.nii.gz"),
+        ("REST2", "RL", "rfMRI_REST2_RL_hp2000_clean.nii.gz"),
+        ("SOCIAL", "LR", "tfMRI_SOCIAL_LR_hp2000_clean.nii.gz"),
+        ("SOCIAL", "RL", "tfMRI_SOCIAL_RL_hp2000_clean.nii.gz"),
+        ("WM", "LR", "tfMRI_WM_LR_hp2000_clean.nii.gz"),
+        ("WM", "RL", "tfMRI_WM_RL_hp2000_clean.nii.gz"),
+        ("RELATIONAL", "LR", "tfMRI_RELATIONAL_LR_hp2000_clean.nii.gz"),
+        ("RELATIONAL", "RL", "tfMRI_RELATIONAL_RL_hp2000_clean.nii.gz"),
+        ("EMOTION", "LR", "tfMRI_EMOTION_LR_hp2000_clean.nii.gz"),
+        ("EMOTION", "RL", "tfMRI_EMOTION_RL_hp2000_clean.nii.gz"),
+        ("LANGUAGE", "LR", "tfMRI_LANGUAGE_LR_hp2000_clean.nii.gz"),
+        ("LANGUAGE", "RL", "tfMRI_LANGUAGE_RL_hp2000_clean.nii.gz"),
+        ("GAMBLING", "LR", "tfMRI_GAMBLING_LR_hp2000_clean.nii.gz"),
+        ("GAMBLING", "RL", "tfMRI_GAMBLING_RL_hp2000_clean.nii.gz"),
+        ("MOTOR", "LR", "tfMRI_MOTOR_LR_hp2000_clean.nii.gz"),
+        ("MOTOR", "RL", "tfMRI_MOTOR_RL_hp2000_clean.nii.gz"),
+    ],
+)
+def test_dataladhcp1200_datagrabber(
+        tasks: Optional[str],
+        phase_encodings: Optional[str],
+        expected_path_name: str,
+) -> None:
+    """Test datalad HCP1200 datagrabber.
+
+    Parameters
+    ----------
+    tasks : str
+        The parametrized tasks.
+    phase_encodings : str
+        The parametrized phase encodings.
+    expected_path_name : str
+        The parametrized expected path name.
+
+    """
     configure_logging(level="DEBUG")
-    dg = DataladHCP1200()
+    dg = DataladHCP1200(
+        tasks=tasks,
+        phase_encodings=phase_encodings,
+    )
     # Set URI to Gin
     dg.uri = URI
     # Set correct root directory
@@ -28,7 +74,7 @@ def test_dataladhcp1200_datagrabber() -> None:
         # Asserts data type
         assert "BOLD" in out
         # Assert data file name
-        assert out["BOLD"]["path"].name == "rfMRI_REST1_LR_hp2000_clean.nii.gz"
+        assert out["BOLD"]["path"].name == expected_path_name
         # Assert data file path exists
         assert out["BOLD"]["path"].exists()
         # Assert data file path is a file
