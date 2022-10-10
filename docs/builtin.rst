@@ -70,7 +70,7 @@ Available
      - Open without registration
      - Built-in
      - Done
-     - 0.0.1 
+     - 0.0.1
    * - :class:`junifer.configs.juseless.JuselessDataladAOMICVBM`
      - AOMIC VBM dataset. Available for Juseless only.
      - Restricted
@@ -78,13 +78,11 @@ Available
      - In Progress
      - :gh:`57`
    * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladIXIVBM`
-     - `IXI VBM dataset <https://brain-development.org/ixi-dataset/>`_
-     - Available for Juseless only.
+     - `IXI VBM dataset <https://brain-development.org/ixi-dataset/>`_. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless.datagrabbers``
      - Done
      - 0.0.1
-     - :gh:`48`
 
 
 Planned
