@@ -4,3 +4,4 @@
 # License: AGPL
 
 from .ukb_vbm import JuselessDataladUKBVBM
+from .ixi_vbm import JuselessDataladIXIVBM
