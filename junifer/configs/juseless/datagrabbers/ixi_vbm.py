@@ -37,9 +37,10 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         sites: Union[str, List[str], None] = None,
     ) -> None:
         """Initialize the class."""
-        uri = "git@jugit.fz-juelich.de:inm7/datasets/datasets_repo.git"
+        uri = (
+            "http://cat_12.5.ds.inm7.de/b71/07c52-8408-11ea-89c6-a0369f287950"
+        )
         types = ["VBM_GM"]
-        rootdir = "processed/cat_12.5/IXI"
         replacements = ["site", "subject"]
         patterns = {
             "VBM_GM": "{site}/sub-{subject}/mri/m0wp1sub-{subject}.nii.gz"
@@ -64,28 +65,6 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
             types=types,
             datadir=datadir,
             uri=uri,
-            rootdir=rootdir,
             replacements=replacements,
             patterns=patterns,
         )
-
-    def get_elements(self) -> List:
-        """Implement fetching list of subjects in the dataset.
-
-        Returns
-        -------
-        elements : list of str
-            The list of subjects in the dataset.
-        """
-        self._dataset.get(self.datadir, get_data=False, source="inm7-storage")
-
-        elements = []
-        for site in self.sites:
-            site_dir = self.datadir / site
-            site_elements = [
-                (site, x.as_posix().split("-")[1])
-                for x in site_dir.glob("sub-*")
-            ]
-            elements += site_elements
-
-        return elements
