@@ -56,6 +56,8 @@ Enhancements
 
 - Implement a JuselessDataladCamCANVBM datagrabber class (:gh: `99` by `Leonard Sasse`_)
 
+- Implement IXI CAT output datagrabber for juseless (:gh: `48` by `Leonard Sasse`_).
+
 Bugs
 ~~~~
 
