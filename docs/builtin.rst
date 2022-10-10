@@ -76,7 +76,7 @@ Available
      - Open without registration
      - Built-in
      - Done
-     - 0.0.1 
+     - 0.0.1
    * - :class:`junifer.configs.juseless.JuselessDataladAOMICVBM`
      - AOMIC VBM dataset. Available for Juseless only.
      - Restricted
@@ -97,11 +97,6 @@ Planned
      - Access
      - Type/Config
      - Reference
-   * - CamCAN
-     - CamCAN dataset for Juseless
-     - Restricted
-     - ``junifer.configs.juseless``
-     - :gh:`46`
    * - ENKI
      - ENKI dataset for Juseless
      - Restricted
