@@ -6,7 +6,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataladDataGrabber
