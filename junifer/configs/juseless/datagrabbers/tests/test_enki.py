@@ -1,6 +1,8 @@
-"""Provide tests for IXI VBM juseless datagrabber."""
+"""Provide tests for eNKI juseless datagrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Vera Komeyer <v.komeyer@fz-juelich.de>
+#          Xuan Li <xu.li@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
