@@ -1,4 +1,4 @@
-"""Provide class for IXI VBM juseless datalad datagrabber."""
+"""Provide class for eNKI juseless datagrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
