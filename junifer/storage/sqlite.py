@@ -59,6 +59,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         **kwargs: str,
     ) -> None:
         """Initialize the class."""
+        # Check upsert argument value
         if upsert not in ["update", "ignore"]:
             raise_error(
                 msg=(
@@ -77,7 +78,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             )
             uri.parent.mkdir(parents=True, exist_ok=True)
         super().__init__(uri=uri, single_output=single_output, **kwargs)
+        # Set upsert
         self._upsert = upsert
+        # Define the available storage kinds available
         self._valid_inputs = ["table", "timeseries", "matrix"]
 
     def get_engine(self, meta: Optional[Dict] = None) -> "Engine":
@@ -110,8 +113,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             prefix = element_to_prefix(element)
         # Format URI for engine creation
         uri = (
-            "sqlite:///" f"{self.uri.parent}/{prefix}{self.uri.name}"
-        )  # type: ignore
+            f"sqlite:///{self.uri.parent}/{prefix}{self.uri.name}"
+        )
         return create_engine(uri, echo=False)
 
     def _save_upsert(
@@ -234,7 +237,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Prepare new dataframe
         data_df = pd.DataFrame(
             data, columns=columns, index=idx
-        )  # type: ignore
+        )
         # Store dataframe
         self.store_df(df=data_df, meta=meta)
 
@@ -430,7 +433,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         diagonal : bool, optional
             Whether to store the diagonal (default True).
             If kind == 'full', setting this to false will raise
-            an error
+            an error.
+
         """
         if diagonal is False and kind not in ["triu", "tril"]:
             raise_error(
