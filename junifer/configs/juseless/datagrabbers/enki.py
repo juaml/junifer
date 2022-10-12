@@ -129,7 +129,7 @@ class JuselesseNKI(PatternDataGrabber):
                     given_param, valid_param, error_msg
                 )
             )
-        sessions, tasks, TRs = param_list
+        self.sessions, self.tasks, self.TRs = param_list
 
         super().__init__(
             types=types,
@@ -137,3 +137,30 @@ class JuselesseNKI(PatternDataGrabber):
             replacements=replacements,
             patterns=patterns,
         )
+
+    def get_elements(self) -> List:
+        """Implement fetching list of elements in the dataset.
+
+        Gets all possible elements for the eNKI dataset and then imposes
+        constraints based on user input in the constructor.
+
+        Returns
+        -------
+        elements : list
+            The list of elements that can be grabbed in the dataset after
+            imposing constraints based on input.
+            Each element is a subject in the BIDS database.
+
+        """
+        all_elements = super().get_elements()
+        constrained_elements = []
+        # elements are (subject, session, task, TR)
+        constraints = [self.sessions, self.tasks, self.TRs]
+        for el in all_elements:
+            for i, j in zip(el[1:], constraints):
+                if i not in j:
+                    break
+            else:
+                constrained_elements.append(el)
+
+        return constrained_elements
