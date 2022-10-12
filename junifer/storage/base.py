@@ -142,6 +142,22 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
+    def store_df(self, df: pd.DataFrame, meta: Dict) -> None:
+        """Store pandas DataFerame.
+
+        Parameters
+        ----------
+        df : pandas.DataFrame
+            The DataFrame to store.
+        meta : dict
+            The metadata as a dictionary.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_df().",
+            klass=NotImplementedError,
+        )
+
     def store_matrix(
         self,
         data: Dict,
@@ -204,23 +220,6 @@ class BaseFeatureStorage(ABC):
         """
         raise_error(
             msg="Concrete classes need to implement store_table().",
-            klass=NotImplementedError,
-        )
-
-    @abstractmethod
-    def store_df(self, df: pd.DataFrame, meta: Dict) -> None:
-        """Store pandas DataFerame.
-
-        Parameters
-        ----------
-        df : pandas.DataFrame
-            The DataFrame to store.
-        meta : dict
-            The metadata as a dictionary.
-
-        """
-        raise_error(
-            msg="Concrete classes need to implement store_df().",
             klass=NotImplementedError,
         )
 
