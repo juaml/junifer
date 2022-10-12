@@ -224,14 +224,13 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    # TODO: complete type annotations
-    @abstractmethod
-    def store_timeseries(self, data, meta: Dict) -> None:
+    def store_timeseries(self, data: Dict, meta: Dict) -> None:
         """Store timeseries.
 
         Parameters
         ----------
-        data
+        data : dict
+            The timeseries data to store.
         meta : dict
             The metadata as a dictionary.
 
