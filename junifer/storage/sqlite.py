@@ -572,20 +572,19 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             data=data, meta=meta, columns=columns, rows_col_name=rows_col_name
         )
 
-    # TODO: complete type annotations
-    def store_timeseries(self, data, meta: Dict) -> None:
+    def store_timeseries(self, data: Dict, meta: Dict) -> None:
         """Implement timeseries storing.
 
         Parameters
         ----------
-        data
+        data: dict
+            The timeseries data to store.
         meta : dict
             The metadata as a dictionary.
 
         """
-        raise_error(
-            msg="store_timeseries() not implemented.",
-            klass=NotImplementedError,
+        self._store_2d(
+            data=data, meta=meta, columns=None, rows_col_name="timepoint",
         )
 
     def collect(self) -> None:
