@@ -206,10 +206,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                         msg=f"Invalid option {if_exists} for if_exists."
                     )
 
-    # TODO: complete type annotations
-    def store_2d(
+    def _store_2d(
         self,
-        data,
+        data: Dict,
         meta: Dict,
         columns: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
@@ -218,7 +217,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
-        data
+        data : dict
+            The data to store.
         meta : dict
             The metadata as a dictionary.
         columns : list or tuple of str, optional
