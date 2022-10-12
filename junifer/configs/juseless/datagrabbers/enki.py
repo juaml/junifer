@@ -51,8 +51,6 @@ class JuselesseNKI(PatternDataGrabber):
     ) -> None:
         """Initialize the class."""
 
-        types = ["T1w", "BOLD", "BOLD_confounds"]
-
         # All sessions
         all_sessions = [
             "ALGA",
@@ -94,7 +92,20 @@ class JuselesseNKI(PatternDataGrabber):
                 "sub-{subject}_ses-{session}_task-{task}_acq-"
                 "{TR}_desc-confounds_regressors.tsv"
             ),
+            "probseg_GM": (
+                "fmriprep/sub-{subject}/anat/"
+                "sub-{subject}_label-GM_probseg.nii.gz"
+            ),
+            "probseg_WM": (
+                "fmriprep/sub-{subject}/anat/"
+                "sub-{subject}_label-WM_probseg.nii.gz"
+            ),
+            "probseg_CSF": (
+                "fmriprep/sub-{subject}/anat/"
+                "sub-{subject}_label-CSF_probseg.nii.gz"
+            ),
         }
+        types = list(patterns.keys())
 
         replacements = ["subject", "session", "task", "TR"]
 

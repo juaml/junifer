@@ -25,22 +25,21 @@ configure_logging(level="DEBUG")
 def test_juselessenki_datagrabber() -> None:
     """Test eNKI datagrabber."""
 
-    expected_types = ["T1w", "BOLD", "BOLD_confounds"]
+    expected_types = [
+        "T1w",
+        "BOLD",
+        "BOLD_confounds",
+        "probseg_GM",
+        "probseg_CSF",
+        "probseg_WM",
+    ]
     with JuselesseNKI() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
         out = dg[test_element]
         for et in expected_types:
             assert et in out
-
-        # element is
-        # subject, session, task, TR)
-        assert out["BOLD"]["path"].name == (
-            f"sub-{test_element[0]}_ses-{test_element[1]}_task-"
-            f"{test_element[2]}_acq-{test_element[3]}_space-MNI152NLin6Asym_"
-            "desc-preproc_bold.nii.gz"
-        )
-        assert out["BOLD"]["path"].exists()
+            assert out[et]["path"].exists()
 
 
 def test_juselessenki_datagrabber_invalid_session() -> None:
