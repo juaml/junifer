@@ -238,7 +238,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Store dataframe
         self.store_df(df=data_df, meta=meta)
 
-    def validate(self, input_: List[str]) -> bool:
+    def validate_input(self, input_: List[str]) -> bool:
         """Implement input validation.
 
         Parameters
