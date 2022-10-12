@@ -58,6 +58,8 @@ Enhancements
 
 - Implement IXI CAT output datagrabber for juseless (:gh: `48` by `Leonard Sasse`_).
 
+- Implement eNKI datagrabber for juseless (:gh: `47` by `Vera Komeyer`_, `Xuan Li`_, and `Leonard Sasse`_)
+
 Bugs
 ~~~~
 

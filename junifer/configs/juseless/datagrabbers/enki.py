@@ -12,7 +12,7 @@ from typing import List, Union
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataGrabber
-from ....utils import raise_error
+from ....datagrabber.utils import validate_and_format_parameters
 
 
 @register_datagrabber
@@ -101,50 +101,24 @@ class JuselesseNKI(PatternDataGrabber):
         # all TRs
         all_TRs = ["645", "1400", "cap"]
 
-        # configure and validate sessions
-        if sessions is None:
-            sessions = all_sessions
-        else:
-            if isinstance(sessions, str):
-                sessions = [sessions]
-            for s in sessions:
-                if s not in all_sessions:
-                    raise_error(
-                        f"{s} is not a valid session in the eNKI"
-                        " dataset! Valid session values can be any or "
-                        f"all of {all_sessions}."
-                    )
-
-        # configure and validate tasks
-        if tasks is None:
-            tasks = all_tasks
-        # Convert single task into list
-        else:
-            if not isinstance(tasks, List):
-                tasks = [tasks]
-            # Check for invalid task(s)
-            for task in tasks:
-                if task not in all_tasks:
-                    raise_error(
-                        f"'{task}' is not a valid eNKI fMRI task input. "
-                        f"Valid task values can be any or all of {all_tasks}."
-                    )
-
-        # configure and validate TRs
-        if TRs is None:
-            TRs = all_TRs
-        # Convert single TR into list
-        else:
-            if isinstance(TRs, str):
-                TRs = [TRs]
-            # Check for invalid TR(s)
-            for tr in TRs:
-                if tr not in all_TRs:
-                    raise_error(
-                        f"'{tr}' is not a valid eNKI TR. "
-                        "Valid repition times (TRs) can be any or all of "
-                        f"{all_TRs}."
-                    )
+        # configure and validate parameters
+        param_list = []
+        descs = ["session", "task", "TR"]
+        valid_params = [all_sessions, all_tasks, all_TRs]
+        given_params = [sessions, tasks, TRs]
+        for given_param, valid_param, desc in zip(
+            given_params, valid_params, descs
+        ):
+            error_msg = (
+                f"Invalid eNKI datagrabber {desc}. "
+                f"Valid values can be any or all of {valid_params}."
+            )
+            param_list.append(
+                validate_and_format_parameters(
+                    given_param, valid_param, error_msg
+                )
+            )
+        sessions, tasks, TRs = param_list
 
         super().__init__(
             types=types,

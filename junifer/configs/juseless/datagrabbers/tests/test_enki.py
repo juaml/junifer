@@ -14,6 +14,7 @@ import pytest
 from junifer.configs.juseless.datagrabbers import JuselesseNKI
 from junifer.utils.logging import configure_logging
 
+
 # Check if the test is running on juseless
 if socket.gethostname() != "juseless":
     pytest.skip("These tests are only for juseless", allow_module_level=True)
@@ -22,7 +23,7 @@ configure_logging(level="DEBUG")
 
 
 def test_juselessenki_datagrabber() -> None:
-    """Test datalad eNKI datagrabber."""
+    """Test eNKI datagrabber."""
 
     expected_types = ["T1w", "BOLD", "BOLD_confounds"]
     with JuselesseNKI() as dg:
@@ -44,6 +45,6 @@ def test_juselessenki_datagrabber() -> None:
 
 def test_juselessenki_datagrabber_invalid_session() -> None:
     """Test eNKI datagrabber with invalid session."""
-    with pytest.raises(ValueError, match="notavalidsite"):
-        with JuselesseNKI(sessions="notavalidsite"):
+    with pytest.raises(ValueError, match="Invalid eNKI datagrabber session."):
+        with JuselesseNKI(sessions="notavalidsession"):
             pass

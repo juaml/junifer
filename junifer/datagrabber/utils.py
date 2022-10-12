@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from ..utils import raise_error
 
@@ -93,3 +93,33 @@ def validate_patterns(types: List[str], patterns: Dict[str, str]) -> None:
             msg="`patterns` must not contain `*` following a replacement",
             klass=ValueError,
         )
+
+
+def validate_and_format_parameters(
+    params: Union[List[str], None, str],
+    valid_params: List[str],
+    error_msg: str,
+) -> List[str]:
+    """Validate and format datagrabber parameters.
+
+    Parameters
+    ----------
+    params : str, list of str, None
+        The parameters handed to the datagrabber.
+    valid_params : list of str
+        The list of accepted parameter values
+    error_msg : str
+        error message if a parameter is not accepted.
+
+    """
+
+    if params is None:
+        params = valid_params
+    else:
+        if isinstance(params, str):
+            params = [params]
+        for p in params:
+            if p not in valid_params:
+                raise_error(error_msg)
+
+    return params

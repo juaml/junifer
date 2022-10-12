@@ -47,7 +47,13 @@ Available
      - Built-in
      - In Progress
      - :gh:`4`
-   * - :class:`junifer.configs.juseless.JuselessDataladUKBVBM`
+   * - :class:`junifer.configs.juseless.datagrabbers.JuselesseNKI`
+     - Processed eNKI dataset on Juseless. Available for Juseless only.
+     - Restricted
+     - ``junifer.configs.juseless.datagrabbers``
+     - Done
+     - 0.0.1
+    * - :class:`junifer.configs.juseless.JuselessDataladUKBVBM`
      - UKB VBM dataset preprocessed with CAT. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless``
