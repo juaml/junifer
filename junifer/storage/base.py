@@ -179,11 +179,9 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    # TODO: complete type annotations
-    @abstractmethod
     def store_table(
         self,
-        data,
+        data: Dict,
         meta: Dict,
         columns: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
@@ -192,7 +190,8 @@ class BaseFeatureStorage(ABC):
 
         Parameters
         ----------
-        data
+        data : dict
+            The table data to store.
         meta : dict
             The metadata as a dictionary.
         columns : list or tuple of str, optional
