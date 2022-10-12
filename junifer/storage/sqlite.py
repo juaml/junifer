@@ -498,10 +498,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Store dataframe
         self.store_df(df=data_df, meta=meta)  # type: ignore
 
-    # TODO: complete type annotations
     def store_table(
         self,
-        data,
+        data: Dict,
         meta: Dict,
         columns: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
@@ -510,7 +509,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
-        data
+        data : dict
+            The table data to store.
         meta : dict
             The metadata as a dictionary.
         columns : list or tuple of str, optional
