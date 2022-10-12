@@ -402,21 +402,21 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             self._save_upsert(meta_df, "meta", engine)
         return f"meta_{meta_md5}"
 
-    # TODO: complete type annotations
-    def store_matrix2d(
+    def store_matrix(
         self,
-        data,
+        data: Dict,
         meta: Dict,
         col_names: Optional[List[str]] = None,
         row_names: Optional[List[str]] = None,
         kind: Optional[str] = "full",
         diagonal: bool = True,
     ) -> None:
-        """Implement 2D matrix storing.
+        """Implement matrix storing.
 
         Parameters
         ----------
-        data
+        data : dict
+            The matrix data to store.
         meta : dict
             The metadata as a dictionary.
         col_names : list or tuple of str, optional
