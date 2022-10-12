@@ -142,6 +142,24 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
+    def store(self, kind: str, data: Dict) -> None:
+        """Store extracted features data.
+
+        Parameters
+        ----------
+        kind : {"matrix", "timeseries", "table"}
+            The storage kind.
+        data : dict
+            The data to store.
+
+        """
+        if kind == "matrix":
+            self.store_matrix()
+        elif kind == "timeseries":
+            self.store_timeseries()
+        elif kind == "table":
+            self.store_table()
+
     def store_df(self, df: pd.DataFrame, meta: Dict) -> None:
         """Store pandas DataFerame.
 
