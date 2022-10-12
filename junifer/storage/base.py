@@ -51,9 +51,8 @@ class BaseFeatureStorage(ABC):
         }
         return meta
 
-    # TODO: is raising ValueError required?
     @abstractmethod
-    def validate(self, input_: List[str]) -> bool:
+    def validate_input(self, input_: List[str]) -> bool:
         """Validate the input to the pipeline step.
 
         Parameters
@@ -65,11 +64,6 @@ class BaseFeatureStorage(ABC):
         -------
         bool
             Whether the `input` is valid or not.
-
-        Raises
-        ------
-        ValueError
-            If the input does not have the required data.
 
         """
         raise_error(
