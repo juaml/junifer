@@ -134,7 +134,7 @@ class BaseFeatureStorage(ABC):
         Returns
         -------
         str
-            The metadata column
+            The metadata column.
 
         """
         raise_error(
