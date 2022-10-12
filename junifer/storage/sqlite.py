@@ -568,7 +568,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             "index" (default None).
 
         """
-        self.store_2d(
+        self._store_2d(
             data=data, meta=meta, columns=columns, rows_col_name=rows_col_name
         )
 
