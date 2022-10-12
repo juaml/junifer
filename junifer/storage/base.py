@@ -142,22 +142,21 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    # TODO: complete type annotations
-    @abstractmethod
-    def store_matrix2d(
+    def store_matrix(
         self,
-        data,
+        data: Dict,
         meta: Dict,
         col_names: Optional[Iterable[str]] = None,
         row_names: Optional[Iterable[str]] = None,
         kind: Optional[str] = "full",
         diagonal: bool = True,
     ) -> None:
-        """Store 2D matrix.
+        """Store matrix.
 
         Parameters
         ----------
-        data
+        data : dict
+            The matrix data to store.
         meta : dict
             The metadata as a dictionary.
         col_names : list or tuple of str, optional
@@ -172,7 +171,7 @@ class BaseFeatureStorage(ABC):
         diagonal : bool, optional
             Whether to store the diagonal (default True).
             If kind == 'full', setting this to false will raise
-            an error
+            an error.
 
         """
         raise_error(
