@@ -161,7 +161,7 @@ class BaseFeatureStorage(ABC):
             self.store_table(**kwargs)
 
     def store_df(self, **kwargs) -> None:
-        """Store pandas DataFerame.
+        """Store pandas DataFrame.
 
         Parameters
         ----------
