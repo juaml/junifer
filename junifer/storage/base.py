@@ -6,7 +6,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -142,33 +142,31 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    def store(self, kind: str, data: Dict) -> None:
+    def store(self, kind: str, **kwargs) -> None:
         """Store extracted features data.
 
         Parameters
         ----------
         kind : {"matrix", "timeseries", "table"}
             The storage kind.
-        data : dict
-            The data to store.
+        **kwargs
+            The keyword arguments.
 
         """
         if kind == "matrix":
-            self.store_matrix()
+            self.store_matrix(**kwargs)
         elif kind == "timeseries":
-            self.store_timeseries()
+            self.store_timeseries(**kwargs)
         elif kind == "table":
-            self.store_table()
+            self.store_table(**kwargs)
 
-    def store_df(self, df: pd.DataFrame, meta: Dict) -> None:
+    def store_df(self, **kwargs) -> None:
         """Store pandas DataFerame.
 
         Parameters
         ----------
-        df : pandas.DataFrame
-            The DataFrame to store.
-        meta : dict
-            The metadata as a dictionary.
+        **kwargs : dict
+            The keyword arguments.
 
         """
         raise_error(
@@ -176,36 +174,13 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    def store_matrix(
-        self,
-        data: Dict,
-        meta: Dict,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
-        kind: Optional[str] = "full",
-        diagonal: bool = True,
-    ) -> None:
+    def store_matrix(self, **kwargs) -> None:
         """Store matrix.
 
         Parameters
         ----------
-        data : dict
-            The matrix data to store.
-        meta : dict
-            The metadata as a dictionary.
-        col_names : list or tuple of str, optional
-            The column names (default None).
-        row_names : list of tuple of str, optional
-            The row names (default None).
-        kind : str, optional
-            The kind of matrix:
-            - 'triu': store upper triangular only.
-            - 'tril': store lower triangular.
-            - 'full': full matrix (default 'full').
-        diagonal : bool, optional
-            Whether to store the diagonal (default True).
-            If kind == 'full', setting this to false will raise
-            an error.
+        **kwargs : dict
+            The keyword arguments.
 
         """
         raise_error(
@@ -213,27 +188,13 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    def store_table(
-        self,
-        data: Dict,
-        meta: Dict,
-        columns: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
-    ) -> None:
+    def store_table(self, **kwargs) -> None:
         """Store table.
 
         Parameters
         ----------
-        data : dict
-            The table data to store.
-        meta : dict
-            The metadata as a dictionary.
-        columns : list or tuple of str, optional
-            The columns (default None).
-        rows_col_name : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+        **kwargs : dict
+            The keyword arguments.
 
         """
         raise_error(
@@ -241,15 +202,13 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    def store_timeseries(self, data: Dict, meta: Dict) -> None:
+    def store_timeseries(self, **kwargs) -> None:
         """Store timeseries.
 
         Parameters
         ----------
-        data : dict
-            The timeseries data to store.
-        meta : dict
-            The metadata as a dictionary.
+        **kwargs : dict
+            The keyword arguments.
 
         """
         raise_error(
