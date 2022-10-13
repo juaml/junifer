@@ -24,9 +24,13 @@ class RSSETSMarker(BaseMarker):
     Parameters
     ----------
     atlas : str
-        The name of the atlas.
+        The name of the atlas. Check valid options by calling
+        `junifer.data.list_atlases`.
     aggregation_method : str, optional
         The aggregation method (default "mean").
+    name : str, optional
+        The name of the marker. If None, will use the class name (default
+        None).
 
     """
 
