@@ -47,3 +47,14 @@ def test_juselessenki_datagrabber_invalid_session() -> None:
     with pytest.raises(ValueError, match="Invalid eNKI datagrabber session."):
         with JuselesseNKI(sessions="notavalidsession"):
             pass
+
+
+def test_juselessenki_datagrabber_invalid_TRs() -> None:
+    """Test if the allowed TRs exists."""
+
+    with JuselesseNKI() as dg:
+        all_elements = dg.get_elements()
+        assert([i for i, v in enumerate(all_elements) if v[3] == '645'])
+        assert([i for i, v in enumerate(all_elements) if v[3] == '1400'])
+        assert([i for i, v in enumerate(all_elements) if v[3] == 'cap'])
+        
