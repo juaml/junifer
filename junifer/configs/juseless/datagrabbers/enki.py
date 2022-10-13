@@ -35,7 +35,7 @@ class JuselesseNKI(PatternDataGrabber):
         options, optional eNKI tasks.
         If None, all available tasks are selected
         (default None).
-    TRs : {"645", "1400", "cap"} or list of the options, optional
+    TRs : {"645", "1400", "2500", "cap"} or list of the options, optional
         eNKI Repetition Times (TRs). If None, all three will be used
         (default None).
     **kwargs
@@ -110,7 +110,7 @@ class JuselesseNKI(PatternDataGrabber):
         replacements = ["subject", "session", "task", "TR"]
 
         # all TRs
-        all_TRs = ["645", "1400", "cap"]
+        all_TRs = ["645", "1400", "2500", "cap"]
 
         # configure and validate parameters
         param_list = []
