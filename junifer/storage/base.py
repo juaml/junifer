@@ -97,7 +97,7 @@ class BaseFeatureStorage(ABC):
         )
 
     @abstractmethod
-    def read_df(
+    def read_features(
         self,
         feature_name: Optional[str] = None,
         feature_md5: Optional[bool] = None,

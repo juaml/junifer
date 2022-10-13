@@ -291,7 +291,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             out = meta_df.to_dict(orient="index")
         return out
 
-    def read_df(
+    def read_features(
         self,
         feature_name: Optional[str] = None,
         feature_md5: Optional[str] = None,
