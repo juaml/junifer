@@ -4,11 +4,15 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional, Union
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from ..pipeline import PipelineStepMixin
 from ..utils import logger, raise_error
+
+
+if TYPE_CHECKING:
+    from junifer.storage import BaseFeatureStorage
 
 
 class BaseMarker(ABC, PipelineStepMixin):
@@ -45,7 +49,7 @@ class BaseMarker(ABC, PipelineStepMixin):
         Returns
         -------
         dict
-            The metadata as a dictionary.
+            The metadata as a dictionary with the only key 'marker'.
 
         """
         s_meta = super().get_meta()
@@ -150,18 +154,25 @@ class BaseMarker(ABC, PipelineStepMixin):
             klass=NotImplementedError,
         )
 
-    # TODO: complete type annotations
-    def fit_transform(self, input: Dict[str, Dict], storage=None) -> Dict:
+    def fit_transform(
+        self,
+        input: Dict[str, Dict],
+        storage: "BaseFeatureStorage" = None,
+    ) -> Dict:
         """Fit and transform.
 
         Parameters
         ----------
-        input
-        storage
+        input : dict
+            The Junifer Data object.
+        storage : storage-like, optional
+            The storage class, for example, SQLiteFeatureStorage.
 
         Returns
         -------
         dict
+            The processed output as a dictionary. If `storage` is provided,
+            empty dictionary is returned.
 
         """
         out = {}
@@ -175,11 +186,11 @@ class BaseMarker(ABC, PipelineStepMixin):
                 t_meta = meta.copy()
                 t_meta.update(t_input.get("meta", {}))
                 t_meta.update(self.get_meta(kind))
-                t_out = self.compute(t_input, extra_input)
+                t_out = self.compute(input=t_input, extra_input=extra_input)
                 t_out.update(meta=t_meta)
                 if storage is not None:
                     logger.info(f"Storing in {storage}")
-                    self.store(kind, t_out, storage)
+                    self.store(kind=kind, out=t_out, storage=storage)
                 else:
                     logger.info("No storage specified, returning dictionary")
                     out[kind] = t_out
