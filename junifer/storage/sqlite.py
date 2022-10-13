@@ -572,7 +572,13 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             data=data, meta=meta, columns=columns, rows_col_name=rows_col_name
         )
 
-    def store_timeseries(self, data: Dict, meta: Dict) -> None:
+    def store_timeseries(
+        self,
+        data: Dict,
+        meta: Dict,
+        columns: Optional[Iterable[str]] = None,
+        row_names: str = "timepoint",
+    ) -> None:
         """Implement timeseries storing.
 
         Parameters
@@ -581,10 +587,18 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The timeseries data to store.
         meta : dict
             The metadata as a dictionary.
+        columns : list or tuple of str, optional
+            The column labels (default None).
+        row_names : str, optional
+            The column name to use in case number of rows greater than 1
+            (default "timepoint").
 
         """
         self._store_2d(
-            data=data, meta=meta, columns=None, rows_col_name="timepoint",
+            data=data,
+            meta=meta,
+            columns=columns,
+            rows_col_name="timepoint",  # explicit so as to stop overriding
         )
 
     def collect(self) -> None:
