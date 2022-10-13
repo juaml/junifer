@@ -17,6 +17,10 @@ from ..utils import logger
 from .base import BaseMarker
 
 
+if TYPE_CHECKING:
+    from junifer.storage import BaseFeatureStorage
+
+
 @register_marker
 class ParcelAggregation(BaseMarker):
     """Class for parcel aggregation.
@@ -82,15 +86,22 @@ class ParcelAggregation(BaseMarker):
                 raise ValueError(f"Unknown input kind for {t_input}")
         return outputs
 
-    # TODO: complete type annotations
-    def store(self, kind: str, out, storage) -> None:
+    def store(
+        self,
+        kind: str,
+        out: Dict[str, Any],
+        storage: "BaseFeatureStorage",
+    ) -> None:
         """Store.
 
         Parameters
         ----------
-        kind
-        out
-        storage
+        kind : {"BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"}
+            The data kind to store.
+        out : dict
+            The computed result as a dictionary to store.
+        storage : storage-like
+            The storage class, for example, SQLiteFeatureStorage.
 
         """
         logger.debug(f"Storing {kind} in {storage}")
@@ -99,15 +110,19 @@ class ParcelAggregation(BaseMarker):
         if kind in ["BOLD"]:
             storage.store_timeseries(**out)
 
-    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
+    def compute(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict] = None,
+    ) -> Dict:
         """Compute.
 
         Parameters
         ----------
-        input : Dict[str, Dict]
+        input : dict
             A single input from the pipeline data object in which to compute
             the marker.
-        extra_input : Dict, optional
+        extra_input : dict, optional
             The other fields in the pipeline data object. Useful for accessing
             other data kind that needs to be used in the computation. For
             example, the functional connectivity markers can make use of the
@@ -118,17 +133,24 @@ class ParcelAggregation(BaseMarker):
         dict
             The computed result as dictionary. This will be either returned
             to the user or stored in the storage by calling the store method
-            with this as a parameter.
+            with this as a parameter. The dictionary has the following keys:
+            - data : the actual computed values as a numpy.ndarray
+            - columns : the column labels for the computed values as a list
+            - row_names (if more than one row is present in data): 'scan'
 
         """
         t_input = input["data"]
         logger.debug(f"Parcel aggregation using {self.method}")
         agg_func = get_aggfunc_by_name(
-            self.method, func_params=self.method_params
+            name=self.method,
+            func_params=self.method_params,
         )
         # Get the min of the voxels sizes and use it as the resolution
-        resolution = np.min(t_input.header.get_zooms()[:3])  # type: ignore
-        t_atlas, t_labels, _ = load_atlas(self.atlas, resolution=resolution)
+        resolution = np.min(t_input.header.get_zooms()[:3])
+        t_atlas, t_labels, _ = load_atlas(
+            name=self.atlas,
+            resolution=resolution,
+        )
         atlas_img_res = resample_to_img(
             t_atlas,
             t_input,
