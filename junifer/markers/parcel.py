@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import numpy as np
 from nilearn.image import math_img, resample_to_img
@@ -23,16 +23,32 @@ class ParcelAggregation(BaseMarker):
 
     Parameters
     ----------
-    atlas
-    method
-    method_params
-    on
-    name
+    atlas : str
+        The name of the atlas. Check valid options by calling
+        `junifer.data.list_atlases`.
+    method : str
+        The method to perform aggregation using. Check valid options in
+        `junifer.stats.get_aggfunc_by_name`.
+    method_params : dict, optional
+        Parameters to pass to the aggregation function. Check valid options in
+        `junifer.stats.get_aggfunc_by_name`.
+    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or list
+         of the options, optional
+        The kind of data to apply the marker to. If None, will work on all
+        available data (default None).
+    name : str, optional
+        The name of the marker. If None, will use the class name (default
+        None).
 
     """
 
     def __init__(
-        self, atlas, method, method_params=None, on=None, name=None
+        self,
+        atlas: str,
+        method: str,
+        method_params: Optional[Dict[str, Any]] = None,
+        on: Union[List[str], str, None] = None,
+        name: Optional[str] = None,
     ) -> None:
         """Initialize the class."""
         self.atlas = atlas
