@@ -68,8 +68,8 @@ class ParcelAggregation(BaseMarker):
 
         Returns
         -------
-        str
-            The kind of output.
+        list of str
+            The list of storage kinds.
 
         """
         outputs = []
