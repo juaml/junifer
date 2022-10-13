@@ -112,9 +112,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 )
             prefix = element_to_prefix(element)
         # Format URI for engine creation
-        uri = (
-            f"sqlite:///{self.uri.parent}/{prefix}{self.uri.name}"
-        )
+        uri = f"sqlite:///{self.uri.parent}/{prefix}{self.uri.name}"
         return create_engine(uri, echo=False)
 
     def _save_upsert(
@@ -235,9 +233,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             meta=meta, n_rows=n_rows, rows_col_name=rows_col_name
         )
         # Prepare new dataframe
-        data_df = pd.DataFrame(
-            data, columns=columns, index=idx
-        )
+        data_df = pd.DataFrame(data, columns=columns, index=idx)
         # Store dataframe
         self.store_df(df=data_df, meta=meta)
 
