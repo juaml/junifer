@@ -122,10 +122,10 @@ class FunctionalConnectivitySpheres(BaseMarker):
         dict
             The computed result as dictionary. The following keys will be
             included in the dictionary:
-            - 'kind': The kind of matrix (tril, triu or full)
             - data: functional connectivity  matrix as a numpy.ndarray.
             - row_names: row names as a list
             - col_names: column names as a list
+            - matrix_kind: the kind of matrix (tril, triu or full)
 
         """
         sa = SphereAggregation(
@@ -150,7 +150,7 @@ class FunctionalConnectivitySpheres(BaseMarker):
         # create column names
         out["row_names"] = ts["columns"]
         out["col_names"] = ts["columns"]
-        out["kind"] = "tril"
+        out["matrix_kind"] = "tril"
         return out
 
     def store(
