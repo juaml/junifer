@@ -31,7 +31,8 @@ class RSSETSMarker(BaseMarker):
         The name of the atlas. Check valid options by calling
         :func:`junifer.data.list_atlases`.
     aggregation_method : str, optional
-        The aggregation method (default "mean").
+        The method to perform aggregation using. Check valid options in
+        :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
