@@ -163,4 +163,4 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
         """
         logger.debug(f"Storing {kind} in {storage}")
-        storage.store_matrix2d(**out)
+        storage.store(kind="matrix", **out)
