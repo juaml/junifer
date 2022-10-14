@@ -15,6 +15,8 @@ License: BSD 3 clause
 import tempfile
 
 import junifer.testing.registry  # noqa: F401
+from junifer.api import collect, run
+from junifer.storage import SQLiteFeatureStorage
 from junifer.utils import configure_logging
 
 
@@ -22,11 +24,15 @@ from junifer.utils import configure_logging
 # Set the logging level to info to see extra information:
 configure_logging(level="INFO")
 
+##############################################################################
+# Define the datagrabber interface
+datagrabber = {
+    "kind": "SPMAuditoryTestingDatagrabber",
+}
 
 ###############################################################################
-# Define the markers you want:
-
-marker_dicts = [
+# Define the markers interface
+markers = [
     {
         "name": "Schaefer100x17_RSSETS",
         "kind": "RSSETSMarker",
@@ -39,26 +45,27 @@ marker_dicts = [
     },
 ]
 
-
 ###############################################################################
 # Create a temporary directory for junifer feature extraction:
 # At the end you can read the extracted data into a ``pandas.DataFrame``.
 with tempfile.TemporaryDirectory() as tmpdir:
-
-    storage = {"kind": "SQLiteFeatureStorage", "uri": f"{tmpdir}/test.db"}
-    # run the defined junifer feature extraction pipeline
-    # TODO: needs SQLiteFeatureStorage.store_timeseries() to be
-    # implemented first
-    # run(
-    #     workdir="/tmp",
-    #     datagrabber={"kind": "SPMAuditoryTestingDatagrabber"},
-    #     markers=marker_dicts,
-    #     storage=storage,
-    # )
-
-    # read in extracted features and add confounds and targets
-    # for julearn run cross validation
-    # This will not run for now as store_timeseries() is not implemented yet
-    # collect(storage)
-    # db = SQLiteFeatureStorage(uri=storage["uri"], single_output=True)
-    # df_vbm = db.read_df(feature_name="Schaefer100x17")
+    # Define the storage interface
+    storage = {
+        "kind": "SQLiteFeatureStorage",
+        "uri": f"{tmpdir}/test.db",
+        "single_output": False,
+    }
+    # Run the defined junifer feature extraction pipeline
+    run(
+        workdir=tmpdir,
+        datagrabber=datagrabber,
+        markers=markers,
+        storage=storage,
+        elements="sub001",
+    )
+    # Collect extracted features data
+    collect(storage=storage)
+    # Create storage object to read in extracted features
+    db = SQLiteFeatureStorage(uri=storage["uri"], single_output=True)
+    # Read extracted features
+    df_vbm = db.read_features(feature_name="BOLD_Schaefer100x17_RSSETS")
