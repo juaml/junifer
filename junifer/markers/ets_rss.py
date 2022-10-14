@@ -29,7 +29,7 @@ class RSSETSMarker(BaseMarker):
     ----------
     atlas : str
         The name of the atlas. Check valid options by calling
-        `junifer.data.list_atlases`.
+        :func:`junifer.data.list_atlases`.
     aggregation_method : str, optional
         The aggregation method (default "mean").
     name : str, optional
@@ -112,7 +112,7 @@ class RSSETSMarker(BaseMarker):
             keys:
             - data : the actual computed values as a numpy.ndarray
             - columns : the column labels for the computed values as a list
-            - row_names (if more than one row is present in data): 'scan'
+            - row_names (if more than one row is present in data): "scan"
 
         References
         ----------
