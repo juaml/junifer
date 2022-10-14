@@ -7,5 +7,6 @@
 from .base import BaseMarker
 from .collection import MarkerCollection
 from .ets_rss import RSSETSMarker
+from .functional_connectivity_atlas import FunctionalConnectivityAtlas
 from .parcel import ParcelAggregation
 from .sphere_aggregation import SphereAggregation
