@@ -27,15 +27,16 @@ class SphereAggregation(BaseMarker):
     coords: str
         The name of the coordinates list to use. See
         :mod:`junifer.data.coordinates` for options.
-    radius: float
+    radius: float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
-        for more information.
-    method: str
+        for more information (default None).
+    method: str, optional
         The aggregation method to use.
-        See :func:`junifer.stats.get_aggfunc_by_name` for more information.
+        See :func:`junifer.stats.get_aggfunc_by_name` for more information
+        (default "mean").
     method_params: dict, optional
-        The parameters to pass to the aggregation method.
+        The parameters to pass to the aggregation method (default None).
     on: list of str, optional
         The kind of data to apply the marker to. By default, will work on all
         available data (default None).
@@ -48,8 +49,8 @@ class SphereAggregation(BaseMarker):
     def __init__(
         self,
         coords: str,
-        radius: float,
-        method: str,
+        radius: Optional[float] = None,
+        method: str = "mean",
         method_params: Optional[Dict] = None,
         on: Optional[List[str]] = None,
         name: Optional[str] = None,
@@ -156,8 +157,8 @@ class SphereAggregation(BaseMarker):
         # )
         coords, out_labels = load_coordinates(self.coords)
         masker = NiftiSpheresMasker(
-            coords,
-            self.radius,
+            seeds=coords,
+            radius=self.radius,
             mask_img=None,  # TODO: support this (needs #79)
         )
 
