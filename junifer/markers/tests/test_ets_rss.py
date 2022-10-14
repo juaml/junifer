@@ -13,8 +13,8 @@ from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import load_atlas
 from junifer.markers.ets_rss import RSSETSMarker
-from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 from junifer.storage import SQLiteFeatureStorage
+from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
 
 # Set atlas
