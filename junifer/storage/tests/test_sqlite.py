@@ -263,7 +263,7 @@ def test_upsert_invalid_option(tmp_path: Path) -> None:
 
 
 # TODO: can the tests be separated?
-def test_store_df_and_read_features(tmp_path: Path) -> None:
+def test_store_df_and_read_df(tmp_path: Path) -> None:
     """Test storing dataframe and reading of stored table into dataframe.
 
     Parameters
@@ -307,20 +307,20 @@ def test_store_df_and_read_features(tmp_path: Path) -> None:
     assert table_name.replace("meta_", "") in features
     # Check for missing feature
     with pytest.raises(ValueError, match="not found"):
-        storage.read_features("wrong_md5")
+        storage.read_df("wrong_md5")
     # Check for missing feature to fetch
     with pytest.raises(ValueError, match="least one"):
-        storage.read_features()
+        storage.read_df()
     # Check for multiple features to fetch
     with pytest.raises(ValueError, match="Only one"):
-        storage.read_features("wrong_md5", "wrong_name")
+        storage.read_df("wrong_md5", "wrong_name")
     # Get MD5 hash of features
     feature_md5 = list(features.keys())[0]
     # Check for key
     assert "fcname" == features[feature_md5]["name"]
     # Read into dataframes
-    read_df1 = storage.read_features(feature_md5=feature_md5)
-    read_df2 = storage.read_features(feature_name="fcname")
+    read_df1 = storage.read_df(feature_md5=feature_md5)
+    read_df2 = storage.read_df(feature_name="fcname")
     # Check if dataframes are equal
     assert_frame_equal(read_df1, read_df2)
     assert_frame_equal(read_df1, to_store)
@@ -441,7 +441,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     feature_md5 = list(features.keys())[0]
     assert "fc" == features[feature_md5]["name"]
 
-    read_df = storage.read_features(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=feature_md5)
     assert read_df.shape == (1, 12)
     assert_array_equal(read_df.values[0], data.flatten())
     assert list(read_df.columns) == stored_names
@@ -457,7 +457,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
     assert "fc" == features[feature_md5]["name"]
-    read_df = storage.read_features(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
 
     with pytest.raises(ValueError, match="Invalid kind"):
@@ -500,7 +500,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
     assert "fc" == features[feature_md5]["name"]
-    read_df = storage.read_features(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
         read_df.values, data[np.triu_indices(n=data.shape[0])][None, :]
@@ -527,7 +527,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
     assert "fc" == features[feature_md5]["name"]
-    read_df = storage.read_features(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
         read_df.values, data[np.triu_indices(n=data.shape[0], k=1)][None, :]
@@ -559,7 +559,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
     assert "fc" == features[feature_md5]["name"]
-    read_df = storage.read_features(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
         read_df.values, data[np.tril_indices(n=data.shape[0])][None, :]
@@ -586,7 +586,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
     assert "fc" == features[feature_md5]["name"]
-    read_df = storage.read_features(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
         read_df.values, data[np.tril_indices(n=data.shape[0], k=-1)][None, :]

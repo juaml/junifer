@@ -287,12 +287,12 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             out = meta_df.to_dict(orient="index")
         return out
 
-    def read_features(
+    def read_df(
         self,
         feature_name: Optional[str] = None,
         feature_md5: Optional[str] = None,
     ) -> pd.DataFrame:
-        """Implement feature reading from the storage.
+        """Implement feature reading into a pandas DataFrame.
 
         Either one of `feature_name` or `feature_md5` needs to be specified.
 
@@ -635,7 +635,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 # TODO: Fix this, needs that read_feature sets the index
                 # properly
                 table_name = f"meta_{meta_md5}"
-                t_df = in_storage.read_features(feature_md5=meta_md5)
+                t_df = in_storage.read_df(feature_md5=meta_md5)
                 # Save data
                 out_storage._save_upsert(t_df, table_name, if_exists="nocheck")
 

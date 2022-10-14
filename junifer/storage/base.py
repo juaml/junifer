@@ -97,12 +97,12 @@ class BaseFeatureStorage(ABC):
         )
 
     @abstractmethod
-    def read_features(
+    def read_df(
         self,
         feature_name: Optional[str] = None,
         feature_md5: Optional[bool] = None,
     ) -> pd.DataFrame:
-        """Read feature from the storage.
+        """Read feature into a pandas DataFrame.
 
         Parameters
         ----------
