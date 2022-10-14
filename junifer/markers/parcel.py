@@ -37,7 +37,7 @@ class ParcelAggregation(BaseMarker):
         Parameters to pass to the aggregation function. Check valid options in
         `junifer.stats.get_aggfunc_by_name`.
     on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or list
-         of the options, optional
+        of the options, optional
         The kind of data to apply the marker to. If None, will work on all
         available data (default None).
     name : str, optional
