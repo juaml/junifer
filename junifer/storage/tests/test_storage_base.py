@@ -22,29 +22,20 @@ def test_BaseFeatureStorage() -> None:
         def __init__(self, uri, single_output=False):
             super().__init__(uri, single_output=single_output)
 
-        def validate(self, input):
-            super().validate(input)
+        def validate_input(self, input):
+            super().validate_input(input)
 
         def list_features(self):
             super().list_features()
 
-        def read_df(self, feature_name=None, feature_md5=None):
-            super().read_df(feature_name=feature_name, feature_md5=feature_md5)
+        def read_features(self, feature_name=None, feature_md5=None):
+            super().read_features(
+                feature_name=feature_name,
+                feature_md5=feature_md5,
+            )
 
         def store_metadata(self, metadata):
             super().store_metadata(metadata)
-
-        def store_matrix2d(self, matrix, meta):
-            super().store_matrix2d(matrix, meta)
-
-        def store_table(self, table, meta):
-            super().store_table(table, meta)
-
-        def store_df(self, df, meta):
-            super().store_df(df, meta)
-
-        def store_timeseries(self, timeseries, meta):
-            super().store_timeseries(timeseries, meta)
 
         def collect(self):
             return super().collect()
@@ -56,28 +47,16 @@ def test_BaseFeatureStorage() -> None:
     assert st.single_output is True
 
     with pytest.raises(NotImplementedError):
-        st.validate(None)
+        st.validate_input(None)
 
     with pytest.raises(NotImplementedError):
         st.list_features()
 
     with pytest.raises(NotImplementedError):
-        st.read_df(None)
+        st.read_features(None)
 
     with pytest.raises(NotImplementedError):
         st.store_metadata(None)
-
-    with pytest.raises(NotImplementedError):
-        st.store_matrix2d(None, None)
-
-    with pytest.raises(NotImplementedError):
-        st.store_table(None, None)
-
-    with pytest.raises(NotImplementedError):
-        st.store_df(None, None)  # type: ignore
-
-    with pytest.raises(NotImplementedError):
-        st.store_timeseries(None, None)
 
     with pytest.raises(NotImplementedError):
         st.collect()
