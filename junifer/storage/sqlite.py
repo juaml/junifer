@@ -470,9 +470,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             "index" (default None).
         matrix_kind : str, optional
             The kind of matrix:
-            - 'triu: store upper triangular only.
-            - 'tril': store lower triangular.
-            - 'full': full matrix (default 'full').
+            - "triu" : store upper triangular only
+            - "tril" : store lower triangular
+            - "full" : full matrix
+            (default "full").
         diagonal : bool, optional
             Whether to store the diagonal. If `matrix_kind` is "full", setting
             this to False will raise an error (default True)..
@@ -538,8 +539,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             new_names = [x for x in data_df.index.names[:-1]]
             new_names.append("pair")
             data_df.index.names = new_names
+
         # Store dataframe
-        self.store_df(df=data_df, meta=meta)  # type: ignore
+        self.store_df(df=data_df, meta=meta)
 
     def store_table(
         self,
