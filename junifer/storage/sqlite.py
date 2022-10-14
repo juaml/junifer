@@ -451,7 +451,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         meta: Dict,
         col_names: Optional[List[str]] = None,
         row_names: Optional[List[str]] = None,
-        kind: Optional[str] = "full",
+        matrix_kind: Optional[str] = "full",
         diagonal: bool = True,
     ) -> None:
         """Implement matrix storing.
@@ -468,43 +468,43 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
             "index" (default None).
-        kind : str, optional
+        matrix_kind : str, optional
             The kind of matrix:
             - 'triu: store upper triangular only.
             - 'tril': store lower triangular.
             - 'full': full matrix (default 'full').
         diagonal : bool, optional
-            Whether to store the diagonal (default True).
-            If kind == 'full', setting this to false will raise
-            an error.
+            Whether to store the diagonal. If `matrix_kind` is "full", setting
+            this to False will raise an error (default True)..
 
         """
-        if diagonal is False and kind not in ["triu", "tril"]:
+        if diagonal is False and matrix_kind not in ["triu", "tril"]:
             raise_error(
                 msg="Diagonal cannot be False if kind is not full",
                 klass=ValueError,
             )
 
-        if kind in ["triu", "tril"]:
+        if matrix_kind in ["triu", "tril"]:
             if data.shape[0] != data.shape[1]:
                 raise_error(
                     "Cannot store a non-square matrix as a triangular matrix",
                     klass=ValueError,
                 )
 
-        if kind == "triu":
+        if matrix_kind == "triu":
             k = 0 if diagonal is True else 1
             data_idx = np.triu_indices(data.shape[0], k=k)
-        elif kind == "tril":
+        elif matrix_kind == "tril":
             k = 0 if diagonal is True else -1
             data_idx = np.tril_indices(data.shape[0], k=k)
-        elif kind == "full":
+        elif matrix_kind == "full":
             data_idx = (
                 np.repeat(np.arange(data.shape[0]), data.shape[1]),
                 np.tile(np.arange(data.shape[1]), data.shape[0]),
             )
         else:
-            raise_error(msg=f"Invalid kind {kind}", klass=ValueError)
+            raise_error(msg=f"Invalid kind {matrix_kind}", klass=ValueError)
+
         if row_names is None:
             row_names = [f"r{i}" for i in range(data.shape[0])]
         elif len(row_names) != data.shape[0]:
