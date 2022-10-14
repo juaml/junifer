@@ -141,7 +141,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
         # create column names
         out["row_names"] = ts["columns"]
         out["col_names"] = ts["columns"]
-        out["kind"] = "tril"
+        out["matrix_kind"] = "tril"
         return out
 
     def store(
