@@ -125,7 +125,7 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     uri = tmp_path / "test_marker_collection_storage.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
     mc = MarkerCollection(
-        markers=markers, storage=storage, datareader=DefaultDataReader()
+        markers=markers, storage=storage, datareader=DefaultDataReader(),
     )
     mc.validate(dg)
     assert mc._storage is not None
@@ -146,21 +146,21 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     features = storage.list_features()
     assert len(features) == 3
     feature_md5 = list(features.keys())[0]
-    t_feature = storage.read_df(feature_md5=feature_md5)
+    t_feature = storage.read_features(feature_md5=feature_md5)
     fname = "gmd_schaefer100x7_mean"
     t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
     cols = out[fname]["VBM_GM"]["columns"]  # type: ignore
     assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
 
     feature_md5 = list(features.keys())[1]
-    t_feature = storage.read_df(feature_md5=feature_md5)
+    t_feature = storage.read_features(feature_md5=feature_md5)
     fname = "gmd_schaefer100x7_std"
     t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
     cols = out[fname]["VBM_GM"]["columns"]  # type: ignore
     assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
 
     feature_md5 = list(features.keys())[2]
-    t_feature = storage.read_df(feature_md5=feature_md5)
+    t_feature = storage.read_features(feature_md5=feature_md5)
     fname = "gmd_schaefer100x7_trim_mean90"
     t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
     cols = out[fname]["VBM_GM"]["columns"]  # type: ignore
