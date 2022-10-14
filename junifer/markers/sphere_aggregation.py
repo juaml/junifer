@@ -116,9 +116,9 @@ class SphereAggregation(BaseMarker):
         """
         logger.debug(f"Storing {kind} in {storage}")
         if kind in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
-            storage.store_table(**out)
+            storage.store(kind="table", **out)
         elif kind in ["BOLD"]:
-            storage.store_timeseries(**out)
+            storage.store(kind="timeseries", **out)
 
     def compute(
         self,
