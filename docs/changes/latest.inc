@@ -51,12 +51,16 @@ Enhancements
 
 - Implement SphereAggregation marker (by `Fede Raimondo`_).
 
-- Implement PIOP1 and PIOP2 AOMIC datasets and refactor AOMICID1000 slightly 
+- Implement PIOP1 and PIOP2 AOMIC datasets and refactor AOMICID1000 slightly
   (:gh: `94` by `Leonard Sasse`_)
 
 - Implement a JuselessDataladCamCANVBM datagrabber class (:gh: `99` by `Leonard Sasse`_)
 
 - Implement IXI CAT output datagrabber for juseless (:gh: `48` by `Leonard Sasse`_).
+
+- Upgrade storage interface for storage-like objects (:gh: `84` by `Synchon Mandal`_).
+
+- Add missing type annotations (:gh: `74` by `Synchon Mandal`_).
 
 Bugs
 ~~~~
