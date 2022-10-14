@@ -633,7 +633,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 # TODO: Fix this, needs that read_feature sets the index
                 # properly
                 table_name = f"meta_{meta_md5}"
-                t_df = in_storage.read_df(feature_md5=meta_md5)
+                t_df = in_storage.read_features(feature_md5=meta_md5)
                 # Save data
                 out_storage._save_upsert(t_df, table_name, if_exists="nocheck")
 
