@@ -2,7 +2,7 @@
 
 Extracting root sum of squares from edge-wise timeseries.
 =========================================================
-This example uses a RSSETSMarker to compute root sum of squares
+This example uses a ``RSSETSMarker`` to compute root sum of squares
 of the edge-wise timeseries using the Schaefer atlas
 (100 rois and 200 rois, 17 Yeo networks) for a 4D nifti BOLD file.
 
@@ -61,11 +61,18 @@ with tempfile.TemporaryDirectory() as tmpdir:
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        elements="sub001",
+        elements=["sub001"],  # we calculate for one subject only
     )
     # Collect extracted features data
     collect(storage=storage)
     # Create storage object to read in extracted features
-    db = SQLiteFeatureStorage(uri=storage["uri"], single_output=True)
+    db = SQLiteFeatureStorage(
+        uri=storage["uri"],
+        single_output=True,  # as we ran collect, we have single output now
+    )
     # Read extracted features
     df_vbm = db.read_features(feature_name="BOLD_Schaefer100x17_RSSETS")
+
+###############################################################################
+# Now we take a look at the dataframe
+df_vbm.head()
