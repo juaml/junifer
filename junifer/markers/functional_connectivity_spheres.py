@@ -100,9 +100,9 @@ class FunctionalConnectivitySpheres(BaseMarker):
         return outputs
 
     def compute(
-            self,
-            input: Dict[str, Any],
-            extra_input: Optional[Dict] = None,
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict] = None,
     ) -> Dict:
         """Compute.
 
@@ -154,10 +154,10 @@ class FunctionalConnectivitySpheres(BaseMarker):
         return out
 
     def store(
-            self,
-            kind: str,
-            out: Dict[str, Any],
-            storage: "BaseFeatureStorage",
+        self,
+        kind: str,
+        out: Dict[str, Any],
+        storage: "BaseFeatureStorage",
     ) -> None:
         """Store.
 
