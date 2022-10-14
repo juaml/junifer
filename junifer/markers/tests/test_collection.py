@@ -4,6 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
+
 import pytest
 from numpy.testing import assert_array_equal
 
@@ -94,7 +96,7 @@ def test_marker_collection():
             )
 
 
-def test_MarkerCollection_storage(tmp_path) -> None:
+def test_marker_collection_storage(tmp_path: Path) -> None:
     """Test marker collection with storage.
 
     Parameters
