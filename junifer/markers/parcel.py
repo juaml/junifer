@@ -29,13 +29,13 @@ class ParcelAggregation(BaseMarker):
     ----------
     atlas : str
         The name of the atlas. Check valid options by calling
-        `junifer.data.list_atlases`.
+        :func:`junifer.data.list_atlases`.
     method : str
         The method to perform aggregation using. Check valid options in
-        `junifer.stats.get_aggfunc_by_name`.
+        :func:`junifer.stats.get_aggfunc_by_name`.
     method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
-        `junifer.stats.get_aggfunc_by_name`.
+        :func:`junifer.stats.get_aggfunc_by_name`.
     on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or list
         of the options, optional
         The kind of data to apply the marker to. If None, will work on all
@@ -136,7 +136,7 @@ class ParcelAggregation(BaseMarker):
             with this as a parameter. The dictionary has the following keys:
             - data : the actual computed values as a numpy.ndarray
             - columns : the column labels for the computed values as a list
-            - row_names (if more than one row is present in data): 'scan'
+            - row_names (if more than one row is present in data): "scan"
 
         """
         t_input = input["data"]
