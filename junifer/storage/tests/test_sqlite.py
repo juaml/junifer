@@ -429,7 +429,10 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     # Store table
     storage.store_matrix(
-        data=data, meta=meta, row_names=row_names, col_names=col_names,
+        data=data,
+        meta=meta,
+        row_names=row_names,
+        col_names=col_names,
     )
 
     stored_names = [f"{i}~{j}" for i in row_names for j in col_names]

@@ -125,7 +125,9 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     uri = tmp_path / "test_marker_collection_storage.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
     mc = MarkerCollection(
-        markers=markers, storage=storage, datareader=DefaultDataReader(),
+        markers=markers,
+        storage=storage,
+        datareader=DefaultDataReader(),
     )
     mc.validate(dg)
     assert mc._storage is not None
