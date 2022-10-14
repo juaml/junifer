@@ -119,7 +119,8 @@ class MarkerCollection:
 
         for marker in self._markers:
             logger.info(f"Validating Marker: {marker.name}")
-            m_data = marker.validate_input(t_data)
+            # Validate marker
+            m_data = marker.validate(input=t_data)
             logger.info(f"Marker output type: {m_data}")
             if self._storage is not None:
                 logger.info(f"Validating storage for {marker.name}")
