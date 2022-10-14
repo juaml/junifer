@@ -48,12 +48,12 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
     def __init__(
         self,
-        atlas,
-        agg_method="mean",
-        agg_method_params=None,
-        cor_method="covariance",
-        cor_method_params=None,
-        name=None,
+        atlas: str,
+        agg_method: str = "mean",
+        agg_method_params: Optional[Dict] = None,
+        cor_method: str = "covariance",
+        cor_method_params: Optional[Dict] = None,
+        name: Optional[str] = None,
     ) -> None:
         """Initialize the class."""
         self.atlas = atlas
