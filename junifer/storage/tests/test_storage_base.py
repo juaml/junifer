@@ -61,4 +61,16 @@ def test_BaseFeatureStorage() -> None:
     with pytest.raises(NotImplementedError):
         st.collect()
 
+    with pytest.raises(NotImplementedError):
+        st.store(kind="matrix")
+
+    with pytest.raises(NotImplementedError):
+        st.store(kind="timeseries")
+
+    with pytest.raises(NotImplementedError):
+        st.store(kind="table")
+
+    with pytest.raises(ValueError):
+        st.store(kind="lego")
+
     assert st.uri == "/tmp"
