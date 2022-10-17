@@ -47,7 +47,7 @@ def test_BaseFeatureStorage() -> None:
     assert st.single_output is True
 
     with pytest.raises(NotImplementedError):
-        st.validate_input(None)
+        st.validate(None)
 
     with pytest.raises(NotImplementedError):
         st.list_features()
