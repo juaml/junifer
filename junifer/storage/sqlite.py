@@ -237,7 +237,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Store dataframe
         self.store_df(df=data_df, meta=meta)
 
-    def validate_input(self, input_: List[str]) -> bool:
+    def validate(self, input_: List[str]) -> None:
         """Implement input validation.
 
         Parameters
@@ -245,17 +245,23 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         input_ : list of str
             The input to the pipeline step.
 
-        Returns
-        -------
-        bool
-            Whether the `input` is valid or not.
+        Raises
+        ------
+        ValueError
+            If the validation fails.
 
         """
         # Convert input to list
         if not isinstance(input_, list):
             input_ = [input_]
 
-        return all(x in self._valid_inputs for x in input_)
+        if not all(x in self._valid_inputs for x in input_):
+            raise_error(
+                msg=(
+                    "At least one of the input is not present in "
+                    f"{self._valid_inputs}",
+                )
+            )
 
     def list_features(
         self, return_df: bool = False

@@ -52,7 +52,7 @@ class BaseFeatureStorage(ABC):
         return meta
 
     @abstractmethod
-    def validate_input(self, input_: List[str]) -> bool:
+    def validate(self, input_: List[str]) -> None:
         """Validate the input to the pipeline step.
 
         Parameters
@@ -60,14 +60,14 @@ class BaseFeatureStorage(ABC):
         input_ : list
             The input to the pipeline step.
 
-        Returns
-        -------
-        bool
-            Whether the `input` is valid or not.
+        Raises
+        ------
+        ValueError
+            If the `input_` is invalid.
 
         """
         raise_error(
-            msg="Concrete classes need to implement validate_input().",
+            msg="Concrete classes need to implement validate().",
             klass=NotImplementedError,
         )
 
