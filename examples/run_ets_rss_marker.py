@@ -71,7 +71,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
         single_output=True,  # as we ran collect, we have single output now
     )
     # Read extracted features
-    df_vbm = db.read_features(feature_name="BOLD_Schaefer100x17_RSSETS")
+    df_vbm = db.read_df(feature_name="BOLD_Schaefer100x17_RSSETS")
 
 ###############################################################################
 # Now we take a look at the dataframe
