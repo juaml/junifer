@@ -77,11 +77,16 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 "does not exist, creating now."
             )
             uri.parent.mkdir(parents=True, exist_ok=True)
-        super().__init__(uri=uri, single_output=single_output, **kwargs)
+        # Available storage kinds
+        storage_types = ["table", "timeseries", "matrix"]
+        super().__init__(
+            uri=uri,
+            storage_types=storage_types,
+            single_output=single_output,
+            **kwargs,
+        )
         # Set upsert
         self._upsert = upsert
-        # Define the available storage kinds available
-        self._valid_inputs = ["table", "timeseries", "matrix"]
 
     def get_engine(self, meta: Optional[Dict] = None) -> "Engine":
         """Get engine.
@@ -236,32 +241,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         data_df = pd.DataFrame(data, columns=columns, index=idx)
         # Store dataframe
         self.store_df(df=data_df, meta=meta)
-
-    def validate(self, input_: List[str]) -> None:
-        """Implement input validation.
-
-        Parameters
-        ----------
-        input_ : list of str
-            The input to the pipeline step.
-
-        Raises
-        ------
-        ValueError
-            If the validation fails.
-
-        """
-        # Convert input to list
-        if not isinstance(input_, list):
-            input_ = [input_]
-
-        if not all(x in self._valid_inputs for x in input_):
-            raise_error(
-                msg=(
-                    "At least one of the input is not present in "
-                    f"{self._valid_inputs}",
-                )
-            )
 
     def list_features(
         self, return_df: bool = False
