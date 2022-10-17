@@ -16,9 +16,10 @@ def test_BaseFeatureStorage_abstractness() -> None:
 
 
 def test_BaseFeatureStorage() -> None:
-    """Test BaseFeatureStorage."""
+    """Test proper subclassing of BaseFeatureStorage."""
     # Create concrete class
     class MyFeatureStorage(BaseFeatureStorage):
+        """Implement concrete class."""
 
         def __init__(self, uri, single_output=False):
             storage_types = ["matrix"]
@@ -43,9 +44,10 @@ def test_BaseFeatureStorage() -> None:
         def collect(self):
             return super().collect()
 
+    # Check single_output is False
     st = MyFeatureStorage(uri="/tmp")
     assert st.single_output is False
-
+    # Check single_output is True
     st = MyFeatureStorage(uri="/tmp", single_output=True)
     assert st.single_output is True
 
