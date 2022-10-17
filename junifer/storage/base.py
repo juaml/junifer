@@ -152,6 +152,11 @@ class BaseFeatureStorage(ABC):
         **kwargs
             The keyword arguments.
 
+        Raises
+        ------
+        ValueError
+            If `kind` is invalid.
+
         """
         if kind == "matrix":
             self.store_matrix(**kwargs)
@@ -159,6 +164,8 @@ class BaseFeatureStorage(ABC):
             self.store_timeseries(**kwargs)
         elif kind == "table":
             self.store_table(**kwargs)
+        else:
+            raise ValueError(f"I don't know how to store {kind}")
 
     def store_df(self, **kwargs) -> None:
         """Store pandas DataFrame.
