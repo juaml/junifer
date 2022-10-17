@@ -122,6 +122,8 @@ class MarkerCollection:
             # Validate marker
             m_data = marker.validate(input=t_data)
             logger.info(f"Marker output type: {m_data}")
+            # Check storage for the marker
             if self._storage is not None:
                 logger.info(f"Validating storage for {marker.name}")
-                self._storage.validate_input(m_data)
+                # Validate storage
+                self._storage.validate(input=m_data)
