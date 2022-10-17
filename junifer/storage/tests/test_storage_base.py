@@ -22,8 +22,8 @@ def test_BaseFeatureStorage() -> None:
         def __init__(self, uri, single_output=False):
             super().__init__(uri, single_output=single_output)
 
-        def validate_input(self, input):
-            super().validate_input(input)
+        def validate(self, input):
+            super().validate(input)
 
         def list_features(self):
             super().list_features()
