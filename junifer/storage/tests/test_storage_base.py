@@ -20,8 +20,6 @@ def test_BaseFeatureStorage() -> None:
     # Create concrete class
     class MyFeatureStorage(BaseFeatureStorage):
 
-        def validate(self, input):
-            super().validate(input)
         def __init__(self, uri, single_output=False):
             storage_types = ["matrix"]
             super().__init__(
@@ -51,8 +49,11 @@ def test_BaseFeatureStorage() -> None:
     st = MyFeatureStorage(uri="/tmp", single_output=True)
     assert st.single_output is True
 
-    with pytest.raises(NotImplementedError):
-        st.validate(None)
+    # Check validate with valid argument
+    st.validate(input_=["matrix"])
+    # Check validate with invalid argument
+    with pytest.raises(ValueError):
+        st.validate(input_=["table"])
 
     with pytest.raises(NotImplementedError):
         st.list_features()

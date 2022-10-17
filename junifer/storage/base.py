@@ -59,13 +59,12 @@ class BaseFeatureStorage(ABC):
         }
         return meta
 
-    @abstractmethod
     def validate(self, input_: List[str]) -> None:
         """Validate the input to the pipeline step.
 
         Parameters
         ----------
-        input_ : list
+        input_ : list of str
             The input to the pipeline step.
 
         Raises
@@ -74,10 +73,12 @@ class BaseFeatureStorage(ABC):
             If the `input_` is invalid.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement validate().",
-            klass=NotImplementedError,
-        )
+        if not any(x in input_ for x in self._valid_inputs):
+            raise_error(
+                "Input does not have the required data."
+                f"\t Input: {input}"
+                f"\t Required (any of): {self._valid_inputs}"
+            )
 
     @abstractmethod
     def list_features(
