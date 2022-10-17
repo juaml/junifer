@@ -24,16 +24,24 @@ class BaseFeatureStorage(ABC):
     ----------
     uri : str or pathlib.Path
         The path to the storage.
+    storage_types : str or list of str
+        The available storage types for the class.
     single_output : bool, optional
         Whether to have single output (default False).
 
     """
 
     def __init__(
-        self, uri: Union[str, Path], single_output: bool = False
+        self,
+        uri: Union[str, Path],
+        storage_types: Union[List[str], str],
+        single_output: bool = False,
     ) -> None:
         """Initialize the class."""
         self.uri = uri
+        if not isinstance(storage_types, list):
+            storage_types = [storage_types]
+        self._valid_inputs = storage_types
         self.single_output = single_output
 
     def get_meta(self) -> Dict:

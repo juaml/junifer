@@ -12,18 +12,23 @@ from junifer.storage.base import BaseFeatureStorage
 def test_BaseFeatureStorage_abstractness() -> None:
     """Test BaseFeatureStorage is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
-        BaseFeatureStorage(uri="/tmp")  # type: ignore
+        BaseFeatureStorage(uri="/tmp", storage_types=["matrix"])
 
 
 def test_BaseFeatureStorage() -> None:
     """Test BaseFeatureStorage."""
     # Create concrete class
     class MyFeatureStorage(BaseFeatureStorage):
-        def __init__(self, uri, single_output=False):
-            super().__init__(uri, single_output=single_output)
 
         def validate(self, input):
             super().validate(input)
+        def __init__(self, uri, single_output=False):
+            storage_types = ["matrix"]
+            super().__init__(
+                uri=uri,
+                storage_types=storage_types,
+                single_output=single_output,
+            )
 
         def list_features(self):
             super().list_features()
