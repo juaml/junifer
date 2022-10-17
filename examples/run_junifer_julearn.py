@@ -84,7 +84,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     collect(storage)
     db = SQLiteFeatureStorage(uri=storage["uri"], single_output=True)
 
-    df_vbm = db.read_features(feature_name="VBM_GM_Schaefer200x17_Mean")
+    df_vbm = db.read_df(feature_name="VBM_GM_Schaefer200x17_Mean")
     oasis_subjects = [x[0] for x in df_vbm.index]
     df_vbm.index = oasis_subjects
 
