@@ -6,7 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 import numpy as np
 
@@ -17,6 +17,10 @@ from .parcel import ParcelAggregation
 from .utils import _ets
 
 
+if TYPE_CHECKING:
+    from junifer.storage import BaseFeatureStorage
+
+
 @register_marker
 class RSSETSMarker(BaseMarker):
     """Class for root sum of squares of edgewise timeseries.
@@ -24,9 +28,14 @@ class RSSETSMarker(BaseMarker):
     Parameters
     ----------
     atlas : str
-        The name of the atlas.
+        The name of the atlas. Check valid options by calling
+        :func:`junifer.data.list_atlases`.
     aggregation_method : str, optional
-        The aggregation method (default "mean").
+        The method to perform aggregation using. Check valid options in
+        :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
+    name : str, optional
+        The name of the marker. If None, will use the class name (default
+        None).
 
     """
 
@@ -58,21 +67,32 @@ class RSSETSMarker(BaseMarker):
         """
         return ["timeseries"]
 
-    # TODO: complete type annotations
-    def store(self, kind: str, out, storage) -> None:
+    def store(
+        self,
+        kind: str,
+        out: Dict[str, Any],
+        storage: "BaseFeatureStorage",
+    ) -> None:
         """Store.
 
         Parameters
         ----------
-        kind
-        out
-        storage
+        kind : {"BOLD"}
+            The data kind to store.
+        out : dict
+            The computed result as a dictionary to store.
+        storage : storage-like
+            The storage class, for example, SQLiteFeatureStorage.
 
         """
         logger.debug(f"Storing BOLD in {storage}")
-        storage.store_timeseries(**out)
+        storage.store(kind="timeseries", **out)
 
-    def compute(self, input: Dict) -> Dict:
+    def compute(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict] = None,
+    ) -> Dict:
         """Compute.
 
         Take a timeseries of brain areas, and calculate timeseries for each
@@ -81,12 +101,19 @@ class RSSETSMarker(BaseMarker):
 
         Parameters
         ----------
-        input : dict of the BOLD data
+        input : dict
+            The BOLD data as dictionary.
+        extra_input : dict, optional
+            The other fields in the pipeline data object (default None).
 
         Returns
         -------
         dict
-            The computed result as dictionary.
+            The computed result as dictionary. The dictionary has the following
+            keys:
+            - data : the actual computed values as a numpy.ndarray
+            - columns : the column labels for the computed values as a list
+            - row_names (if more than one row is present in data): "scan"
 
         References
         ----------
@@ -103,9 +130,10 @@ class RSSETSMarker(BaseMarker):
             method=self.aggregation_method,
         )
         # Compute the parcel aggregation
-        out = parcel_aggregation.compute(input)
+        out = parcel_aggregation.compute(input=input, extra_input=extra_input)
         edge_ts = _ets(out["data"])
         # Compute the RSS
         out["data"] = np.sum(edge_ts**2, 1) ** 0.5
-
+        # Set correct column label
+        out["columns"] = ["root_sum_of_squares_ets"]
         return out

@@ -138,19 +138,17 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
 
     marker.fit_transform(input, storage=storage)
 
-    # TODO: Needs store_timeseries implemented for SQLiteFeatureStorage
+    meta = {
+        "element": "test",
+        "version": "0.0.1",
+        "marker": {"name": "BOLD_fcname"},
+    }
+    # Get the SPM auditory data:
+    subject_data = datasets.fetch_spm_auditory()
+    fmri_img = concat_imgs(subject_data.func)  # type: ignore
+    input = {"BOLD": {"data": fmri_img}, "meta": meta}
+    marker = SphereAggregation(
+        coords="DMNBuckner", method="mean", radius=8, on="BOLD"
+    )
 
-    # meta = {
-    #     "element": "test",
-    #     "version": "0.0.1",
-    #     "marker": {"name": "BOLD_fcname"},
-    # }
-    # # Get the SPM auditory data:
-    # subject_data = datasets.fetch_spm_auditory()
-    # fmri_img = concat_imgs(subject_data.func)  # type: ignore
-    # input = {"BOLD": {"data": fmri_img}, "meta": meta}
-    # marker = SphereAggregation(
-    #     coords="DMNBuckner", method="mean", radius=8, on="BOLD"
-    # )
-
-    # marker.fit_transform(input, storage=storage)
+    marker.fit_transform(input, storage=storage)

@@ -1,23 +1,28 @@
-"""Provide base class for markers."""
+"""Provide abstract base class for markers."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional, Union
+from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from ..pipeline import PipelineStepMixin
 from ..utils import logger, raise_error
 
 
-class BaseMarker(PipelineStepMixin):
-    """Base class for all markers.
+if TYPE_CHECKING:
+    from junifer.storage import BaseFeatureStorage
+
+
+class BaseMarker(ABC, PipelineStepMixin):
+    """Abstract base class for all markers.
 
     Parameters
     ----------
-    on : list of str
+    on : str or list of str
         The kind of data to apply the marker to. By default, will work on all
-        available data (default None).
+        available data.
     name : str, optional
         The name of the marker. By default, it will use the class name as the
         name of the marker (default None).
@@ -44,7 +49,7 @@ class BaseMarker(PipelineStepMixin):
         Returns
         -------
         dict
-            The metadata as a dictionary.
+            The metadata as a dictionary with the only key 'marker'.
 
         """
         s_meta = super().get_meta()
@@ -76,6 +81,7 @@ class BaseMarker(PipelineStepMixin):
                 f"\t Required (any of): {self._valid_inputs}"
             )
 
+    @abstractmethod
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
 
@@ -92,9 +98,11 @@ class BaseMarker(PipelineStepMixin):
 
         """
         raise_error(
-            msg="get_output_kind() not implemented", klass=NotImplementedError
+            msg="Concrete classes need to implement get_output_kind().",
+            klass=NotImplementedError,
         )
 
+    @abstractmethod
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
@@ -117,32 +125,54 @@ class BaseMarker(PipelineStepMixin):
             with this as a parameter.
 
         """
-        raise_error(msg="compute() not implemented", klass=NotImplementedError)
+        raise_error(
+            msg="Concrete classes need to implement compute().",
+            klass=NotImplementedError,
+        )
 
-    # TODO: complete type annotations
-    def store(self, kind: str, out: Dict, storage) -> None:
+    @abstractmethod
+    def store(
+        self,
+        kind: str,
+        out: Dict[str, Any],
+        storage: "BaseFeatureStorage",
+    ) -> None:
         """Store.
 
         Parameters
         ----------
-        input
-        out
+        kind : str
+            The data kind to store.
+        out : dict
+            The computed result as a dictionary to store.
+        storage : storage-like
+            The storage class.
 
         """
-        raise_error(msg="store() not implemented", klass=NotImplementedError)
+        raise_error(
+            msg="Concrete classes need to implement store().",
+            klass=NotImplementedError,
+        )
 
-    # TODO: complete type annotations
-    def fit_transform(self, input: Dict[str, Dict], storage=None) -> Dict:
+    def fit_transform(
+        self,
+        input: Dict[str, Dict],
+        storage: "BaseFeatureStorage" = None,
+    ) -> Dict:
         """Fit and transform.
 
         Parameters
         ----------
-        input
-        storage
+        input : dict
+            The Junifer Data object.
+        storage : storage-like, optional
+            The storage class, for example, SQLiteFeatureStorage.
 
         Returns
         -------
         dict
+            The processed output as a dictionary. If `storage` is provided,
+            empty dictionary is returned.
 
         """
         out = {}
@@ -156,11 +186,11 @@ class BaseMarker(PipelineStepMixin):
                 t_meta = meta.copy()
                 t_meta.update(t_input.get("meta", {}))
                 t_meta.update(self.get_meta(kind))
-                t_out = self.compute(t_input, extra_input)
+                t_out = self.compute(input=t_input, extra_input=extra_input)
                 t_out.update(meta=t_meta)
                 if storage is not None:
                     logger.info(f"Storing in {storage}")
-                    self.store(kind, t_out, storage)
+                    self.store(kind=kind, out=t_out, storage=storage)
                 else:
                     logger.info("No storage specified, returning dictionary")
                     out[kind] = t_out
