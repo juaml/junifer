@@ -16,10 +16,10 @@ import yaml
 from ..datagrabber.base import BaseDataGrabber
 from ..markers.base import BaseMarker
 from ..markers.collection import MarkerCollection
+from ..pipeline.registry import build
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger, raise_error
 from ..utils.fs import make_executable
-from .registry import build
 
 
 def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
