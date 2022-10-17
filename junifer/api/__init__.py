@@ -7,4 +7,3 @@
 from .cli import cli
 from .functions import run, collect
 from . import decorators
-from . import registry
