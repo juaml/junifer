@@ -11,8 +11,8 @@ import pytest
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api.functions import collect, run
-from junifer.api.registry import build
 from junifer.datagrabber.base import BaseDataGrabber
+from junifer.pipeline.registry import build
 
 
 # Define datagrabber

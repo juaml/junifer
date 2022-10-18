@@ -2,14 +2,14 @@
 
 import importlib
 
-from junifer.api.registry import get_step_names
+from junifer.pipeline.registry import get_step_names
 
 
 def test_testing_registry() -> None:
     """Test testing registry."""
     import junifer
 
-    importlib.reload(junifer.api.registry)
+    importlib.reload(junifer.pipeline.registry)
     importlib.reload(junifer)
 
     assert "OasisVBMTestingDatagrabber" not in get_step_names("datagrabber")
