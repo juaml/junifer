@@ -7,8 +7,8 @@
 from pathlib import Path
 from typing import Union
 
-from ..api.decorators import register_datagrabber
-from ..datagrabber import PatternDataladDataGrabber
+from ....api.decorators import register_datagrabber
+from ....datagrabber import PatternDataladDataGrabber
 
 
 @register_datagrabber
