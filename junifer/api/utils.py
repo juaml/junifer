@@ -40,8 +40,13 @@ def _get_python_information() -> Dict[str, str]:
     }
 
 
-def _get_dependency_information() -> Dict[str, str]:
+def _get_dependency_information(long_: bool) -> Dict[str, str]:
     """Get Python environment dependency information.
+
+    Parameters
+    ----------
+    long_ : bool
+        Whether to report long version.
 
     Returns
     -------
@@ -52,10 +57,27 @@ def _get_dependency_information() -> Dict[str, str]:
     dependency_versions = get_versions()
 
     pruned_dependency_versions = {}
-    for key, value in dependency_versions.items():
-        # Ignore built-in modules and self
-        if value != "None" and key != "junifer":
-            pruned_dependency_versions[key] = value
+    # Report long version
+    if long_:
+        for key, value in dependency_versions.items():
+            # Ignore built-in modules and self
+            if value != "None" and key != "junifer":
+                pruned_dependency_versions[key] = value
+
+    # Report short version
+    else:
+        for key in [
+            "click",
+            "numpy",
+            "datalad",
+            "pandas",
+            "nibabel",
+            "nilearn",
+            "sqlalchemy",
+            "pyyaml",
+        ]:
+            if key in dependency_versions.keys():
+                pruned_dependency_versions[key] = dependency_versions[key]
 
     return pruned_dependency_versions
 

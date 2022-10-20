@@ -211,7 +211,7 @@ def wtf(long_: bool) -> None:
     report = {
         "junifer": _get_junifer_version(),
         "python": _get_python_information(),
-        "dependencies": _get_dependency_information(),
+        "dependencies": _get_dependency_information(long_=long_),
         "system": _get_system_information(),
         "environment": _get_environment_information(),
     }
