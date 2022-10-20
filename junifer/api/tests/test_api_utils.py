@@ -5,6 +5,8 @@
 
 import platform as pl
 
+import pytest
+
 from junifer._version import __version__
 from junifer.api.utils import (
     _get_dependency_information,
@@ -67,23 +69,21 @@ def test_get_system_information() -> None:
     assert system_information["platform"] == pl.platform()
 
 
-def test_get_environment_information_short() -> None:
-    """Test short version of _get_environment_information()."""
-    environment_information = _get_environment_information(long_=False)
-    assert [key for key in environment_information.keys()] == [
-        "LC_CTYPE",
-        "PATH",
-    ]
+@pytest.mark.parametrize(
+    "format_",
+    [
+        "short",
+        "long",
+    ],
+)
+def test_get_environment_information(format_: str) -> None:
+    """Test _get_environment_information().
 
+    Parameters
+    ----------
+    format_ : str
+        The parametrized report version.
 
-def test_get_environment_information_long() -> None:
-    """Test long version of _get_environment_information()."""
-    environment_information = _get_environment_information(long_=True)
-    environment_information_keys = [
-        key for key in environment_information.keys()
-    ]
-    for key in [
-        "LC_CTYPE",
-        "PATH",
-    ]:
-        assert key in environment_information_keys
+    """
+    environment_information = _get_environment_information(long_=format_)
+    assert "PATH" in environment_information.keys()
