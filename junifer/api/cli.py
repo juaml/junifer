@@ -198,8 +198,16 @@ def queue(
 
 
 @cli.command()
-def wtf() -> None:
-    """Wtf command for CLI."""
+@click.option("--long", "long_", is_flag=True)
+def wtf(long_: bool) -> None:
+    """Wtf command for CLI.
+
+    Parameters
+    ----------
+    long_ : bool
+        Whether to report long version or not.
+
+    """
     report = {
         "junifer": _get_junifer_version(),
         "python": _get_python_information(),
