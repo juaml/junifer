@@ -84,8 +84,7 @@ def _get_environment_information() -> Dict[str, str]:
 
     """
     environment_values = {}
-    for key in ["LC_CTYPE", "LC_TERMINAL", "LC_TERMINAL_VERSION", "PATH"]:
-        if key in os.environ.keys():
-            environment_values[key] = os.environ[key]
+    for key, value in os.environ.items():
+        environment_values[key] = value
 
     return environment_values
