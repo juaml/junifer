@@ -74,7 +74,7 @@ def _get_dependency_information(long_: bool) -> Dict[str, str]:
             "nibabel",
             "nilearn",
             "sqlalchemy",
-            "pyyaml",
+            "yaml",
         ]:
             if key in dependency_versions.keys():
                 pruned_dependency_versions[key] = dependency_versions[key]
