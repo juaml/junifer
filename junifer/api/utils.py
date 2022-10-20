@@ -52,9 +52,10 @@ def _get_dependency_information() -> Dict[str, str]:
     dependency_versions = get_versions()
 
     pruned_dependency_versions = {}
-    for key in ["numpy", "scipy", "pandas", "nilearn", "nibabel", "nitime"]:
-        if key in dependency_versions.keys():
-            pruned_dependency_versions[key] = dependency_versions[key]
+    for key, value in dependency_versions.items():
+        # Ignore built-in modules and self
+        if value != "None" and key != "junifer":
+            pruned_dependency_versions[key] = value
 
     return pruned_dependency_versions
 
