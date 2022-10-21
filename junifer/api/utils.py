@@ -5,6 +5,8 @@
 
 import os
 import platform as pl
+import re
+from importlib.metadata import distribution
 from typing import Dict
 
 from .._version import __version__
@@ -66,18 +68,24 @@ def _get_dependency_information(long_: bool) -> Dict[str, str]:
 
     # Report short version
     else:
-        for key in [
-            "click",
-            "numpy",
-            "datalad",
-            "pandas",
-            "nibabel",
-            "nilearn",
-            "sqlalchemy",
-            "yaml",
-        ]:
+        # Get dependencies for junifer
+        dist = distribution("junifer")
+        # Compile regex pattern
+        re_pattern = re.compile("[a-z-]+")
+
+        for pkg_with_version in dist.requires:
+            # Perform regex search
+            matches = re.findall(pattern=re_pattern, string=pkg_with_version)
+            # Fix issue with PyYAML name registration
+            if matches[0] == "pyyaml":
+                key = "yaml"
+            else:
+                key = matches[0]
+
             if key in dependency_versions.keys():
-                pruned_dependency_versions[key] = dependency_versions[key]
+                # Check if pkg part of optional dependencies
+                if "extra" not in matches:
+                    pruned_dependency_versions[key] = dependency_versions[key]
 
     return pruned_dependency_versions
 
