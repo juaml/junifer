@@ -62,6 +62,8 @@ Enhancements
 
 - Add missing type annotations (:gh: `74` by `Synchon Mandal`_).
 
+- Add ``junifer wtf`` to report environment details (:gh: `33` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
