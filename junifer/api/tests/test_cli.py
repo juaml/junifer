@@ -11,7 +11,7 @@ import pytest
 import yaml
 from click.testing import CliRunner
 
-from junifer.api.cli import collect, run
+from junifer.api.cli import collect, run, wtf
 
 
 # Create click test runner
@@ -68,3 +68,19 @@ def test_run_and_collect_commands(
     collect_result = runner.invoke(collect, collect_args)
     # Check
     assert collect_result.exit_code == 0
+
+
+def test_wtf_short() -> None:
+    """Test short version of wtf command."""
+    # Invoke wtf command
+    wtf_result = runner.invoke(wtf)
+    # Check
+    assert wtf_result.exit_code == 0
+
+
+def test_wtf_long() -> None:
+    """Test long version of wtf command."""
+    # Invoke wtf command
+    wtf_result = runner.invoke(wtf, "--long")
+    # Check
+    assert wtf_result.exit_code == 0
