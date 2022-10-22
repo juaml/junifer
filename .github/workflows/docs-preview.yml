@@ -1,6 +1,7 @@
-name: Build and publish docs
+name: Build docs and preview PR
 
 on:
+  push
   pull_request:
     types:
       - opened
@@ -42,6 +43,7 @@ jobs:
       run: |
         BUILDDIR=_build/main make -C docs/ local
     - name: Deploy preview
+      if: github.event_name == 'pull_request'
       uses: rossjrw/pr-preview-action@v1
       with:
         source-dir: docs/_build
