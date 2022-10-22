@@ -14,5 +14,14 @@ junifer. This is the first step towards including the new functionality in
 the junifer package.
 
 In this section we will show how to extend junifer, by creating new
-datagrabbers, preprocessing and markers, following the _junifer_ way.
+datagrabbers, preprocessing and markers, following the *junifer* way.
 
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   datagrabber
+   .. datareader
+   .. marker
+   .. storage
