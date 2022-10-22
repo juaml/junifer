@@ -1,0 +1,47 @@
+name: Build and publish docs
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Check for sudo
+      shell: bash
+      run: |
+        if type sudo >/dev/null 2>&1; then SUDO="sudo"; else SUDO=""; fi
+        echo "SUDO=$SUDO" >> $GITHUB_ENV
+    - name: Install dependencies
+      run: |
+        $SUDO bash -c "$(curl -fsSL http://neuro.debian.net/_files/neurodebian-travis.sh)"
+        $SUDO apt-get update -qq
+        $SUDO apt-get install git-annex-standalone
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install -e .[docs]
+    - name: Configure git for datalad
+      run: |
+        git config --global user.email "runner@github.com"
+        git config --global user.name "GITHUB CI Runner"
+    - name: Test build docs
+      if: github.ref != 'refs/heads/main' && ! startsWith(github.ref, 'refs/tags')
+      run: |
+        BUILDDIR=_build/main make -C docs/ local
+    - name: Deploy preview
+      uses: rossjrw/pr-preview-action@v1
+      with:
+        source-dir: docs/_build
