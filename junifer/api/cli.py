@@ -5,6 +5,9 @@
 # License: AGPL
 
 import pathlib
+import subprocess
+import sys
+from pathlib import Path
 from typing import Dict, List, Union
 
 import click
@@ -216,3 +219,16 @@ def wtf(long_: bool) -> None:
         "environment": _get_environment_information(long_=long_),
     }
     click.echo(yaml.dump(report, sort_keys=False))
+
+
+@cli.command()
+def selftest() -> None:
+    """Selftest command for CLI."""
+    subprocess.run(
+        ["pytest", "-vvv"],
+        stdin=subprocess.DEVNULL,
+        stdout=sys.stdout,
+        stderr=subprocess.STDOUT,
+        cwd=Path(__file__).parent.parent.parent.absolute(),
+        check=True,
+    )
