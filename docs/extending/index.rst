@@ -1,5 +1,7 @@
 .. include:: ../links.inc
 
+.. _extending:
+
 Extending junifer
 =================
 
@@ -18,7 +20,7 @@ datagrabbers, preprocessing and markers, following the *junifer* way.
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
    datagrabber

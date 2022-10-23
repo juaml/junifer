@@ -25,6 +25,7 @@
 
 .. _`Github`: https://github.com/
 .. _`junifer Github`: https://github.com/juaml/junifer
+.. _`junifer Discussions`: https://github.com/juaml/junifer/discussions
 
 .. _`Wikipedia`: https://wikipedia.org
 

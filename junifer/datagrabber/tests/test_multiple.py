@@ -27,7 +27,7 @@ def test_multiple() -> None:
         "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
     }
     pattern2 = {
-        "bold": "{subject}/{session}/func/"
+        "BOLD": "{subject}/{session}/func/"
         "{subject}_{session}_task-rest_bold.nii.gz",
     }
     dg1 = PatternDataladDataGrabber(
@@ -41,7 +41,7 @@ def test_multiple() -> None:
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri,
-        types=["bold"],
+        types=["BOLD"],
         patterns=pattern2,
         replacements=replacements,
     )
@@ -50,7 +50,7 @@ def test_multiple() -> None:
 
     types = dg.get_types()
     assert "T1w" in types
-    assert "bold" in types
+    assert "BOLD" in types
 
     expected_subs = [
         (f"sub-{i:02d}", f"ses-{j:02d}")
@@ -64,7 +64,7 @@ def test_multiple() -> None:
 
         data = dg[("sub-01", "ses-01")]
         assert "T1w" in data
-        assert "bold" in data
+        assert "BOLD" in data
 
     meta = dg.get_meta()
     assert "class" in meta
@@ -85,7 +85,7 @@ def test_multiple_no_intersection() -> None:
         "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
     }
     pattern2 = {
-        "bold": "{subject}/{session}/func/"
+        "BOLD": "{subject}/{session}/func/"
         "{subject}_{session}_task-rest_bold.nii.gz",
     }
     dg1 = PatternDataladDataGrabber(
@@ -99,7 +99,7 @@ def test_multiple_no_intersection() -> None:
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri2,
-        types=["bold"],
+        types=["BOLD"],
         patterns=pattern2,
         replacements=replacements,
     )

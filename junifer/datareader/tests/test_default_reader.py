@@ -42,7 +42,7 @@ def test_meta() -> None:
 
     nib_data_path = Path(nib_testing.data_path)
     t_path = nib_data_path / "example4d.nii.gz"
-    input = {"bold": {"path": t_path}}
+    input = {"BOLD": {"path": t_path}}
     output = reader.fit_transform(input)
     assert "meta" in output
     assert "datareader" in output["meta"]
@@ -67,23 +67,23 @@ def test_read_nifti(fname: str) -> None:
 
     t_path = nib_data_path / fname
 
-    input = {"bold": {"path": t_path}}
+    input = {"BOLD": {"path": t_path}}
     output = reader.fit_transform(input)
 
     assert isinstance(output, dict)
-    assert "bold" in output
-    assert isinstance(output["bold"], dict)
-    assert "path" in output["bold"]
-    assert "data" in output["bold"]
+    assert "BOLD" in output
+    assert isinstance(output["BOLD"], dict)
+    assert "path" in output["BOLD"]
+    assert "data" in output["BOLD"]
 
-    read_img = output["bold"]["data"]
+    read_img = output["BOLD"]["data"]
 
     t_read_img = nib.load(t_path)
     assert_array_equal(read_img.get_fdata(), t_read_img.get_fdata())
 
-    input = {"bold": {"path": t_path.as_posix()}}
+    input = {"BOLD": {"path": t_path.as_posix()}}
     output2 = reader.fit_transform(input)
-    assert output["bold"]["path"] == output2["bold"]["path"]
+    assert output["BOLD"]["path"] == output2["BOLD"]["path"]
 
 
 def test_read_unknown() -> None:

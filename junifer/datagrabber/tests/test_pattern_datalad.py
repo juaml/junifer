@@ -45,11 +45,11 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
 
     """
     # Define types
-    types = ["T1w", "bold"]
+    types = ["T1w", "BOLD"]
     # Define patterns
     patterns = {
         "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
-        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+        "BOLD": "{subject}/func/{subject}_task-rest_bold.nii.gz",
     }
     # Define replacements
     replacements = ["subject"]
@@ -75,8 +75,8 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
             assert t_sub["T1w"]["path"] == (
                 dg.datadir / f"{elem}/anat/{elem}_T1w.nii.gz"
             )
-            assert "path" in t_sub["bold"]
-            assert t_sub["bold"]["path"] == (
+            assert "path" in t_sub["BOLD"]
+            assert t_sub["BOLD"]["path"] == (
                 dg.datadir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
             )
 
@@ -104,11 +104,11 @@ def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:
 
     """
     # Define types
-    types = ["T1w", "bold"]
+    types = ["T1w", "BOLD"]
     # Define patterns
     patterns = {
         "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
-        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+        "BOLD": "{subject}/func/{subject}_task-rest_bold.nii.gz",
     }
     # Define replacements
     replacements = ["subject"]
@@ -118,7 +118,7 @@ def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:
     datadir = "dataset"  # use string and not absolute path
     patterns = {
         "T1w": "example_bids/{subject}/anat/{subject}_T*w.nii.gz",
-        "bold": "example_bids/{subject}/func/{subject}_task-rest_*.nii.gz",
+        "BOLD": "example_bids/{subject}/func/{subject}_task-rest_*.nii.gz",
     }
     with PatternDataladDataGrabber(
         uri=repo_uri,
@@ -134,18 +134,18 @@ def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:
             assert t_sub["T1w"]["path"] == (
                 dg.datadir / f"{elem}/anat/{elem}_T1w.nii.gz"
             )
-            assert "path" in t_sub["bold"]
-            assert t_sub["bold"]["path"] == (
+            assert "path" in t_sub["BOLD"]
+            assert t_sub["BOLD"]["path"] == (
                 dg.datadir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
             )
 
 
 def test_bids_PatternDataladDataGrabber_session():
     """Test a subject and session-based BIDS datalad datagrabber."""
-    types = ["T1w", "bold"]
+    types = ["T1w", "BOLD"]
     patterns = {
         "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-        "bold": "{subject}/{session}/func/"
+        "BOLD": "{subject}/{session}/func/"
         "{subject}_{session}_task-rest_bold.nii.gz",
     }
     replacements = ["subject", "session"]
@@ -162,7 +162,7 @@ def test_bids_PatternDataladDataGrabber_session():
     rootdir = "example_bids_ses"
     # repo_commit =  _testing_dataset['example_bids_ses']['id']
 
-    # With T1W and bold, only 2 sessions are available
+    # With T1W and BOLD, only 2 sessions are available
     with PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri,
