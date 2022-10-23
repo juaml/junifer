@@ -52,7 +52,11 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">6. API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html#pipeline-elements">6.1. Pipeline Elements</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#utilities">6.2. Utilities</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">6.2.1. API Functions</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">6.2.1. API Functions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-junifer.api">6.2.1.1. Main API functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-junifer.api.decorators">6.2.1.2. Decorators</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="utils.html">6.2.2. Utils</a></li>
 <li class="toctree-l3"><a class="reference internal" href="testing.html">6.2.3. Testing</a></li>
 </ul>
@@ -90,8 +94,10 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-junifer.api">
-<span id="api-functions"></span><h1><span class="section-number">6.2.1. </span>API Functions<a class="headerlink" href="#module-junifer.api" title="Permalink to this heading"></a></h1>
+  <section id="api-functions">
+<h1><span class="section-number">6.2.1. </span>API Functions<a class="headerlink" href="#api-functions" title="Permalink to this heading"></a></h1>
+<section id="module-junifer.api">
+<span id="main-api-functions"></span><h2><span class="section-number">6.2.1.1. </span>Main API functions<a class="headerlink" href="#module-junifer.api" title="Permalink to this heading"></a></h2>
 <p>Provide imports for api sub-package.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.api.collect">
@@ -140,6 +146,92 @@ init function.</p>
 </dl>
 </dd></dl>
 
+</section>
+<section id="module-junifer.api.decorators">
+<span id="decorators"></span><h2><span class="section-number">6.2.1.2. </span>Decorators<a class="headerlink" href="#module-junifer.api.decorators" title="Permalink to this heading"></a></h2>
+<p>Provide decorators for api.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.decorators.register">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.10)"><span class="pre">type</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#junifer.api.decorators.register" title="Permalink to this definition"></a></dt>
+<dd><p>Register a function to be used in a pipeline step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>step</strong><span class="classifier">str</span></dt><dd><p>Name of the step.</p>
+</dd>
+<dt><strong>name</strong><span class="classifier">str</span></dt><dd><p>Name of the function.</p>
+</dd>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>Class to be registered.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.decorators.register_datagrabber">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_datagrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.10)"><span class="pre">type</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.10)"><span class="pre">type</span></a></span></span><a class="headerlink" href="#junifer.api.decorators.register_datagrabber" title="Permalink to this definition"></a></dt>
+<dd><p>Datagrabber registration decorator.</p>
+<p>Registers the datagrabber so it can be used by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>klass: class</strong></dt><dd><p>The class of the datagrabber to register.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.decorators.register_marker">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_marker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.10)"><span class="pre">type</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.10)"><span class="pre">type</span></a></span></span><a class="headerlink" href="#junifer.api.decorators.register_marker" title="Permalink to this definition"></a></dt>
+<dd><p>Marker registration decorator.</p>
+<p>Registers the marker so it can be used by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>klass: class</strong></dt><dd><p>The class of the marker to register.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.decorators.register_storage">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register_storage" title="Permalink to this definition"></a></dt>
+<dd><p>Storage registration decorator.</p>
+<p>Registers the storage so it can be used by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>klass: class</strong></dt><dd><p>The class of the storage to register.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 
 

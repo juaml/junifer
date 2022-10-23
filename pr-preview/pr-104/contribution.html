@@ -225,10 +225,10 @@ texts.</p>
 <span class="c1"># The BIDS datagrabber requires three parameters: the types of data we want,</span>
 <span class="c1"># the specific pattern that matches each type, and the variables that will be</span>
 <span class="c1"># replaced int he patterns.</span>
-<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;T1w&quot;</span><span class="p">,</span> <span class="s2">&quot;bold&quot;</span><span class="p">]</span>
+<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;T1w&quot;</span><span class="p">,</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">]</span>
 <span class="n">patterns</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;bold&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 <span class="n">replacements</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span>
 <span class="c1">###############################################################################</span>
@@ -254,7 +254,7 @@ texts.</p>
 <span class="c1">###############################################################################</span>
 <span class="c1"># Another feature of the datagrabber is the ability to get a specific</span>
 <span class="c1"># element by its name. In this case, we index `sub-01` and we get the file</span>
-<span class="c1"># paths for the two types of data we want (T1w and bold).</span>
+<span class="c1"># paths for the two types of data we want (T1w and BOLD).</span>
 <span class="k">with</span> <span class="n">PatternDataladDataGrabber</span><span class="p">(</span>
     <span class="n">rootdir</span><span class="o">=</span><span class="n">rootdir</span><span class="p">,</span>
     <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>

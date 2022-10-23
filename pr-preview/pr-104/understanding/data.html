@@ -53,7 +53,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabber.html">2.2. Data Grabber</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datareader.html">2.3. Data Reader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="marker.html">2.4. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marker.html">2.4. Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.html">2.5. Storage</a></li>
 </ul>
 </li>
@@ -93,7 +93,7 @@
            <div itemprop="articleBody">
              
   <section id="the-data-object">
-<h1><span class="section-number">2.1. </span>The Data Object<a class="headerlink" href="#the-data-object" title="Permalink to this heading"></a></h1>
+<span id="understanding-data-object"></span><h1><span class="section-number">2.1. </span>The Data Object<a class="headerlink" href="#the-data-object" title="Permalink to this heading"></a></h1>
 <section id="description">
 <h2><span class="section-number">2.1.1. </span>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
 <p>This is the <em>object</em> that traverses the steps of the pipeline. It is indeed a
@@ -105,7 +105,7 @@ object including source and previous transformation steps.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: path to the file containing the data.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: the data loaded in memory.</p></li>
 </ul>
-<p>The <a class="reference internal" href="datagrabber.html#datagrabber"><span class="std std-ref">Data Grabber</span></a> step will only fill the <code class="docutils literal notranslate"><span class="pre">path</span></code> value.
+<p>The <a class="reference internal" href="datagrabber.html#datagrabbers"><span class="std std-ref">Data Grabber</span></a> step will only fill the <code class="docutils literal notranslate"><span class="pre">path</span></code> value.
 The <code class="docutils literal notranslate"><span class="pre">data</span></code> value will be filled by the <a class="reference internal" href="datareader.html#datareader"><span class="std std-ref">Data Reader</span></a> step, if it is one of the possible file types
 that the datareader can read.</p>
 </section>
@@ -133,11 +133,15 @@ that the datareader can read.</p>
 <td><p>BOLD image (4D)</p></td>
 <td><p>Preprocessed/Denoised BOLD image (fmriprep output)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code></p></td>
+<td><p>BOLD image confounds (CSV/TSV file)</p></td>
+<td><p>Confounds that can be applied to the BOLD image.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code></p></td>
 <td><p>VBM Gray Matter segmentation (3D)</p></td>
 <td><p>CAT output (<cite>m0wp1</cite> images)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VBM_WM</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VBM_WM</span></code></p></td>
 <td><p>VBM White Matter segmentation (3D)</p></td>
 <td><p>CAT output (<cite>m0wp2</cite> images)</p></td>
 </tr>

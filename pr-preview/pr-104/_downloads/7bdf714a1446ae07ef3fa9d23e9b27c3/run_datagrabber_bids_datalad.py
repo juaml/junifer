@@ -23,10 +23,10 @@ configure_logging(level="INFO")
 # The BIDS datagrabber requires three parameters: the types of data we want,
 # the specific pattern that matches each type, and the variables that will be
 # replaced int he patterns.
-types = ["T1w", "bold"]
+types = ["T1w", "BOLD"]
 patterns = {
     "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
-    "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+    "BOLD": "{subject}/func/{subject}_task-rest_bold.nii.gz",
 }
 replacements = ["subject"]
 ###############################################################################
@@ -52,7 +52,7 @@ with PatternDataladDataGrabber(
 ###############################################################################
 # Another feature of the datagrabber is the ability to get a specific
 # element by its name. In this case, we index `sub-01` and we get the file
-# paths for the two types of data we want (T1w and bold).
+# paths for the two types of data we want (T1w and BOLD).
 with PatternDataladDataGrabber(
     rootdir=rootdir,
     types=types,

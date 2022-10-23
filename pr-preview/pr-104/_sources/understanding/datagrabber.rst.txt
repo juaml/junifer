@@ -1,10 +1,9 @@
 .. include:: ../links.inc
 
-.. _datagrabber:
+.. _datagrabbers:
 
 Data Grabber
 ============
-
 
 Description
 ^^^^^^^^^^^
@@ -14,7 +13,7 @@ Of course, datagrabbers are not only possible for Datalad but any origin of a da
 It is intended to use them as context managers.
 If you are interested in just using already provided datagrabbers please go to :doc:`../builtin`.
 If you want to implement your own Data Grabbers you need to inherit from different types of 
-Data Grabbers we already provide.
+Data Grabbers we already provide (see :ref:`extending_datagrabbers`).
 
 Typical Data Grabbers
 ^^^^^^^^^^^^^^^^^^^^^

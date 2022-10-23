@@ -1,5 +1,7 @@
 .. include:: ../links.inc
 
+.. _understanding:
+
 Understanding junifer
 =====================
 
