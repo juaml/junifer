@@ -222,13 +222,64 @@ def wtf(long_: bool) -> None:
 
 
 @cli.command()
-def selftest() -> None:
-    """Selftest command for CLI."""
-    subprocess.run(
-        ["pytest", "-vvv"],
-        stdin=subprocess.DEVNULL,
-        stdout=sys.stdout,
-        stderr=subprocess.STDOUT,
-        cwd=Path(__file__).parent.parent.parent.absolute(),
-        check=True,
-    )
+@click.argument("subpkg", type=str)
+def selftest(subpkg: str) -> None:
+    """Selftest command for CLI.
+
+    Parameters
+    ----------
+    subpkg : {"all", "api", "configs", "data", "datagrabber", "datareader",
+        "markers", "pipeline", "preprocess", "storage", "testing", "utils",
+        "stats"}
+        The sub-package to run tests for.
+
+    Raises
+    ------
+    click.BadArgumentUsage
+        If `subpkg` is invalid.
+
+    """
+    sub_packages = [
+        "all",
+        "api",
+        "configs",
+        "data",
+        "datagrabber",
+        "datareader",
+        "markers",
+        "pipeline",
+        "preprocess",
+        "storage",
+        "testing",
+        "tests",
+        "utils",
+    ]
+    if subpkg not in sub_packages:
+        raise click.BadArgumentUsage(
+            f"Invalid value for argument `subpkg`: {subpkg}. "
+            f"Should be one of {sub_packages}"
+        )
+
+    if subpkg == "all":
+        completed_process = subprocess.run(
+            ["pytest", "-vvv"],
+            stdin=subprocess.DEVNULL,
+            stdout=sys.stdout,
+            stderr=subprocess.STDOUT,
+            cwd=Path(__file__).parent.parent.parent.absolute(),
+            check=False,
+        )
+    else:
+        completed_process = subprocess.run(
+            ["pytest", f"junifer/{subpkg}", "-vvv"],
+            stdin=subprocess.DEVNULL,
+            stdout=sys.stdout,
+            stderr=subprocess.STDOUT,
+            cwd=Path(__file__).parent.parent.parent.absolute(),
+            check=False,
+        )
+
+    if completed_process.returncode == 0:
+        click.secho("Successful.", fg="green")
+    else:
+        click.secho("Failure.", fg="red")
