@@ -47,7 +47,7 @@ Available
      - Built-in
      - In Progress
      - :gh:`4`
-   * - :class:`junifer.configs.juseless.JuselessDataladUKBVBM`
+   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladUKBVBM`
      - UKB VBM dataset preprocessed with CAT. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless``
@@ -56,7 +56,7 @@ Available
    * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladCamCANVBM`
      - CamCAN VBM dataset preprocessed with CAT. Available for Juseless only.
      - Restricted
-     - ``junifer.configs.juseless.datagrabbers``
+     - ``junifer.configs.juseless``
      - Done
      - 0.0.1
    * - :class:`junifer.datagrabber.DataladAOMICID1000`
@@ -77,7 +77,7 @@ Available
      - Built-in
      - Done
      - 0.0.1
-   * - :class:`junifer.configs.juseless.JuselessDataladAOMICVBM`
+   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladAOMICVBM`
      - AOMIC VBM dataset. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless``
@@ -86,7 +86,7 @@ Available
    * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladIXIVBM`
      - `IXI VBM dataset <https://brain-development.org/ixi-dataset/>`_. Available for Juseless only.
      - Restricted
-     - ``junifer.configs.juseless.datagrabbers``
+     - ``junifer.configs.juseless``
      - Done
      - 0.0.1
 
