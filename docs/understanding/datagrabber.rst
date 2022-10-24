@@ -2,8 +2,8 @@
 
 .. _datagrabbers:
 
-Data Grabber
-============
+DataGrabber
+===========
 
 Description
 ^^^^^^^^^^^
