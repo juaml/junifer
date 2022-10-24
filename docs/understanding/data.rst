@@ -7,7 +7,7 @@ Description
 ^^^^^^^^^^^
 
 This is the *object* that traverses the steps of the pipeline. It is indeed a
-dictionary of dictionaries. The first level of keys are the :ref:`data_types`
+dictionary of dictionaries. The first level of keys are the :ref:`data types <data_types>`
 and a special key named ``meta`` that contains all the information on the data
 object including source and previous transformation steps.
 
@@ -16,8 +16,8 @@ The second level of keys are the actual data. So far, there are two keys used:
 - ``path``: path to the file containing the data.
 - ``data``: the data loaded in memory.
 
-The :ref:`datagrabber` step will only fill the ``path`` value.
-The ``data`` value will be filled by the :ref:`datareader` step, if it is one of the possible file types
+The :ref:`DataGrabber <datagrabber>` step will only fill the ``path`` value.
+The ``data`` value will be filled by the :ref:`DataReader <datareader>` step, if it is one of the possible file types
 that the datareader can read.
 
 .. _data_types:
