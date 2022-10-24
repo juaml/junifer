@@ -1,3 +1,5 @@
+![Junifer logo](docs/images/junifer_logo.png)
+
 # junifer - JUelich NeuroImaging FEature extractoR
 
 ![PyPI](https://img.shields.io/pypi/v/junifer?style=flat-square)
