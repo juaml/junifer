@@ -2,5 +2,5 @@
 
 .. _datareader:
 
-Data Reader
-===========
+DataReader
+==========
