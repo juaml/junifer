@@ -154,6 +154,10 @@ Available
      - Spherical aggregation using mean
      - Done
      - 0.0.1
+   * - :class:`junifer.markers.FunctionalConnectivitySpheres`
+     - Perform spherical aggregation and compute functional connectivity
+     - Done
+     - 0.0.1
    * - :class:`junifer.markers.RSSETSMarker`
      - Compute root sum of squares of edgewise timeseries
      - Done
