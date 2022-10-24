@@ -14,7 +14,7 @@ Data Grabbers
         - Open with registration
         - Restricted
 
-    Type/config: this should mention weather the class is built-in in the
+    Type/config: this should mention whether the class is built-in in the
     core of junifer or needs to be imported from a specific configuration in
     the `junifer.configs` module.
 
