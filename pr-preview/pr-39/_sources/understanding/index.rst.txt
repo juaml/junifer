@@ -4,7 +4,7 @@ Understanding junifer
 =====================
 
 Before you start, you should understand how junifer works. Junifer is a
-tool conceived to extract features from neuroimaging data in a easy-to-use
+tool conceived to extract features from neuroimaging data in an easy-to-use
 manner, with minimal coding and minimal user expertise in the internal aspects.
 
 Unlike other tools like FSL, SPM, AFNI, etc., junifer is not a toolbox to
@@ -24,5 +24,6 @@ julearn_).
    data
    datagrabber
    datareader
+   preprocess
    marker
    storage
