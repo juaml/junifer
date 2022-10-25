@@ -1,6 +1,6 @@
 .. include:: ../links.inc
 
-.. _understanding_data_object:
+.. _data_object:
 
 The Data Object
 ===============
