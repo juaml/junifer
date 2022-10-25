@@ -98,10 +98,11 @@
 <h2><span class="section-number">2.2.1. </span>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">DataGrabber</span></code> is an object that can provide an interface to datasets you want to work with in junifer.
 Every concrete implementation of a datagrabber is aware of a particular dataset’s structure and thus allows
-you to fetch specific elements of interest from the dataset. As the interface is consistent, you always use
-the same procedure to interact with the datagrabber.</p>
+you to fetch specific elements of interest from the dataset. It adds the <code class="docutils literal notranslate"><span class="pre">path</span></code> key to each <a class="reference internal" href="data.html#data-types"><span class="std std-ref">data type</span></a>
+in the <a class="reference internal" href="data.html#data-object"><span class="std std-ref">Data object</span></a>.</p>
 <p>Datagrabbers are intended to be used as context managers. When used within a context, a datagrabber takes care
-of any pre and post steps for interacting with the dataset, for example, downloading and cleaning up.</p>
+of any pre and post steps for interacting with the dataset, for example, downloading and cleaning up. As the interface
+is consistent, you always use the same procedure to interact with the datagrabber.</p>
 <p>For example, a concrete implementation of <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladDataGrabber</span></code></a> can provide junifer
 with data from a Datalad dataset. Of course, datagrabbers are not only meant to work with Datalad datasets but
 any dataset.</p>

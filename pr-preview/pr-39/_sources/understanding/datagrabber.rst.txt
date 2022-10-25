@@ -10,11 +10,12 @@ Description
 
 The ``DataGrabber`` is an object that can provide an interface to datasets you want to work with in junifer.
 Every concrete implementation of a datagrabber is aware of a particular dataset's structure and thus allows
-you to fetch specific elements of interest from the dataset. As the interface is consistent, you always use
-the same procedure to interact with the datagrabber.
+you to fetch specific elements of interest from the dataset. It adds the ``path`` key to each :ref:`data type <data_types>`
+in the :ref:`Data object <data_object>`.
 
 Datagrabbers are intended to be used as context managers. When used within a context, a datagrabber takes care
-of any pre and post steps for interacting with the dataset, for example, downloading and cleaning up.
+of any pre and post steps for interacting with the dataset, for example, downloading and cleaning up. As the interface
+is consistent, you always use the same procedure to interact with the datagrabber.
 
 For example, a concrete implementation of :class:`junifer.datagrabber.DataladDataGrabber` can provide junifer
 with data from a Datalad dataset. Of course, datagrabbers are not only meant to work with Datalad datasets but
