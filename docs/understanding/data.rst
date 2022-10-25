@@ -20,13 +20,15 @@ The :ref:`DataGrabber <datagrabber>` step will only fill the ``path`` value.
 The ``data`` value will be filled by the :ref:`DataReader <datareader>` step, if it is one of the possible file types
 that the datareader can read.
 
+A point to note is that you never directly interact with the *data object* but it's important to know where and how the object is being manipulated to reason about your pipeine.
+
 .. _data_types:
 
 Data types
 ^^^^^^^^^^
 
-.. list-table:: Built-in data types
-   :widths: 30 80 40
+.. list-table::
+   :widths: auto
    :header-rows: 1
 
    * - Name
