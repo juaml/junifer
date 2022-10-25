@@ -1,5 +1,7 @@
 .. include:: ../links.inc
 
+.. _data_object:
+
 The Data Object
 ===============
 
