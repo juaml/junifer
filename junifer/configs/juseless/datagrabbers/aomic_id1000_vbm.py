@@ -28,10 +28,12 @@ class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
 
     def __init__(self, datadir: Union[str, Path, None] = None) -> None:
         """Initialize the class."""
-        uri = "ria+file:///data/project/infrasound/dataladstore#~ds003097"
+        uri = "https://gin.g-node.org/felixh/ds003097_ReproVBM"
         types = ["VBM_GM"]
         replacements = ["subject"]
-        patterns = {"VBM_GM": "{subject}/mri/m0wp1sub-{subject}_T1w.nii.gz"}
+        patterns = {
+            "VBM_GM": "sub-{subject}/mri/mwp1sub-{subject}_run-2_T1w.nii.gz",
+        }
         super().__init__(
             types=types,
             datadir=datadir,
