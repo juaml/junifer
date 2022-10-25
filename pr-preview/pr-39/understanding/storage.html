@@ -51,7 +51,11 @@
 <li class="toctree-l2"><a class="reference internal" href="datareader.html">2.3. DataReader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="preprocess.html">2.4. Preprocess</a></li>
 <li class="toctree-l2"><a class="reference internal" href="marker.html">2.5. Marker</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">2.6. Storage</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.6. Storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#description">2.6.1. Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#currently-supported-storage-interfaces">2.6.2. Currently supported storage interfaces</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Pipeline steps and atlases</a></li>
@@ -89,7 +93,41 @@
            <div itemprop="articleBody">
              
   <section id="storage">
-<h1><span class="section-number">2.6. </span>Storage<a class="headerlink" href="#storage" title="Permalink to this heading"></a></h1>
+<span id="id1"></span><h1><span class="section-number">2.6. </span>Storage<a class="headerlink" href="#storage" title="Permalink to this heading"></a></h1>
+<section id="description">
+<h2><span class="section-number">2.6.1. </span>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Storage</span></code> is an object that is responsible for storing extracted features as computed from <a class="reference internal" href="marker.html#marker"><span class="std std-ref">Marker</span></a>
+step of the pipeline. If the pipeline is provided with a <code class="docutils literal notranslate"><span class="pre">storage-like</span></code> object, the extracted features are stored via
+that object else they are kept in memory.</p>
+<p>Storage is meant to be used inside the datagrabber context but you can operate on them outside the context as long
+as the processed data is in the memory and the Python runtime has not garbage-collected it.</p>
+<p>The <a class="reference internal" href="marker.html#marker"><span class="std std-ref">Markers</span></a> are responsible for defining what <em>storage kind</em> (<code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">table</span></code>, <code class="docutils literal notranslate"><span class="pre">timeseries</span></code>)
+they support for which <a class="reference internal" href="data.html#data-types"><span class="std std-ref">data type</span></a> by overriding its <code class="docutils literal notranslate"><span class="pre">store</span></code> method. The storage object in turn
+declares and provides implementation for specific <em>storage kind</em>. For example, <a class="reference internal" href="../api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.storage.SQLiteFeatureStorage</span></code></a>
+supports saving <code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">table</span></code> and <code class="docutils literal notranslate"><span class="pre">timeseries</span></code> via <code class="docutils literal notranslate"><span class="pre">store_matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">store_table</span></code> and <code class="docutils literal notranslate"><span class="pre">store_timeseries</span></code>
+methods respectively.</p>
+<p>For storage interfaces not supported by junifer yet, you can either make your own <code class="docutils literal notranslate"><span class="pre">Storage</span></code> by providing a concrete
+implementation of <a class="reference internal" href="../api/storage.html#junifer.storage.BaseFeatureStorage" title="junifer.storage.BaseFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.storage.BaseFeatureStorage</span></code></a> or open an issue on <a class="reference external" href="https://github.com/juaml/junifer">junifer Github</a> and we can help you out.</p>
+</section>
+<section id="currently-supported-storage-interfaces">
+<h2><span class="section-number">2.6.2. </span>Currently supported storage interfaces<a class="headerlink" href="#currently-supported-storage-interfaces" title="Permalink to this heading"></a></h2>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Storage class</p></th>
+<th class="head"><p>File extension</p></th>
+<th class="head"><p>File type</p></th>
+<th class="head"><p>Storage kinds</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.storage.SQLiteFeatureStorage</span></code></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">.db</span></code></p></td>
+<td><p>SQLite</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">table</span></code>, <code class="docutils literal notranslate"><span class="pre">timeseries</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
 </section>
 
 
