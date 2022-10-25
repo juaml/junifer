@@ -21,7 +21,7 @@ For example, a concrete implementation of :class:`junifer.datagrabber.DataladDat
 with data from a Datalad dataset. Of course, datagrabbers are not only meant to work with Datalad datasets but
 any dataset.
 
-If you are interested in using already provided datagrabbers please go to :doc:`../builtin`. And, if you want
+If you are interested in using already provided datagrabbers, please go to :doc:`../builtin`. And, if you want
 to implement your own datagrabber, you need to provide concrete implementations of base classes already
 provided.
 
