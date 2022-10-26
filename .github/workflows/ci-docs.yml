@@ -18,6 +18,8 @@ jobs:
       - run: 'echo "No build required"'
       - name: Create mock coverage.xml file
         run: |
+          mkdir junifer
+          touch junifer/__init__.py
           echo '<?xml version="1.0" ?>' > coverage.xml
           echo '<coverage version="6.5.0" timestamp="1666772572187" lines-valid="1" lines-covered="1" line-rate="1" branches-valid="1" branches-covered="1" branch-rate="1" complexity="0">' >> coverage.xml
           echo '<sources>' >> coverage.xml
