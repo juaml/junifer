@@ -2,50 +2,52 @@
 
 .. _datagrabber:
 
-Data Grabber
-============
-
+DataGrabber
+===========
 
 Description
 ^^^^^^^^^^^
-A datagrabber is an object that can provide datasets you want to junifer.
-For example, a DataladDataGrabber can provide data from a Datalad dataset to junifer.
-Of course, datagrabbers are not only possible for Datalad but any origin of a dataset.
-It is intended to use them as context managers.
-If you are interested in just using already provided datagrabbers please go to :doc:`../builtin`.
-If you want to implement your own Data Grabbers you need to inherit from different types of 
-Data Grabbers we already provide.
 
-Typical Data Grabbers
-^^^^^^^^^^^^^^^^^^^^^
-In this section we will showcase different types of datagrabber classes you might want to use
-to implement your own datagrabbers for your own data.
+The ``DataGrabber`` is an object that can provide an interface to datasets you want to work with in junifer.
+Every concrete implementation of a datagrabber is aware of a particular dataset's structure and thus allows
+you to fetch specific elements of interest from the dataset. It adds the ``path`` key to each :ref:`data type <data_types>`
+in the :ref:`Data object <data_object>`.
 
-.. list-table:: Data Grabbers Type
-   :widths: 25 35
+Datagrabbers are intended to be used as context managers. When used within a context, a datagrabber takes care
+of any pre and post steps for interacting with the dataset, for example, downloading and cleaning up. As the interface
+is consistent, you always use the same procedure to interact with the datagrabber.
+
+For example, a concrete implementation of :class:`junifer.datagrabber.DataladDataGrabber` can provide junifer
+with data from a Datalad dataset. Of course, datagrabbers are not only meant to work with Datalad datasets but
+any dataset.
+
+If you are interested in using already provided datagrabbers, please go to :doc:`../builtin`. And, if you want
+to implement your own datagrabber, you need to provide concrete implementations of base classes already
+provided.
+
+Base classes
+^^^^^^^^^^^^
+In this section, we showcase different abstract base classes you might want to use to implement your own datagrabber.
+
+.. list-table::
+   :widths: auto
    :header-rows: 1
 
    * - Name
      - Description
-   * - :py:class:`~junifer.datagrabber.base.BaseDataGrabber`
-     - | An abstract class providing you an interface to implement for you own datagrabber.
-       | This is not intedent to be used in general.
-       | Instead you should use the DataladDataGrabber or PatternDataGrabber if possible.
-       | You have to at least implement the ``get_elements`` method, but most of the time
-       | you should also overwrite other existing methods like ``__enter__`` and ``__exit__``.
-   * - :py:class:`~junifer.datagrabber.pattern.PatternDataGrabber`
-     - | Implements some functionality to help you to define the pattern of the dataset you want to get. 
-       | E.g. you know that T1 images are found in a directory following this pattern 
-       | inside of the dataset "{subject}/anat/{subject}_T1w.nii.gz".
-       | Now you can provide this to the PatternDataGrabber
-       | and it will be able to get the image to junifer. 
-   * - :py:class:`~junifer.datagrabber.datalad_base.DataladDataGrabber`
-     - | Implements some functionality specific to basic usage of Datalad datasets. 
-       | This mostly takes care of the ``__enter__`` and ``__exit__`` methods to clone your Datalad dataset
-       | and remove it on  ``__exit__``.
-       | This means that even if your code fails inside of the context of the 
-       | datagrabber the DataladDataGrabber cleans up the created Datalad directories. 
-   * - :py:class:`~junifer.datagrabber.pattern_datalad.PatternDataladDataGrabber`
-     - | Combination of PatternDataGrabber and DataladDataGrabber.
-       | Probably the class you are looking for when using Datalad. 
-
+   * - :class:`junifer.datagrabber.BaseDataGrabber`
+     - | The abstract base class providing you an interface to implement your own datagrabber.
+       | You should try to avoid using this directly and instead use
+       | :class:`junifer.datagrabber.PatternDataGrabber` or :class:`junifer.datagrabber.DataladDataGrabber`.
+       | To build your own custom *low-level* datagrabber, you need to at least implement the ``get_elements`` method,
+       | but most of the time you should also override other existing methods like ``__enter__`` and ``__exit__``.
+   * - :class:`junifer.datagrabber.PatternDataGrabber`
+     - | It implements functionality to help you define the pattern of the dataset you want to get. For example,
+       | you know that T1 images are found in a directory following this pattern ``{subject}/anat/{subject}_T1w.nii.gz``
+       | inside of the dataset. Now you can provide this to the **PatternDataGrabber** and it will be able to get the file.
+   * - :class:`junifer.datagrabber.DataladDataGrabber`
+     - | It implements functionality to deal with Datalad datasets. Specifically, the ``__enter__`` and ``__exit__`` methods
+       | take care of cloning and removing the Datalad dataset.
+   * - :class:`junifer.datagrabber.PatternDataladDataGrabber`
+     - | It is a combination of :class:`junifer.datagrabber.PatternPatternDataGrabber` and
+       | :class:`junifer.datagrabber.DataladDataGrabber`. This is probably the class you are looking for when using Datalad.
