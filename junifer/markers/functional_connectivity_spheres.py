@@ -79,7 +79,18 @@ class FunctionalConnectivitySpheres(BaseMarker):
             "empirical", False
         )
 
-        super().__init__(on=["BOLD"], name=name)
+        super().__init__(name=name)
+
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        return ["BOLD"]
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.

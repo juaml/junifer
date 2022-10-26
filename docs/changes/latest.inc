@@ -67,6 +67,8 @@ Enhancements
 
 - Add ``junifer selftest`` to report environment details (:gh:`9` by `Synchon Mandal`_).
 
+- Refactor markers ``on`` attribute and ``get_valid_inputs`` to verify that the marker can be computed on the input data types (by `Fede Raimondo`_)
+
 Bugs
 ~~~~
 

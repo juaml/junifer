@@ -30,13 +30,35 @@ class BaseMarker(ABC, PipelineStepMixin):
     """
 
     def __init__(
-        self, on: Union[List[str], str], name: Optional[str] = None
+        self,
+        on: Optional[Union[List[str], str]] = None,
+        name: Optional[str] = None,
     ) -> None:
         """Initialize the class."""
+        if on is None:
+            on = self.get_valid_inputs()
         if not isinstance(on, list):
             on = [on]
-        self._valid_inputs = on
         self.name = self.__class__.__name__ if name is None else name
+
+        if any(x not in self.get_valid_inputs() for x in on):
+            wrong_on = [x for x in on if x not in self.get_valid_inputs()]
+            raise ValueError(f"{self.name} cannot be computed on {wrong_on}")
+        self._on = on
+
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement get_valid_inputs().",
+            klass=NotImplementedError,
+        )
 
     def get_meta(self, kind: str) -> Dict:
         """Get metadata.
@@ -74,11 +96,11 @@ class BaseMarker(ABC, PipelineStepMixin):
             If the input does not have the required data.
 
         """
-        if not any(x in input for x in self._valid_inputs):
+        if not any(x in input for x in self._on):
             raise_error(
                 "Input does not have the required data."
                 f"\t Input: {input}"
-                f"\t Required (any of): {self._valid_inputs}"
+                f"\t Required (any of): {self._on}"
             )
 
     @abstractmethod
@@ -157,7 +179,7 @@ class BaseMarker(ABC, PipelineStepMixin):
     def fit_transform(
         self,
         input: Dict[str, Dict],
-        storage: "BaseFeatureStorage" = None,
+        storage: Optional["BaseFeatureStorage"] = None,
     ) -> Dict:
         """Fit and transform.
 
@@ -177,7 +199,7 @@ class BaseMarker(ABC, PipelineStepMixin):
         """
         out = {}
         meta = input.get("meta", {})
-        for kind in self._valid_inputs:
+        for kind in self._on:
             if kind in input.keys():
                 logger.info(f"Computing {kind}")
                 t_input = input[kind]
