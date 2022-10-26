@@ -18,31 +18,20 @@ jobs:
       - run: 'echo "No build required"'
       - name: Create mock coverage.xml file
         run: |
-          mkdir junifer
-          touch junifer/__init__.py
+          mkdir docs
+          touch docs/conf.py
           echo '<?xml version="1.0" ?>' > coverage.xml
           echo '<coverage version="6.5.0" timestamp="1666772572187" lines-valid="1" lines-covered="1" line-rate="1" branches-valid="1" branches-covered="1" branch-rate="1" complexity="0">' >> coverage.xml
           echo '<sources>' >> coverage.xml
-          echo '<source>/home/runner/work/junifer/junifer</source>' >> coverage.xml
+          echo '<source>/home/runner/work/docs/docs</source>' >> coverage.xml
           echo '</sources>' >> coverage.xml
           echo '<packages>' >> coverage.xml
-          echo '<package name="junifer" line-rate="1" branch-rate="1" complexity="0">' >> coverage.xml
+          echo '<package name="docs" line-rate="1" branch-rate="1" complexity="0">' >> coverage.xml
           echo '<classes>' >> coverage.xml
-          echo '<class name="__init__.py" filename="junifer/__init__.py" complexity="0" line-rate="1" branch-rate="1">' >> coverage.xml
+          echo '<class name="conf.py" filename="docs/conf.py" complexity="0" line-rate="1" branch-rate="1">' >> coverage.xml
           echo '<methods/>' >> coverage.xml
           echo '<lines>' >> coverage.xml
           echo '<line number="7" hits="1"/>' >> coverage.xml
-          echo '<line number="8" hits="1"/>' >> coverage.xml
-          echo '<line number="9" hits="1"/>' >> coverage.xml
-          echo '<line number="10" hits="1"/>' >> coverage.xml
-          echo 'line number="11" hits="1"/>' >> coverage.xml
-          echo 'line number="12" hits="1"/>' >> coverage.xml
-          echo 'line number="13" hits="1"/>' >> coverage.xml
-          echo 'line number="14" hits="1"/>' >> coverage.xml
-          echo 'line number="15" hits="1"/>' >> coverage.xml
-          echo 'line number="16" hits="1"/>' >> coverage.xml
-          echo 'line number="17" hits="1"/>' >> coverage.xml
-          echo 'line number="18" hits="1"/>' >> coverage.xml
           echo '</lines>' >> coverage.xml
           echo '</class>' >> coverage.xml
           echo '</classes>' >> coverage.xml
@@ -55,5 +44,5 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          flags: mock
+          flags: docs
         if: success() && matrix.python-version == 3.9
