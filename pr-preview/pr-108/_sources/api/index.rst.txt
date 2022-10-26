@@ -1,0 +1,27 @@
+API Reference
+=============
+
+Pipeline Elements
+^^^^^^^^^^^^^^^^^
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   datagrabbers
+   datareaders
+   preprocessing
+   markers
+   storage
+
+
+Utilities
+^^^^^^^^^
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   api
+   utils
+   testing
