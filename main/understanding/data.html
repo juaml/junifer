@@ -23,7 +23,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="2.2. Data Grabber" href="datagrabber.html" />
+    <link rel="next" title="2.2. DataGrabber" href="datagrabber.html" />
     <link rel="prev" title="2. Understanding junifer" href="index.html" /> 
 </head>
 
@@ -32,7 +32,8 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> junifer
+            <a href="../index.html">
+            <img src="../_static/junifer_logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -51,10 +52,11 @@
 <li class="toctree-l3"><a class="reference internal" href="#data-types">2.1.2. Data types</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="datagrabber.html">2.2. Data Grabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datareader.html">2.3. Data Reader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="marker.html">2.4. Marker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="storage.html">2.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagrabber.html">2.2. DataGrabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datareader.html">2.3. DataReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocess.html">2.4. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="marker.html">2.5. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="storage.html">2.6. Storage</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Pipeline steps and atlases</a></li>
@@ -76,7 +78,7 @@
       </nav>
 
       <div class="wy-nav-content">
-        <div class="rst-content">
+        <div class="rst-content style-external-links">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
@@ -92,11 +94,11 @@
            <div itemprop="articleBody">
              
   <section id="the-data-object">
-<h1><span class="section-number">2.1. </span>The Data Object<a class="headerlink" href="#the-data-object" title="Permalink to this heading"></a></h1>
+<span id="data-object"></span><h1><span class="section-number">2.1. </span>The Data Object<a class="headerlink" href="#the-data-object" title="Permalink to this heading"></a></h1>
 <section id="description">
 <h2><span class="section-number">2.1.1. </span>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
 <p>This is the <em>object</em> that traverses the steps of the pipeline. It is indeed a
-dictionary of dictionaries. The first level of keys are the <a class="reference internal" href="#data-types"><span class="std std-ref">Data types</span></a>
+dictionary of dictionaries. The first level of keys are the <a class="reference internal" href="#data-types"><span class="std std-ref">data types</span></a>
 and a special key named <code class="docutils literal notranslate"><span class="pre">meta</span></code> that contains all the information on the data
 object including source and previous transformation steps.</p>
 <p>The second level of keys are the actual data. So far, there are two keys used:</p>
@@ -104,19 +106,14 @@ object including source and previous transformation steps.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: path to the file containing the data.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: the data loaded in memory.</p></li>
 </ul>
-<p>The <a class="reference internal" href="datagrabber.html#datagrabber"><span class="std std-ref">Data Grabber</span></a> step will only fill the <code class="docutils literal notranslate"><span class="pre">path</span></code> value.
-The <code class="docutils literal notranslate"><span class="pre">data</span></code> value will be filled by the <a class="reference internal" href="datareader.html#datareader"><span class="std std-ref">Data Reader</span></a> step, if it is one of the possible file types
+<p>The <a class="reference internal" href="datagrabber.html#datagrabber"><span class="std std-ref">DataGrabber</span></a> step will only fill the <code class="docutils literal notranslate"><span class="pre">path</span></code> value.
+The <code class="docutils literal notranslate"><span class="pre">data</span></code> value will be filled by the <a class="reference internal" href="datareader.html#datareader"><span class="std std-ref">DataReader</span></a> step, if it is one of the possible file types
 that the datareader can read.</p>
+<p>A point to note is that you never directly interact with the <em>data object</em> but it’s important to know where and how the object is being manipulated to reason about your pipeine.</p>
 </section>
 <section id="data-types">
 <span id="id1"></span><h2><span class="section-number">2.1.2. </span>Data types<a class="headerlink" href="#data-types" title="Permalink to this heading"></a></h2>
-<table class="colwidths-given docutils align-default" id="id2">
-<caption><span class="caption-text">Built-in data types</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 53%" />
-<col style="width: 27%" />
-</colgroup>
+<table class="colwidths-auto docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
 <th class="head"><p>Description</p></th>
@@ -150,7 +147,7 @@ that the datareader can read.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="2. Understanding junifer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="datagrabber.html" class="btn btn-neutral float-right" title="2.2. Data Grabber" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="datagrabber.html" class="btn btn-neutral float-right" title="2.2. DataGrabber" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
