@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union, Tuple, Any
 
 import numpy as np
 import pandas as pd
@@ -21,8 +21,8 @@ if TYPE_CHECKING:
     from nibabel import MGHImage, Nifti1Image, Nifti2Image
 
 
-class BaseConfoundRemover(PipelineStepMixin):
-    """Base class for confound removal.
+class FMRIPrepConfoundRemover(PipelineStepMixin):
+    """Class for confound removal.
 
     Read confound files and select columns according to
     a pre-defined strategy.
@@ -46,8 +46,8 @@ class BaseConfoundRemover(PipelineStepMixin):
         (default None).
     spike : float, optional
         If None, no spike regressor is added. If spike is a float, it will
-        add a spike regressor for every point at which FD exceeds the
-        specified float (default None).
+        add a spike regressor for every point at which framewise displacement
+        exceeds the specified float (default None).
     detrend : bool, Optional
         If True, detrending will be applied on timeseries
         (before confound removal) (default True).
@@ -147,7 +147,7 @@ class BaseConfoundRemover(PipelineStepMixin):
             If the input does not have the required data.
 
         """
-        _required_inputs = ["BOLD", "confounds"]
+        _required_inputs = ["BOLD", "BOLD_confounds"]
         if any(x not in input for x in _required_inputs):
             raise_error(
                 msg="Input does not have the required data. \n"
@@ -175,51 +175,178 @@ class BaseConfoundRemover(PipelineStepMixin):
         # Does not add any new keys
         return input
 
-    # TODO: complete type annotations
-    def _pick_confounds(self, input):
+    def _pick_confounds(self, input: Dict[str, Any]) -> pd.DataFrame:
         """Select relevant confounds from the specified file."""
-        to_select = []
-        confounds_df = input["data"]
-        confounds_spec = input["names"]["spec"]
-        # for every confound there is a derivative
-        # and for every confound + derivative there should be squares
-        derivatives_to_compute = input["names"].get("derivatives", {})
-        squares_to_compute = input["names"].get("squares", {})
-        spike_name = input["names"]["spike"]
 
-        # Get all the column names according to the strategy
-        for comp, param in self.strategy.items():
-            to_select.extend(confounds_spec[comp][param])
+        confounds_format = input["format"]
+        if confounds_format == "adhoc":
+            self._map_adhoc_to_fmriprep(input)
+        elif confounds_format != "fmriprep":
+            raise ValueError(f"Invalid confounds format {confounds_format}")
+
+        processed_spec = self._process_fmriprep_spec(input)
+
+        (
+            to_select,
+            squares_to_compute,
+            derivatives_to_compute,
+            spike_name,
+        ) = processed_spec
+        # Copy the confounds
+        out_df = input["data"].copy()
 
         # Add derivatives if needed
-        to_compute = [x in derivatives_to_compute.keys() for x in to_select]
-        out_df = confounds_df.copy()
-        if any(to_compute):
-            for t_dst, t_src in derivatives_to_compute.items():
-                out_df[t_dst] = np.append(  # type: ignore
-                    np.diff(out_df[t_src]), 0
-                )  # type: ignore
+        for t_dst, t_src in derivatives_to_compute.items():
+            out_df[t_dst] = np.append(np.diff(out_df[t_src]), 0)
 
         # Add squares (of base confounds and derivatives) if needed
-        to_compute = [x in squares_to_compute.keys() for x in to_select]
-        if any(to_compute):
-            for t_dst, t_src in squares_to_compute.items():
-                out_df[t_dst] = out_df[t_src] ** 2
-        out_df = out_df[to_select]
+        for t_dst, t_src in squares_to_compute.items():
+            out_df[t_dst] = out_df[t_src] ** 2
 
         # add binary spike regressor if needed at given threshold
         if self.spike is not None:
-            fd = confounds_df[spike_name].copy()
+            fd = out_df[spike_name].copy()
             fd.loc[fd > self.spike] = 1
             fd.loc[fd != 1] = 0
             out_df["spike"] = fd
+            to_select.append("spike")
 
+        # Now pick all the relevant confounds
+        out_df = out_df[to_select]
         return out_df
+
+    def _process_fmriprep_spec(
+        self, input: Dict[str, Any]
+    ) -> Tuple[List, Dict, Dict, str]:
+        """Process the fmpriprep format spec from the specified file.
+
+        Based on the strategy, find the relevant column names in the dataframe,
+        as well as the required squared and derivatives to compute.
+
+        Parameters
+        ----------
+        input : dict
+            Dictionary containing the following keys:
+            - path: path to the confounds file
+            - data: the confounds file loaded in memory (dataframe)
+            - format: format of the confounds file (must be "fmriprep")
+
+        Returns
+        -------
+        to_select : list of str
+            List of confounds to select from the confounds file, based on the
+            strategy
+        squares_to_compute : dict[str, str]
+            Dictionary containing the missing power2 confounds to compute
+            (keys) and the corresponding confounds to square (values)
+        derivatives_to_compute : dict[str, str]
+            Dictionary containing the missing derivatives confounds to compute
+            (keys) and the corresponding confounds to compute the derivative
+            from (values)
+        spike_name : str
+            Name of the confound to use for spike detection
+
+        """
+        confounds_df = input["data"]
+        available_vars = confounds_df.columns
+
+        # This function should build this 3 variables
+        to_select = []  # the list of confounds to select
+        squares_to_compute = {}  # the dictionary of missing squares
+        derivatives_to_compute = {}  # the dictionary of missing derivatives
+
+        basics = {
+            "motion": [
+                "trans_x",
+                "trans_y",
+                "trans_z",
+                "rot_x",
+                "rot_y",
+                "rot_z",
+            ],
+            "wm_csf": ["csf", "white_matter"],
+            "global_signal": ["global_signal"],
+        }
+
+        for t_kind, t_strategy in self.strategy.items():
+            t_basics = basics[t_kind]
+
+            if any(x not in available_vars for x in t_basics):
+                missing = [x for x in t_basics if x not in available_vars]
+                raise ValueError(
+                    "Invalid confounds file. Missing basic confounds: "
+                    f"{missing}. "
+                    "Check if this file is really an fmriprep confounds file. "
+                    "You can also modify the confound removal strategy."
+                )
+
+            to_select.extend(t_basics)
+
+            if t_strategy in ["power2", "full"]:
+                for x in t_basics:
+                    x_2 = f"{x}_power2"
+                    to_select.append(x_2)
+                    if x_2 not in available_vars:
+                        squares_to_compute[x_2] = x
+
+            if t_strategy in ["derivatives", "full"]:
+                for x in t_basics:
+                    x_derivative = f"{x}_derivative1"
+                    to_select.append(x_derivative)
+                    if x_derivative not in available_vars:
+                        derivatives_to_compute[x_derivative] = x
+                    if t_strategy == "full":
+                        x_derivative_2 = f"{x_derivative}_power2"
+                        to_select.append(x_derivative_2)
+                        if x_derivative_2 not in available_vars:
+                            squares_to_compute[x_derivative_2] = x_derivative
+        spike_name = "framewise_displacement"
+
+        out = to_select, squares_to_compute, derivatives_to_compute, spike_name
+        return out
+
+    def _map_adhoc_to_fmriprep(self, input: Dict[str, Any]):
+        """Map the adhoc format to the fmpriprep format spec.
+
+        Based on the spec, map the column names to match the fmriprep format.
+
+        This method modifies the dataframe in place.
+
+        Parameters
+        ----------
+        input : dict
+            Dictionary containing the following keys:
+            - path: path to the confounds file
+            - data: the confounds file loaded in memory (dataframe)
+            - format: format of the confounds file (must be "adhoc")
+        """
+
+        confounds_df = input["data"]
+
+        # This is an
+        confounds_mapping = input["mappings"]
+
+        # Check that all the required columns are present
+        missing = [
+            x
+            for x in confounds_mapping.keys()
+            if x not in confounds_df.columns
+        ]
+
+        if len(missing) is not None:
+            raise ValueError(
+                "Invalid confounds file. Missing columns: "
+                f"{missing}. "
+                "Check if this file matches the adhoc specification for "
+                "this dataset."
+            )
+
+        # Rename the columns
+        confounds_df.rename(columns=confounds_mapping, inplace=True)
 
     def _remove_confounds(
         self, bold_img: "Nifti1Image", confounds_df: pd.DataFrame
     ) -> Union["Nifti1Image", "Nifti2Image", "MGHImage", List]:
-        """Remove confounds from the BOLD data."""
         """Remove confounds from the BOLD image.
 
         Parameters
@@ -267,19 +394,18 @@ class BaseConfoundRemover(PipelineStepMixin):
 
         return clean_bold
 
-    # TODO: complete type annotations
-    def _validate_data(self, input):
+    def _validate_data(self, input: Dict[str, Any]):
         """Validate input data."""
         # Bold must be 4D niimg
         check_niimg_4d(input["BOLD"]["data"])
 
         # Confounds must be a dataframe
-        if not isinstance(input["confounds"]["data"], pd.DataFrame):
+        if not isinstance(input["BOLD_confounds"]["data"], pd.DataFrame):
             raise_error(
-                "confounds data must be a pandas dataframe", ValueError
+                "Confounds data must be a pandas dataframe", ValueError
             )
 
-        confound_df = input["confounds"]["data"]
+        confound_df = input["BOLD_confounds"]["data"]
         bold_img = input["BOLD"]["data"]
         if bold_img.get_fdata().shape[3] != len(confound_df):
             raise_error(
@@ -308,95 +434,96 @@ class BaseConfoundRemover(PipelineStepMixin):
         #     'full', [(list of columns)]}
         # }
 
-        # Check the columns in the dataframe
-        conf_spec = input["confounds"]["names"]["spec"]
-        if any(x not in conf_spec.keys() for x in self._valid_components):
-            raise_error(
-                "All of the component types must be in the confounds data "
-                "object `spec`. Please check your datagrabber.",
-                ValueError,
-            )
+        # # Check the columns in the dataframe
+        # conf_spec = input["confounds"]["names"]["spec"]
+        # if any(x not in conf_spec.keys() for x in self._valid_components):
+        #     raise_error(
+        #         "All of the component types must be in the confounds data "
+        #         "object `spec`. Please check your datagrabber.",
+        #         ValueError,
+        #     )
 
-        if any(
-            x not in v.keys()
-            for x in self._valid_confounds
-            for v in conf_spec.values()
-        ):
-            raise_error(
-                "All of the confound types must be in the confounds data "
-                "object `spec`. Please check your datagrabber.",
-                ValueError,
-            )
+        # if any(
+        #     x not in v.keys()
+        #     for x in self._valid_confounds
+        #     for v in conf_spec.values()
+        # ):
+        #     raise_error(
+        #         "All of the confound types must be in the confounds data "
+        #         "object `spec`. Please check your datagrabber.",
+        #         ValueError,
+        #     )
 
-        spike_name = input["confounds"]["names"]["spike"]
+        # spike_name = input["confounds"]["names"]["spike"]
 
-        derivatives_to_compute = input["confounds"]["names"].get(
-            "derivatives", {}
-        )
-        if not (isinstance(derivatives_to_compute, dict)):
-            raise_error(
-                'input["confounds"]["names"]["derivatives"] '
-                "must be a dictionary. Please check your datagrabber",
-                ValueError,
-            )
+        # derivatives_to_compute = input["confounds"]["names"].get(
+        #     "derivatives", {}
+        # )
+        # if not (isinstance(derivatives_to_compute, dict)):
+        #     raise_error(
+        #         'input["confounds"]["names"]["derivatives"] '
+        #         "must be a dictionary. Please check your datagrabber",
+        #         ValueError,
+        #     )
 
-        if any(
-            not (isinstance(k, str) or isinstance(v, str))
-            for k, v in derivatives_to_compute.items()
-        ):
-            raise_error(
-                'input["confounds"]["names"]["derivatives"] '
-                "must be a dictionary with string keys and values. "
-                "Please check your datagrabber",
-                ValueError,
-            )
+        # if any(
+        #     not (isinstance(k, str) or isinstance(v, str))
+        #     for k, v in derivatives_to_compute.items()
+        # ):
+        #     raise_error(
+        #         'input["confounds"]["names"]["derivatives"] '
+        #         "must be a dictionary with string keys and values. "
+        #         "Please check your datagrabber",
+        #         ValueError,
+        #     )
 
-        missing_derivatives = [
-            x
-            for x in derivatives_to_compute.values()
-            if x not in confound_df.columns
-        ]
-        if len(missing_derivatives) > 0:
-            raise_error(
-                "Some of the derivatives to calculate are not in the confounds"
-                f" dataframe: {missing_derivatives}."
-                "Please check your data "
-                f'({input["confounds"]["path"].as_posix()}) '
-                "and the datagrabber.",
-                ValueError,
-            )
+        # missing_derivatives = [
+        #     x
+        #     for x in derivatives_to_compute.values()
+        #     if x not in confound_df.columns
+        # ]
+        # if len(missing_derivatives) > 0:
+        #     raise_error(
+        #         "Some of the derivatives to calculate are not in the "
+        #         "confounds"
+        #         f" dataframe: {missing_derivatives}."
+        #         "Please check your data "
+        #         f'({input["confounds"]["path"].as_posix()}) '
+        #         "and the datagrabber.",
+        #         ValueError,
+        #     )
 
-        t_conf_spec = {
-            k: input["confounds"]["names"]["spec"][k][v]
-            for k, v in self.strategy.items()
-        }
+        # t_conf_spec = {
+        #     k: input["confounds"]["names"]["spec"][k][v]
+        #     for k, v in self.strategy.items()
+        # }
 
-        column_names = set([x for y in t_conf_spec.values() for x in y])
-        column_names.add(spike_name)
+        # column_names = set([x for y in t_conf_spec.values() for x in y])
+        # column_names.add(spike_name)
 
-        missing_columns = [
-            x
-            for x in column_names
-            if x not in confound_df.columns
-            and x not in derivatives_to_compute.keys()
-        ]
+        # missing_columns = [
+        #     x
+        #     for x in column_names
+        #     if x not in confound_df.columns
+        #     and x not in derivatives_to_compute.keys()
+        # ]
 
-        if len(missing_columns) > 0:
-            raise_error(
-                "Some of the columns in the confound spec are not in the "
-                f"confounds dataframe: {missing_columns}. "
-                "Please check your data "
-                f'({input["confounds"]["path"].as_posix()}) '
-                "and the datagrabber.",
-                ValueError,
-            )
+        # if len(missing_columns) > 0:
+        #     raise_error(
+        #         "Some of the columns in the confound spec are not in the "
+        #         f"confounds dataframe: {missing_columns}. "
+        #         "Please check your data "
+        #         f'({input["confounds"]["path"].as_posix()}) '
+        #         "and the datagrabber.",
+        #         ValueError,
+        #     )
 
     # TODO: complete type annotations
     def fit_transform(self, input):
         """Fit and transform."""
         self._validate_data(input)
         bold_img = input["BOLD"]["data"]
-        confounds_df = self._pick_confounds(input["confounds"])
+        confounds_df = self._pick_confounds(input["BOLD_confounds"])
         input["BOLD"]["data"] = self._remove_confounds(bold_img, confounds_df)
 
         # TODO: Update meta
