@@ -13,7 +13,7 @@ import numpy as np
 from ..api.decorators import register_marker
 from ..utils import logger
 from .base import BaseMarker
-from .parcel import ParcelAggregation
+from .parcel_aggregation import ParcelAggregation
 from .utils import _ets
 
 
@@ -43,12 +43,23 @@ class RSSETSMarker(BaseMarker):
         self,
         atlas: str,
         aggregation_method: str = "mean",
-        name: str = None,
+        name: Optional[str] = None,
     ) -> None:
         """Initialize the class."""
         self.atlas = atlas
         self.aggregation_method = aggregation_method
-        super().__init__(on=["BOLD"], name=name)
+        super().__init__(name=name)
+
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        return ["BOLD"]
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.

@@ -12,13 +12,16 @@ from junifer.markers.base import BaseMarker
 def test_base_marker_abstractness() -> None:
     """Test BaseMarker is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
-        BaseMarker(on=["BOLD"])
+        BaseMarker(on=["BOLD"])  # type: ignore
 
 
-def test_base_datagrabber_subclassing() -> None:
+def test_base_marker_subclassing() -> None:
     """Test proper subclassing of BaseMarker."""
     # Create concrete class
     class MyBaseMarker(BaseMarker):
+        def get_valid_inputs(self):
+            return ["BOLD", "T1w"]
+
         def get_output_kind(self, input):
             return ["timeseries"]
 
@@ -31,6 +34,9 @@ def test_base_datagrabber_subclassing() -> None:
 
         def store(self, kind, out, storage):
             return super().store(kind=kind, out=out, storage=storage)
+
+    with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
+        MyBaseMarker(on=["BOLD", "T2w"])
 
     # Create input for marker
     input_ = {
@@ -54,7 +60,7 @@ def test_base_datagrabber_subclassing() -> None:
 
     # Check no implementation check
     with pytest.raises(NotImplementedError):
-        marker.store(kind="kind", out="out", storage="storage")
+        marker.store(kind="kind", out="out", storage="storage")  # type: ignore
 
     # Check attributes
     assert marker.name == "MyBaseMarker"

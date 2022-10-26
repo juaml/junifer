@@ -14,7 +14,7 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 from junifer.markers.functional_connectivity_atlas import (
     FunctionalConnectivityAtlas,
 )
-from junifer.markers.parcel import ParcelAggregation
+from junifer.markers.parcel_aggregation import ParcelAggregation
 from junifer.storage import SQLiteFeatureStorage
 
 

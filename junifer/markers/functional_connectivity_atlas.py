@@ -12,7 +12,7 @@ from sklearn.covariance import EmpiricalCovariance
 from ..api.decorators import register_marker
 from ..utils import logger
 from .base import BaseMarker
-from .parcel import ParcelAggregation
+from .parcel_aggregation import ParcelAggregation
 
 
 if TYPE_CHECKING:
@@ -65,13 +65,23 @@ class FunctionalConnectivityAtlas(BaseMarker):
         self.cor_method_params = (
             {} if cor_method_params is None else cor_method_params
         )
-        on = ["BOLD"]
         # default to nilearn behavior
         self.cor_method_params["empirical"] = self.cor_method_params.get(
             "empirical", False
         )
 
-        super().__init__(on=on, name=name)
+        super().__init__(name=name)
+
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        return ["BOLD"]
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
