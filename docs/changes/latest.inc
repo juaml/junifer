@@ -19,6 +19,7 @@ Current (0.0.0.dev)
 
 Enhancements
 ~~~~~~~~~~~~
+
 - Created a the repository based on the mockup by `Fede Raimondo`_.
 
 - Implemented SPM Auditory testing datagrabber X (:gh:`52` by `Fede Raimondo`_).
