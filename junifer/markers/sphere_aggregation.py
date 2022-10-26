@@ -69,9 +69,18 @@ class SphereAggregation(BaseMarker):
 
         self.method = method
         self.method_params = {} if method_params is None else method_params
-        if on is None:
-            on = ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
         super().__init__(on=on, name=name)
+
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.

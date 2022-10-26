@@ -38,7 +38,7 @@ class ParcelAggregation(BaseMarker):
         :func:`junifer.stats.get_aggfunc_by_name`.
     on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or list
         of the options, optional
-        The kind of data to apply the marker to. If None, will work on all
+        The data types to apply the marker to. If None, will work on all
         available data (default None).
     name : str, optional
         The name of the marker. If None, will use the class name (default
@@ -58,9 +58,18 @@ class ParcelAggregation(BaseMarker):
         self.atlas = atlas
         self.method = method
         self.method_params = {} if method_params is None else method_params
-        if on is None:
-            on = ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
         super().__init__(on=on, name=name)
+
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.

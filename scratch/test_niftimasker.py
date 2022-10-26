@@ -43,7 +43,7 @@ for t_v in sorted(np.unique(atlas_values)):
     manual.append(t_values)
 
 
-from junifer.markers.parcel import ParcelAggregation
+from junifer.markers.parcel_aggregation import ParcelAggregation
 
 marker = ParcelAggregation(atlas='Schaefer100x7', method='mean')
 input = dict(VBM_GM=dict(data=img))
