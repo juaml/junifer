@@ -59,7 +59,6 @@ class BaseDataGrabber(ABC):
         for elem in self.get_elements():
             yield elem
 
-    # TODO: element does nothing, check
     def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Dict]:
         """Enable indexing support.
 
