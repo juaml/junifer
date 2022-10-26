@@ -42,4 +42,6 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: true
+        flags: junifer
       if: success() && matrix.python-version == 3.9
