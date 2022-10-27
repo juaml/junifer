@@ -7,6 +7,9 @@
 
 
 from numpy.testing import assert_array_equal, assert_raises
+import pytest
+import pandas as pd
+import numpy as np
 
 from junifer.preprocess.confounds import FMRIPrepConfoundRemover
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
@@ -30,6 +33,189 @@ from junifer.datareader import DefaultDataReader
 #     # Create an nifti image with the data, and corresponding mask
 #     mask = Nifti1Image(np.ones([5, 5, 2]), np.eye(4))
 #     return img, mask
+
+
+def test_FMRIPrepConfoundRemover_init() -> None:
+    """Test FMRIPrepConfoundRemover init."""
+
+    with pytest.raises(ValueError, match="keys must be strings"):
+        FMRIPrepConfoundRemover(strategy={1: "full"})  # type: ignore
+
+    with pytest.raises(ValueError, match="values must be strings"):
+        FMRIPrepConfoundRemover(strategy={"motion": 1})  # type: ignore
+
+    with pytest.raises(ValueError, match="component names"):
+        FMRIPrepConfoundRemover(strategy={"wrong": "full"})
+
+    with pytest.raises(ValueError, match="confound types"):
+        FMRIPrepConfoundRemover(strategy={"motion": "wrong"})
+
+
+def test_FMRIPrepConfoundRemover_validate_input() -> None:
+    """Test FMRIPrepConfoundRemover validate_input."""
+    confound_remover = FMRIPrepConfoundRemover()
+
+    # Input is valid when both BOLD and BOLD_confounds are present
+
+    input = ["T1w"]
+    with pytest.raises(ValueError, match="not have the required data"):
+        confound_remover.validate_input(input)
+
+    input = ["BOLD"]
+    with pytest.raises(ValueError, match="not have the required data"):
+        confound_remover.validate_input(input)
+
+    input = ["BOLD", "T1w"]
+    with pytest.raises(ValueError, match="not have the required data"):
+        confound_remover.validate_input(input)
+
+    input = ["BOLD", "T1w", "BOLD_confounds"]
+    confound_remover.validate_input(input)
+
+
+def test_FMRIPrepConfoundRemover_get_output_kind() -> None:
+    """Test FMRIPrepConfoundRemover validate_input."""
+    confound_remover = FMRIPrepConfoundRemover()
+    inputs = [
+        ["BOLD", "T1w", "BOLD_confounds"],
+        ["BOLD", "VBM_GM", "BOLD_confounds"],
+        ["BOLD", "BOLD_confounds"],
+    ]
+    # Confound remover works in place
+    for input in inputs:
+        assert confound_remover.get_output_kind(input) == input
+
+
+def test_FMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
+    """Test FMRIPrepConfoundRemover adhoc to fmriprep spec mapping."""
+    confound_remover = FMRIPrepConfoundRemover()
+    # Use non fmriprep variable names
+    adhoc_names = [f"var{i}" for i in range(6)]
+    adhoc_df = pd.DataFrame(np.random.randn(10, 6), columns=adhoc_names)
+
+    # map them to valid variable names
+    fmriprep_names = [
+        "trans_x",
+        "trans_y",
+        "trans_z",
+        "rot_x",
+        "rot_y",
+        "rot_z",
+    ]
+
+    # Build mappings dictionary
+    mappings = {x: y for x, y in zip(adhoc_names, fmriprep_names)}
+    input = {
+        "mappings": {"fmriprep": mappings},
+        "data" : adhoc_df,
+    }
+
+    confound_remover._map_adhoc_to_fmriprep(input)
+    # This should work in-place
+    assert adhoc_df.columns.tolist() == fmriprep_names
+
+
+def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
+    """Test FMRIPrepConfoundRemover fmriprep spec processing."""
+
+    # Test one strategy, full, no spike
+    confound_remover = FMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
+
+    var_names = [
+        "csf", "white_matter", "csf_power2", "white_matter_power2",
+        "csf_derivative1", "white_matter_derivative1",
+        "csf_derivative1_power2", "white_matter_derivative1_power2"]
+
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names)
+
+    out = confound_remover._process_fmriprep_spec({"data": confounds_df})
+    to_select, sq_to_compute, der_to_compute, spike_name = out
+    assert set(to_select) == set(var_names)
+    assert len(sq_to_compute) == 0
+    assert len(der_to_compute) == 0
+    assert spike_name == "framewise_displacement"
+
+    # Same strategy, but derivatives are not present
+    var_names = [
+        "csf", "white_matter", "csf_power2", "white_matter_power2"]
+    missing_der_names = ["csf_derivative1", "white_matter_derivative1"]
+    missing_sq_names = [
+        "csf_derivative1_power2", "white_matter_derivative1_power2"]
+
+    all_names = var_names + missing_der_names + missing_sq_names
+
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names)
+    out = confound_remover._process_fmriprep_spec({"data": confounds_df})
+    to_select, sq_to_compute, der_to_compute, spike_name = out
+    assert set(to_select) == set(all_names)
+    assert set(sq_to_compute) == set(missing_sq_names)
+    assert set(der_to_compute) == set(missing_der_names)
+    assert spike_name == "framewise_displacement"
+
+    # Same strategy, with spike, only basics are present
+    confound_remover = FMRIPrepConfoundRemover(
+        strategy={"wm_csf": "full"}, spike=0.2)
+
+    var_names = ["csf", "white_matter"]
+    missing_der_names = ["csf_derivative1", "white_matter_derivative1"]
+    missing_sq_names = [
+        "csf_power2", "white_matter_power2",
+        "csf_derivative1_power2", "white_matter_derivative1_power2"]
+
+    all_names = var_names + missing_der_names + missing_sq_names
+
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names) + 1),
+        columns=var_names + ["framewise_displacement"])
+    out = confound_remover._process_fmriprep_spec({"data": confounds_df})
+    to_select, sq_to_compute, der_to_compute, spike_name = out
+    assert set(to_select) == set(all_names)
+    assert set(sq_to_compute) == set(missing_sq_names)
+    assert set(der_to_compute) == set(missing_der_names)
+    assert spike_name == "framewise_displacement"
+
+    # Two component strategy, mixed confounds, no spike
+    confound_remover = FMRIPrepConfoundRemover(
+        strategy={"wm_csf": "power2", "global_signal": "full"})
+
+    var_names = ["csf", "white_matter", "global_signal"]
+    missing_der_names = ["global_signal_derivative1"]
+    missing_sq_names = [
+        "csf_power2", "white_matter_power2", "global_signal_power2",
+        "global_signal_derivative1_power2"]
+
+    all_names = var_names + missing_der_names + missing_sq_names
+
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names)
+    out = confound_remover._process_fmriprep_spec({"data": confounds_df})
+    to_select, sq_to_compute, der_to_compute, spike_name = out
+    assert set(to_select) == set(all_names)
+    assert set(sq_to_compute) == set(missing_sq_names)
+    assert set(der_to_compute) == set(missing_der_names)
+    assert spike_name == "framewise_displacement"
+
+    # Test for wrong columns/strategy pairs
+
+    confound_remover = FMRIPrepConfoundRemover(
+        strategy={"wm_csf": "full"}, spike=0.2)
+    var_names = ["csf"]
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names)
+
+    msg = r"Missing basic confounds: \['white_matter'\]"
+    with pytest.raises(ValueError, match=msg):
+        confound_remover._process_fmriprep_spec({"data": confounds_df})
+
+    var_names = ["csf", "white_matter"]
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names)
+
+    msg = r"Missing framewise_displacement"
+    with pytest.raises(ValueError, match=msg):
+        confound_remover._process_fmriprep_spec({"data": confounds_df})
 
 
 def test_FMRIPrepConfoundRemover_allpresent() -> None:
