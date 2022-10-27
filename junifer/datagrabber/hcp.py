@@ -174,6 +174,8 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
     phase_encodings : {"LR", "RL"} or list of the options, optional
         HCP phase encoding directions. If None, both will be used
         (default None).
+    check_file_existence : bool, optional
+        Whether to check if file exists while accessing (default False).
     **kwargs
         Keyword arguments passed to superclass.
 
@@ -184,6 +186,7 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
         datadir: Union[str, Path, None] = None,
         tasks: Union[str, List[str], None] = None,
         phase_encodings: Union[str, List[str], None] = None,
+        check_file_existence: bool = False,
         **kwargs,
     ) -> None:
         """Initialize the class."""
@@ -196,6 +199,7 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
             datadir=datadir,
             tasks=tasks,
             phase_encodings=phase_encodings,
+            check_file_existence=check_file_existence,
             uri=uri,
             rootdir=rootdir,
         )
