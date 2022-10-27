@@ -32,6 +32,8 @@ class PatternDataGrabber(BaseDataGrabber):
         `{subject}` in the pattern will be replaced by the indexed element.
     replacements: list of str
         Replacements in the patterns for each item in the "element" tuple.
+    check_file_existence : bool, optional
+        Whether to check if file exists while accessing (default False).
     datadir : str or pathlib.Path
         The directory where the data is / will be stored.
     **kwargs
@@ -48,6 +50,7 @@ class PatternDataGrabber(BaseDataGrabber):
         types: List[str],
         patterns: Dict[str, str],
         replacements: List[str],
+        check_file_existence: bool = False,
         **kwargs,
     ) -> None:
         """Initialize the class."""
@@ -65,6 +68,7 @@ class PatternDataGrabber(BaseDataGrabber):
         logger.debug(f"\treplacements = {replacements}")
         self.patterns = patterns
         self.replacements = replacements
+        self.check_file_existence = check_file_existence
 
     def _replace_patterns_regex(
         self, pattern: str
@@ -170,11 +174,12 @@ class PatternDataGrabber(BaseDataGrabber):
                 t_out = t_matches[0]
             else:
                 t_out = self.datadir / t_replace
-                if not t_out.exists() and not t_out.is_symlink():
-                    raise_error(
-                        f"Cannot access {t_type} for {element}: "
-                        f"File {t_out} does not exist"
-                    )
+                if self.check_file_existence:
+                    if not t_out.exists() and not t_out.is_symlink():
+                        raise_error(
+                            f"Cannot access {t_type} for {element}: "
+                            f"File {t_out} does not exist"
+                        )
             out[t_type] = {"path": t_out}
         # Meta here is element and types
         out["meta"]["element"] = dict(zip(self.replacements, element))
