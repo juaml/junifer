@@ -199,3 +199,23 @@ def test_dataladhcp1200_datagrabber_multi_access_task_simple() -> None:
         for element in all_elements:
             assert element[1] == "REST1"
             assert element[2] in ["LR", "RL"]
+
+
+def test_dataladhcp1200_datagrabber_multi_access_phase_simple() -> None:
+    """Test datalad HCP1200 datagrabber simple multiple access for phase."""
+    configure_logging(level="DEBUG")
+    dg = DataladHCP1200(
+        tasks=["REST1", "REST2"],
+        phase_encodings="LR",
+    )
+    # Set URI to Gin
+    dg.uri = URI
+    # Set correct root directory
+    dg._rootdir = "."
+    with dg:
+        # Get all elements
+        all_elements = dg.get_elements()
+        # Check only specified task and phase encoding are found
+        for element in all_elements:
+            assert element[1] in ["REST1", "REST2"]
+            assert element[2] == "LR"
