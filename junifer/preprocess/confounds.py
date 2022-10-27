@@ -239,7 +239,7 @@ class FMRIPrepConfoundRemover(PipelineStepMixin):
 
         Based on the spec, map the column names to match the fmriprep format.
 
-        It asumes that the data is valid, meaning that all the mapping
+        It assumes that the data is valid, meaning that all the mapping
         keys are in the confounds dataframe columns and all the mapped
         values are valid fmriprep column names.
 
