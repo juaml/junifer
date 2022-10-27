@@ -250,3 +250,34 @@ def test_dataladhcp1200_datagrabber_incorrect_access_task(
             tasks=tasks,
             phase_encodings=phase_encodings,
         )
+
+
+@pytest.mark.parametrize(
+    "tasks, phase_encodings",
+    [
+        ("REST1", ["FOO", "BAR"]),
+        ("REST1", "FOO"),
+        (["REST1", "REST2"], ["FOO", "BAR"]),
+        (["REST1", "REST2"], "BAR"),
+    ],
+)
+def test_dataladhcp1200_datagrabber_incorrect_access_phase(
+    tasks: Optional[str],
+    phase_encodings: Optional[str],
+) -> None:
+    """Test datalad HCP1200 datagrabber incorrect access for phase.
+
+    Parameters
+    ----------
+    tasks : str
+        The parametrized tasks.
+    phase_encodings : str
+        The parametrized phase encodings.
+
+    """
+    configure_logging(level="DEBUG")
+    with pytest.raises(ValueError, match="not a valid HCP-YA phase encoding"):
+        _ = DataladHCP1200(
+            tasks=tasks,
+            phase_encodings=phase_encodings,
+        )
