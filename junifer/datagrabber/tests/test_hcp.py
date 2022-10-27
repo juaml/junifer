@@ -39,9 +39,9 @@ URI = "https://gin.g-node.org/juaml/datalad-example-hcp1200"
     ],
 )
 def test_dataladhcp1200_datagrabber(
-        tasks: Optional[str],
-        phase_encodings: Optional[str],
-        expected_path_name: str,
+    tasks: Optional[str],
+    phase_encodings: Optional[str],
+    expected_path_name: str,
 ) -> None:
     """Test datalad HCP1200 datagrabber.
 
@@ -85,3 +85,58 @@ def test_dataladhcp1200_datagrabber(
         assert "element" in meta
         assert "subject" in meta["element"]
         assert test_element[0] == meta["element"]["subject"]
+
+
+@pytest.mark.parametrize(
+    "tasks, phase_encodings",
+    [
+        ("REST1", "LR"),
+        ("REST1", "RL"),
+        ("REST2", "LR"),
+        ("REST2", "RL"),
+        ("SOCIAL", "LR"),
+        ("SOCIAL", "RL"),
+        ("WM", "LR"),
+        ("WM", "RL"),
+        ("RELATIONAL", "LR"),
+        ("RELATIONAL", "RL"),
+        ("EMOTION", "LR"),
+        ("EMOTION", "RL"),
+        ("LANGUAGE", "LR"),
+        ("LANGUAGE", "RL"),
+        ("GAMBLING", "LR"),
+        ("GAMBLING", "RL"),
+        ("MOTOR", "LR"),
+        ("MOTOR", "RL"),
+    ],
+)
+def test_dataladhcp1200_datagrabber_iterator(
+    tasks: Optional[str],
+    phase_encodings: Optional[str],
+) -> None:
+    """Test datalad HCP1200 datagrabber iterator.
+
+    Parameters
+    ----------
+    tasks : str
+        The parametrized tasks.
+    phase_encodings : str
+        The parametrized phase encodings.
+
+    """
+    configure_logging(level="DEBUG")
+    dg = DataladHCP1200(
+        tasks=tasks,
+        phase_encodings=phase_encodings,
+    )
+    # Set URI to Gin
+    dg.uri = URI
+    # Set correct root directory
+    dg._rootdir = "."
+    with dg:
+        # Get all elements
+        all_elements = dg.get_elements()
+        # Check only specified task and phase encoding are found
+        for element in all_elements:
+            assert element[1] == tasks
+            assert element[2] == phase_encodings
