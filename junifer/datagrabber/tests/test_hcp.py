@@ -140,3 +140,42 @@ def test_dataladhcp1200_datagrabber_single_access(
         for element in all_elements:
             assert element[1] == tasks
             assert element[2] == phase_encodings
+
+
+@pytest.mark.parametrize(
+    "tasks, phase_encodings",
+    [
+        (["REST1", "REST2"], ["LR", "RL"]),
+        (["REST1", "REST2"], None),
+    ],
+)
+def test_dataladhcp1200_datagrabber_multi_access(
+    tasks: Optional[str],
+    phase_encodings: Optional[str],
+) -> None:
+    """Test datalad HCP1200 datagrabber multiple access.
+
+    Parameters
+    ----------
+    tasks : str
+        The parametrized tasks.
+    phase_encodings : str
+        The parametrized phase encodings.
+
+    """
+    configure_logging(level="DEBUG")
+    dg = DataladHCP1200(
+        tasks=["REST1", "REST2"],
+        phase_encodings=["LR", "RL"],
+    )
+    # Set URI to Gin
+    dg.uri = URI
+    # Set correct root directory
+    dg._rootdir = "."
+    with dg:
+        # Get all elements
+        all_elements = dg.get_elements()
+        # Check only specified task and phase encoding are found
+        for element in all_elements:
+            assert element[1] in ["REST1", "REST2"]
+            assert element[2] in ["LR", "RL"]
