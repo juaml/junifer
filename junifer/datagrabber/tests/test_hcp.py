@@ -219,3 +219,34 @@ def test_dataladhcp1200_datagrabber_multi_access_phase_simple() -> None:
         for element in all_elements:
             assert element[1] in ["REST1", "REST2"]
             assert element[2] == "LR"
+
+
+@pytest.mark.parametrize(
+    "tasks, phase_encodings",
+    [
+        ("FOO", ["LR", "RL"]),
+        ("FOO", "RL"),
+        (["FOO", "BAR"], ["LR", "RL"]),
+        (["FOO", "BAR"], "LR"),
+    ],
+)
+def test_dataladhcp1200_datagrabber_incorrect_access_task(
+    tasks: Optional[str],
+    phase_encodings: Optional[str],
+) -> None:
+    """Test datalad HCP1200 datagrabber incorrect access for task.
+
+    Parameters
+    ----------
+    tasks : str
+        The parametrized tasks.
+    phase_encodings : str
+        The parametrized phase encodings.
+
+    """
+    configure_logging(level="DEBUG")
+    with pytest.raises(ValueError, match="not a valid HCP-YA fMRI task input"):
+        _ = DataladHCP1200(
+            tasks=tasks,
+            phase_encodings=phase_encodings,
+        )
