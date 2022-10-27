@@ -21,6 +21,65 @@ if TYPE_CHECKING:
     from nibabel import MGHImage, Nifti1Image, Nifti2Image
 
 
+FMRIPREP_BASICS = {
+    "motion": [
+        "trans_x",
+        "trans_y",
+        "trans_z",
+        "rot_x",
+        "rot_y",
+        "rot_z",
+    ],
+    "wm_csf": ["csf", "white_matter"],
+    "global_signal": ["global_signal"],
+}
+
+FMRIPREP_POWER2 = {
+    "motion": [
+        "trans_x_power2",
+        "trans_y_power2",
+        "trans_z_power2",
+        "rot_x_power2",
+        "rot_y_power2",
+        "rot_z_power2",
+    ],
+    "wm_csf": ["csf_power2", "white_matter_power2"],
+    "global_signal": ["global_signal_power2"],
+}
+
+FMRIPREP_DERIVATIVES = {
+    "motion": [
+        "trans_x_derivative1",
+        "trans_y_derivative1",
+        "trans_z_derivative1",
+        "rot_x_derivative1",
+        "rot_y_derivative1",
+        "rot_z_derivative1",
+    ],
+    "wm_csf": ["csf_derivative1", "white_matter_derivative1"],
+    "global_signal": ["global_signal_derivative1"],
+}
+
+FMRIPREP_DERIVATIVES_POWER2 = {
+    "motion": [
+        "trans_x_derivative1_power2",
+        "trans_y_derivative1_power2",
+        "trans_z_derivative1_power2",
+        "rot_x_derivative1_power2",
+        "rot_y_derivative1_power2",
+        "rot_z_derivative1_power2",
+    ],
+    "wm_csf": ["csf_derivative1_power2", "white_matter_derivative1_power2"],
+    "global_signal": ["global_signal_derivative1_power2"],
+}
+
+FMRIPREP_VALID_NAMES = [
+    elem for x in [FMRIPREP_BASICS, FMRIPREP_POWER2, FMRIPREP_DERIVATIVES,
+                   FMRIPREP_DERIVATIVES_POWER2]
+    for t_list in x.values()
+    for elem in t_list]
+
+
 class FMRIPrepConfoundRemover(PipelineStepMixin):
     """Class for confound removal.
 
@@ -124,7 +183,7 @@ class FMRIPrepConfoundRemover(PipelineStepMixin):
 
         if any(x not in self._valid_confounds for x in strategy.values()):
             raise_error(
-                msg=f"Invalid component names {list(strategy.values())}. "
+                msg=f"Invalid confound types {list(strategy.values())}. "
                 f"Valid confound types are {self._valid_confounds}.\n"
                 f"If any of them is a valid parameter in "
                 "nilearn.interfaces.fmriprep.load_confounds we may "
@@ -175,45 +234,33 @@ class FMRIPrepConfoundRemover(PipelineStepMixin):
         # Does not add any new keys
         return input
 
-    def _pick_confounds(self, input: Dict[str, Any]) -> pd.DataFrame:
-        """Select relevant confounds from the specified file."""
+    def _map_adhoc_to_fmriprep(self, input: Dict[str, Any]):
+        """Map the adhoc format to the fmpriprep format spec.
 
-        confounds_format = input["format"]
-        if confounds_format == "adhoc":
-            self._map_adhoc_to_fmriprep(input)
-        elif confounds_format != "fmriprep":
-            raise ValueError(f"Invalid confounds format {confounds_format}")
+        Based on the spec, map the column names to match the fmriprep format.
 
-        processed_spec = self._process_fmriprep_spec(input)
+        It asumes that the data is valid, meaning that all the mapping
+        keys are in the confounds dataframe columns and all the mapped
+        values are valid fmriprep column names.
 
-        (
-            to_select,
-            squares_to_compute,
-            derivatives_to_compute,
-            spike_name,
-        ) = processed_spec
-        # Copy the confounds
-        out_df = input["data"].copy()
+        This method modifies the dataframe in place.
 
-        # Add derivatives if needed
-        for t_dst, t_src in derivatives_to_compute.items():
-            out_df[t_dst] = np.append(np.diff(out_df[t_src]), 0)
+        Parameters
+        ----------
+        input : dict
+            Dictionary containing the following keys:
+            - data: the confounds file loaded in memory (dataframe)
+            - format: format of the confounds file (must be "adhoc")
+            - mappings: dictionary containing the mappings from the adhoc
+            format to the fmriprep format as a dictionary with key "fmriprep"
 
-        # Add squares (of base confounds and derivatives) if needed
-        for t_dst, t_src in squares_to_compute.items():
-            out_df[t_dst] = out_df[t_src] ** 2
+        """
 
-        # add binary spike regressor if needed at given threshold
-        if self.spike is not None:
-            fd = out_df[spike_name].copy()
-            fd.loc[fd > self.spike] = 1
-            fd.loc[fd != 1] = 0
-            out_df["spike"] = fd
-            to_select.append("spike")
+        confounds_df = input["data"]
+        confounds_mapping = input["mappings"]["fmriprep"]
 
-        # Now pick all the relevant confounds
-        out_df = out_df[to_select]
-        return out_df
+        # Rename the columns
+        confounds_df.rename(columns=confounds_mapping, inplace=True)
 
     def _process_fmriprep_spec(
         self, input: Dict[str, Any]
@@ -255,21 +302,8 @@ class FMRIPrepConfoundRemover(PipelineStepMixin):
         squares_to_compute = {}  # the dictionary of missing squares
         derivatives_to_compute = {}  # the dictionary of missing derivatives
 
-        basics = {
-            "motion": [
-                "trans_x",
-                "trans_y",
-                "trans_z",
-                "rot_x",
-                "rot_y",
-                "rot_z",
-            ],
-            "wm_csf": ["csf", "white_matter"],
-            "global_signal": ["global_signal"],
-        }
-
         for t_kind, t_strategy in self.strategy.items():
-            t_basics = basics[t_kind]
+            t_basics = FMRIPREP_BASICS[t_kind]
 
             if any(x not in available_vars for x in t_basics):
                 missing = [x for x in t_basics if x not in available_vars]
@@ -301,48 +335,54 @@ class FMRIPrepConfoundRemover(PipelineStepMixin):
                         if x_derivative_2 not in available_vars:
                             squares_to_compute[x_derivative_2] = x_derivative
         spike_name = "framewise_displacement"
-
+        if self.spike is not None:
+            if spike_name not in available_vars:
+                raise ValueError(
+                    "Invalid confounds file. Missing framewise_displacement "
+                    "(spike) confound. "
+                    "Check if this file is really an fmriprep confounds file. "
+                    "You can also deactivate spike (set spike = None)."
+                )
         out = to_select, squares_to_compute, derivatives_to_compute, spike_name
         return out
 
-    def _map_adhoc_to_fmriprep(self, input: Dict[str, Any]):
-        """Map the adhoc format to the fmpriprep format spec.
+    def _pick_confounds(self, input: Dict[str, Any]) -> pd.DataFrame:
+        """Select relevant confounds from the specified file."""
 
-        Based on the spec, map the column names to match the fmriprep format.
+        confounds_format = input["format"]
+        if confounds_format == "adhoc":
+            self._map_adhoc_to_fmriprep(input)
 
-        This method modifies the dataframe in place.
+        processed_spec = self._process_fmriprep_spec(input)
 
-        Parameters
-        ----------
-        input : dict
-            Dictionary containing the following keys:
-            - path: path to the confounds file
-            - data: the confounds file loaded in memory (dataframe)
-            - format: format of the confounds file (must be "adhoc")
-        """
+        (
+            to_select,
+            squares_to_compute,
+            derivatives_to_compute,
+            spike_name,
+        ) = processed_spec
+        # Copy the confounds
+        out_df = input["data"].copy()
 
-        confounds_df = input["data"]
+        # Add derivatives if needed
+        for t_dst, t_src in derivatives_to_compute.items():
+            out_df[t_dst] = np.append(np.diff(out_df[t_src]), 0)
 
-        # This is an
-        confounds_mapping = input["mappings"]
+        # Add squares (of base confounds and derivatives) if needed
+        for t_dst, t_src in squares_to_compute.items():
+            out_df[t_dst] = out_df[t_src] ** 2
 
-        # Check that all the required columns are present
-        missing = [
-            x
-            for x in confounds_mapping.keys()
-            if x not in confounds_df.columns
-        ]
+        # add binary spike regressor if needed at given threshold
+        if self.spike is not None:
+            fd = out_df[spike_name].copy()
+            fd.loc[fd > self.spike] = 1
+            fd.loc[fd != 1] = 0
+            out_df["spike"] = fd
+            to_select.append("spike")
 
-        if len(missing) is not None:
-            raise ValueError(
-                "Invalid confounds file. Missing columns: "
-                f"{missing}. "
-                "Check if this file matches the adhoc specification for "
-                "this dataset."
-            )
-
-        # Rename the columns
-        confounds_df.rename(columns=confounds_mapping, inplace=True)
+        # Now pick all the relevant confounds
+        out_df = out_df[to_select]
+        return out_df
 
     def _remove_confounds(
         self, bold_img: "Nifti1Image", confounds_df: pd.DataFrame
@@ -413,6 +453,53 @@ class FMRIPrepConfoundRemover(PipelineStepMixin):
                 f"\tImage time series: { bold_img.get_fdata().shape[3]}\n"
                 f"\tConfounds: {len(confound_df)}"
             )
+
+        if "format" not in input["BOLD_confounds"]:
+            raise_error(
+                "Confounds format must be specified in "
+                "input[\"BOLD_confounds\"]"
+            )
+
+        t_format = input["BOLD_confounds"]["format"]
+
+        if t_format == "adhoc":
+            if "mappings" not in input["BOLD_confounds"]:
+                raise_error(
+                    "When using adhoc format, you must specify "
+                    "the variables names mappings in "
+                    "input[\"BOLD_confounds\"][\"mappings\"]"
+                )
+            if "fmriprep" not in input["BOLD_confounds"]["mappings"]:
+                raise_error(
+                    "When using adhoc format, you must specify "
+                    "the variables names mappings to fmriprep format in "
+                    "input[\"BOLD_confounds\"][\"mappings\"][\"fmriprep\"]"
+                )
+            fmriprep_mappings = input["BOLD_confounds"]["mappings"]["fmriprep"]
+            wrong_names = [
+                x for x in fmriprep_mappings.values()
+                if x not in FMRIPREP_VALID_NAMES]
+            if len(wrong_names) > 0:
+                raise_error(
+                    "The following mapping values are not valid fmriprep "
+                    f"names: {wrong_names}"
+                )
+            # Check that all the required columns are present
+            missing = [
+                x
+                for x in fmriprep_mappings.keys()
+                if x not in confound_df.columns
+            ]
+
+            if len(missing) is not None:
+                raise ValueError(
+                    "Invalid confounds file. Missing columns: "
+                    f"{missing}. "
+                    "Check if this file matches the adhoc specification for "
+                    "this dataset."
+                )
+        elif t_format != "fmriprep":
+            raise ValueError(f"Invalid confounds format {t_format}")
 
         # Check the column names of the dataframe and the spec
         # spec must be a dictionary:
