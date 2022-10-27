@@ -110,11 +110,11 @@ def test_dataladhcp1200_datagrabber(
         ("MOTOR", "RL"),
     ],
 )
-def test_dataladhcp1200_datagrabber_iterator(
+def test_dataladhcp1200_datagrabber_single_access(
     tasks: Optional[str],
     phase_encodings: Optional[str],
 ) -> None:
-    """Test datalad HCP1200 datagrabber iterator.
+    """Test datalad HCP1200 datagrabber single access.
 
     Parameters
     ----------
