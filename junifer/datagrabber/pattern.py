@@ -30,7 +30,7 @@ class PatternDataGrabber(BaseDataGrabber):
         Patterns for each type of data as a dictionary. The keys are the types
         and the values are the patterns. Each occurrence of the string
         `{subject}` in the pattern will be replaced by the indexed element.
-    replacements: list of str
+    replacements : list of str
         Replacements in the patterns for each item in the "element" tuple.
     check_file_existence : bool, optional
         Whether to check if file exists while accessing (default False).
