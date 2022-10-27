@@ -81,3 +81,7 @@ Bugs
 
 API changes
 ~~~~~~~~~~~
+
+- Add new argument ``check_file_existence`` for PatternDataGrabber which allows skipping actual file existence check.
+  This is needed for datagrabbers which extend from PatternDataGrabber and DataladDataGrabber and have one or more
+  Datalad subdatasets inside the dataset, for example, DataladHCP1200.
