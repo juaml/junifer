@@ -12,7 +12,7 @@ License: BSD 3 clause
 
 import nilearn
 
-from junifer.markers.parcel import ParcelAggregation
+from junifer.markers.parcel_aggregation import ParcelAggregation
 from junifer.utils import configure_logging
 
 
