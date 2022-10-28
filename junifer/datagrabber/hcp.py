@@ -199,3 +199,8 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
             uri=uri,
             rootdir=rootdir,
         )
+
+    @property
+    def skip_file_check(self) -> bool:
+        """Skip file check existence."""
+        return True
