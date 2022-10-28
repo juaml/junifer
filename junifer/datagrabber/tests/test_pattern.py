@@ -103,7 +103,6 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
             "anat": "anat/{subject}_{session}_ses.nii",
         },
         replacements=["subject", "session"],
-        check_file_existence=True,
     )
 
     with pytest.raises(ValueError, match="element length must be"):
