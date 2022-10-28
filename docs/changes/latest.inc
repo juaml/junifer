@@ -69,6 +69,8 @@ Enhancements
 
 - Refactor markers ``on`` attribute and ``get_valid_inputs`` to verify that the marker can be computed on the input data types (by `Fede Raimondo`_)
 
+- Implement JuselessDataladAOMICID1000VBM datagrabber for accessing AOMIC ID 1000 VBM from juseless (:gh:`57` by `Felix Hoffstaedter`_ and `Synchon Mandal`_)
+
 Bugs
 ~~~~
 
