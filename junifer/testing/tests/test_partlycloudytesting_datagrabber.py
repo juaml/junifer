@@ -32,7 +32,7 @@ def test_PartlyCloudyTestingDataGrabber() -> None:
         assert out["BOLD_confounds"]["path"].exists()
         assert out["BOLD_confounds"]["path"].is_file()
         assert "format" in out["BOLD_confounds"]
-        assert "adhoc" == out["BOLD_confounds"]["format"]
+        assert "fmriprep" == out["BOLD_confounds"]["format"]
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         out = dg["sub-01"]
