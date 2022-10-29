@@ -5,14 +5,21 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-
+import typing
 from numpy.testing import assert_array_equal, assert_raises
 import pytest
 import pandas as pd
+from pandas.testing import assert_frame_equal
 import numpy as np
 
+import nibabel as nib
+from nilearn._utils.exceptions import DimensionError
+
 from junifer.preprocess.confounds import FMRIPrepConfoundRemover
-from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
+from junifer.testing.datagrabbers import (
+    OasisVBMTestingDatagrabber,
+    PartlyCloudyTestingDataGrabber,
+)
 from junifer.datareader import DefaultDataReader
 
 # Set RNG seed for reproducibility
@@ -107,7 +114,7 @@ def test_FMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
     mappings = {x: y for x, y in zip(adhoc_names, fmriprep_names)}
     input = {
         "mappings": {"fmriprep": mappings},
-        "data" : adhoc_df,
+        "data": adhoc_df,
     }
 
     confound_remover._map_adhoc_to_fmriprep(input)
@@ -122,12 +129,19 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
     confound_remover = FMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
 
     var_names = [
-        "csf", "white_matter", "csf_power2", "white_matter_power2",
-        "csf_derivative1", "white_matter_derivative1",
-        "csf_derivative1_power2", "white_matter_derivative1_power2"]
+        "csf",
+        "white_matter",
+        "csf_power2",
+        "white_matter_power2",
+        "csf_derivative1",
+        "white_matter_derivative1",
+        "csf_derivative1_power2",
+        "white_matter_derivative1_power2",
+    ]
 
     confounds_df = pd.DataFrame(
-        np.random.randn(7, len(var_names)), columns=var_names)
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
 
     out = confound_remover._process_fmriprep_spec({"data": confounds_df})
     to_select, sq_to_compute, der_to_compute, spike_name = out
@@ -137,16 +151,18 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
     assert spike_name == "framewise_displacement"
 
     # Same strategy, but derivatives are not present
-    var_names = [
-        "csf", "white_matter", "csf_power2", "white_matter_power2"]
+    var_names = ["csf", "white_matter", "csf_power2", "white_matter_power2"]
     missing_der_names = ["csf_derivative1", "white_matter_derivative1"]
     missing_sq_names = [
-        "csf_derivative1_power2", "white_matter_derivative1_power2"]
+        "csf_derivative1_power2",
+        "white_matter_derivative1_power2",
+    ]
 
     all_names = var_names + missing_der_names + missing_sq_names
 
     confounds_df = pd.DataFrame(
-        np.random.randn(7, len(var_names)), columns=var_names)
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
     out = confound_remover._process_fmriprep_spec({"data": confounds_df})
     to_select, sq_to_compute, der_to_compute, spike_name = out
     assert set(to_select) == set(all_names)
@@ -156,19 +172,24 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
 
     # Same strategy, with spike, only basics are present
     confound_remover = FMRIPrepConfoundRemover(
-        strategy={"wm_csf": "full"}, spike=0.2)
+        strategy={"wm_csf": "full"}, spike=0.2
+    )
 
     var_names = ["csf", "white_matter"]
     missing_der_names = ["csf_derivative1", "white_matter_derivative1"]
     missing_sq_names = [
-        "csf_power2", "white_matter_power2",
-        "csf_derivative1_power2", "white_matter_derivative1_power2"]
+        "csf_power2",
+        "white_matter_power2",
+        "csf_derivative1_power2",
+        "white_matter_derivative1_power2",
+    ]
 
     all_names = var_names + missing_der_names + missing_sq_names
 
     confounds_df = pd.DataFrame(
         np.random.randn(7, len(var_names) + 1),
-        columns=var_names + ["framewise_displacement"])
+        columns=var_names + ["framewise_displacement"],
+    )
     out = confound_remover._process_fmriprep_spec({"data": confounds_df})
     to_select, sq_to_compute, der_to_compute, spike_name = out
     assert set(to_select) == set(all_names)
@@ -178,18 +199,23 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
 
     # Two component strategy, mixed confounds, no spike
     confound_remover = FMRIPrepConfoundRemover(
-        strategy={"wm_csf": "power2", "global_signal": "full"})
+        strategy={"wm_csf": "power2", "global_signal": "full"}
+    )
 
     var_names = ["csf", "white_matter", "global_signal"]
     missing_der_names = ["global_signal_derivative1"]
     missing_sq_names = [
-        "csf_power2", "white_matter_power2", "global_signal_power2",
-        "global_signal_derivative1_power2"]
+        "csf_power2",
+        "white_matter_power2",
+        "global_signal_power2",
+        "global_signal_derivative1_power2",
+    ]
 
     all_names = var_names + missing_der_names + missing_sq_names
 
     confounds_df = pd.DataFrame(
-        np.random.randn(7, len(var_names)), columns=var_names)
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
     out = confound_remover._process_fmriprep_spec({"data": confounds_df})
     to_select, sq_to_compute, der_to_compute, spike_name = out
     assert set(to_select) == set(all_names)
@@ -200,10 +226,12 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
     # Test for wrong columns/strategy pairs
 
     confound_remover = FMRIPrepConfoundRemover(
-        strategy={"wm_csf": "full"}, spike=0.2)
+        strategy={"wm_csf": "full"}, spike=0.2
+    )
     var_names = ["csf"]
     confounds_df = pd.DataFrame(
-        np.random.randn(7, len(var_names)), columns=var_names)
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
 
     msg = r"Missing basic confounds: \['white_matter'\]"
     with pytest.raises(ValueError, match=msg):
@@ -211,14 +239,239 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
 
     var_names = ["csf", "white_matter"]
     confounds_df = pd.DataFrame(
-        np.random.randn(7, len(var_names)), columns=var_names)
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
 
     msg = r"Missing framewise_displacement"
     with pytest.raises(ValueError, match=msg):
         confound_remover._process_fmriprep_spec({"data": confounds_df})
 
 
-def test_FMRIPrepConfoundRemover_allpresent() -> None:
+def test_FMRIPrepConfoundRemover__pick_confounds_adhoc() -> None:
+    """Test FMRIPrepConfoundRemover pick confounds on adhoc confounds."""
+    confound_remover = FMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
+    # Use non fmriprep variable names
+    adhoc_names = [f"var{i}" for i in range(2)]
+    adhoc_df = pd.DataFrame(np.random.randn(10, 2), columns=adhoc_names)
+
+    # map them to valid variable names
+    fmriprep_names = ["csf", "white_matter"]
+    fmriprep_all_vars = [
+        "csf",
+        "white_matter",
+        "csf_power2",
+        "white_matter_power2",
+        "csf_derivative1",
+        "white_matter_derivative1",
+        "csf_derivative1_power2",
+        "white_matter_derivative1_power2",
+    ]
+
+    # Build mappings dictionary
+    mappings = {x: y for x, y in zip(adhoc_names, fmriprep_names)}
+    input = {
+        "mappings": {"fmriprep": mappings},
+        "data": adhoc_df,
+        "format": "adhoc",
+    }
+
+    out = confound_remover._pick_confounds(input)
+    assert set(out.columns) == set(fmriprep_all_vars)
+
+
+def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
+    """Test FMRIPrepConfoundRemover pick confounds on fmriprep confounds."""
+    confound_remover = FMRIPrepConfoundRemover(
+        strategy={"wm_csf": "full"}, spike=0.2
+    )
+    fmriprep_all_vars = [
+        "csf",
+        "white_matter",
+        "csf_power2",
+        "white_matter_power2",
+        "csf_derivative1",
+        "white_matter_derivative1",
+        "csf_derivative1_power2",
+        "white_matter_derivative1_power2",
+    ]
+
+    reader = DefaultDataReader()
+    out1, out2 = None, None
+    with PartlyCloudyTestingDataGrabber() as dg:
+        input = dg["sub-01"]
+        input = reader.fit_transform(input)
+        out1 = confound_remover._pick_confounds(input["BOLD_confounds"])
+        assert set(out1.columns) == set(fmriprep_all_vars + ["spike"])
+
+    with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
+        input = dg["sub-01"]
+        input = reader.fit_transform(input)
+        out2 = confound_remover._pick_confounds(input["BOLD_confounds"])
+        assert set(out2.columns) == set(fmriprep_all_vars + ["spike"])
+
+    assert_frame_equal(out1, out2)
+    # TODO: Test if fmriprep returns the same derivatives/power2 as we compute
+
+
+def test_FMRIPrepConfoundRemover__validate_data() -> None:
+    """Test FMRIPrepConfoundRemover validate data."""
+    confound_remover = FMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
+    reader = DefaultDataReader()
+    with OasisVBMTestingDatagrabber() as dg:
+        input = dg["sub-01"]
+        input = reader.fit_transform(input)
+        new_input = input["VBM_GM"]
+        with pytest.raises(
+            DimensionError, match="incompatible dimensionality"
+        ):
+            confound_remover._validate_data(new_input, None)
+
+    with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
+        input = dg["sub-01"]
+        input = reader.fit_transform(input)
+        new_input = input["BOLD"]
+
+        with pytest.raises(ValueError, match="No extra input"):
+            confound_remover._validate_data(new_input, None)
+        with pytest.raises(ValueError, match="No BOLD_confounds provided"):
+            confound_remover._validate_data(new_input, {})
+        with pytest.raises(
+            ValueError, match="No BOLD_confounds data provided"
+        ):
+            confound_remover._validate_data(new_input, {"BOLD_confounds": {}})
+
+        extra_input = {
+            "BOLD_confounds": {"data": "wrong"},
+        }
+        msg = "must be a pandas dataframe"
+        with pytest.raises(ValueError, match=msg):
+            confound_remover._validate_data(new_input, extra_input)
+
+        extra_input = {"BOLD_confounds": {"data": pd.DataFrame()}}
+        with pytest.raises(ValueError, match="Image time series and"):
+            confound_remover._validate_data(new_input, extra_input)
+
+        extra_input = {
+            "BOLD_confounds": {"data": input["BOLD_confounds"]["data"]}
+        }
+        with pytest.raises(ValueError, match="format must be specified"):
+            confound_remover._validate_data(new_input, extra_input)
+
+        extra_input = {
+            "BOLD_confounds": {
+                "data": input["BOLD_confounds"]["data"],
+                "format": "wrong",
+            }
+        }
+        with pytest.raises(ValueError, match="Invalid confounds format wrong"):
+            confound_remover._validate_data(new_input, extra_input)
+
+        extra_input = {
+            "BOLD_confounds": {
+                "data": input["BOLD_confounds"]["data"],
+                "format": "adhoc",
+            }
+        }
+        with pytest.raises(ValueError, match="variables names mappings"):
+            confound_remover._validate_data(new_input, extra_input)
+
+        extra_input = {
+            "BOLD_confounds": {
+                "data": input["BOLD_confounds"]["data"],
+                "format": "adhoc",
+                "mappings": {},
+            }
+        }
+        with pytest.raises(ValueError, match="mappings to fmriprep"):
+            confound_remover._validate_data(new_input, extra_input)
+
+        extra_input = {
+            "BOLD_confounds": {
+                "data": input["BOLD_confounds"]["data"],
+                "format": "adhoc",
+                "mappings": {
+                    "fmriprep": {
+                        "rot_x": "wrong",
+                        "rot_y": "rot_z",
+                        "rot_z": "rot_y",
+                    }
+                },
+            }
+        }
+        with pytest.raises(ValueError, match=r"names: \['wrong'\]"):
+            confound_remover._validate_data(new_input, extra_input)
+
+        extra_input = {
+            "BOLD_confounds": {
+                "data": input["BOLD_confounds"]["data"],
+                "format": "adhoc",
+                "mappings": {
+                    "fmriprep": {
+                        "wrong": "rot_x",
+                        "rot_y": "rot_z",
+                        "rot_z": "rot_y",
+                    }
+                },
+            }
+        }
+        with pytest.raises(ValueError, match=r"Missing columns: \['wrong'\]"):
+            confound_remover._validate_data(new_input, extra_input)
+
+
+def test_FMRIPrepConfoundRemover__remove_confounds() -> None:
+    """Test FMRIPrepConfoundRemover remove confounds."""
+    confound_remover = FMRIPrepConfoundRemover(
+        strategy={"wm_csf": "full"}, spike=0.2
+    )
+    reader = DefaultDataReader()
+    with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
+        input = dg["sub-01"]
+        input = reader.fit_transform(input)
+        confounds = confound_remover._pick_confounds(input["BOLD_confounds"])
+        raw_bold = input["BOLD"]["data"]
+        clean_bold = confound_remover._remove_confounds(
+            bold_img=raw_bold, confounds_df=confounds
+        )
+        clean_bold = typing.cast(nib.Nifti1Image, clean_bold)
+        # TODO: Find a better way to test functionality here
+        assert (
+            clean_bold.header.get_zooms()  # type: ignore
+            == raw_bold.header.get_zooms()
+        )
+        assert clean_bold.get_fdata().shape == raw_bold.get_fdata().shape
+    # TODO: Test confound remover with mask, needs #79 to be implemented
+
+
+def test_FMRIPrepConfoundRemover_preprocess() -> None:
+    """Test FMRIPrepConfoundRemover with all confounds present."""
+
+    # need reader for the data
+    reader = DefaultDataReader()
+    # All strategies full, no spike
+    confound_remover = FMRIPrepConfoundRemover()
+
+    with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
+        input = dg["sub-01"]
+        input = reader.fit_transform(input)
+        orig_bold = input["BOLD"]["data"].get_fdata().copy()
+        pre_input = input["BOLD"]
+        pre_extra_input = {"BOLD_confounds": input["BOLD_confounds"]}
+        key, output = confound_remover.preprocess(pre_input, pre_extra_input)
+        trans_bold = output["data"].get_fdata()
+        # Transformation is in place
+        assert_array_equal(trans_bold, input["BOLD"]["data"].get_fdata())
+
+        # Data should have the same shape
+        assert orig_bold.shape == trans_bold.shape
+
+        # but be different
+        assert_raises(
+            AssertionError, assert_array_equal, orig_bold, trans_bold
+        )
+        assert key == "BOLD"
+
+
+def test_FMRIPrepConfoundRemover_fit_transform() -> None:
     """Test FMRIPrepConfoundRemover with all confounds present."""
 
     # need reader for the data
@@ -237,315 +490,23 @@ def test_FMRIPrepConfoundRemover_allpresent() -> None:
 
         # Data should have the same shape
         assert orig_bold.shape == trans_bold.shape
+
+        # but be different
         assert_raises(
             AssertionError, assert_array_equal, orig_bold, trans_bold
         )
 
-
-# # TODO: split the tests
-# def test_baseconfoundremover() -> None:
-#     """Test BaseConfoundRemover."""
-#     # Generate a simulated BOLD img
-#     siimg, simsk = _simu_img()
-
-#     # generate random confound dataframe with Felix's column naming
-
-#     motion_basic = [f"RP.{i}" for i in range(1, 7)]
-#     motion_power2 = [f"RP^2.{i}" for i in range(1, 7)]
-#     motion_derivatives = [f"DRP.{i}" for i in range(1, 7)]
-#     motion_full = [f"DRP^2.{i}" for i in range(1, 7)]
-
-#     wm_csf_basic = ["WM", "CSF"]
-#     wm_csf_power2 = ["WM^2", "CSF^2"]
-#     wm_csf_derivatives = ["DWM", "DCSF"]
-#     wm_csf_full = ["DWM^2", "DCSF^2"]
-
-#     gs_basic = ["GS"]
-#     gs_power2 = ["GS^2"]
-#     gs_derivatives = ["DGS"]
-#     gs_full = ["DGS^2"]
-
-#     confound_column_names = []
-
-#     confound_column_names.append("FD")  # spike
-
-#     confound_column_names.extend(motion_basic)
-#     confound_column_names.extend(motion_power2)
-#     confound_column_names.extend(motion_derivatives)
-#     confound_column_names.extend(motion_full)
-
-#     confound_column_names.extend(wm_csf_basic)
-#     confound_column_names.extend(wm_csf_power2)
-#     confound_column_names.extend(wm_csf_derivatives)
-#     confound_column_names.extend(wm_csf_full)
-
-#     confound_column_names.extend(gs_basic)
-#     confound_column_names.extend(gs_power2)
-#     confound_column_names.extend(gs_derivatives)
-#     confound_column_names.extend(gs_full)
-
-#     # add some random irrelevant confounds
-#     for _ in range(10):
-#         confound_column_names.append(generate_conf_name())
-
-#     np.random.shuffle(confound_column_names)
-#     n_cols = len(confound_column_names)
-#     confounds_df = pd.DataFrame(
-#         np.random.randint(0, 100, size=(100, n_cols)),
-#         columns=confound_column_names,
-#     )
-
-#     # Generate spec from Felix's column naming
-#     spec = {
-#         "motion": {
-#             "basic": motion_basic,
-#             "power2": motion_basic + motion_power2,
-#             "derivatives": motion_basic + motion_derivatives,
-#             "full": motion_basic
-#             + motion_derivatives
-#             + motion_power2
-#             + motion_full,
-#         },
-#         "wm_csf": {
-#             "basic": wm_csf_basic,
-#             "power2": wm_csf_basic + wm_csf_power2,
-#             "derivatives": wm_csf_basic + wm_csf_derivatives,
-#             "full": wm_csf_basic
-#             + wm_csf_derivatives
-#             + wm_csf_power2
-#             + wm_csf_full,
-#         },
-#         "global_signal": {
-#             "basic": gs_basic,
-#             "power2": gs_basic + gs_power2,
-#             "derivatives": gs_basic + gs_derivatives,
-#             "full": gs_basic + gs_derivatives + gs_power2 + gs_full,
-#         },
-#     }
-
-#     # generate a junifer pipeline data object dictionary
-#     input_data_obj = {}
-#     input_data_obj["meta"] = {}
-#     input_data_obj["BOLD"] = {}
-#     input_data_obj["BOLD"]["data"] = siimg
-#     input_data_obj["confounds"] = {}
-#     input_data_obj["confounds"]["path"] = Path("/test.df")
-#     input_data_obj["confounds"]["data"] = confounds_df
-#     input_data_obj["confounds"]["names"] = {}
-#     input_data_obj["confounds"]["names"]["spec"] = spec
-#     input_data_obj["confounds"]["names"]["spike"] = "FD"
-
-#     # generate confound removal strategies with varying numbers of parameters
-
-#     # Test #1: 36 params, no derivatives to compute, no spike
-#     # 36 params
-#     strat1 = {"motion": "full", "wm_csf": "full", "global_signal": "full"}
-
-#     cr = BaseConfoundRemover(
-#         strategy=strat1, spike=None, mask_img=simsk, t_r=0.75
-#     )
-#     cr.validate_input(list(input_data_obj.keys()))
-#     out_type = cr.get_output_kind(list(input_data_obj.keys()))
-
-#     assert "BOLD" in out_type
-
-#     # Check if the input data is valid
-#     cr._validate_data(input_data_obj)
-
-#     # Check that the confounds are picked correctly:
-#     t_df = cr._pick_confounds(input_data_obj["confounds"])
-#     assert len(t_df.columns) == 36
-#     assert all(x in t_df.columns for x in motion_basic)
-#     assert all(x in t_df.columns for x in motion_power2)
-#     assert all(x in t_df.columns for x in motion_derivatives)
-#     assert all(x in t_df.columns for x in motion_full)
-#     assert all(x in t_df.columns for x in wm_csf_basic)
-#     assert all(x in t_df.columns for x in wm_csf_power2)
-#     assert all(x in t_df.columns for x in wm_csf_derivatives)
-#     assert all(x in t_df.columns for x in wm_csf_full)
-#     assert all(x in t_df.columns for x in gs_basic)
-#     assert all(x in t_df.columns for x in gs_power2)
-#     assert all(x in t_df.columns for x in gs_derivatives)
-#     assert all(x in t_df.columns for x in gs_full)
-#     assert "FD" not in t_df.columns
-#     assert "spike" not in t_df.columns
-
-#     # Test #2: 24 params, no derivatives to compute, no spike
-#     # 24 params
-#     strat2 = {
-#         "motion": "full",
-#     }
-
-#     cr = BaseConfoundRemover(
-#         strategy=strat2, spike=None, mask_img=simsk, t_r=0.75
-#     )
-#     cr.validate_input(list(input_data_obj.keys()))
-#     out_type = cr.get_output_kind(list(input_data_obj.keys()))
-
-#     assert "BOLD" in out_type
-
-#     # Check if the input data is valid
-#     cr._validate_data(input_data_obj)
-
-#     # Check that the confounds are picked correctly:
-#     t_df = cr._pick_confounds(input_data_obj["confounds"])
-#     assert len(t_df.columns) == 24
-#     assert all(x in t_df.columns for x in motion_basic)
-#     assert all(x in t_df.columns for x in motion_power2)
-#     assert all(x in t_df.columns for x in motion_derivatives)
-#     assert all(x in t_df.columns for x in motion_full)
-#     assert all(x not in t_df.columns for x in wm_csf_basic)
-#     assert all(x not in t_df.columns for x in wm_csf_power2)
-#     assert all(x not in t_df.columns for x in wm_csf_derivatives)
-#     assert all(x not in t_df.columns for x in wm_csf_full)
-#     assert all(x not in t_df.columns for x in gs_basic)
-#     assert all(x not in t_df.columns for x in gs_power2)
-#     assert all(x not in t_df.columns for x in gs_derivatives)
-#     assert all(x not in t_df.columns for x in gs_full)
-#     assert "FD" not in t_df.columns
-#     assert "spike" not in t_df.columns
-
-#     # Test #3: 9 params, no derivatives to compute, no spike
-#     strat3 = {"motion": "basic", "wm_csf": "basic", "global_signal": "basic"}
-
-#     cr = BaseConfoundRemover(
-#         strategy=strat3, spike=None, mask_img=simsk, t_r=0.75
-#     )
-#     cr.validate_input(list(input_data_obj.keys()))
-#     out_type = cr.get_output_kind(list(input_data_obj.keys()))
-
-#     assert "BOLD" in out_type
-
-#     # Check if the input data is valid
-#     cr._validate_data(input_data_obj)
-
-#     # Check that the confounds are picked correctly:
-#     t_df = cr._pick_confounds(input_data_obj["confounds"])
-#     assert len(t_df.columns) == 9
-#     assert all(x in t_df.columns for x in motion_basic)
-#     assert all(x not in t_df.columns for x in motion_power2)
-#     assert all(x not in t_df.columns for x in motion_derivatives)
-#     assert all(x not in t_df.columns for x in motion_full)
-#     assert all(x in t_df.columns for x in wm_csf_basic)
-#     assert all(x not in t_df.columns for x in wm_csf_power2)
-#     assert all(x not in t_df.columns for x in wm_csf_derivatives)
-#     assert all(x not in t_df.columns for x in wm_csf_full)
-#     assert all(x in t_df.columns for x in gs_basic)
-#     assert all(x not in t_df.columns for x in gs_power2)
-#     assert all(x not in t_df.columns for x in gs_derivatives)
-#     assert all(x not in t_df.columns for x in gs_full)
-#     assert "FD" not in t_df.columns
-#     assert "spike" not in t_df.columns
-
-#     # Test #4: 6 params, no derivatives to compute, no spike
-#     strat4 = {
-#         "motion": "basic",
-#     }
-#     cr = BaseConfoundRemover(
-#         strategy=strat4, spike=None, mask_img=simsk, t_r=0.75
-#     )
-#     cr.validate_input(list(input_data_obj.keys()))
-#     out_type = cr.get_output_kind(list(input_data_obj.keys()))
-
-#     assert "BOLD" in out_type
-
-#     # Check if the input data is valid
-#     cr._validate_data(input_data_obj)
-
-#     # Check that the confounds are picked correctly:
-#     t_df = cr._pick_confounds(input_data_obj["confounds"])
-#     assert len(t_df.columns) == 6
-#     assert all(x in t_df.columns for x in motion_basic)
-#     assert all(x not in t_df.columns for x in motion_power2)
-#     assert all(x not in t_df.columns for x in motion_derivatives)
-#     assert all(x not in t_df.columns for x in motion_full)
-#     assert all(x not in t_df.columns for x in wm_csf_basic)
-#     assert all(x not in t_df.columns for x in wm_csf_power2)
-#     assert all(x not in t_df.columns for x in wm_csf_derivatives)
-#     assert all(x not in t_df.columns for x in wm_csf_full)
-#     assert all(x not in t_df.columns for x in gs_basic)
-#     assert all(x not in t_df.columns for x in gs_power2)
-#     assert all(x not in t_df.columns for x in gs_derivatives)
-#     assert all(x not in t_df.columns for x in gs_full)
-#     assert "FD" not in t_df.columns
-#     assert "spike" not in t_df.columns
-
-#     # Test #5: 2 params, no derivatives to compute, no spike
-#     strat5 = {
-#         "wm_csf": "basic",
-#     }
-#     cr = BaseConfoundRemover(
-#         strategy=strat5, spike=None, mask_img=simsk, t_r=0.75
-#     )
-#     cr.validate_input(list(input_data_obj.keys()))
-#     out_type = cr.get_output_kind(list(input_data_obj.keys()))
-
-#     assert "BOLD" in out_type
-
-#     # Check if the input data is valid
-#     cr._validate_data(input_data_obj)
-
-#     # Check that the confounds are picked correctly:
-#     t_df = cr._pick_confounds(input_data_obj["confounds"])
-#     assert len(t_df.columns) == 2
-#     assert all(x not in t_df.columns for x in motion_basic)
-#     assert all(x not in t_df.columns for x in motion_power2)
-#     assert all(x not in t_df.columns for x in motion_derivatives)
-#     assert all(x not in t_df.columns for x in motion_full)
-#     assert all(x in t_df.columns for x in wm_csf_basic)
-#     assert all(x not in t_df.columns for x in wm_csf_power2)
-#     assert all(x not in t_df.columns for x in wm_csf_derivatives)
-#     assert all(x not in t_df.columns for x in wm_csf_full)
-#     assert all(x not in t_df.columns for x in gs_basic)
-#     assert all(x not in t_df.columns for x in gs_power2)
-#     assert all(x not in t_df.columns for x in gs_derivatives)
-#     assert all(x not in t_df.columns for x in gs_full)
-#     assert "FD" not in t_df.columns
-#     assert "spike" not in t_df.columns
-
-#     out = cr.fit_transform(input_data_obj)
-#     check_niimg_4d(out["BOLD"]["data"])
-#     # TODO: check meta
-
-#     # Test #6: 12 params, derivatives to compute, spike
-#     to_select = [
-#         x for x in confounds_df.columns if x not in motion_derivatives
-#     ]
-#     no_d_df = confounds_df[to_select]
-#     input_data_obj["confounds"]["data"] = no_d_df
-
-#     derivatives = {f"D{x}": x for x in motion_basic}
-
-#     input_data_obj["confounds"]["names"]["derivatives"] = derivatives
-
-#     strat6 = {
-#         "motion": "derivatives",
-#     }
-#     cr = BaseConfoundRemover(
-#         strategy=strat6, spike=0.75, mask_img=simsk, t_r=0.75
-#     )
-#     cr.validate_input(list(input_data_obj.keys()))
-#     out_type = cr.get_output_kind(list(input_data_obj.keys()))
-
-#     assert "BOLD" in out_type
-
-#     # Check if the input data is valid
-#     cr._validate_data(input_data_obj)
-
-#     # Check that the confounds are picked correctly:
-#     t_df = cr._pick_confounds(input_data_obj["confounds"])
-#     assert len(t_df.columns) == 13
-#     assert all(x in t_df.columns for x in motion_basic)
-#     assert all(x not in t_df.columns for x in motion_power2)
-#     assert all(x in t_df.columns for x in motion_derivatives)
-#     assert all(x not in t_df.columns for x in motion_full)
-#     assert all(x not in t_df.columns for x in wm_csf_basic)
-#     assert all(x not in t_df.columns for x in wm_csf_power2)
-#     assert all(x not in t_df.columns for x in wm_csf_derivatives)
-#     assert all(x not in t_df.columns for x in wm_csf_full)
-#     assert all(x not in t_df.columns for x in gs_basic)
-#     assert all(x not in t_df.columns for x in gs_power2)
-#     assert all(x not in t_df.columns for x in gs_derivatives)
-#     assert all(x not in t_df.columns for x in gs_full)
-#     assert "FD" not in t_df.columns
-#     assert "spike" in t_df.columns
+        assert output["meta"] == input["meta"]  # general meta does not change
+        assert "meta" in output["BOLD"]
+        assert "preprocess" in output["BOLD"]["meta"]
+        t_meta = output["BOLD"]["meta"]["preprocess"]
+        assert t_meta["class"] == "FMRIPrepConfoundRemover"
+        # It should have all the default parameters
+        assert t_meta["strategy"] == confound_remover.strategy
+        assert t_meta["spike"] is None
+        assert t_meta["detrend"] is True
+        assert t_meta["standardize"] is True
+        assert t_meta["low_pass"] is None
+        assert t_meta["high_pass"] is None
+        assert t_meta["t_r"] is None
+        assert t_meta["mask_img"] is None
