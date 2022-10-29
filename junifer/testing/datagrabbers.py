@@ -199,16 +199,13 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         out = super().__getitem__(element)
         i_sub = int(element.split("-")[1]) - 1
         out["BOLD"] = {"path": Path(self._dataset["func"][i_sub])}
-        conf_format = "adhoc" if self.reduce_confounds else "fmriprep"
+        conf_format = "fmriprep"
 
         out["BOLD_confounds"] = {
             "path": Path(self._dataset["confounds"][i_sub]),
             "format": conf_format,
         }
-        # if self.reduce_confounds:
-        #     spec = {
 
-        #     }
         # Set the element accordingly
         out["meta"]["element"] = {"subject": element}
         return out
