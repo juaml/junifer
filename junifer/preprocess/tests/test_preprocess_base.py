@@ -26,6 +26,7 @@ def test_base_preprocessor_subclassing() -> None:
             return ["timeseries"]
 
         def preprocess(self, input, extra_input):
+            input["data"] = f"mofidied_{input['data']}"
             return "BOLD", input
 
     with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
@@ -41,6 +42,10 @@ def test_base_preprocessor_subclassing() -> None:
             "path": ".",
             "data": "data",
         },
+        "T1w": {
+            "path": ".",
+            "data": "data",
+        },
     }
     prep = MyBasePreprocessor(on=["BOLD"])
 
@@ -51,5 +56,10 @@ def test_base_preprocessor_subclassing() -> None:
     # Check output
     assert "BOLD" in output
     assert "data" in output["BOLD"]
+    assert output["BOLD"]["data"] == "mofidied_data"
     assert "path" in output["BOLD"]
     assert "meta" in output["BOLD"]
+
+    assert "T1w" in output
+    assert "data" in output["T1w"]
+    assert output["T1w"]["data"] == "data"
