@@ -31,6 +31,9 @@ def test_base_preprocessor_subclassing() -> None:
     with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
         MyBasePreprocessor(on=["BOLD", "T2w"])
 
+    with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
+        MyBasePreprocessor(on="T2w")
+
     # Create input for marker
     input_ = {
         "meta": {"datagrabber": "dg", "element": "elem", "datareader": "dr"},
