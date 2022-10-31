@@ -471,7 +471,7 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
                 if x not in confound_df.columns
             ]
 
-            if len(missing) is not None:
+            if len(missing) > 0:
                 raise ValueError(
                     "Invalid confounds file. Missing columns: "
                     f"{missing}. "

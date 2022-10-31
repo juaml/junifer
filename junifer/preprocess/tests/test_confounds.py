@@ -415,6 +415,21 @@ def test_FMRIPrepConfoundRemover__validate_data() -> None:
         with pytest.raises(ValueError, match=r"Missing columns: \['wrong'\]"):
             confound_remover._validate_data(new_input, extra_input)
 
+        extra_input = {
+            "BOLD_confounds": {
+                "data": input["BOLD_confounds"]["data"],
+                "format": "adhoc",
+                "mappings": {
+                    "fmriprep": {
+                        "rot_x": "rot_x",
+                        "rot_y": "rot_z",
+                        "rot_z": "rot_y",
+                    }
+                },
+            }
+        }
+        confound_remover._validate_data(new_input, extra_input)
+
 
 def test_FMRIPrepConfoundRemover__remove_confounds() -> None:
     """Test FMRIPrepConfoundRemover remove confounds."""
