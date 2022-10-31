@@ -71,6 +71,8 @@ Enhancements
 
 - Implement JuselessDataladAOMICID1000VBM datagrabber for accessing AOMIC ID 1000 VBM from juseless (:gh:`57` by `Felix Hoffstaedter`_ and `Synchon Mandal`_)
 
+- Add test for DataladHCP1200 datagrabber (:gh: `93` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
@@ -79,3 +81,7 @@ Bugs
 
 API changes
 ~~~~~~~~~~~
+
+- Add new argument ``check_file_existence`` for PatternDataGrabber which allows skipping actual file existence check.
+  This is needed for datagrabbers which extend from PatternDataGrabber and DataladDataGrabber and have one or more
+  Datalad subdatasets inside the dataset, for example, DataladHCP1200.
