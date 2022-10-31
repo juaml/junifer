@@ -199,7 +199,7 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
 
     # Two component strategy, mixed confounds, no spike
     confound_remover = FMRIPrepConfoundRemover(
-        strategy={"wm_csf": "power2", "global_signal": "full"}
+        strategy={"wm_csf": "power2", "global_signal": "derivatives"}
     )
 
     var_names = ["csf", "white_matter", "global_signal"]
@@ -207,8 +207,6 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
     missing_sq_names = [
         "csf_power2",
         "white_matter_power2",
-        "global_signal_power2",
-        "global_signal_derivative1_power2",
     ]
 
     all_names = var_names + missing_der_names + missing_sq_names
