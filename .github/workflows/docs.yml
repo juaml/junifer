@@ -3,10 +3,10 @@ name: Build and publish docs
 on:
   push:
     # Sequence of patterns matched against refs/heads
-    branches:    
+    branches:
       - main
     # Sequence of patterns matched against refs/tags
-    tags:        
+    tags:
       - v*
 
 jobs:
@@ -17,14 +17,14 @@ jobs:
 
     steps:
     - name: Checkout source
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         # require all of history to see all tagged versions' docs
         fetch-depth: 0
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.9
+        python-version: '3.10'
     - name: Check for sudo
       shell: bash
       run: |
@@ -44,7 +44,7 @@ jobs:
     - name: Checkout gh-pages
       # As we already did a deploy of gh-pages above, it is guaranteed to be there
       # so check it out so we can selectively build docs below
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
           ref: gh-pages
           path: docs/_build
