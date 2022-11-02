@@ -156,7 +156,7 @@ will work on all available data (default None).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>input</strong><span class="classifier">list of str</span></dt><dd><p>The input to the marker. The list must contain the
+<dt><strong>input</strong><span class="classifier">list of str</span></dt><dd><p>The input to the preprocessor. The list must contain the
 available Junifer Data dictionary keys.</p>
 </dd>
 </dl>
@@ -178,7 +178,7 @@ available Junifer Data dictionary keys.</p>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><dl class="simple">
 <dt>list of str</dt><dd><p>The list of data types that can be used as input for this
-preprocessor</p>
+preprocessor.</p>
 </dd>
 </dl>
 </dd>
@@ -192,12 +192,11 @@ preprocessor</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>input</strong><span class="classifier">dict[str, dict]</span></dt><dd><p>A single input from the pipeline data object in which to compute
-the marker.</p>
+<dt><strong>input</strong><span class="classifier">dict[str, dict]</span></dt><dd><p>A single input from the Junifer Data object to preprocess.</p>
 </dd>
-<dt><strong>extra_input</strong><span class="classifier">dict, optional</span></dt><dd><p>The other fields in the pipeline data object. Useful for accessing
+<dt><strong>extra_input</strong><span class="classifier">dict, optional</span></dt><dd><p>The other fields in the Junifer Data object. Useful for accessing
 other data kind that needs to be used in the computation. For
-example, the functional connectivity markers can make use of the
+example, the confound removers can make use of the
 confounds if available (default None).</p>
 </dd>
 </dl>
