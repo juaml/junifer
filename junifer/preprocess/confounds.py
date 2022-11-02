@@ -571,9 +571,9 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         Parameters
         ----------
-        input : Dict[str, Dict]
+        input : dict
             A single input from the Junifer Data object in which to preprocess.
-        extra_input : Dict, optional
+        extra_input : dict, optional
             The other fields in the Junifer Data object. Must include the
             "BOLD_confounds" key.
 
