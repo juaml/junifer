@@ -68,7 +68,7 @@ class BasePreprocessor(ABC, PipelineStepMixin):
         Parameters
         ----------
         input : list of str
-            The input to the marker. The list must contain the
+            The input to the preprocessor. The list must contain the
             available Junifer Data dictionary keys.
 
         Returns
@@ -89,7 +89,7 @@ class BasePreprocessor(ABC, PipelineStepMixin):
         -------
         list of str
             The list of data types that can be used as input for this
-            preprocessor
+            preprocessor.
 
         """
         raise_error(
@@ -157,12 +157,11 @@ class BasePreprocessor(ABC, PipelineStepMixin):
         Parameters
         ----------
         input : dict[str, dict]
-            A single input from the pipeline data object in which to compute
-            the marker.
+            A single input from the Junifer Data object to preprocess.
         extra_input : dict, optional
-            The other fields in the pipeline data object. Useful for accessing
+            The other fields in the Junifer Data object. Useful for accessing
             other data kind that needs to be used in the computation. For
-            example, the functional connectivity markers can make use of the
+            example, the confound removers can make use of the
             confounds if available (default None).
 
         Returns
