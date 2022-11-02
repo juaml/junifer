@@ -4,6 +4,7 @@ Configs
 Juseless
 --------
 
-.. automodule:: junifer.configs.juseless
-   :members:
-   :imported-members:
+.. automodule:: junifer.configs.juseless.datagrabbers
+    :members: 
+    :imported-members:
+    :special-members: None

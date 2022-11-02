@@ -24,28 +24,27 @@ class SphereAggregation(BaseMarker):
 
     Parameters
     ----------
-    coords: str
+
+    coords : str
         The name of the coordinates list to use. See
-        :func:`junifer.data.list_coordinates` for options.
-    radius: float, optional
+        :func:`junifer.data.coordinates.list_coordinates` for options.
+    radius : float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
         for more information (default None).
-    method: str, optional
+    method : str, optional
         The aggregation method to use.
         See :func:`junifer.stats.get_aggfunc_by_name` for more information
         (default "mean").
-    method_params: dict, optional
+    method_params : dict, optional
         The parameters to pass to the aggregation method (default None).
-    on: list of str, optional
+    on : list of str, optional
         The kind of data to apply the marker to. By default, will work on all
         available data (default None).
     name : str, optional
         The name of the marker. By default, it will use KIND_SphereAggregation
         where KIND is the kind of data it was applied to (default None).
-
     """
-
     def __init__(
         self,
         coords: str,
@@ -55,7 +54,6 @@ class SphereAggregation(BaseMarker):
         on: Optional[List[str]] = None,
         name: Optional[str] = None,
     ) -> None:
-        """Initialize the class."""
         self.coords = coords
         self.radius = radius
 
@@ -77,7 +75,7 @@ class SphereAggregation(BaseMarker):
         Returns
         -------
         list of str
-            The list of data types that can be used as input for this marker
+            The list of data types that can be used as input for this marker.
 
         """
         return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]

@@ -40,7 +40,6 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         tasks: Union[str, List[str], None] = None,
         **kwargs,
     ) -> None:
-        """Initialize the class."""
         # The types of data
         types = [
             "BOLD",
@@ -125,7 +124,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
 
         Returns
         -------
-        elements : list
+        list
             The list of elements that can be grabbed in the dataset after
             imposing constraints based on specified tasks.
         """

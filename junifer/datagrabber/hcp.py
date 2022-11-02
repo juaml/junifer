@@ -40,7 +40,6 @@ class HCP1200(PatternDataGrabber):
         phase_encodings: Union[str, List[str], None] = None,
         **kwargs,
     ) -> None:
-        """Initialize the class."""
         # All tasks
         all_tasks = [
             "REST1",
@@ -139,12 +138,12 @@ class HCP1200(PatternDataGrabber):
         return out
 
     def get_elements(self) -> List:
-        """Implement fetching list of subjects in the dataset.
+        """Implement fetching list of elements in the dataset.
 
         Returns
         -------
-        elements : list of str
-            The list of subjects in the dataset.
+        list
+            The list of elements in the dataset.
 
         """
         subjects = [x.name for x in self.datadir.iterdir() if x.is_dir()]
@@ -186,7 +185,6 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
         phase_encodings: Union[str, List[str], None] = None,
         **kwargs,
     ) -> None:
-        """Initialize the class."""
         uri = (
             "https://github.com/datalad-datasets/"
             "human-connectome-project-openaccess.git"

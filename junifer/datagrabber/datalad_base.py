@@ -46,17 +46,17 @@ class DataladDataGrabber(BaseDataGrabber):
         Removes the datalad dataset from the `datadir`. This method is called
         automatically when the datagrabber is used within a context.
 
+    See Also
+    --------
+    BaseDataGrabber
+        For the abstract base class of any datagrabber.
+
     Notes
     -----
     By itself, this class is still abstract as the `__getitem__` method relies
     on the parent class `BaseDataGrabber.__getitem__` which is not yet
     implemented. This class is intended to be used as a superclass of a class
     with multiple inheritance.
-
-    See Also
-    --------
-    BaseDataGrabber
-
     """
 
     def __init__(
@@ -66,7 +66,6 @@ class DataladDataGrabber(BaseDataGrabber):
         uri: Optional[str] = None,
         **kwargs,
     ):
-        """Initialize the class."""
         if datadir is None:
             logger.warning("`datadir` is None, creating a temporary directory")
             # Create temporary directory

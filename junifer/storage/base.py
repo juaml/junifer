@@ -37,7 +37,6 @@ class BaseFeatureStorage(ABC):
         storage_types: Union[List[str], str],
         single_output: bool = False,
     ) -> None:
-        """Initialize the class."""
         self.uri = uri
         if not isinstance(storage_types, list):
             storage_types = [storage_types]
@@ -49,7 +48,7 @@ class BaseFeatureStorage(ABC):
 
         Returns
         -------
-        meta : dict
+        dict
             The metadata as a dictionary.
 
         """
