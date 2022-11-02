@@ -115,6 +115,47 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.testing.datagrabbers.</span></span><span class="sig-name descname"><span class="pre">PartlyCloudyTestingDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reduce_confounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber" title="Permalink to this definition"></a></dt>
+<dd><p>DataGrabber for Partly Cloudy dataset.</p>
+<p>Wrapper for nilearn.datasets.fetch_partly_cloudy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>reduce_confounds</strong><span class="classifier">bool, optional</span></dt><dd><p>If True, the returned confounds only include 6 motion parameters,
+mean framewise displacement, signal from white matter, csf, and
+6 anatomical compcor parameters. This selection only serves the
+purpose of having realistic examples. Depending on your research
+question, other confounds might be more appropriate.
+If False, returns all <a class="reference external" href="https://nilearn.github.io/stable/glossary.html#term-fMRIPrep" title="(in Nilearn)"><span class="xref std std-term">fMRIPrep</span></a> confounds.
+Default=True.</p>
+</dd>
+<dt><strong>age_group</strong><span class="classifier">str, optional</span></dt><dd><p>Default=’both’. Which age group to fetch
+- ‘adults’ = fetch adults only (n=33, ages 18-39)
+- ‘child’ = fetch children only (n=122, ages 3-12)
+- ‘both’ = fetch full sample (n=155)</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.get_elements">
+<span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.get_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Get elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>list of str</dt><dd><p>List of elements that can be grabbed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.SPMAuditoryTestingDatagrabber">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.testing.datagrabbers.</span></span><span class="sig-name descname"><span class="pre">SPMAuditoryTestingDatagrabber</span></span><a class="headerlink" href="#junifer.testing.datagrabbers.SPMAuditoryTestingDatagrabber" title="Permalink to this definition"></a></dt>
 <dd><p>DataGrabber for SPM Auditory dataset.</p>
