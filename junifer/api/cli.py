@@ -5,15 +5,26 @@
 # License: AGPL
 
 import pathlib
+import subprocess
+import sys
+from pathlib import Path
 from typing import Dict, List, Union
 
 import click
+import yaml
 
 from ..utils.logging import configure_logging, logger, warn_with_log
 from .functions import collect as api_collect
 from .functions import queue as api_queue
 from .functions import run as api_run
 from .parser import parse_yaml
+from .utils import (
+    _get_dependency_information,
+    _get_environment_information,
+    _get_junifer_version,
+    _get_python_information,
+    _get_system_information,
+)
 
 
 def _parse_elements(element: str, config: Dict) -> Union[List, None]:
@@ -190,6 +201,85 @@ def queue(
 
 
 @cli.command()
-def selftest() -> None:
-    """Selftest command for CLI."""
-    pass
+@click.option("--long", "long_", is_flag=True)
+def wtf(long_: bool) -> None:
+    """Wtf command for CLI.
+
+    Parameters
+    ----------
+    long_ : bool
+        Whether to report long version or not.
+
+    """
+    report = {
+        "junifer": _get_junifer_version(),
+        "python": _get_python_information(),
+        "dependencies": _get_dependency_information(long_=long_),
+        "system": _get_system_information(),
+        "environment": _get_environment_information(long_=long_),
+    }
+    click.echo(yaml.dump(report, sort_keys=False))
+
+
+@cli.command()
+@click.argument("subpkg", type=str)
+def selftest(subpkg: str) -> None:
+    """Selftest command for CLI.
+
+    Parameters
+    ----------
+    subpkg : {"all", "api", "configs", "data", "datagrabber", "datareader",
+        "markers", "pipeline", "preprocess", "storage", "testing", "utils",
+        "stats"}
+        The sub-package to run tests for.
+
+    Raises
+    ------
+    click.BadArgumentUsage
+        If `subpkg` is invalid.
+
+    """
+    sub_packages = [
+        "all",
+        "api",
+        "configs",
+        "data",
+        "datagrabber",
+        "datareader",
+        "markers",
+        "pipeline",
+        "preprocess",
+        "storage",
+        "testing",
+        "tests",
+        "utils",
+    ]
+    if subpkg not in sub_packages:
+        raise click.BadArgumentUsage(
+            f"Invalid value for argument `subpkg`: {subpkg}. "
+            f"Should be one of {sub_packages}"
+        )
+
+    if subpkg == "all":
+        completed_process = subprocess.run(
+            ["pytest", "-vvv"],
+            stdin=subprocess.DEVNULL,
+            stdout=sys.stdout,
+            stderr=subprocess.STDOUT,
+            cwd=Path(__file__).parent.parent.parent.absolute(),
+            check=False,
+        )
+    else:
+        completed_process = subprocess.run(
+            ["pytest", f"junifer/{subpkg}", "-vvv"],
+            stdin=subprocess.DEVNULL,
+            stdout=sys.stdout,
+            stderr=subprocess.STDOUT,
+            cwd=Path(__file__).parent.parent.parent.absolute(),
+            check=False,
+        )
+
+    if completed_process.returncode == 0:
+        click.secho("Successful.", fg="green")
+    else:
+        click.secho("Failure.", fg="red")

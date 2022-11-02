@@ -12,7 +12,7 @@ from nilearn.maskers import NiftiLabelsMasker, NiftiMasker
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 from scipy.stats import trim_mean
 
-from junifer.markers.parcel import ParcelAggregation
+from junifer.markers.parcel_aggregation import ParcelAggregation
 
 
 def test_ParcelAggregation_input_output() -> None:

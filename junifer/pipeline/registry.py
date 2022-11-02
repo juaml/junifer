@@ -11,12 +11,13 @@ from ..utils.logging import logger, raise_error
 
 
 if TYPE_CHECKING:
-    from ..datagrabber.base import BaseDataGrabber
-    from ..pipeline import PipelineStepMixin
-    from ..storage.base import BaseFeatureStorage
+    from ..datagrabber import BaseDataGrabber
+    from ..storage import BaseFeatureStorage
+    from .pipeline_step_mixin import PipelineStepMixin
+
 
 # Define valid steps for operation
-_valid_steps = [
+_VALID_STEPS: List[str] = [
     "datagrabber",
     "datareader",
     "preprocessing",
@@ -25,7 +26,7 @@ _valid_steps = [
 ]
 
 # Define registry for valid steps
-_registry = {x: {} for x in _valid_steps}
+_REGISTRY: Dict[str, Dict[str, type]] = {x: {} for x in _VALID_STEPS}
 
 
 def register(step: str, name: str, klass: type) -> None:
@@ -42,14 +43,14 @@ def register(step: str, name: str, klass: type) -> None:
 
     """
     # Verify step
-    if step not in _valid_steps:
+    if step not in _VALID_STEPS:
         raise_error(msg=f"Invalid step: {step}", klass=ValueError)
 
     logger.info(f"Registering {name} in {step}")
-    _registry[step][name] = klass
+    _REGISTRY[step][name] = klass
 
 
-def get_step_names(step: str) -> List:
+def get_step_names(step: str) -> List[str]:
     """Get the names of the registered functions for a given step.
 
     Parameters
@@ -64,10 +65,10 @@ def get_step_names(step: str) -> List:
 
     """
     # Verify step
-    if step not in _valid_steps:
+    if step not in _VALID_STEPS:
         raise_error(msg=f"Invalid step: {step}", klass=ValueError)
 
-    return list(_registry[step].keys())
+    return list(_REGISTRY[step].keys())
 
 
 def get_class(step: str, name: str) -> type:
@@ -87,13 +88,13 @@ def get_class(step: str, name: str) -> type:
 
     """
     # Verify step
-    if step not in _valid_steps:
+    if step not in _VALID_STEPS:
         raise_error(msg=f"Invalid step: {step}", klass=ValueError)
     # Verify step name
-    if name not in _registry[step]:
+    if name not in _REGISTRY[step]:
         raise_error(msg=f"Invalid name: {name}", klass=ValueError)
 
-    return _registry[step][name]
+    return _REGISTRY[step][name]
 
 
 def build(

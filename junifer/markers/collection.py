@@ -5,7 +5,7 @@
 # License: AGPL
 
 from collections import Counter
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 from ..datareader.default import DefaultDataReader
 from ..markers.base import BaseMarker
@@ -14,15 +14,23 @@ from ..storage.base import BaseFeatureStorage
 from ..utils import logger
 
 
+if TYPE_CHECKING:
+    from junifer.datagrabber import BaseDataGrabber
+
+
 class MarkerCollection:
     """Class for marker collection.
 
     Parameters
     ----------
-    markers
-    datareader
-    preprocessing
-    storage
+    markers : list of marker-like
+        The markers to compute.
+    datareader : datareader-like, optional
+        The datareader to use (default None).
+    preprocessing : preprocessing-like, optional
+        The preprocessing steps to apply.
+    storage : storage-like, optional
+        The storage to use (default None).
 
     """
 
@@ -60,17 +68,23 @@ class MarkerCollection:
 
         Returns
         -------
-        output : dict or None
+        dict or None
             The output of the pipeline. Each key represents a marker name and
             the values are the computer marker values. If the pipeline has a
             storage configured, then the output will be None.
 
         """
         logger.info("Fitting pipeline")
+
+        # Fetch actual data using datareader
         data = self._datareader.fit_transform(input)
+
+        # Apply preprocessing steps
         if self._preprocessing is not None:
             logger.info("Preprocessing data")
             data = self._preprocessing.fit_transform(data)
+
+        # Compute markers
         out = {}
         for marker in self._markers:
             logger.info(f"Fitting marker {marker.name}")
@@ -78,20 +92,21 @@ class MarkerCollection:
             if self._storage is None:
                 out[marker.name] = m_value
         logger.info("Marker collection fitting done")
+
         return None if self._storage else out
 
-    # TODO: complete type annotations
-    def validate(self, datagrabber) -> None:
+    def validate(self, datagrabber: "BaseDataGrabber") -> None:
         """Validate the pipeline.
 
-        Without doing any computation, check if the Marker Collection can
+        Without doing any computation, check if the marker collection can
         be fit without problems. That is, the data required for each marker is
         present and streamed down the steps. Also, if a storage is configured,
         check that the storage can handle the markers output.
 
         Parameters
         ----------
-        datagrabber
+        datagrabber : datagrabber-like
+            The datagrabber to validate.
 
         """
         logger.info("Validating Marker Collection")
@@ -104,8 +119,11 @@ class MarkerCollection:
 
         for marker in self._markers:
             logger.info(f"Validating Marker: {marker.name}")
-            m_data = marker.validate(t_data)
+            # Validate marker
+            m_data = marker.validate(input=t_data)
             logger.info(f"Marker output type: {m_data}")
+            # Check storage for the marker
             if self._storage is not None:
                 logger.info(f"Validating storage for {marker.name}")
-                self._storage.validate(m_data)
+                # Validate storage
+                self._storage.validate(input_=m_data)

@@ -11,7 +11,7 @@ import pytest
 import yaml
 from click.testing import CliRunner
 
-from junifer.api.cli import collect, run
+from junifer.api.cli import collect, run, selftest, wtf
 
 
 # Create click test runner
@@ -68,3 +68,35 @@ def test_run_and_collect_commands(
     collect_result = runner.invoke(collect, collect_args)
     # Check
     assert collect_result.exit_code == 0
+
+
+def test_wtf_short() -> None:
+    """Test short version of wtf command."""
+    # Invoke wtf command
+    wtf_result = runner.invoke(wtf)
+    # Check
+    assert wtf_result.exit_code == 0
+
+
+def test_wtf_long() -> None:
+    """Test long version of wtf command."""
+    # Invoke wtf command
+    wtf_result = runner.invoke(wtf, "--long")
+    # Check
+    assert wtf_result.exit_code == 0
+
+
+def test_selftest_invalid_arg() -> None:
+    """Test selftest failure for invalid argument value."""
+    # Invoke selftest command
+    selftest_result = runner.invoke(selftest, "abyss")
+    # Check
+    assert selftest_result.exit_code == 2
+
+
+def test_selftest() -> None:
+    """Test selftest."""
+    # Invoke selftest command
+    selftest_result = runner.invoke(selftest, "tests")
+    # Check; will result in 1 due to I/O descriptor manipulation
+    assert selftest_result.exit_code == 1

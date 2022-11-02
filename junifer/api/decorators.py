@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .registry import register
+from ..pipeline.registry import register
 
 
 def register_datagrabber(klass: type) -> type:

@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import numpy as np
 from nilearn.image import math_img, resample_to_img
@@ -17,30 +17,59 @@ from ..utils import logger
 from .base import BaseMarker
 
 
+if TYPE_CHECKING:
+    from junifer.storage import BaseFeatureStorage
+
+
 @register_marker
 class ParcelAggregation(BaseMarker):
     """Class for parcel aggregation.
 
     Parameters
     ----------
-    atlas
-    method
-    method_params
-    on
-    name
+    atlas : str
+        The name of the atlas. Check valid options by calling
+        :func:`junifer.data.list_atlases`.
+    method : str
+        The method to perform aggregation using. Check valid options in
+        :func:`junifer.stats.get_aggfunc_by_name`.
+    method_params : dict, optional
+        Parameters to pass to the aggregation function. Check valid options in
+        :func:`junifer.stats.get_aggfunc_by_name`.
+    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or list
+        of the options, optional
+        The data types to apply the marker to. If None, will work on all
+        available data (default None).
+    name : str, optional
+        The name of the marker. If None, will use the class name (default
+        None).
 
     """
 
     def __init__(
-        self, atlas, method, method_params=None, on=None, name=None
+        self,
+        atlas: str,
+        method: str,
+        method_params: Optional[Dict[str, Any]] = None,
+        on: Union[List[str], str, None] = None,
+        name: Optional[str] = None,
     ) -> None:
         """Initialize the class."""
         self.atlas = atlas
         self.method = method
         self.method_params = {} if method_params is None else method_params
-        if on is None:
-            on = ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
         super().__init__(on=on, name=name)
+
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
@@ -52,8 +81,8 @@ class ParcelAggregation(BaseMarker):
 
         Returns
         -------
-        str
-            The kind of output.
+        list of str
+            The list of storage kinds.
 
         """
         outputs = []
@@ -66,32 +95,43 @@ class ParcelAggregation(BaseMarker):
                 raise ValueError(f"Unknown input kind for {t_input}")
         return outputs
 
-    # TODO: complete type annotations
-    def store(self, kind: str, out, storage) -> None:
+    def store(
+        self,
+        kind: str,
+        out: Dict[str, Any],
+        storage: "BaseFeatureStorage",
+    ) -> None:
         """Store.
 
         Parameters
         ----------
-        kind
-        out
-        storage
+        kind : {"BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"}
+            The data kind to store.
+        out : dict
+            The computed result as a dictionary to store.
+        storage : storage-like
+            The storage class, for example, SQLiteFeatureStorage.
 
         """
         logger.debug(f"Storing {kind} in {storage}")
         if kind in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
-            storage.store_table(**out)
-        if kind in ["BOLD"]:
-            storage.store_timeseries(**out)
+            storage.store(kind="table", **out)
+        elif kind in ["BOLD"]:
+            storage.store(kind="timeseries", **out)
 
-    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
+    def compute(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict] = None,
+    ) -> Dict:
         """Compute.
 
         Parameters
         ----------
-        input : Dict[str, Dict]
+        input : dict
             A single input from the pipeline data object in which to compute
             the marker.
-        extra_input : Dict, optional
+        extra_input : dict, optional
             The other fields in the pipeline data object. Useful for accessing
             other data kind that needs to be used in the computation. For
             example, the functional connectivity markers can make use of the
@@ -102,17 +142,24 @@ class ParcelAggregation(BaseMarker):
         dict
             The computed result as dictionary. This will be either returned
             to the user or stored in the storage by calling the store method
-            with this as a parameter.
+            with this as a parameter. The dictionary has the following keys:
+            - data : the actual computed values as a numpy.ndarray
+            - columns : the column labels for the computed values as a list
+            - row_names (if more than one row is present in data): "scan"
 
         """
         t_input = input["data"]
         logger.debug(f"Parcel aggregation using {self.method}")
         agg_func = get_aggfunc_by_name(
-            self.method, func_params=self.method_params
+            name=self.method,
+            func_params=self.method_params,
         )
         # Get the min of the voxels sizes and use it as the resolution
-        resolution = np.min(t_input.header.get_zooms()[:3])  # type: ignore
-        t_atlas, t_labels, _ = load_atlas(self.atlas, resolution=resolution)
+        resolution = np.min(t_input.header.get_zooms()[:3])
+        t_atlas, t_labels, _ = load_atlas(
+            name=self.atlas,
+            resolution=resolution,
+        )
         atlas_img_res = resample_to_img(
             t_atlas,
             t_input,

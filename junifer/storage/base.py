@@ -6,7 +6,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -24,16 +24,24 @@ class BaseFeatureStorage(ABC):
     ----------
     uri : str or pathlib.Path
         The path to the storage.
+    storage_types : str or list of str
+        The available storage types for the class.
     single_output : bool, optional
         Whether to have single output (default False).
 
     """
 
     def __init__(
-        self, uri: Union[str, Path], single_output: bool = False
+        self,
+        uri: Union[str, Path],
+        storage_types: Union[List[str], str],
+        single_output: bool = False,
     ) -> None:
         """Initialize the class."""
         self.uri = uri
+        if not isinstance(storage_types, list):
+            storage_types = [storage_types]
+        self._valid_inputs = storage_types
         self.single_output = single_output
 
     def get_meta(self) -> Dict:
@@ -51,31 +59,26 @@ class BaseFeatureStorage(ABC):
         }
         return meta
 
-    # TODO: is raising ValueError required?
-    @abstractmethod
-    def validate(self, input_: List[str]) -> bool:
+    def validate(self, input_: List[str]) -> None:
         """Validate the input to the pipeline step.
 
         Parameters
         ----------
-        input_ : list
+        input_ : list of str
             The input to the pipeline step.
-
-        Returns
-        -------
-        bool
-            Whether the `input` is valid or not.
 
         Raises
         ------
         ValueError
-            If the input does not have the required data.
+            If the `input_` is invalid.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement validate_input().",
-            klass=NotImplementedError,
-        )
+        if not any(x in input_ for x in self._valid_inputs):
+            raise_error(
+                "Input does not have the required data."
+                f"\t Input: {input}"
+                f"\t Required (any of): {self._valid_inputs}"
+            )
 
     @abstractmethod
     def list_features(
@@ -108,7 +111,7 @@ class BaseFeatureStorage(ABC):
         feature_name: Optional[str] = None,
         feature_md5: Optional[bool] = None,
     ) -> pd.DataFrame:
-        """Read feature from the storage.
+        """Read feature into a pandas DataFrame.
 
         Parameters
         ----------
@@ -140,7 +143,7 @@ class BaseFeatureStorage(ABC):
         Returns
         -------
         str
-            The metadata column
+            The metadata column.
 
         """
         raise_error(
@@ -148,83 +151,38 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    # TODO: complete type annotations
-    @abstractmethod
-    def store_matrix2d(
-        self,
-        data,
-        meta: Dict,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
-        kind: Optional[str] = "full",
-        diagonal: bool = True,
-    ) -> None:
-        """Store 2D matrix.
+    def store(self, kind: str, **kwargs) -> None:
+        """Store extracted features data.
 
         Parameters
         ----------
-        data
-        meta : dict
-            The metadata as a dictionary.
-        col_names : list or tuple of str, optional
-            The column names (default None).
-        row_names : list of tuple of str, optional
-            The row names (default None).
-        kind : str, optional
-            The kind of matrix:
-            - 'triu': store upper triangular only.
-            - 'tril': store lower triangular.
-            - 'full': full matrix (default 'full').
-        diagonal : bool, optional
-            Whether to store the diagonal (default True).
-            If kind == 'full', setting this to false will raise
-            an error
+        kind : {"matrix", "timeseries", "table"}
+            The storage kind.
+        **kwargs
+            The keyword arguments.
+
+        Raises
+        ------
+        ValueError
+            If `kind` is invalid.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement store_matrix2d().",
-            klass=NotImplementedError,
-        )
+        if kind == "matrix":
+            self.store_matrix(**kwargs)
+        elif kind == "timeseries":
+            self.store_timeseries(**kwargs)
+        elif kind == "table":
+            self.store_table(**kwargs)
+        else:
+            raise ValueError(f"I don't know how to store {kind}")
 
-    # TODO: complete type annotations
-    @abstractmethod
-    def store_table(
-        self,
-        data,
-        meta: Dict,
-        columns: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
-    ) -> None:
-        """Store table.
+    def store_df(self, **kwargs) -> None:
+        """Store pandas DataFrame.
 
         Parameters
         ----------
-        data
-        meta : dict
-            The metadata as a dictionary.
-        columns : list or tuple of str, optional
-            The columns (default None).
-        rows_col_name : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
-
-        """
-        raise_error(
-            msg="Concrete classes need to implement store_table().",
-            klass=NotImplementedError,
-        )
-
-    @abstractmethod
-    def store_df(self, df: pd.DataFrame, meta: Dict) -> None:
-        """Store pandas DataFerame.
-
-        Parameters
-        ----------
-        df : pandas.DataFrame
-            The DataFrame to store.
-        meta : dict
-            The metadata as a dictionary.
+        **kwargs : dict
+            The keyword arguments.
 
         """
         raise_error(
@@ -232,16 +190,41 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    # TODO: complete type annotations
-    @abstractmethod
-    def store_timeseries(self, data, meta: Dict) -> None:
+    def store_matrix(self, **kwargs) -> None:
+        """Store matrix.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            The keyword arguments.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_matrix2d().",
+            klass=NotImplementedError,
+        )
+
+    def store_table(self, **kwargs) -> None:
+        """Store table.
+
+        Parameters
+        ----------
+        **kwargs : dict
+            The keyword arguments.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_table().",
+            klass=NotImplementedError,
+        )
+
+    def store_timeseries(self, **kwargs) -> None:
         """Store timeseries.
 
         Parameters
         ----------
-        data
-        meta : dict
-            The metadata as a dictionary.
+        **kwargs : dict
+            The keyword arguments.
 
         """
         raise_error(

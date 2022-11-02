@@ -406,8 +406,8 @@ def test_store_table(tmp_path: Path) -> None:
     assert_frame_equal(df_new, c_df_new)
 
 
-def test_store_matrix2d(tmp_path: Path) -> None:
-    """Test 2D Matrix store.
+def test_store_matrix(tmp_path: Path) -> None:
+    """Test matrix store.
 
     Parameters
     ----------
@@ -428,8 +428,11 @@ def test_store_matrix2d(tmp_path: Path) -> None:
     col_names = ["col1", "col2", "col3"]
 
     # Store table
-    storage.store_matrix2d(
-        data, meta, row_names=row_names, col_names=col_names
+    storage.store_matrix(
+        data=data,
+        meta=meta,
+        row_names=row_names,
+        col_names=col_names,
     )
 
     stored_names = [f"{i}~{j}" for i in row_names for j in col_names]
@@ -445,7 +448,7 @@ def test_store_matrix2d(tmp_path: Path) -> None:
     # Store without row and column names
     uri = tmp_path / "test_store_table_nonames.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
-    storage.store_matrix2d(data, meta)
+    storage.store_matrix(data=data, meta=meta)
     stored_names = [
         f"r{i}~c{j}"
         for i in range(data.shape[0])
@@ -458,13 +461,18 @@ def test_store_matrix2d(tmp_path: Path) -> None:
     assert list(read_df.columns) == stored_names
 
     with pytest.raises(ValueError, match="Invalid kind"):
-        storage.store_matrix2d(data, meta, kind="wrong")
+        storage.store_matrix(data=data, meta=meta, matrix_kind="wrong")
 
     with pytest.raises(ValueError, match="non-square"):
-        storage.store_matrix2d(data, meta, kind="triu")
+        storage.store_matrix(data=data, meta=meta, matrix_kind="triu")
 
     with pytest.raises(ValueError, match="cannot be False"):
-        storage.store_matrix2d(data, meta, kind="full", diagonal=False)
+        storage.store_matrix(
+            data=data,
+            meta=meta,
+            matrix_kind="full",
+            diagonal=False,
+        )
 
     # Store upper triangular matrix
     data = np.array([[1, 2, 3], [11, 22, 33], [111, 222, 333]])
@@ -472,8 +480,12 @@ def test_store_matrix2d(tmp_path: Path) -> None:
     col_names = ["col1", "col2", "col3"]
     uri = tmp_path / "test_store_table_triu.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
-    storage.store_matrix2d(
-        data, meta, kind="triu", row_names=row_names, col_names=col_names
+    storage.store_matrix(
+        data=data,
+        meta=meta,
+        matrix_kind="triu",
+        row_names=row_names,
+        col_names=col_names,
     )
 
     stored_names = [
@@ -497,10 +509,10 @@ def test_store_matrix2d(tmp_path: Path) -> None:
     # Store upper triangular matrix without diagonal
     uri = tmp_path / "test_store_table_triu_nodiagonal.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
-    storage.store_matrix2d(
-        data,
-        meta,
-        kind="triu",
+    storage.store_matrix(
+        data=data,
+        meta=meta,
+        matrix_kind="triu",
         row_names=row_names,
         col_names=col_names,
         diagonal=False,
@@ -527,8 +539,12 @@ def test_store_matrix2d(tmp_path: Path) -> None:
     col_names = ["col1", "col2", "col3"]
     uri = tmp_path / "test_store_table_tril.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
-    storage.store_matrix2d(
-        data, meta, kind="tril", row_names=row_names, col_names=col_names
+    storage.store_matrix(
+        data=data,
+        meta=meta,
+        matrix_kind="tril",
+        row_names=row_names,
+        col_names=col_names,
     )
 
     stored_names = [
@@ -552,10 +568,10 @@ def test_store_matrix2d(tmp_path: Path) -> None:
     # Store lower triangular matrix without diagonal
     uri = tmp_path / "test_store_table_tril_nodiagonal.db"
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
-    storage.store_matrix2d(
+    storage.store_matrix(
         data,
         meta,
-        kind="tril",
+        matrix_kind="tril",
         row_names=row_names,
         col_names=col_names,
         diagonal=False,

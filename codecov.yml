@@ -10,16 +10,30 @@ comment:                  # this is a top-level key
 
 coverage:
   status:
-    patch:
-      default:
-        if_ci_failed: failure
-        if_no_uploads: error
-        if_not_found: success
-        target: 95.0
-    project:
-      default: false
-      library:
-        if_ci_failed: failure
-        if_no_uploads: error
-        if_not_found: success
-        target: 90.0
+    project: off
+    patch: off
+
+flag_management:
+  default_rules:
+    carryforward: true
+  individual_flags:
+    - name: junifer
+      paths:
+        - junifer/
+      statuses:
+        - type: project
+          target: 90%
+          threshold: 1%
+        - type: patch
+          target: 95%
+          threshold: 1%
+    - name: docs
+      paths:
+        - docs/
+      statuses:
+        - type: project
+          target: 100%
+          threshold: 1%
+        - type: patch
+          target: 95%
+          threshold: 1%

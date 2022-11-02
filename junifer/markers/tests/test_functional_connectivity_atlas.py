@@ -1,4 +1,4 @@
-"""Provide test for parcel aggregation."""
+"""Provide tests for functional connectivity atlas."""
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
@@ -14,13 +14,19 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 from junifer.markers.functional_connectivity_atlas import (
     FunctionalConnectivityAtlas,
 )
-from junifer.markers.parcel import ParcelAggregation
+from junifer.markers.parcel_aggregation import ParcelAggregation
 from junifer.storage import SQLiteFeatureStorage
 
 
 def test_FunctionalConnectivityAtlas(tmp_path: Path) -> None:
-    """Test FunctionalConnectivityAtlas."""
+    """Test FunctionalConnectivityAtlas.
 
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     # get a dataset
     ni_data = datasets.fetch_spm_auditory(subject_id="sub001")
     fmri_img = image.concat_imgs(ni_data.func)  # type: ignore

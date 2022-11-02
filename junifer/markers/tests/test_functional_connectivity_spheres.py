@@ -1,18 +1,17 @@
-"""Provide test for functional connectivity spheres."""
+"""Provide tests for functional connectivity spheres."""
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-import pytest
-
 from pathlib import Path
-from numpy.testing import assert_array_almost_equal
 
-from sklearn.covariance import EmpiricalCovariance
+import pytest
 from nilearn import datasets, image
 from nilearn.connectome import ConnectivityMeasure
+from numpy.testing import assert_array_almost_equal
+from sklearn.covariance import EmpiricalCovariance
 
 from junifer.markers.functional_connectivity_spheres import (
     FunctionalConnectivitySpheres,
@@ -30,7 +29,6 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-
     # get a dataset
     ni_data = datasets.fetch_spm_auditory(subject_id="sub001")
     fmri_img = image.concat_imgs(ni_data.func)  # type: ignore
@@ -118,8 +116,7 @@ def test_FunctionalConnectivitySpheres_empirical(tmp_path: Path) -> None:
 
     # Check that FC are almost equal when using nileran
     cm = ConnectivityMeasure(
-        cov_estimator=EmpiricalCovariance(),  # type: ignore
-        kind="correlation"
+        cov_estimator=EmpiricalCovariance(), kind="correlation"  # type: ignore
     )
     out_ni = cm.fit_transform([ts["data"]])[0]
     assert_array_almost_equal(out_ni, out["data"], decimal=3)

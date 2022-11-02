@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from ..api.registry import register
+from ..pipeline.registry import register
 from .datagrabbers import (
     OasisVBMTestingDatagrabber,
     SPMAuditoryTestingDatagrabber,

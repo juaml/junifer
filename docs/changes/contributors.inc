@@ -8,3 +8,4 @@
 .. _Xuan Li: https://github.com/xuanli-ac
 .. _Sami Hamdan: https://github.com/samihamdan
 .. _Nicolas Nieto: https://github.com/N-Nieto
+.. _Felix Hoffstaedter: https://github.com/FeHoff

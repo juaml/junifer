@@ -30,7 +30,7 @@ class PatternDataGrabber(BaseDataGrabber):
         Patterns for each type of data as a dictionary. The keys are the types
         and the values are the patterns. Each occurrence of the string
         `{subject}` in the pattern will be replaced by the indexed element.
-    replacements: list of str
+    replacements : list of str
         Replacements in the patterns for each item in the "element" tuple.
     datadir : str or pathlib.Path
         The directory where the data is / will be stored.
@@ -65,6 +65,11 @@ class PatternDataGrabber(BaseDataGrabber):
         logger.debug(f"\treplacements = {replacements}")
         self.patterns = patterns
         self.replacements = replacements
+
+    @property
+    def skip_file_check(self) -> bool:
+        """Skip file check existence."""
+        return False
 
     def _replace_patterns_regex(
         self, pattern: str
@@ -170,11 +175,12 @@ class PatternDataGrabber(BaseDataGrabber):
                 t_out = t_matches[0]
             else:
                 t_out = self.datadir / t_replace
-                if not t_out.exists() and not t_out.is_symlink():
-                    raise_error(
-                        f"Cannot access {t_type} for {element}: "
-                        f"File {t_out} does not exist"
-                    )
+                if not self.skip_file_check:
+                    if not t_out.exists() and not t_out.is_symlink():
+                        raise_error(
+                            f"Cannot access {t_type} for {element}: "
+                            f"File {t_out} does not exist"
+                        )
             out[t_type] = {"path": t_out}
         # Meta here is element and types
         out["meta"]["element"] = dict(zip(self.replacements, element))

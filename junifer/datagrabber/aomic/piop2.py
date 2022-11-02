@@ -119,3 +119,15 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             patterns=patterns,
             replacements=replacements,
         )
+
+    def get_elements(self):
+        """Implement fetching list of elements in the dataset.
+
+        Returns
+        -------
+        elements : list
+            The list of elements that can be grabbed in the dataset after
+            imposing constraints based on specified tasks.
+        """
+        all_elements = super().get_elements()
+        return [x for x in all_elements if x[1] in self.tasks]

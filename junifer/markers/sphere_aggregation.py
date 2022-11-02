@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from nilearn.maskers import NiftiSpheresMasker
 
@@ -12,6 +12,10 @@ from ..api.decorators import register_marker
 from ..data import load_coordinates
 from ..utils import logger, raise_error
 from .base import BaseMarker
+
+
+if TYPE_CHECKING:
+    from junifer.storage import BaseFeatureStorage
 
 
 @register_marker
@@ -22,16 +26,17 @@ class SphereAggregation(BaseMarker):
     ----------
     coords: str
         The name of the coordinates list to use. See
-        :mod:`junifer.data.coordinates`
-    radius: float
+        :mod:`junifer.data.coordinates` for options.
+    radius: float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
-        for more information.
-    method: str
+        for more information (default None).
+    method: str, optional
         The aggregation method to use.
-        See :func:`junifer.stats.get_aggfunc_by_name` for more information.
-    method_params: Dict, optional
-        The parameters to pass to the aggregation method.
+        See :func:`junifer.stats.get_aggfunc_by_name` for more information
+        (default "mean").
+    method_params: dict, optional
+        The parameters to pass to the aggregation method (default None).
     on: list of str, optional
         The kind of data to apply the marker to. By default, will work on all
         available data (default None).
@@ -44,8 +49,8 @@ class SphereAggregation(BaseMarker):
     def __init__(
         self,
         coords: str,
-        radius: float,
-        method: str,
+        radius: Optional[float] = None,
+        method: str = "mean",
         method_params: Optional[Dict] = None,
         on: Optional[List[str]] = None,
         name: Optional[str] = None,
@@ -64,9 +69,18 @@ class SphereAggregation(BaseMarker):
 
         self.method = method
         self.method_params = {} if method_params is None else method_params
-        if on is None:
-            on = ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
         super().__init__(on=on, name=name)
+
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
@@ -92,31 +106,43 @@ class SphereAggregation(BaseMarker):
                 raise ValueError(f"Unknown input kind for {t_input}")
         return outputs
 
-    def store(self, kind: str, out, storage) -> None:
+    def store(
+        self,
+        kind: str,
+        out: Dict[str, Any],
+        storage: "BaseFeatureStorage",
+    ) -> None:
         """Store.
 
         Parameters
         ----------
-        kind
-        out
-        storage
+        kind : {"BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"}
+            The data kind to store.
+        out : dict
+            The computed result as a dictionary to store.
+        storage : storage-like
+            The storage class, for example, SQLiteFeatureStorage.
 
         """
         logger.debug(f"Storing {kind} in {storage}")
         if kind in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
-            storage.store_table(**out)
+            storage.store(kind="table", **out)
         elif kind in ["BOLD"]:
-            storage.store_timeseries(**out)
+            storage.store(kind="timeseries", **out)
 
-    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
+    def compute(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict] = None,
+    ) -> Dict:
         """Compute.
 
         Parameters
         ----------
-        input : Dict[str, Dict]
+        input : dict
             A single input from the pipeline data object in which to compute
             the marker.
-        extra_input : Dict, optional
+        extra_input : dict, optional
             The other fields in the pipeline data object. Useful for accessing
             other data kind that needs to be used in the computation. For
             example, the functional connectivity markers can make use of the
@@ -125,7 +151,12 @@ class SphereAggregation(BaseMarker):
         Returns
         -------
         dict
-            The computed result as dictionary.
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
+            - data : the actual computed values as a numpy.ndarray
+            - columns : the column labels for the computed values as a list
+            - row_names (if more than one row is present in data): "scan"
 
         """
         t_input = input["data"]
@@ -135,8 +166,8 @@ class SphereAggregation(BaseMarker):
         # )
         coords, out_labels = load_coordinates(self.coords)
         masker = NiftiSpheresMasker(
-            coords,
-            self.radius,
+            seeds=coords,
+            radius=self.radius,
             mask_img=None,  # TODO: support this (needs #79)
         )
 

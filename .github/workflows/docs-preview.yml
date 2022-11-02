@@ -1,13 +1,19 @@
-name: Build and publish docs
+name: Build and preview docs
 
 on:
   push:
-    # Sequence of patterns matched against refs/heads
-    branches:
-      - main
-    # Sequence of patterns matched against refs/tags
-    tags:
+    branches-ignore:
+      - 'main'
+    tags-ignore:
       - v*
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+concurrency: preview-${{ github.ref }}
 
 jobs:
   build-docs:
@@ -18,9 +24,6 @@ jobs:
     steps:
     - name: Checkout source
       uses: actions/checkout@v3
-      with:
-        # require all of history to see all tagged versions' docs
-        fetch-depth: 0
     - name: Set up Python 3.10
       uses: actions/setup-python@v4
       with:
@@ -41,22 +44,11 @@ jobs:
       run: |
         git config --global user.email "runner@github.com"
         git config --global user.name "GITHUB CI Runner"
-    - name: Checkout gh-pages
-      # As we already did a deploy of gh-pages above, it is guaranteed to be there
-      # so check it out so we can selectively build docs below
-      uses: actions/checkout@v3
-      with:
-          ref: gh-pages
-          path: docs/_build
-    - name: Build docs
-      # Use the args we normally pass to sphinx-build, but run sphinx-multiversion
+    - name: Test build docs
       run: |
-        make -C docs/ html
-        touch docs/_build/.nojekyll
-        cp docs/redirect.html docs/_build/index.html
-    - name: Publish docs to gh-pages
-      uses: peaceiris/actions-gh-pages@v3
+        BUILDDIR=_build/main make -C docs/ local
+    - name: Deploy preview
+      if: github.event_name == 'pull_request'
+      uses: rossjrw/pr-preview-action@v1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/_build
-        keep_files: true
+        source-dir: docs/_build/main

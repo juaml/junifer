@@ -5,7 +5,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import nibabel as nib
 import pandas as pd
@@ -32,48 +32,59 @@ _readers["TSV"] = {"func": pd.read_csv, "params": {"sep": "\t"}}
 class DefaultDataReader(PipelineStepMixin):
     """Mixin class for default data reader."""
 
-    # TODO: complete type annotations
     def validate_input(self, input: List[str]) -> None:
         """Validate input.
 
         Parameters
         ----------
-        input
+        input : list of str
+            The input to the pipeline step. The list must contain the
+            available Junifer Data dictionary keys.
 
         """
         # Nothing to validate, any input is fine
         pass
 
-    # TODO: complete type annotations
-    def get_output_kind(self, input):
+    def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
 
         Parameters
         ----------
-        input
+        input : list of str
+            The input to the reader. The list must contain the
+            available Junifer Data dictionary keys.
+
+        Returns
+        -------
+        list of str
+            The updated list of output kinds, as reading possibilities.
 
         """
         # It will output the same kind of data as the input
         return input
 
-    # TODO: complete type annotations
-    def fit_transform(self, input, params=None) -> Dict:
+    def fit_transform(
+        self,
+        input: Dict[str, Dict],
+        params: Optional[Dict] = None,
+    ) -> Dict:
         """Fit and transform.
 
         Parameters
         ----------
-        input
-        params
+        input : dict
+            The Junifer Data object.
+        params : dict, optional
+            Extra parameters for data types (default None).
 
         Returns
         -------
         dict
+            The processed output as dictionary. The "data" key is added to
+            each data type dictionary except "meta".
 
         """
         # For each kind of data, try to read it
-
-        # out is the same, but with the 'data' key set in
-        # each kind dictionary, except for meta
         out = input.copy()
         if params is None:
             params = {}

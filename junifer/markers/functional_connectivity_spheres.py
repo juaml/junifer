@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from nilearn.connectome import ConnectivityMeasure
 from sklearn.covariance import EmpiricalCovariance
@@ -15,6 +15,10 @@ from .base import BaseMarker
 from .sphere_aggregation import SphereAggregation
 
 
+if TYPE_CHECKING:
+    from junifer.storage import BaseFeatureStorage
+
+
 @register_marker
 class FunctionalConnectivitySpheres(BaseMarker):
     """Class for functional connectivity using coordinates (spheres).
@@ -23,16 +27,23 @@ class FunctionalConnectivitySpheres(BaseMarker):
     ----------
     coords : str
         The name of the coordinates list to use. See
-        :mod:`junifer.data.coordinates`
-    radius : float
+        :mod:`junifer.data.coordinates` for options.
+    radius : float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
-        for more information.
-    agg_method : str
+        for more information (default None).
+    agg_method : str, optional
         The aggregation method to use.
-        See :func:`junifer.stats.get_aggfunc_by_name` for more information.
+        See :func:`junifer.stats.get_aggfunc_by_name` for more information
+        (default None).
     agg_method_params : dict, optional
-        The parameters to pass to the aggregation method.
+        The parameters to pass to the aggregation method (default None).
+    cor_method : str, optional
+        The method to perform correlation using. Check valid options in
+        :func:`nilearn.connectome.ConnectivityMeasure` (default "covariance").
+    cor_method_params : dict, optional
+        Parameters to pass to the correlation function. Check valid options in
+        :func:`nilearn.connectome.ConnectivityMeasure` (default None).
     name : str, optional
         The name of the marker. By default, it will use
         KIND_FunctionalConnectivitySpheres where KIND is the kind of data it
@@ -43,7 +54,7 @@ class FunctionalConnectivitySpheres(BaseMarker):
     def __init__(
         self,
         coords: str,
-        radius: float,
+        radius: Optional[float] = None,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
@@ -68,7 +79,18 @@ class FunctionalConnectivitySpheres(BaseMarker):
             "empirical", False
         )
 
-        super().__init__(on=["BOLD"], name=name)
+        super().__init__(name=name)
+
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        return ["BOLD"]
 
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
@@ -88,12 +110,16 @@ class FunctionalConnectivitySpheres(BaseMarker):
         outputs = ["matrix"]
         return outputs
 
-    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
+    def compute(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict] = None,
+    ) -> Dict:
         """Compute.
 
         Parameters
         ----------
-        input : dict[str, dict]
+        input : dict
             A single input from the pipeline data object in which to compute
             the marker.
         extra_input : dict, optional
@@ -107,10 +133,10 @@ class FunctionalConnectivitySpheres(BaseMarker):
         dict
             The computed result as dictionary. The following keys will be
             included in the dictionary:
-            - 'data': FC matrix as a 2D numpy array.
-            - 'row_names': Row names as a list.
-            - 'col_names': Col names as a list.
-            - 'kind': The kind of matrix (tril, triu or full)
+            - data: functional connectivity  matrix as a numpy.ndarray.
+            - row_names: row names as a list
+            - col_names: column names as a list
+            - matrix_kind: the kind of matrix (tril, triu or full)
 
         """
         sa = SphereAggregation(
@@ -135,18 +161,26 @@ class FunctionalConnectivitySpheres(BaseMarker):
         # create column names
         out["row_names"] = ts["columns"]
         out["col_names"] = ts["columns"]
-        out["kind"] = "tril"
+        out["matrix_kind"] = "tril"
         return out
 
-    # TODO: complete type annotations
-    def store(self, kind: str, out: Dict, storage) -> None:
+    def store(
+        self,
+        kind: str,
+        out: Dict[str, Any],
+        storage: "BaseFeatureStorage",
+    ) -> None:
         """Store.
 
         Parameters
         ----------
-        input
-        out
+        kind : {"BOLD"}
+            The data kind to store.
+        out : dict
+            The computed result as a dictionary to store.
+        storage : storage-like
+            The storage class, for example, SQLiteFeatureStorage.
 
         """
         logger.debug(f"Storing {kind} in {storage}")
-        storage.store_matrix2d(**out)
+        storage.store(kind="matrix", **out)

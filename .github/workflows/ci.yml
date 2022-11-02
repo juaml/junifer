@@ -1,6 +1,12 @@
 name: Run Tests
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'junifer/**'
+  pull_request:
+    paths:
+      - 'junifer/**'
 
 jobs:
   run-tests:
@@ -8,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
 
     steps:
     - name: Set up system
@@ -36,4 +42,6 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-      if: success() && matrix.python-version == 3.9
+        fail_ci_if_error: true
+        flags: junifer
+      if: success() && matrix.python-version == 3.10
