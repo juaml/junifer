@@ -36,10 +36,12 @@ class FunctionalConnectivityAtlas(BaseMarker):
         :func:`junifer.stats.get_aggfunc_by_name` (default None).
     cor_method : str, optional
         The method to perform correlation using. Check valid options in
-        :func:`nilearn.connectome.ConnectivityMeasure` (default "covariance").
+        :external:class:`nilearn.connectome.ConnectivityMeasure`
+        (default "covariance").
     cor_method_params : dict, optional
         Parameters to pass to the correlation function. Check valid options in
-        :func:`nilearn.connectome.ConnectivityMeasure` (default None).
+        :external:class:`nilearn.connectome.ConnectivityMeasure`
+        (default None).
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).

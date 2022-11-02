@@ -49,5 +49,5 @@ In this section, we showcase different abstract base classes you might want to u
      - | It implements functionality to deal with Datalad datasets. Specifically, the ``__enter__`` and ``__exit__`` methods
        | take care of cloning and removing the Datalad dataset.
    * - :class:`junifer.datagrabber.PatternDataladDataGrabber`
-     - | It is a combination of :class:`junifer.datagrabber.PatternPatternDataGrabber` and
+     - | It is a combination of :class:`junifer.datagrabber.PatternDataladDataGrabber` and
        | :class:`junifer.datagrabber.DataladDataGrabber`. This is probably the class you are looking for when using Datalad.

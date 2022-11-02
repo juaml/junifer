@@ -4,7 +4,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from functools import partial
 from typing import Any, Callable, Dict, Optional
 
 import numpy as np
@@ -37,8 +36,8 @@ def get_aggfunc_by_name(
     -------
     function
         Respective function with `func_params` parameter set.
-
     """
+    from functools import partial  # local import to avoid sphinx error
     # check validity of names
     _valid_func_names = {"winsorized_mean", "mean", "std", "trim_mean"}
     if func_params is None:
@@ -65,6 +64,8 @@ def get_aggfunc_by_name(
             )
         logger.info(f"Limits for winsorized mean are set to {limits}.")
         # partially interpret func_params
+        
+
         func = partial(winsorized_mean, **func_params)
     elif name == "mean":
         func = np.mean
@@ -100,7 +101,6 @@ def winsorized_mean(
     numpy.ndarray
         Winsorized mean of the inputted data with the winsorize settings
         applied as specified in win_params.
-
     """
     win_dat = winsorize(data, axis=axis, **win_params)
     win_mean = win_dat.mean(axis=axis)

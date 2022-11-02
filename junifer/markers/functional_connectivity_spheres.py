@@ -27,7 +27,7 @@ class FunctionalConnectivitySpheres(BaseMarker):
     ----------
     coords : str
         The name of the coordinates list to use. See
-        :mod:`junifer.data.coordinates` for options.
+        :func:`junifer.data.list_coordinates` for options.
     radius : float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
@@ -40,10 +40,11 @@ class FunctionalConnectivitySpheres(BaseMarker):
         The parameters to pass to the aggregation method (default None).
     cor_method : str, optional
         The method to perform correlation using. Check valid options in
-        :func:`nilearn.connectome.ConnectivityMeasure` (default "covariance").
+        :external+nilearn:class:`nilearn.connectome.ConnectivityMeasure`
+        (default "covariance").
     cor_method_params : dict, optional
         Parameters to pass to the correlation function. Check valid options in
-        :func:`nilearn.connectome.ConnectivityMeasure` (default None).
+        :external+nilearn:class:`nilearn.connectome.ConnectivityMeasure` (default None).
     name : str, optional
         The name of the marker. By default, it will use
         KIND_FunctionalConnectivitySpheres where KIND is the kind of data it

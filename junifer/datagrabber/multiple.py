@@ -19,7 +19,7 @@ class MultipleDataGrabber(BaseDataGrabber):
 
     Parameters
     ----------
-    datagrabbers : list of datagrabbers
+    datagrabbers : list of BaseDataGrabber
         The datagrabbers to use to fetch data using.
     **kwargs
         Keyword arguments passed to superclass.
