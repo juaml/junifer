@@ -14,7 +14,6 @@ Pipeline Elements
    markers
    storage
 
-
 Utilities
 ^^^^^^^^^
 
@@ -22,6 +21,19 @@ Utilities
    :maxdepth: 2
    :caption: Contents:
 
+   data
+   stats
+   pipeline
    api
    utils
    testing
+
+
+Configs
+^^^^^^^
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   configs

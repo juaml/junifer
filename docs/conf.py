@@ -23,6 +23,20 @@ from pathlib import Path
 curdir = Path(__file__).parent
 sys.path.append((curdir / "sphinxext").as_posix())
 
+
+paths_to_add = [
+    "junifer/configs/juseless",
+]
+
+for t_path in paths_to_add:
+    t_path = (curdir.parent / t_path).resolve().as_posix()
+    sys.path.insert(0, t_path)
+
+
+# sys.path.insert(
+#     1, (curdir.parent / "junifer" / "configs" / "juseless").resolve()
+# )
+
 # -- Project information -----------------------------------------------------
 
 project = "junifer"
@@ -38,6 +52,7 @@ author = "Fede Raimondo"
 # ones.
 extensions = [
     "sphinx.ext.autodoc",  # include documentation from docstrings
+    "sphinx_autodoc_typehints",  # include type hints from docstrings
     "sphinx.ext.autosummary",  # generate autodoc summaries
     "sphinx.ext.doctest",  # test snippets in the documentation
     "sphinx.ext.intersphinx",  # link to other projects’ documentation
@@ -57,6 +72,42 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+nitpicky = True
+
+nitpick_ignore_regex = [
+    ("py:class", "numpy._typing.*"),
+    ("py:obj", "trimboth"),  # python 3.11 error
+    ("py:obj", "tmean"),  # python 3.11 error
+    ("py:obj", "subclass"),  # python 3.11 error
+    ("py:class", "typing.Any"),  # python 3.11 error
+    # ('py:class', 'numpy.typing.ArrayLike')
+]
+
+# numpydoc_validation_checks = {
+#     "all",
+#     "GL01",
+#     "GL02",
+#     "GL03",
+#     "ES01",
+#     "SA01",
+#     "EX01",
+# }
+numpydoc_xref_param_type = True
+numpydoc_xref_aliases = {
+    "Path": "pathlib.Path",
+    "Nifti1Image": "nibabel.nifti1.Nifti1Image",
+    "Nifti2Image": "nibabel.nifti2.Nifti2Image",
+    "Engine": "sqlalchemy.engine.Engine",
+}
+numpydoc_xref_ignore = {
+    "of",
+    "shape",
+    "optional",
+    "or",
+    "the",
+    "options",
+    "function"
+}
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -85,10 +136,15 @@ html_static_path = []
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/", None),
+    "python": ("https://docs.python.org/3/", None),
     "sklearn": ("https://scikit-learn.org/stable", None),
     "nilearn": ("https://nilearn.github.io/stable/", None),
     "julearn": ("https://juaml.github.io/julearn/main", None),
+    "nibabel": ("https://nipy.org/nibabel/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/dev", None),
+    "sqlalchemy": ("https://docs.sqlalchemy.org/en/20/", None),
 }
 
 sphinx_gallery_conf = {

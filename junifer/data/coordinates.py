@@ -68,7 +68,6 @@ def register_coordinates(
     overwrite : bool, optional
         If True, overwrite an existing list of coordinates with the same name.
         Does not apply to built-in coordinates (default False).
-
     """
     if name in _available_coordinates:
         if isinstance(_available_coordinates[name], Path):
@@ -114,7 +113,6 @@ def list_coordinates() -> List[str]:
     -------
     list of str
         A list with all available coordinates names.
-
     """
     return sorted(_available_coordinates.keys())
 
@@ -133,7 +131,6 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         The coordinates.
     list of str
         The names of the VOIs.
-
     """
     if name not in _available_coordinates:
         raise_error(f"Coordinates {name} not found.")

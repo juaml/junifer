@@ -88,7 +88,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Set upsert
         self._upsert = upsert
 
-    def get_engine(self, meta: Optional[Dict] = None) -> "Engine":
+    def get_engine(
+        self, meta: Optional[Dict] = None
+    ) -> "Engine":
         """Get engine.
 
         Parameters
@@ -98,7 +100,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Returns
         -------
-        sqlalchemy.Engine
+        sqlalchemy.engine.Engine
             The sqlalchemy engine.
 
         """

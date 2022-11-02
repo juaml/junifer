@@ -26,7 +26,7 @@ class SphereAggregation(BaseMarker):
     ----------
     coords: str
         The name of the coordinates list to use. See
-        :mod:`junifer.data.coordinates` for options.
+        :func:`junifer.data.list_coordinates` for options.
     radius: float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
