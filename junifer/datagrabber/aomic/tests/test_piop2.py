@@ -28,6 +28,11 @@ def test_aomic_piop2_datagrabber() -> None:
 
         with dg:
             all_elements = dg.get_elements()
+
+            if task_param == "restingstate":
+                for el in all_elements:
+                    assert el[1] == "restingstate"
+
             test_element = all_elements[0]
             sub, task = test_element
 
