@@ -106,7 +106,8 @@ numpydoc_xref_ignore = {
     "the",
     "options",
     "function",
-    "object"
+    "object",
+    "class"
 }
 
 autoclass_content = "class"

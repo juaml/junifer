@@ -5,5 +5,5 @@
 # License: AGPL
 
 from .cli import cli
-from .functions import run, collect
+from .functions import run, collect, queue
 from . import decorators
