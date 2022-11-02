@@ -1,4 +1,4 @@
-"""Provide base class for preprocessor."""
+"""Provide abstract base class for preprocessor."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
