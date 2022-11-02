@@ -23,13 +23,16 @@ def get_aggfunc_by_name(
     name : str
         Name to identify the function. Currently supported names and
         corresponding functions are:
-        - 'winsorized_mean' -> scipy.stats.mstats.winsorize
-        - 'mean' -> numpy.mean
-        - 'std' -> numpy.std
-        - 'trim_mean' -> scipy.stats.trim_mean
+
+        * ``winsorized_mean`` ->
+          :external+scipy:func:`scipy.stats.mstats.winsorize`
+        * ``mean`` -> :external+numpy:func:`numpy.mean`
+        * ``std`` -> :external+numpy:func:`numpy.std`
+        * ``trim_mean`` -> :external+scipy:func:`scipy.stats.trim_mean`
+
     func_params : dict, optional
         Parameters to pass to the function.
-        E.g. for 'winsorized_mean': func_params = {'limits': [0.1, 0.1]}
+        E.g. for `winsorized_mean`: ``func_params = {'limits': [0.1, 0.1]}``
         (default None).
 
     Returns
@@ -99,6 +102,11 @@ def winsorized_mean(
     numpy.ndarray
         Winsorized mean of the inputted data with the winsorize settings
         applied as specified in win_params.
+
+    See Also
+    --------
+    scipy.stats.mstats.winsorize :
+        The winsorize function used in this function.
     """
     win_dat = winsorize(data, axis=axis, **win_params)
     win_mean = win_dat.mean(axis=axis)

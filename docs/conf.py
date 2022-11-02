@@ -155,6 +155,7 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/dev", None),
     "sqlalchemy": ("https://docs.sqlalchemy.org/en/20/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
 sphinx_gallery_conf = {

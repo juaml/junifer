@@ -5,7 +5,7 @@ Pipeline Elements
 ^^^^^^^^^^^^^^^^^
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    datagrabbers
@@ -18,7 +18,7 @@ Utilities
 ^^^^^^^^^
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    data
@@ -33,7 +33,7 @@ Configs
 ^^^^^^^
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    configs
