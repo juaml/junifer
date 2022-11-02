@@ -130,9 +130,4 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             imposing constraints based on specified tasks.
         """
         all_elements = super().get_elements()
-        constrained_elements = []
-        for el in all_elements:
-            if el[1] in self.tasks:
-                constrained_elements.append(el)
-
-        return constrained_elements
+        return [x for x in all_elements if x[1] in self.tasks]
