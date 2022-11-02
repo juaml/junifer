@@ -24,7 +24,6 @@ class SphereAggregation(BaseMarker):
 
     Parameters
     ----------
-
     coords : str
         The name of the coordinates list to use. See
         :func:`junifer.data.coordinates.list_coordinates` for options.
@@ -45,6 +44,7 @@ class SphereAggregation(BaseMarker):
         The name of the marker. By default, it will use KIND_SphereAggregation
         where KIND is the kind of data it was applied to (default None).
     """
+
     def __init__(
         self,
         coords: str,
