@@ -137,17 +137,18 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         6 anatomical compcor parameters. This selection only serves the
         purpose of having realistic examples. Depending on your research
         question, other confounds might be more appropriate.
-        If False, returns all :term:`fMRIPrep` confounds.
-        Default=True.
+        If False, returns all :term:`fMRIPrep` confounds (default True).
 
-    age_group : str, optional
-        Default='both'. Which age group to fetch
+    age_group : {"adults", "child", "both"}, optional
+       Which age group to fetch (default "both").
         - 'adults' = fetch adults only (n=33, ages 18-39)
         - 'child' = fetch children only (n=122, ages 3-12)
         - 'both' = fetch full sample (n=155)
     """
 
-    def __init__(self, reduce_confounds=True, age_group="both") -> None:
+    def __init__(
+        self, reduce_confounds: bool = True, age_group: str = "both"
+    ) -> None:
         """Initialize the class."""
         datadir = tempfile.mkdtemp()
         # Define types

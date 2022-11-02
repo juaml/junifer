@@ -1,4 +1,4 @@
-"""Provide base class for confound removal."""
+"""Provide class for confound removal using FMRIPrep format."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -14,6 +14,7 @@ from nilearn.image import clean_img
 from nilearn.masking import compute_brain_mask
 
 from .base import BasePreprocessor
+from ..api.decorators import register_preprocessor
 from ..utils import logger, raise_error
 
 
@@ -86,8 +87,9 @@ FMRIPREP_VALID_NAMES = [
 ]
 
 
-class FMRIPrepConfoundRemover(BasePreprocessor):
-    """Class for confound removal.
+@register_preprocessor
+class fMRIPrepConfoundRemover(BasePreprocessor):
+    """Class for confound removal using fMRIPrep confounds format.
 
     Read confound files and select columns according to
     a pre-defined strategy.
@@ -113,7 +115,7 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
         If None, no spike regressor is added. If spike is a float, it will
         add a spike regressor for every point at which framewise displacement
         exceeds the specified float (default None).
-    detrend : bool, Optional
+    detrend : bool, optional
         If True, detrending will be applied on timeseries
         (before confound removal) (default True).
     standardize : bool, optional
@@ -150,7 +152,6 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
         mask_img: Optional["Nifti1Image"] = None,
     ) -> None:
         """Initialise the class."""
-        super().__init__()
         if strategy is None:
             strategy = {
                 "motion": "full",
@@ -194,6 +195,7 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
                 "include it in the future",
                 klass=ValueError,
             )
+        super().__init__()
 
     def validate_input(self, input: List[str]) -> None:
         """Validate the input to the pipeline step.
@@ -202,7 +204,7 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
         ----------
         input : list of str
             The input to the pipeline step. The list must contain the
-            available Junifer Data dictionary keys.
+            available Junifer Data object keys.
 
         Raises
         ------
@@ -226,12 +228,12 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
         ----------
         input : list of str
             The input to the pipeline step. The list must contain the
-            available Junifer Data dictionary keys.
+            available Junifer Data object keys.
 
         Returns
         -------
         list of str
-            The updated list of available Junifer Data dictionary keys after
+            The updated list of available Junifer Data object keys after
             the pipeline step.
 
         """
@@ -249,7 +251,7 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
         """
         return ["BOLD"]
 
-    def _map_adhoc_to_fmriprep(self, input: Dict[str, Any]):
+    def _map_adhoc_to_fmriprep(self, input: Dict[str, Any]) -> None:
         """Map the adhoc format to the fmpriprep format spec.
 
         Based on the spec, map the column names to match the fmriprep format.
@@ -279,7 +281,7 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
 
     def _process_fmriprep_spec(
         self, input: Dict[str, Any]
-    ) -> Tuple[List, Dict, Dict, str]:
+    ) -> Tuple[List[str], Dict[str, str], Dict[str, str], str]:
         """Process the fmpriprep format spec from the specified file.
 
         Based on the strategy, find the relevant column names in the dataframe,
@@ -298,10 +300,10 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
         to_select : list of str
             List of confounds to select from the confounds file, based on the
             strategy
-        squares_to_compute : dict[str, str]
+        squares_to_compute : dict
             Dictionary containing the missing power2 confounds to compute
             (keys) and the corresponding confounds to square (values)
-        derivatives_to_compute : dict[str, str]
+        derivatives_to_compute : dict
             Dictionary containing the missing derivatives confounds to compute
             (keys) and the corresponding confounds to compute the derivative
             from (values)
@@ -362,7 +364,20 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
         return out
 
     def _pick_confounds(self, input: Dict[str, Any]) -> pd.DataFrame:
-        """Select relevant confounds from the specified file."""
+        """Select relevant confounds from the specified file.
+
+        Parameters
+        ----------
+        input : dict
+            Dictionary containing the "BOLD_confounds" value from the
+            Junifer Data object.
+        
+        Returns
+        -------
+        confounds_df : pandas.DataFrame
+            Dataframe containing the relevant confounds.
+        
+        """
 
         confounds_format = input["format"]
         if confounds_format == "adhoc":
@@ -404,7 +419,18 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
         input: Dict[str, Any],
         extra_input: Optional[Dict[str, Any]] = None,
     ) -> None:
-        """Validate input data."""
+        """Validate input data.
+        
+        Parameters
+        ----------
+        input : dict
+            Dictionary containing the "BOLD" value from the
+            Junifer Data object.
+        extra_input : dict, optional
+            Dictionary containing the rest of the Junifer Data object. Must
+            include the "BOLD_confounds" key.
+        
+        """
 
         # Bold must be 4D niimg
         check_niimg_4d(input["data"])
@@ -546,13 +572,10 @@ class FMRIPrepConfoundRemover(BasePreprocessor):
         Parameters
         ----------
         input : Dict[str, Dict]
-            A single input from the pipeline data object in which to compute
-            the marker.
+            A single input from the Junifer Data object in which to preprocess.
         extra_input : Dict, optional
-            The other fields in the pipeline data object. Useful for accessing
-            other data kind that needs to be used in the computation. For
-            example, the functional connectivity markers can make use of the
-            confounds if available (default None).
+            The other fields in the Junifer Data object. Must include the
+            "BOLD_confounds" key.
 
         Returns
         -------

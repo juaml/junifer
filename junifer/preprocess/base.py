@@ -13,13 +13,13 @@ from ..utils import logger, raise_error
 
 
 class BasePreprocessor(ABC, PipelineStepMixin):
-    """Abstract base class for all preprocessors.
+    """Provide abstract base class for all preprocessors.
 
     Parameters
     ----------
-    on : str or list of str
+    on : str or list of str, optional
         The kind of data to apply the preprocessor to. If None,
-        will work on all available data (default: None).
+        will work on all available data (default None).
 
     """
 
@@ -88,7 +88,8 @@ class BasePreprocessor(ABC, PipelineStepMixin):
         Returns
         -------
         list of str
-            The list of data types that can be used as input for this marker
+            The list of data types that can be used as input for this
+            preprocessor
 
         """
         raise_error(
@@ -107,13 +108,10 @@ class BasePreprocessor(ABC, PipelineStepMixin):
         Returns
         -------
         dict
-            The metadata as a dictionary with the only key 'marker'.
+            The metadata as a dictionary with the only key 'preprocess'.
 
         """
         s_meta = super().get_meta()
-        # same marker can be "fit"ted into different kinds, so the name
-        # is created from the kind and the name of the marker
-        s_meta["kind"] = kind
         return {"preprocess": s_meta}
 
     def fit_transform(
@@ -158,10 +156,10 @@ class BasePreprocessor(ABC, PipelineStepMixin):
 
         Parameters
         ----------
-        input : Dict[str, Dict]
+        input : dict[str, dict]
             A single input from the pipeline data object in which to compute
             the marker.
-        extra_input : Dict, optional
+        extra_input : dict, optional
             The other fields in the pipeline data object. Useful for accessing
             other data kind that needs to be used in the computation. For
             example, the functional connectivity markers can make use of the

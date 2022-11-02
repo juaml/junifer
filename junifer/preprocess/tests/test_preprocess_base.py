@@ -1,4 +1,4 @@
-"""Provide tests for base marker."""
+"""Provide tests for BasePreprocessor."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
