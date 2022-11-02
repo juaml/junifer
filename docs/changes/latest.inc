@@ -79,6 +79,8 @@ Bugs
 - Fix a bug in which a PatternDatagrabber would now work with relative `datadir` paths.
   (:gh:`96` by `Leonard Sasse`_, fixed in :gh:`98` by `Fede Raimondo`_).
 
+- Fix a bug in which AOMIC PIOP2 datagrabber did not use user input to constrain elements based on tasks (:gh: `105` by `Leonard Sasse`_)
+
 API changes
 ~~~~~~~~~~~
 
