@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5.2.3. Pipeline &mdash; junifer  documentation</title>
+  <title>5.2.4. Pipeline &mdash; junifer  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="5.2.4. API Functions" href="api.html" />
-    <link rel="prev" title="5.2.2. Stats" href="stats.html" /> 
+    <link rel="next" title="5.2.6. API Functions" href="api.html" />
+    <link rel="prev" title="5.2.3. Stats" href="stats.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,12 +53,14 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">5. API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html#pipeline-elements">5.1. Pipeline Elements</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#utilities">5.2. Utilities</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="data.html">5.2.1. Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="stats.html">5.2.2. Stats</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">5.2.3. Pipeline</a></li>
-<li class="toctree-l3"><a class="reference internal" href="api.html">5.2.4. API Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="utils.html">5.2.5. Utils</a></li>
-<li class="toctree-l3"><a class="reference internal" href="testing.html">5.2.6. Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">5.2.1. Atlases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html#module-junifer.data.coordinates">5.2.2. Coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stats.html">5.2.3. Stats</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">5.2.4. Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-junifer.pipeline.registry">5.2.5. Registry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api.html">5.2.6. API Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">5.2.7. Utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html">5.2.8. Testing</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#configs">5.3. Configs</a></li>
@@ -85,7 +87,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="index.html"><span class="section-number">5. </span>API Reference</a> &raquo;</li>
-      <li><span class="section-number">5.2.3. </span>Pipeline</li>
+      <li><span class="section-number">5.2.4. </span>Pipeline</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/pipeline.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,7 +98,7 @@
            <div itemprop="articleBody">
              
   <section id="module-junifer.pipeline">
-<span id="pipeline"></span><h1><span class="section-number">5.2.3. </span>Pipeline<a class="headerlink" href="#module-junifer.pipeline" title="Permalink to this heading"></a></h1>
+<span id="pipeline"></span><h1><span class="section-number">5.2.4. </span>Pipeline<a class="headerlink" href="#module-junifer.pipeline" title="Permalink to this heading"></a></h1>
 <p>Provide imports for pipeline sub-package.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.pipeline.PipelineStepMixin">
@@ -203,13 +205,126 @@ available Junifer Data dictionary keys.</p>
 </dd></dl>
 
 </section>
+<section id="module-junifer.pipeline.registry">
+<span id="registry"></span><h1><span class="section-number">5.2.5. </span>Registry<a class="headerlink" href="#module-junifer.pipeline.registry" title="Permalink to this heading"></a></h1>
+<p>Provide functions for registry.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.pipeline.registry.build">
+<span class="sig-prename descclassname"><span class="pre">junifer.pipeline.registry.</span></span><span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseclass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.registry.build" title="Permalink to this definition"></a></dt>
+<dd><p>Ensure that the given object is an instance of the given class.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the step.</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the function.</p>
+</dd>
+<dt><strong>baseclass</strong><span class="classifier">class</span></dt><dd><p>Class to be checked against.</p>
+</dd>
+<dt><strong>init_parms</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the base class constructor (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>object</dt><dd><p>An instance of the given base class.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the created object with the given name is not an instance of the
+base class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.pipeline.registry.get_class">
+<span class="sig-prename descclassname"><span class="pre">junifer.pipeline.registry.</span></span><span class="sig-name descname"><span class="pre">get_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.registry.get_class" title="Permalink to this definition"></a></dt>
+<dd><p>Get the class of the registered function for a given step.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the step.</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the function.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>class</dt><dd><p>Registered function class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.pipeline.registry.get_step_names">
+<span class="sig-prename descclassname"><span class="pre">junifer.pipeline.registry.</span></span><span class="sig-name descname"><span class="pre">get_step_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.registry.get_step_names" title="Permalink to this definition"></a></dt>
+<dd><p>Get the names of the registered functions for a given step.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the step.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></dt><dd><p>List of registered function names.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.pipeline.registry.raise_error">
+<span class="sig-prename descclassname"><span class="pre">junifer.pipeline.registry.</span></span><span class="sig-name descname"><span class="pre">raise_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass=&lt;class</span> <span class="pre">'ValueError'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.registry.raise_error" title="Permalink to this definition"></a></dt>
+<dd><p>Raise error, but first log it.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>msg</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The message for the exception.</p>
+</dd>
+<dt><strong>klass</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subclass</span></code> of <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></a>, optional</span></dt><dd><p>The subclass of Exception to raise using (default ValueError).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.pipeline.registry.register">
+<span class="sig-prename descclassname"><span class="pre">junifer.pipeline.registry.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.registry.register" title="Permalink to this definition"></a></dt>
+<dd><p>Register a function to be used in a pipeline step.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the step.</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the function.</p>
+</dd>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>Class to be registered.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="stats.html" class="btn btn-neutral float-left" title="5.2.2. Stats" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="api.html" class="btn btn-neutral float-right" title="5.2.4. API Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="stats.html" class="btn btn-neutral float-left" title="5.2.3. Stats" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="5.2.6. API Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

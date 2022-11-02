@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5.2.4. API Functions &mdash; junifer  documentation</title>
+  <title>5.2.6. API Functions &mdash; junifer  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="5.2.5. Utils" href="utils.html" />
-    <link rel="prev" title="5.2.3. Pipeline" href="pipeline.html" /> 
+    <link rel="next" title="5.2.7. Utils" href="utils.html" />
+    <link rel="prev" title="5.2.4. Pipeline" href="pipeline.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,12 +53,14 @@
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">5. API Reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="index.html#pipeline-elements">5.1. Pipeline Elements</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="index.html#utilities">5.2. Utilities</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="data.html">5.2.1. Data</a></li>
-<li class="toctree-l3"><a class="reference internal" href="stats.html">5.2.2. Stats</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pipeline.html">5.2.3. Pipeline</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">5.2.4. API Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="utils.html">5.2.5. Utils</a></li>
-<li class="toctree-l3"><a class="reference internal" href="testing.html">5.2.6. Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">5.2.1. Atlases</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html#module-junifer.data.coordinates">5.2.2. Coordinates</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stats.html">5.2.3. Stats</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline.html">5.2.4. Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline.html#module-junifer.pipeline.registry">5.2.5. Registry</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">5.2.6. API Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">5.2.7. Utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="testing.html">5.2.8. Testing</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="index.html#configs">5.3. Configs</a></li>
@@ -85,7 +87,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="index.html"><span class="section-number">5. </span>API Reference</a> &raquo;</li>
-      <li><span class="section-number">5.2.4. </span>API Functions</li>
+      <li><span class="section-number">5.2.6. </span>API Functions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/api.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -96,7 +98,7 @@
            <div itemprop="articleBody">
              
   <section id="module-junifer.api">
-<span id="api-functions"></span><h1><span class="section-number">5.2.4. </span>API Functions<a class="headerlink" href="#module-junifer.api" title="Permalink to this heading"></a></h1>
+<span id="api-functions"></span><h1><span class="section-number">5.2.6. </span>API Functions<a class="headerlink" href="#module-junifer.api" title="Permalink to this heading"></a></h1>
 <p>Provide imports for api sub-package.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.api.collect">
@@ -108,6 +110,37 @@
 <dt><strong>storage</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Storage to use. Must have a key “kind” with the kind of
 storage to use. All other keys are passed to the storage
 init function.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.queue">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.</span></span><span class="sig-name descname"><span class="pre">queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'junifer_job'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue" title="Permalink to this definition"></a></dt>
+<dd><p>Queue a job to be executed later.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>config</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The configuration to be used for queueing the job.</p>
+</dd>
+<dt><strong>kind</strong><span class="classifier">{“HTCondor”, “SLURM”}</span></dt><dd><p>The kind of job queue system to use.</p>
+</dd>
+<dt><strong>jobname</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the job (default “junifer_job”).</p>
+</dd>
+<dt><strong>overwrite</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to overwrite if job directory already exists (default False).</p>
+</dd>
+<dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a>, optional</span></dt><dd><p>Element(s) to process. Will be used to index the datagrabber
+(default None).</p>
+</dd>
+<dt><strong>**kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The keyword arguments to pass to the job queue system.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the value of <cite>kind</cite> is invalid.</p>
 </dd>
 </dl>
 </dd>
@@ -145,14 +178,96 @@ init function.</p>
 </dl>
 </dd></dl>
 
+<span class="target" id="module-junifer.api.decorators"></span><p>Provide decorators for api.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.decorators.register">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register" title="Permalink to this definition"></a></dt>
+<dd><p>Register a function to be used in a pipeline step.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the step.</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the function.</p>
+</dd>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>Class to be registered.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.decorators.register_datagrabber">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_datagrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register_datagrabber" title="Permalink to this definition"></a></dt>
+<dd><p>Datagrabber registration decorator.</p>
+<p>Registers the datagrabber so it can be used by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>klass: class</strong></dt><dd><p>The class of the datagrabber to register.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.decorators.register_marker">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_marker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register_marker" title="Permalink to this definition"></a></dt>
+<dd><p>Marker registration decorator.</p>
+<p>Registers the marker so it can be used by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>klass: class</strong></dt><dd><p>The class of the marker to register.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.decorators.register_storage">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register_storage" title="Permalink to this definition"></a></dt>
+<dd><p>Storage registration decorator.</p>
+<p>Registers the storage so it can be used by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>klass: class</strong></dt><dd><p>The class of the storage to register.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><dl class="simple">
+<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pipeline.html" class="btn btn-neutral float-left" title="5.2.3. Pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="utils.html" class="btn btn-neutral float-right" title="5.2.5. Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pipeline.html" class="btn btn-neutral float-left" title="5.2.4. Pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utils.html" class="btn btn-neutral float-right" title="5.2.7. Utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
