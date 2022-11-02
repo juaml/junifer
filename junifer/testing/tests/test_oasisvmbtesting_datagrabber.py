@@ -1,4 +1,4 @@
-"""Provide tests for SPM Auditory datagrabber."""
+"""Provide tests for Oasis VBM Testing datagrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
@@ -7,7 +7,7 @@ from junifer.testing.datagrabbers import OasisVBMTestingDatagrabber
 
 
 def test_OasisVBMTestingDatagrabber() -> None:
-    """Test Oasis VBM datagrabber."""
+    """Test Oasis VBM Testing datagrabber."""
     expected_elements = [
         "sub-01",
         "sub-02",

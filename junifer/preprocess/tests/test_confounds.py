@@ -1,4 +1,4 @@
-"""Provide tests for confound removal."""
+"""Provide tests for fMRIPrepConfoundRemover."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -15,52 +15,33 @@ import numpy as np
 import nibabel as nib
 from nilearn._utils.exceptions import DimensionError
 
-from junifer.preprocess.confounds import FMRIPrepConfoundRemover
+from junifer.preprocess.confounds import fMRIPrepConfoundRemover
 from junifer.testing.datagrabbers import (
     OasisVBMTestingDatagrabber,
     PartlyCloudyTestingDataGrabber,
 )
 from junifer.datareader import DefaultDataReader
 
-# Set RNG seed for reproducibility
-# np.random.seed(1234567)
 
-
-# def generate_conf_name(
-#     size: int = 6, chars: str = string.ascii_uppercase + string.digits
-# ) -> str:
-#     """Generate configuration name."""
-#     return "".join(random.choice(chars) for _ in range(size))
-
-
-# def _simu_img() -> Tuple[Nifti1Image, Nifti1Image]:
-#     # Random 4D volume with 100 time points
-#     vol = 100 + 10 * np.random.randn(5, 5, 2, 100)
-#     img = Nifti1Image(vol, np.eye(4))
-#     # Create an nifti image with the data, and corresponding mask
-#     mask = Nifti1Image(np.ones([5, 5, 2]), np.eye(4))
-#     return img, mask
-
-
-def test_FMRIPrepConfoundRemover_init() -> None:
-    """Test FMRIPrepConfoundRemover init."""
+def test_fMRIPrepConfoundRemover_init() -> None:
+    """Test fMRIPrepConfoundRemover init."""
 
     with pytest.raises(ValueError, match="keys must be strings"):
-        FMRIPrepConfoundRemover(strategy={1: "full"})  # type: ignore
+        fMRIPrepConfoundRemover(strategy={1: "full"})  # type: ignore
 
     with pytest.raises(ValueError, match="values must be strings"):
-        FMRIPrepConfoundRemover(strategy={"motion": 1})  # type: ignore
+        fMRIPrepConfoundRemover(strategy={"motion": 1})  # type: ignore
 
     with pytest.raises(ValueError, match="component names"):
-        FMRIPrepConfoundRemover(strategy={"wrong": "full"})
+        fMRIPrepConfoundRemover(strategy={"wrong": "full"})
 
     with pytest.raises(ValueError, match="confound types"):
-        FMRIPrepConfoundRemover(strategy={"motion": "wrong"})
+        fMRIPrepConfoundRemover(strategy={"motion": "wrong"})
 
 
-def test_FMRIPrepConfoundRemover_validate_input() -> None:
-    """Test FMRIPrepConfoundRemover validate_input."""
-    confound_remover = FMRIPrepConfoundRemover()
+def test_fMRIPrepConfoundRemover_validate_input() -> None:
+    """Test fMRIPrepConfoundRemover validate_input."""
+    confound_remover = fMRIPrepConfoundRemover()
 
     # Input is valid when both BOLD and BOLD_confounds are present
 
@@ -80,9 +61,9 @@ def test_FMRIPrepConfoundRemover_validate_input() -> None:
     confound_remover.validate_input(input)
 
 
-def test_FMRIPrepConfoundRemover_get_output_kind() -> None:
-    """Test FMRIPrepConfoundRemover validate_input."""
-    confound_remover = FMRIPrepConfoundRemover()
+def test_fMRIPrepConfoundRemover_get_output_kind() -> None:
+    """Test fMRIPrepConfoundRemover validate_input."""
+    confound_remover = fMRIPrepConfoundRemover()
     inputs = [
         ["BOLD", "T1w", "BOLD_confounds"],
         ["BOLD", "VBM_GM", "BOLD_confounds"],
@@ -93,9 +74,9 @@ def test_FMRIPrepConfoundRemover_get_output_kind() -> None:
         assert confound_remover.get_output_kind(input) == input
 
 
-def test_FMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
-    """Test FMRIPrepConfoundRemover adhoc to fmriprep spec mapping."""
-    confound_remover = FMRIPrepConfoundRemover()
+def test_fMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
+    """Test fMRIPrepConfoundRemover adhoc to fmriprep spec mapping."""
+    confound_remover = fMRIPrepConfoundRemover()
     # Use non fmriprep variable names
     adhoc_names = [f"var{i}" for i in range(6)]
     adhoc_df = pd.DataFrame(np.random.randn(10, 6), columns=adhoc_names)
@@ -122,11 +103,11 @@ def test_FMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
     assert adhoc_df.columns.tolist() == fmriprep_names
 
 
-def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
-    """Test FMRIPrepConfoundRemover fmriprep spec processing."""
+def test_fMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
+    """Test fMRIPrepConfoundRemover fmriprep spec processing."""
 
     # Test one strategy, full, no spike
-    confound_remover = FMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
+    confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
 
     var_names = [
         "csf",
@@ -171,7 +152,7 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
     assert spike_name == "framewise_displacement"
 
     # Same strategy, with spike, only basics are present
-    confound_remover = FMRIPrepConfoundRemover(
+    confound_remover = fMRIPrepConfoundRemover(
         strategy={"wm_csf": "full"}, spike=0.2
     )
 
@@ -198,7 +179,7 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
     assert spike_name == "framewise_displacement"
 
     # Two component strategy, mixed confounds, no spike
-    confound_remover = FMRIPrepConfoundRemover(
+    confound_remover = fMRIPrepConfoundRemover(
         strategy={"wm_csf": "power2", "global_signal": "derivatives"}
     )
 
@@ -223,7 +204,7 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
 
     # Test for wrong columns/strategy pairs
 
-    confound_remover = FMRIPrepConfoundRemover(
+    confound_remover = fMRIPrepConfoundRemover(
         strategy={"wm_csf": "full"}, spike=0.2
     )
     var_names = ["csf"]
@@ -245,9 +226,9 @@ def test_FMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
         confound_remover._process_fmriprep_spec({"data": confounds_df})
 
 
-def test_FMRIPrepConfoundRemover__pick_confounds_adhoc() -> None:
-    """Test FMRIPrepConfoundRemover pick confounds on adhoc confounds."""
-    confound_remover = FMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
+def test_fMRIPrepConfoundRemover__pick_confounds_adhoc() -> None:
+    """Test fMRIPrepConfoundRemover pick confounds on adhoc confounds."""
+    confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
     # Use non fmriprep variable names
     adhoc_names = [f"var{i}" for i in range(2)]
     adhoc_df = pd.DataFrame(np.random.randn(10, 2), columns=adhoc_names)
@@ -278,8 +259,8 @@ def test_FMRIPrepConfoundRemover__pick_confounds_adhoc() -> None:
 
 
 def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
-    """Test FMRIPrepConfoundRemover pick confounds on fmriprep confounds."""
-    confound_remover = FMRIPrepConfoundRemover(
+    """Test fMRIPrepConfoundRemover pick confounds on fmriprep confounds."""
+    confound_remover = fMRIPrepConfoundRemover(
         strategy={"wm_csf": "full"}, spike=0.2
     )
     fmriprep_all_vars = [
@@ -311,9 +292,9 @@ def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
     # TODO: Test if fmriprep returns the same derivatives/power2 as we compute
 
 
-def test_FMRIPrepConfoundRemover__validate_data() -> None:
-    """Test FMRIPrepConfoundRemover validate data."""
-    confound_remover = FMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
+def test_fMRIPrepConfoundRemover__validate_data() -> None:
+    """Test fMRIPrepConfoundRemover validate data."""
+    confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
     reader = DefaultDataReader()
     with OasisVBMTestingDatagrabber() as dg:
         input = dg["sub-01"]
@@ -431,9 +412,9 @@ def test_FMRIPrepConfoundRemover__validate_data() -> None:
         confound_remover._validate_data(new_input, extra_input)
 
 
-def test_FMRIPrepConfoundRemover__remove_confounds() -> None:
-    """Test FMRIPrepConfoundRemover remove confounds."""
-    confound_remover = FMRIPrepConfoundRemover(
+def test_fMRIPrepConfoundRemover__remove_confounds() -> None:
+    """Test fMRIPrepConfoundRemover remove confounds."""
+    confound_remover = fMRIPrepConfoundRemover(
         strategy={"wm_csf": "full"}, spike=0.2
     )
     reader = DefaultDataReader()
@@ -455,13 +436,13 @@ def test_FMRIPrepConfoundRemover__remove_confounds() -> None:
     # TODO: Test confound remover with mask, needs #79 to be implemented
 
 
-def test_FMRIPrepConfoundRemover_preprocess() -> None:
-    """Test FMRIPrepConfoundRemover with all confounds present."""
+def test_fMRIPrepConfoundRemover_preprocess() -> None:
+    """Test fMRIPrepConfoundRemover with all confounds present."""
 
     # need reader for the data
     reader = DefaultDataReader()
     # All strategies full, no spike
-    confound_remover = FMRIPrepConfoundRemover()
+    confound_remover = fMRIPrepConfoundRemover()
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         input = dg["sub-01"]
@@ -484,13 +465,13 @@ def test_FMRIPrepConfoundRemover_preprocess() -> None:
         assert key == "BOLD"
 
 
-def test_FMRIPrepConfoundRemover_fit_transform() -> None:
-    """Test FMRIPrepConfoundRemover with all confounds present."""
+def test_fMRIPrepConfoundRemover_fit_transform() -> None:
+    """Test fMRIPrepConfoundRemover with all confounds present."""
 
     # need reader for the data
     reader = DefaultDataReader()
     # All strategies full, no spike
-    confound_remover = FMRIPrepConfoundRemover()
+    confound_remover = fMRIPrepConfoundRemover()
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         input = dg["sub-01"]
@@ -513,7 +494,7 @@ def test_FMRIPrepConfoundRemover_fit_transform() -> None:
         assert "meta" in output["BOLD"]
         assert "preprocess" in output["BOLD"]["meta"]
         t_meta = output["BOLD"]["meta"]["preprocess"]
-        assert t_meta["class"] == "FMRIPrepConfoundRemover"
+        assert t_meta["class"] == "fMRIPrepConfoundRemover"
         # It should have all the default parameters
         assert t_meta["strategy"] == confound_remover.strategy
         assert t_meta["spike"] is None
