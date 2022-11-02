@@ -34,9 +34,10 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
 
     See Also
     --------
-    DataladDataGrabber
-    PatternDataGrabber
-
+    DataladDataGrabber:
+        Base class for data fetching via Datalad.
+    PatternDataGrabber:
+        Base class for pattern-based data fetching.
     """
 
     def __init__(
@@ -45,7 +46,6 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
         patterns: Dict[str, str],
         **kwargs,
     ) -> None:
-        """Initialize the class."""
         # Validate patterns
         validate_patterns(types=types, patterns=patterns)
 

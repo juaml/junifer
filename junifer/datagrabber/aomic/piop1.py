@@ -41,7 +41,6 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         tasks: Union[str, List[str], None] = None,
         **kwargs,
     ) -> None:
-        """Initialize the class."""
         # The types of data
         types = [
             "BOLD",
@@ -162,7 +161,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
 
         Returns
         -------
-        elements : list of str
+        list of str
             The list of subjects in the dataset.
 
         """

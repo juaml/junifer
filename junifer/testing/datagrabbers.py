@@ -17,7 +17,6 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
     """DataGrabber for Oasis VBM testing data."""
 
     def __init__(self) -> None:
-        """Initialize the class."""
         # Create temporary directory
         datadir = tempfile.mkdtemp()
         # Define types
@@ -75,7 +74,6 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
     """
 
     def __init__(self) -> None:
-        """Initialize the class."""
         # Create temporary directory
         datadir = tempfile.mkdtemp()
         # Define types

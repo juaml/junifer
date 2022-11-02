@@ -47,7 +47,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
     See Also
     --------
-    PandasBaseFeatureStorage
+    PandasBaseFeatureStorage : The base class for Pandas-based feature storage.
 
     """
 
@@ -58,7 +58,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         upsert: str = "update",
         **kwargs: str,
     ) -> None:
-        """Initialize the class."""
         # Check upsert argument value
         if upsert not in ["update", "ignore"]:
             raise_error(
@@ -568,7 +567,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
-        data: dict
+        data : dict
             The timeseries data to store.
         meta : dict
             The metadata as a dictionary.

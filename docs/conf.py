@@ -24,13 +24,13 @@ curdir = Path(__file__).parent
 sys.path.append((curdir / "sphinxext").as_posix())
 
 
-paths_to_add = [
-    "junifer/configs/juseless",
-]
+# paths_to_add = [
+#     "junifer/configs/juseless",
+# ]
 
-for t_path in paths_to_add:
-    t_path = (curdir.parent / t_path).resolve().as_posix()
-    sys.path.insert(0, t_path)
+# for t_path in paths_to_add:
+#     t_path = (curdir.parent / t_path).resolve().as_posix()
+#     sys.path.insert(0, t_path)
 
 
 # sys.path.insert(
@@ -52,7 +52,6 @@ author = "Fede Raimondo"
 # ones.
 extensions = [
     "sphinx.ext.autodoc",  # include documentation from docstrings
-    "sphinx_autodoc_typehints",  # include type hints from docstrings
     "sphinx.ext.autosummary",  # generate autodoc summaries
     "sphinx.ext.doctest",  # test snippets in the documentation
     "sphinx.ext.intersphinx",  # link to other projects’ documentation
@@ -106,8 +105,13 @@ numpydoc_xref_ignore = {
     "or",
     "the",
     "options",
-    "function"
+    "function",
+    "object"
 }
+
+autoclass_content = "class"
+autodoc_typehints = "description"
+autodoc_typehints_description_target = "documented"
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -132,7 +136,13 @@ html_logo = "./images/junifer_logo.png"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ['_static']
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'css/custom.css',
+]
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {

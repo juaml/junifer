@@ -174,7 +174,7 @@ def load_atlas(
 
     Returns
     -------
-    niimg-like object or None
+    Nifti1Image or None
         Loaded atlas image.
     list of str
         Atlas labels.

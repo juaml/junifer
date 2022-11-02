@@ -34,7 +34,6 @@ class BaseMarker(ABC, PipelineStepMixin):
         on: Optional[Union[List[str], str]] = None,
         name: Optional[str] = None,
     ) -> None:
-        """Initialize the class."""
         if on is None:
             on = self.get_valid_inputs()
         if not isinstance(on, list):
@@ -52,8 +51,7 @@ class BaseMarker(ABC, PipelineStepMixin):
         Returns
         -------
         list of str
-            The list of data types that can be used as input for this marker
-
+            The list of data types that can be used as input for this marker.
         """
         raise_error(
             msg="Concrete classes need to implement get_valid_inputs().",

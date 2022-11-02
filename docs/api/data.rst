@@ -1,6 +1,14 @@
 Data
 ^^^^
 
-.. automodule:: junifer.data
+Atlases
+-------
+
+.. automodule:: junifer.data.atlases
    :members:
-   :imported-members:
+
+Coordinates
+-----------
+
+.. automodule:: junifer.data.coordinates
+   :members:

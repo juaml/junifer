@@ -27,7 +27,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
     ----------
     atlas : str
         The name of the atlas. Check valid options by calling
-        :func:`junifer.data.list_atlases`.
+        :func:`junifer.data.atlases.list_atlases`.
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
@@ -45,7 +45,6 @@ class FunctionalConnectivityAtlas(BaseMarker):
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
-
     """
 
     def __init__(
@@ -57,7 +56,6 @@ class FunctionalConnectivityAtlas(BaseMarker):
         cor_method_params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
-        """Initialize the class."""
         self.atlas = atlas
         self.agg_method = agg_method
         self.agg_method_params = (
@@ -80,8 +78,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
         Returns
         -------
         list of str
-            The list of data types that can be used as input for this marker
-
+            The list of data types that can be used as input for this marker.
         """
         return ["BOLD"]
 
@@ -98,7 +95,6 @@ class FunctionalConnectivityAtlas(BaseMarker):
         -------
         list of str
             The updated list of output kinds, as storage possibilities.
-
         """
         outputs = ["matrix"]
         return outputs

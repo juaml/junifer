@@ -33,7 +33,6 @@ class BaseDataGrabber(ABC):
     """
 
     def __init__(self, types: List[str], datadir: Union[str, Path]) -> None:
-        """Initialize the class."""
         # Validate types
         validate_types(types)
         # Convert str to Path

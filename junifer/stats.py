@@ -64,8 +64,6 @@ def get_aggfunc_by_name(
             )
         logger.info(f"Limits for winsorized mean are set to {limits}.")
         # partially interpret func_params
-        
-
         func = partial(winsorized_mean, **func_params)
     elif name == "mean":
         func = np.mean
@@ -94,7 +92,7 @@ def winsorized_mean(
         The axis to calculate winsorized mean on (default None).
     **win_params : dict
         Dictionary containing the keyword arguments for the winsorize function.
-        E.g. {'limits': [0.1, 0.1]}
+        E.g. ``{'limits': [0.1, 0.1]}``.
 
     Returns
     -------

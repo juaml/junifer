@@ -18,7 +18,7 @@ class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
     Implements a DataGrabber to access the AOMICID1000 VBM data in Juseless.
 
     Parameters
-    -----------
+    ----------
     datadir : str or pathlib.Path, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
@@ -27,7 +27,6 @@ class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
     """
 
     def __init__(self, datadir: Union[str, Path, None] = None) -> None:
-        """Initialize the class."""
         uri = "https://gin.g-node.org/felixh/ds003097_ReproVBM"
         types = ["VBM_GM"]
         replacements = ["subject"]

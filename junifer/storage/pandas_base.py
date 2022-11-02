@@ -30,14 +30,13 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
     See Also
     --------
-    BaseFeatureStorage
+    BaseFeatureStorage : The base class for feature storage.
 
     """
 
     def __init__(
         self, uri: Union[str, Path], single_output: bool = False, **kwargs
     ) -> None:
-        """Initialize the class."""
         super().__init__(uri=uri, single_output=single_output, **kwargs)
 
     def _meta_row(self, meta: Dict, meta_md5: str) -> pd.DataFrame:

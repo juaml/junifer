@@ -23,11 +23,9 @@ class MultipleDataGrabber(BaseDataGrabber):
         The datagrabbers to use to fetch data using.
     **kwargs
         Keyword arguments passed to superclass.
-
     """
 
     def __init__(self, datagrabbers: List[BaseDataGrabber], **kwargs) -> None:
-        """Initialize the class."""
         # TODO: Check datagrabbers consistency
         # - same element keys
         # - no overlapping types
@@ -73,7 +71,7 @@ class MultipleDataGrabber(BaseDataGrabber):
 
         Returns
         -------
-        elements : list
+        list
             The list of elements that can be grabbed in the dataset. It
             corresponds to the elements that are present in all the
             related datagrabbers.
