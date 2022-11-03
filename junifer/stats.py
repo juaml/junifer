@@ -31,7 +31,7 @@ def get_aggfunc_by_name(
 
     func_params : dict, optional
         Parameters to pass to the function.
-        E.g. for `winsorized_mean`: ``func_params = {'limits': [0.1, 0.1]}``
+        E.g. for ``winsorized_mean``: ``func_params = {'limits': [0.1, 0.1]}``
         (default None).
 
     Returns
