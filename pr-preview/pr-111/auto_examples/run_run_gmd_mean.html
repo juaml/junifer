@@ -1,434 +1,582 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="4.5. Extracting root sum of squares from edge-wise timeseries." href="run_ets_rss_marker.html" /><link rel="prev" title="4.3. Generic BIDS datagrabber for datalad." href="run_datagrabber_bids_datalad.html" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>4.4. UKB VBM GMD Extraction &mdash; junifer  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+        <title>4.4. UKB VBM GMD Extraction - junifer documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-    <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="4.5. Extracting root sum of squares from edge-wise timeseries." href="run_ets_rss_marker.html" />
-    <link rel="prev" title="4.3. Generic BIDS datagrabber for datalad." href="run_datagrabber_bids_datalad.html" /> 
-</head>
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html">
-            <img src="../_static/junifer_logo.png" class="logo" alt="Logo"/>
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">junifer  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/junifer_logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">junifer  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">2.1. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.2. DataGrabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.3. DataReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">2.4. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">2.5. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.6. Storage</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Pipeline steps and atlases</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">4. Examples</a><ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">4. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="run_compute_parcel_mean.html">4.1. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="norun_ukbvm_gmd.html">4.2. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">4.3. Generic BIDS datagrabber for datalad.</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">4.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">4.4. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="run_ets_rss_marker.html">4.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="norun_hcpfc_pearson.html">4.6. HCP FC Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="run_junifer_julearn.html">4.7. Run junifer and julearn.</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/index.html">5. API Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">5. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">5.1.1. Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">5.1.2. Data Readers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">5.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">5.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">5.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">5.2.1. Atlases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">5.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">5.2.3. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">5.2.4. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">5.2.5. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">5.2.6. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">5.2.7. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">5.2.8. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">5.3.1. Configs</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">6. Contributing to junifer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../maintaining.html">7. Maintaining</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">8. FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../whats_new.html">9. What’s new</a></li>
 </ul>
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">junifer</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content style-external-links">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html"><span class="section-number">4. </span>Examples</a> &raquo;</li>
-      <li><span class="section-number">4.4. </span>UKB VBM GMD Extraction</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/auto_examples/run_run_gmd_mean.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <div class="sphx-glr-download-link-note admonition note">
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-run-run-gmd-mean-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="ukb-vbm-gmd-extraction">
-<span id="sphx-glr-auto-examples-run-run-gmd-mean-py"></span><h1><span class="section-number">4.4. </span>UKB VBM GMD Extraction<a class="headerlink" href="#ukb-vbm-gmd-extraction" title="Permalink to this heading"></a></h1>
+<span id="sphx-glr-auto-examples-run-run-gmd-mean-py"></span><h1><span class="section-number">4.4. </span>UKB VBM GMD Extraction<a class="headerlink" href="#ukb-vbm-gmd-extraction" title="Permalink to this heading">#</a></h1>
 <p>Authors: Federico Raimondo</p>
 <p>License: BSD 3 clause</p>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-02 12:21:29,208 - JUNIFER - INFO - Registering OasisVBMTestingDatagrabber in datagrabber
-2022-11-02 12:21:29,208 - JUNIFER - INFO - Registering SPMAuditoryTestingDatagrabber in datagrabber
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-03 11:12:29,979 - JUNIFER - INFO - Registering OasisVBMTestingDatagrabber in datagrabber
+2022-11-03 11:12:29,979 - JUNIFER - INFO - Registering SPMAuditoryTestingDatagrabber in datagrabber
 /opt/hostedtoolcache/Python/3.10.8/x64/lib/python3.10/site-packages/nilearn/datasets/struct.py:774: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
   warnings.warn(_LEGACY_FORMAT_MSG)
-2022-11-02 12:21:29,215 - JUNIFER - INFO - Getting element sub-01
-2022-11-02 12:21:29,215 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:21:29,215 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:21:29,215 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:21:29,216 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:21:29,216 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:29,217 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:29,217 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:29,217 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:29,217 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:29,217 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:29,217 - JUNIFER - INFO - At least one of the atlas files is missing. Fetching using nilearn.
+2022-11-03 11:12:29,986 - JUNIFER - INFO - Getting element sub-01
+2022-11-03 11:12:29,986 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:12:29,986 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:12:29,986 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:12:29,987 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:12:29,987 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:29,987 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:29,987 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:29,987 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:29,987 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:29,987 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:29,988 - JUNIFER - INFO - At least one of the atlas files is missing. Fetching using nilearn.
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_1000Parcels_7Networks_order.txt ...
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2022-11-02 12:21:29,272 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:30,144 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:30,732 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:21:30,732 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:30,733 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:30,733 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:30,733 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:30,733 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:30,733 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:30,736 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:31,622 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:32,121 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:21:32,121 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:32,121 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:32,121 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:32,121 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:32,121 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:32,121 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:32,125 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:32,997 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:33,514 - JUNIFER - INFO - Marker collection fitting done
-2022-11-02 12:21:33,515 - JUNIFER - INFO - Getting element sub-02
-2022-11-02 12:21:33,515 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:21:33,515 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:21:33,515 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:21:33,516 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:21:33,516 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:33,516 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:33,516 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:33,516 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:33,516 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:33,516 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:33,519 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:34,406 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:34,886 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:21:34,886 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:34,887 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:34,887 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:34,887 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:34,887 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:34,887 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:34,890 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:35,787 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:36,286 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:21:36,287 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:36,287 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:36,287 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:36,287 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:36,287 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:36,287 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:36,290 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:37,160 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:37,677 - JUNIFER - INFO - Marker collection fitting done
-2022-11-02 12:21:37,677 - JUNIFER - INFO - Getting element sub-03
-2022-11-02 12:21:37,677 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:21:37,677 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:21:37,677 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:21:37,678 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:21:37,678 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:37,678 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:37,678 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:37,679 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:37,679 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:37,679 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:37,682 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:38,575 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:39,057 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:21:39,057 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:39,057 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:39,057 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:39,057 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:39,057 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:39,058 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:39,061 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:39,984 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:40,490 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:21:40,490 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:40,490 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:40,490 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:40,490 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:40,490 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:40,490 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:40,494 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:41,404 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:41,922 - JUNIFER - INFO - Marker collection fitting done
-2022-11-02 12:21:41,922 - JUNIFER - INFO - Getting element sub-04
-2022-11-02 12:21:41,922 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:21:41,922 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:21:41,922 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:21:41,923 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:21:41,923 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:41,923 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:41,924 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:41,924 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:41,924 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:41,924 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:41,927 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:42,862 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:43,344 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:21:43,344 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:43,344 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:43,344 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:43,344 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:43,344 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:43,345 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:43,348 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:44,222 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:45,705 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:21:45,705 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:45,705 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:45,706 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:45,706 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:45,706 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:45,706 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:45,709 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:46,597 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:47,115 - JUNIFER - INFO - Marker collection fitting done
-2022-11-02 12:21:47,115 - JUNIFER - INFO - Getting element sub-05
-2022-11-02 12:21:47,116 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:21:47,116 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:21:47,116 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:21:47,117 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:21:47,117 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:47,117 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:47,117 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:47,117 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:47,117 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:47,117 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:47,120 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:48,022 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:48,503 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:21:48,503 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:48,503 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:48,503 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:48,503 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:48,503 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:48,504 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:48,507 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:49,363 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:49,864 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:21:49,864 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:49,864 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:49,864 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:49,865 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:49,865 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:49,865 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:49,868 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:50,756 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:51,272 - JUNIFER - INFO - Marker collection fitting done
-2022-11-02 12:21:51,272 - JUNIFER - INFO - Getting element sub-06
-2022-11-02 12:21:51,273 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:21:51,273 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:21:51,273 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:21:51,274 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:21:51,274 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:51,274 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:51,274 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:51,274 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:51,274 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:51,274 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:51,277 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:52,195 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:52,681 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:21:52,681 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:52,681 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:52,681 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:52,681 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:52,682 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:52,682 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:52,685 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:53,562 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:54,065 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:21:54,065 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:54,066 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:54,066 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:54,066 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:54,066 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:54,066 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:54,069 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:55,033 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:55,554 - JUNIFER - INFO - Marker collection fitting done
-2022-11-02 12:21:55,554 - JUNIFER - INFO - Getting element sub-07
-2022-11-02 12:21:55,554 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:21:55,554 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:21:55,554 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:21:55,555 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:21:55,555 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:55,555 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:55,555 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:55,555 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:55,556 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:55,556 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:55,559 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:56,473 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:56,959 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:21:56,959 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:56,959 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:56,959 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:56,959 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:56,959 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:56,959 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:56,963 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:57,839 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:58,340 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:21:58,340 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:58,341 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:58,341 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:58,341 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:58,341 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:58,341 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:58,344 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:21:59,243 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:21:59,761 - JUNIFER - INFO - Marker collection fitting done
-2022-11-02 12:21:59,762 - JUNIFER - INFO - Getting element sub-08
-2022-11-02 12:21:59,762 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:21:59,762 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:21:59,762 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:21:59,763 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:21:59,763 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:21:59,763 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:21:59,763 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:21:59,763 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:21:59,763 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:21:59,763 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:21:59,766 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:22:00,675 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:22:01,157 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:22:01,157 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:22:01,157 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:22:01,157 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:22:01,157 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:22:01,158 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:22:01,158 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:22:01,161 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:22:02,046 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:22:02,547 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:22:02,547 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:22:02,547 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:22:02,547 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:22:02,547 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:22:02,547 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:22:02,547 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:22:02,551 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:22:03,434 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:22:03,955 - JUNIFER - INFO - Marker collection fitting done
-2022-11-02 12:22:03,955 - JUNIFER - INFO - Getting element sub-09
-2022-11-02 12:22:03,955 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:22:03,955 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:22:03,955 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:22:03,956 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:22:03,956 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:22:03,956 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:22:03,956 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:22:03,956 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:22:03,957 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:22:03,957 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:22:03,960 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:22:04,928 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:22:05,409 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:22:05,409 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:22:05,410 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:22:05,410 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:22:05,410 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:22:05,410 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:22:05,410 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:22:05,413 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:22:06,341 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:22:06,844 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:22:06,844 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:22:06,845 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:22:06,845 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:22:06,845 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:22:06,845 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:22:06,845 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:22:06,848 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:22:07,752 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:22:08,273 - JUNIFER - INFO - Marker collection fitting done
-2022-11-02 12:22:08,273 - JUNIFER - INFO - Getting element sub-10
-2022-11-02 12:22:08,273 - JUNIFER - INFO - Fitting pipeline
-2022-11-02 12:22:08,274 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-02 12:22:08,274 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-02 12:22:08,275 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-02 12:22:08,275 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:22:08,275 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:22:08,275 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:22:08,275 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:22:08,275 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:22:08,275 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:22:08,278 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:22:09,209 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:22:09,690 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-02 12:22:09,690 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:22:09,690 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:22:09,690 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:22:09,690 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:22:09,690 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:22:09,691 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:22:09,694 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:22:10,578 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:22:11,082 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-02 12:22:11,082 - JUNIFER - INFO - Computing VBM_GM
-2022-11-02 12:22:11,082 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-11-02 12:22:11,082 - JUNIFER - INFO - Atlas parameters:
-2022-11-02 12:22:11,082 - JUNIFER - INFO -      n_rois: 1000
-2022-11-02 12:22:11,082 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-02 12:22:11,082 - JUNIFER - INFO -      resolution: 2.0
-2022-11-02 12:22:11,085 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-02 12:22:11,980 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp49h2oz7h/test.db (multiple output)&gt;
-2022-11-02 12:22:12,501 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:12:30,059 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:31,049 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:31,589 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:12:31,589 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:31,590 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:31,590 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:31,590 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:31,590 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:31,590 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:31,593 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:32,559 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:33,069 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:12:33,070 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:33,070 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:33,070 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:33,070 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:33,070 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:33,070 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:33,073 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:34,053 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:34,578 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:12:34,578 - JUNIFER - INFO - Getting element sub-02
+2022-11-03 11:12:34,578 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:12:34,578 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:12:34,578 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:12:34,579 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:12:34,579 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:34,579 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:34,580 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:34,580 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:34,580 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:34,580 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:34,583 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:35,580 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:36,073 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:12:36,074 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:36,074 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:36,074 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:36,074 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:36,074 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:36,074 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:36,077 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:37,063 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:37,573 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:12:37,573 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:37,574 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:37,574 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:37,574 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:37,574 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:37,574 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:37,577 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:38,555 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:39,814 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:12:39,814 - JUNIFER - INFO - Getting element sub-03
+2022-11-03 11:12:39,814 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:12:39,814 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:12:39,814 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:12:39,815 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:12:39,815 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:39,815 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:39,815 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:39,816 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:39,816 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:39,816 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:39,819 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:40,829 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:41,323 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:12:41,323 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:41,323 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:41,323 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:41,324 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:41,324 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:41,324 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:41,327 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:42,298 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:42,808 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:12:42,809 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:42,809 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:42,809 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:42,809 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:42,809 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:42,809 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:42,812 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:43,794 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:44,320 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:12:44,321 - JUNIFER - INFO - Getting element sub-04
+2022-11-03 11:12:44,321 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:12:44,321 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:12:44,321 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:12:44,322 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:12:44,322 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:44,322 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:44,322 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:44,322 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:44,322 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:44,322 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:44,326 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:45,320 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:45,813 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:12:45,813 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:45,813 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:45,813 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:45,813 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:45,813 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:45,813 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:45,817 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:46,785 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:47,297 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:12:47,298 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:47,298 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:47,298 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:47,298 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:47,298 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:47,298 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:47,301 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:48,282 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:48,810 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:12:48,811 - JUNIFER - INFO - Getting element sub-05
+2022-11-03 11:12:48,811 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:12:48,811 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:12:48,811 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:12:48,812 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:12:48,812 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:48,812 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:48,812 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:48,812 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:48,812 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:48,812 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:48,816 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:49,814 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:50,306 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:12:50,307 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:50,307 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:50,307 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:50,307 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:50,307 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:50,307 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:50,310 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:51,280 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:51,792 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:12:51,792 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:51,792 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:51,793 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:51,793 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:51,793 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:51,793 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:51,796 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:52,779 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:53,309 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:12:53,310 - JUNIFER - INFO - Getting element sub-06
+2022-11-03 11:12:53,310 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:12:53,310 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:12:53,310 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:12:53,311 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:12:53,311 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:53,311 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:53,311 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:53,311 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:53,311 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:53,311 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:53,315 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:54,305 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:54,800 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:12:54,800 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:54,800 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:54,800 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:54,800 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:54,800 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:54,800 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:54,804 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:55,771 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:56,285 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:12:56,285 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:56,285 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:56,285 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:56,285 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:56,286 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:56,286 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:56,289 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:57,264 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:57,794 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:12:57,794 - JUNIFER - INFO - Getting element sub-07
+2022-11-03 11:12:57,794 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:12:57,794 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:12:57,794 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:12:57,795 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:12:57,795 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:57,795 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:57,795 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:57,795 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:57,796 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:57,796 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:57,799 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:12:58,805 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:12:59,305 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:12:59,305 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:12:59,306 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:12:59,306 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:12:59,306 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:12:59,306 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:12:59,306 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:12:59,309 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:00,286 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:00,798 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:13:00,798 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:00,798 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:00,798 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:00,798 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:00,798 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:00,798 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:00,802 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:01,795 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:02,322 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:13:02,322 - JUNIFER - INFO - Getting element sub-08
+2022-11-03 11:13:02,323 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:13:02,323 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:13:02,323 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:13:02,324 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:13:02,324 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:02,324 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:02,324 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:02,324 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:02,324 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:02,324 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:02,327 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:03,333 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:03,828 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:13:03,828 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:03,828 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:03,828 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:03,828 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:03,828 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:03,829 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:03,832 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:04,803 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:05,314 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:13:05,314 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:05,314 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:05,314 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:05,315 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:05,315 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:05,315 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:05,318 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:06,297 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:06,825 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:13:06,825 - JUNIFER - INFO - Getting element sub-09
+2022-11-03 11:13:06,825 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:13:06,825 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:13:06,825 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:13:06,826 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:13:06,826 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:06,827 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:06,827 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:06,827 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:06,827 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:06,827 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:06,830 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:07,856 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:08,347 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:13:08,347 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:08,347 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:08,347 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:08,347 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:08,347 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:08,347 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:08,351 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:09,330 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:09,843 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:13:09,843 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:09,843 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:09,843 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:09,843 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:09,843 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:09,844 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:09,847 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:10,852 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:11,381 - JUNIFER - INFO - Marker collection fitting done
+2022-11-03 11:13:11,382 - JUNIFER - INFO - Getting element sub-10
+2022-11-03 11:13:11,382 - JUNIFER - INFO - Fitting pipeline
+2022-11-03 11:13:11,382 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-03 11:13:11,382 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-03 11:13:11,383 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-03 11:13:11,383 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:11,383 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:11,383 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:11,383 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:11,383 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:11,383 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:11,387 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:12,392 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:12,887 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-03 11:13:12,887 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:12,887 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:12,887 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:12,887 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:12,887 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:12,887 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:12,891 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:13,867 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:14,384 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-03 11:13:14,384 - JUNIFER - INFO - Computing VBM_GM
+2022-11-03 11:13:14,384 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-03 11:13:14,384 - JUNIFER - INFO - Atlas parameters:
+2022-11-03 11:13:14,384 - JUNIFER - INFO -      n_rois: 1000
+2022-11-03 11:13:14,384 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-03 11:13:14,384 - JUNIFER - INFO -      resolution: 2.0
+2022-11-03 11:13:14,387 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-03 11:13:15,369 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp25rdbb8c/test.db (multiple output)&gt;
+2022-11-03 11:13:15,899 - JUNIFER - INFO - Marker collection fitting done
 </pre></div>
 </div>
 <div class="line-block">
@@ -481,8 +629,8 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
     <span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  43.295 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-run-gmd-mean-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  45.923 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-run-gmd-mean-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/042dd4fe6bffbb0ea320b529af464ace/run_run_gmd_mean.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_run_gmd_mean.py</span></code></a></p>
 </div>
@@ -493,35 +641,64 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 
-
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="run_datagrabber_bids_datalad.html" class="btn btn-neutral float-left" title="4.3. Generic BIDS datagrabber for datalad." accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="run_ets_rss_marker.html" class="btn btn-neutral float-right" title="4.5. Extracting root sum of squares from edge-wise timeseries." accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2022, Authors of junifer.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
+        </article>
       </div>
-    </section>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="run_ets_rss_marker.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">4.5. </span>Extracting root sum of squares from edge-wise timeseries.</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="run_datagrabber_bids_datalad.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">4.3. </span>Generic BIDS datagrabber for datalad.</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Authors of junifer
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/js/custom.js"></script>
+    </body>
 </html>
