@@ -127,7 +127,7 @@ class CrossAtlasFC(BaseMarker):
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
             - data : the correlation values between the two parcellations as
-                     a numpy.ndarray
+            a numpy.ndarray
             - col_names : the ROIs for first parcellation as a list
             - row_names : the ROIs for second parcellation as a list
 
