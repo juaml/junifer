@@ -20,7 +20,7 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
     Implements a DataGrabber to access the IXI VBM data in Juseless.
 
     Parameters
-    -----------
+    ----------
     datadir : str or pathlib.Path, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
@@ -36,7 +36,6 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         datadir: Union[str, Path, None] = None,
         sites: Union[str, List[str], None] = None,
     ) -> None:
-        """Initialize the class."""
         uri = (
             "ria+http://cat_12.5.ds.inm7.de"
             "#b7107c52-8408-11ea-89c6-a0369f287950"

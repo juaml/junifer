@@ -7,6 +7,7 @@
 
 import re
 from typing import Dict, List, Tuple, Union
+from pathlib import Path
 
 import numpy as np
 
@@ -34,13 +35,6 @@ class PatternDataGrabber(BaseDataGrabber):
         Replacements in the patterns for each item in the "element" tuple.
     datadir : str or pathlib.Path
         The directory where the data is / will be stored.
-    **kwargs
-        Keyword arguments passed to superclass.
-
-    See Also
-    --------
-    BaseDataGrabber
-
     """
 
     def __init__(
@@ -48,9 +42,8 @@ class PatternDataGrabber(BaseDataGrabber):
         types: List[str],
         patterns: Dict[str, str],
         replacements: List[str],
-        **kwargs,
+        datadir: Union[str, Path],
     ) -> None:
-        """Initialize the class."""
         # Validate patterns
         validate_patterns(types=types, patterns=patterns)
 
@@ -59,7 +52,7 @@ class PatternDataGrabber(BaseDataGrabber):
         # Validate replacements
         validate_replacements(replacements=replacements, patterns=patterns)
 
-        super().__init__(types=types, **kwargs)
+        super().__init__(types=types, datadir=datadir)
         logger.debug("Initializing PatternDataGrabber")
         logger.debug(f"\tpatterns = {patterns}")
         logger.debug(f"\treplacements = {replacements}")
@@ -195,10 +188,8 @@ class PatternDataGrabber(BaseDataGrabber):
 
         Returns
         -------
-        elements : list
-            The list of elements that can be grabbed in the dataset. Each
-            element is a subject in the BIDS database.
-
+        list
+            The list of elements that can be grabbed in the dataset.
         """
         elements = None
 

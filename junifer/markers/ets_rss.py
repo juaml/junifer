@@ -29,7 +29,7 @@ class RSSETSMarker(BaseMarker):
     ----------
     atlas : str
         The name of the atlas. Check valid options by calling
-        :func:`junifer.data.list_atlases`.
+        :func:`junifer.data.atlases.list_atlases`.
     aggregation_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
@@ -45,7 +45,6 @@ class RSSETSMarker(BaseMarker):
         aggregation_method: str = "mean",
         name: Optional[str] = None,
     ) -> None:
-        """Initialize the class."""
         self.atlas = atlas
         self.aggregation_method = aggregation_method
         super().__init__(name=name)
@@ -56,7 +55,7 @@ class RSSETSMarker(BaseMarker):
         Returns
         -------
         list of str
-            The list of data types that can be used as input for this marker
+            The list of data types that can be used as input for this marker.
 
         """
         return ["BOLD"]

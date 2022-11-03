@@ -19,7 +19,7 @@ class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
     Implements a DataGrabber to access the CamCAN VBM data in Juseless.
 
     Parameters
-    -----------
+    ----------
     datadir : str or pathlib.Path, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
@@ -28,7 +28,6 @@ class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
     """
 
     def __init__(self, datadir: Union[str, Path, None] = None) -> None:
-        """Initialize the class."""
         uri = (
             "ria+http://cat_12.5.ds.inm7.de"
             "#a139b26a-8406-11ea-8f94-a0369f287950"

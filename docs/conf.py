@@ -43,7 +43,6 @@ extensions = [
     "sphinx.ext.intersphinx",  # link to other projects’ documentation
     "sphinx.ext.mathjax",  # math support for HTML outputs in Sphinx
     "sphinx_gallery.gen_gallery",  # HTML gallery of examples
-    "sphinx_rtd_theme",  # RTD theme
     "sphinx_multiversion",  # self-hosted versioned documentation
     "numpydoc",  # support for NumPy style docstrings
     "gh_substitutions",  # custom GitHub substitutions
@@ -57,23 +56,66 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
+nitpicky = True
+
+nitpick_ignore_regex = [
+    ("py:class", "numpy._typing.*"),
+    ("py:obj", "trimboth"),  # python 3.11 error
+    ("py:obj", "tmean"),  # python 3.11 error
+    ("py:obj", "subclass"),  # python 3.11 error
+    ("py:class", "typing.Any"),  # python 3.11 error
+    # ('py:class', 'numpy.typing.ArrayLike')
+]
+
+# numpydoc_validation_checks = {
+#     "all",
+#     "GL01",
+#     "GL02",
+#     "GL03",
+#     "ES01",
+#     "SA01",
+#     "EX01",
+# }
+numpydoc_xref_param_type = True
+numpydoc_xref_aliases = {
+    "Path": "pathlib.Path",
+    "Nifti1Image": "nibabel.nifti1.Nifti1Image",
+    "Nifti2Image": "nibabel.nifti2.Nifti2Image",
+    "Engine": "sqlalchemy.engine.Engine",
+}
+numpydoc_xref_ignore = {
+    "of",
+    "shape",
+    "optional",
+    "or",
+    "the",
+    "options",
+    "function",
+    "object",
+    "class",
+    "objects"
+}
+
+autoclass_content = "class"
+autodoc_typehints = "description"
+autodoc_typehints_description_target = "documented"
 
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
-html_theme_options = {
-    "display_version": True,
-    "style_external_links": True,
-    "logo_only": True,
-}
+html_theme = "furo"
+
 html_sidebars = {
     "**": [
-        "globaltoc.html",
-        "sourcelink.html",
-        "searchbox.html",
+        "sidebar/scroll-start.html",
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/navigation.html",
+        "versions.html",
+        "sidebar/ethical-ads.html",
+        "sidebar/scroll-end.html",
     ]
 }
 html_logo = "./images/junifer_logo.png"
@@ -81,14 +123,30 @@ html_logo = "./images/junifer_logo.png"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = []
+html_static_path = ['_static']
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'css/custom.css',
+]
+
+html_js_files = [
+    'js/custom.js',
+]
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/", None),
+    "python": ("https://docs.python.org/3/", None),
     "sklearn": ("https://scikit-learn.org/stable", None),
     "nilearn": ("https://nilearn.github.io/stable/", None),
     "julearn": ("https://juaml.github.io/julearn/main", None),
+    "nibabel": ("https://nipy.org/nibabel/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "pandas": ("https://pandas.pydata.org/pandas-docs/dev", None),
+    "sqlalchemy": ("https://docs.sqlalchemy.org/en/20/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
 sphinx_gallery_conf = {

@@ -30,11 +30,9 @@ class BaseDataGrabber(ABC):
     ----------
     datadir : pathlib.Path
         The directory where the data is / will be stored.
-
     """
 
     def __init__(self, types: List[str], datadir: Union[str, Path]) -> None:
-        """Initialize the class."""
         # Validate types
         validate_types(types)
         # Convert str to Path
@@ -124,6 +122,7 @@ class BaseDataGrabber(ABC):
         Returns
         -------
         str
+            The element keys.
 
         """
         return "element"

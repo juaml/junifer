@@ -101,7 +101,6 @@ def register_atlas(
     ValueError
         If the atlas name is already registered and overwrite is set to False
         or if the atlas name is a built-in atlas.
-
     """
     # Check for attempt of overwriting built-in atlases
     if name in _available_atlases:
@@ -134,7 +133,6 @@ def list_atlases() -> List[str]:
     -------
     list of str
         A list with all available atlases.
-
     """
     return sorted(_available_atlases.keys())
 
@@ -174,37 +172,14 @@ def load_atlas(
     path_only : bool, optional
         If True, the atlas image will not be loaded (default False).
 
-    Extra Parameters
-    ----------------
-    Use to specify atlas specific keyword arguments.
-
-    - Schaefer :
-        n_rois : {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}
-            Granularity of atlas to be used.
-        yeo_network : {7, 17}, optional
-            Number of yeo networks to use (default 7).
-    - Tian :
-        scale : {1, 2, 3, 4}
-            Scale of atlas (defines granularity).
-        space : {"MNI6thgeneration", "MNInonlinear2009cAsym"}, optional
-            Space of atlas (default "MNI6thgeneration"). (For more information
-            see https://github.com/yetianmed/subcortex)
-        magneticfield : {"3T", "7T"}, optional
-            Magnetic field (default "3T").
-    - SUIT :
-        space : {"MNI", "SUIT"}, optional
-            Space of atlas (default "MNI"). (For more information
-            see http://www.diedrichsenlab.org/imaging/suit.htm).
-
     Returns
     -------
-    niimg-like object or None
+    Nifti1Image or None
         Loaded atlas image.
     list of str
         Atlas labels.
     pathlib.Path
         File path to the atlas image.
-
     """
     # Invalid atlas name
     if name not in _available_atlases:
@@ -261,7 +236,7 @@ def _retrieve_atlas(
         higher than the desired one. By default, will load the highest one
         (default None).
 
-    Extra Parameters
+    Other Parameters
     ----------------
     **kwargs
         Use to specify atlas specific keyword arguments.
@@ -295,7 +270,6 @@ def _retrieve_atlas(
     ------
     ValueError
         If the atlas name is invalid.
-
     """
     if atlas_dir is None:
         atlas_dir = Path().home() / "junifer" / "data" / "atlas"
@@ -343,7 +317,6 @@ def _closest_resolution(
     -------
     float
         The closest valid resolution.
-
     """
     # Convert list of int to numpy.ndarray
     if not isinstance(valid_resolution, np.ndarray):
@@ -396,7 +369,6 @@ def _retrieve_schaefer(
     ValueError
         If invalid value is provided for `n_rois` or `yeo_networks` or if
         there is a problem fetching the atlas.
-
     """
     logger.info("Atlas parameters:")
     logger.info(f"\tn_rois: {n_rois}")
@@ -503,7 +475,6 @@ def _retrieve_tian(
     ValueError
         If invalid value is provided for `scale` or `magneticfield` or `space`
         or if there is a problem fetching the atlas.
-
     """
     # show atlas parameters to user
     logger.info("Atlas parameters:")
@@ -655,7 +626,6 @@ def _retrieve_suit(
     ValueError
         If invalid value is provided for `space` or if there is a problem
         fetching the atlas.
-
     """
     logger.info("Atlas parameters:")
     logger.info(f"\tspace: {space}")

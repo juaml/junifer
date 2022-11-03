@@ -4,7 +4,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from functools import partial
 from typing import Any, Callable, Dict, Optional
 
 import numpy as np
@@ -24,21 +23,23 @@ def get_aggfunc_by_name(
     name : str
         Name to identify the function. Currently supported names and
         corresponding functions are:
-        - 'winsorized_mean' -> scipy.stats.mstats.winsorize
-        - 'mean' -> numpy.mean
-        - 'std' -> numpy.std
-        - 'trim_mean' -> scipy.stats.trim_mean
+
+        * ``winsorized_mean`` -> :func:`scipy.stats.mstats.winsorize`
+        * ``mean`` -> :func:`numpy.mean`
+        * ``std`` -> :func:`numpy.std`
+        * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
+
     func_params : dict, optional
         Parameters to pass to the function.
-        E.g. for 'winsorized_mean': func_params = {'limits': [0.1, 0.1]}
+        E.g. for ``winsorized_mean``: ``func_params = {'limits': [0.1, 0.1]}``
         (default None).
 
     Returns
     -------
     function
         Respective function with `func_params` parameter set.
-
     """
+    from functools import partial  # local import to avoid sphinx error
     # check validity of names
     _valid_func_names = {"winsorized_mean", "mean", "std", "trim_mean"}
     if func_params is None:
@@ -93,7 +94,7 @@ def winsorized_mean(
         The axis to calculate winsorized mean on (default None).
     **win_params : dict
         Dictionary containing the keyword arguments for the winsorize function.
-        E.g. {'limits': [0.1, 0.1]}
+        E.g. ``{'limits': [0.1, 0.1]}``.
 
     Returns
     -------
@@ -101,6 +102,10 @@ def winsorized_mean(
         Winsorized mean of the inputted data with the winsorize settings
         applied as specified in win_params.
 
+    See Also
+    --------
+    scipy.stats.mstats.winsorize :
+        The winsorize function used in this function.
     """
     win_dat = winsorize(data, axis=axis, **win_params)
     win_mean = win_dat.mean(axis=axis)

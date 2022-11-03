@@ -14,7 +14,6 @@ from ..utils import logger
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
 
-
 if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 
@@ -27,7 +26,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
     ----------
     atlas : str
         The name of the atlas. Check valid options by calling
-        :func:`junifer.data.list_atlases`.
+        :func:`junifer.data.atlases.list_atlases`.
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
@@ -36,14 +35,14 @@ class FunctionalConnectivityAtlas(BaseMarker):
         :func:`junifer.stats.get_aggfunc_by_name` (default None).
     cor_method : str, optional
         The method to perform correlation using. Check valid options in
-        :func:`nilearn.connectome.ConnectivityMeasure` (default "covariance").
+        :class:`nilearn.connectome.ConnectivityMeasure`
+        (default "covariance").
     cor_method_params : dict, optional
         Parameters to pass to the correlation function. Check valid options in
-        :func:`nilearn.connectome.ConnectivityMeasure` (default None).
+        :class:`nilearn.connectome.ConnectivityMeasure` (default None).
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
-
     """
 
     def __init__(
@@ -55,7 +54,6 @@ class FunctionalConnectivityAtlas(BaseMarker):
         cor_method_params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
-        """Initialize the class."""
         self.atlas = atlas
         self.agg_method = agg_method
         self.agg_method_params = (
@@ -78,8 +76,7 @@ class FunctionalConnectivityAtlas(BaseMarker):
         Returns
         -------
         list of str
-            The list of data types that can be used as input for this marker
-
+            The list of data types that can be used as input for this marker.
         """
         return ["BOLD"]
 
@@ -96,7 +93,6 @@ class FunctionalConnectivityAtlas(BaseMarker):
         -------
         list of str
             The updated list of output kinds, as storage possibilities.
-
         """
         outputs = ["matrix"]
         return outputs
@@ -124,10 +120,11 @@ class FunctionalConnectivityAtlas(BaseMarker):
         dict
             The computed result as dictionary. The following data will be
             included in the dictionary:
-            - data: functional connectivity matrix as a numpy.ndarray.
-            - row_names: row names as a list
-            - col_names: column names as a list
-            - matrix_kind: the kind of matrix (tril, triu or full)
+
+            * data: functional connectivity matrix as a numpy.ndarray.
+            * row_names: row names as a list
+            * col_names: column names as a list
+            * matrix_kind: the kind of matrix (tril, triu or full)
 
         """
         pa = ParcelAggregation(

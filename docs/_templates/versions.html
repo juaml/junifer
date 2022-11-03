@@ -1,27 +1,25 @@
-{%- if current_version %}
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: {{ current_version.name }}
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    {%- if versions.tags %}
-    <dl>
-      <dt>Tags</dt>
-      {%- for item in versions.tags %}
-      <dd><a href="{{ item.url }}">{{ item.name }}</a></dd>
-      {%- endfor %}
-    </dl>
-    {%- endif %}
-    {%- if versions.branches %}
-    <dl>
-      <dt>Branches</dt>
+{% if versions %}
+<div class="sidebar-tree">
+  <p class="version-select">
+    <span class="caption-text">Other Versions</span>
+  </p> 
+  <div id="versions">
+    {% if versions.branches %}
+    <span class="caption-text">{{ _('Branches') }}</span>
+    <ul>
       {%- for item in versions.branches %}
-      <dd><a href="{{ item.url }}">{{ item.name }}</a></dd>
+      <li><a class="reference internal" href="{{ item.url }}">{{ item.name }}</a></li>
       {%- endfor %}
-    </dl>
-    {%- endif %}
+    </ul>
+    {% endif %}
+    {% if versions.tags %}
+    <span class="caption-text">{{ _('Tags') }}</span>
+    <ul>
+      {%- for item in versions.tags %}
+      <li><a class="reference internal" href="{{ item.url }}">{{ item.name }}</a></li>
+      {%- endfor %}
+    </ul>
+    {% endif %}
   </div>
 </div>
-{%- endif %}
+{% endif %}

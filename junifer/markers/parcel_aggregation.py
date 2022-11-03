@@ -29,7 +29,7 @@ class ParcelAggregation(BaseMarker):
     ----------
     atlas : str
         The name of the atlas. Check valid options by calling
-        :func:`junifer.data.list_atlases`.
+        :func:`junifer.data.atlases.list_atlases`.
     method : str
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name`.
@@ -43,7 +43,6 @@ class ParcelAggregation(BaseMarker):
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
-
     """
 
     def __init__(
@@ -54,7 +53,6 @@ class ParcelAggregation(BaseMarker):
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
-        """Initialize the class."""
         self.atlas = atlas
         self.method = method
         self.method_params = {} if method_params is None else method_params
@@ -66,7 +64,7 @@ class ParcelAggregation(BaseMarker):
         Returns
         -------
         list of str
-            The list of data types that can be used as input for this marker
+            The list of data types that can be used as input for this marker.
 
         """
         return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]

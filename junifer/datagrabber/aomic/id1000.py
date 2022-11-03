@@ -34,7 +34,6 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         datadir: Union[str, Path, None] = None,
         **kwargs,
     ) -> None:
-        """Initialize the class."""
         # The types of data
         types = [
             "BOLD",

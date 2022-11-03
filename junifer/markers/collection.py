@@ -41,7 +41,6 @@ class MarkerCollection:
         preprocessing: Optional[PipelineStepMixin] = None,
         storage: Optional[BaseFeatureStorage] = None,
     ):
-        """Initialize the class."""
         # Check that the markers have different names
         marker_names = [m.name for m in markers]
         if len(set(marker_names)) != len(marker_names):
@@ -62,7 +61,7 @@ class MarkerCollection:
 
         Parameters
         ----------
-        input
+        input : dict
             The input data to fit the pipeline on. Should be the output of
             indexing the DataGrabber with one element.
 

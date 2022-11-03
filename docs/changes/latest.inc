@@ -71,7 +71,9 @@ Enhancements
 
 - Implement JuselessDataladAOMICID1000VBM datagrabber for accessing AOMIC ID 1000 VBM from juseless (:gh:`57` by `Felix Hoffstaedter`_ and `Synchon Mandal`_)
 
-- Add test for DataladHCP1200 datagrabber (:gh: `93` by `Synchon Mandal`_).
+- Add test for DataladHCP1200 datagrabber (:gh:`93` by `Synchon Mandal`_).
+
+- Change documentation template to furo. Fix references and standardize documentation (:gh:`114` by `Fede Raimondo`_).
 
 Bugs
 ~~~~
@@ -79,7 +81,7 @@ Bugs
 - Fix a bug in which a PatternDatagrabber would now work with relative `datadir` paths.
   (:gh:`96` by `Leonard Sasse`_, fixed in :gh:`98` by `Fede Raimondo`_).
 
-- Fix a bug in which AOMIC PIOP2 datagrabber did not use user input to constrain elements based on tasks (:gh: `105` by `Leonard Sasse`_)
+- Fix a bug in which AOMIC PIOP2 datagrabber did not use user input to constrain elements based on tasks (:gh:`105` by `Leonard Sasse`_)
 
 API changes
 ~~~~~~~~~~~
