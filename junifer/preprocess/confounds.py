@@ -99,25 +99,30 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     Parameters
     ----------
     strategy : dict, optional
+        The strategy to use for each component. If None, will use the *full*
+        strategy for all components (default None).
         The keys of the dictionary should correspond to names of noise
         components to include:
-        - 'motion'
-        - 'wm_csf'
-        - 'global_signal'
+
+        * 'motion'
+        * 'wm_csf'
+        * 'global_signal'
+
         The values of dictionary should correspond to types of confounds
         extracted from each signal:
-        - 'basic': only the confounding time series
-        - 'power2': signal + quadratic term
-        - 'derivatives': signal + derivatives
-        - 'full': signal + deriv. + quadratic terms + power2 deriv.
-        (default None).
+
+        * 'basic': only the confounding time series
+        * 'power2': signal + quadratic term
+        * 'derivatives': signal + derivatives
+        * 'full': signal + deriv. + quadratic terms + power2 deriv.
+
     spike : float, optional
         If None, no spike regressor is added. If spike is a float, it will
         add a spike regressor for every point at which framewise displacement
         exceeds the specified float (default None).
     detrend : bool, optional
-        If True, detrending will be applied on timeseries
-        (before confound removal) (default True).
+        If True, detrending will be applied on timeseries, before confound
+        removal (default True).
     standardize : bool, optional
         If True, returned signals are set to unit variance (default True).
     low_pass : float, optional
@@ -133,13 +138,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         If provided, signal is only cleaned from voxels inside the mask.
         If mask is provided, it should have same shape and affine as imgs.
         If not provided, a mask is computed using
-        `nilearn.masking.compute_brain_mask` (default None).
+        :func:`nilearn.masking.compute_brain_mask` (default None).
 
     """
 
-    # TODO: implement more strategies from
-    # nilearn.interfaces.fmriprep.load_confounds,
-    # in particular scrubbing
     def __init__(
         self,
         strategy: Optional[Dict[str, str]] = None,
@@ -291,9 +293,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         ----------
         input : dict
             Dictionary containing the following keys:
-            - path: path to the confounds file
-            - data: the confounds file loaded in memory (dataframe)
-            - format: format of the confounds file (must be "fmriprep")
+
+            * path: path to the confounds file
+            * data: the confounds file loaded in memory (dataframe)
+            * format: format of the confounds file (must be "fmriprep")
 
         Returns
         -------
@@ -371,12 +374,12 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         input : dict
             Dictionary containing the "BOLD_confounds" value from the
             Junifer Data object.
-        
+
         Returns
         -------
         confounds_df : pandas.DataFrame
             Dataframe containing the relevant confounds.
-        
+
         """
 
         confounds_format = input["format"]
@@ -420,7 +423,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         extra_input: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Validate input data.
-        
+
         Parameters
         ----------
         input : dict
@@ -429,7 +432,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         extra_input : dict, optional
             Dictionary containing the rest of the Junifer Data object. Must
             include the "BOLD_confounds" key.
-        
+
         """
 
         # Bold must be 4D niimg

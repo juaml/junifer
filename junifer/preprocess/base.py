@@ -20,14 +20,12 @@ class BasePreprocessor(ABC, PipelineStepMixin):
     on : str or list of str, optional
         The kind of data to apply the preprocessor to. If None,
         will work on all available data (default None).
-
     """
 
     def __init__(
         self,
         on: Optional[Union[List[str], str]] = None,
     ) -> None:
-        """Initialize the class."""
         if on is None:
             on = self.get_valid_inputs()
         if not isinstance(on, list):
@@ -52,7 +50,6 @@ class BasePreprocessor(ABC, PipelineStepMixin):
         ------
         ValueError
             If the input does not have the required data.
-
         """
         if not any(x in input for x in self._on):
             raise_error(
@@ -90,7 +87,6 @@ class BasePreprocessor(ABC, PipelineStepMixin):
         list of str
             The list of data types that can be used as input for this
             preprocessor.
-
         """
         raise_error(
             msg="Concrete classes need to implement get_valid_inputs().",
@@ -109,7 +105,6 @@ class BasePreprocessor(ABC, PipelineStepMixin):
         -------
         dict
             The metadata as a dictionary with the only key 'preprocess'.
-
         """
         s_meta = super().get_meta()
         return {"preprocess": s_meta}
