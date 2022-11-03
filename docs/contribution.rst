@@ -5,7 +5,6 @@
 Contributing to junifer
 =======================
 
-
 Setting up the local development environment
 --------------------------------------------
 
