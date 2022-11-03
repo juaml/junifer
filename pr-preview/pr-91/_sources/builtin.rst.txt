@@ -45,8 +45,8 @@ Available
      - `HCP OpenAccess dataset <https://github.com/datalad-datasets/human-connectome-project-openaccess>`_
      - Open with registration
      - Built-in
-     - In Progress
-     - :gh:`4`
+     - Done
+     - 0.0.1
    * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladUKBVBM`
      - UKB VBM dataset preprocessed with CAT. Available for Juseless only.
      - Restricted
@@ -77,12 +77,12 @@ Available
      - Built-in
      - Done
      - 0.0.1
-   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladAOMICVBM`
-     - AOMIC VBM dataset. Available for Juseless only.
+   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladAOMICID1000VBM`
+     - AOMIC ID1000 VBM dataset. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless``
-     - In Progress
-     - :gh:`57`
+     - Done
+     - 0.0.1
    * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladIXIVBM`
      - `IXI VBM dataset <https://brain-development.org/ixi-dataset/>`_. Available for Juseless only.
      - Restricted
