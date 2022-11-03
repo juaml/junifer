@@ -4,11 +4,12 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
 from ..api.decorators import register_marker
+from ..storage import BaseFeatureStorage
 from ..utils import logger
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
@@ -27,10 +28,13 @@ class CrossAtlasFC(BaseMarker):
         The name of the second atlas.
     aggregation_method : str, optional
         The aggregation method (default "mean").
-    correlation_method : str or callable
-        any method that can be passed to:
+    correlation_method : str or callable, optional
+        Any method that can be passed to:
         https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
-
+        (default "pearson").
+    name : str, optional
+        The name of the marker. If None, will use the class name
+        (default None).
     """
 
     def __init__(
@@ -76,20 +80,32 @@ class CrossAtlasFC(BaseMarker):
         """
         return ["matrix"]
 
-    def store(self, kind: str, out, storage) -> None:
+    def store(
+        self,
+        kind,
+        out: Dict[str, Any],
+        storage: "BaseFeatureStorage",
+    ) -> None:
         """Store.
 
         Parameters
         ----------
-        kind
-        out
-        storage
+        kind : {"BOLD"}
+            The data kind to store.
+        out : dict
+            The computed result as a dictionary to store.
+        storage : storage-like
+            The storage class, for example, SQLiteFeatureStorage.
 
         """
-        logger.debug(f"Storing {kind} in {storage}")
+        logger.debug(f"Storing matrix in {storage}")
         storage.store(kind="matrix", **out)
 
-    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
+    def compute(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict] = None,
+    ) -> Dict:
         """Compute.
 
         Take a timeseries, parcellate them with two different parcellation
@@ -99,18 +115,29 @@ class CrossAtlasFC(BaseMarker):
 
         Parameters
         ----------
-        input : dict of the BOLD data
+        input : dict
+            The BOLD data as a dictionary.
+        extra_input : dict, optional
+            The other fields in the pipeline data object (default None).
 
         Returns
         -------
         dict
-            The computed result as a dictionary.
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
+            - data : the correlation values between the two parcellations as
+                     a numpy.ndarray
+            - col_names : the ROIs for first parcellation as a list
+            - row_names : the ROIs for second parcellation as a list
 
         """
-
-        logger.debug("Aggregating time series in both atlases.")
+        logger.debug(
+            "Aggregating time series in"
+            f" {self.atlas_one} and {self.atlas_two} atlases."
+        )
         # Initialize a ParcelAggregation
-        final_out_dict = ParcelAggregation(
+        atlas_one_dict = ParcelAggregation(
             atlas=self.atlas_one,
             method=self.aggregation_method,
         ).compute(input)
@@ -119,17 +146,17 @@ class CrossAtlasFC(BaseMarker):
             method=self.aggregation_method,
         ).compute(input)
 
-        parcellated_ts_one = final_out_dict["data"]
+        parcellated_ts_one = atlas_one_dict["data"]
         parcellated_ts_two = atlas_two_dict["data"]
         # columns should be named after parcellation 1
         # rows should be named after parcellation 2
-        final_out_dict["col_names"] = final_out_dict["columns"]
-        del final_out_dict["columns"]
-        final_out_dict["row_names"] = atlas_two_dict["columns"]
+        atlas_one_dict["col_names"] = atlas_one_dict["columns"]
+        del atlas_one_dict["columns"]
+        atlas_one_dict["row_names"] = atlas_two_dict["columns"]
 
-        final_out_dict["data"] = _correlate_dataframes(
+        atlas_one_dict["data"] = _correlate_dataframes(
             pd.DataFrame(parcellated_ts_one),
             pd.DataFrame(parcellated_ts_two),
             method=self.correlation_method,
         ).values
-        return final_out_dict
+        return atlas_one_dict

@@ -6,9 +6,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from typing import Callable, Union
+
 import numpy as np
 import pandas as pd
 from scipy.stats import zscore
+
+from ..utils import raise_error
 
 
 def _ets(bold_ts: np.ndarray) -> np.ndarray:
@@ -47,29 +51,42 @@ def _ets(bold_ts: np.ndarray) -> np.ndarray:
     return timeseries[:, u] * timeseries[:, v]
 
 
-def _correlate_dataframes(df1, df2, method="pearson"):
+def _correlate_dataframes(
+    df1: pd.DataFrame,
+    df2: pd.DataFrame,
+    method: Union[str, Callable] = "pearson",
+) -> pd.DataFrame:
     """Column-wise correlations between two dataframes.
 
-    Correlates each column from dataframe 1 with each column from dataframe 2.
+    Correlates each column of `df1` with each column of `df2`.
     Output is a dataframe of shape (df2.shape[1], df1.shape[1]).
     It is required that number of rows are matched.
 
     Parameters
     ----------
     df1 : pd.DataFrame
+        The first dataframe.
     df2 : pd.DataFrame
-    method : str or callable
+        The second dataframe.
+    method : str or callable, optional
         any method that can be passed to:
         https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
+        (default "pearson").
 
-    Returns :
-    ---------
+    Returns
+    -------
     df_corr : pd.DataFrame
+        The correlated values as a dataframe.
+
+    Raises
+    ------
+    ValueError
+        If number of rows between dataframes are not matched.
+
     """
 
-    assert (
-        df1.shape[0] == df2.shape[0]
-    ), "pd.DataFrames have unequal number of rows!"
+    if df1.shape[0] != df2.shape[0]:
+        raise_error("pd.DataFrames have unequal number of rows!")
     return (
         pd.concat([df1, df2], axis=1, keys=["df1", "df2"])
         .corr(method=method)
