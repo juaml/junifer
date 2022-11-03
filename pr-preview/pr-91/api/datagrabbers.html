@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5.1.1. Data Grabbers &mdash; junifer  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="5.1.2. Data Readers" href="datareaders.html" />
+    <link rel="prev" title="5. API Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html">
+            <img src="../_static/junifer_logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Pipeline steps and atlases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../auto_examples/index.html">4. Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#pipeline-elements">5.1. Pipeline Elements</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">5.1.1. Data Grabbers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datareaders.html">5.1.2. Data Readers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="preprocessing.html">5.1.3. Pre-processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="markers.html">5.1.4. Markers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="storage.html">5.1.5. Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#utilities">5.2. Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">6. Contributing to junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">7. Maintaining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">8. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">9. What’s new</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">junifer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content style-external-links">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html"><span class="section-number">5. </span>API Reference</a> &raquo;</li>
+      <li><span class="section-number">5.1.1. </span>Data Grabbers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/datagrabbers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-junifer.datagrabber">
+<span id="data-grabbers"></span><h1><span class="section-number">5.1.1. </span>Data Grabbers<a class="headerlink" href="#module-junifer.datagrabber" title="Permalink to this heading"></a></h1>
+<p>Provide imports for datagrabber sub-package.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">BaseDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract base class for datagrabber.</p>
+<p>For every interface that is required, one needs to provide a concrete
+implementation of this abstract class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>types</strong><span class="classifier">list of str</span></dt><dd><p>The types of data to be grabbed.</p>
+</dd>
+<dt><strong>datadir</strong><span class="classifier">str or pathlib.Path</span></dt><dd><p>The directory where the data is / will be stored.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Attributes</dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.datadir" title="junifer.datagrabber.BaseDataGrabber.datadir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datadir</span></code></a><span class="classifier">pathlib.Path</span></dt><dd><p>Get data directory path.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber.datadir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a></em><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.datadir" title="Permalink to this definition"></a></dt>
+<dd><p>Get data directory path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>pathlib.Path</dt><dd><p>Path to the data directory. Can be overridden by subclasses.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber.get_element_keys">
+<span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.get_element_keys" title="Permalink to this definition"></a></dt>
+<dd><p>Get element keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>str</dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber.get_elements">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a></span></span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.get_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Get elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>list</dt><dd><p>List of elements that can be grabbed. The elements can be strings,
+tuples or any object that will be then used as a key to index the
+datagrabber.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a></span></span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.get_meta" title="Permalink to this definition"></a></dt>
+<dd><p>Get metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>dict</dt><dd><p>The metadata as dictionary.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber.get_types">
+<span class="sig-name descname"><span class="pre">get_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.get_types" title="Permalink to this definition"></a></dt>
+<dd><p>Get types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>list of str</dt><dd><p>The types of data to be grabbed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICID1000">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICID1000</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICID1000" title="Permalink to this definition"></a></dt>
+<dd><p>Concrete implementation for pattern-based data fetching of AOMICID1000.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>datadir</strong><span class="classifier">str or Path, optional</span></dt><dd><p>The directory where the datalad dataset will be cloned. If None,
+the datalad dataset will be cloned into a temporary directory
+(default None).</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICPIOP1">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICPIOP1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP1" title="Permalink to this definition"></a></dt>
+<dd><p>Concrete implementation for pattern-based data fetching of AOMICPIOP1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>datadir</strong><span class="classifier">str or Path, optional</span></dt><dd><p>The directory where the datalad dataset will be cloned. If None,
+the datalad dataset will be cloned into a temporary directory
+(default None).</p>
+</dd>
+<dt><strong>tasks</strong><span class="classifier">{“restingstate”, “anticipation”, “emomatching”, “faces”, “gstroop”,</span></dt><dd><p>“workingmemory”} or list of the options, optional
+AOMIC PIOP1 task sessions. If None, all available task sessions are
+selected (default None).</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICPIOP1.get_elements">
+<span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a></span></span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP1.get_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Implement fetching list of subjects in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>elements</strong><span class="classifier">list of str</span></dt><dd><p>The list of subjects in the dataset.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICPIOP2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICPIOP2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP2" title="Permalink to this definition"></a></dt>
+<dd><p>Concrete implementation for pattern-based data fetching of AOMICPIOP2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>datadir</strong><span class="classifier">str or Path, optional</span></dt><dd><p>The directory where the datalad dataset will be cloned. If None,
+the datalad dataset will be cloned into a temporary directory
+(default None).</p>
+</dd>
+<dt><strong>tasks</strong><span class="classifier">{“restingstate”, “stopsignal”, “emomatching”, “workingmemory”} or</span></dt><dd><p>list of the options, optional
+AOMIC PIOP2 task sessions. If None, all available task sessions are
+selected (default None).</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICPIOP2.get_elements">
+<span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP2.get_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Implement fetching list of elements in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>elements</strong><span class="classifier">list</span></dt><dd><p>The list of elements that can be grabbed in the dataset after
+imposing constraints based on specified tasks.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rootdir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract base class for data fetching via Datalad.</p>
+<p>Defines a DataGrabber that gets data from a datalad sibling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>rootdir</strong><span class="classifier">str or Path, optional</span></dt><dd><p>The path within the datalad dataset to the root directory
+(default “.”).</p>
+</dd>
+<dt><strong>datadir</strong><span class="classifier">str or Path, optional</span></dt><dd><p>That directory where the datalad dataset will be cloned. If None,
+the datalad dataset will be cloned into a temporary directory
+(default None).</p>
+</dd>
+<dt><strong>uri</strong><span class="classifier">str, optional</span></dt><dd><p>URI of the datalad sibling (default None).</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.BaseDataGrabber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">Notes</p>
+<p>By itself, this class is still abstract as the <cite>__getitem__</cite> method relies
+on the parent class <cite>BaseDataGrabber.__getitem__</cite> which is not yet
+implemented. This class is intended to be used as a superclass of a class
+with multiple inheritance.</p>
+<p class="rubric">Methods</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 92%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>install:</strong></p></td>
+<td><p>Installs (clones) the datalad dataset into the <cite>datadir</cite>. This method is called automatically when the datagrabber is used within a context.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>remove:</strong></p></td>
+<td><p>Removes the datalad dataset from the <cite>datadir</cite>. This method is called automatically when the datagrabber is used within a context.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Initialize the class.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber.datadir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a></em><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.datadir" title="Permalink to this definition"></a></dt>
+<dd><p>Get data directory path.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber.install">
+<span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.install" title="Permalink to this definition"></a></dt>
+<dd><p>Install the datalad dataset into the datadir.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.remove" title="Permalink to this definition"></a></dt>
+<dd><p>Remove the datalad dataset from the datadir.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladHCP1200">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladHCP1200</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_encodings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladHCP1200" title="Permalink to this definition"></a></dt>
+<dd><p>Concrete implementation for datalad-based data fetching of HCP1200.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>datadir</strong><span class="classifier">str or Path, optional</span></dt><dd><p>The directory where the datalad dataset will be cloned. If None,
+the datalad dataset will be cloned into a temporary directory
+(default None).</p>
+</dd>
+<dt><strong>tasks</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”,</span></dt><dd><p>“LANGUAGE”, “GAMBLING”, “MOTOR”} or list of the options, optional
+HCP task sessions. If None, all available task sessions are selected
+(default None).</p>
+</dd>
+<dt><strong>phase_encodings</strong><span class="classifier">{“LR”, “RL”} or list of the options, optional</span></dt><dd><p>HCP phase encoding directions. If None, both will be used
+(default None).</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladHCP1200.skip_file_check">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skip_file_check</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="headerlink" href="#junifer.datagrabber.DataladHCP1200.skip_file_check" title="Permalink to this definition"></a></dt>
+<dd><p>Skip file check existence.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.HCP1200">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">HCP1200</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_encodings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.HCP1200" title="Permalink to this definition"></a></dt>
+<dd><p>Concrete implementation for pattern-based data fetching of HCP1200.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>datadir</strong><span class="classifier">str or Path, optional</span></dt><dd><p>The directory where the datalad dataset will be cloned. If None,
+the datalad dataset will be cloned into a temporary directory
+(default None).</p>
+</dd>
+<dt><strong>tasks</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”,</span></dt><dd><p>“LANGUAGE”, “GAMBLING”, “MOTOR”} or list of the options, optional
+HCP task sessions. If None, all available task sessions are selected
+(default None).</p>
+</dd>
+<dt><strong>phase_encodings</strong><span class="classifier">{“LR”, “RL”} or list of the options, optional</span></dt><dd><p>HCP phase encoding directions. If None, both will be used
+(default None).</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.HCP1200.get_elements">
+<span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a></span></span><a class="headerlink" href="#junifer.datagrabber.HCP1200.get_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Implement fetching list of subjects in the dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>elements</strong><span class="classifier">list of str</span></dt><dd><p>The list of subjects in the dataset.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">MultipleDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datagrabbers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.base.BaseDataGrabber"><span class="pre">BaseDataGrabber</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.MultipleDataGrabber" title="Permalink to this definition"></a></dt>
+<dd><p>Datagrabber class for data fetching from multiple sources.</p>
+<p>Defines a DataGrabber which can be used to fetch data from multiple
+datagrabbers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>datagrabbers</strong><span class="classifier">list of datagrabbers</span></dt><dd><p>The datagrabbers to use to fetch data using.</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_elements">
+<span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a></span></span><a class="headerlink" href="#junifer.datagrabber.MultipleDataGrabber.get_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Get elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>elements</strong><span class="classifier">list</span></dt><dd><p>The list of elements that can be grabbed in the dataset. It
+corresponds to the elements that are present in all the
+related datagrabbers.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a></span></span><a class="headerlink" href="#junifer.datagrabber.MultipleDataGrabber.get_meta" title="Permalink to this definition"></a></dt>
+<dd><p>Get metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>dict</dt><dd><p>The metadata as dictionary.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_types">
+<span class="sig-name descname"><span class="pre">get_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#junifer.datagrabber.MultipleDataGrabber.get_types" title="Permalink to this definition"></a></dt>
+<dd><p>Get types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>list of list of str</dt><dd><p>The types of data to be grabbed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">PatternDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patterns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacements</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber" title="Permalink to this definition"></a></dt>
+<dd><p>Concrete implementation for data fetching using patterns.</p>
+<p>Implements a DataGrabber that understands patterns to grab data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>types</strong><span class="classifier">list of str</span></dt><dd><p>The types of data to be grabbed (default None).</p>
+</dd>
+<dt><strong>patterns</strong><span class="classifier">dict</span></dt><dd><p>Patterns for each type of data as a dictionary. The keys are the types
+and the values are the patterns. Each occurrence of the string
+<cite>{subject}</cite> in the pattern will be replaced by the indexed element.</p>
+</dd>
+<dt><strong>replacements</strong><span class="classifier">list of str</span></dt><dd><p>Replacements in the patterns for each item in the “element” tuple.</p>
+</dd>
+<dt><strong>datadir</strong><span class="classifier">str or pathlib.Path</span></dt><dd><p>The directory where the data is / will be stored.</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.BaseDataGrabber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p>Initialize the class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber.get_elements">
+<span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a></span></span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.get_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Implement fetching list of elements in the dataset.</p>
+<p>It will use regex to search for “replacements” in the “patterns” and
+return the intersection of the results for each type i.e., build a
+list of elements that have all the required types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>elements</strong><span class="classifier">list</span></dt><dd><p>The list of elements that can be grabbed in the dataset. Each
+element is a subject in the BIDS database.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber.skip_file_check">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skip_file_check</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.skip_file_check" title="Permalink to this definition"></a></dt>
+<dd><p>Skip file check existence.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.PatternDataladDataGrabber">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">PatternDataladDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.11)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patterns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataladDataGrabber" title="Permalink to this definition"></a></dt>
+<dd><p>Base class for pattern-based data fetching via Datalad.</p>
+<p>Defines a DataGrabber that gets data from a datalad sibling,
+interpreting patterns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>types</strong><span class="classifier">list of str</span></dt><dd><p>The types of data to be grabbed.</p>
+</dd>
+<dt><strong>patterns</strong><span class="classifier">dict, optional</span></dt><dd><p>Patterns for each type of data as a dictionary. The keys are the types
+and the values are the patterns. Each occurrence of the string
+<cite>{subject}</cite> in the pattern will be replaced by the indexed element
+(default None).</p>
+</dd>
+<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a></dt><dd></dd>
+<dt><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a></dt><dd></dd>
+</dl>
+</div>
+<p>Initialize the class.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="5. API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="datareaders.html" class="btn btn-neutral float-right" title="5.1.2. Data Readers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Authors of junifer.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
