@@ -11,7 +11,7 @@ import pandas as pd
 from ..api.decorators import register_marker
 from ..utils import logger
 from .base import BaseMarker
-from .parcel import ParcelAggregation
+from .parcel_aggregation import ParcelAggregation
 from .utils import _correlate_dataframes
 
 
@@ -48,6 +48,17 @@ class CrossAtlasFC(BaseMarker):
         self.correlation_method = correlation_method
         super().__init__(on=["BOLD"], name=name)
 
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker
+
+        """
+        return ["BOLD"]
+
     def get_output_kind(self, input: List[str]) -> List[str]:
         """Get output kind.
 
@@ -76,7 +87,7 @@ class CrossAtlasFC(BaseMarker):
 
         """
         logger.debug(f"Storing {kind} in {storage}")
-        storage.store_matrix2d(**out)
+        storage.store(kind="matrix", **out)
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
