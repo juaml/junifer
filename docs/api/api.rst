@@ -1,6 +1,5 @@
-
 API Functions
-^^^^^^^^^^^^^^
+=============
 
 Main API functions
 ------------------
