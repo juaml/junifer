@@ -6,7 +6,7 @@ DataGrabber
 ===========
 
 Description
-^^^^^^^^^^^
+-----------
 
 The ``DataGrabber`` is an object that can provide an interface to datasets you want to work with in junifer.
 Every concrete implementation of a datagrabber is aware of a particular dataset's structure and thus allows
@@ -26,7 +26,8 @@ to implement your own datagrabber, you need to provide concrete implementations 
 provided.
 
 Base classes
-^^^^^^^^^^^^
+------------
+
 In this section, we showcase different abstract base classes you might want to use to implement your own datagrabber.
 
 .. list-table::
