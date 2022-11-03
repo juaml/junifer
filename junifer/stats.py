@@ -24,11 +24,10 @@ def get_aggfunc_by_name(
         Name to identify the function. Currently supported names and
         corresponding functions are:
 
-        * ``winsorized_mean`` ->
-          :external+scipy:func:`scipy.stats.mstats.winsorize`
-        * ``mean`` -> :external+numpy:func:`numpy.mean`
-        * ``std`` -> :external+numpy:func:`numpy.std`
-        * ``trim_mean`` -> :external+scipy:func:`scipy.stats.trim_mean`
+        * ``winsorized_mean`` -> :func:`scipy.stats.mstats.winsorize`
+        * ``mean`` -> :func:`numpy.mean`
+        * ``std`` -> :func:`numpy.std`
+        * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
 
     func_params : dict, optional
         Parameters to pass to the function.
