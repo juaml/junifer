@@ -1,6 +1,5 @@
-
 Pre-processing
-^^^^^^^^^^^^^^
+==============
 
 .. automodule:: junifer.preprocess
    :members:
