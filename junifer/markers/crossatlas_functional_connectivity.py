@@ -28,7 +28,7 @@ class CrossAtlasFC(BaseMarker):
         The name of the second atlas.
     aggregation_method : str, optional
         The aggregation method (default "mean").
-    correlation_method : str or callable, optional
+    correlation_method : str, optional
         Any method that can be passed to:
         https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
         (default "pearson").
@@ -98,7 +98,7 @@ class CrossAtlasFC(BaseMarker):
             The storage class, for example, SQLiteFeatureStorage.
 
         """
-        logger.debug(f"Storing matrix in {storage}")
+        logger.debug(f"Storing BOLD-based marker in {storage}")
         storage.store(kind="matrix", **out)
 
     def compute(
@@ -150,13 +150,15 @@ class CrossAtlasFC(BaseMarker):
         parcellated_ts_two = atlas_two_dict["data"]
         # columns should be named after parcellation 1
         # rows should be named after parcellation 2
-        atlas_one_dict["col_names"] = atlas_one_dict["columns"]
-        del atlas_one_dict["columns"]
-        atlas_one_dict["row_names"] = atlas_two_dict["columns"]
 
-        atlas_one_dict["data"] = _correlate_dataframes(
+        result = _correlate_dataframes(
             pd.DataFrame(parcellated_ts_one),
             pd.DataFrame(parcellated_ts_two),
             method=self.correlation_method,
         ).values
-        return atlas_one_dict
+
+        return {
+            "data": result,
+            "col_names": atlas_one_dict["columns"],
+            "row_names": atlas_two_dict["columns"],
+        }
