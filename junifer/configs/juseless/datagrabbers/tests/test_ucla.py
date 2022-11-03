@@ -26,7 +26,7 @@ def test_juseless_ucla_datagrabber() -> None:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
         out = dg[test_element]
-        
+
         types = [
             "BOLD",
             "BOLD_confounds",
@@ -35,7 +35,7 @@ def test_juseless_ucla_datagrabber() -> None:
             "probseg_GM",
             "probseg_WM",
         ]
-        
+
         for t in types:
             assert t in out
             assert out[t]["path"].exists()
@@ -43,7 +43,7 @@ def test_juseless_ucla_datagrabber() -> None:
 
 def test_juseless_ucla_datagrabber_task_params() -> None:
     """Test juseless ucla datagrabber with different task parameters."""
-    
+
     all_tasks = [
         "rest",
         "bart",
@@ -53,13 +53,13 @@ def test_juseless_ucla_datagrabber_task_params() -> None:
         "scap",
         "taskswitch",
         "stopsignal",
-    ]    
+    ]
 
     task_params = [None, "rest", ["rest", "stopsignal"]]
     for tp in task_params:
         with JuselessUCLA(tasks=tp) as dg:
             all_elements = dg.get_elements()
-            
+
             if tp is None:
                 for el in all_elements:
                     assert el[1] in all_tasks
@@ -68,14 +68,13 @@ def test_juseless_ucla_datagrabber_task_params() -> None:
                     assert el[1] == "rest"
             else:
                 for el in all_elements:
-                    assert ["rest", "stopsignal"]
+                    assert el[1] in ["rest", "stopsignal"]
+
 
 def test_juseless_ucla_datagrabber_invalid_tasks() -> None:
     """Test juseless ucla datagrabber with invalid task parameters."""
-    with pytest.raises(ValueError, match=f"invalid is not a valid task in the UCLA"):
-        with JuselessUCLA(tasks="invalid") as dg:
-            pass   
-        
-
-    
-        
+    with pytest.raises(
+        ValueError, match="invalid is not a valid task in the UCLA"
+    ):
+        with JuselessUCLA(tasks="invalid"):
+            pass
