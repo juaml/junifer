@@ -23,20 +23,6 @@ from pathlib import Path
 curdir = Path(__file__).parent
 sys.path.append((curdir / "sphinxext").as_posix())
 
-
-# paths_to_add = [
-#     "junifer/configs/juseless",
-# ]
-
-# for t_path in paths_to_add:
-#     t_path = (curdir.parent / t_path).resolve().as_posix()
-#     sys.path.insert(0, t_path)
-
-
-# sys.path.insert(
-#     1, (curdir.parent / "junifer" / "configs" / "juseless").resolve()
-# )
-
 # -- Project information -----------------------------------------------------
 
 project = "junifer"
@@ -57,7 +43,6 @@ extensions = [
     "sphinx.ext.intersphinx",  # link to other projects’ documentation
     "sphinx.ext.mathjax",  # math support for HTML outputs in Sphinx
     "sphinx_gallery.gen_gallery",  # HTML gallery of examples
-    "sphinx_rtd_theme",  # RTD theme
     "sphinx_multiversion",  # self-hosted versioned documentation
     "numpydoc",  # support for NumPy style docstrings
     "gh_substitutions",  # custom GitHub substitutions
@@ -120,11 +105,7 @@ autodoc_typehints_description_target = "documented"
 # a list of builtin themes.
 #
 html_theme = "furo"
-html_theme_options = {
-    # "display_version": True,
-    # "style_external_links": True,
-    # "logo_only": True,
-}
+
 html_sidebars = {
     "**": [
         "sidebar/scroll-start.html",
