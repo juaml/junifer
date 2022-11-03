@@ -1,11 +1,11 @@
 {% if versions %}
 <div class="sidebar-tree">
-  <p class="version-select">
+  <p class="caption" role="heading" style="cursor: pointer;" data-toggle="collapse" data-target="version-selection" >
     <span class="caption-text">Other Versions</span>
-  </p> 
-  <div id="versions">
+  </p>
+  <div id="versions" class="version-selection" style="display: none;">
     {% if versions.branches %}
-    <span class="caption-text">{{ _('Branches') }}</span>
+    <h5>{{ _('Branches') }}</h5>
     <ul>
       {%- for item in versions.branches %}
       <li><a class="reference internal" href="{{ item.url }}">{{ item.name }}</a></li>
@@ -13,7 +13,7 @@
     </ul>
     {% endif %}
     {% if versions.tags %}
-    <span class="caption-text">{{ _('Tags') }}</span>
+    <h5>{{ _('Tags') }}</h5>
     <ul>
       {%- for item in versions.tags %}
       <li><a class="reference internal" href="{{ item.url }}">{{ item.name }}</a></li>

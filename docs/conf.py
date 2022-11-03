@@ -119,17 +119,21 @@ autodoc_typehints_description_target = "documented"
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = "sphinx_rtd_theme"
+html_theme = "furo"
 html_theme_options = {
-    "display_version": True,
-    "style_external_links": True,
-    "logo_only": True,
+    # "display_version": True,
+    # "style_external_links": True,
+    # "logo_only": True,
 }
 html_sidebars = {
     "**": [
-        "globaltoc.html",
-        "sourcelink.html",
-        "searchbox.html",
+        "sidebar/scroll-start.html",
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/navigation.html",
+        "versions.html"
+        "sidebar/ethical-ads.html",
+        "sidebar/scroll-end.html",
     ]
 }
 html_logo = "./images/junifer_logo.png"
@@ -143,6 +147,10 @@ html_static_path = ['_static']
 # or fully qualified paths (eg. https://...)
 html_css_files = [
     'css/custom.css',
+]
+
+html_js_files = [
+    'js/custom.js',
 ]
 
 # Example configuration for intersphinx: refer to the Python standard library.
