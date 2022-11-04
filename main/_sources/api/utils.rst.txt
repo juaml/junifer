@@ -1,6 +1,5 @@
-
 Utils
-^^^^^
+=====
 
 .. automodule:: junifer.utils
    :members:

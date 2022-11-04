@@ -1,6 +1,5 @@
-
-Data Readers
-^^^^^^^^^^^^
+DataReaders
+===========
 
 .. automodule:: junifer.datareader
    :members:

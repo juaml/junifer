@@ -186,8 +186,8 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">5. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">5.1.1. Data Grabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">5.1.2. Data Readers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">5.1.1. DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">5.1.2. DataReaders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">5.1.3. Pre-processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/markers.html">5.1.4. Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/storage.html">5.1.5. Storage</a></li>
@@ -263,6 +263,111 @@ depending on the use-case. For example, you might want to perform confound remov
 feature extraction.</p>
 <p>This step is still under development and is an optional one for the pipeline to work.</p>
 </section>
+<section id="confound-removal">
+<span id="preprocess-confounds"></span><h2><span class="section-number">2.4.2. </span>Confound Removal<a class="headerlink" href="#confound-removal" title="Permalink to this heading">#</a></h2>
+<p>The <em>Confound Removal</em> step is meant to remove <em>confounds</em> from the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data. The confounds are
+extracted from the <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> data (must be provided by the <a class="reference internal" href="datagrabber.html#datagrabber"><span class="std std-ref">DataGrabber</span></a>).
+The confounds are then regressed out from the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data using <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.image.clean_img.html#nilearn.image.clean_img" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.image.clean_img()</span></code></a>.</p>
+<p>Currently, junifer supports only one confound removal class:
+<a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.preprocess.fMRIPrepConfoundRemover</span></code></a>. This class is meant to remove confounds as described
+before, using the output of <a class="reference external" href="https://fmriprep.org">fMRIPrep</a> as reference.</p>
+<section id="strategy">
+<h3><span class="section-number">2.4.2.1. </span>Strategy<a class="headerlink" href="#strategy" title="Permalink to this heading">#</a></h3>
+<p>This confound remover uses the <a class="reference external" href="https://nilearn.github.io">nilearn</a> API from <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.interfaces.fmriprep.load_confounds.html#nilearn.interfaces.fmriprep.load_confounds" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.interfaces.fmriprep.load_confounds()</span></code></a>. That is,
+define a <em>strategy</em> to extract the confounds from the <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> data. The <em>strategy</em> is defined
+by choosing the <em>noise components</em> to be used and the <em>confounds</em> to be extracted from each noise components.
+The <em>noise components</em> currently supported are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">motion</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wm_csf</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">global_signal</span></code></p></li>
+</ul>
+<p>The confounds options for each <em>noise component</em> are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">basic</span></code>: the basic confounds for each <em>noise component</em>. For example, for <code class="docutils literal notranslate"><span class="pre">motion</span></code>, the basic confounds
+are the 6 motion parameters (3 translations and 3 rotations). For <code class="docutils literal notranslate"><span class="pre">wm_csf</span></code>, the basic
+confounds are the mean signal of the white matter and CSF regions. For <code class="docutils literal notranslate"><span class="pre">global_signal</span></code>, the basic confound
+is the mean signal of the whole brain.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">power2</span></code>: the basic confounds plus the square of each basic confound.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">derivatives</span></code>: the basic confounds plus the derivative of each basic confound.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">full</span></code>: the basic confounds, the derivative of each basic confound, the square of each basic confound and the
+square of each derivative of each basic confound.</p></li>
+</ul>
+<p>The <em>strategy</em> is defined as a dictionary, with the <em>noise components</em> as keys and the <em>confounds</em> as values.</p>
+<p>Example in python format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strategy</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;motion&quot;</span><span class="p">:</span> <span class="s2">&quot;basic&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wm_csf&quot;</span><span class="p">:</span> <span class="s2">&quot;full&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;global_signal&quot;</span><span class="p">:</span> <span class="s2">&quot;derivatives&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>or in YAML format:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strategy</span><span class="p">:</span>
+    <span class="n">motion</span><span class="p">:</span> <span class="n">basic</span>
+    <span class="n">wm_csf</span><span class="p">:</span> <span class="n">full</span>
+    <span class="n">global_signal</span><span class="p">:</span> <span class="n">derivatives</span>
+</pre></div>
+</div>
+<p>The default value is to use all the <em>noise components</em> with the <code class="docutils literal notranslate"><span class="pre">full</span></code> <em>confounds</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">strategy</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;motion&quot;</span><span class="p">:</span> <span class="s2">&quot;full&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wm_csf&quot;</span><span class="p">:</span> <span class="s2">&quot;full&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;global_signal&quot;</span><span class="p">:</span> <span class="s2">&quot;full&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="other-parameters">
+<h3><span class="section-number">2.4.2.2. </span>Other parameters<a class="headerlink" href="#other-parameters" title="Permalink to this heading">#</a></h3>
+<p>Additionaly, the <a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.preprocess.fMRIPrepConfoundRemover</span></code></a> supports the following parameters:</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 22.2%" />
+<col style="width: 66.7%" />
+<col style="width: 11.1%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">spike</span></code></p></td>
+<td><p>Add a spike regressor in the timepoints when the framewise displacement exceeds this threshold.</p></td>
+<td><p>deactivated</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">detrend</span></code></p></td>
+<td><p>Apply detrending on timeseries, before confound removal.</p></td>
+<td><p>activated</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">standardize</span></code></p></td>
+<td><p>Scale signals to unit variance.</p></td>
+<td><p>activated</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">low_pass</span></code></p></td>
+<td><p>Low cutoff frequencies, in Hertz.</p></td>
+<td><p>deactivated</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">high_pass</span></code></p></td>
+<td><p>High cutoff frequencies, in Hertz.</p></td>
+<td><p>deactivated</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">t_r</span></code></p></td>
+<td><p>Repetition time, in second (sampling period).</p></td>
+<td><p>from nifti header</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mask</span></code></p></td>
+<td><p>If provided, signal is only cleaned from voxels inside the mask. If not, a mask is computed using <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.masking.compute_brain_mask.html#nilearn.masking.compute_brain_mask" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.compute_brain_mask()</span></code></a>.</p></td>
+<td><p>compute</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
 </section>
 
         </article>
@@ -324,6 +429,11 @@ feature extraction.</p>
             <ul>
 <li><a class="reference internal" href="#">2.4. Preprocess</a><ul>
 <li><a class="reference internal" href="#description">2.4.1. Description</a></li>
+<li><a class="reference internal" href="#confound-removal">2.4.2. Confound Removal</a><ul>
+<li><a class="reference internal" href="#strategy">2.4.2.1. Strategy</a></li>
+<li><a class="reference internal" href="#other-parameters">2.4.2.2. Other parameters</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
