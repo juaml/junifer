@@ -13,7 +13,6 @@ from pandas.testing import assert_frame_equal
 import numpy as np
 
 import nibabel as nib
-from nilearn.interfaces import fmriprep
 from nilearn._utils.exceptions import DimensionError
 
 from junifer.preprocess.confounds import fMRIPrepConfoundRemover
