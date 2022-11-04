@@ -29,9 +29,7 @@ project = "junifer"
 copyright = "2022, Authors of junifer"
 author = "Fede Raimondo"
 
-
 # -- General configuration ---------------------------------------------------
-
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -49,12 +47,18 @@ extensions = [
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ["_templates"]
+templates_path = [
+    "_templates",
+]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+]
 
 nitpicky = True
 
@@ -68,45 +72,29 @@ nitpick_ignore_regex = [
     ("py:obj", "sqlalchemy.engine.Engine"),  # ignore sqlalchemy
 ]
 
-# numpydoc_validation_checks = {
-#     "all",
-#     "GL01",
-#     "GL02",
-#     "GL03",
-#     "ES01",
-#     "SA01",
-#     "EX01",
-# }
-numpydoc_xref_param_type = True
-numpydoc_xref_aliases = {
-    "Path": "pathlib.Path",
-    "Nifti1Image": "nibabel.nifti1.Nifti1Image",
-    "Nifti2Image": "nibabel.nifti2.Nifti2Image",
-    "Engine": "sqlalchemy.engine.Engine",
-}
-numpydoc_xref_ignore = {
-    "of",
-    "shape",
-    "optional",
-    "or",
-    "the",
-    "options",
-    "function",
-    "object",
-    "class",
-    "objects"
-}
-
-autoclass_content = "class"
-autodoc_typehints = "description"
-autodoc_typehints_description_target = "documented"
-
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
+# The theme to use for HTML and HTML Help pages. See the documentation for
 # a list of builtin themes.
 #
 html_theme = "furo"
+
+html_logo = "./images/junifer_logo.png"
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    "css/custom.css",
+]
+
+html_js_files = [
+    "js/custom.js",
+]
+
+# Add any paths that contain custom static files (such as style sheets) here,
+# relative to this directory. They are copied after the builtin static files,
+# so a file named "default.css" will overwrite the builtin "default.css".
+html_static_path = ["_static"]
 
 html_sidebars = {
     "**": [
@@ -119,24 +107,19 @@ html_sidebars = {
         "sidebar/scroll-end.html",
     ]
 }
-html_logo = "./images/junifer_logo.png"
 
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# -- sphinx.ext.autodoc configuration ----------------------------------------
 
-# These paths are either relative to html_static_path
-# or fully qualified paths (eg. https://...)
-html_css_files = [
-    'css/custom.css',
-]
+autoclass_content = "both"
+autodoc_typehints = "description"
+autodoc_typehints_description_target = "documented"
 
-html_js_files = [
-    'js/custom.js',
-]
+# -- sphinx.ext.autosummary configuration ------------------------------------
 
-# Example configuration for intersphinx: refer to the Python standard library.
+autosummary_generate = True
+
+# -- sphinx.ext.intersphinx configuration ------------------------------------
+
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
     "sklearn": ("https://scikit-learn.org/stable", None),
@@ -150,6 +133,41 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
+# -- numpydoc configuration --------------------------------------------------
+
+numpydoc_show_class_members = False
+numpydoc_xref_param_type = True
+numpydoc_xref_aliases = {
+    "Path": "pathlib.Path",
+    "Nifti1Image": "nibabel.nifti1.Nifti1Image",
+    "Nifti2Image": "nibabel.nifti2.Nifti2Image",
+    # "Engine": "sqlalchemy.engine.Engine",
+}
+numpydoc_xref_ignore = {
+    "of",
+    "shape",
+    "optional",
+    "or",
+    "the",
+    "options",
+    "function",
+    "object",
+    "class",
+    "objects",
+    "Engine",
+}
+# numpydoc_validation_checks = {
+#     "all",
+#     "GL01",
+#     "GL02",
+#     "GL03",
+#     "ES01",
+#     "SA01",
+#     "EX01",
+# }
+
+# -- Sphinx-Gallery configuration --------------------------------------------
+
 sphinx_gallery_conf = {
     "examples_dirs": ["../examples"],
     "gallery_dirs": ["auto_examples"],
@@ -157,12 +175,8 @@ sphinx_gallery_conf = {
     "backreferences_dir": "generated",
 }
 
+# -- sphinx-multiversion configuration ---------------------------------------
 
-autosummary_generate = True
-numpydoc_show_class_members = False
-autoclass_content = "both"
-
-# sphinx-multiversion options
 smv_rebuild_tags = False
 smv_tag_whitelist = r"^v\d+\.\d+.\d+$"
 smv_branch_whitelist = r"main"
