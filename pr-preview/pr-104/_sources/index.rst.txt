@@ -1,5 +1,9 @@
 .. include:: links.inc
 
+.. image:: images/junifer_logo.png
+   :width: 300px
+   :alt: junifer logo
+
 Welcome to junifer's documentation!
 ===================================
 

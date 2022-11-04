@@ -4,12 +4,12 @@ FAQs
 ====
 
 How do I contribute to junifer?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 Please follow the :ref:`contribution guidelines <contribution_guidelines>`.
 
 
 How do I set up VSCode for contribution?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------
 
 The :ref:`contribution guidelines <contribution_guidelines>`
 apply in general when using VSCode as your IDE as well.

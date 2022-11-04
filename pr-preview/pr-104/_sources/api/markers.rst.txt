@@ -1,6 +1,5 @@
-
 Markers
-^^^^^^^
+=======
 
 .. automodule:: junifer.markers
    :members:

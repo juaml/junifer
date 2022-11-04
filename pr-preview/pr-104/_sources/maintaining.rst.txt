@@ -4,7 +4,8 @@ Maintaining
 ===========
 
 Versioning
-^^^^^^^^^^
+----------
+
 Version numbers are as follows: *MAJOR.MINOR.MICRO*. Additionally,
 development version append *devN* where N is the distance (in commits) to
 the last release.
@@ -20,9 +21,10 @@ version "X.Y.Z". Additionally, for every push to main, it will be published
 as pre-release to TestPypi.
 
 Releasing a new version
-^^^^^^^^^^^^^^^^^^^^^^^
+-----------------------
+
 Once the milestone is reached (all issues closed), it is time to do a new
-release. 
+release.
 
 1. Open a PR to update documentation:
     - `docs/changes/latest.inc` should now be renamed to the version to be

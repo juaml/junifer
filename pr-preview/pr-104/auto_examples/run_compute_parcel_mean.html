@@ -1,55 +1,186 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5.2. UKB VBM GMD Extraction" href="norun_ukbvm_gmd.html" /><link rel="prev" title="5. Examples" href="index.html" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5.1. Computer Parcel Aggregation. &mdash; junifer  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
+        <title>5.1. Computer Parcel Aggregation. - junifer documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-    <script src="../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="5.2. UKB VBM GMD Extraction" href="norun_ukbvm_gmd.html" />
-    <link rel="prev" title="5. Examples" href="index.html" /> 
-</head>
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> junifer
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">junifer  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/junifer_logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">junifer  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">2.1. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.2. DataGrabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.3. DataReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">2.4. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">2.5. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.6. Storage</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Pipeline steps and atlases</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../extending/index.html">4. Extending junifer</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="index.html">5. Examples</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">5.1. Computer Parcel Aggregation.</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">4. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">4.1. Creating DataGrabbers</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">5. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.1. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="norun_ukbvm_gmd.html">5.2. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">5.3. Generic BIDS datagrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="run_run_gmd_mean.html">5.4. UKB VBM GMD Extraction</a></li>
@@ -58,52 +189,74 @@
 <li class="toctree-l2"><a class="reference internal" href="run_junifer_julearn.html">5.7. Run junifer and julearn.</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../api/index.html">6. API Reference</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">6. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">6.1.1. DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">6.1.2. DataReaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">6.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">6.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">6.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">6.2.1. Atlases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">6.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">6.2.3. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">6.2.4. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">6.2.5. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">6.2.6. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">6.2.7. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">6.2.8. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">6.3.1. Configs</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">7. Contributing to junifer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../maintaining.html">8. Maintaining</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">9. FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../whats_new.html">10. What’s new</a></li>
 </ul>
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">junifer</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="index.html"><span class="section-number">5. </span>Examples</a> &raquo;</li>
-      <li><span class="section-number">5.1. </span>Computer Parcel Aggregation.</li>
-      <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/auto_examples/run_compute_parcel_mean.rst.txt" rel="nofollow"> View page source</a>
-      </li>
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <div class="sphx-glr-download-link-note admonition note">
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-run-compute-parcel-mean-py"><span class="std std-ref">here</span></a>
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="computer-parcel-aggregation">
-<span id="sphx-glr-auto-examples-run-compute-parcel-mean-py"></span><h1><span class="section-number">5.1. </span>Computer Parcel Aggregation.<a class="headerlink" href="#computer-parcel-aggregation" title="Permalink to this heading"></a></h1>
+<span id="sphx-glr-auto-examples-run-compute-parcel-mean-py"></span><h1><span class="section-number">5.1. </span>Computer Parcel Aggregation.<a class="headerlink" href="#computer-parcel-aggregation" title="Permalink to this heading">#</a></h1>
 <p>This example uses a ParcelAggregation marker to compute the mean of each parcel
 using the Schaefer atlas (100 rois, 7 Yeo networks) for both a 3D and 4D nifti</p>
 <p>Authors: Federico Raimondo</p>
 <p>License: BSD 3 clause</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nilearn</span>
 
-<span class="kn">from</span> <span class="nn">junifer.markers.parcel</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">ParcelAggregation</span></a>
+<span class="kn">from</span> <span class="nn">junifer.markers.parcel_aggregation</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">ParcelAggregation</span></a>
 <span class="kn">from</span> <span class="nn">junifer.utils</span> <span class="kn">import</span> <span class="n">configure_logging</span>
 </pre></div>
 </div>
@@ -111,46 +264,41 @@ using the Schaefer atlas (100 rois, 7 Yeo networks) for both a 3D and 4D nifti</
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-10-23 11:12:55,205 - JUNIFER - INFO - ===== Lib Versions =====
-2022-10-23 11:12:55,205 - JUNIFER - INFO - numpy: 1.22.4
-2022-10-23 11:12:55,205 - JUNIFER - INFO - scipy: 1.9.3
-2022-10-23 11:12:55,205 - JUNIFER - INFO - pandas: 1.4.4
-2022-10-23 11:12:55,205 - JUNIFER - INFO - nilearn: 0.9.2
-2022-10-23 11:12:55,205 - JUNIFER - INFO - nibabel: 4.0.2
-2022-10-23 11:12:55,205 - JUNIFER - INFO - junifer: 0.0.1.dev1
-2022-10-23 11:12:55,205 - JUNIFER - INFO - ========================
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-04 21:47:35,768 - JUNIFER - INFO - ===== Lib Versions =====
+2022-11-04 21:47:35,768 - JUNIFER - INFO - numpy: 1.23.4
+2022-11-04 21:47:35,768 - JUNIFER - INFO - scipy: 1.9.3
+2022-11-04 21:47:35,768 - JUNIFER - INFO - pandas: 1.5.1
+2022-11-04 21:47:35,768 - JUNIFER - INFO - nilearn: 0.9.2
+2022-11-04 21:47:35,768 - JUNIFER - INFO - nibabel: 4.0.2
+2022-11-04 21:47:35,768 - JUNIFER - INFO - junifer: 0.0.1.dev1
+2022-11-04 21:47:35,768 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>Load the VBM GM data (3d):
 - Fetch the Oasis dataset</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_oasis_vbm.html#nilearn.datasets.fetch_oasis_vbm" title="nilearn.datasets.fetch_oasis_vbm" class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_oasis_vbm</span></a><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_fname</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">gray_matter_maps</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">vbm_img</span> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.image.load_img.html#nilearn.image.load_img" title="nilearn.image.load_img" class="sphx-glr-backref-module-nilearn-image sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load_img</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_fname</span></a><span class="p">)</span>
+<a href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="nibabel.nifti1.Nifti1Image" class="sphx-glr-backref-module-nibabel-nifti1 sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_img</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.image.load_img.html#nilearn.image.load_img" title="nilearn.image.load_img" class="sphx-glr-backref-module-nilearn-image sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load_img</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_fname</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset created in /home/runner/nilearn_data/oasis1
 
 Downloading data from https://www.nitrc.org/frs/download.php/6364/archive_dartel.tgz ...
 
-Downloaded 208789504 of 905208634 bytes (23.1%,    3.3s remaining)
-Downloaded 357285888 of 905208634 bytes (39.5%,    3.1s remaining)
-Downloaded 398049280 of 905208634 bytes (44.0%,    3.8s remaining)
-Downloaded 442089472 of 905208634 bytes (48.8%,    4.2s remaining)
-Downloaded 486916096 of 905208634 bytes (53.8%,    4.3s remaining)
-Downloaded 527278080 of 905208634 bytes (58.2%,    4.3s remaining)
-Downloaded 568221696 of 905208634 bytes (62.8%,    4.2s remaining)
-Downloaded 611426304 of 905208634 bytes (67.5%,    3.9s remaining)
-Downloaded 649494528 of 905208634 bytes (71.8%,    3.6s remaining)
-Downloaded 690954240 of 905208634 bytes (76.3%,    3.1s remaining)
-Downloaded 729325568 of 905208634 bytes (80.6%,    2.7s remaining)
-Downloaded 767721472 of 905208634 bytes (84.8%,    2.2s remaining)
-Downloaded 803561472 of 905208634 bytes (88.8%,    1.6s remaining)
-Downloaded 842858496 of 905208634 bytes (93.1%,    1.0s remaining)
-Downloaded 882401280 of 905208634 bytes (97.5%,    0.4s remaining) ...done. (16 seconds, 0 min)
+Downloaded 53067776 of 905208634 bytes (5.9%,   16.1s remaining)
+Downloaded 127614976 of 905208634 bytes (14.1%,   12.2s remaining)
+Downloaded 202194944 of 905208634 bytes (22.3%,   10.5s remaining)
+Downloaded 276078592 of 905208634 bytes (30.5%,    9.2s remaining)
+Downloaded 351748096 of 905208634 bytes (38.9%,    7.9s remaining)
+Downloaded 425033728 of 905208634 bytes (47.0%,    6.8s remaining)
+Downloaded 500088832 of 905208634 bytes (55.2%,    5.7s remaining)
+Downloaded 574504960 of 905208634 bytes (63.5%,    4.6s remaining)
+Downloaded 648675328 of 905208634 bytes (71.7%,    3.6s remaining)
+Downloaded 722452480 of 905208634 bytes (79.8%,    2.5s remaining)
+Downloaded 791994368 of 905208634 bytes (87.5%,    1.6s remaining)
+Downloaded 867303424 of 905208634 bytes (95.8%,    0.5s remaining) ...done. (13 seconds, 0 min)
 Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8baa05152/archive_dartel.tgz..... done.
-/opt/hostedtoolcache/Python/3.9.15/x64/lib/python3.9/site-packages/nilearn/datasets/struct.py:774: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
+/opt/hostedtoolcache/Python/3.10.8/x64/lib/python3.10/site-packages/nilearn/datasets/struct.py:774: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
   warnings.warn(_LEGACY_FORMAT_MSG)
 </pre></div>
 </div>
@@ -158,30 +306,21 @@ Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8ba
 - Fetch the SPM auditory dataset
 - Concatenate the functional data into one 4D image</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s_func_data</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_spm_auditory.html#nilearn.datasets.fetch_spm_auditory" title="nilearn.datasets.fetch_spm_auditory" class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_spm_auditory</span></a><span class="p">()</span>
-<span class="n">fmri_img</span> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.image.concat_imgs.html#nilearn.image.concat_imgs" title="nilearn.image.concat_imgs" class="sphx-glr-backref-module-nilearn-image sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">concat_imgs</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s_func_data</span><span class="o">.</span><span class="n">func</span></a><span class="p">)</span>
+<a href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="nibabel.nifti1.Nifti1Image" class="sphx-glr-backref-module-nibabel-nifti1 sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fmri_img</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.image.concat_imgs.html#nilearn.image.concat_imgs" title="nilearn.image.concat_imgs" class="sphx-glr-backref-module-nilearn-image sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">concat_imgs</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s_func_data</span><span class="o">.</span><span class="n">func</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset created in /home/runner/nilearn_data/spm_auditory
 
 Data absent, downloading...
 Downloading data from http://www.fil.ion.ucl.ac.uk/spm/download/data/MoAEpilot/MoAEpilot.zip ...
 
-Downloaded 4964352 of 34212021 bytes (14.5%,    5.9s remaining)
-Downloaded 10092544 of 34212021 bytes (29.5%,    4.9s remaining)
-Downloaded 15147008 of 34212021 bytes (44.3%,    3.9s remaining)
-Downloaded 16998400 of 34212021 bytes (49.7%,    4.2s remaining)
-Downloaded 18104320 of 34212021 bytes (52.9%,    4.6s remaining)
-Downloaded 19259392 of 34212021 bytes (56.3%,    4.8s remaining)
-Downloaded 20316160 of 34212021 bytes (59.4%,    4.9s remaining)
-Downloaded 21446656 of 34212021 bytes (62.7%,    4.9s remaining)
-Downloaded 22691840 of 34212021 bytes (66.3%,    4.7s remaining)
-Downloaded 23937024 of 34212021 bytes (70.0%,    4.4s remaining)
-Downloaded 25305088 of 34212021 bytes (74.0%,    3.9s remaining)
-Downloaded 26804224 of 34212021 bytes (78.3%,    3.4s remaining)
-Downloaded 28418048 of 34212021 bytes (83.1%,    2.7s remaining)
-Downloaded 30154752 of 34212021 bytes (88.1%,    1.9s remaining)
-Downloaded 32096256 of 34212021 bytes (93.8%,    1.0s remaining) ...done. (17 seconds, 0 min)
+Downloaded 2940928 of 34212021 bytes (8.6%,   10.7s remaining)
+Downloaded 8634368 of 34212021 bytes (25.2%,    5.9s remaining)
+Downloaded 14000128 of 34212021 bytes (40.9%,    4.4s remaining)
+Downloaded 19562496 of 34212021 bytes (57.2%,    3.0s remaining)
+Downloaded 25018368 of 34212021 bytes (73.1%,    1.9s remaining)
+Downloaded 29409280 of 34212021 bytes (86.0%,    1.0s remaining)
+Downloaded 34111488 of 34212021 bytes (99.7%,    0.0s remaining) ...done. (8 seconds, 0 min)
 Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip..... done.
 </pre></div>
 </div>
@@ -190,21 +329,20 @@ Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip
 </pre></div>
 </div>
 <p>Prepare the input</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">fmri_img</span><span class="p">},</span> <span class="s2">&quot;VBM_GM&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">vbm_img</span><span class="p">}}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <a href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="nibabel.nifti1.Nifti1Image" class="sphx-glr-backref-module-nibabel-nifti1 sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fmri_img</span></a><span class="p">},</span> <span class="s2">&quot;VBM_GM&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <a href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="nibabel.nifti1.Nifti1Image" class="sphx-glr-backref-module-nibabel-nifti1 sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_img</span></a><span class="p">}}</span>
 </pre></div>
 </div>
 <p>Fit transform the data</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">out</span></a> <span class="o">=</span> <span class="n">marker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-10-23 11:13:38,423 - JUNIFER - INFO - Computing BOLD
-2022-10-23 11:13:38,424 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-10-23 11:13:38,424 - JUNIFER - INFO - Atlas parameters:
-2022-10-23 11:13:38,424 - JUNIFER - INFO -      n_rois: 100
-2022-10-23 11:13:38,424 - JUNIFER - INFO -      yeo_networks: 7
-2022-10-23 11:13:38,424 - JUNIFER - INFO -      resolution: 3.0
-2022-10-23 11:13:38,424 - JUNIFER - INFO - At least one of the atlas files is missing. Fetching using nilearn.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-04 21:48:06,996 - JUNIFER - INFO - Computing BOLD
+2022-11-04 21:48:06,997 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-04 21:48:06,997 - JUNIFER - INFO - Atlas parameters:
+2022-11-04 21:48:06,997 - JUNIFER - INFO -      n_rois: 100
+2022-11-04 21:48:06,997 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-04 21:48:06,997 - JUNIFER - INFO -      resolution: 3.0
+2022-11-04 21:48:06,997 - JUNIFER - INFO - At least one of the atlas files is missing. Fetching using nilearn.
 
 Dataset created in /home/runner/junifer/data/atlas/schaefer_2018
 
@@ -212,16 +350,16 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2022-10-23 11:13:38,478 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-10-23 11:13:39,667 - JUNIFER - INFO - No storage specified, returning dictionary
-2022-10-23 11:13:39,667 - JUNIFER - INFO - Computing VBM_GM
-2022-10-23 11:13:39,667 - JUNIFER - INFO - Fetching one of Schaefer atlas.
-2022-10-23 11:13:39,667 - JUNIFER - INFO - Atlas parameters:
-2022-10-23 11:13:39,667 - JUNIFER - INFO -      n_rois: 100
-2022-10-23 11:13:39,667 - JUNIFER - INFO -      yeo_networks: 7
-2022-10-23 11:13:39,667 - JUNIFER - INFO -      resolution: 2.0
-2022-10-23 11:13:39,669 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-10-23 11:13:40,147 - JUNIFER - INFO - No storage specified, returning dictionary
+2022-11-04 21:48:07,069 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-04 21:48:08,826 - JUNIFER - INFO - No storage specified, returning dictionary
+2022-11-04 21:48:08,826 - JUNIFER - INFO - Computing VBM_GM
+2022-11-04 21:48:08,827 - JUNIFER - INFO - Fetching one of Schaefer atlas.
+2022-11-04 21:48:08,827 - JUNIFER - INFO - Atlas parameters:
+2022-11-04 21:48:08,827 - JUNIFER - INFO -      n_rois: 100
+2022-11-04 21:48:08,827 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-04 21:48:08,827 - JUNIFER - INFO -      resolution: 2.0
+2022-11-04 21:48:08,830 - JUNIFER - INFO - Loading atlas /home/runner/junifer/data/atlas/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-04 21:48:09,575 - JUNIFER - INFO - No storage specified, returning dictionary
 </pre></div>
 </div>
 <p>Check the results</p>
@@ -232,15 +370,14 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
 <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">out</span></a><span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (timepoints x parcels)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-script-out">Out:</p>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>dict_keys([&#39;BOLD&#39;, &#39;VBM_GM&#39;])
 (1, 100)
 dict_keys([&#39;BOLD&#39;, &#39;VBM_GM&#39;])
 (96, 100)
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.949 seconds)</p>
-<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-compute-parcel-mean-py">
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  33.815 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-compute-parcel-mean-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/c1da12f6e22b8ea8de3cd5add55a3fa8/run_compute_parcel_mean.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_compute_parcel_mean.py</span></code></a></p>
 </div>
@@ -251,35 +388,64 @@ dict_keys([&#39;BOLD&#39;, &#39;VBM_GM&#39;])
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
 
-
-           </div>
-          </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="5. Examples" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="norun_ukbvm_gmd.html" class="btn btn-neutral float-right" title="5.2. UKB VBM GMD Extraction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright 2022, Authors of junifer.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
+        </article>
       </div>
-    </section>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="norun_ukbvm_gmd.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">5.2. </span>UKB VBM GMD Extraction</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">5. </span>Examples</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2022, Authors of junifer
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            <div class="icons">
+              
+            </div>
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/js/custom.js"></script>
+    </body>
 </html>

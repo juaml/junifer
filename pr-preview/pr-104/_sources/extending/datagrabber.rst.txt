@@ -14,7 +14,7 @@ the structure of a dataset and provide two specific functionalities:
 
 In this section, we will see how to create a datagrabber for a dataset. Basic
 aspects of datagrabbers are covedered in the 
-:ref:`Understanding DataGrabbers <datagrabbers>` section.
+:ref:`Understanding DataGrabbers <datagrabber>` section.
 
 .. _extending_datagrabbers_think:
 
