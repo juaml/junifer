@@ -8,7 +8,9 @@ from pathlib import Path
 
 from nilearn import image
 
-from junifer.markers.crossparcellation_functional_connectivity import CrossParcellationFC
+from junifer.markers.crossparcellation_functional_connectivity import (
+    CrossParcellationFC,
+)
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
@@ -86,7 +88,9 @@ def test_store(tmp_path: Path) -> None:
 def test_get_output_kind() -> None:
     """Test CrossParcellationFC get_output_kind()."""
 
-    crossparcellation = CrossParcellationFC(parcellation_one=parcellation_ONE, parcellation_two=parcellation_TWO)
+    crossparcellation = CrossParcellationFC(
+        parcellation_one=parcellation_ONE, parcellation_two=parcellation_TWO
+    )
     input_list = ["BOLD"]
     input_list = crossparcellation.get_output_kind(input_list)
     assert len(input_list) == 1

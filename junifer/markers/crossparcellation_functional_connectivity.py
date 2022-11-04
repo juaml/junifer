@@ -18,7 +18,7 @@ from .utils import _correlate_dataframes
 
 @register_marker
 class CrossParcellationFC(BaseMarker):
-    """Class for calculating parcel-wise correlations between two parcellations.
+    """Class for calculating parcel-wise correlations with 2 parcellations.
 
     Parameters
     ----------
@@ -133,7 +133,8 @@ class CrossParcellationFC(BaseMarker):
         """
         logger.debug(
             "Aggregating time series in"
-            f" {self.parcellation_one} and {self.parcellation_two} parcellations."
+            f" {self.parcellation_one} and "
+            f"{self.parcellation_two} parcellations."
         )
         # Initialize a ParcelAggregation
         parcellation_one_dict = ParcelAggregation(
