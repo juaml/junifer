@@ -36,7 +36,6 @@ class JuselessUCLA(PatternDataGrabber):
         ] = "/data/project/psychosis_thalamus/data/fmriprep",
         tasks: Union[str, List[str], None] = None,
     ) -> None:
-        """Initialise the class."""
         types = [
             "BOLD",
             "BOLD_confounds",
