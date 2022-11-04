@@ -1,6 +1,5 @@
-
 API Functions
-^^^^^^^^^^^^^^
+=============
 
 .. automodule:: junifer.api
    :members:

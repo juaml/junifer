@@ -5,7 +5,7 @@ Installing junifer
 
 
 Requirements
-^^^^^^^^^^^^
+------------
 
 junifer is compatible with `Python`_ >= 3.8 and requires the following packages:
 
@@ -21,7 +21,8 @@ junifer is compatible with `Python`_ >= 3.8 and requires the following packages:
 Depending on the installation method, these packages might be installed automatically.
 
 Installation
-^^^^^^^^^^^^
+------------
+
 Depending on your use-case, junifer can be installed differently:
 
 * Install the :ref:`install_latest_release`. This is the most suitable approach
@@ -36,7 +37,7 @@ Either way, we strongly recommend using `virtual environments <https://realpytho
 .. _install_latest_release:
 
 Stable release
---------------
+~~~~~~~~~~~~~~
 
 Use ``pip`` to install julearn from `PyPI <https://pypi.org>`_, like so:
 
@@ -48,6 +49,6 @@ Use ``pip`` to install julearn from `PyPI <https://pypi.org>`_, like so:
 .. _install_development_git:
 
 Local Git repository
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 Follow the `detailed contribution guidelines <contribution.rst>`_.

@@ -4,8 +4,8 @@ Pipeline steps and atlases
 ==========================
 
 
-Data Grabbers
-^^^^^^^^^^^^^
+DataGrabbers
+------------
 
 ..
     Provide a list of the DataGrabbers that are implemented or planned.
@@ -29,7 +29,7 @@ Data Grabbers
     following syntax: :gh:`<issue number>`
 
 Available
----------
+~~~~~~~~~
 
 .. list-table::
    :widths: auto
@@ -92,7 +92,7 @@ Available
 
 
 Planned
--------
+~~~~~~~
 
 .. list-table::
    :widths: auto
@@ -116,23 +116,23 @@ Planned
 
 
 Markers
-^^^^^^^
+-------
 
 ..
     Provide a list of the Markers that are implemented or planned.
 
-    State: this should indicate the state of the dataset. Valid options are
+    State: this should indicate the state of the marker. Valid options are
     - Planned
     - In Progress
     - Done
 
     Version added: If the status is "Done", the Junifer version in which the
-    dataset was added. Else, a link to the Github issue or pull request
-    implementing the dataset. Links to github can be added by using the
+    marker was added. Else, a link to the Github issue or pull request
+    implementing the marker. Links to github can be added by using the
     following syntax: :gh:`<issue number>`
 
 Available
----------
+~~~~~~~~~
 
 .. list-table::
    :widths: auto
@@ -165,7 +165,7 @@ Available
 
 
 Planned
--------
+~~~~~~~
 
 .. list-table::
    :widths: auto
@@ -195,10 +195,15 @@ Planned
 
 
 Atlases
-^^^^^^^
+-------
+
+..
+    Provide a list of the Atlases that are implemented or planned.
+
+    Version added: The Junifer version in which the atlas was added.
 
 Available
----------
+~~~~~~~~~
 
 ========  =================  =================================================================================  =============  ====================================================
 Name      Options            Keys                                                                               Version added  Publication
@@ -225,7 +230,7 @@ TIAN      ``scale``,         | ``TianxS1x3TxMNI6thgeneration``, ``TianxS1x3TxMNI
 
 
 Planned
--------
+~~~~~~~
 
 =================  ==============================================================================
 Name               Publication

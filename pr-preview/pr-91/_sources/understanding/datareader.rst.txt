@@ -6,7 +6,7 @@ DataReader
 ==========
 
 Description
-^^^^^^^^^^^
+-----------
 
 The ``DataReader`` is an object that is responsible for actually reading data files in junifer.
 It reads the value of the key ``path`` for each :ref:`data type <data_types>` in the :ref:`Data object <data_object>`
@@ -20,7 +20,7 @@ For data formats not supported by junifer yet, you can either make your own ``Da
 `junifer Github`_ and we can help you out.
 
 Currently supported file-formats
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------
 
 We already provide a concrete implementation :class:`junifer.datareader.DefaultDataReader` which knows how to
 read the following file formats:
