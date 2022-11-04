@@ -1,6 +1,6 @@
 .. include:: ../links.inc
 
-.. _datagrabbers:
+.. _datagrabber:
 
 DataGrabber
 ===========
