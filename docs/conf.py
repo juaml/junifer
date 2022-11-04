@@ -65,6 +65,7 @@ nitpick_ignore_regex = [
     ("py:obj", "subclass"),  # python 3.11 error
     ("py:class", "typing.Any"),  # python 3.11 error
     # ('py:class', 'numpy.typing.ArrayLike')
+    ("py:obj", "sqlalchemy.engine.Engine"),  # ignore sqlalchemy
 ]
 
 # numpydoc_validation_checks = {
@@ -145,7 +146,7 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
     "pandas": ("https://pandas.pydata.org/pandas-docs/dev", None),
-    "sqlalchemy": ("https://docs.sqlalchemy.org/en/20/", None),
+    # "sqlalchemy": ("https://docs.sqlalchemy.org/en/20/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
