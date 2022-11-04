@@ -13,6 +13,7 @@ from pandas.testing import assert_frame_equal
 import numpy as np
 
 import nibabel as nib
+from nilearn.interfaces import fmriprep
 from nilearn._utils.exceptions import DimensionError
 
 from junifer.preprocess.confounds import fMRIPrepConfoundRemover
@@ -20,6 +21,7 @@ from junifer.testing.datagrabbers import (
     OasisVBMTestingDatagrabber,
     PartlyCloudyTestingDataGrabber,
 )
+from junifer.testing import get_testing_data
 from junifer.datareader import DefaultDataReader
 
 
@@ -289,7 +291,39 @@ def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
         assert set(out2.columns) == set(fmriprep_all_vars + ["spike"])
 
     assert_frame_equal(out1, out2)
-    # TODO: Test if fmriprep returns the same derivatives/power2 as we compute
+
+
+def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep_compute() -> None:
+    """Test if fmriprep returns the same derivatives/power2 as we compute."""
+
+    confound_remover = fMRIPrepConfoundRemover(
+        strategy={"wm_csf": "full"}
+    )
+    fmriprep_all_vars = [
+        "csf",
+        "white_matter",
+        "csf_power2",
+        "white_matter_power2",
+        "csf_derivative1",
+        "white_matter_derivative1",
+        "csf_derivative1_power2",
+        "white_matter_derivative1_power2",
+    ]
+
+    t_fname = get_testing_data(
+        "sub-0001_task-anticipation_acq-seq_desc-confounds_regressors.tsv"
+    )
+    t_full_confounds = pd.read_csv(t_fname, sep="\t")[fmriprep_all_vars]
+    t_basic_confounds = t_full_confounds[["csf", "white_matter"]]
+
+    input_basic = {"data": t_basic_confounds, "format": "fmriprep"}
+    out_junifer = confound_remover._pick_confounds(input_basic)
+
+    input_full = {"data": t_full_confounds, "format": "fmriprep"}
+    out_fmriprep = confound_remover._pick_confounds(input_full)
+
+    assert np.all(out_fmriprep.values != np.nan)
+    assert_frame_equal(out_junifer, out_fmriprep)
 
 
 def test_fMRIPrepConfoundRemover__validate_data() -> None:

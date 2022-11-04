@@ -5,3 +5,4 @@
 # License: AGPL
 
 from . import datagrabbers
+from .utils import get_testing_data

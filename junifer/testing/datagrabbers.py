@@ -140,10 +140,11 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         If False, returns all :term:`fMRIPrep` confounds (default True).
 
     age_group : {"adults", "child", "both"}, optional
-       Which age group to fetch (default "both").
-        - 'adults' = fetch adults only (n=33, ages 18-39)
-        - 'child' = fetch children only (n=122, ages 3-12)
-        - 'both' = fetch full sample (n=155)
+       Which age group to fetch (default "both"):
+
+        * 'adults' = fetch adults only (n=33, ages 18-39)
+        * 'child' = fetch children only (n=122, ages 3-12)
+        * 'both' = fetch full sample (n=155)
     """
 
     def __init__(
