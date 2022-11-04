@@ -6,7 +6,7 @@ Marker
 ======
 
 Description
-^^^^^^^^^^^
+-----------
 
 The ``Marker`` is an object that is responsible for feature extraction. It primarily operates on data loaded
 in memory by :ref:`datareader <DataReader>` and stored in the ``data`` key of each :ref:`data type <data_types>`

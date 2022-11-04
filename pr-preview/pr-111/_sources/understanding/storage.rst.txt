@@ -6,7 +6,7 @@ Storage
 =======
 
 Description
-^^^^^^^^^^^
+-----------
 
 The ``Storage`` is an object that is responsible for storing extracted features as computed from :ref:`Marker <marker>`
 step of the pipeline. If the pipeline is provided with a ``storage-like`` object, the extracted features are stored via
@@ -25,7 +25,7 @@ For storage interfaces not supported by junifer yet, you can either make your ow
 implementation of :class:`junifer.storage.BaseFeatureStorage` or open an issue on `junifer Github`_ and we can help you out.
 
 Currently supported storage interfaces
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------------------
 
 .. list-table::
    :widths: auto

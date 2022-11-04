@@ -6,7 +6,7 @@ The Data Object
 ===============
 
 Description
-^^^^^^^^^^^
+-----------
 
 This is the *object* that traverses the steps of the pipeline. It is indeed a
 dictionary of dictionaries. The first level of keys are the :ref:`data types <data_types>`
@@ -27,7 +27,7 @@ A point to note is that you never directly interact with the *data object* but i
 .. _data_types:
 
 Data types
-^^^^^^^^^^
+----------
 
 .. list-table::
    :widths: auto
