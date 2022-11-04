@@ -8,7 +8,7 @@ from pathlib import Path
 
 from nilearn import image
 
-from junifer.markers.crossparcellation_functional_connectivity import CrossparcellationFC
+from junifer.markers.crossparcellation_functional_connectivity import CrossParcellationFC
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
@@ -18,7 +18,7 @@ parcellation_TWO = "Schaefer200x17"
 
 
 def test_compute() -> None:
-    """Test CrossparcellationFC compute()."""
+    """Test CrossParcellationFC compute()."""
 
     with SPMAuditoryTestingDatagrabber() as dg:
         out = dg["sub001"]
@@ -32,7 +32,7 @@ def test_compute() -> None:
             "meta": {"element": "sub001"},
         }
 
-        crossparcellation = CrossparcellationFC(
+        crossparcellation = CrossParcellationFC(
             parcellation_one=parcellation_ONE,
             parcellation_two=parcellation_TWO,
             correlation_method="spearman",
@@ -43,14 +43,14 @@ def test_compute() -> None:
         assert len(out["row_names"]) == 200
         meta = crossparcellation.get_meta("BOLD")["marker"]
         assert meta["aggregation_method"] == "mean"
-        assert meta["class"] == "CrossparcellationFC"
+        assert meta["class"] == "CrossParcellationFC"
         assert meta["parcellation_one"] == "Schaefer100x17"
         assert meta["parcellation_two"] == "Schaefer200x17"
         assert meta["correlation_method"] == "spearman"
 
 
 def test_store(tmp_path: Path) -> None:
-    """Test CrossparcellationFC store().
+    """Test CrossParcellationFC store().
 
     Parameters
     ----------
@@ -71,7 +71,7 @@ def test_store(tmp_path: Path) -> None:
             "meta": {"element": "sub001"},
         }
 
-        crossparcellation = CrossparcellationFC(
+        crossparcellation = CrossParcellationFC(
             parcellation_one=parcellation_ONE,
             parcellation_two=parcellation_TWO,
             correlation_method="spearman",
@@ -84,9 +84,9 @@ def test_store(tmp_path: Path) -> None:
 
 
 def test_get_output_kind() -> None:
-    """Test CrossparcellationFC get_output_kind()."""
+    """Test CrossParcellationFC get_output_kind()."""
 
-    crossparcellation = CrossparcellationFC(parcellation_one=parcellation_ONE, parcellation_two=parcellation_TWO)
+    crossparcellation = CrossParcellationFC(parcellation_one=parcellation_ONE, parcellation_two=parcellation_TWO)
     input_list = ["BOLD"]
     input_list = crossparcellation.get_output_kind(input_list)
     assert len(input_list) == 1
