@@ -5,6 +5,7 @@
 # License: AGPL
 
 import tempfile
+from pathlib import Path
 from typing import Dict, List
 
 import nibabel as nib
@@ -39,7 +40,7 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
         """
         out = super().__getitem__(element)
         i_sub = int(element.split("-")[1]) - 1
-        out["VBM_GM"] = {"path": self._dataset.gray_matter_maps[i_sub]}
+        out["VBM_GM"] = {"path": Path(self._dataset.gray_matter_maps[i_sub])}
         # Set the element accordingly
         out["meta"]["element"] = {"subject": element}
         return out
@@ -117,6 +118,96 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
         nib.save(anat_img, anat_fname)
         out["BOLD"] = {"path": fmri_fname}
         out["T1w"] = {"path": anat_fname}
+        # Set the element accordingly
+        out["meta"]["element"] = {"subject": element}
+        return out
+
+
+class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
+    """DataGrabber for Partly Cloudy dataset.
+
+    Wrapper for nilearn.datasets.fetch_partly_cloudy
+
+
+    Parameters
+    ----------
+    reduce_confounds : bool, optional
+        If True, the returned confounds only include 6 motion parameters,
+        mean framewise displacement, signal from white matter, csf, and
+        6 anatomical compcor parameters. This selection only serves the
+        purpose of having realistic examples. Depending on your research
+        question, other confounds might be more appropriate.
+        If False, returns all :term:`fMRIPrep` confounds (default True).
+
+    age_group : {"adults", "child", "both"}, optional
+       Which age group to fetch (default "both"):
+
+        * 'adults' = fetch adults only (n=33, ages 18-39)
+        * 'child' = fetch children only (n=122, ages 3-12)
+        * 'both' = fetch full sample (n=155)
+    """
+
+    def __init__(
+        self, reduce_confounds: bool = True, age_group: str = "both"
+    ) -> None:
+        """Initialize the class."""
+        datadir = tempfile.mkdtemp()
+        # Define types
+        types = ["BOLD", "BOLD_confounds"]
+        self.reduce_confounds = reduce_confounds
+        self.age_group = age_group
+        super().__init__(types=types, datadir=datadir)
+
+    def __enter__(self) -> "PartlyCloudyTestingDataGrabber":
+        """Implement context entry.
+
+        Returns
+        -------
+        PartlyCloudyTestingDataGrabber
+
+        """
+        self._dataset = datasets.fetch_development_fmri(
+            n_subjects=10,
+            reduce_confounds=self.reduce_confounds,
+            age_group=self.age_group,
+        )
+        return self
+
+    def get_elements(self) -> List[str]:
+        """Get elements.
+
+        Returns
+        -------
+        list of str
+            List of elements that can be grabbed.
+
+        """
+        return [f"sub-{x:02d}" for x in list(range(1, 11))]
+
+    def __getitem__(self, element: str) -> Dict:
+        """Implement indexing support.
+
+        Parameters
+        ----------
+        element : str
+            The element to retrieve.
+
+        Returns
+        -------
+        dict
+            The data along with the metadata.
+
+        """
+        out = super().__getitem__(element)
+        i_sub = int(element.split("-")[1]) - 1
+        out["BOLD"] = {"path": Path(self._dataset["func"][i_sub])}
+        conf_format = "fmriprep"
+
+        out["BOLD_confounds"] = {
+            "path": Path(self._dataset["confounds"][i_sub]),
+            "format": conf_format,
+        }
+
         # Set the element accordingly
         out["meta"]["element"] = {"subject": element}
         return out

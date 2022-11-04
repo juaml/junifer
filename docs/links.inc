@@ -19,6 +19,8 @@
 .. _`Python`: https://python.org
 .. _`seaborn`: https://seaborn.pydata.org
 .. _`matplotlib`: https://matplotlib.org
+.. _`fMRIPrep`: https://fmriprep.org
+.. _`nilearn`: https://nilearn.github.io
 
 .. _`venv`: https://docs.python.org/3/tutorial/venv.html
 .. _`conda env`: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html

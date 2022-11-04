@@ -75,6 +75,8 @@ Enhancements
 
 - Change documentation template to furo. Fix references and standardize documentation (:gh:`114` by `Fede Raimondo`_).
 
+- Add :class:`junifer.preprocess.fMRIPrepConfoundRemover` (:gh:`111` by `Fede Raimondo`_ and `Leonard Sasse`_).
+
 Bugs
 ~~~~
 

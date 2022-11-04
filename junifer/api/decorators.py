@@ -32,6 +32,30 @@ def register_datagrabber(klass: type) -> type:
     return klass
 
 
+def register_preprocessor(klass: type) -> type:
+    """Preprocessor registration decorator.
+
+    Registers the preprocessor so it can be used by name.
+
+    Parameters
+    ----------
+    klass: class
+        The class of the preprocessor to register.
+
+    Returns
+    -------
+    klass: class
+        The unmodified input class.
+
+    """
+    register(
+        step="preprocessing",
+        name=klass.__name__,
+        klass=klass,
+    )
+    return klass
+
+
 def register_marker(klass: type) -> type:
     """Marker registration decorator.
 
