@@ -48,15 +48,14 @@ def test_juseless_ucla_datagrabber() -> None:
 )
 def test_juseless_ucla_datagrabber_task_params(tasks: Optional[str]) -> None:
     """Test juseless ucla datagrabber with different task parameters.
-    
+
     Parameters
     ----------
     tasks : str
         The parametrized tasks in the UCLA dataset.
-    
+
     """
 
-    
     all_tasks = [
         "rest",
         "bart",
