@@ -21,18 +21,20 @@ class JuselessUCLA(PatternDataGrabber):
     datadir : str or Path, optional
         The directory where the dataset is stored
         (default '/data/project/psychosis_thalamus/data/fmriprep').
-    **kwargs
-        Keyword arguments passed to superclass.
+    tasks : {"rest", "bart", "bht", "pamenc", "pamret",
+        "scap", "taskswitch", "stopsignal"} or
+        list of the options, optional
+        UCLA task sessions. If None, all available task sessions are
+        selected (default None).
 
     """
 
     def __init__(
         self,
         datadir: Union[
-            str, Path, None
+            str, Path
         ] = "/data/project/psychosis_thalamus/data/fmriprep",
         tasks: Union[str, List[str], None] = None,
-        **kwargs,
     ) -> None:
         """Initialise the class."""
         types = [
@@ -108,7 +110,7 @@ class JuselessUCLA(PatternDataGrabber):
             replacements=replacements,
         )
 
-    def get_elements(self):
+    def get_elements(self) -> List:
         """Implement fetching list of elements in the dataset.
 
         Returns

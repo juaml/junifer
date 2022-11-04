@@ -6,6 +6,7 @@
 # License: AGPL
 
 import socket
+from typing import Optional
 
 import pytest
 
@@ -41,7 +42,11 @@ def test_juseless_ucla_datagrabber() -> None:
             assert out[t]["path"].exists()
 
 
-def test_juseless_ucla_datagrabber_task_params() -> None:
+@pytest.mark.parametrize(
+    "tasks",
+    [None, "rest", ["rest", "stopsignal"]],
+)
+def test_juseless_ucla_datagrabber_task_params(tasks: Optional[str]) -> None:
     """Test juseless ucla datagrabber with different task parameters."""
 
     all_tasks = [
@@ -55,20 +60,18 @@ def test_juseless_ucla_datagrabber_task_params() -> None:
         "stopsignal",
     ]
 
-    task_params = [None, "rest", ["rest", "stopsignal"]]
-    for tp in task_params:
-        with JuselessUCLA(tasks=tp) as dg:
-            all_elements = dg.get_elements()
+    with JuselessUCLA(tasks=tasks) as dg:
+        all_elements = dg.get_elements()
 
-            if tp is None:
-                for el in all_elements:
-                    assert el[1] in all_tasks
-            elif tp == "rest":
-                for el in all_elements:
-                    assert el[1] == "rest"
-            else:
-                for el in all_elements:
-                    assert el[1] in ["rest", "stopsignal"]
+        if tasks is None:
+            for el in all_elements:
+                assert el[1] in all_tasks
+        elif tasks == "rest":
+            for el in all_elements:
+                assert el[1] == "rest"
+        else:
+            for el in all_elements:
+                assert el[1] in ["rest", "stopsignal"]
 
 
 def test_juseless_ucla_datagrabber_invalid_tasks() -> None:
@@ -76,5 +79,4 @@ def test_juseless_ucla_datagrabber_invalid_tasks() -> None:
     with pytest.raises(
         ValueError, match="invalid is not a valid task in the UCLA"
     ):
-        with JuselessUCLA(tasks="invalid"):
-            pass
+        JuselessUCLA(tasks="invalid")
