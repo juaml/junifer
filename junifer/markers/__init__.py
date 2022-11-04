@@ -11,3 +11,4 @@ from .functional_connectivity_atlas import FunctionalConnectivityAtlas
 from .functional_connectivity_spheres import FunctionalConnectivitySpheres
 from .parcel_aggregation import ParcelAggregation
 from .sphere_aggregation import SphereAggregation
+from .crossparcellation_functional_connectivity import CrossParcellationFC
