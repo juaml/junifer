@@ -29,9 +29,8 @@ class CrossAtlasFC(BaseMarker):
     aggregation_method : str, optional
         The aggregation method (default "mean").
     correlation_method : str, optional
-        Any method that can be passed to:
-        https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
-        (default "pearson").
+        Any method that can be passed to
+        :func:`pandas.DataFrame.corr` (default "pearson").
     name : str, optional
         The name of the marker. If None, will use the class name
         (default None).
@@ -45,7 +44,6 @@ class CrossAtlasFC(BaseMarker):
         correlation_method: str = "pearson",
         name: str = None,
     ) -> None:
-        """Initialize the class."""
         self.atlas_one = atlas_one
         self.atlas_two = atlas_two
         self.aggregation_method = aggregation_method
@@ -126,10 +124,11 @@ class CrossAtlasFC(BaseMarker):
             The computed result as dictionary. This will be either returned
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
-            - data : the correlation values between the two parcellations as
+
+            * data : the correlation values between the two parcellations as
             a numpy.ndarray
-            - col_names : the ROIs for first parcellation as a list
-            - row_names : the ROIs for second parcellation as a list
+            * col_names : the ROIs for first parcellation as a list
+            * row_names : the ROIs for second parcellation as a list
 
         """
         logger.debug(

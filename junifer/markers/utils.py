@@ -64,18 +64,17 @@ def _correlate_dataframes(
 
     Parameters
     ----------
-    df1 : pd.DataFrame
+    df1 : pandas.DataFrame
         The first dataframe.
-    df2 : pd.DataFrame
+    df2 : pandas.DataFrame
         The second dataframe.
     method : str or callable, optional
-        any method that can be passed to:
-        https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
-        (default "pearson").
+        any method that can be passed to
+        :func:`pandas.DataFrame.corr` (default "pearson").
 
     Returns
     -------
-    df_corr : pd.DataFrame
+    df_corr : pandas.DataFrame
         The correlated values as a dataframe.
 
     Raises
@@ -86,7 +85,7 @@ def _correlate_dataframes(
     """
 
     if df1.shape[0] != df2.shape[0]:
-        raise_error("pd.DataFrames have unequal number of rows!")
+        raise_error("pandas.DataFrame's have unequal number of rows!")
     return (
         pd.concat([df1, df2], axis=1, keys=["df1", "df2"])
         .corr(method=method)
