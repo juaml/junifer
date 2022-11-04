@@ -2,7 +2,7 @@ API Reference
 =============
 
 Pipeline Elements
-^^^^^^^^^^^^^^^^^
+-----------------
 
 .. toctree::
    :maxdepth: 2
@@ -15,7 +15,7 @@ Pipeline Elements
    storage
 
 Utilities
-^^^^^^^^^
+---------
 
 .. toctree::
    :maxdepth: 2
@@ -28,9 +28,8 @@ Utilities
    utils
    testing
 
-
 Configs
-^^^^^^^
+-------
 
 .. toctree::
    :maxdepth: 3

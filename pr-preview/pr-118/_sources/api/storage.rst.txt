@@ -1,6 +1,5 @@
-
 Storage
-^^^^^^^
+=======
 
 .. automodule:: junifer.storage
    :members:
