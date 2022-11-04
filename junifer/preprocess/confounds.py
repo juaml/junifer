@@ -399,7 +399,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         # Add derivatives if needed
         for t_dst, t_src in derivatives_to_compute.items():
-            out_df[t_dst] = np.append(np.diff(out_df[t_src]), 0)
+            out_df[t_dst] = np.insert(np.diff(out_df[t_src]), 0, np.nan)
 
         # Add squares (of base confounds and derivatives) if needed
         for t_dst, t_src in squares_to_compute.items():
@@ -415,6 +415,13 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         # Now pick all the relevant confounds
         out_df = out_df[to_select]
+
+        # Derivatives have NaN on the first row
+        # Replace them by estimates at second time point,
+        # otherwise nilearn will crash.
+        mask_nan = np.isnan(out_df.values[0, :])
+        out_df.iloc[0, mask_nan] = out_df.iloc[1, mask_nan]
+
         return out_df
 
     def _validate_data(

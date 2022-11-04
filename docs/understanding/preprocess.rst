@@ -42,7 +42,7 @@ The *noise components* currently supported are:
 The confounds options for each *noise component* are:
 
 * ``basic``: the basic confounds for each *noise component*. For example, for ``motion``, the basic confounds
-  are the 6 motion parameters (3 translations and 3 rotations) and their derivatives. For ``wm_csf``, the basic
+  are the 6 motion parameters (3 translations and 3 rotations). For ``wm_csf``, the basic
   confounds are the mean signal of the white matter and CSF regions. For ``global_signal``, the basic confound
   is the mean signal of the whole brain.
 * ``power2``: the basic confounds plus the square of each basic confound.
@@ -71,7 +71,7 @@ or in YAML format:
         wm_csf: full
         global_signal: derivatives
 
-The default value is to use all the *noise components* with the ``full`` *confounds*:abbr:
+The default value is to use all the *noise components* with the ``full`` *confounds*:
 
 .. code-block:: 
 
