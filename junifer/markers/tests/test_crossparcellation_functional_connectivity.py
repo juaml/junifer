@@ -1,4 +1,4 @@
-"""Provide tests for marker class to calculate cross-atlas FC."""
+"""Provide tests for marker class to calculate cross-parcellation FC."""
 
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
@@ -8,17 +8,17 @@ from pathlib import Path
 
 from nilearn import image
 
-from junifer.markers.crossatlas_functional_connectivity import CrossAtlasFC
+from junifer.markers.crossparcellation_functional_connectivity import CrossparcellationFC
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
 
-ATLAS_ONE = "Schaefer100x17"
-ATLAS_TWO = "Schaefer200x17"
+parcellation_ONE = "Schaefer100x17"
+parcellation_TWO = "Schaefer200x17"
 
 
 def test_compute() -> None:
-    """Test CrossAtlasFC compute()."""
+    """Test CrossparcellationFC compute()."""
 
     with SPMAuditoryTestingDatagrabber() as dg:
         out = dg["sub001"]
@@ -32,25 +32,25 @@ def test_compute() -> None:
             "meta": {"element": "sub001"},
         }
 
-        crossatlas = CrossAtlasFC(
-            atlas_one=ATLAS_ONE,
-            atlas_two=ATLAS_TWO,
+        crossparcellation = CrossparcellationFC(
+            parcellation_one=parcellation_ONE,
+            parcellation_two=parcellation_TWO,
             correlation_method="spearman",
         )
-        out = crossatlas.compute(input_dict["BOLD"])
+        out = crossparcellation.compute(input_dict["BOLD"])
         assert out["data"].shape == (200, 100)
         assert len(out["col_names"]) == 100
         assert len(out["row_names"]) == 200
-        meta = crossatlas.get_meta("BOLD")["marker"]
+        meta = crossparcellation.get_meta("BOLD")["marker"]
         assert meta["aggregation_method"] == "mean"
-        assert meta["class"] == "CrossAtlasFC"
-        assert meta["atlas_one"] == "Schaefer100x17"
-        assert meta["atlas_two"] == "Schaefer200x17"
+        assert meta["class"] == "CrossparcellationFC"
+        assert meta["parcellation_one"] == "Schaefer100x17"
+        assert meta["parcellation_two"] == "Schaefer200x17"
         assert meta["correlation_method"] == "spearman"
 
 
 def test_store(tmp_path: Path) -> None:
-    """Test CrossAtlasFC store().
+    """Test CrossparcellationFC store().
 
     Parameters
     ----------
@@ -71,23 +71,23 @@ def test_store(tmp_path: Path) -> None:
             "meta": {"element": "sub001"},
         }
 
-        crossatlas = CrossAtlasFC(
-            atlas_one=ATLAS_ONE,
-            atlas_two=ATLAS_TWO,
+        crossparcellation = CrossparcellationFC(
+            parcellation_one=parcellation_ONE,
+            parcellation_two=parcellation_TWO,
             correlation_method="spearman",
         )
-        uri = tmp_path / "test_crossatlas.db"
+        uri = tmp_path / "test_crossparcellation.db"
         storage = SQLiteFeatureStorage(
             uri=uri, single_output=True, upsert="ignore"
         )
-        out = crossatlas.fit_transform(input_dict, storage=storage)
+        out = crossparcellation.fit_transform(input_dict, storage=storage)
 
 
 def test_get_output_kind() -> None:
-    """Test CrossAtlasFC get_output_kind()."""
+    """Test CrossparcellationFC get_output_kind()."""
 
-    crossatlas = CrossAtlasFC(atlas_one=ATLAS_ONE, atlas_two=ATLAS_TWO)
+    crossparcellation = CrossparcellationFC(parcellation_one=parcellation_ONE, parcellation_two=parcellation_TWO)
     input_list = ["BOLD"]
-    input_list = crossatlas.get_output_kind(input_list)
+    input_list = crossparcellation.get_output_kind(input_list)
     assert len(input_list) == 1
     assert input_list[0] in ["matrix"]

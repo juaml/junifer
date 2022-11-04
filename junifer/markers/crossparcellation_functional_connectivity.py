@@ -1,4 +1,4 @@
-"""Provide marker class to calculate cross-atlas FC."""
+"""Provide marker class to calculate cross-parcellation FC."""
 
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
@@ -17,15 +17,15 @@ from .utils import _correlate_dataframes
 
 
 @register_marker
-class CrossAtlasFC(BaseMarker):
-    """Class for calculating parcel-wise correlations between two atlases.
+class CrossParcellationFC(BaseMarker):
+    """Class for calculating parcel-wise correlations between two parcellations.
 
     Parameters
     ----------
-    atlas_one : str
-        The name of the first atlas.
-    atlas_two : str
-        The name of the second atlas.
+    parcellation_one : str
+        The name of the first parcellation.
+    parcellation_two : str
+        The name of the second parcellation.
     aggregation_method : str, optional
         The aggregation method (default "mean").
     correlation_method : str, optional
@@ -38,14 +38,14 @@ class CrossAtlasFC(BaseMarker):
 
     def __init__(
         self,
-        atlas_one: str,
-        atlas_two: str,
+        parcellation_one: str,
+        parcellation_two: str,
         aggregation_method: str = "mean",
         correlation_method: str = "pearson",
         name: str = None,
     ) -> None:
-        self.atlas_one = atlas_one
-        self.atlas_two = atlas_two
+        self.parcellation_one = parcellation_one
+        self.parcellation_two = parcellation_two
         self.aggregation_method = aggregation_method
         self.correlation_method = correlation_method
         super().__init__(on=["BOLD"], name=name)
@@ -109,7 +109,7 @@ class CrossAtlasFC(BaseMarker):
         Take a timeseries, parcellate them with two different parcellation
         schemes, and get parcel-wise correlations between the two different
         parcellated time series. Shape of output matrix corresponds to number
-        of ROIs in (atlas_two, atlas_one).
+        of ROIs in (parcellation_two, parcellation_one).
 
         Parameters
         ----------
@@ -133,20 +133,20 @@ class CrossAtlasFC(BaseMarker):
         """
         logger.debug(
             "Aggregating time series in"
-            f" {self.atlas_one} and {self.atlas_two} atlases."
+            f" {self.parcellation_one} and {self.parcellation_two} parcellations."
         )
         # Initialize a ParcelAggregation
-        atlas_one_dict = ParcelAggregation(
-            atlas=self.atlas_one,
+        parcellation_one_dict = ParcelAggregation(
+            parcellation=self.parcellation_one,
             method=self.aggregation_method,
         ).compute(input)
-        atlas_two_dict = ParcelAggregation(
-            atlas=self.atlas_two,
+        parcellation_two_dict = ParcelAggregation(
+            parcellation=self.parcellation_two,
             method=self.aggregation_method,
         ).compute(input)
 
-        parcellated_ts_one = atlas_one_dict["data"]
-        parcellated_ts_two = atlas_two_dict["data"]
+        parcellated_ts_one = parcellation_one_dict["data"]
+        parcellated_ts_two = parcellation_two_dict["data"]
         # columns should be named after parcellation 1
         # rows should be named after parcellation 2
 
@@ -158,6 +158,6 @@ class CrossAtlasFC(BaseMarker):
 
         return {
             "data": result,
-            "col_names": atlas_one_dict["columns"],
-            "row_names": atlas_two_dict["columns"],
+            "col_names": parcellation_one_dict["columns"],
+            "row_names": parcellation_two_dict["columns"],
         }
