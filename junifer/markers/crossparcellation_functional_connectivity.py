@@ -14,6 +14,7 @@ from ..utils import logger
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
 from .utils import _correlate_dataframes
+from ..utils.logging import raise_error
 
 
 @register_marker
@@ -30,7 +31,7 @@ class CrossParcellationFC(BaseMarker):
         The aggregation method (default "mean").
     correlation_method : str, optional
         Any method that can be passed to
-        :func:`pandas.DataFrame.corr` (default "pearson").
+        :any:`pandas.DataFrame.corr` (default "pearson").
     name : str, optional
         The name of the marker. If None, will use the class name
         (default None).
@@ -42,8 +43,12 @@ class CrossParcellationFC(BaseMarker):
         parcellation_two: str,
         aggregation_method: str = "mean",
         correlation_method: str = "pearson",
-        name: str = None,
+        name: Optional[str] = None,
     ) -> None:
+        if parcellation_one == parcellation_two:
+            raise_error(
+                "The two parcellations must be different.",
+            )
         self.parcellation_one = parcellation_one
         self.parcellation_two = parcellation_two
         self.aggregation_method = aggregation_method
@@ -126,7 +131,7 @@ class CrossParcellationFC(BaseMarker):
             with this as a parameter. The dictionary has the following keys:
 
             * data : the correlation values between the two parcellations as
-            a numpy.ndarray
+              a numpy.ndarray
             * col_names : the ROIs for first parcellation as a list
             * row_names : the ROIs for second parcellation as a list
 

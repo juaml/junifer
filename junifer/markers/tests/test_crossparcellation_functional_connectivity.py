@@ -7,6 +7,7 @@
 from pathlib import Path
 
 from nilearn import image
+import pytest
 
 from junifer.markers.crossparcellation_functional_connectivity import (
     CrossParcellationFC,
@@ -95,3 +96,13 @@ def test_get_output_kind() -> None:
     input_list = crossparcellation.get_output_kind(input_list)
     assert len(input_list) == 1
     assert input_list[0] in ["matrix"]
+
+
+def test_init_() -> None:
+    """Test CrossParcellationFC init()."""
+    with pytest.raises(ValueError, match="must be different"):
+        CrossParcellationFC(
+            parcellation_one="a",
+            parcellation_two="a",
+            correlation_method="pearson",
+        )
