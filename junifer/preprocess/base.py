@@ -71,7 +71,8 @@ class BasePreprocessor(ABC, PipelineStepMixin):
         Returns
         -------
         list of str
-            The updated list of output kinds, as storage possibilities.
+            The updated list of available Junifer Data object keys after
+            the pipeline step.
 
         """
         raise_error(

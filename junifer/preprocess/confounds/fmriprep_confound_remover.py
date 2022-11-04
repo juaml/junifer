@@ -1,4 +1,4 @@
-"""Provide class for confound removal using FMRIPrep format."""
+"""Provide class for confound removal using fMRIPrep format."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -13,9 +13,9 @@ from nilearn._utils.niimg_conversions import check_niimg_4d
 from nilearn.image import clean_img
 from nilearn.masking import compute_brain_mask
 
-from .base import BasePreprocessor
-from ..api.decorators import register_preprocessor
-from ..utils import logger, raise_error
+from ..base import BasePreprocessor
+from ...api.decorators import register_preprocessor
+from ...utils import logger, raise_error
 
 
 if TYPE_CHECKING:
