@@ -79,7 +79,7 @@ Enhancements
 
 - Implement CrossParcellationFC marker (:gh:`85` by `Leonard Sasse`_ and `Kaustubh R. Patil`_)
 
-- Add datagrabber implementation for the UCLA dataset available on juseless (by `Leonard Sasse`_).
+- Add datagrabber implementation for the UCLA dataset available on juseless (:gh:`118` by `Leonard Sasse`_).
 
 Bugs
 ~~~~
