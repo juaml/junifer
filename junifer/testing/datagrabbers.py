@@ -24,13 +24,24 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
         types = ["VBM_GM"]
         super().__init__(types=types, datadir=datadir)
 
-    def __getitem__(self, element: str) -> Dict:
+    def get_element_keys(self) -> List[str]:
+        """Get element keys.
+
+        Returns
+        -------
+        str
+            The element keys.
+
+        """
+        return ["subject"]
+
+    def get_item(self, subject: str) -> Dict:
         """Implement indexing support.
 
         Parameters
         ----------
-        element : str
-            The element to retrieve.
+        subject : str
+            The subject to retrieve.
 
         Returns
         -------
@@ -38,11 +49,10 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
             The data along with the metadata.
 
         """
-        out = super().__getitem__(element)
-        i_sub = int(element.split("-")[1]) - 1
+        out = {}
+        i_sub = int(subject.split("-")[1]) - 1
         out["VBM_GM"] = {"path": Path(self._dataset.gray_matter_maps[i_sub])}
-        # Set the element accordingly
-        out["meta"]["element"] = {"subject": element}
+
         return out
 
     def __enter__(self) -> "OasisVBMTestingDatagrabber":
@@ -82,6 +92,17 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
         types = ["BOLD", "T1w"]  # TODO: Check that they are T1w
         super().__init__(types=types, datadir=datadir)
 
+    def get_element_keys(self) -> List[str]:
+        """Get element keys.
+
+        Returns
+        -------
+        str
+            The element keys.
+
+        """
+        return ["subject"]
+
     def get_elements(self) -> List[str]:
         """Get elements.
 
@@ -93,13 +114,13 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
         """
         return [f"sub{x:03d}" for x in list(range(1, 11))]
 
-    def __getitem__(self, element: str) -> Dict:
+    def get_item(self, subject: str) -> Dict:
         """Implement indexing support.
 
         Parameters
         ----------
-        element : str
-            The element to retrieve.
+        subject : str
+            The subject to retrieve.
 
         Returns
         -------
@@ -107,20 +128,17 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
             The data along with the metadata.
 
         """
-        out = super().__getitem__(element)
-
-        nilearn_data = datasets.fetch_spm_auditory(subject_id=element)
+        out = {}
+        nilearn_data = datasets.fetch_spm_auditory(subject_id=subject)
         fmri_img = image.concat_imgs(nilearn_data.func)  # type: ignore
         anat_img = image.concat_imgs(nilearn_data.anat)  # type: ignore
 
-        fmri_fname = self.datadir / f"{element}_bold.nii.gz"
-        anat_fname = self.datadir / f"{element}_T1w.nii.gz"
+        fmri_fname = self.datadir / f"{subject}_bold.nii.gz"
+        anat_fname = self.datadir / f"{subject}_T1w.nii.gz"
         nib.save(fmri_img, fmri_fname)
         nib.save(anat_img, anat_fname)
         out["BOLD"] = {"path": fmri_fname}
         out["T1w"] = {"path": anat_fname}
-        # Set the element accordingly
-        out["meta"]["element"] = {"subject": element}
         return out
 
 
@@ -176,6 +194,17 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         )
         return self
 
+    def get_element_keys(self) -> List[str]:
+        """Get element keys.
+
+        Returns
+        -------
+        str
+            The element keys.
+
+        """
+        return ["subject"]
+
     def get_elements(self) -> List[str]:
         """Get elements.
 
@@ -187,13 +216,13 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         """
         return [f"sub-{x:02d}" for x in list(range(1, 11))]
 
-    def __getitem__(self, element: str) -> Dict:
+    def get_item(self, subject: str) -> Dict:
         """Implement indexing support.
 
         Parameters
         ----------
-        element : str
-            The element to retrieve.
+        subject : str
+            The subject to retrieve.
 
         Returns
         -------
@@ -201,8 +230,8 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
             The data along with the metadata.
 
         """
-        out = super().__getitem__(element)
-        i_sub = int(element.split("-")[1]) - 1
+        out = {}
+        i_sub = int(subject.split("-")[1]) - 1
         out["BOLD"] = {"path": Path(self._dataset["func"][i_sub])}
         conf_format = "fmriprep"
 
@@ -211,6 +240,4 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
             "format": conf_format,
         }
 
-        # Set the element accordingly
-        out["meta"]["element"] = {"subject": element}
         return out
