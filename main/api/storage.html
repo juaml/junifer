@@ -357,7 +357,7 @@ values are the metadata of each feature.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <cite>kind</cite> is invalid.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">kind</span></code> is invalid.</p>
 </dd>
 </dl>
 </dd>
@@ -453,7 +453,7 @@ values are the metadata of each feature.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <cite>input_</cite> is invalid.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">input_</span></code> is invalid.</p>
 </dd>
 </dl>
 </dd>
@@ -527,7 +527,7 @@ If “update”, the existing elements are updated (default “update”).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotImplementedError</span></code></a></dt><dd><p>If <cite>single_output</cite> is True.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NotImplementedError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">single_output</span></code> is True.</p>
 </dd>
 </dl>
 </dd>
@@ -581,7 +581,8 @@ values are the metadata of each feature.</p>
 <dt class="sig sig-object py" id="junifer.storage.SQLiteFeatureStorage.read_df">
 <span class="sig-name descname"><span class="pre">read_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.SQLiteFeatureStorage.read_df" title="Permalink to this definition">#</a></dt>
 <dd><p>Implement feature reading into a pandas DataFrame.</p>
-<p>Either one of <cite>feature_name</cite> or <cite>feature_md5</cite> needs to be specified.</p>
+<p>Either one of <code class="docutils literal notranslate"><span class="pre">feature_name</span></code> or <code class="docutils literal notranslate"><span class="pre">feature_md5</span></code> needs to be
+specified.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -647,11 +648,13 @@ generated from the metadata.</p>
 If None and number of rows greater than 1, then the name will be
 “index” (default None).</p>
 </dd>
-<dt><strong>matrix_kind</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The kind of matrix:
-- “triu” : store upper triangular only
-- “tril” : store lower triangular
-- “full” : full matrix
-(default “full”).</p>
+<dt><strong>matrix_kind</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The kind of matrix:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">triu</span></code> : store upper triangular only</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tril</span></code> : store lower triangular</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">full</span></code> : full matrix</p></li>
+</ul>
+<p>(default “full”).</p>
 </dd>
 <dt><strong>diagonal</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to store the diagonal. If <cite>matrix_kind</cite> is “full”, setting
 this to False will raise an error (default True)..</p>

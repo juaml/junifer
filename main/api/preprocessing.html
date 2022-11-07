@@ -354,7 +354,7 @@ preprocessor.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>]</span></dt><dd><p>A single input from the Junifer Data object to preprocess.</p>
+<dt><strong>input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>A single input from the Junifer Data object to preprocess.</p>
 </dd>
 <dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the Junifer Data object. Useful for accessing
 other data kind that needs to be used in the computation. For
@@ -404,7 +404,7 @@ available Junifer Data dictionary keys.</p>
 <dd><p>Class for confound removal using fMRIPrep confounds format.</p>
 <p>Read confound files and select columns according to
 a pre-defined strategy.</p>
-<p>Confound removal is based on <cite>nilearn.image.clean_img</cite>.</p>
+<p>Confound removal is based on <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.image.clean_img.html#nilearn.image.clean_img" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.image.clean_img()</span></code></a>.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -413,17 +413,17 @@ strategy for all components (default None).
 The keys of the dictionary should correspond to names of noise
 components to include:</p>
 <ul class="simple">
-<li><p>‘motion’</p></li>
-<li><p>‘wm_csf’</p></li>
-<li><p>‘global_signal’</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">motion</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">wm_csf</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">global_signal</span></code></p></li>
 </ul>
 <p>The values of dictionary should correspond to types of confounds
 extracted from each signal:</p>
 <ul class="simple">
-<li><p>‘basic’: only the confounding time series</p></li>
-<li><p>‘power2’: signal + quadratic term</p></li>
-<li><p>‘derivatives’: signal + derivatives</p></li>
-<li><p>‘full’: signal + deriv. + quadratic terms + power2 deriv.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">basic</span></code> : only the confounding time series</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">power2</span></code> : signal + quadratic term</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">derivatives</span></code> : signal + derivatives</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">full</span></code> : signal + deriv. + quadratic terms + power2 deriv.</p></li>
 </ul>
 </dd>
 <dt><strong>spike</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>If None, no spike regressor is added. If spike is a float, it will
@@ -499,7 +499,7 @@ the pipeline step.</p>
 <dt><strong>input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>A single input from the Junifer Data object in which to preprocess.</p>
 </dd>
 <dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the Junifer Data object. Must include the
-“BOLD_confounds” key.</p>
+<code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> key.</p>
 </dd>
 </dl>
 </dd>
@@ -508,7 +508,7 @@ the pipeline step.</p>
 <dt><strong>key</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The key to store the output in the Junifer Data object.</p>
 </dd>
 <dt><strong>object</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The computed result as dictionary. This will be stored in the
-Junifer Data object under the key ‘key’.</p>
+Junifer Data object under the key <code class="docutils literal notranslate"><span class="pre">key</span></code>.</p>
 </dd>
 </dl>
 </dd>
