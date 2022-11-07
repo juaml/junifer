@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 def make_executable(path: Path) -> None:
-    """Make `path` executable.
+    """Make ``path`` executable.
 
     Parameters
     ----------
