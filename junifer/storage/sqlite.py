@@ -280,7 +280,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     ) -> pd.DataFrame:
         """Implement feature reading into a pandas DataFrame.
 
-        Either one of `feature_name` or `feature_md5` needs to be specified.
+        Either one of ``feature_name`` or ``feature_md5`` needs to be
+        specified.
 
         Parameters
         ----------
@@ -591,7 +592,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         Raises
         ------
         NotImplementedError
-            If `single_output` is True.
+            If ``single_output`` is True.
 
         """
         if self.single_output is True:
