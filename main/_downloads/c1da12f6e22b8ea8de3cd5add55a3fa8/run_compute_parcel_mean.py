@@ -3,7 +3,8 @@ Computer Parcel Aggregation.
 ============================
 
 This example uses a ParcelAggregation marker to compute the mean of each parcel
-using the Schaefer atlas (100 rois, 7 Yeo networks) for both a 3D and 4D nifti
+using the Schaefer parcellations (100 rois, 7 Yeo networks) for both a 3D and
+4D nifti
 
 Authors: Federico Raimondo
 
@@ -37,7 +38,7 @@ fmri_img = nilearn.image.concat_imgs(s_func_data.func)
 
 ###############################################################################
 # Define the marker
-marker = ParcelAggregation(atlas="Schaefer100x7", method="mean")
+marker = ParcelAggregation(parcellation="Schaefer100x7", method="mean")
 
 ###############################################################################
 # Prepare the input

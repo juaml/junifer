@@ -3,7 +3,7 @@
 Extracting root sum of squares from edge-wise timeseries.
 =========================================================
 This example uses a ``RSSETSMarker`` to compute root sum of squares
-of the edge-wise timeseries using the Schaefer atlas
+of the edge-wise timeseries using the Schaefer parcellation
 (100 rois and 200 rois, 17 Yeo networks) for a 4D nifti BOLD file.
 
 Authors: Leonard Sasse, Sami Hamdan, Nicolas Nieto, Synchon Mandal
@@ -36,12 +36,12 @@ markers = [
     {
         "name": "Schaefer100x17_RSSETS",
         "kind": "RSSETSMarker",
-        "atlas": "Schaefer100x17",
+        "parcellation": "Schaefer100x17",
     },
     {
         "name": "Schaefer200x17_RSSETS",
         "kind": "RSSETSMarker",
-        "atlas": "Schaefer200x17",
+        "parcellation": "Schaefer200x17",
     },
 ]
 

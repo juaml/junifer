@@ -1,7 +1,7 @@
-Atlases
-=======
+Parcellations
+=============
 
-.. automodule:: junifer.data.atlases
+.. automodule:: junifer.data.parcellations
    :members:
 
 Coordinates

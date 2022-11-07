@@ -172,11 +172,11 @@
 <li class="toctree-l2"><a class="reference internal" href="understanding/storage.html">2.6. Storage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="builtin.html">3. Pipeline steps and atlases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="builtin.html">3. Built-in Pipeline steps and data</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">4. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_compute_parcel_mean.html">4.1. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_ukbvm_gmd.html">4.2. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_datagrabber_bids_datalad.html">4.3. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_datagrabber_bids_datalad.html">4.2. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_ukbvm_gmd.html">4.3. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_run_gmd_mean.html">4.4. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_ets_rss_marker.html">4.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_hcpfc_pearson.html">4.6. HCP FC Extraction</a></li>
@@ -189,7 +189,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/preprocessing.html">5.1.3. Pre-processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/markers.html">5.1.4. Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/storage.html">5.1.5. Storage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data.html">5.2.1. Atlases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data.html">5.2.1. Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/data.html#module-junifer.data.coordinates">5.2.2. Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/stats.html">5.2.3. Stats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/pipeline.html">5.2.4. Pipeline</a></li>
@@ -293,7 +293,7 @@
         <ul>
           <li><a href="api/markers.html#junifer.markers.CrossParcellationFC.compute">(junifer.markers.CrossParcellationFC method)</a>
 </li>
-          <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityAtlas.compute">(junifer.markers.FunctionalConnectivityAtlas method)</a>
+          <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityParcels.compute">(junifer.markers.FunctionalConnectivityParcels method)</a>
 </li>
           <li><a href="api/markers.html#junifer.markers.FunctionalConnectivitySpheres.compute">(junifer.markers.FunctionalConnectivitySpheres method)</a>
 </li>
@@ -362,7 +362,7 @@
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover">fMRIPrepConfoundRemover (class in junifer.preprocess)</a>
 </li>
-        <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityAtlas">FunctionalConnectivityAtlas (class in junifer.markers)</a>
+        <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityParcels">FunctionalConnectivityParcels (class in junifer.markers)</a>
 </li>
         <li><a href="api/markers.html#junifer.markers.FunctionalConnectivitySpheres">FunctionalConnectivitySpheres (class in junifer.markers)</a>
 </li>
@@ -425,7 +425,7 @@
 </li>
           <li><a href="api/markers.html#junifer.markers.CrossParcellationFC.get_output_kind">(junifer.markers.CrossParcellationFC method)</a>
 </li>
-          <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityAtlas.get_output_kind">(junifer.markers.FunctionalConnectivityAtlas method)</a>
+          <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityParcels.get_output_kind">(junifer.markers.FunctionalConnectivityParcels method)</a>
 </li>
           <li><a href="api/markers.html#junifer.markers.FunctionalConnectivitySpheres.get_output_kind">(junifer.markers.FunctionalConnectivitySpheres method)</a>
 </li>
@@ -457,7 +457,7 @@
         <ul>
           <li><a href="api/markers.html#junifer.markers.CrossParcellationFC.get_valid_inputs">(junifer.markers.CrossParcellationFC method)</a>
 </li>
-          <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityAtlas.get_valid_inputs">(junifer.markers.FunctionalConnectivityAtlas method)</a>
+          <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityParcels.get_valid_inputs">(junifer.markers.FunctionalConnectivityParcels method)</a>
 </li>
           <li><a href="api/markers.html#junifer.markers.FunctionalConnectivitySpheres.get_valid_inputs">(junifer.markers.FunctionalConnectivitySpheres method)</a>
 </li>
@@ -522,17 +522,17 @@
 </li>
         </ul></li>
         <li>
-    junifer.data.atlases
-
-        <ul>
-          <li><a href="api/data.html#module-junifer.data.atlases">module</a>
-</li>
-        </ul></li>
-        <li>
     junifer.data.coordinates
 
         <ul>
           <li><a href="api/data.html#module-junifer.data.coordinates">module</a>
+</li>
+        </ul></li>
+        <li>
+    junifer.data.parcellations
+
+        <ul>
+          <li><a href="api/data.html#module-junifer.data.parcellations">module</a>
 </li>
         </ul></li>
         <li>
@@ -625,8 +625,6 @@
   <h2>L</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/data.html#junifer.data.atlases.list_atlases">list_atlases() (in module junifer.data.atlases)</a>
-</li>
         <li><a href="api/data.html#junifer.data.coordinates.list_coordinates">list_coordinates() (in module junifer.data.coordinates)</a>
 </li>
         <li><a href="api/storage.html#junifer.storage.BaseFeatureStorage.list_features">list_features() (junifer.storage.BaseFeatureStorage method)</a>
@@ -637,9 +635,11 @@
         </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/data.html#junifer.data.atlases.load_atlas">load_atlas() (in module junifer.data.atlases)</a>
+        <li><a href="api/data.html#junifer.data.parcellations.list_parcellations">list_parcellations() (in module junifer.data.parcellations)</a>
 </li>
         <li><a href="api/data.html#junifer.data.coordinates.load_coordinates">load_coordinates() (in module junifer.data.coordinates)</a>
+</li>
+        <li><a href="api/data.html#junifer.data.parcellations.load_parcellation">load_parcellation() (in module junifer.data.parcellations)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -663,9 +663,9 @@
 </li>
           <li><a href="api/configs.html#module-junifer.configs.juseless.datagrabbers">junifer.configs.juseless.datagrabbers</a>
 </li>
-          <li><a href="api/data.html#module-junifer.data.atlases">junifer.data.atlases</a>
-</li>
           <li><a href="api/data.html#module-junifer.data.coordinates">junifer.data.coordinates</a>
+</li>
+          <li><a href="api/data.html#module-junifer.data.parcellations">junifer.data.parcellations</a>
 </li>
           <li><a href="api/datagrabbers.html#module-junifer.datagrabber">junifer.datagrabber</a>
 </li>
@@ -766,15 +766,15 @@
           <li><a href="api/pipeline.html#junifer.pipeline.registry.register">(in module junifer.pipeline.registry)</a>
 </li>
         </ul></li>
-        <li><a href="api/data.html#junifer.data.atlases.register_atlas">register_atlas() (in module junifer.data.atlases)</a>
+        <li><a href="api/data.html#junifer.data.coordinates.register_coordinates">register_coordinates() (in module junifer.data.coordinates)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/data.html#junifer.data.coordinates.register_coordinates">register_coordinates() (in module junifer.data.coordinates)</a>
-</li>
         <li><a href="api/api.html#junifer.api.decorators.register_datagrabber">register_datagrabber() (in module junifer.api.decorators)</a>
 </li>
         <li><a href="api/api.html#junifer.api.decorators.register_marker">register_marker() (in module junifer.api.decorators)</a>
+</li>
+        <li><a href="api/data.html#junifer.data.parcellations.register_parcellation">register_parcellation() (in module junifer.data.parcellations)</a>
 </li>
         <li><a href="api/api.html#junifer.api.decorators.register_preprocessor">register_preprocessor() (in module junifer.api.decorators)</a>
 </li>
@@ -811,7 +811,7 @@
         <ul>
           <li><a href="api/markers.html#junifer.markers.CrossParcellationFC.store">(junifer.markers.CrossParcellationFC method)</a>
 </li>
-          <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityAtlas.store">(junifer.markers.FunctionalConnectivityAtlas method)</a>
+          <li><a href="api/markers.html#junifer.markers.FunctionalConnectivityParcels.store">(junifer.markers.FunctionalConnectivityParcels method)</a>
 </li>
           <li><a href="api/markers.html#junifer.markers.FunctionalConnectivitySpheres.store">(junifer.markers.FunctionalConnectivitySpheres method)</a>
 </li>

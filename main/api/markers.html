@@ -174,11 +174,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.6. Storage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Pipeline steps and atlases</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Built-in Pipeline steps and data</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">4. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">4.1. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">4.2. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">4.3. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">4.2. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">4.3. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">4.4. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">4.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">4.6. HCP FC Extraction</a></li>
@@ -191,7 +191,7 @@
 <li class="toctree-l2"><a class="reference internal" href="preprocessing.html">5.1.3. Pre-processing</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.1.4. Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.html">5.1.5. Storage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.html">5.2.1. Atlases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">5.2.1. Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html#module-junifer.data.coordinates">5.2.2. Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stats.html">5.2.3. Stats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pipeline.html">5.2.4. Pipeline</a></li>
@@ -434,7 +434,7 @@ available Junifer Data dictionary keys.</p>
 <dt><strong>aggregation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method (default “mean”).</p>
 </dd>
 <dt><strong>correlation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Any method that can be passed to
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.0.0.dev0+588.g1d8922e20b)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.0.0.dev0+589.gf0d4694bf8)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
 </dd>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use the class name
 (default None).</p>
@@ -532,14 +532,14 @@ available Junifer Data dictionary keys.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityAtlas">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">FunctionalConnectivityAtlas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'covariance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityAtlas" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityParcels">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">FunctionalConnectivityParcels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'covariance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityParcels" title="Permalink to this definition">#</a></dt>
 <dd><p>Class for functional connectivity.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>atlas</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the atlas. Check valid options by calling
-<a class="reference internal" href="data.html#junifer.data.atlases.list_atlases" title="junifer.data.atlases.list_atlases"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.atlases.list_atlases()</span></code></a>.</p>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the parcellation. Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
 </dd>
 <dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
 <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
@@ -561,8 +561,8 @@ None).</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityAtlas.compute">
-<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityAtlas.compute" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityParcels.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityParcels.compute" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -594,8 +594,8 @@ included in the dictionary:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityAtlas.get_output_kind">
-<span class="sig-name descname"><span class="pre">get_output_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityAtlas.get_output_kind" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityParcels.get_output_kind">
+<span class="sig-name descname"><span class="pre">get_output_kind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityParcels.get_output_kind" title="Permalink to this definition">#</a></dt>
 <dd><p>Get output kind.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -615,8 +615,8 @@ available Junifer Data dictionary keys.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityAtlas.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityAtlas.get_valid_inputs" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityParcels.get_valid_inputs">
+<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityParcels.get_valid_inputs" title="Permalink to this definition">#</a></dt>
 <dd><p>Get valid data types for input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -629,8 +629,8 @@ available Junifer Data dictionary keys.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityAtlas.store">
-<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityAtlas.store" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityParcels.store">
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityParcels.store" title="Permalink to this definition">#</a></dt>
 <dd><p>Store.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -830,13 +830,13 @@ check that the storage can handle the markers output.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.ParcelAggregation">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">ParcelAggregation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ParcelAggregation" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">ParcelAggregation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ParcelAggregation" title="Permalink to this definition">#</a></dt>
 <dd><p>Class for parcel aggregation.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>atlas</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the atlas. Check valid options by calling
-<a class="reference internal" href="data.html#junifer.data.atlases.list_atlases" title="junifer.data.atlases.list_atlases"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.atlases.list_atlases()</span></code></a>.</p>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the parcellation. Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
 </dd>
 <dt><strong>method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The method to perform aggregation using. Check valid options in
 <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a>.</p>
@@ -941,13 +941,13 @@ with this as a parameter. The dictionary has the following keys:
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.RSSETSMarker">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">RSSETSMarker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.RSSETSMarker" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">RSSETSMarker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.RSSETSMarker" title="Permalink to this definition">#</a></dt>
 <dd><p>Class for root sum of squares of edgewise timeseries.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>atlas</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the atlas. Check valid options by calling
-<a class="reference internal" href="data.html#junifer.data.atlases.list_atlases" title="junifer.data.atlases.list_atlases"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.atlases.list_atlases()</span></code></a>.</p>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the parcellation. Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
 </dd>
 <dt><strong>aggregation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
 <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
@@ -1243,11 +1243,11 @@ with this as a parameter. The dictionary has the following keys:
 <li><a class="reference internal" href="#junifer.markers.CrossParcellationFC.store"><code class="docutils literal notranslate"><span class="pre">CrossParcellationFC.store()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityAtlas"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityAtlas</span></code></a><ul>
-<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityAtlas.compute"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityAtlas.compute()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityAtlas.get_output_kind"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityAtlas.get_output_kind()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityAtlas.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityAtlas.get_valid_inputs()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityAtlas.store"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityAtlas.store()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityParcels"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityParcels</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityParcels.compute"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityParcels.compute()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityParcels.get_output_kind"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityParcels.get_output_kind()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityParcels.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityParcels.get_valid_inputs()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.markers.FunctionalConnectivityParcels.store"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityParcels.store()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.markers.FunctionalConnectivitySpheres"><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivitySpheres</span></code></a><ul>
