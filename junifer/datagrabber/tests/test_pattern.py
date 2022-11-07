@@ -105,7 +105,7 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
         replacements=["subject", "session"],
     )
 
-    with pytest.raises(ValueError, match="element length must be"):
+    with pytest.raises(ValueError, match="element keys must be"):
         datagrabber["sub001"]
 
     # This should not work, file does not exists

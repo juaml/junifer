@@ -105,7 +105,7 @@ class PatternDataGrabber(BaseDataGrabber):
             glob_pattern = glob_pattern.replace(f"{{{t_r}}}", "*")
         return re_pattern, glob_pattern, t_replacements
 
-    def _replace_patterns_glob(self, element: Tuple, pattern: str) -> str:
+    def _replace_patterns_glob(self, element: Dict, pattern: str) -> str:
         """Replace patterns with the element so it can be globbed.
 
         Parameters
@@ -121,15 +121,28 @@ class PatternDataGrabber(BaseDataGrabber):
             The pattern with the element replaced.
 
         """
-        if len(element) != len(self.replacements):
+        if list(element.keys()) != self.replacements:
             raise_error(
-                f"The element length must be {len(self.replacements)}, "
-                f"indicating {self.replacements}."
+                f"The element keys must be {self.replacements}, "
+                f"element has {list(element.keys())}."
             )
-        to_replace = dict(zip(self.replacements, element))
-        return pattern.format(**to_replace)
+        return pattern.format(**element)
 
-    def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Dict]:
+    def get_element_keys(self) -> List[str]:
+        """Get element keys.
+
+        For each item in the "element" tuple, this functions returns the
+        corresponding key.
+
+        Returns
+        -------
+        str
+            The element keys.
+
+        """
+        return self.replacements
+
+    def get_item(self, **element: Dict) -> Dict[str, Dict]:
         """Implement single element indexing in the database.
 
         Each occurrence of the strings in "replacements" is replaced by the
@@ -137,11 +150,9 @@ class PatternDataGrabber(BaseDataGrabber):
 
         Parameters
         ----------
-        element : str or tuple
-            The element to be indexed. If one string is provided, it is
-            assumed to be a tuple with only one item. If a tuple is provided,
-            each item in the tuple is the value for the replacement string
-            specified in "replacements".
+        element : dict
+            The element to be indexed. The keys must be the same as the
+            replacements.
 
         Returns
         -------
@@ -150,9 +161,7 @@ class PatternDataGrabber(BaseDataGrabber):
             specified element.
 
         """
-        out = super().__getitem__(element)
-        if not isinstance(element, tuple):
-            element = (element,)
+        out = dict()
         for t_type in self.types:
             t_pattern = self.patterns[t_type]
             t_replace = self._replace_patterns_glob(element, t_pattern)
@@ -175,8 +184,6 @@ class PatternDataGrabber(BaseDataGrabber):
                             f"File {t_out} does not exist"
                         )
             out[t_type] = {"path": t_out}
-        # Meta here is element and types
-        out["meta"]["element"] = dict(zip(self.replacements, element))
         return out
 
     def get_elements(self) -> List:

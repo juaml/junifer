@@ -2,7 +2,7 @@
 
 from itertools import product
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Union
 
 from junifer.datagrabber.datalad_base import DataladDataGrabber
 
@@ -104,15 +104,20 @@ class HCP1200(PatternDataGrabber):
         )
         self.phase_encodings = phase_encodings
 
-    def __getitem__(self, element: Tuple[str, str, str]) -> Dict[str, Path]:
+    def get_item(
+        self, subject: str, task: str, phase_encoding: str
+    ) -> Dict[str, Path]:
         """Index one element in the dataset.
 
         Parameters
         ----------
-        element : triple of str
-            The element to be indexed. First element in the tuple is the
-            subject, second element is the task, third element is the
-            phase encoding direction.
+        subject : str
+            The subject ID.
+        task : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
+               "LANGUAGE", "GAMBLING", "MOTOR"}
+            The task.
+        phase_encoding : {"LR", "RL"}
+            The phase encoding.
 
         Returns
         -------
@@ -121,20 +126,15 @@ class HCP1200(PatternDataGrabber):
             specified element.
 
         """
-        sub, task, phase_encoding = element
-
         # Resting task
         if "REST" in task:
             new_task = f"rfMRI_{task}"
         else:
             new_task = f"tfMRI_{task}"
 
-        out = super().__getitem__((sub, new_task, phase_encoding))
-        out["meta"]["element"] = {
-            "subject": sub,
-            "task": task,
-            "phase_encoding": phase_encoding,
-        }
+        out = super().get_item(
+            subject=subject, task=new_task, phase_encoding=phase_encoding
+        )
         return out
 
     def get_elements(self) -> List:
@@ -173,17 +173,13 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
     phase_encodings : {"LR", "RL"} or list of the options, optional
         HCP phase encoding directions. If None, both will be used
         (default None).
-    **kwargs
-        Keyword arguments passed to superclass.
-
     """
 
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
         tasks: Union[str, List[str], None] = None,
-        phase_encodings: Union[str, List[str], None] = None,
-        **kwargs,
+        phase_encodings: Union[str, List[str], None] = None
     ) -> None:
         uri = (
             "https://github.com/datalad-datasets/"

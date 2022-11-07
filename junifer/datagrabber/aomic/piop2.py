@@ -29,16 +29,12 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         list of the options, optional
         AOMIC PIOP2 task sessions. If None, all available task sessions are
         selected (default None).
-    **kwargs
-        Keyword arguments passed to superclass.
-
     """
 
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
         tasks: Union[str, List[str], None] = None,
-        **kwargs,
     ) -> None:
         # The types of data
         types = [

@@ -22,11 +22,14 @@ def test_BaseDataGrabber() -> None:
     """Test BaseDataGrabber."""
     # Create concrete class.
     class MyDataGrabber(BaseDataGrabber):
-        def __getitem__(self, element):
-            return super().__getitem__(element)
+        def get_item(self, subject):
+            return {}
 
         def get_elements(self):
             return super().get_elements()
+
+        def get_element_keys(self):
+            return ["subject"]
 
     dg = MyDataGrabber(datadir="/tmp", types=["func"])
     elem = dg["elem"]
@@ -34,6 +37,9 @@ def test_BaseDataGrabber() -> None:
     assert "datagrabber" in elem["meta"]
     assert "class" in elem["meta"]["datagrabber"]
     assert MyDataGrabber.__name__ in elem["meta"]["datagrabber"]["class"]
+    assert "element" in elem["meta"]
+    assert "subject" in elem["meta"]["element"]
+    assert "elem" in elem["meta"]["element"]["subject"]
 
     with pytest.raises(NotImplementedError):
         dg.get_elements()

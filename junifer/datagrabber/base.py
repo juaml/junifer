@@ -63,10 +63,7 @@ class BaseDataGrabber(ABC):
         Parameters
         ----------
         element : str or tuple
-            The element to be indexed. If one string is provided, it is
-            assumed to be a tuple with only one item. If a tuple is provided,
-            each item in the tuple is the value for the replacement string
-            specified in "replacements".
+            The element to be indexed.
 
         Returns
         -------
@@ -76,8 +73,14 @@ class BaseDataGrabber(ABC):
 
         """
         logger.info(f"Getting element {element}")
-        out = {}
-        out["meta"] = {"datagrabber": self.get_meta()}
+        if not isinstance(element, tuple):
+            element = (element,)
+        named_element = dict(zip(self.get_element_keys(), element))
+        out = self.get_item(**named_element)
+        out["meta"] = {
+            "datagrabber": self.get_meta(),
+            "element": named_element
+        }
         return out
 
     def __enter__(self) -> "BaseDataGrabber":
@@ -115,18 +118,6 @@ class BaseDataGrabber(ABC):
                 t_meta[k] = v
         return t_meta
 
-    # TODO: what is the final functionality?
-    def get_element_keys(self) -> str:
-        """Get element keys.
-
-        Returns
-        -------
-        str
-            The element keys.
-
-        """
-        return "element"
-
     @property
     def datadir(self) -> Path:
         """Get data directory path.
@@ -138,6 +129,24 @@ class BaseDataGrabber(ABC):
 
         """
         return self._datadir
+
+    @abstractmethod
+    def get_element_keys(self) -> str:
+        """Get element keys.
+
+        For each item in the "element" tuple, this functions returns the
+        corresponding key.
+
+        Returns
+        -------
+        str
+            The element keys.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement get_element_keys().",
+            klass=NotImplementedError,
+        )
 
     @abstractmethod
     def get_elements(self) -> List:
@@ -153,5 +162,26 @@ class BaseDataGrabber(ABC):
         """
         raise_error(
             msg="Concrete classes need to implement get_elements().",
+            klass=NotImplementedError,
+        )
+
+    @abstractmethod
+    def get_item(self, **element: Dict) -> Dict[str, Dict]:
+        """Get the specified item from the dataset.
+
+        Parameters
+        ----------
+        element : Dict
+            The element to be indexed.
+
+        Returns
+        -------
+        dict
+            Dictionary of paths for each type of data required for the
+            specified element.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement get_item().",
             klass=NotImplementedError,
         )

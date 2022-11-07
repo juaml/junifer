@@ -55,6 +55,26 @@ class MultipleDataGrabber(BaseDataGrabber):
             out.update(t_out)
         return out
 
+    def get_item(self, **element: Dict) -> Dict[str, Dict]:
+        """Get item.
+
+        Parameters
+        ----------
+        element : dict
+            The element to be indexed.
+
+        Returns
+        -------
+        dict
+            Dictionary of paths for each type of data required for the
+            specified element.
+
+        Notes
+        -----
+            This function is not implemented for this class as it is useless.
+        """
+        raise ValueError("This should not be called")
+
     def __enter__(self) -> "BaseDataGrabber":
         """Implement context entry."""
         for dg in self._datagrabbers:
@@ -81,6 +101,22 @@ class MultipleDataGrabber(BaseDataGrabber):
         for s in all_elements[1:]:
             elements.intersection_update(s)
         return list(elements)
+
+    def get_element_keys(self) -> List[str]:
+        """Get element keys.
+
+        For each item in the "element" tuple, this functions returns the
+        corresponding key.
+
+        Returns
+        -------
+        str
+            The element keys.
+        """
+        all_keys = [
+            x for dg in self._datagrabbers for x in dg.get_element_keys()
+        ]
+        return list(set(all_keys))
 
     def get_types(self) -> List[str]:
         """Get types.

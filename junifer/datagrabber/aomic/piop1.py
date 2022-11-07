@@ -8,7 +8,7 @@
 
 from itertools import product
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Union
 
 from junifer.datagrabber import PatternDataladDataGrabber
 
@@ -30,16 +30,12 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         "workingmemory"} or list of the options, optional
         AOMIC PIOP1 task sessions. If None, all available task sessions are
         selected (default None).
-    **kwargs
-        Keyword arguments passed to superclass.
-
     """
 
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
         tasks: Union[str, List[str], None] = None,
-        **kwargs,
     ) -> None:
         # The types of data
         types = [
@@ -122,25 +118,24 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
             replacements=replacements,
         )
 
-    def __getitem__(self, element: Tuple[str, str]) -> Dict[str, Path]:
+    def get_item(self, subject: str, task: str) -> Dict[str, Path]:
         """Index one element in the dataset.
 
         Parameters
         ----------
-        element : tuple of str
-            The element to be indexed. First element in the tuple is the
-            subject, second element is the task.
+        subject : str
+            The subject ID.
+        task : {"restingstate", "anticipation", "emomatching", "faces", \
+                "gstroop", "workingmemory"}
+            The task to get.
 
         Returns
         -------
         out : dict
             Dictionary of paths for each type of data required for the
             specified element.
-
         """
-        sub, task = element
 
-        # depending on task 'acquisition is different'
         task_acqs = {
             "anticipation": "seq",
             "emomatching": "seq",
@@ -152,8 +147,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         acq = task_acqs[task]
         new_task = f"{task}_acq-{acq}"
 
-        out = super().__getitem__((sub, new_task))
-        out["meta"]["element"] = {"subject": sub, "task": task}
+        out = super().get_item(subject=subject, task=new_task)
         return out
 
     def get_elements(self) -> List:

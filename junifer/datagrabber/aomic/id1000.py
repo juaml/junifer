@@ -24,15 +24,11 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    **kwargs
-        Keyword arguments passed to superclass.
-
     """
 
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
-        **kwargs,
     ) -> None:
         # The types of data
         types = [
