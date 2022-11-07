@@ -27,7 +27,7 @@ with TemporaryDirectory() as tmpdir_name:
                   f'func/{t_sub}_task-rest_bold.json']
         for fname in fnames:
             with open(sub_dir / fname, 'w') as f:
-                f.write('placeholder')
+                f.write(f'placeholder-{fname}')
 
     ds.save(recursive=True)
     ds.siblings('add', name='gin', url=dst)

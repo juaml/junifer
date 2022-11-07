@@ -15,11 +15,11 @@ from junifer.datagrabber.pattern_datalad import PatternDataladDataGrabber
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
-        "id": "e2ce149bd723088769a86c72e57eded009258c6b",
+        "id": "522dfb203afcd2cd55799bf347f9b211919a7338",
     },
     "example_bids_ses": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids-ses",
-        "id": "3d08d55d1faad4f12ab64ac9497544a0d924d47a",
+        "id": "81839501b32183c476d285d6c23a5f8ad3adf5b4",
     },
 }
 
@@ -91,7 +91,7 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
             assert dg_meta["dataset_commit_id"] == repo_commit
 
             with open(t_sub["T1w"]["path"], "r") as f:
-                assert f.readlines()[0] == "placeholder"
+                assert f.readlines()[0].startswith("placeholder")
 
 
 def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:

@@ -101,6 +101,7 @@ class DataladDataGrabber(BaseDataGrabber):
             The modified dictionary with version appended.
 
         """
+        dirty_status = False
         for _, v in out.items():
             if "path" in v:
                 logger.debug(f"Getting {v['path']}")
@@ -109,8 +110,25 @@ class DataladDataGrabber(BaseDataGrabber):
                 # was to point to a subdataset rather than a file. This may be
                 # a source of confusion (+ performance/storage issue) when
                 # implementing a grabber.
-                self._dataset.get(v["path"])
+                dl_out = self._dataset.get(v["path"])
+                if not self._was_cloned:
+                    # If the dataset was already installed, check that the
+                    # file was actually downloaded to avoid removing a
+                    # file that was already there.
+                    if len(dl_out) > 1:
+                        raise_error("More than one file downloaded. WTF?")
+                    dl_out = dl_out[0]
+                    if dl_out["status"] == "ok":
+                        logger.debug("File downloaded")
+                        self._got_files.append(v["path"])
+                    elif dl_out["status"] == "notneeded":
+                        dirty_status = True
+                        logger.debug("File was already present")
+                    else:
+                        raise_error(f"File download failed: {dl_out}")
                 logger.debug("Get done")
+
+        assert self._dataset.repo is not None  # avoid errors from mypy
 
         # append the version of the dataset
         out["meta"]["datagrabber"][
@@ -118,19 +136,33 @@ class DataladDataGrabber(BaseDataGrabber):
         ] = self._dataset.repo.get_hexsha(
             self._dataset.repo.get_corresponding_branch()
         )
+
+        # Set a flag to indicate that the dataset was dirty
+        out["meta"]["datagrabber"]["dataset_dirty"] = dirty_status
         return out
 
     def install(self) -> None:
         """Install the datalad dataset into the datadir."""
-        logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
-        self._dataset: dl.Dataset = dl.clone(self.uri, self._datadir)
-        logger.debug("Dataset installed")
+        isinstalled = dl.Dataset(self._datadir).is_installed()
+        if isinstalled:
+            logger.debug("Dataset already installed")
+            self._got_files = []
+            self._dataset: dl.Dataset = dl.Dataset(self._datadir)
+            # TODO: Check URI
+        else:
+            logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
+            self._dataset: dl.Dataset = \
+                dl.clone(self.uri, self._datadir)  # type: ignore
+            logger.debug("Dataset installed")
+        self._was_cloned = not isinstalled
 
     def remove(self):
         """Remove the datalad dataset from the datadir."""
-        # This probably wants to use `reckless='kill'` or similar.
-        # See issue #53
-        self._dataset.remove(recursive=True)
+        if self._was_cloned:
+            self._dataset.remove(recursive=True, reckless="kill")
+        else:
+            for f in self._got_files:
+                self._dataset.drop(f)
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:
         """Implement single element indexing in the Datalad database.

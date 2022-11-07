@@ -81,6 +81,8 @@ Enhancements
 
 - Add datagrabber implementation for the UCLA dataset available on juseless (:gh:`118` by `Leonard Sasse`_).
 
+- Refactor the :class:`junifer.datagrabber.BaseDatagrabber` class to allow for easier subclassing (by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
@@ -88,6 +90,8 @@ Bugs
   (:gh:`96` by `Leonard Sasse`_, fixed in :gh:`98` by `Fede Raimondo`_).
 
 - Fix a bug in which AOMIC PIOP2 datagrabber did not use user input to constrain elements based on tasks (:gh:`105` by `Leonard Sasse`_)
+
+- Fix a bug in which a datalad dataset could remove a user-cloned dataset (:gh:`53` by `Fede Raimondo`_)
 
 API changes
 ~~~~~~~~~~~

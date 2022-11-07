@@ -9,7 +9,7 @@ from junifer.datagrabber import MultipleDataGrabber, PatternDataladDataGrabber
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
-        "id": "e2ce149bd723088769a86c72e57eded009258c6b",
+        "id": "522dfb203afcd2cd55799bf347f9b211919a7338",
     },
     "example_bids_ses": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids-ses",
