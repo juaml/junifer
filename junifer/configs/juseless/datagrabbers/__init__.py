@@ -9,3 +9,4 @@ from .ukb_vbm import JuselessDataladUKBVBM
 from .camcan_vbm import JuselessDataladCamCANVBM
 from .ixi_vbm import JuselessDataladIXIVBM
 from .aomic_id1000_vbm import JuselessDataladAOMICID1000VBM
+from .ucla import JuselessUCLA
