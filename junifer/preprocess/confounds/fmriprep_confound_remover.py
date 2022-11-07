@@ -94,7 +94,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     Read confound files and select columns according to
     a pre-defined strategy.
 
-    Confound removal is based on `nilearn.image.clean_img`.
+    Confound removal is based on :func:`nilearn.image.clean_img`.
 
     Parameters
     ----------
