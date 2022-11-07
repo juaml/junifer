@@ -3,8 +3,9 @@ Run junifer and julearn.
 ========================
 
 This example uses a ParcelAggregation marker to compute the mean of each parcel
-using the Schaefer atlas (100 rois, 7 Yeo networks) for a 3D nifti to extract
-some features for machine learning using julearn to predict some other data.
+using the Schaefer parcellation (100 rois, 7 Yeo networks) for a 3D nifti to
+extract some features for machine learning using julearn to predict some other
+data.
 
 Authors: Leonard Sasse, Sami Hamdan, Nicolas Nieto, Synchon Mandal
 
@@ -35,14 +36,14 @@ marker_dicts = [
     {
         "name": "Schaefer100x17_TrimMean80",
         "kind": "ParcelAggregation",
-        "atlas": "Schaefer100x17",
+        "parcellation": "Schaefer100x17",
         "method": "trim_mean",
         "method_params": {"proportiontocut": 0.2},
     },
     {
         "name": "Schaefer200x17_Mean",
         "kind": "ParcelAggregation",
-        "atlas": "Schaefer200x17",
+        "parcellation": "Schaefer200x17",
         "method": "mean",
     },
 ]

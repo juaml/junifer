@@ -27,9 +27,9 @@ class RSSETSMarker(BaseMarker):
 
     Parameters
     ----------
-    atlas : str
-        The name of the atlas. Check valid options by calling
-        :func:`junifer.data.atlases.list_atlases`.
+    parcellation : str
+        The name of the parcellation. Check valid options by calling
+        :func:`junifer.data.parcellations.list_parcellations`.
     aggregation_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
@@ -41,11 +41,11 @@ class RSSETSMarker(BaseMarker):
 
     def __init__(
         self,
-        atlas: str,
+        parcellation: str,
         aggregation_method: str = "mean",
         name: Optional[str] = None,
     ) -> None:
-        self.atlas = atlas
+        self.parcellation = parcellation
         self.aggregation_method = aggregation_method
         super().__init__(name=name)
 
@@ -136,7 +136,7 @@ class RSSETSMarker(BaseMarker):
         logger.debug("Calculating root sum of squares of edgewise timeseries.")
         # Initialize a ParcelAggregation
         parcel_aggregation = ParcelAggregation(
-            atlas=self.atlas,
+            parcellation=self.parcellation,
             method=self.aggregation_method,
         )
         # Compute the parcel aggregation

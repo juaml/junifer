@@ -20,20 +20,20 @@ markers = [
     {
         "name": "Schaefer1000x7_TrimMean80",
         "kind": "ParcelAggregation",
-        "atlas": "Schaefer1000x7",
+        "parcellation": "Schaefer1000x7",
         "method": "trim_mean",
         "method_params": {"proportiontocut": 0.2},
     },
     {
         "name": "Schaefer1000x7_Mean",
         "kind": "ParcelAggregation",
-        "atlas": "Schaefer1000x7",
+        "parcellation": "Schaefer1000x7",
         "method": "mean",
     },
     {
         "name": "Schaefer1000x7_Std",
         "kind": "ParcelAggregation",
-        "atlas": "Schaefer1000x7",
+        "parcellation": "Schaefer1000x7",
         "method": "std",
     },
 ]

@@ -33,7 +33,7 @@ Enhancements
 
 - Implement matrix storage in SQliteFeatureStorage (:gh:`42` by `Fede Raimondo`_).
 
-- Marker for functional connectivity using an atlas (:gh:`41` by
+- Marker for functional connectivity using a parcellation (:gh:`41` by
   `Amir Omidvarnia`_ and `Kaustubh R. Patil`_).
 
 - Added documentation for the datagrabbers (by `Leonard Sasse`_,
