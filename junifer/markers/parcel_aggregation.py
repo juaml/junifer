@@ -36,8 +36,8 @@ class ParcelAggregation(BaseMarker):
     method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name`.
-    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or list
-        of the options, optional
+    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} \
+         or list of the options, optional
         The data types to apply the marker to. If None, will work on all
         available data (default None).
     name : str, optional
@@ -141,9 +141,10 @@ class ParcelAggregation(BaseMarker):
             The computed result as dictionary. This will be either returned
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
-            - data : the actual computed values as a numpy.ndarray
-            - columns : the column labels for the computed values as a list
-            - row_names (if more than one row is present in data): "scan"
+
+            * ``data`` : the actual computed values as a numpy.ndarray
+            * ``columns`` : the column labels for the computed values as a list
+            * ``row_names`` (if more than one row is present in data): "scan"
 
         """
         t_input = input["data"]

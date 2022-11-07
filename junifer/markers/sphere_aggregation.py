@@ -152,9 +152,10 @@ class SphereAggregation(BaseMarker):
             The computed result as dictionary. This will be either returned
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
-            - data : the actual computed values as a numpy.ndarray
-            - columns : the column labels for the computed values as a list
-            - row_names (if more than one row is present in data): "scan"
+
+            * ``data`` : the actual computed values as a numpy.ndarray
+            * ``columns`` : the column labels for the computed values as a list
+            * ``row_names`` (if more than one row is present in data): "scan"
 
         """
         t_input = input["data"]

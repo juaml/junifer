@@ -121,10 +121,10 @@ class FunctionalConnectivityParcels(BaseMarker):
             The computed result as dictionary. The following data will be
             included in the dictionary:
 
-            * data: functional connectivity matrix as a numpy.ndarray.
-            * row_names: row names as a list
-            * col_names: column names as a list
-            * matrix_kind: the kind of matrix (tril, triu or full)
+            * ``data`` : functional connectivity matrix as a numpy.ndarray.
+            * ``row_names`` : row names as a list
+            * ``col_names`` : column names as a list
+            * ``matrix_kind`` : the kind of matrix (tril, triu or full)
 
         """
         pa = ParcelAggregation(

@@ -128,10 +128,10 @@ class BaseMarker(ABC, PipelineStepMixin):
 
         Parameters
         ----------
-        input : Dict[str, Dict]
+        input : dict
             A single input from the pipeline data object in which to compute
             the marker.
-        extra_input : Dict, optional
+        extra_input : dict, optional
             The other fields in the pipeline data object. Useful for accessing
             other data kind that needs to be used in the computation. For
             example, the functional connectivity markers can make use of the

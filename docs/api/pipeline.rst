@@ -10,4 +10,3 @@ Registry
 
 .. automodule:: junifer.pipeline.registry
    :members:
-   :imported-members:

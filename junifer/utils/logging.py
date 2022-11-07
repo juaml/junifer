@@ -214,9 +214,9 @@ def configure_logging(
     output_format : str, optional
         Format of the output messages. See the following for examples:
         https://docs.python.org/dev/howto/logging.html
-        e.g., "%(asctime)s - %(levelname)s - %(message)s".
+        e.g., ``"%(asctime)s - %(levelname)s - %(message)s"``.
         If None, default string format is used
-        (default "%(asctime)s - %(name)s - %(levelname)s - %(message)s").
+        (default ``"%(asctime)s - %(name)s - %(levelname)s - %(message)s"``).
 
     """
     _close_handlers(logger)  # close relevant logger handlers

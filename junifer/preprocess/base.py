@@ -152,7 +152,7 @@ class BasePreprocessor(ABC, PipelineStepMixin):
 
         Parameters
         ----------
-        input : dict[str, dict]
+        input : dict
             A single input from the Junifer Data object to preprocess.
         extra_input : dict, optional
             The other fields in the Junifer Data object. Useful for accessing

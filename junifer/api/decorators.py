@@ -80,7 +80,7 @@ def register_marker(klass: type) -> type:
     return klass
 
 
-def register_storage(klass):
+def register_storage(klass: type) -> type:
     """Storage registration decorator.
 
     Registers the storage so it can be used by name.
