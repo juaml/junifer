@@ -81,6 +81,8 @@ Enhancements
 
 - Add datagrabber implementation for the UCLA dataset available on juseless (:gh:`118` by `Leonard Sasse`_).
 
+- Rename "atlas" to "parcellation" (:gh:`116` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
