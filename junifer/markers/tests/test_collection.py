@@ -20,10 +20,14 @@ def test_marker_collection_incorrect_markers() -> None:
     """Test incorrect markers for MarkerCollection."""
     wrong_markers = [
         ParcelAggregation(
-            atlas="Schaefer100x7", method="mean", name="gmd_schaefer100x7_mean"
+            parcellation="Schaefer100x7",
+            method="mean",
+            name="gmd_schaefer100x7_mean",
         ),
         ParcelAggregation(
-            atlas="Schaefer100x7", method="mean", name="gmd_schaefer100x7_mean"
+            parcellation="Schaefer100x7",
+            method="mean",
+            name="gmd_schaefer100x7_mean",
         ),
     ]
     with pytest.raises(ValueError, match=r"must have different names"):
@@ -34,13 +38,17 @@ def test_marker_collection():
     """Test MarkerCollection."""
     markers = [
         ParcelAggregation(
-            atlas="Schaefer100x7", method="mean", name="gmd_schaefer100x7_mean"
+            parcellation="Schaefer100x7",
+            method="mean",
+            name="gmd_schaefer100x7_mean",
         ),
         ParcelAggregation(
-            atlas="Schaefer100x7", method="std", name="gmd_schaefer100x7_std"
+            parcellation="Schaefer100x7",
+            method="std",
+            name="gmd_schaefer100x7_std",
         ),
         ParcelAggregation(
-            atlas="Schaefer100x7",
+            parcellation="Schaefer100x7",
             method="trim_mean",
             method_params={"proportiontocut": 0.1},
             name="gmd_schaefer100x7_trim_mean90",
@@ -107,13 +115,17 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     """
     markers = [
         ParcelAggregation(
-            atlas="Schaefer100x7", method="mean", name="gmd_schaefer100x7_mean"
+            parcellation="Schaefer100x7",
+            method="mean",
+            name="gmd_schaefer100x7_mean",
         ),
         ParcelAggregation(
-            atlas="Schaefer100x7", method="std", name="gmd_schaefer100x7_std"
+            parcellation="Schaefer100x7",
+            method="std",
+            name="gmd_schaefer100x7_std",
         ),
         ParcelAggregation(
-            atlas="Schaefer100x7",
+            parcellation="Schaefer100x7",
             method="trim_mean",
             method_params={"proportiontocut": 0.1},
             name="gmd_schaefer100x7_trim_mean90",

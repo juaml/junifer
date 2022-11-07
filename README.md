@@ -23,7 +23,7 @@ The documentation is available at [https://juaml.github.io/junifer](https://juam
 * `junifer`: Main library directory.
   * `api`: User API module.
   * `configs`: Module for pre-defined configs for most used computing clusters.
-  * `data`: Module that handles data required for the library to work (e.g. atlases).
+  * `data`: Module that handles data required for the library to work (e.g. parcels, coordinates).
   * `datagrabber`: DataGrabber module.
   * `datareader`: DataReader module.
   * `markers`: Markers module.

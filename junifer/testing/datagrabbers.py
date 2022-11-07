@@ -71,7 +71,8 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
 class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
     """DataGrabber for SPM Auditory dataset.
 
-    Wrapper for nilearn.datasets.fetch_spm_auditory
+    Wrapper for :func:`nilearn.datasets.fetch_spm_auditory`.
+
     """
 
     def __init__(self) -> None:
@@ -126,8 +127,7 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
 class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
     """DataGrabber for Partly Cloudy dataset.
 
-    Wrapper for nilearn.datasets.fetch_partly_cloudy
-
+    Wrapper for :func:`nilearn.datasets.fetch_development_fmri`
 
     Parameters
     ----------
@@ -140,11 +140,14 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         If False, returns all :term:`fMRIPrep` confounds (default True).
 
     age_group : {"adults", "child", "both"}, optional
-       Which age group to fetch (default "both"):
+       Which age group to fetch:
 
-        * 'adults' = fetch adults only (n=33, ages 18-39)
-        * 'child' = fetch children only (n=122, ages 3-12)
-        * 'both' = fetch full sample (n=155)
+        * ``adults`` : fetch adults only (n=33, ages 18-39)
+        * ``child`` : fetch children only (n=122, ages 3-12)
+        * ``both`` : fetch full sample (n=155)
+
+        (default "both")
+
     """
 
     def __init__(

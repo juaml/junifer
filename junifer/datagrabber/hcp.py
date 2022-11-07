@@ -21,8 +21,8 @@ class HCP1200(PatternDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION",
-        "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
+    tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
+            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
         HCP task sessions. If None, all available task sessions are selected
         (default None).
     phase_encodings : {"LR", "RL"} or list of the options, optional
@@ -166,8 +166,8 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION",
-        "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
+    tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
+            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
         HCP task sessions. If None, all available task sessions are selected
         (default None).
     phase_encodings : {"LR", "RL"} or list of the options, optional

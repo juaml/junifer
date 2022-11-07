@@ -25,8 +25,8 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    tasks : {"restingstate", "stopsignal", "emomatching", "workingmemory"} or
-        list of the options, optional
+    tasks : {"restingstate", "stopsignal", "emomatching", "workingmemory"} \
+            or list of the options, optional
         AOMIC PIOP2 task sessions. If None, all available task sessions are
         selected (default None).
     """

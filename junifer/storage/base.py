@@ -69,7 +69,7 @@ class BaseFeatureStorage(ABC):
         Raises
         ------
         ValueError
-            If the `input_` is invalid.
+            If the ``input_`` is invalid.
 
         """
         if not any(x in input_ for x in self._valid_inputs):
@@ -163,7 +163,7 @@ class BaseFeatureStorage(ABC):
         Raises
         ------
         ValueError
-            If `kind` is invalid.
+            If ``kind`` is invalid.
 
         """
         if kind == "matrix":

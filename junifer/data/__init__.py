@@ -4,7 +4,11 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .atlases import list_atlases, register_atlas, load_atlas
+from .parcellations import (
+    list_parcellations,
+    register_parcellation,
+    load_parcellation,
+)
 from .coordinates import (
     list_coordinates,
     register_coordinates,

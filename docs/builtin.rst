@@ -1,7 +1,7 @@
 .. include:: links.inc
 
-Pipeline steps and atlases
-==========================
+Built-in Pipeline steps and data
+================================
 
 
 DataGrabbers
@@ -113,12 +113,6 @@ Planned
      - Restricted
      - ``junifer.configs.juseless``
      - :gh:`47`
-   * - UCLA
-     - UCLA dataset for Juseless
-     - Built-in
-     - ``junifer.configs.juseless``
-     - :gh:`88`
-
 
 Markers
 -------
@@ -151,8 +145,12 @@ Available
      - Apply parcellation and perform aggregation function
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.FunctionalConnectivityAtlas`
-     - Compute functional connectivity
+   * - :class:`junifer.markers.FunctionalConnectivityParcels`
+     - Compute functional connectivity over parcellation
+     - Done
+     - 0.0.1
+   * - :class:`junifer.markers.CrossParcellationFC`
+     - Compute functional connectivity across two parcellations
      - Done
      - 0.0.1
    * - :class:`junifer.markers.SphereAggregation`
@@ -160,7 +158,7 @@ Available
      - Done
      - 0.0.1
    * - :class:`junifer.markers.FunctionalConnectivitySpheres`
-     - Perform spherical aggregation and compute functional connectivity
+     - Compute functional connectivity over spheres placed on coordinates
      - Done
      - 0.0.1
    * - :class:`junifer.markers.RSSETSMarker`
@@ -194,18 +192,14 @@ Planned
    * - EdgeCentricFC
      - Calculate edge-centric functional connectivity
      - :gh:`64`
-   * - CrossAtlasFC
-     - Calculate cross-atlas functional connectivity
-     - :gh:`85`
 
-
-Atlases
--------
+Parcellations
+-------------
 
 ..
-    Provide a list of the Atlases that are implemented or planned.
+    Provide a list of the Parcellations that are implemented or planned.
 
-    Version added: The Junifer version in which the atlas was added.
+    Version added: The Junifer version in which the parcellation was added.
 
 Available
 ~~~~~~~~~
@@ -278,6 +272,15 @@ Buckner            | Buckner, R. L., Krienen, F. M., Castellanos, A., Diaz, J. C
                    | Journal of Neurophysiology, 106(3), 1125–1165.
                    | https://doi.org/10.1152/jn.00338.2011
 =================  ==============================================================================
+
+Coordinates
+-----------
+
+Available
+~~~~~~~~~
+
+Planned
+~~~~~~~
 
 ..
   helpful site for creating tables: https://rest-sphinx-memo.readthedocs.io/en/latest/ReST.html#tables

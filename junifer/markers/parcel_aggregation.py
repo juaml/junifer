@@ -11,7 +11,7 @@ from nilearn.image import math_img, resample_to_img
 from nilearn.maskers import NiftiMasker
 
 from ..api.decorators import register_marker
-from ..data import load_atlas
+from ..data import load_parcellation
 from ..stats import get_aggfunc_by_name
 from ..utils import logger
 from .base import BaseMarker
@@ -27,17 +27,17 @@ class ParcelAggregation(BaseMarker):
 
     Parameters
     ----------
-    atlas : str
-        The name of the atlas. Check valid options by calling
-        :func:`junifer.data.atlases.list_atlases`.
+    parcellation : str
+        The name of the parcellation. Check valid options by calling
+        :func:`junifer.data.parcellations.list_parcellations`.
     method : str
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name`.
     method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name`.
-    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or list
-        of the options, optional
+    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} \
+         or list of the options, optional
         The data types to apply the marker to. If None, will work on all
         available data (default None).
     name : str, optional
@@ -47,13 +47,13 @@ class ParcelAggregation(BaseMarker):
 
     def __init__(
         self,
-        atlas: str,
+        parcellation: str,
         method: str,
         method_params: Optional[Dict[str, Any]] = None,
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
-        self.atlas = atlas
+        self.parcellation = parcellation
         self.method = method
         self.method_params = {} if method_params is None else method_params
         super().__init__(on=on, name=name)
@@ -141,9 +141,10 @@ class ParcelAggregation(BaseMarker):
             The computed result as dictionary. This will be either returned
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
-            - data : the actual computed values as a numpy.ndarray
-            - columns : the column labels for the computed values as a list
-            - row_names (if more than one row is present in data): "scan"
+
+            * ``data`` : the actual computed values as a numpy.ndarray
+            * ``columns`` : the column labels for the computed values as a list
+            * ``row_names`` (if more than one row is present in data): "scan"
 
         """
         t_input = input["data"]
@@ -154,37 +155,37 @@ class ParcelAggregation(BaseMarker):
         )
         # Get the min of the voxels sizes and use it as the resolution
         resolution = np.min(t_input.header.get_zooms()[:3])
-        t_atlas, t_labels, _ = load_atlas(
-            name=self.atlas,
+        t_parcellation, t_labels, _ = load_parcellation(
+            name=self.parcellation,
             resolution=resolution,
         )
-        atlas_img_res = resample_to_img(
-            t_atlas,
+        parcellation_img_res = resample_to_img(
+            t_parcellation,
             t_input,
             interpolation="nearest",
         )
-        atlas_bin = math_img(
+        parcellation_bin = math_img(
             "img != 0",
-            img=atlas_img_res,
+            img=parcellation_img_res,
         )
         logger.debug("Masking")
         masker = NiftiMasker(
-            atlas_bin, target_affine=t_input.affine
+            parcellation_bin, target_affine=t_input.affine
         )  # type: ignore
 
-        # Mask the input data and the atlas
+        # Mask the input data and the parcellation
         data = masker.fit_transform(t_input)
-        atlas_values = masker.transform(atlas_img_res)
-        atlas_values = np.squeeze(atlas_values).astype(int)
+        parcellation_values = masker.transform(parcellation_img_res)
+        parcellation_values = np.squeeze(parcellation_values).astype(int)
 
         # Get the values for each parcel and apply agg function
         logger.debug("Computing ROI means")
-        atlas_roi_vals = sorted(np.unique(atlas_values))
+        parcellation_roi_vals = sorted(np.unique(parcellation_values))
         out_labels = []
         out_values = []
         # Iterate over the parcels (existing)
-        for t_v in atlas_roi_vals:
-            t_values = agg_func(data[:, atlas_values == t_v], axis=-1)
+        for t_v in parcellation_roi_vals:
+            t_values = agg_func(data[:, parcellation_values == t_v], axis=-1)
             out_values.append(t_values)
             # Update the labels just in case a parcel has no voxels
             # in it

@@ -19,14 +19,14 @@ if TYPE_CHECKING:
 
 
 @register_marker
-class FunctionalConnectivityAtlas(BaseMarker):
+class FunctionalConnectivityParcels(BaseMarker):
     """Class for functional connectivity.
 
     Parameters
     ----------
-    atlas : str
-        The name of the atlas. Check valid options by calling
-        :func:`junifer.data.atlases.list_atlases`.
+    parcellation : str
+        The name of the parcellation. Check valid options by calling
+        :func:`junifer.data.parcellations.list_parcellations`.
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
@@ -47,14 +47,14 @@ class FunctionalConnectivityAtlas(BaseMarker):
 
     def __init__(
         self,
-        atlas: str,
+        parcellation: str,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
         cor_method_params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
-        self.atlas = atlas
+        self.parcellation = parcellation
         self.agg_method = agg_method
         self.agg_method_params = (
             {} if agg_method_params is None else agg_method_params
@@ -121,14 +121,14 @@ class FunctionalConnectivityAtlas(BaseMarker):
             The computed result as dictionary. The following data will be
             included in the dictionary:
 
-            * data: functional connectivity matrix as a numpy.ndarray.
-            * row_names: row names as a list
-            * col_names: column names as a list
-            * matrix_kind: the kind of matrix (tril, triu or full)
+            * ``data`` : functional connectivity matrix as a numpy.ndarray.
+            * ``row_names`` : row names as a list
+            * ``col_names`` : column names as a list
+            * ``matrix_kind`` : the kind of matrix (tril, triu or full)
 
         """
         pa = ParcelAggregation(
-            atlas=self.atlas,
+            parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
             on="BOLD",

@@ -143,11 +143,11 @@ class CrossParcellationFC(BaseMarker):
         )
         # Initialize a ParcelAggregation
         parcellation_one_dict = ParcelAggregation(
-            atlas=self.parcellation_one,
+            parcellation=self.parcellation_one,
             method=self.aggregation_method,
         ).compute(input)
         parcellation_two_dict = ParcelAggregation(
-            atlas=self.parcellation_two,
+            parcellation=self.parcellation_two,
             method=self.aggregation_method,
         ).compute(input)
 

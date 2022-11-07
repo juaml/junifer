@@ -37,7 +37,7 @@ def get_aggfunc_by_name(
     Returns
     -------
     function
-        Respective function with `func_params` parameter set.
+        Respective function with ``func_params`` parameter set.
     """
     from functools import partial  # local import to avoid sphinx error
     # check validity of names
@@ -100,7 +100,7 @@ def winsorized_mean(
     -------
     numpy.ndarray
         Winsorized mean of the inputted data with the winsorize settings
-        applied as specified in win_params.
+        applied as specified in ``win_params``.
 
     See Also
     --------

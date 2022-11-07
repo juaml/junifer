@@ -11,14 +11,14 @@ from pathlib import Path
 from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
-from junifer.data import load_atlas
+from junifer.data import load_parcellation
 from junifer.markers.ets_rss import RSSETSMarker
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
 
-# Set atlas
-ATLAS = "Schaefer100x17"
+# Set parcellation
+PARCELLATION = "Schaefer100x17"
 
 
 def test_compute() -> None:
@@ -31,13 +31,13 @@ def test_compute() -> None:
         # Create input data
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Compute the RSSETSMarker
-        ets_rss_marker = RSSETSMarker(atlas=ATLAS)
+        ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
         new_out = ets_rss_marker.compute(input_dict)
 
-        # Load atlas
-        test_atlas, _, _ = load_atlas(ATLAS)
+        # Load parcellation
+        test_parcellation, _, _ = load_parcellation(PARCELLATION)
         # Compute the NiftiLabelsMasker
-        test_masker = NiftiLabelsMasker(test_atlas)
+        test_masker = NiftiLabelsMasker(test_parcellation)
         test_ts = test_masker.fit_transform(niimg)
         # Assert the dimension of timeseries
         n_time, _ = test_ts.shape
@@ -45,14 +45,14 @@ def test_compute() -> None:
 
         # Assert the meta
         meta = ets_rss_marker.get_meta("BOLD")["marker"]
-        assert meta["atlas"] == "Schaefer100x17"
+        assert meta["parcellation"] == "Schaefer100x17"
         assert meta["aggregation_method"] == "mean"
         assert meta["class"] == "RSSETSMarker"
 
 
 def test_get_output_kind() -> None:
     """Test RSS ETS get_output_kind()."""
-    ets_rss_marker = RSSETSMarker(atlas=ATLAS)
+    ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
     input_list = ["BOLD"]
     input_list = ets_rss_marker.get_output_kind(input_list)
     assert len(input_list) == 1
@@ -75,7 +75,7 @@ def test_store(tmp_path: Path) -> None:
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Compute the RSSETSMarker
-        ets_rss_marker = RSSETSMarker(atlas=ATLAS)
+        ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(
             uri=str((tmp_path / "test.db").absolute()),

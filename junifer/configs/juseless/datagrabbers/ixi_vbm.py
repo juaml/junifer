@@ -25,8 +25,7 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    sites : {"Guys", "HH", "IOP"} or list of the
-        options, optional.
+    sites : {"Guys", "HH", "IOP"} or list of the options, optional.
         Which sites to access data from. If None, all available sites are
         selected (default None).
     """
