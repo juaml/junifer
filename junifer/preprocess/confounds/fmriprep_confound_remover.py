@@ -104,17 +104,17 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         The keys of the dictionary should correspond to names of noise
         components to include:
 
-        * 'motion'
-        * 'wm_csf'
-        * 'global_signal'
+        * ``motion``
+        * ``wm_csf``
+        * ``global_signal``
 
         The values of dictionary should correspond to types of confounds
         extracted from each signal:
 
-        * 'basic': only the confounding time series
-        * 'power2': signal + quadratic term
-        * 'derivatives': signal + derivatives
-        * 'full': signal + deriv. + quadratic terms + power2 deriv.
+        * ``basic`` : only the confounding time series
+        * ``power2`` : signal + quadratic term
+        * ``derivatives`` : signal + derivatives
+        * ``full`` : signal + deriv. + quadratic terms + power2 deriv.
 
     spike : float, optional
         If None, no spike regressor is added. If spike is a float, it will
@@ -585,7 +585,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             A single input from the Junifer Data object in which to preprocess.
         extra_input : dict, optional
             The other fields in the Junifer Data object. Must include the
-            "BOLD_confounds" key.
+            ``BOLD_confounds`` key.
 
         Returns
         -------
@@ -593,7 +593,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             The key to store the output in the Junifer Data object.
         object : dict
             The computed result as dictionary. This will be stored in the
-            Junifer Data object under the key 'key'.
+            Junifer Data object under the key ``key``.
 
         """
         self._validate_data(input, extra_input)
