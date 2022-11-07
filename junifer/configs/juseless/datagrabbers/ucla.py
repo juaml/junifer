@@ -21,9 +21,9 @@ class JuselessUCLA(PatternDataGrabber):
     datadir : str or Path, optional
         The directory where the dataset is stored
         (default '/data/project/psychosis_thalamus/data/fmriprep').
-    tasks : {"rest", "bart", "bht", "pamenc", "pamret",
-        "scap", "taskswitch", "stopsignal"} or
-        list of the options, optional
+    tasks : {"rest", "bart", "bht", "pamenc", "pamret", \
+            "scap", "taskswitch", "stopsignal"} or \
+            list of the options, optional
         UCLA task sessions. If None, all available task sessions are
         selected (default None).
 
