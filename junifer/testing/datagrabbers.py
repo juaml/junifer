@@ -71,7 +71,8 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
 class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
     """DataGrabber for SPM Auditory dataset.
 
-    Wrapper for nilearn.datasets.fetch_spm_auditory
+    Wrapper for :func:`nilearn.datasets.fetch_spm_auditory`.
+
     """
 
     def __init__(self) -> None:
@@ -126,8 +127,7 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
 class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
     """DataGrabber for Partly Cloudy dataset.
 
-    Wrapper for nilearn.datasets.fetch_partly_cloudy
-
+    Wrapper for :func:`nilearn.datasets.fetch_development_fmri`
 
     Parameters
     ----------
