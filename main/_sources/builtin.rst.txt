@@ -89,7 +89,12 @@ Available
      - ``junifer.configs.juseless``
      - Done
      - 0.0.1
-
+   * - :class:`junifer.configs.juseless.datagrabbers.JuselessUCLA`
+     - UCLA fMRIPrep dataset. Available for Juseless only.
+     - Restricted
+     - ``junifer.configs.juseless``
+     - Done
+     - 0.0.1
 
 Planned
 ~~~~~~~
