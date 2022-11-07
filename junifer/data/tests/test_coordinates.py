@@ -15,7 +15,7 @@ from junifer.data.coordinates import (
 
 
 def test_register_coordinates_built_in_check() -> None:
-    """Test coordinates registration check for built-in atlas."""
+    """Test coordinates registration check for built-in coordinates."""
     with pytest.raises(ValueError, match=r"built-in"):
         register_coordinates(
             name="DMNBuckner",

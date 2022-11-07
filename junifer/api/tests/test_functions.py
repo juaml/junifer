@@ -25,13 +25,13 @@ markers = [
     {
         "name": "Schaefer1000x7_Mean",
         "kind": "ParcelAggregation",
-        "atlas": "Schaefer1000x7",
+        "parcellation": "Schaefer1000x7",
         "method": "mean",
     },
     {
         "name": "Schaefer1000x7_Std",
         "kind": "ParcelAggregation",
-        "atlas": "Schaefer1000x7",
+        "parcellation": "Schaefer1000x7",
         "method": "std",
     },
 ]

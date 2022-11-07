@@ -33,7 +33,7 @@ Enhancements
 
 - Implement matrix storage in SQliteFeatureStorage (:gh:`42` by `Fede Raimondo`_).
 
-- Marker for functional connectivity using an atlas (:gh:`41` by
+- Marker for functional connectivity using a parcellation (:gh:`41` by
   `Amir Omidvarnia`_ and `Kaustubh R. Patil`_).
 
 - Added documentation for the datagrabbers (by `Leonard Sasse`_,
@@ -80,6 +80,8 @@ Enhancements
 - Implement CrossParcellationFC marker (:gh:`85` by `Leonard Sasse`_ and `Kaustubh R. Patil`_)
 
 - Add datagrabber implementation for the UCLA dataset available on juseless (:gh:`118` by `Leonard Sasse`_).
+
+- Rename "atlas" to "parcellation" (:gh:`116` by `Fede Raimondo`_).
 
 Bugs
 ~~~~

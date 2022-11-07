@@ -18,7 +18,7 @@ from junifer.markers.parcel_aggregation import ParcelAggregation
 def test_ParcelAggregation_input_output() -> None:
     """Test ParcelAggregation input and output types."""
     marker = ParcelAggregation(
-        atlas="Schaefer100x7", method="mean", on="VBM_GM"
+        parcellation="Schaefer100x7", method="mean", on="VBM_GM"
     )
 
     output = marker.get_output_kind(["VBM_GM", "BOLD"])
@@ -30,40 +30,40 @@ def test_ParcelAggregation_input_output() -> None:
 
 def test_ParcelAggregation_3D() -> None:
     """Test ParcelAggregation object on 3D images."""
-    # Get the testing atlas (for nilearn)
-    atlas = datasets.fetch_atlas_schaefer_2018(n_rois=100)
+    # Get the testing parcellation (for nilearn)
+    parcellation = datasets.fetch_atlas_schaefer_2018(n_rois=100)
 
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
     vbm = oasis_dataset.gray_matter_maps[0]
     img = nib.load(vbm)
 
-    # Mask atlas manually
-    atlas_img_res = resample_to_img(
-        atlas.maps,
+    # Mask parcellation manually
+    parcellation_img_res = resample_to_img(
+        parcellation.maps,
         img,
         interpolation="nearest",
     )
-    atlas_bin = math_img(
+    parcellation_bin = math_img(
         "img != 0",
-        img=atlas_img_res,
+        img=parcellation_img_res,
     )
 
     # Create NiftiMasker
-    masker = NiftiMasker(atlas_bin, target_affine=img.affine)
+    masker = NiftiMasker(parcellation_bin, target_affine=img.affine)
     data = masker.fit_transform(img)
-    atlas_values = masker.transform(atlas_img_res)
-    atlas_values = np.squeeze(atlas_values).astype(int)
+    parcellation_values = masker.transform(parcellation_img_res)
+    parcellation_values = np.squeeze(parcellation_values).astype(int)
 
     # Compute the mean manually
     manual = []
-    for t_v in sorted(np.unique(atlas_values)):
-        t_values = np.mean(data[:, atlas_values == t_v])
+    for t_v in sorted(np.unique(parcellation_values)):
+        t_values = np.mean(data[:, parcellation_values == t_v])
         manual.append(t_values)
     manual = np.array(manual)[np.newaxis, :]
 
     # Create NiftiLabelsMasker
-    nifti_masker = NiftiLabelsMasker(labels_img=atlas.maps)
+    nifti_masker = NiftiLabelsMasker(labels_img=parcellation.maps)
     auto = nifti_masker.fit_transform(img)
 
     # Check that arrays are almost equal
@@ -71,7 +71,7 @@ def test_ParcelAggregation_3D() -> None:
 
     # Use the ParcelAggregation object
     marker = ParcelAggregation(
-        atlas="Schaefer100x7",
+        parcellation="Schaefer100x7",
         method="mean",
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
@@ -85,7 +85,7 @@ def test_ParcelAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
-    assert meta["atlas"] == "Schaefer100x7"
+    assert meta["parcellation"] == "Schaefer100x7"
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
@@ -93,13 +93,13 @@ def test_ParcelAggregation_3D() -> None:
 
     # Test using another function (std)
     manual = []
-    for t_v in sorted(np.unique(atlas_values)):
-        t_values = np.std(data[:, atlas_values == t_v])
+    for t_v in sorted(np.unique(parcellation_values)):
+        t_values = np.std(data[:, parcellation_values == t_v])
         manual.append(t_values)
     manual = np.array(manual)[np.newaxis, :]
 
     # Use the ParcelAggregation object
-    marker = ParcelAggregation(atlas="Schaefer100x7", method="std")
+    marker = ParcelAggregation(parcellation="Schaefer100x7", method="std")
     input = dict(VBM_GM=dict(data=img))
     jun_values3d_std = marker.fit_transform(input)["VBM_GM"]["data"]
 
@@ -109,7 +109,7 @@ def test_ParcelAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "std"
-    assert meta["atlas"] == "Schaefer100x7"
+    assert meta["parcellation"] == "Schaefer100x7"
     assert meta["name"] == "VBM_GM_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
@@ -117,9 +117,9 @@ def test_ParcelAggregation_3D() -> None:
 
     # Test using another function with parameters
     manual = []
-    for t_v in sorted(np.unique(atlas_values)):
+    for t_v in sorted(np.unique(parcellation_values)):
         t_values = trim_mean(
-            data[:, atlas_values == t_v],
+            data[:, parcellation_values == t_v],
             proportiontocut=0.1,
             axis=None,  # type: ignore
         )
@@ -128,7 +128,7 @@ def test_ParcelAggregation_3D() -> None:
 
     # Use the ParcelAggregation object
     marker = ParcelAggregation(
-        atlas="Schaefer100x7",
+        parcellation="Schaefer100x7",
         method="trim_mean",
         method_params={"proportiontocut": 0.1},
     )
@@ -141,7 +141,7 @@ def test_ParcelAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "trim_mean"
-    assert meta["atlas"] == "Schaefer100x7"
+    assert meta["parcellation"] == "Schaefer100x7"
     assert meta["name"] == "VBM_GM_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
@@ -150,8 +150,8 @@ def test_ParcelAggregation_3D() -> None:
 
 def test_ParcelAggregation_4D():
     """Test ParcelAggregation object on 4D images."""
-    # Get the testing atlas (for nilearn)
-    atlas = datasets.fetch_atlas_schaefer_2018(
+    # Get the testing parcellation (for nilearn)
+    parcellation = datasets.fetch_atlas_schaefer_2018(
         n_rois=100, yeo_networks=7, resolution_mm=2
     )
 
@@ -160,11 +160,11 @@ def test_ParcelAggregation_4D():
     fmri_img = concat_imgs(subject_data.func)  # type: ignore
 
     # Create NiftiLabelsMasker
-    nifti_masker = NiftiLabelsMasker(labels_img=atlas.maps)
+    nifti_masker = NiftiLabelsMasker(labels_img=parcellation.maps)
     auto4d = nifti_masker.fit_transform(fmri_img)
 
     # Create ParcelAggregation object
-    marker = ParcelAggregation(atlas="Schaefer100x7", method="mean")
+    marker = ParcelAggregation(parcellation="Schaefer100x7", method="mean")
     input = dict(BOLD=dict(data=fmri_img))
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
@@ -174,7 +174,7 @@ def test_ParcelAggregation_4D():
 
     meta = marker.get_meta("BOLD")["marker"]
     assert meta["method"] == "mean"
-    assert meta["atlas"] == "Schaefer100x7"
+    assert meta["parcellation"] == "Schaefer100x7"
     assert meta["name"] == "BOLD_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "BOLD"
