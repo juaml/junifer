@@ -457,9 +457,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             "index" (default None).
         matrix_kind : str, optional
             The kind of matrix:
-            - "triu" : store upper triangular only
-            - "tril" : store lower triangular
-            - "full" : full matrix
+
+            * ``triu`` : store upper triangular only
+            * ``tril`` : store lower triangular
+            * ``full`` : full matrix
+
             (default "full").
         diagonal : bool, optional
             Whether to store the diagonal. If `matrix_kind` is "full", setting
