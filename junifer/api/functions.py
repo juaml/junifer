@@ -62,17 +62,17 @@ def run(
     workdir : str or pathlib.Path
         Directory where the pipeline will be executed.
     datagrabber : dict
-        Datagrabber to use. Must have a key 'kind' with the kind of
+        Datagrabber to use. Must have a key ``kind`` with the kind of
         datagrabber to use. All other keys are passed to the datagrabber
         init function.
     markers : list of dict
         List of markers to extract. Each marker is a dict with at least two
-        keys: "name" and "kind". The "name" key is used to name the output
-        marker. The "kind" key is used to specify the kind of marker to
-        extract. The rest of the keys are used to pass parameters to the
+        keys: ``name`` and ``kind``. The ``name`` key is used to name the
+        output marker. The ``kind`` key is used to specify the kind of marker
+        to extract. The rest of the keys are used to pass parameters to the
         marker calculation.
     storage : dict
-        Storage to use. Must have a key "kind" with the kind of
+        Storage to use. Must have a key ``kind`` with the kind of
         storage to use. All other keys are passed to the storage
         init function.
     elements : str or tuple or list of str or tuple, optional
@@ -127,7 +127,7 @@ def collect(storage: Dict) -> None:
     Parameters
     ----------
     storage : dict
-        Storage to use. Must have a key "kind" with the kind of
+        Storage to use. Must have a key ``kind`` with the kind of
         storage to use. All other keys are passed to the storage
         init function.
 
@@ -177,7 +177,7 @@ def queue(
     Raises
     ------
     ValueError
-        If the value of `kind` is invalid.
+        If the value of ``kind`` is invalid.
 
     """
     # Create a folder within the CWD to store the job files / config
