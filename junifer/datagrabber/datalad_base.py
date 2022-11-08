@@ -182,13 +182,13 @@ class DataladDataGrabber(BaseDataGrabber):
             logger.debug("Dataset installed")
         self._was_cloned = not isinstalled
 
-    def remove(self):
-        """Remove the datalad dataset from the datadir."""
+    def cleanup(self):
+        """Cleanup the datalad dataset."""
         if self._was_cloned:
             logger.debug("Removing dataset with reckless='kill'")
             self._dataset.remove(recursive=True, reckless="kill")
         else:
-            logger.debug("Removing files that were downloaded")
+            logger.debug("Dropping files that were downloaded")
             for f in self._got_files:
                 logger.debug(f"Dropping {f.as_posix()}")
                 self._dataset.drop(f)
@@ -227,6 +227,6 @@ class DataladDataGrabber(BaseDataGrabber):
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """Implement context exit."""
-        logger.debug("Removing dataset")
-        self.remove()
-        logger.debug("Dataset removed")
+        logger.debug("Cleaning up dataset")
+        self.cleanup()
+        logger.debug("Dataset state restored")
