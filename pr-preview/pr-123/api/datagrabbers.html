@@ -282,8 +282,8 @@ implementation of this abstract class.</p>
 <dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber.get_element_keys">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.get_element_keys" title="Permalink to this definition">#</a></dt>
 <dd><p>Get element keys.</p>
-<p>For each item in the “element” tuple, this functions returns the
-corresponding key.</p>
+<p>For each item in the <code class="docutils literal notranslate"><span class="pre">element</span></code> tuple passed to <code class="docutils literal notranslate"><span class="pre">__getitem__()</span></code>,
+this method returns the corresponding key(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -317,7 +317,7 @@ datagrabber.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>element</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Dict</span></code></span></dt><dd><p>The element to be indexed.</p>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element to be indexed.</p>
 </dd>
 </dl>
 </dd>
@@ -525,6 +525,12 @@ with multiple inheritance.</p>
 <span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.install" title="Permalink to this definition">#</a></dt>
 <dd><p>Install the datalad dataset into the datadir.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the dataset is already installed but from a different URI.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </dd></dl>
 
@@ -647,12 +653,12 @@ datagrabbers.</p>
 <dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_element_keys">
 <span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.MultipleDataGrabber.get_element_keys" title="Permalink to this definition">#</a></dt>
 <dd><p>Get element keys.</p>
-<p>For each item in the “element” tuple, this functions returns the
-corresponding key.</p>
+<p>For each item in the <code class="docutils literal notranslate"><span class="pre">element</span></code> tuple passed to <code class="docutils literal notranslate"><span class="pre">__getitem__()</span></code>,
+this method returns the corresponding key(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys.</p>
 </dd>
 </dl>
 </dd>
@@ -754,11 +760,12 @@ and the values are the patterns. Each occurrence of the string
 <span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.get_element_keys" title="Permalink to this definition">#</a></dt>
 <dd><p>Get element keys.</p>
 <p>For each item in the “element” tuple, this functions returns the
-corresponding key.</p>
+corresponding key, that is, the <code class="docutils literal notranslate"><span class="pre">replacements</span></code> of patterns defined
+in the constructor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys.</p>
 </dd>
 </dl>
 </dd>
@@ -786,8 +793,8 @@ list of elements that have all the required types.</p>
 <dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber.get_item">
 <span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.get_item" title="Permalink to this definition">#</a></dt>
 <dd><p>Implement single element indexing in the database.</p>
-<p>Each occurrence of the strings in “replacements” is replaced by the
-corresponding item in the element tuple.</p>
+<p>This method constructs a real path to the requested item’s data, by
+replacing the <code class="docutils literal notranslate"><span class="pre">patterns</span></code> with actual values passed via <code class="docutils literal notranslate"><span class="pre">**element</span></code>.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
