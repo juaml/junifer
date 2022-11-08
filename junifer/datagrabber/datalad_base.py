@@ -14,7 +14,7 @@ import datalad.api as dl
 from ..api.decorators import register_datagrabber
 from ..utils import logger
 from .base import BaseDataGrabber
-from .utils import raise_error
+from ..utils import raise_error, warn_with_log
 
 
 @register_datagrabber
@@ -81,6 +81,9 @@ class DataladDataGrabber(BaseDataGrabber):
         logger.debug(f"\t_rootdir = {rootdir}")
         self.uri = uri
         self._rootdir = rootdir
+        # Flag to indicate if the dataset was cloned before and it might be
+        # dirty
+        self._dataset_dirty = False
 
     @property
     def datadir(self) -> Path:
@@ -101,7 +104,7 @@ class DataladDataGrabber(BaseDataGrabber):
             The modified dictionary with version appended.
 
         """
-        dirty_status = False
+        dirty_status = self._dataset_dirty
         for _, v in out.items():
             if "path" in v:
                 logger.debug(f"Getting {v['path']}")
@@ -117,15 +120,15 @@ class DataladDataGrabber(BaseDataGrabber):
                     # file that was already there.
                     if len(dl_out) > 1:
                         raise_error("More than one file downloaded. WTF?")
-                    dl_out = dl_out[0]
-                    if dl_out["status"] == "ok":
+                    t_file_out = dl_out[0]
+                    if t_file_out["status"] == "ok":
                         logger.debug("File downloaded")
                         self._got_files.append(v["path"])
-                    elif dl_out["status"] == "notneeded":
+                    elif t_file_out["status"] == "notneeded":
                         dirty_status = True
                         logger.debug("File was already present")
                     else:
-                        raise_error(f"File download failed: {dl_out}")
+                        raise_error(f"File download failed: {t_file_out}")
                 logger.debug("Get done")
 
         assert self._dataset.repo is not None  # avoid errors from mypy
@@ -142,13 +145,36 @@ class DataladDataGrabber(BaseDataGrabber):
         return out
 
     def install(self) -> None:
-        """Install the datalad dataset into the datadir."""
+        """Install the datalad dataset into the datadir.
+
+        Raises
+        ------
+        ValueError
+            If the dataset is already installed but from a different URI.
+        """
         isinstalled = dl.Dataset(self._datadir).is_installed()
         if isinstalled:
             logger.debug("Dataset already installed")
             self._got_files = []
             self._dataset: dl.Dataset = dl.Dataset(self._datadir)
-            # TODO: Check URI
+
+            siblings = {
+                x["name"]: x["url"]
+                for x in self._dataset.siblings()
+                if "url" in x and x["name"] != "here"
+            }
+            logger.debug(f"Found siblings {siblings}")
+            if self.uri not in siblings.values():
+                raise_error(
+                    "Dataset already installed but with a different "
+                    f"URI: {siblings}"
+                )
+            if len(siblings) > 1:
+                self._dataset_dirty = True
+                warn_with_log(
+                    "More than one sibling found, Junifer will consider this "
+                    "dataset as dirty.")
+
         else:
             logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
             self._dataset: dl.Dataset = \
@@ -159,9 +185,12 @@ class DataladDataGrabber(BaseDataGrabber):
     def remove(self):
         """Remove the datalad dataset from the datadir."""
         if self._was_cloned:
+            logger.debug("Removing dataset with reckless='kill'")
             self._dataset.remove(recursive=True, reckless="kill")
         else:
+            logger.debug("Removing files that were downloaded")
             for f in self._got_files:
+                logger.debug(f"Dropping {f.as_posix()}")
                 self._dataset.drop(f)
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:

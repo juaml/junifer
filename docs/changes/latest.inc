@@ -83,7 +83,7 @@ Enhancements
 
 - Rename "atlas" to "parcellation" (:gh:`116` by `Fede Raimondo`_).
 
-- Refactor the :class:`junifer.datagrabber.BaseDataGrabber` class to allow for easier subclassing (by `Fede Raimondo`_).
+- Refactor the :class:`junifer.datagrabber.BaseDataGrabber` class to allow for easier subclassing (:gh:`123` by `Fede Raimondo`_).
 
 Bugs
 ~~~~

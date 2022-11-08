@@ -30,10 +30,62 @@ def test_datalad_base_abstractness() -> None:
         DataladDataGrabber()
 
 
+def test_datalad_install_errors(tmp_path: Path) -> None:
+    """Test datalad base install errors / warnings."""
+
+    class MyDataGrabber(DataladDataGrabber):  # type: ignore
+        def __init__(self, datadir, uri):
+            super().__init__(
+                datadir=datadir,
+                rootdir="example_bids",
+                uri=uri,
+                types=["T1w", "BOLD"],
+            )
+
+        def get_item(self, subject):
+            out = {
+                "T1w": {
+                    "path": self.datadir
+                    / f"{subject}/anat/{subject}_T1w.nii.gz"
+                },
+                "BOLD": {
+                    "path": self.datadir
+                    / f"{subject}/func/{subject}_task-rest_bold.nii.gz"
+                },
+            }
+            return out
+
+        def get_elements(self):
+            return [f"sub-{i:02d}" for i in range(1, 10)]
+
+        def get_element_keys(self):
+            return ["subject"]
+
+    # Dataset cloned outside of datagrabber
+    datadir = tmp_path / "cloned_uri"
+    uri = _testing_dataset["example_bids"]["uri"]
+
+    # Files are not there
+    assert datadir.exists() is False
+    # Clone dataset
+    dataset = dl.clone(uri, datadir)  # type: ignore
+
+    dg = MyDataGrabber(datadir=datadir, uri="different")
+    with pytest.raises(ValueError, match=r"different URI"):
+        with dg:
+            pass
+
+    dataset.siblings("add", name="other", url="different")
+    dg = MyDataGrabber(datadir=datadir, uri=uri)
+    with pytest.warns(RuntimeWarning, match=r"More than one sibling"):
+        with dg:
+            pass
+
+
 def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     """Test datalad base cleanup procedure."""
 
-    class MyDataGrabber(DataladDataGrabber):
+    class MyDataGrabber(DataladDataGrabber):  # type: ignore
         def __init__(self, datadir):
             super().__init__(
                 datadir=datadir,
@@ -45,13 +97,13 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
         def get_item(self, subject):
             out = {
                 "T1w": {
-                    "path":
-                        self.datadir / f"{subject}/anat/{subject}_T1w.nii.gz"
-                    },
+                    "path": self.datadir
+                    / f"{subject}/anat/{subject}_T1w.nii.gz"
+                },
                 "BOLD": {
-                    "path": self.datadir /
-                        f"{subject}/func/{subject}_task-rest_bold.nii.gz"
-                }
+                    "path": self.datadir
+                    / f"{subject}/func/{subject}_task-rest_bold.nii.gz"
+                },
             }
             return out
 
@@ -63,10 +115,10 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
 
     # Clone whole dataset
     datadir = tmp_path / "newclone"
-    elem1_bold = datadir / \
-        "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
-    elem1_t1w = datadir / \
-        "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
+    elem1_bold = (
+        datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    )
+    elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
 
     assert datadir.exists() is False
     assert elem1_bold.is_file() is False
@@ -95,10 +147,10 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
 
     # Dataset cloned outside of datagrabber
     datadir = tmp_path / "cloned"
-    elem1_bold = datadir / \
-        "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
-    elem1_t1w = datadir / \
-        "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
+    elem1_bold = (
+        datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    )
+    elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
     uri = _testing_dataset["example_bids"]["uri"]
 
     # Files are not there
@@ -140,10 +192,10 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
 
     # Dataset cloned outside of datagrabber with some files present
     datadir = tmp_path / "dirty"
-    elem1_bold = datadir / \
-        "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
-    elem1_t1w = datadir / \
-        "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
+    elem1_bold = (
+        datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    )
+    elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
     uri = _testing_dataset["example_bids"]["uri"]
 
     # Files are not there
@@ -161,7 +213,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert elem1_t1w.is_symlink() is True
     assert elem1_t1w.is_file() is False
 
-    dl.get(elem1_t1w, dataset=datadir)
+    dl.get(elem1_t1w, dataset=datadir)  # type: ignore
 
     assert elem1_bold.is_symlink() is True
     assert elem1_bold.is_file() is False

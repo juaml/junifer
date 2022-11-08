@@ -47,3 +47,19 @@ def test_BaseDataGrabber() -> None:
     with dg:
         assert dg.datadir == Path("/tmp")
         assert dg.types == ["func"]
+
+    class MyDataGrabber2(BaseDataGrabber):
+        def get_item(self, subject):
+            return super().get_item(subject=subject)
+
+        def get_elements(self):
+            return super().get_elements()
+
+        def get_element_keys(self):
+            return super().get_element_keys()
+    dg = MyDataGrabber2(datadir="/tmp", types=["func"])
+    with pytest.raises(NotImplementedError):
+        dg.get_element_keys()
+
+    with pytest.raises(NotImplementedError):
+        dg.get_item(subject=1)  # type: ignore

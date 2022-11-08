@@ -110,7 +110,7 @@ class PatternDataGrabber(BaseDataGrabber):
 
         Parameters
         ----------
-        element : tuple
+        element : dict
             The element to be used in the replacement.
         pattern : str
             The pattern to be replaced.
@@ -132,11 +132,12 @@ class PatternDataGrabber(BaseDataGrabber):
         """Get element keys.
 
         For each item in the "element" tuple, this functions returns the
-        corresponding key.
+        corresponding key, that is, the ``replacements`` of patterns defined
+        in the constructor.
 
         Returns
         -------
-        str
+        list of str
             The element keys.
 
         """
@@ -145,8 +146,8 @@ class PatternDataGrabber(BaseDataGrabber):
     def get_item(self, **element: Dict) -> Dict[str, Dict]:
         """Implement single element indexing in the database.
 
-        Each occurrence of the strings in "replacements" is replaced by the
-        corresponding item in the element tuple.
+        This method constructs a real path to the requested item's data, by
+        replacing the ``patterns`` with actual values passed via ``**element``.
 
         Parameters
         ----------
@@ -161,7 +162,7 @@ class PatternDataGrabber(BaseDataGrabber):
             specified element.
 
         """
-        out = dict()
+        out = {}
         for t_type in self.types:
             t_pattern = self.patterns[t_type]
             t_replace = self._replace_patterns_glob(element, t_pattern)

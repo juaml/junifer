@@ -134,8 +134,8 @@ class BaseDataGrabber(ABC):
     def get_element_keys(self) -> str:
         """Get element keys.
 
-        For each item in the "element" tuple, this functions returns the
-        corresponding key.
+        For each item in the ``element`` tuple passed to ``__getitem__()``,
+        this method returns the corresponding key(s).
 
         Returns
         -------
@@ -171,7 +171,7 @@ class BaseDataGrabber(ABC):
 
         Parameters
         ----------
-        element : Dict
+        element : dict
             The element to be indexed.
 
         Returns

@@ -29,13 +29,13 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
 
         Returns
         -------
-        str
+        list of str
             The element keys.
 
         """
         return ["subject"]
 
-    def get_item(self, subject: str) -> Dict:
+    def get_item(self, subject: str) -> Dict[str, Dict]:
         """Implement indexing support.
 
         Parameters
@@ -97,7 +97,7 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
 
         Returns
         -------
-        str
+        list of str
             The element keys.
 
         """
@@ -114,7 +114,7 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
         """
         return [f"sub{x:03d}" for x in list(range(1, 11))]
 
-    def get_item(self, subject: str) -> Dict:
+    def get_item(self, subject: str) -> Dict[str, Dict]:
         """Implement indexing support.
 
         Parameters
@@ -199,7 +199,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
 
         Returns
         -------
-        str
+        list of str
             The element keys.
 
         """
@@ -216,7 +216,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         """
         return [f"sub-{x:02d}" for x in list(range(1, 11))]
 
-    def get_item(self, subject: str) -> Dict:
+    def get_item(self, subject: str) -> Dict[str, Dict]:
         """Implement indexing support.
 
         Parameters
