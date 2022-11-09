@@ -91,8 +91,13 @@ def test_datalad_install_errors(tmp_path: Path) -> None:
 
 
 def test_datalad_selective_cleanup(tmp_path: Path) -> None:
-    """Test datalad base cleanup procedure."""
+    """Test datalad base get and cleanup procedures.
 
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    """
     class MyDataGrabber(DataladDataGrabber):  # type: ignore
         def __init__(self, datadir):
             super().__init__(
@@ -168,7 +173,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert elem1_t1w.exists() is False
 
     # Clone dataset
-    dl.clone(uri, datadir)  # type: ignore
+    dl.clone(uri, datadir, result_renderer="disabled")  # type: ignore
 
     # Files are there, but are empty symbolic links
     assert datadir.exists() is True
@@ -207,7 +212,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert len(list(datadir.glob("*"))) > 0
 
     # Dataset cloned outside of datagrabber with some files present
-    datadir = tmp_path / "dirty"
+    datadir = tmp_path / "cloned_clean"
     elem1_bold = (
         datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
     )
@@ -221,7 +226,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert elem1_t1w.exists() is False
 
     # Clone dataset
-    dl.clone(uri, datadir)  # type: ignore
+    dl.clone(uri, datadir, result_renderer="disabled")  # type: ignore
 
     # Files are there, but are empty symbolic links
     assert datadir.exists() is True
@@ -230,7 +235,8 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert elem1_t1w.is_symlink() is True
     assert elem1_t1w.is_file() is False
 
-    dl.get(elem1_t1w, dataset=datadir)  # type: ignore
+    dl.get(  # type: ignore
+        elem1_t1w, dataset=datadir, result_renderer="disabled")
 
     assert elem1_bold.is_symlink() is True
     assert elem1_bold.is_file() is False
@@ -244,7 +250,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
         assert "meta" in elem1
         assert "datagrabber" in elem1["meta"]
         assert "datalad_dirty" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_dirty"] is True
+        assert elem1["meta"]["datagrabber"]["datalad_dirty"] is False
         assert "datalad_commit_id" in elem1["meta"]["datagrabber"]
         assert elem1["meta"]["datagrabber"]["datalad_commit_id"] == commit
         assert "datalad_id" in elem1["meta"]["datagrabber"]
@@ -268,4 +274,104 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert elem1_bold.is_symlink() is True
     assert elem1_bold.is_file() is False
     assert elem1_t1w.is_symlink() is True
+    assert elem1_t1w.is_file() is True
+
+    # Dataset cloned outside of datagrabber with some files present and dirty
+    datadir = tmp_path / "cloned_dirty"
+    elem1_bold = (
+        datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    )
+    elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
+    uri = _testing_dataset["example_bids"]["uri"]
+    commit = _testing_dataset["example_bids"]["commit"]
+
+    # Files are not there
+    assert datadir.exists() is False
+    assert elem1_bold.exists() is False
+    assert elem1_t1w.exists() is False
+
+    # Clone dataset
+    dl.clone(uri, datadir, result_renderer="disabled")  # type: ignore
+
+    # Files are there, but are empty symbolic links
+    assert datadir.exists() is True
+    assert elem1_bold.is_symlink() is True
+    assert elem1_bold.is_file() is False
+    assert elem1_t1w.is_symlink() is True
+    assert elem1_t1w.is_file() is False
+
+    dl.get(  # type: ignore
+        elem1_t1w, dataset=datadir, result_renderer="disabled")
+
+    assert elem1_bold.is_symlink() is True
+    assert elem1_bold.is_file() is False
+    assert elem1_t1w.is_symlink() is True
+    assert elem1_t1w.is_file() is True
+
+    elem1_t1w.unlink()
+    with open(elem1_t1w, "w") as f:
+        f.write("modified!")
+
+    with MyDataGrabber(datadir=datadir) as dg:
+        assert datadir.exists() is True
+        assert dg._was_cloned is False
+        elem1 = dg["sub-01"]
+        assert "meta" in elem1
+        assert "datagrabber" in elem1["meta"]
+        assert "datalad_dirty" in elem1["meta"]["datagrabber"]
+        assert elem1["meta"]["datagrabber"]["datalad_dirty"] is True
+        assert "datalad_commit_id" in elem1["meta"]["datagrabber"]
+        assert elem1["meta"]["datagrabber"]["datalad_commit_id"] == commit
+        assert "datalad_id" in elem1["meta"]["datagrabber"]
+        assert elem1["meta"]["datagrabber"]["datalad_id"] == id
+
+        assert hasattr(dg, "_got_files") is True
+        # Files are there and symlinks are fixed
+        assert elem1["BOLD"]["path"].is_file() is True
+        assert elem1["BOLD"]["path"].is_symlink() is True
+        assert elem1["T1w"]["path"].is_file() is True
+        assert elem1["T1w"]["path"].is_symlink() is False
+
+        # Datagrabber fetched two files
+        assert len(dg._got_files) == 1
+        assert dg._got_files[0].name == "sub-01_task-rest_bold.nii.gz"
+
+    # Now get another subject that has not been modified
+    with MyDataGrabber(datadir=datadir) as dg:
+        assert datadir.exists() is True
+        assert dg._was_cloned is False
+        elem2 = dg["sub-02"]
+        assert "meta" in elem2
+        assert "datagrabber" in elem2["meta"]
+        assert "datalad_dirty" in elem2["meta"]["datagrabber"]
+
+        # Dataset is still dirty due to subject sub-01
+        assert elem2["meta"]["datagrabber"]["datalad_dirty"] is True
+
+        assert "datalad_commit_id" in elem2["meta"]["datagrabber"]
+        assert elem2["meta"]["datagrabber"]["datalad_commit_id"] == commit
+        assert "datalad_id" in elem2["meta"]["datagrabber"]
+        assert elem2["meta"]["datagrabber"]["datalad_id"] == id
+
+        assert hasattr(dg, "_got_files") is True
+        # Files are there and symlinks are fixed
+        assert elem2["BOLD"]["path"].is_file() is True
+        assert elem2["BOLD"]["path"].is_symlink() is True
+        assert elem2["T1w"]["path"].is_file() is True
+        assert elem2["T1w"]["path"].is_symlink() is True
+
+        # Datagrabber fetched two files
+        assert len(dg._got_files) == 2
+        assert any(x.name == "sub-02_T1w.nii.gz" for x in dg._got_files)
+        assert any(
+            x.name == "sub-02_task-rest_bold.nii.gz" for x in dg._got_files
+        )
+
+    assert datadir.exists() is True
+    assert len(list(datadir.glob("*"))) > 0
+
+    # Same state as before using the datagrabber
+    assert elem1_bold.is_symlink() is True
+    assert elem1_bold.is_file() is False
+    assert elem1_t1w.is_symlink() is False
     assert elem1_t1w.is_file() is True

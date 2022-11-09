@@ -104,7 +104,6 @@ class DataladDataGrabber(BaseDataGrabber):
             The modified dictionary with meta updated.
 
         """
-        dirty_status = self._dataset_dirty
         to_get = [v["path"] for v in out.values() if "path" in v]
 
         if len(to_get) > 0:
@@ -113,7 +112,6 @@ class DataladDataGrabber(BaseDataGrabber):
                 logger.debug(f"\t: {fname.as_posix()}")
 
             dl_out = self._dataset.get(to_get, result_renderer="disabled")
-
             if not self._was_cloned:
                 # If the dataset was already installed, check that the
                 # file was actually downloaded to avoid removing a
@@ -124,7 +122,6 @@ class DataladDataGrabber(BaseDataGrabber):
                         logger.debug(f"File {t_path.as_posix()} downloaded")
                         self._got_files.append(t_path)
                     elif t_out["status"] == "notneeded":
-                        dirty_status = True
                         logger.debug(
                             f"File {t_path.as_posix()} was already present"
                         )
@@ -132,15 +129,6 @@ class DataladDataGrabber(BaseDataGrabber):
                         raise_error(f"File download failed: {t_out}")
             logger.debug("Get done")
 
-        # append the version of the dataset
-        out["meta"]["datagrabber"][
-            "datalad_commit_id"
-        ] = self._datalad_commit_id
-
-        out["meta"]["datagrabber"]["datalad_id"] = self._dataset.id
-
-        # Set a flag to indicate that the dataset was dirty
-        out["meta"]["datagrabber"]["datalad_dirty"] = dirty_status
         return out
 
     def install(self) -> None:
@@ -168,12 +156,26 @@ class DataladDataGrabber(BaseDataGrabber):
                     "Dataset already installed but with a different "
                     f"URI: {siblings}"
                 )
+
+            # Check for dirty datasets:
+            # 1) URI mismatch -> dirty
             if len(siblings) > 1:
                 self._dataset_dirty = True
                 warn_with_log(
                     "More than one sibling found, Junifer will consider this "
                     "dataset as dirty."
                 )
+            # 2) At least one file not clean -> dirty
+            if self._dataset_dirty is False:
+                status = self._dataset.status()
+                if any([x["state"] != "clean" for x in status]):
+                    self._dataset_dirty = True
+                    warn_with_log(
+                        "At least one file is not clean, Junifer will "
+                        "consider this dataset as dirty."
+                    )
+            if self._dataset_dirty is False:
+                logger.debug("Dataset is clean")
 
         else:
             logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
@@ -191,12 +193,12 @@ class DataladDataGrabber(BaseDataGrabber):
         """Cleanup the datalad dataset."""
         if self._was_cloned:
             logger.debug("Removing dataset with reckless='kill'")
-            self._dataset.remove(reckless="kill")
+            self._dataset.remove(reckless="kill", result_renderer="disabled")
         else:
             logger.debug("Dropping files that were downloaded")
             for f in self._got_files:
                 logger.debug(f"Dropping {f.as_posix()}")
-                self._dataset.drop(f)
+                self._dataset.drop(f, result_renderer="disabled")
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:
         """Implement single element indexing in the Datalad database.
@@ -235,3 +237,21 @@ class DataladDataGrabber(BaseDataGrabber):
         logger.debug("Cleaning up dataset")
         self.cleanup()
         logger.debug("Dataset state restored")
+
+    def get_meta(self) -> Dict:
+        """Get metadata.
+
+        Returns
+        -------
+        dict
+            The metadata as dictionary.
+
+        """
+        t_meta = super().get_meta()
+        t_meta["datalad_commit_id"] = self._datalad_commit_id
+
+        t_meta["datalad_id"] = self._dataset.id
+
+        # Set a flag to indicate that the dataset was dirty
+        t_meta["datalad_dirty"] = self._dataset_dirty
+        return t_meta
