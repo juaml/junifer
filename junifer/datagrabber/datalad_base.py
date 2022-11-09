@@ -101,48 +101,46 @@ class DataladDataGrabber(BaseDataGrabber):
         Returns
         -------
         dict
-            The modified dictionary with version appended.
+            The modified dictionary with meta updated.
 
         """
         dirty_status = self._dataset_dirty
-        for _, v in out.items():
-            if "path" in v:
-                logger.debug(f"Getting {v['path']}")
-                # Note, that `self._dataset.get` without an option would get
-                # the content of all files in a (sub-dataset) if `v["path"]`
-                # was to point to a subdataset rather than a file. This may be
-                # a source of confusion (+ performance/storage issue) when
-                # implementing a grabber.
-                dl_out = self._dataset.get(v["path"])
-                if not self._was_cloned:
-                    # If the dataset was already installed, check that the
-                    # file was actually downloaded to avoid removing a
-                    # file that was already there.
-                    if len(dl_out) > 1:
-                        raise_error("More than one file downloaded. WTF?")
-                    t_file_out = dl_out[0]
-                    if t_file_out["status"] == "ok":
-                        logger.debug("File downloaded")
-                        self._got_files.append(v["path"])
-                    elif t_file_out["status"] == "notneeded":
-                        dirty_status = True
-                        logger.debug("File was already present")
-                    else:
-                        raise_error(f"File download failed: {t_file_out}")
-                logger.debug("Get done")
+        to_get = [v["path"] for v in out.values() if "path" in v]
 
-        if self._dataset.repo is None:
-            raise_error("Dataset has no repo. Please report this issue.")
+        if len(to_get) > 0:
+            logger.debug(f"Getting {len(to_get)} files using datalad:")
+            for fname in to_get:
+                logger.debug(f"\t: {fname.as_posix()}")
+
+            dl_out = self._dataset.get(to_get, result_renderer="disabled")
+
+            if not self._was_cloned:
+                # If the dataset was already installed, check that the
+                # file was actually downloaded to avoid removing a
+                # file that was already there.
+                for t_out in dl_out:
+                    t_path = Path(t_out["path"])
+                    if t_out["status"] == "ok":
+                        logger.debug(f"File {t_path.as_posix()} downloaded")
+                        self._got_files.append(t_path)
+                    elif t_out["status"] == "notneeded":
+                        dirty_status = True
+                        logger.debug(
+                            f"File {t_path.as_posix()} was already present"
+                        )
+                    else:
+                        raise_error(f"File download failed: {t_out}")
+            logger.debug("Get done")
 
         # append the version of the dataset
         out["meta"]["datagrabber"][
-            "dataset_commit_id"
-        ] = self._dataset.repo.get_hexsha(
-            self._dataset.repo.get_corresponding_branch()
-        )
+            "datalad_commit_id"
+        ] = self._datalad_commit_id
+
+        out["meta"]["datagrabber"]["datalad_id"] = self._dataset.id
 
         # Set a flag to indicate that the dataset was dirty
-        out["meta"]["datagrabber"]["dataset_dirty"] = dirty_status
+        out["meta"]["datagrabber"]["datalad_dirty"] = dirty_status
         return out
 
     def install(self) -> None:
@@ -174,20 +172,26 @@ class DataladDataGrabber(BaseDataGrabber):
                 self._dataset_dirty = True
                 warn_with_log(
                     "More than one sibling found, Junifer will consider this "
-                    "dataset as dirty.")
+                    "dataset as dirty."
+                )
 
         else:
             logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
-            self._dataset: dl.Dataset = \
-                dl.clone(self.uri, self._datadir)  # type: ignore
+            self._dataset: dl.Dataset = dl.clone(  # type: ignore
+                self.uri, self._datadir, result_renderer="disabled"
+            )
             logger.debug("Dataset installed")
         self._was_cloned = not isinstalled
+
+        self._datalad_commit_id = self._dataset.repo.get_hexsha(
+            self._dataset.repo.get_corresponding_branch()
+        )
 
     def cleanup(self):
         """Cleanup the datalad dataset."""
         if self._was_cloned:
             logger.debug("Removing dataset with reckless='kill'")
-            self._dataset.remove(recursive=True, reckless="kill")
+            self._dataset.remove(reckless="kill")
         else:
             logger.debug("Dropping files that were downloaded")
             for f in self._got_files:
