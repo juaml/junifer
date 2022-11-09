@@ -31,7 +31,13 @@ def test_datalad_base_abstractness() -> None:
 
 
 def test_datalad_install_errors(tmp_path: Path) -> None:
-    """Test datalad base install errors / warnings."""
+    """Test datalad base install errors / warnings.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    """
 
     class MyDataGrabber(DataladDataGrabber):  # type: ignore
         def __init__(self, datadir, uri):

@@ -131,7 +131,8 @@ class DataladDataGrabber(BaseDataGrabber):
                         raise_error(f"File download failed: {t_file_out}")
                 logger.debug("Get done")
 
-        assert self._dataset.repo is not None  # avoid errors from mypy
+        if self._dataset.repo is None:
+            raise_error("Dataset has no repo. Please report this issue.")
 
         # append the version of the dataset
         out["meta"]["datagrabber"][
