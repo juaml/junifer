@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Callable, List, Tuple, Union
+from typing import TYPE_CHECKING, Callable, List, Optional, Tuple, Union
 
 import numpy as np
 from nilearn._utils.class_inspect import get_params
@@ -34,15 +34,15 @@ class _JuniferExtractionFunctor:
         as the images (typically MNI or TAL).
     radius : float
         Indicates, in millimeters, the radius for the sphere around the seed.
-        Signal is extracted on a single voxel.
     mask_img : Niimg-like object
         Mask to apply to regions before extracting signals.
     agg_func : callable
         The function to aggregate signals using.
     allow_overlap : bool
-        Whether to allow maps to overlap.
-    dtype : any type that can be coerced into a numpy dtype.
-        The dtype for the extraction.
+        If False, an error is raised if the maps overlap.
+    dtype : any type that can be coerced into a numpy dtype or "auto"
+        The dtype for the extraction. If "auto", the data will be converted to
+        int32 if dtype is discrete and float32 if it is continuous.
 
     """
 
@@ -51,11 +51,11 @@ class _JuniferExtractionFunctor:
     def __init__(
         self,
         seeds_: "ArrayLike",
-        radius: float,
-        mask_img: Union["Nifti1Image", "Nifti2Image"],
+        radius: Optional[float],
+        mask_img: Union["Nifti1Image", "Nifti2Image", None],
         agg_func: Callable,
         allow_overlap: bool,
-        dtype: "DTypeLike",
+        dtype: Union["DTypeLike", str, None],
     ) -> None:
         self.seeds_ = seeds_
         self.radius = radius
