@@ -26,9 +26,16 @@ class MultipleDataGrabber(BaseDataGrabber):
     """
 
     def __init__(self, datagrabbers: List[BaseDataGrabber], **kwargs) -> None:
-        # TODO: Check datagrabbers consistency
-        # - same element keys
-        # - no overlapping types
+        # Check datagrabbers consistency
+        # 1) same element keys
+        first_keys = datagrabbers[0].get_element_keys()
+        for dg in datagrabbers[1:]:
+            if dg.get_element_keys() != first_keys:
+                raise ValueError("Datagrabbers have different element keys.")
+        # 2) no overlapping types
+        types = [x for dg in datagrabbers for x in dg.get_types()]
+        if len(types) != len(set(types)):
+            raise ValueError("Datagrabbers have overlapping types.")
         self._datagrabbers = datagrabbers
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:
@@ -49,11 +56,33 @@ class MultipleDataGrabber(BaseDataGrabber):
             specified element.
 
         """
+
         out = {}
         for dg in self._datagrabbers:
             t_out = dg[element]
             out.update(t_out)
         return out
+
+    def get_item(self, **element: Dict) -> Dict[str, Dict]:
+        """Get item.
+
+        Parameters
+        ----------
+        element : dict
+            The element to be indexed.
+
+        Returns
+        -------
+        dict
+            Dictionary of paths for each type of data required for the
+            specified element.
+
+        Notes
+        -----
+            This function is not implemented for this class as it is useless.
+        """
+        raise NotImplementedError(
+            "get_item() is not useful for this class, hence not implemented.")
 
     def __enter__(self) -> "BaseDataGrabber":
         """Implement context entry."""
@@ -81,6 +110,19 @@ class MultipleDataGrabber(BaseDataGrabber):
         for s in all_elements[1:]:
             elements.intersection_update(s)
         return list(elements)
+
+    def get_element_keys(self) -> List[str]:
+        """Get element keys.
+
+        For each item in the ``element`` tuple passed to ``__getitem__()``,
+        this method returns the corresponding key(s).
+
+        Returns
+        -------
+        list of str
+            The element keys.
+        """
+        return self._datagrabbers[0].get_element_keys()
 
     def get_types(self) -> List[str]:
         """Get types.

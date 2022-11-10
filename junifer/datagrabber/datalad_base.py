@@ -10,11 +10,12 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
 
 import datalad.api as dl
+from datalad.support.gitrepo import GitRepo
 
 from ..api.decorators import register_datagrabber
 from ..utils import logger
 from .base import BaseDataGrabber
-from .utils import raise_error
+from ..utils import raise_error, warn_with_log
 
 
 @register_datagrabber
@@ -81,11 +82,36 @@ class DataladDataGrabber(BaseDataGrabber):
         logger.debug(f"\t_rootdir = {rootdir}")
         self.uri = uri
         self._rootdir = rootdir
+        # Flag to indicate if the dataset was cloned before and it might be
+        # dirty
+        self._dataset_dirty = False
 
     @property
     def datadir(self) -> Path:
         """Get data directory path."""
         return super().datadir / self._rootdir
+
+    def _get_dataset_id_remote(self) -> str:
+        """Get the dataset id from the remote.
+
+        Returns
+        -------
+        str
+            The dataset id.
+
+        """
+        remote_id = None
+        with tempfile.TemporaryDirectory() as tmpdir:
+            logger.debug(f"Querying {self.uri} for dataset ID")
+            repo = GitRepo.clone(
+                self.uri, path=tmpdir,
+                clone_options=["-n", "--depth=1"])
+            repo.checkout(name=".datalad/config", options=["HEAD"])
+            remote_id = repo.config.get("datalad.dataset.id", None)
+            logger.debug(f"Got remote dataset ID = {remote_id}")
+        if remote_id is None:
+            raise_error("Could not get dataset ID from remote")
+        return remote_id
 
     def _dataset_get(self, out: Dict) -> Dict:
         """Get the dataset found from the path in `out`.
@@ -98,39 +124,90 @@ class DataladDataGrabber(BaseDataGrabber):
         Returns
         -------
         dict
-            The modified dictionary with version appended.
+            The modified dictionary with meta updated.
 
         """
-        for _, v in out.items():
-            if "path" in v:
-                logger.debug(f"Getting {v['path']}")
-                # Note, that `self._dataset.get` without an option would get
-                # the content of all files in a (sub-dataset) if `v["path"]`
-                # was to point to a subdataset rather than a file. This may be
-                # a source of confusion (+ performance/storage issue) when
-                # implementing a grabber.
-                self._dataset.get(v["path"])
-                logger.debug("Get done")
+        to_get = [v["path"] for v in out.values() if "path" in v]
 
-        # append the version of the dataset
-        out["meta"]["datagrabber"][
-            "dataset_commit_id"
-        ] = self._dataset.repo.get_hexsha(
-            self._dataset.repo.get_corresponding_branch()
-        )
+        if len(to_get) > 0:
+            logger.debug(f"Getting {len(to_get)} files using datalad:")
+            for fname in to_get:
+                logger.debug(f"\t: {fname}")
+
+            dl_out = self._dataset.get(to_get, result_renderer="disabled")
+            if not self._was_cloned:
+                # If the dataset was already installed, check that the
+                # file was actually downloaded to avoid removing a
+                # file that was already there.
+                for t_out in dl_out:
+                    t_path = Path(t_out["path"])
+                    if t_out["status"] == "ok":
+                        logger.debug(f"File {t_path} downloaded")
+                        self._got_files.append(t_path)
+                    elif t_out["status"] == "notneeded":
+                        logger.debug(
+                            f"File {t_path} was already present"
+                        )
+                    else:
+                        raise_error(f"File download failed: {t_out}")
+            logger.debug("Get done")
+
         return out
 
     def install(self) -> None:
-        """Install the datalad dataset into the datadir."""
-        logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
-        self._dataset: dl.Dataset = dl.clone(self.uri, self._datadir)
-        logger.debug("Dataset installed")
+        """Install the datalad dataset into the datadir.
 
-    def remove(self):
-        """Remove the datalad dataset from the datadir."""
-        # This probably wants to use `reckless='kill'` or similar.
-        # See issue #53
-        self._dataset.remove(recursive=True)
+        Raises
+        ------
+        ValueError
+            If the dataset is already installed but with a different ID.
+        """
+        isinstalled = dl.Dataset(self._datadir).is_installed()
+        if isinstalled:
+            logger.debug("Dataset already installed")
+            self._got_files = []
+            self._dataset: dl.Dataset = dl.Dataset(self._datadir)
+
+            remote_id = self._get_dataset_id_remote()
+            if remote_id != self._dataset.id:
+                raise_error(
+                    "Dataset already installed but with a different "
+                    f"ID: {self._dataset.id} (local) != {remote_id} (remote)"
+                )
+
+            # Check for dirty datasets:
+            status = self._dataset.status()
+            if any([x["state"] != "clean" for x in status]):
+                self._dataset_dirty = True
+                warn_with_log(
+                    "At least one file is not clean, Junifer will "
+                    "consider this dataset as dirty."
+                )
+            else:
+                logger.debug("Dataset is clean")
+
+        else:
+            logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
+            self._dataset: dl.Dataset = dl.clone(  # type: ignore
+                self.uri, self._datadir, result_renderer="disabled"
+            )
+            logger.debug("Dataset installed")
+        self._was_cloned = not isinstalled
+
+        self._datalad_commit_id = self._dataset.repo.get_hexsha(
+            self._dataset.repo.get_corresponding_branch()
+        )
+
+    def cleanup(self) -> None:
+        """Cleanup the datalad dataset."""
+        if self._was_cloned:
+            logger.debug("Removing dataset with reckless='kill'")
+            self._dataset.remove(reckless="kill", result_renderer="disabled")
+        else:
+            logger.debug("Dropping files that were downloaded")
+            for f in self._got_files:
+                logger.debug(f"Dropping {f}")
+                self._dataset.drop(f, result_renderer="disabled")
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:
         """Implement single element indexing in the Datalad database.
@@ -166,6 +243,24 @@ class DataladDataGrabber(BaseDataGrabber):
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         """Implement context exit."""
-        logger.debug("Removing dataset")
-        self.remove()
-        logger.debug("Dataset removed")
+        logger.debug("Cleaning up dataset")
+        self.cleanup()
+        logger.debug("Dataset state restored")
+
+    def get_meta(self) -> Dict:
+        """Get metadata.
+
+        Returns
+        -------
+        dict
+            The metadata as dictionary.
+
+        """
+        t_meta = super().get_meta()
+        t_meta["datalad_commit_id"] = self._datalad_commit_id
+
+        t_meta["datalad_id"] = self._dataset.id
+
+        # Set a flag to indicate that the dataset was dirty
+        t_meta["datalad_dirty"] = self._dataset_dirty
+        return t_meta

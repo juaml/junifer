@@ -83,6 +83,8 @@ Enhancements
 
 - Rename "atlas" to "parcellation" (:gh:`116` by `Fede Raimondo`_).
 
+- Refactor the :class:`junifer.datagrabber.BaseDataGrabber` class to allow for easier subclassing (:gh:`123` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
@@ -90,6 +92,8 @@ Bugs
   (:gh:`96` by `Leonard Sasse`_, fixed in :gh:`98` by `Fede Raimondo`_).
 
 - Fix a bug in which AOMIC PIOP2 datagrabber did not use user input to constrain elements based on tasks (:gh:`105` by `Leonard Sasse`_)
+
+- Fix a bug in which a datalad dataset could remove a user-cloned dataset (:gh:`53` by `Fede Raimondo`_)
 
 API changes
 ~~~~~~~~~~~

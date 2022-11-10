@@ -34,7 +34,7 @@ with TemporaryDirectory() as tmpdir_name:
                     f'func/{t_sub}_{t_ses}_task-rest_bold.json'])
             for fname in fnames:
                 with open(ses_dir / fname, 'w') as f:
-                    f.write('placeholder')
+                    f.write('placeholder-{fname}')
 
     ds.save(recursive=True)
     ds.siblings('add', name='gin', url=dst)

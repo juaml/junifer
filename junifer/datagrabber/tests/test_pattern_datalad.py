@@ -15,11 +15,13 @@ from junifer.datagrabber.pattern_datalad import PatternDataladDataGrabber
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
-        "id": "e2ce149bd723088769a86c72e57eded009258c6b",
+        "commit": "522dfb203afcd2cd55799bf347f9b211919a7338",
+        "id": "fec92475-d9c0-4409-92ba-f041b6a12c40",
     },
     "example_bids_ses": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids-ses",
-        "id": "3d08d55d1faad4f12ab64ac9497544a0d924d47a",
+        "commit": "3d08d55d1faad4f12ab64ac9497544a0d924d47a",
+        "id": "c83500d0-532f-45be-baf1-0dab703bdc2a",
     },
 }
 
@@ -56,7 +58,7 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
 
     repo_uri = _testing_dataset["example_bids"]["uri"]
     rootdir = "example_bids"
-    repo_commit = _testing_dataset["example_bids"]["id"]
+    repo_commit = _testing_dataset["example_bids"]["commit"]
 
     with PatternDataladDataGrabber(
         rootdir=rootdir,
@@ -87,11 +89,11 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
             assert dg_meta["class"] == "PatternDataladDataGrabber"
             assert "uri" in dg_meta
             assert dg_meta["uri"] == repo_uri
-            assert "dataset_commit_id" in dg_meta
-            assert dg_meta["dataset_commit_id"] == repo_commit
+            assert "datalad_commit_id" in dg_meta
+            assert dg_meta["datalad_commit_id"] == repo_commit
 
             with open(t_sub["T1w"]["path"], "r") as f:
-                assert f.readlines()[0] == "placeholder"
+                assert f.readlines()[0].startswith("placeholder")
 
 
 def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:

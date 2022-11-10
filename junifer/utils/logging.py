@@ -11,9 +11,12 @@ from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Dict, NoReturn, Optional, Type, Union
 from warnings import warn
-
+import datalad
 
 logger = logging.getLogger("JUNIFER")
+
+# Set up datalad logger level to warning by default
+datalad.log.lgr.setLevel(logging.WARNING)
 
 _logging_types = {
     "DEBUG": logging.DEBUG,
@@ -253,6 +256,7 @@ def configure_logging(
 
     lh.setFormatter(formatter)  # set formatter
     logger.setLevel(level)  # set level
+    datalad.log.lgr.setLevel(level)  # set level for datalad
     logger.addHandler(lh)  # set handler
     log_versions()  # log versions of installed packages
 

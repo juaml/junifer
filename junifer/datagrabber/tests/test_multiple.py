@@ -3,13 +3,15 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+import pytest
+
 from junifer.datagrabber import MultipleDataGrabber, PatternDataladDataGrabber
 
 
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
-        "id": "e2ce149bd723088769a86c72e57eded009258c6b",
+        "id": "522dfb203afcd2cd55799bf347f9b211919a7338",
     },
     "example_bids_ses": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids-ses",
@@ -109,3 +111,60 @@ def test_multiple_no_intersection() -> None:
     with dg:
         subs = [x for x in dg]
         assert set(subs) == set(expected_subs)
+
+
+def test_multiple_get_item() -> None:
+    """Test a multiple datagrabber get_item error."""
+    repo_uri1 = _testing_dataset["example_bids"]["uri"]
+    rootdir = "example_bids_ses"
+    replacements = ["subject", "session"]
+    pattern1 = {
+        "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+    }
+    dg1 = PatternDataladDataGrabber(
+        rootdir=rootdir,
+        uri=repo_uri1,
+        types=["T1w"],
+        patterns=pattern1,
+        replacements=replacements,
+    )
+
+    dg = MultipleDataGrabber([dg1])
+    with pytest.raises(NotImplementedError):
+        dg.get_item(subject="sub-01")  # type: ignore
+
+
+def test_multiple_validation() -> None:
+    """Test a multiple datagrabber init validation."""
+    repo_uri1 = _testing_dataset["example_bids"]["uri"]
+    repo_uri2 = _testing_dataset["example_bids_ses"]["uri"]
+    rootdir = "example_bids_ses"
+    replacement1 = ["subject", "session"]
+    replacement2 = ["subject"]
+    pattern1 = {
+        "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+    }
+    pattern2 = {
+        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+    }
+    dg1 = PatternDataladDataGrabber(
+        rootdir=rootdir,
+        uri=repo_uri1,
+        types=["T1w"],
+        patterns=pattern1,
+        replacements=replacement1,
+    )
+
+    dg2 = PatternDataladDataGrabber(
+        rootdir=rootdir,
+        uri=repo_uri2,
+        types=["bold"],
+        patterns=pattern2,
+        replacements=replacement2,
+    )
+
+    with pytest.raises(ValueError, match="different element key"):
+        MultipleDataGrabber([dg1, dg2])
+
+    with pytest.raises(ValueError, match="overlapping types"):
+        MultipleDataGrabber([dg1, dg1])
