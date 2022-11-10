@@ -9,6 +9,8 @@ from typing import Type
 import datalad.api as dl
 import pytest
 
+from typing import Type
+
 from pathlib import Path
 
 import datalad.api as dl

@@ -5,3 +5,4 @@
 
 from . import registry
 from .pipeline_step_mixin import PipelineStepMixin
+from . import registry

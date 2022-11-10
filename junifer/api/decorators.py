@@ -33,7 +33,7 @@ def register_datagrabber(klass: Type) -> Type:
     return klass
 
 
-def register_datareader(klass: type) -> type:
+def register_datareader(klass: Type) -> Type:
     """Datareader registration decorator.
 
     Registers the datareader so it can be used by name.
@@ -57,7 +57,7 @@ def register_datareader(klass: type) -> type:
     return klass
 
 
-def register_preprocessor(klass: type) -> type:
+def register_preprocessor(klass: Type) -> Type:
     """Preprocessor registration decorator.
 
     Registers the preprocessor so it can be used by name.
