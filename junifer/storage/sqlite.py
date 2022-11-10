@@ -130,8 +130,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
-        df : pandas.DataFrame
-            DataFrame to save.
+        df : pandas.DataFrame or pandas.Series
+            The pandas DataFrame or Series to save.
         name : str
             Name of the table to save.
         engine : sqlalchemy.Engine, optional
@@ -390,8 +390,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
-        df : pandas.DataFrame
-            The DataFrame to store.
+        df : pandas.DataFrame or pandas.Series
+            The pandas DataFrame or Series to store.
         meta : dict
             The metadata as a dictionary.
 
