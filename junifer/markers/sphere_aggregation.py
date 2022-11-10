@@ -27,21 +27,24 @@ class SphereAggregation(BaseMarker):
         The name of the coordinates list to use. See
         :func:`junifer.data.coordinates.list_coordinates` for options.
     radius : float, optional
-        The radius of the sphere in mm. If None, the signal will be extracted
-        from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
-        for more information (default None).
+        The radius of the sphere in millimeters. If None, the signal will be
+        extracted from a single voxel. See
+        :class:`nilearn.maskers.NiftiSpheresMasker` for more information
+        (default None).
     method : str, optional
         The aggregation method to use.
         See :func:`junifer.stats.get_aggfunc_by_name` for more information
         (default "mean").
     method_params : dict, optional
         The parameters to pass to the aggregation method (default None).
-    on : list of str, optional
-        The kind of data to apply the marker to. By default, will work on all
+    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or \
+         list of the options, optional
+        The data types to apply the marker to. If None, will work on all
         available data (default None).
     name : str, optional
         The name of the marker. By default, it will use KIND_SphereAggregation
         where KIND is the kind of data it was applied to (default None).
+
     """
 
     def __init__(
@@ -49,8 +52,8 @@ class SphereAggregation(BaseMarker):
         coords: str,
         radius: Optional[float] = None,
         method: str = "mean",
-        method_params: Optional[Dict] = None,
-        on: Optional[Union[List[str], str]] = None,
+        method_params: Optional[Dict[str, Any]] = None,
+        on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.coords = coords
@@ -90,7 +93,7 @@ class SphereAggregation(BaseMarker):
         Returns
         -------
         list of str
-            The kind of output.
+            The list of storage kinds.
 
         """
         outputs = []
