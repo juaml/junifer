@@ -51,16 +51,20 @@ def get_aggfunc_by_name(
         limits = func_params.get("limits")
         if limits is None or not isinstance(limits, list):
             raise_error(
-                "func_params must contain a list of limits for " "winsorized_mean",
+                "func_params must contain a list of limits for "
+                "winsorized_mean",
                 ValueError,
             )
         if len(limits) != 2:
             raise_error(
-                "func_params must contain a list of two limits for " "winsorized_mean",
+                "func_params must contain a list of two limits for "
+                "winsorized_mean",
                 ValueError,
             )
         if any((lim < 0.0 or lim > 1) for lim in limits):
-            raise_error("Limits for the winsorized mean must be between 0 and 1.")
+            raise_error(
+                "Limits for the winsorized mean must be between 0 and 1."
+            )
         logger.info(f"Limits for winsorized mean are set to {limits}.")
         # partially interpret func_params
         func = partial(winsorized_mean, **func_params)
@@ -72,7 +76,8 @@ def get_aggfunc_by_name(
         func = partial(trim_mean, **func_params)
     else:
         raise_error(
-            f"Function {name} unknown. Please provide any of " f"{_valid_func_names}"
+            f"Function {name} unknown. Please provide any of "
+            f"{_valid_func_names}"
         )
     return func
 

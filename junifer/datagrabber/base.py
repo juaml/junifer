@@ -77,7 +77,10 @@ class BaseDataGrabber(ABC):
             element = (element,)
         named_element = dict(zip(self.get_element_keys(), element))
         out = self.get_item(**named_element)
-        out["meta"] = {"datagrabber": self.get_meta(), "element": named_element}
+        out["meta"] = {
+            "datagrabber": self.get_meta(),
+            "element": named_element,
+        }
         return out
 
     def __enter__(self) -> "BaseDataGrabber":

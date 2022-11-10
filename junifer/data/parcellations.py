@@ -106,7 +106,10 @@ def register_parcellation(
     if name in _available_parcellations:
         if overwrite is True:
             logger.info(f"Overwriting {name} parcellation")
-            if _available_parcellations[name]["family"] != "CustomUserParcellation":
+            if (
+                _available_parcellations[name]["family"]
+                != "CustomUserParcellation"
+            ):
                 raise_error(
                     f"Cannot overwrite {name} parcellation. "
                     "It is a built-in parcellation."
@@ -274,7 +277,9 @@ def _retrieve_parcellation(
         If the parcellation's name is invalid.
     """
     if parcellations_dir is None:
-        parcellations_dir = Path().home() / "junifer" / "data" / "parcellations"
+        parcellations_dir = (
+            Path().home() / "junifer" / "data" / "parcellations"
+        )
         # Create default junifer data directory if not present
         parcellations_dir.mkdir(exist_ok=True, parents=True)
     # Convert str to Path
@@ -303,7 +308,9 @@ def _retrieve_parcellation(
             **kwargs,
         )
     else:
-        raise_error(f"The provided parcellation name {family} cannot be retrieved.")
+        raise_error(
+            f"The provided parcellation name {family} cannot be retrieved."
+        )
 
     return parcellation_fname, parcellation_labesl
 
@@ -550,7 +557,9 @@ def _retrieve_tian(
                 f"Tian_Subcortex_S{scale}_{magneticfield}_{space}.nii.gz"
             )
     elif magneticfield == "7T":
-        parcellation_fname_base_7T = parcellations_dir / "Tian2020MSA_v1.1" / "7T"
+        parcellation_fname_base_7T = (
+            parcellations_dir / "Tian2020MSA_v1.1" / "7T"
+        )
         parcellation_fname_base_7T.mkdir(exist_ok=True, parents=True)
         parcellation_fname = (
             parcellations_dir
@@ -560,7 +569,9 @@ def _retrieve_tian(
         )
         # define 7T labels (b/c currently no labels file available for 7T)
         scale7Trois = {1: 16, 2: 34, 3: 54, 4: 62}
-        labels = [("parcel_" + str(x)) for x in np.arange(1, scale7Trois[scale] + 1)]
+        labels = [
+            ("parcel_" + str(x)) for x in np.arange(1, scale7Trois[scale] + 1)
+        ]
         parcellation_lname = parcellation_fname_base_7T / (
             f"Tian_Subcortex_S{scale}_7T_labelnumbering.txt"
         )
@@ -577,9 +588,13 @@ def _retrieve_tian(
 
     # check existence of parcellation
     if not (parcellation_fname.exists() and parcellation_lname.exists()):
-        logger.info("At least one of the parcellation files are missing, fetching.")
+        logger.info(
+            "At least one of the parcellation files are missing, fetching."
+        )
 
-        url_basis = "https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip"
+        url_basis = (
+            "https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip"
+        )
 
         logger.info(f"Downloading TIAN from {url_basis}")
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -593,7 +608,9 @@ def _retrieve_tian(
             if (parcellations_dir / "__MACOSX").exists():
                 shutil.rmtree((parcellations_dir / "__MACOSX").as_posix())
 
-        labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[0].to_list()
+        labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[
+            0
+        ].to_list()
 
         if not (parcellation_fname.exists() and parcellation_lname.exists()):
             raise_error("There was a problem fetching the parcellations.")
@@ -663,7 +680,9 @@ def _retrieve_suit(
     # check existence of parcellation
     if not (parcellation_fname.exists() and parcellation_lname.exists()):
         parcellation_fname.parent.mkdir(exist_ok=True, parents=True)
-        logger.info("At least one of the parcellation files is missing, fetching.")
+        logger.info(
+            "At least one of the parcellation files is missing, fetching."
+        )
 
         url_basis = (
             "https://github.com/DiedrichsenLab/cerebellar_atlases/raw"

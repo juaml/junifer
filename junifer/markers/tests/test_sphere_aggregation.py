@@ -88,7 +88,9 @@ def test_SphereAggregation_4D() -> None:
     auto4d = nifti_masker.fit_transform(fmri_img)
 
     # Create SphereAggregation object
-    marker = SphereAggregation(coords=coord_names, method="mean", radius=radius)
+    marker = SphereAggregation(
+        coords=coord_names, method="mean", radius=radius
+    )
     input = {"BOLD": {"data": fmri_img}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
@@ -121,7 +123,9 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     img = nib.load(vbm)
     uri = tmp_path / "test_sphere_storage_3D.db"
 
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
+    storage = SQLiteFeatureStorage(
+        uri=uri, single_output=True, upsert="ignore"
+    )
     meta = {
         "element": "test",
         "version": "0.0.1",
@@ -143,6 +147,8 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     subject_data = datasets.fetch_spm_auditory()
     fmri_img = concat_imgs(subject_data.func)  # type: ignore
     input = {"BOLD": {"data": fmri_img}, "meta": meta}
-    marker = SphereAggregation(coords="DMNBuckner", method="mean", radius=8, on="BOLD")
+    marker = SphereAggregation(
+        coords="DMNBuckner", method="mean", radius=8, on="BOLD"
+    )
 
     marker.fit_transform(input, storage=storage)

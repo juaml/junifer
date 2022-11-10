@@ -65,9 +65,13 @@ class FunctionalConnectivitySpheres(BaseMarker):
         if radius is None or radius <= 0:
             raise_error(f"radius should be > 0: provided {radius}")
         self.agg_method = agg_method
-        self.agg_method_params = {} if agg_method_params is None else agg_method_params
+        self.agg_method_params = (
+            {} if agg_method_params is None else agg_method_params
+        )
         self.cor_method = cor_method
-        self.cor_method_params = {} if cor_method_params is None else cor_method_params
+        self.cor_method_params = (
+            {} if cor_method_params is None else cor_method_params
+        )
         # default to nilearn behavior
         self.cor_method_params["empirical"] = self.cor_method_params.get(
             "empirical", False

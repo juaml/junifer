@@ -45,7 +45,8 @@ class MarkerCollection:
         if len(set(marker_names)) != len(marker_names):
             counts = Counter(marker_names)
             raise ValueError(
-                "Markers must have different names. " f"Current names are: {counts}"
+                "Markers must have different names. "
+                f"Current names are: {counts}"
             )
         self._markers = markers
         if datareader is None:

@@ -16,7 +16,9 @@ from pandas.testing import assert_frame_equal
 from junifer.datareader import DefaultDataReader
 
 
-@pytest.mark.parametrize("kind", [["T1w", "BOLD", "T2", "dwi"], [], None, ["whatever"]])
+@pytest.mark.parametrize(
+    "kind", [["T1w", "BOLD", "T2", "dwi"], [], None, ["whatever"]]
+)
 def test_validation(kind) -> None:
     """Test validating input/output.
 
@@ -48,7 +50,9 @@ def test_meta() -> None:
     assert output["meta"]["datareader"]["class"] == "DefaultDataReader"
 
 
-@pytest.mark.parametrize("fname", ["example4d.nii.gz", "reoriented_anat_moved.nii"])
+@pytest.mark.parametrize(
+    "fname", ["example4d.nii.gz", "reoriented_anat_moved.nii"]
+)
 def test_read_nifti(fname: str) -> None:
     """Test reading NIFTI files.
 

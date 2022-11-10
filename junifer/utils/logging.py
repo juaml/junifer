@@ -277,7 +277,9 @@ def raise_error(msg: str, klass: Type[Exception] = ValueError) -> NoReturn:
     raise klass(msg)
 
 
-def warn_with_log(msg: str, category: Optional[Type[Warning]] = RuntimeWarning) -> None:
+def warn_with_log(
+    msg: str, category: Optional[Type[Warning]] = RuntimeWarning
+) -> None:
     """Warn, but first log it.
 
     Parameters

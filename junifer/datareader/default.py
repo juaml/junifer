@@ -92,7 +92,9 @@ class DefaultDataReader(PipelineStepMixin):
                 out["meta"] = input["meta"]
                 continue
             if "path" not in input[kind]:
-                warn_with_log(f"Input kind {kind} does not provide a path. Skipping.")
+                warn_with_log(
+                    f"Input kind {kind} does not provide a path. Skipping."
+                )
                 continue
             t_path = input[kind]["path"]
             t_params = params.get(kind, {})
@@ -116,7 +118,9 @@ class DefaultDataReader(PipelineStepMixin):
                     fread = reader_func(t_path, **t_params)
                     break
             if fread is None:
-                logger.info(f"Unknown file type {t_path.as_posix()}, skipping reading")
+                logger.info(
+                    f"Unknown file type {t_path.as_posix()}, skipping reading"
+                )
             out[kind]["data"] = fread
             if "meta" not in out:
                 out["meta"] = {}

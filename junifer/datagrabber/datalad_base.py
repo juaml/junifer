@@ -191,8 +191,10 @@ class DataladDataGrabber(BaseDataGrabber):
             logger.debug("Dataset installed")
         self._was_cloned = not isinstalled
 
-        self._datalad_commit_id = self._dataset.repo.get_hexsha(  # type: ignore
-            self._dataset.repo.get_corresponding_branch()  # type: ignore
+        self._datalad_commit_id = (
+            self._dataset.repo.get_hexsha(  # type: ignore
+                self._dataset.repo.get_corresponding_branch()  # type: ignore
+            )
         )
 
     def cleanup(self) -> None:

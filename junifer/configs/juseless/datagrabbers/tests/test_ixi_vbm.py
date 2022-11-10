@@ -26,7 +26,9 @@ def test_juselessdataladixivbm_datagrabber() -> None:
         test_element = all_elements[0]
         out = dg[test_element]
         assert "VBM_GM" in out
-        assert out["VBM_GM"]["path"].name == f"m0wp1sub-{test_element[1]}.nii.gz"
+        assert (
+            out["VBM_GM"]["path"].name == f"m0wp1sub-{test_element[1]}.nii.gz"
+        )
         assert out["VBM_GM"]["path"].exists()
 
 

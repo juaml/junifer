@@ -5,7 +5,10 @@
 # License: AGPL
 
 from ..pipeline.registry import register
-from .datagrabbers import OasisVBMTestingDatagrabber, SPMAuditoryTestingDatagrabber
+from .datagrabbers import (
+    OasisVBMTestingDatagrabber,
+    SPMAuditoryTestingDatagrabber,
+)
 
 # Register testing datagrabber
 register(

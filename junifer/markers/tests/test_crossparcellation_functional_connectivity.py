@@ -79,7 +79,9 @@ def test_store(tmp_path: Path) -> None:
             correlation_method="spearman",
         )
         uri = tmp_path / "test_crossparcellation.db"
-        storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
+        storage = SQLiteFeatureStorage(
+            uri=uri, single_output=True, upsert="ignore"
+        )
         out = crossparcellation.fit_transform(input_dict, storage=storage)
 
 
