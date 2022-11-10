@@ -121,11 +121,17 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
         as the images (typically MNI or TAL).
     radius : float, optional
         Indicates, in millimeters, the radius for the sphere around the seed.
-        Signal is extracted on a single voxel (default None).
+        If None, signal is extracted on a single voxel (default None).
     mask_img : Niimg-like object, optional
-        Mask to apply to regions before extracting signals.
-    agg_func : callable
-        The function to aggregate signals using.
+        Mask to apply to regions before extracting signals (default None).
+    agg_func : callable, optional
+        The function to aggregate signals using (default numpy.mean).
+    allow_overlap : bool, optional
+        If False, an error is raised if the maps overlap (default None).
+    dtype : any type that can be coerced into a numpy dtype or "auto", optional
+        The dtype for the extraction. If "auto", the data will be converted to
+        int32 if dtype is discrete and float32 if it is continuous
+        (default None).
     **kwargs
         Keyword arguments are passed to the
         :func:`nilearn.maskers.NiftiSpheresMasker`.
@@ -135,9 +141,11 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
     def __init__(
         self,
         seeds: "ArrayLike",
-        radius: float,
-        mask_img: Union["Nifti1Image", "Nifti2Image"],
-        agg_func: Callable,
+        radius: Optional[float] = None,
+        mask_img: Union["Nifti1Image", "Nifti2Image", None] = None,
+        agg_func: Callable = np.mean,
+        allow_overlap: bool = False,
+        dtype: Union["DTypeLike", str, None] = None,
         **kwargs,  # TODO: to keep or not?
     ) -> None:
         self.agg_func = agg_func
@@ -145,6 +153,7 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
             seeds=seeds,
             radius=radius,
             mask_img=mask_img,
+            allow_overlap=allow_overlap,
             **kwargs,
         )
 
