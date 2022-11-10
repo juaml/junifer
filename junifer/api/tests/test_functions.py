@@ -167,7 +167,9 @@ def test_run_and_collect(tmp_path: Path) -> None:
         storage=storage,
     )
     # Get datagrabber
-    dg = build(step="datagrabber", name=datagrabber["kind"], baseclass=BaseDataGrabber)
+    dg = build(
+        step="datagrabber", name=datagrabber["kind"], baseclass=BaseDataGrabber
+    )
     elements = dg.get_elements()  # type: ignore
     # This should create 10 files
     files = list(outdir.glob("*.db"))

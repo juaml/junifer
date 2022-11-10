@@ -35,10 +35,15 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         datadir: Union[str, Path, None] = None,
         sites: Union[str, List[str], None] = None,
     ) -> None:
-        uri = "ria+http://cat_12.5.ds.inm7.de" "#b7107c52-8408-11ea-89c6-a0369f287950"
+        uri = (
+            "ria+http://cat_12.5.ds.inm7.de"
+            "#b7107c52-8408-11ea-89c6-a0369f287950"
+        )
         types = ["VBM_GM"]
         replacements = ["site", "subject"]
-        patterns = {"VBM_GM": "{site}/sub-{subject}/mri/m0wp1sub-{subject}.nii.gz"}
+        patterns = {
+            "VBM_GM": "{site}/sub-{subject}/mri/m0wp1sub-{subject}.nii.gz"
+        }
 
         # validate and/or transform 'site' input
         all_sites = ["HH", "Guys", "IOP"]

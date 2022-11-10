@@ -66,7 +66,8 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
             for t in tasks:
                 if t not in all_tasks:
                     raise_error(
-                        f"{t} is not a valid task in the AOMIC PIOP1" " dataset!"
+                        f"{t} is not a valid task in the AOMIC PIOP1"
+                        " dataset!"
                     )
 
         self.tasks = tasks

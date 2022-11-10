@@ -64,7 +64,9 @@ class PatternDataGrabber(BaseDataGrabber):
         """Skip file check existence."""
         return False
 
-    def _replace_patterns_regex(self, pattern: str) -> Tuple[str, str, List[str]]:
+    def _replace_patterns_regex(
+        self, pattern: str
+    ) -> Tuple[str, str, List[str]]:
         """Replace the patterns in `pattern` with the named groups.
 
         It allows elements to be obtained from the filesystem.
@@ -86,7 +88,9 @@ class PatternDataGrabber(BaseDataGrabber):
         """
         re_pattern = pattern
         glob_pattern = pattern
-        t_replacements = [x for x in self.replacements if f"{{{x}}}" in pattern]
+        t_replacements = [
+            x for x in self.replacements if f"{{{x}}}" in pattern
+        ]
 
         for t_r in t_replacements:
             # Replace the first of each with a named group definition
@@ -245,7 +249,10 @@ class PatternDataGrabber(BaseDataGrabber):
                     ]
                     new_elements = set()
                     for t_element in elements:
-                        if tuple(np.array(t_element)[t_repl_idx]) in types_element:
+                        if (
+                            tuple(np.array(t_element)[t_repl_idx])
+                            in types_element
+                        ):
                             new_elements.add(t_element)
                     elements = new_elements
         if elements is None:

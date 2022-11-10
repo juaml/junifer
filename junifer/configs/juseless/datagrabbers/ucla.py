@@ -31,7 +31,9 @@ class JuselessUCLA(PatternDataGrabber):
 
     def __init__(
         self,
-        datadir: Union[str, Path] = "/data/project/psychosis_thalamus/data/fmriprep",
+        datadir: Union[
+            str, Path
+        ] = "/data/project/psychosis_thalamus/data/fmriprep",
         tasks: Union[str, List[str], None] = None,
     ) -> None:
         types = [
@@ -62,7 +64,9 @@ class JuselessUCLA(PatternDataGrabber):
         else:
             for t in tasks:
                 if t not in all_tasks:
-                    raise_error(f"{t} is not a valid task in the UCLA dataset!")
+                    raise_error(
+                        f"{t} is not a valid task in the UCLA dataset!"
+                    )
 
         self.tasks = tasks
 
@@ -72,7 +76,8 @@ class JuselessUCLA(PatternDataGrabber):
                 "MNI152NLin2009cAsym_preproc.nii.gz"
             ),
             "BOLD_confounds": (
-                "sub-{subject}/func/sub-{subject}_" "task-{task}_bold_confounds.tsv"
+                "sub-{subject}/func/sub-{subject}_"
+                "task-{task}_bold_confounds.tsv"
             ),
             "T1w": (
                 "sub-{subject}/anat/sub-{subject}_"

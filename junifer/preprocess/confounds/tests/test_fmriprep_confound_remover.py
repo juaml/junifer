@@ -121,7 +121,9 @@ def test_fMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
         "white_matter_derivative1_power2",
     ]
 
-    confounds_df = pd.DataFrame(np.random.randn(7, len(var_names)), columns=var_names)
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
 
     out = confound_remover._process_fmriprep_spec({"data": confounds_df})
     to_select, sq_to_compute, der_to_compute, spike_name = out
@@ -140,7 +142,9 @@ def test_fMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
 
     all_names = var_names + missing_der_names + missing_sq_names
 
-    confounds_df = pd.DataFrame(np.random.randn(7, len(var_names)), columns=var_names)
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
     out = confound_remover._process_fmriprep_spec({"data": confounds_df})
     to_select, sq_to_compute, der_to_compute, spike_name = out
     assert set(to_select) == set(all_names)
@@ -149,7 +153,9 @@ def test_fMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
     assert spike_name == "framewise_displacement"
 
     # Same strategy, with spike, only basics are present
-    confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"}, spike=0.2)
+    confound_remover = fMRIPrepConfoundRemover(
+        strategy={"wm_csf": "full"}, spike=0.2
+    )
 
     var_names = ["csf", "white_matter"]
     missing_der_names = ["csf_derivative1", "white_matter_derivative1"]
@@ -187,7 +193,9 @@ def test_fMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
 
     all_names = var_names + missing_der_names + missing_sq_names
 
-    confounds_df = pd.DataFrame(np.random.randn(7, len(var_names)), columns=var_names)
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
     out = confound_remover._process_fmriprep_spec({"data": confounds_df})
     to_select, sq_to_compute, der_to_compute, spike_name = out
     assert set(to_select) == set(all_names)
@@ -197,16 +205,22 @@ def test_fMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
 
     # Test for wrong columns/strategy pairs
 
-    confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"}, spike=0.2)
+    confound_remover = fMRIPrepConfoundRemover(
+        strategy={"wm_csf": "full"}, spike=0.2
+    )
     var_names = ["csf"]
-    confounds_df = pd.DataFrame(np.random.randn(7, len(var_names)), columns=var_names)
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
 
     msg = r"Missing basic confounds: \['white_matter'\]"
     with pytest.raises(ValueError, match=msg):
         confound_remover._process_fmriprep_spec({"data": confounds_df})
 
     var_names = ["csf", "white_matter"]
-    confounds_df = pd.DataFrame(np.random.randn(7, len(var_names)), columns=var_names)
+    confounds_df = pd.DataFrame(
+        np.random.randn(7, len(var_names)), columns=var_names
+    )
 
     msg = r"Missing framewise_displacement"
     with pytest.raises(ValueError, match=msg):
@@ -247,7 +261,9 @@ def test_fMRIPrepConfoundRemover__pick_confounds_adhoc() -> None:
 
 def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
     """Test fMRIPrepConfoundRemover pick confounds on fmriprep confounds."""
-    confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"}, spike=0.2)
+    confound_remover = fMRIPrepConfoundRemover(
+        strategy={"wm_csf": "full"}, spike=0.2
+    )
     fmriprep_all_vars = [
         "csf",
         "white_matter",
@@ -315,7 +331,9 @@ def test_fMRIPrepConfoundRemover__validate_data() -> None:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
         new_input = input["VBM_GM"]
-        with pytest.raises(DimensionError, match="incompatible dimensionality"):
+        with pytest.raises(
+            DimensionError, match="incompatible dimensionality"
+        ):
             confound_remover._validate_data(new_input, None)
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
@@ -327,7 +345,9 @@ def test_fMRIPrepConfoundRemover__validate_data() -> None:
             confound_remover._validate_data(new_input, None)
         with pytest.raises(ValueError, match="No BOLD_confounds provided"):
             confound_remover._validate_data(new_input, {})
-        with pytest.raises(ValueError, match="No BOLD_confounds data provided"):
+        with pytest.raises(
+            ValueError, match="No BOLD_confounds data provided"
+        ):
             confound_remover._validate_data(new_input, {"BOLD_confounds": {}})
 
         extra_input = {
@@ -341,7 +361,9 @@ def test_fMRIPrepConfoundRemover__validate_data() -> None:
         with pytest.raises(ValueError, match="Image time series and"):
             confound_remover._validate_data(new_input, extra_input)
 
-        extra_input = {"BOLD_confounds": {"data": input["BOLD_confounds"]["data"]}}
+        extra_input = {
+            "BOLD_confounds": {"data": input["BOLD_confounds"]["data"]}
+        }
         with pytest.raises(ValueError, match="format must be specified"):
             confound_remover._validate_data(new_input, extra_input)
 
@@ -423,7 +445,9 @@ def test_fMRIPrepConfoundRemover__validate_data() -> None:
 
 def test_fMRIPrepConfoundRemover__remove_confounds() -> None:
     """Test fMRIPrepConfoundRemover remove confounds."""
-    confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"}, spike=0.2)
+    confound_remover = fMRIPrepConfoundRemover(
+        strategy={"wm_csf": "full"}, spike=0.2
+    )
     reader = DefaultDataReader()
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         input = dg["sub-01"]
@@ -466,7 +490,9 @@ def test_fMRIPrepConfoundRemover_preprocess() -> None:
         assert orig_bold.shape == trans_bold.shape
 
         # but be different
-        assert_raises(AssertionError, assert_array_equal, orig_bold, trans_bold)
+        assert_raises(
+            AssertionError, assert_array_equal, orig_bold, trans_bold
+        )
         assert key == "BOLD"
 
 
@@ -491,7 +517,9 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
         assert orig_bold.shape == trans_bold.shape
 
         # but be different
-        assert_raises(AssertionError, assert_array_equal, orig_bold, trans_bold)
+        assert_raises(
+            AssertionError, assert_array_equal, orig_bold, trans_bold
+        )
 
         assert output["meta"] == input["meta"]  # general meta does not change
         assert "meta" in output["BOLD"]

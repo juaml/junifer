@@ -81,7 +81,9 @@ def cli() -> None:  # pragma: no cover
 @cli.command()
 @click.argument(
     "filepath",
-    type=click.Path(exists=True, readable=True, dir_okay=False, path_type=pathlib.Path),
+    type=click.Path(
+        exists=True, readable=True, dir_okay=False, path_type=pathlib.Path
+    ),
 )
 @click.option("--element", type=str, multiple=True)
 @click.option(
@@ -124,7 +126,9 @@ def run(filepath: click.Path, element: str, verbose: click.Choice) -> None:
 @cli.command()
 @click.argument(
     "filepath",
-    type=click.Path(exists=True, readable=True, dir_okay=False, path_type=pathlib.Path),
+    type=click.Path(
+        exists=True, readable=True, dir_okay=False, path_type=pathlib.Path
+    ),
 )
 @click.option(
     "-v",
@@ -154,7 +158,9 @@ def collect(filepath: click.Path, verbose: click.Choice) -> None:
 @cli.command()
 @click.argument(
     "filepath",
-    type=click.Path(exists=True, readable=True, dir_okay=False, path_type=pathlib.Path),
+    type=click.Path(
+        exists=True, readable=True, dir_okay=False, path_type=pathlib.Path
+    ),
 )
 @click.option("--element", type=str, multiple=True)
 @click.option("--overwrite", is_flag=True)

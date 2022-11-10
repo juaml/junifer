@@ -44,10 +44,14 @@ def test_get_aggfunc_by_name_errors() -> None:
         get_aggfunc_by_name(name="winsorized_mean", func_params=None)
 
     with pytest.raises(ValueError, match="list of limits"):
-        get_aggfunc_by_name(name="winsorized_mean", func_params={"limits": 0.1})
+        get_aggfunc_by_name(
+            name="winsorized_mean", func_params={"limits": 0.1}
+        )
 
     with pytest.raises(ValueError, match="list of two limits"):
-        get_aggfunc_by_name(name="winsorized_mean", func_params={"limits": [0.2]})
+        get_aggfunc_by_name(
+            name="winsorized_mean", func_params={"limits": [0.2]}
+        )
 
     with pytest.raises(ValueError, match="list of two"):
         get_aggfunc_by_name(
@@ -55,10 +59,14 @@ def test_get_aggfunc_by_name_errors() -> None:
         )
 
     with pytest.raises(ValueError, match="must be between 0 and 1"):
-        get_aggfunc_by_name(name="winsorized_mean", func_params={"limits": [-1, 0.7]})
+        get_aggfunc_by_name(
+            name="winsorized_mean", func_params={"limits": [-1, 0.7]}
+        )
 
     with pytest.raises(ValueError, match="must be between 0 and 1"):
-        get_aggfunc_by_name(name="winsorized_mean", func_params={"limits": [0.1, 2]})
+        get_aggfunc_by_name(
+            name="winsorized_mean", func_params={"limits": [0.1, 2]}
+        )
 
 
 def test_winsorized_mean() -> None:

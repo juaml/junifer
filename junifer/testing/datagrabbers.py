@@ -168,7 +168,9 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
 
     """
 
-    def __init__(self, reduce_confounds: bool = True, age_group: str = "both") -> None:
+    def __init__(
+        self, reduce_confounds: bool = True, age_group: str = "both"
+    ) -> None:
         """Initialize the class."""
         datadir = tempfile.mkdtemp()
         # Define types

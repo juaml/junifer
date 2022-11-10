@@ -57,7 +57,10 @@ def concrete_datagrabber() -> Type[DataladDataGrabber]:
 
         def get_item(self, subject):
             out = {
-                "T1w": {"path": self.datadir / f"{subject}/anat/{subject}_T1w.nii.gz"},
+                "T1w": {
+                    "path": self.datadir
+                    / f"{subject}/anat/{subject}_T1w.nii.gz"
+                },
                 "BOLD": {
                     "path": self.datadir
                     / f"{subject}/func/{subject}_task-rest_bold.nii.gz"
@@ -74,7 +77,9 @@ def concrete_datagrabber() -> Type[DataladDataGrabber]:
     return MyDataGrabber
 
 
-def test_datalad_install_errors(tmp_path: Path, concrete_datagrabber: Type) -> None:
+def test_datalad_install_errors(
+    tmp_path: Path, concrete_datagrabber: Type
+) -> None:
     """Test datalad base install errors / warnings.
 
     Parameters
@@ -110,7 +115,9 @@ def test_datalad_install_errors(tmp_path: Path, concrete_datagrabber: Type) -> N
             pass
 
 
-def test_datalad_clone_cleanup(tmp_path: Path, concrete_datagrabber: Type) -> None:
+def test_datalad_clone_cleanup(
+    tmp_path: Path, concrete_datagrabber: Type
+) -> None:
     """Test datalad base clone and remove.
 
     Parameters
@@ -124,7 +131,9 @@ def test_datalad_clone_cleanup(tmp_path: Path, concrete_datagrabber: Type) -> No
     # Clone whole dataset
     datadir = tmp_path / "newclone"
     uri = _testing_dataset["example_bids"]["uri"]
-    elem1_bold = datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    elem1_bold = (
+        datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    )
     elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
 
     assert datadir.exists() is False
@@ -153,7 +162,9 @@ def test_datalad_clone_cleanup(tmp_path: Path, concrete_datagrabber: Type) -> No
     assert len(list(datadir.glob("*"))) == 0
 
 
-def test_datalad_previously_cloned(tmp_path: Path, concrete_datagrabber: Type) -> None:
+def test_datalad_previously_cloned(
+    tmp_path: Path, concrete_datagrabber: Type
+) -> None:
     """Test datalad base on cloned dataset.
 
     Parameters
@@ -166,7 +177,9 @@ def test_datalad_previously_cloned(tmp_path: Path, concrete_datagrabber: Type) -
 
     # Dataset cloned outside of datagrabber
     datadir = tmp_path / "cloned"
-    elem1_bold = datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    elem1_bold = (
+        datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    )
     elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
     uri = _testing_dataset["example_bids"]["uri"]
     commit = _testing_dataset["example_bids"]["commit"]
@@ -208,7 +221,9 @@ def test_datalad_previously_cloned(tmp_path: Path, concrete_datagrabber: Type) -
         # Datagrabber fetched two files
         assert len(dg._got_files) == 2
         assert any(x.name == "sub-01_T1w.nii.gz" for x in dg._got_files)
-        assert any(x.name == "sub-01_task-rest_bold.nii.gz" for x in dg._got_files)
+        assert any(
+            x.name == "sub-01_task-rest_bold.nii.gz" for x in dg._got_files
+        )
 
     assert datadir.exists() is True
     assert len(list(datadir.glob("*"))) > 0
@@ -229,7 +244,9 @@ def test_datalad_previously_cloned_and_get(
 
     # Dataset cloned outside of datagrabber with some files present
     datadir = tmp_path / "cloned_clean"
-    elem1_bold = datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    elem1_bold = (
+        datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    )
     elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
     uri = _testing_dataset["example_bids"]["uri"]
     commit = _testing_dataset["example_bids"]["commit"]
@@ -307,7 +324,9 @@ def test_datalad_previously_cloned_and_get_dirty(
 
     # Dataset cloned outside of datagrabber with some files present and dirty
     datadir = tmp_path / "cloned_dirty"
-    elem1_bold = datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    elem1_bold = (
+        datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+    )
     elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
     uri = _testing_dataset["example_bids"]["uri"]
     commit = _testing_dataset["example_bids"]["commit"]
@@ -391,7 +410,9 @@ def test_datalad_previously_cloned_and_get_dirty(
         # Datagrabber fetched two files
         assert len(dg._got_files) == 2
         assert any(x.name == "sub-02_T1w.nii.gz" for x in dg._got_files)
-        assert any(x.name == "sub-02_task-rest_bold.nii.gz" for x in dg._got_files)
+        assert any(
+            x.name == "sub-02_task-rest_bold.nii.gz" for x in dg._got_files
+        )
 
     assert datadir.exists() is True
     assert len(list(datadir.glob("*"))) > 0

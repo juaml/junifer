@@ -106,7 +106,10 @@ def register_parcellation(
     if name in _available_parcellations:
         if overwrite is True:
             logger.info(f"Overwriting {name} parcellation")
-            if _available_parcellations[name]["family"] != "CustomUserParcellation":
+            if (
+                _available_parcellations[name]["family"]
+                != "CustomUserParcellation"
+            ):
                 raise_error(
                     f"Cannot overwrite {name} parcellation. "
                     "It is a built-in parcellation."
@@ -274,7 +277,9 @@ def _retrieve_parcellation(
         If the parcellation's name is invalid.
     """
     if parcellations_dir is None:
-        parcellations_dir = Path().home() / "junifer" / "data" / "parcellations"
+        parcellations_dir = (
+            Path().home() / "junifer" / "data" / "parcellations"
+        )
         # Create default junifer data directory if not present
         parcellations_dir.mkdir(exist_ok=True, parents=True)
     # Convert str to Path
@@ -303,7 +308,9 @@ def _retrieve_parcellation(
             **kwargs,
         )
     else:
-        raise_error(f"The provided parcellation name {family} cannot be retrieved.")
+        raise_error(
+            f"The provided parcellation name {family} cannot be retrieved."
+        )
 
     return parcellation_fname, parcellation_labesl
 
@@ -562,7 +569,9 @@ def _retrieve_tian(
         )
         # define 7T labels (b/c currently no labels file available for 7T)
         scale7Trois = {1: 16, 2: 34, 3: 54, 4: 62}
-        labels = [("parcel_" + str(x)) for x in np.arange(1, scale7Trois[scale] + 1)]
+        labels = [
+            ("parcel_" + str(x)) for x in np.arange(1, scale7Trois[scale] + 1)
+        ]
         parcellation_lname = parcellation_fname_base_7T / (
             f"Tian_Subcortex_S{scale}_7T_labelnumbering.txt"
         )
@@ -583,7 +592,9 @@ def _retrieve_tian(
             "At least one of the parcellation files are missing, fetching."
         )
 
-        url_basis = "https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip"
+        url_basis = (
+            "https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip"
+        )
 
         logger.info(f"Downloading TIAN from {url_basis}")
         with tempfile.TemporaryDirectory() as tmpdir:

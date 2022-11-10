@@ -17,7 +17,9 @@ from junifer.markers.parcel_aggregation import ParcelAggregation
 
 def test_ParcelAggregation_input_output() -> None:
     """Test ParcelAggregation input and output types."""
-    marker = ParcelAggregation(parcellation="Schaefer100x7", method="mean", on="VBM_GM")
+    marker = ParcelAggregation(
+        parcellation="Schaefer100x7", method="mean", on="VBM_GM"
+    )
 
     output = marker.get_output_kind(["VBM_GM", "BOLD"])
     assert output == ["table", "timeseries"]
