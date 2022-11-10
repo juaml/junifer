@@ -49,9 +49,7 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
     assert len(set(out["col_names"])) == 6
 
     # get the timeseries using sa
-    sa = SphereAggregation(
-        coords="DMNBuckner", radius=5.0, method="mean", on="BOLD"
-    )
+    sa = SphereAggregation(coords="DMNBuckner", radius=5.0, method="mean", on="BOLD")
     ts = sa.compute({"data": fmri_img})
 
     # Check that FC are almost equal when using nileran
@@ -64,9 +62,7 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
 
     uri = tmp_path / "test_fc_parcel.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
     meta = {
         "element": "test",
         "version": "0.0.1",
@@ -109,9 +105,7 @@ def test_FunctionalConnectivitySpheres_empirical(tmp_path: Path) -> None:
     assert len(set(out["col_names"])) == 6
 
     # get the timeseries using sa
-    sa = SphereAggregation(
-        coords="DMNBuckner", radius=5.0, method="mean", on="BOLD"
-    )
+    sa = SphereAggregation(coords="DMNBuckner", radius=5.0, method="mean", on="BOLD")
     ts = sa.compute({"data": fmri_img})
 
     # Check that FC are almost equal when using nileran

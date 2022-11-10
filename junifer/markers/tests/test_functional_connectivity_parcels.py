@@ -45,8 +45,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
     assert len(set(out["col_names"])) == 100
 
     # get the timeseries using pa
-    pa = ParcelAggregation(
-        parcellation="Schaefer100x7", method="mean", on="BOLD")
+    pa = ParcelAggregation(parcellation="Schaefer100x7", method="mean", on="BOLD")
     ts = pa.compute({"data": fmri_img})
 
     # compare with nilearn
@@ -54,8 +53,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
     parcellation = datasets.fetch_atlas_schaefer_2018(
         n_rois=100, yeo_networks=7, resolution_mm=2
     )
-    masker = NiftiLabelsMasker(
-        labels_img=parcellation["maps"], standardize=False)
+    masker = NiftiLabelsMasker(labels_img=parcellation["maps"], standardize=False)
     ts_ni = masker.fit_transform(fmri_img)
 
     # check the TS are almost equal
@@ -78,9 +76,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
 
     uri = tmp_path / "test_fc_parcellation.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
     meta = {
         "element": "test",
         "version": "0.0.1",

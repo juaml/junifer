@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union, Tuple, Any
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -13,10 +13,9 @@ from nilearn._utils.niimg_conversions import check_niimg_4d
 from nilearn.image import clean_img
 from nilearn.masking import compute_brain_mask
 
-from ..base import BasePreprocessor
 from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
-
+from ..base import BasePreprocessor
 
 if TYPE_CHECKING:
     from nibabel import MGHImage, Nifti1Image, Nifti2Image
@@ -453,9 +452,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             raise_error("No BOLD_confounds data provided", ValueError)
         # Confounds must be a dataframe
         if not isinstance(extra_input["BOLD_confounds"]["data"], pd.DataFrame):
-            raise_error(
-                "Confounds data must be a pandas dataframe", ValueError
-            )
+            raise_error("Confounds data must be a pandas dataframe", ValueError)
 
         confound_df = extra_input["BOLD_confounds"]["data"]
         bold_img = input["data"]
@@ -468,8 +465,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         if "format" not in extra_input["BOLD_confounds"]:
             raise_error(
-                "Confounds format must be specified in "
-                'input["BOLD_confounds"]'
+                "Confounds format must be specified in " 'input["BOLD_confounds"]'
             )
 
         t_format = extra_input["BOLD_confounds"]["format"]
@@ -487,13 +483,9 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                     "the variables names mappings to fmriprep format in "
                     'input["BOLD_confounds"]["mappings"]["fmriprep"]'
                 )
-            fmriprep_mappings = extra_input["BOLD_confounds"]["mappings"][
-                "fmriprep"
-            ]
+            fmriprep_mappings = extra_input["BOLD_confounds"]["mappings"]["fmriprep"]
             wrong_names = [
-                x
-                for x in fmriprep_mappings.values()
-                if x not in FMRIPREP_VALID_NAMES
+                x for x in fmriprep_mappings.values() if x not in FMRIPREP_VALID_NAMES
             ]
             if len(wrong_names) > 0:
                 raise_error(
@@ -502,9 +494,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 )
             # Check that all the required columns are present
             missing = [
-                x
-                for x in fmriprep_mappings.keys()
-                if x not in confound_df.columns
+                x for x in fmriprep_mappings.keys() if x not in confound_df.columns
             ]
 
             if len(missing) > 0:

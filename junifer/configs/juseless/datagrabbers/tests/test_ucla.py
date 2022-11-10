@@ -13,7 +13,6 @@ import pytest
 from junifer.configs.juseless.datagrabbers import JuselessUCLA
 from junifer.utils.logging import configure_logging
 
-
 # Check if the test is running on juseless
 if socket.gethostname() != "juseless":
     pytest.skip("These tests are only for juseless", allow_module_level=True)
@@ -83,7 +82,5 @@ def test_juseless_ucla_datagrabber_task_params(tasks: Optional[str]) -> None:
 
 def test_juseless_ucla_datagrabber_invalid_tasks() -> None:
     """Test juseless ucla datagrabber with invalid task parameters."""
-    with pytest.raises(
-        ValueError, match="invalid is not a valid task in the UCLA"
-    ):
+    with pytest.raises(ValueError, match="invalid is not a valid task in the UCLA"):
         JuselessUCLA(tasks="invalid")

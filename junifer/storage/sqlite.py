@@ -19,7 +19,6 @@ from ..utils import logger, raise_error, warn_with_log
 from .pandas_base import PandasBaseFeatureStorage
 from .utils import element_to_index, element_to_prefix, process_meta
 
-
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
@@ -87,9 +86,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Set upsert
         self._upsert = upsert
 
-    def get_engine(
-        self, meta: Optional[Dict] = None
-    ) -> "Engine":
+    def get_engine(self, meta: Optional[Dict] = None) -> "Engine":
         """Get engine.
 
         Parameters
@@ -112,10 +109,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         prefix = ""
         if self.single_output is False:
             if element is None:
-                raise_error(
-                    msg="element must be specified when"
-                    "single_output is False."
-                )
+                msg = "element must be specified when single_output is False."
+                raise_error(msg)
             prefix = element_to_prefix(element)
         # Format URI for engine creation
         uri = (
@@ -180,8 +175,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                         con, table_name=name, index_col=index_col
                     )
                     existing, new = _split_incoming_data(
-                        df, pk_indb, index_col
-                    )
+                        df, pk_indb, index_col)
                     # Step 2: upsert existing data
                     pandas_sql = pandasSQL_builder(con)
                     pandas_sql.meta.reflect(bind=con, only=[name])
@@ -210,8 +204,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                     raise_error(msg=f"Table ({name}) already exists.")
                 else:
                     raise_error(
-                        msg=f"Invalid option {if_exists} for if_exists."
-                    )
+                        msg=f"Invalid option {if_exists} for if_exists.")
 
     def _store_2d(
         self,
@@ -239,17 +232,16 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         n_rows = len(data)
         # Convert element metadata to index
         idx = element_to_index(
-            meta=meta, n_rows=n_rows, rows_col_name=rows_col_name
-        )
+            meta=meta, n_rows=n_rows, rows_col_name=rows_col_name)
         # Prepare new dataframe
         data_df = pd.DataFrame(  # type: ignore
-            data, columns=columns, index=idx)  # type: ignore
+            data, columns=columns, index=idx  # type: ignore
+        )
         # Store dataframe
         self.store_df(df=data_df, meta=meta)
 
     def list_features(
-        self, return_df: bool = False
-    ) -> Union[Dict, pd.DataFrame]:
+            self, return_df: bool = False) -> Union[Dict, pd.DataFrame]:
         """Implement features listing from the storage.
 
         Parameters
@@ -311,10 +303,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Parameter value check
         if feature_md5 is not None and feature_name is not None:
             raise_error(
-                msg=(
-                    "Only one of `feature_name` or `feature_md5` can be "
-                    "specified."
-                )
+                msg=("Only one of `feature_name` or `feature_md5` can be "
+                     "specified.")
             )
         elif feature_md5 is None and feature_name is None:
             raise_error(
@@ -353,9 +343,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             f"WHERE tbl_name='{table_name}' "
             "ORDER BY cid;"
         )
-        index_names = (
-            pd.read_sql(sql=query, con=engine).values.squeeze().tolist()
-        )
+        index_names = pd.read_sql(
+            sql=query, con=engine).values.squeeze().tolist()
         # Set index on dataframe
         df = df.set_index(index_names)
         return df
@@ -605,7 +594,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             raise_error(msg="collect() is not implemented for single output.")
         logger.info(
             "Collecting data from "
-            f"{self.uri.parent}/*{self.uri.name}"   # type: ignore
+            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
         )
         # Create new instance
         out_storage = SQLiteFeatureStorage(
@@ -619,8 +608,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             in_engine = in_storage.get_engine()
             # Open "meta" table
             t_meta_df = pd.read_sql(
-                sql="meta", con=in_engine, index_col="meta_md5"
-            )
+                sql="meta", con=in_engine, index_col="meta_md5")
             # Save metadata
             out_storage._save_upsert(t_meta_df, "meta")
             # Save dataframes

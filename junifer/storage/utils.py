@@ -29,9 +29,7 @@ def _meta_hash(meta: Dict) -> str:
 
     """
     logger.debug(f"Hashing metadata: {meta}")
-    meta_md5 = hashlib.md5(
-        json.dumps(meta, sort_keys=True).encode("utf-8")
-    ).hexdigest()
+    meta_md5 = hashlib.md5(json.dumps(meta, sort_keys=True).encode("utf-8")).hexdigest()
     logger.debug(f"Hash computed: {meta_md5}")
     return meta_md5
 
@@ -69,9 +67,7 @@ def process_meta(meta: Dict) -> Tuple[str, Dict]:
     element = t_meta.pop("element", None)
     if element is None:
         if "_element_keys" not in t_meta:
-            raise_error(
-                msg="`meta` must contain the key 'element' or '_element_keys'"
-            )
+            raise_error(msg="`meta` must contain the key 'element' or '_element_keys'")
     else:
         if isinstance(element, dict):
             t_meta["_element_keys"] = list(element.keys())
@@ -145,9 +141,7 @@ def element_to_index(
 
     """
     if "element" not in meta:
-        raise_error(
-            msg="To create and index, metadata must contain the key 'element'."
-        )
+        raise_error(msg="To create and index, metadata must contain the key 'element'.")
     # Get element
     element = meta["element"]
     if not isinstance(element, dict):
@@ -158,7 +152,5 @@ def element_to_index(
     elem_idx: Dict[Any, Any] = {k: [v] * n_rows for k, v in element.items()}
     elem_idx[rows_col_name] = np.arange(n_rows)
     # Create index
-    index = pd.MultiIndex.from_frame(
-        pd.DataFrame(elem_idx, index=range(n_rows))
-    )
+    index = pd.MultiIndex.from_frame(pd.DataFrame(elem_idx, index=range(n_rows)))
     return index

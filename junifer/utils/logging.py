@@ -11,6 +11,7 @@ from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Dict, NoReturn, Optional, Type, Union
 from warnings import warn
+
 import datalad
 
 logger = logging.getLogger("JUNIFER")
@@ -276,9 +277,7 @@ def raise_error(msg: str, klass: Type[Exception] = ValueError) -> NoReturn:
     raise klass(msg)
 
 
-def warn_with_log(
-    msg: str, category: Optional[Type[Warning]] = RuntimeWarning
-) -> None:
+def warn_with_log(msg: str, category: Optional[Type[Warning]] = RuntimeWarning) -> None:
     """Warn, but first log it.
 
     Parameters

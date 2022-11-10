@@ -13,7 +13,6 @@ from numpy.typing import ArrayLike
 
 from ..utils.logging import logger, raise_error
 
-
 # Path to the VOIs
 _vois_path = Path(__file__).parent / "VOIs"
 
@@ -72,8 +71,7 @@ def register_coordinates(
     if name in _available_coordinates:
         if isinstance(_available_coordinates[name], Path):
             raise_error(
-                f"Coordinates {name} already registered as built-in "
-                "coordinates."
+                f"Coordinates {name} already registered as built-in " "coordinates."
             )
         if overwrite is True:
             logger.info(f"Overwriting coordinates {name}")
@@ -84,17 +82,11 @@ def register_coordinates(
             )
 
     if not isinstance(coordinates, np.ndarray):
-        raise_error(
-            f"Coordinates must be a numpy.ndarray, not {type(coordinates)}."
-        )
+        raise_error(f"Coordinates must be a numpy.ndarray, not {type(coordinates)}.")
     if coordinates.ndim != 2:
-        raise_error(
-            f"Coordinates must be a 2D array, not {coordinates.ndim}D."
-        )
+        raise_error(f"Coordinates must be a 2D array, not {coordinates.ndim}D.")
     if coordinates.shape[1] != 3:
-        raise_error(
-            f"Each coordinate must have 3 values, not {coordinates.shape[1]} "
-        )
+        raise_error(f"Each coordinate must have 3 values, not {coordinates.shape[1]} ")
     if len(voi_names) != coordinates.shape[0]:
         raise_error(
             f"Length of voi_names ({len(voi_names)}) does not match the "

@@ -7,7 +7,6 @@ import pytest
 
 from junifer.datagrabber import MultipleDataGrabber, PatternDataladDataGrabber
 
-
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
@@ -29,8 +28,7 @@ def test_multiple() -> None:
         "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
     }
     pattern2 = {
-        "bold": "{subject}/{session}/func/"
-        "{subject}_{session}_task-rest_bold.nii.gz",
+        "bold": "{subject}/{session}/func/" "{subject}_{session}_task-rest_bold.nii.gz",
     }
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
@@ -55,9 +53,7 @@ def test_multiple() -> None:
     assert "bold" in types
 
     expected_subs = [
-        (f"sub-{i:02d}", f"ses-{j:02d}")
-        for j in range(1, 3)
-        for i in range(1, 10)
+        (f"sub-{i:02d}", f"ses-{j:02d}") for j in range(1, 3) for i in range(1, 10)
     ]
 
     with dg:
@@ -87,8 +83,7 @@ def test_multiple_no_intersection() -> None:
         "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
     }
     pattern2 = {
-        "bold": "{subject}/{session}/func/"
-        "{subject}_{session}_task-rest_bold.nii.gz",
+        "bold": "{subject}/{session}/func/" "{subject}_{session}_task-rest_bold.nii.gz",
     }
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,

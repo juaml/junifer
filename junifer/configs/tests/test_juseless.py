@@ -12,7 +12,6 @@ import pytest
 from junifer.datagrabber.hcp import DataladHCP1200
 from junifer.utils.logging import configure_logging
 
-
 # Check if the test is running on juseless
 if socket.gethostname() != "juseless":
     pytest.skip("These tests are only for juseless", allow_module_level=True)

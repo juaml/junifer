@@ -102,9 +102,7 @@ class HCP1200(PatternDataGrabber):
         )
         self.phase_encodings = phase_encodings
 
-    def get_item(
-        self, subject: str, task: str, phase_encoding: str
-    ) -> Dict:
+    def get_item(self, subject: str, task: str, phase_encoding: str) -> Dict:
         """Index one element in the dataset.
 
         Parameters
@@ -177,7 +175,7 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
         self,
         datadir: Union[str, Path, None] = None,
         tasks: Union[str, List[str], None] = None,
-        phase_encodings: Union[str, List[str], None] = None
+        phase_encodings: Union[str, List[str], None] = None,
     ) -> None:
         uri = (
             "https://github.com/datalad-datasets/"

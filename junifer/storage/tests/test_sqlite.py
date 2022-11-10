@@ -15,12 +15,7 @@ from pandas.testing import assert_frame_equal
 from sqlalchemy import create_engine
 
 from junifer.storage.sqlite import SQLiteFeatureStorage
-from junifer.storage.utils import (
-    element_to_index,
-    element_to_prefix,
-    process_meta,
-)
-
+from junifer.storage.utils import element_to_index, element_to_prefix, process_meta
 
 df1 = pd.DataFrame(
     {
@@ -95,9 +90,7 @@ def test_get_engine_single_output(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_single_output.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
     assert storage.single_output is True
     engine = storage.get_engine()
     assert engine.url.drivername == "sqlite"
@@ -114,9 +107,7 @@ def test_get_engine_multi_output(tmp_path: Path) -> None:
 
     """
     uri = tmp_path / "test_multi_output.db"
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=False, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, single_output=False, upsert="ignore")
     with pytest.raises(ValueError, match="element must be specified"):
         storage.get_engine()
 
@@ -150,9 +141,7 @@ def test_upsert_replace(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_upsert_replace.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
     # Save to database
@@ -186,9 +175,7 @@ def test_upsert_ignore(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_upsert_ignore.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
     # Save to database
@@ -205,9 +192,7 @@ def test_upsert_ignore(tmp_path: Path) -> None:
     with pytest.warns(RuntimeWarning, match="are already present"):
         storage.store_df(df2, meta)
     # Read stored table
-    c_dfignore = _read_sql(
-        table_name, uri=uri.as_posix(), index_col=["element", "pk2"]
-    )
+    c_dfignore = _read_sql(table_name, uri=uri.as_posix(), index_col=["element", "pk2"])
     # Check if dataframes are equal
     assert_frame_equal(c_dfignore, df_ignore)
     # Check for error
@@ -241,9 +226,7 @@ def test_upsert_update(tmp_path: Path) -> None:
     # Save to database
     storage.store_df(df2, meta)
     # Read stored table
-    c_dfupdate = _read_sql(
-        table_name, uri=uri.as_posix(), index_col=["element", "pk2"]
-    )
+    c_dfupdate = _read_sql(table_name, uri=uri.as_posix(), index_col=["element", "pk2"])
     # Check if dataframes are equal
     assert_frame_equal(c_dfupdate, df_update)
 
@@ -273,9 +256,7 @@ def test_store_df_and_read_df(tmp_path: Path) -> None:
 
     """
     uri = tmp_path / "test_store_df_and_read_df.db"
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
     # Metadata to store
     meta = {
         "element": "test",
@@ -337,9 +318,7 @@ def test_store_metadata(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_metadata_store.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
     # Store metadata
@@ -393,9 +372,7 @@ def test_store_table(tmp_path: Path) -> None:
     df_new = pd.DataFrame(data_new, columns=["f1", "f2"], index=idx_new)
     # Check warning
     with pytest.warns(RuntimeWarning, match=r"Some rows"):
-        storage.store_table(
-            data_new, meta, columns=["f1", "f2"], rows_col_name="scan"
-        )
+        storage.store_table(data_new, meta, columns=["f1", "f2"], rows_col_name="scan")
     # Read stored table
     c_df_new = _read_sql(
         table_name=table_name,
@@ -421,9 +398,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
 
     # Store 4 x 3 full matrix
-    data = np.array(
-        [[1, 2, 3], [11, 22, 33], [111, 222, 333], [1111, 2222, 3333]]
-    )
+    data = np.array([[1, 2, 3], [11, 22, 33], [111, 222, 333], [1111, 2222, 3333]])
     row_names = ["row1", "row2", "row3", "row4"]
     col_names = ["col1", "col2", "col3"]
 
@@ -450,9 +425,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     storage = SQLiteFeatureStorage(uri=uri, single_output=True)
     storage.store_matrix(data=data, meta=meta)
     stored_names = [
-        f"r{i}~c{j}"
-        for i in range(data.shape[0])
-        for j in range(data.shape[1])
+        f"r{i}~c{j}" for i in range(data.shape[0]) for j in range(data.shape[1])
     ]
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
@@ -502,9 +475,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     assert "fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
-    assert_array_equal(
-        read_df.values, data[np.triu_indices(n=data.shape[0])][None, :]
-    )
+    assert_array_equal(read_df.values, data[np.triu_indices(n=data.shape[0])][None, :])
 
     # Store upper triangular matrix without diagonal
     uri = tmp_path / "test_store_table_triu_nodiagonal.db"
@@ -561,9 +532,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     assert "fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
-    assert_array_equal(
-        read_df.values, data[np.tril_indices(n=data.shape[0])][None, :]
-    )
+    assert_array_equal(read_df.values, data[np.tril_indices(n=data.shape[0])][None, :])
 
     # Store lower triangular matrix without diagonal
     uri = tmp_path / "test_store_table_tril_nodiagonal.db"
@@ -655,15 +624,9 @@ def test_store_multiple_output(tmp_path: Path):
     assert hash1 == hash2
     assert hash2 == hash3
     # Store tables
-    storage.store_table(
-        data1, meta1, columns=["f1", "f2"], rows_col_name="scan"
-    )
-    storage.store_table(
-        data2, meta2, columns=["f1", "f2"], rows_col_name="scan"
-    )
-    storage.store_table(
-        data3, meta3, columns=["f1", "f2"], rows_col_name="scan"
-    )
+    storage.store_table(data1, meta1, columns=["f1", "f2"], rows_col_name="scan")
+    storage.store_table(data2, meta2, columns=["f1", "f2"], rows_col_name="scan")
+    storage.store_table(data3, meta3, columns=["f1", "f2"], rows_col_name="scan")
     # Check that URI does not exist yet
     assert not uri.exists()
     # Convert element to preifx
@@ -733,15 +696,9 @@ def test_collect(tmp_path: Path) -> None:
     data2 = data1 * 10
     data3 = data1 * 20
     # Store tables
-    storage.store_table(
-        data1, meta1, columns=["f1", "f2"], rows_col_name="scan"
-    )
-    storage.store_table(
-        data2, meta2, columns=["f1", "f2"], rows_col_name="scan"
-    )
-    storage.store_table(
-        data3, meta3, columns=["f1", "f2"], rows_col_name="scan"
-    )
+    storage.store_table(data1, meta1, columns=["f1", "f2"], rows_col_name="scan")
+    storage.store_table(data2, meta2, columns=["f1", "f2"], rows_col_name="scan")
+    storage.store_table(data3, meta3, columns=["f1", "f2"], rows_col_name="scan")
     # Convert element to prefix
     prefix1 = element_to_prefix(meta1["element"])
     prefix2 = element_to_prefix(meta2["element"])

@@ -6,15 +6,14 @@
 
 from pathlib import Path
 
-from nilearn import image
 import pytest
+from nilearn import image
 
 from junifer.markers.crossparcellation_functional_connectivity import (
     CrossParcellationFC,
 )
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
-
 
 parcellation_ONE = "Schaefer100x17"
 parcellation_TWO = "Schaefer200x17"
@@ -80,9 +79,7 @@ def test_store(tmp_path: Path) -> None:
             correlation_method="spearman",
         )
         uri = tmp_path / "test_crossparcellation.db"
-        storage = SQLiteFeatureStorage(
-            uri=uri, single_output=True, upsert="ignore"
-        )
+        storage = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
         out = crossparcellation.fit_transform(input_dict, storage=storage)
 
 

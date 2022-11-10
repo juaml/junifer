@@ -13,9 +13,8 @@ import datalad.api as dl
 from datalad.support.gitrepo import GitRepo
 
 from ..api.decorators import register_datagrabber
-from ..utils import logger
+from ..utils import logger, raise_error, warn_with_log
 from .base import BaseDataGrabber
-from ..utils import raise_error, warn_with_log
 
 
 @register_datagrabber
@@ -104,8 +103,8 @@ class DataladDataGrabber(BaseDataGrabber):
         with tempfile.TemporaryDirectory() as tmpdir:
             logger.debug(f"Querying {self.uri} for dataset ID")
             repo = GitRepo.clone(
-                self.uri, path=tmpdir,
-                clone_options=["-n", "--depth=1"])
+                self.uri, path=tmpdir, clone_options=["-n", "--depth=1"]
+            )
             repo.checkout(name=".datalad/config", options=["HEAD"])
             remote_id = repo.config.get("datalad.dataset.id", None)
             logger.debug(f"Got remote dataset ID = {remote_id}")
@@ -145,9 +144,7 @@ class DataladDataGrabber(BaseDataGrabber):
                         logger.debug(f"File {t_path} downloaded")
                         self._got_files.append(t_path)
                     elif t_out["status"] == "notneeded":
-                        logger.debug(
-                            f"File {t_path} was already present"
-                        )
+                        logger.debug(f"File {t_path} was already present")
                     else:
                         raise_error(f"File download failed: {t_out}")
             logger.debug("Get done")
@@ -194,10 +191,9 @@ class DataladDataGrabber(BaseDataGrabber):
             logger.debug("Dataset installed")
         self._was_cloned = not isinstalled
 
-        self._datalad_commit_id = \
-            self._dataset.repo.get_hexsha(  # type: ignore
-                self._dataset.repo.get_corresponding_branch()  # type: ignore
-            )
+        self._datalad_commit_id = self._dataset.repo.get_hexsha(  # type: ignore
+            self._dataset.repo.get_corresponding_branch()  # type: ignore
+        )
 
     def cleanup(self) -> None:
         """Cleanup the datalad dataset."""

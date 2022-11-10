@@ -13,7 +13,6 @@ from ..data import load_coordinates
 from ..utils import logger, raise_error
 from .base import BaseMarker
 
-
 if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 

@@ -11,7 +11,6 @@ import pytest
 from junifer.configs.juseless.datagrabbers import JuselessDataladAOMICID1000VBM
 from junifer.utils.logging import configure_logging
 
-
 # Check if the test is running on juseless
 if socket.gethostname() != "juseless":
     pytest.skip("These tests are only for juseless", allow_module_level=True)
@@ -26,8 +25,5 @@ def test_juselessdataladaomicid1000vbm_datagrabber() -> None:
         test_element = all_elements[0]
         out = dg[test_element]
         assert "VBM_GM" in out
-        assert (
-            out["VBM_GM"]["path"].name
-            == f"mwp1sub-{test_element}_run-2_T1w.nii.gz"
-        )
+        assert out["VBM_GM"]["path"].name == f"mwp1sub-{test_element}_run-2_T1w.nii.gz"
         assert out["VBM_GM"]["path"].exists()

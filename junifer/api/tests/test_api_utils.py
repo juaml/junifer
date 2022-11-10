@@ -47,9 +47,7 @@ def test_get_dependency_information_short() -> None:
 def test_get_dependency_information_long() -> None:
     """Test long version of _get_dependency_information()."""
     dependency_information = _get_dependency_information(long_=True)
-    dependency_information_keys = [
-        key for key in dependency_information.keys()
-    ]
+    dependency_information_keys = [key for key in dependency_information.keys()]
     for key in [
         "click",
         "numpy",

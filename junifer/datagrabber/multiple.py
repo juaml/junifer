@@ -82,7 +82,8 @@ class MultipleDataGrabber(BaseDataGrabber):
             This function is not implemented for this class as it is useless.
         """
         raise NotImplementedError(
-            "get_item() is not useful for this class, hence not implemented.")
+            "get_item() is not useful for this class, hence not implemented."
+        )
 
     def __enter__(self) -> "BaseDataGrabber":
         """Implement context entry."""

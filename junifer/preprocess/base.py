@@ -5,8 +5,7 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
-from typing import Dict, List, Optional, Union, Tuple, Any
-
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from ..pipeline import PipelineStepMixin
 from ..utils import logger, raise_error
@@ -136,8 +135,7 @@ class BasePreprocessor(ABC, PipelineStepMixin):
                 extra_input.pop(kind)
                 t_meta = t_input.get("meta", {})  # input kind meta
                 t_meta.update(self.get_meta(kind))
-                key, t_out = self.preprocess(
-                    input=t_input, extra_input=extra_input)
+                key, t_out = self.preprocess(input=t_input, extra_input=extra_input)
                 t_out.update(meta=t_meta)
                 out[key] = t_out
         return out

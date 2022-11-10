@@ -4,5 +4,5 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from .confounds import fMRIPrepConfoundRemover
 from .base import BasePreprocessor
+from .confounds import fMRIPrepConfoundRemover
