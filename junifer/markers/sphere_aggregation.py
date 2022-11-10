@@ -6,11 +6,11 @@
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
-from nilearn.maskers import NiftiSpheresMasker
-
 from ..api.decorators import register_marker
 from ..data import load_coordinates
-from ..utils import logger, raise_error
+from ..external.nilearn import JuniferNiftiSpheresMasker
+from ..stats import get_aggfunc_by_name
+from ..utils import logger
 from .base import BaseMarker
 
 if TYPE_CHECKING:
@@ -58,15 +58,6 @@ class SphereAggregation(BaseMarker):
     ) -> None:
         self.coords = coords
         self.radius = radius
-
-        if method != "mean":
-            raise_error(
-                "Only mean aggregation is supported for sphere aggregation. "
-                "If you need other aggregation methods, please open an issue "
-                "on `junifer github`_.",
-                NotImplementedError,
-            )
-
         self.method = method
         self.method_params = {} if method_params is None else method_params
         super().__init__(on=on, name=name)
@@ -162,17 +153,21 @@ class SphereAggregation(BaseMarker):
         """
         t_input = input["data"]
         logger.debug(f"Sphere aggregation using {self.method}")
-        # agg_func = get_aggfunc_by_name(
-        #     self.method, func_params=self.method_params
-        # )
-        coords, out_labels = load_coordinates(self.coords)
-        masker = NiftiSpheresMasker(
+        # Get aggregation function
+        agg_func = get_aggfunc_by_name(
+            self.method, func_params=self.method_params
+        )
+        # Get seeds and labels
+        coords, out_labels = load_coordinates(name=self.coords)
+        masker = JuniferNiftiSpheresMasker(
             seeds=coords,
             radius=self.radius,
             mask_img=None,  # TODO: support this (needs #79)
+            agg_func=agg_func,
         )
-
+        # Fit and transform the marker on the data
         out_values = masker.fit_transform(t_input)
+        # Format the output
         out = {"data": out_values, "columns": out_labels}
         if out_values.shape[0] > 1:
             out["row_names"] = "scan"
