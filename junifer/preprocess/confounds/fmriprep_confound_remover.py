@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union, Tuple, Any
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -13,10 +13,9 @@ from nilearn._utils.niimg_conversions import check_niimg_4d
 from nilearn.image import clean_img
 from nilearn.masking import compute_brain_mask
 
-from ..base import BasePreprocessor
 from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
-
+from ..base import BasePreprocessor
 
 if TYPE_CHECKING:
     from nibabel import MGHImage, Nifti1Image, Nifti2Image

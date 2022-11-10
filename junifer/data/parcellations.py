@@ -20,7 +20,6 @@ from nilearn import datasets
 
 from ..utils.logging import logger, raise_error
 
-
 if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
@@ -558,8 +557,9 @@ def _retrieve_tian(
                 f"Tian_Subcortex_S{scale}_{magneticfield}_{space}.nii.gz"
             )
     elif magneticfield == "7T":
-        parcellation_fname_base_7T = \
+        parcellation_fname_base_7T = (
             parcellations_dir / "Tian2020MSA_v1.1" / "7T"
+        )
         parcellation_fname_base_7T.mkdir(exist_ok=True, parents=True)
         parcellation_fname = (
             parcellations_dir
@@ -589,7 +589,8 @@ def _retrieve_tian(
     # check existence of parcellation
     if not (parcellation_fname.exists() and parcellation_lname.exists()):
         logger.info(
-            "At least one of the parcellation files are missing, fetching.")
+            "At least one of the parcellation files are missing, fetching."
+        )
 
         url_basis = (
             "https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip"
@@ -607,8 +608,9 @@ def _retrieve_tian(
             if (parcellations_dir / "__MACOSX").exists():
                 shutil.rmtree((parcellations_dir / "__MACOSX").as_posix())
 
-        labels = pd.read_csv(
-            parcellation_lname, sep=" ", header=None)[0].to_list()
+        labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[
+            0
+        ].to_list()
 
         if not (parcellation_fname.exists() and parcellation_lname.exists()):
             raise_error("There was a problem fetching the parcellations.")
@@ -679,7 +681,8 @@ def _retrieve_suit(
     if not (parcellation_fname.exists() and parcellation_lname.exists()):
         parcellation_fname.parent.mkdir(exist_ok=True, parents=True)
         logger.info(
-            "At least one of the parcellation files is missing, fetching.")
+            "At least one of the parcellation files is missing, fetching."
+        )
 
         url_basis = (
             "https://github.com/DiedrichsenLab/cerebellar_atlases/raw"

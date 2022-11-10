@@ -10,7 +10,6 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 from ..pipeline import PipelineStepMixin
 from ..utils import logger, raise_error
 
-
 if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 

@@ -13,7 +13,6 @@ from ..pipeline import PipelineStepMixin
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger
 
-
 if TYPE_CHECKING:
     from junifer.datagrabber import BaseDataGrabber
 

@@ -14,7 +14,6 @@ from ..utils import logger, raise_error
 from .base import BaseMarker
 from .sphere_aggregation import SphereAggregation
 
-
 if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 

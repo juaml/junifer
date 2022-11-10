@@ -16,7 +16,6 @@ from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
 from .utils import _ets
 
-
 if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 

@@ -14,7 +14,6 @@ from junifer.api.functions import collect, run
 from junifer.datagrabber.base import BaseDataGrabber
 from junifer.pipeline.registry import build
 
-
 # Define datagrabber
 datagrabber = {
     "kind": "OasisVBMTestingDatagrabber",

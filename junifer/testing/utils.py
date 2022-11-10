@@ -6,7 +6,7 @@
 from pathlib import Path
 
 
-def get_testing_data(fname : str) -> Path:
+def get_testing_data(fname: str) -> Path:
     """Get the path to a testing data file.
 
     Parameters

@@ -73,7 +73,7 @@ def _get_dependency_information(long_: bool) -> Dict[str, str]:
         # Compile regex pattern
         re_pattern = re.compile("[a-z-]+")
 
-        for pkg_with_version in dist.requires:
+        for pkg_with_version in dist.requires:  # type: ignore
             # Perform regex search
             matches = re.findall(pattern=re_pattern, string=pkg_with_version)
             # Fix issue with PyYAML name registration

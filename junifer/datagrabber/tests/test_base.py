@@ -57,6 +57,7 @@ def test_BaseDataGrabber() -> None:
 
         def get_element_keys(self):
             return super().get_element_keys()
+
     dg = MyDataGrabber2(datadir="/tmp", types=["func"])
     with pytest.raises(NotImplementedError):
         dg.get_element_keys()

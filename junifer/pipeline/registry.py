@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from ..utils.logging import logger, raise_error
 
-
 if TYPE_CHECKING:
     from ..datagrabber import BaseDataGrabber
     from ..storage import BaseFeatureStorage

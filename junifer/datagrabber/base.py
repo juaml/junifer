@@ -79,7 +79,7 @@ class BaseDataGrabber(ABC):
         out = self.get_item(**named_element)
         out["meta"] = {
             "datagrabber": self.get_meta(),
-            "element": named_element
+            "element": named_element,
         }
         return out
 
@@ -131,7 +131,7 @@ class BaseDataGrabber(ABC):
         return self._datadir
 
     @abstractmethod
-    def get_element_keys(self) -> str:
+    def get_element_keys(self) -> List[str]:
         """Get element keys.
 
         For each item in the ``element`` tuple passed to ``__getitem__()``,

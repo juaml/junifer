@@ -10,7 +10,6 @@ from .datagrabbers import (
     SPMAuditoryTestingDatagrabber,
 )
 
-
 # Register testing datagrabber
 register(
     step="datagrabber",

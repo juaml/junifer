@@ -6,22 +6,22 @@
 # License: AGPL
 
 import typing
-from numpy.testing import assert_array_equal, assert_raises
-import pytest
-import pandas as pd
-from pandas.testing import assert_frame_equal
-import numpy as np
 
 import nibabel as nib
+import numpy as np
+import pandas as pd
+import pytest
 from nilearn._utils.exceptions import DimensionError
+from numpy.testing import assert_array_equal, assert_raises
+from pandas.testing import assert_frame_equal
 
+from junifer.datareader import DefaultDataReader
 from junifer.preprocess.confounds import fMRIPrepConfoundRemover
+from junifer.testing import get_testing_data
 from junifer.testing.datagrabbers import (
     OasisVBMTestingDatagrabber,
     PartlyCloudyTestingDataGrabber,
 )
-from junifer.testing import get_testing_data
-from junifer.datareader import DefaultDataReader
 
 
 def test_fMRIPrepConfoundRemover_init() -> None:
@@ -295,9 +295,7 @@ def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
 def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep_compute() -> None:
     """Test if fmriprep returns the same derivatives/power2 as we compute."""
 
-    confound_remover = fMRIPrepConfoundRemover(
-        strategy={"wm_csf": "full"}
-    )
+    confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
     fmriprep_all_vars = [
         "csf",
         "white_matter",
@@ -462,8 +460,8 @@ def test_fMRIPrepConfoundRemover__remove_confounds() -> None:
         clean_bold = typing.cast(nib.Nifti1Image, clean_bold)
         # TODO: Find a better way to test functionality here
         assert (
-            clean_bold.header.get_zooms()  # type: ignore
-            == raw_bold.header.get_zooms()
+            clean_bold.header.get_zooms() ==  # type: ignore
+            raw_bold.header.get_zooms()
         )
         assert clean_bold.get_fdata().shape == raw_bold.get_fdata().shape
     # TODO: Test confound remover with mask, needs #79 to be implemented

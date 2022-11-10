@@ -46,7 +46,8 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
 
     # get the timeseries using pa
     pa = ParcelAggregation(
-        parcellation="Schaefer100x7", method="mean", on="BOLD")
+        parcellation="Schaefer100x7", method="mean", on="BOLD"
+    )
     ts = pa.compute({"data": fmri_img})
 
     # compare with nilearn
@@ -55,7 +56,8 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
         n_rois=100, yeo_networks=7, resolution_mm=2
     )
     masker = NiftiLabelsMasker(
-        labels_img=parcellation["maps"], standardize=False)
+        labels_img=parcellation["maps"], standardize=False
+    )
     ts_ni = masker.fit_transform(fmri_img)
 
     # check the TS are almost equal

@@ -21,7 +21,6 @@ from junifer.storage.utils import (
     process_meta,
 )
 
-
 df1 = pd.DataFrame(
     {
         "element": [1, 2, 3, 4, 5],

@@ -87,7 +87,7 @@ def _correlate_dataframes(
     if df1.shape[0] != df2.shape[0]:
         raise_error("pandas.DataFrame's have unequal number of rows!")
     return (
-        pd.concat([df1, df2], axis=1, keys=["df1", "df2"])
-        .corr(method=method)
+        pd.concat([df1, df2], axis=1, keys=["df1", "df2"])  # type: ignore
+        .corr(method=method)  # type: ignore
         .loc["df2", "df1"]
     )

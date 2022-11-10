@@ -11,10 +11,10 @@ import pandas as pd
 from ..api.decorators import register_marker
 from ..storage import BaseFeatureStorage
 from ..utils import logger
+from ..utils.logging import raise_error
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
 from .utils import _correlate_dataframes
-from ..utils.logging import raise_error
 
 
 @register_marker

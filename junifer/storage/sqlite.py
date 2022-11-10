@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Dict, Iterable, List, Optional, Union
 import numpy as np
 import pandas as pd
 from pandas.core.base import NoNewAttributesMixin
-from pandas.io.sql import pandasSQL_builder
+from pandas.io.sql import pandasSQL_builder  # type: ignore
 from sqlalchemy import create_engine, inspect
 from tqdm import tqdm
 
@@ -18,7 +18,6 @@ from ..api.decorators import register_storage
 from ..utils import logger, raise_error, warn_with_log
 from .pandas_base import PandasBaseFeatureStorage
 from .utils import element_to_index, element_to_prefix, process_meta
-
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
@@ -87,9 +86,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Set upsert
         self._upsert = upsert
 
-    def get_engine(
-        self, meta: Optional[Dict] = None
-    ) -> "Engine":
+    def get_engine(self, meta: Optional[Dict] = None) -> "Engine":
         """Get engine.
 
         Parameters
@@ -112,18 +109,19 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         prefix = ""
         if self.single_output is False:
             if element is None:
-                raise_error(
-                    msg="element must be specified when"
-                    "single_output is False."
-                )
+                msg = "element must be specified when single_output is False."
+                raise_error(msg)
             prefix = element_to_prefix(element)
         # Format URI for engine creation
-        uri = f"sqlite:///{self.uri.parent}/{prefix}{self.uri.name}"
+        uri = (
+            f"sqlite:///{self.uri.parent}/"  # type: ignore
+            f"{prefix}{self.uri.name}"  # type: ignore
+        )
         return create_engine(uri, echo=False)
 
     def _save_upsert(
         self,
-        df: pd.DataFrame,
+        df: Union[pd.DataFrame, pd.Series],
         name: str,
         engine: Optional["Engine"] = None,
         if_exists: str = "append",
@@ -132,8 +130,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
-        df : pandas.DataFrame
-            DataFrame to save.
+        df : pandas.DataFrame or pandas.Series
+            The pandas DataFrame or Series to save.
         name : str
             Name of the table to save.
         engine : sqlalchemy.Engine, optional
@@ -239,13 +237,15 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             meta=meta, n_rows=n_rows, rows_col_name=rows_col_name
         )
         # Prepare new dataframe
-        data_df = pd.DataFrame(data, columns=columns, index=idx)
+        data_df = pd.DataFrame(  # type: ignore
+            data, columns=columns, index=idx  # type: ignore
+        )
         # Store dataframe
         self.store_df(df=data_df, meta=meta)
 
     def list_features(
         self, return_df: bool = False
-    ) -> Union[Dict[str, Dict], pd.DataFrame]:
+    ) -> Union[Dict, pd.DataFrame]:
         """Implement features listing from the storage.
 
         Parameters
@@ -270,7 +270,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         out = meta_df
         # Return dictionary
         if return_df is False:
-            out = meta_df.to_dict(orient="index")
+            out = meta_df.to_dict(orient="index")  # type: ignore
         return out
 
     def read_df(
@@ -385,13 +385,13 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             self._save_upsert(meta_df, "meta", engine)
         return f"meta_{meta_md5}"
 
-    def store_df(self, df: pd.DataFrame, meta: Dict) -> None:
+    def store_df(self, df: Union[pd.DataFrame, pd.Series], meta: Dict) -> None:
         """Implement pandas DataFrame storing.
 
         Parameters
         ----------
-        df : pandas.DataFrame
-            The DataFrame to store.
+        df : pandas.DataFrame or pandas.Series
+            The pandas DataFrame or Series to store.
         meta : dict
             The metadata as a dictionary.
 
@@ -434,7 +434,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
     def store_matrix(
         self,
-        data: Dict,
+        data: np.ndarray,
         meta: Dict,
         col_names: Optional[List[str]] = None,
         row_names: Optional[List[str]] = None,
@@ -445,7 +445,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
-        data : dict
+        data : numpy.ndarray
             The matrix data to store.
         meta : dict
             The metadata as a dictionary.
@@ -600,8 +600,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         if self.single_output is True:
             raise_error(msg="collect() is not implemented for single output.")
         logger.info(
-            "Collecting data from " f"{self.uri.parent}/*{self.uri.name}"
-        )  # type: ignore
+            "Collecting data from "
+            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
+        )
         # Create new instance
         out_storage = SQLiteFeatureStorage(
             uri=self.uri, single_output=True, upsert="ignore"

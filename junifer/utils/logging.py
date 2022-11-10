@@ -11,6 +11,7 @@ from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Dict, NoReturn, Optional, Type, Union
 from warnings import warn
+
 import datalad
 
 logger = logging.getLogger("JUNIFER")

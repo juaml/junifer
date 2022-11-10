@@ -13,7 +13,6 @@ import pandas as pd
 from ..pipeline import PipelineStepMixin
 from ..utils.logging import logger, warn_with_log
 
-
 # Map each file extension to a kind
 _extensions = {
     ".nii": "NIFTI",

@@ -13,7 +13,6 @@ from click.testing import CliRunner
 
 from junifer.api.cli import collect, run, selftest, wtf
 
-
 # Create click test runner
 runner = CliRunner()
 

@@ -4,13 +4,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .parcellations import (
-    list_parcellations,
-    register_parcellation,
-    load_parcellation,
-)
 from .coordinates import (
     list_coordinates,
-    register_coordinates,
     load_coordinates,
+    register_coordinates,
+)
+from .parcellations import (
+    list_parcellations,
+    load_parcellation,
+    register_parcellation,
 )

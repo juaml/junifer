@@ -3,4 +3,5 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from . import registry
 from .pipeline_step_mixin import PipelineStepMixin

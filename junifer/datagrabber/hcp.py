@@ -18,9 +18,7 @@ class HCP1200(PatternDataGrabber):
     Parameters
     ----------
     datadir : str or Path, optional
-        The directory where the datalad dataset will be cloned. If None,
-        the datalad dataset will be cloned into a temporary directory
-        (default None).
+        The directory where the datalad dataset will be cloned.
     tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
             "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
         HCP task sessions. If None, all available task sessions are selected
@@ -35,7 +33,7 @@ class HCP1200(PatternDataGrabber):
 
     def __init__(
         self,
-        datadir: Union[str, Path, None] = None,
+        datadir: Union[str, Path],
         tasks: Union[str, List[str], None] = None,
         phase_encodings: Union[str, List[str], None] = None,
         **kwargs,
@@ -104,9 +102,7 @@ class HCP1200(PatternDataGrabber):
         )
         self.phase_encodings = phase_encodings
 
-    def get_item(
-        self, subject: str, task: str, phase_encoding: str
-    ) -> Dict[str, Path]:
+    def get_item(self, subject: str, task: str, phase_encoding: str) -> Dict:
         """Index one element in the dataset.
 
         Parameters
@@ -179,7 +175,7 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
         self,
         datadir: Union[str, Path, None] = None,
         tasks: Union[str, List[str], None] = None,
-        phase_encodings: Union[str, List[str], None] = None
+        phase_encodings: Union[str, List[str], None] = None,
     ) -> None:
         uri = (
             "https://github.com/datalad-datasets/"

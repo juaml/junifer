@@ -40,6 +40,7 @@ def get_aggfunc_by_name(
         Respective function with ``func_params`` parameter set.
     """
     from functools import partial  # local import to avoid sphinx error
+
     # check validity of names
     _valid_func_names = {"winsorized_mean", "mean", "std", "trim_mean"}
     if func_params is None:

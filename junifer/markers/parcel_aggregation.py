@@ -16,7 +16,6 @@ from ..stats import get_aggfunc_by_name
 from ..utils import logger
 from .base import BaseMarker
 
-
 if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 

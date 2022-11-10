@@ -4,11 +4,12 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+from typing import Type
 
 from ..pipeline.registry import register
 
 
-def register_datagrabber(klass: type) -> type:
+def register_datagrabber(klass: Type) -> Type:
     """Datagrabber registration decorator.
 
     Registers the datagrabber so it can be used by name.
@@ -32,7 +33,7 @@ def register_datagrabber(klass: type) -> type:
     return klass
 
 
-def register_preprocessor(klass: type) -> type:
+def register_preprocessor(klass: Type) -> Type:
     """Preprocessor registration decorator.
 
     Registers the preprocessor so it can be used by name.
@@ -56,7 +57,7 @@ def register_preprocessor(klass: type) -> type:
     return klass
 
 
-def register_marker(klass: type) -> type:
+def register_marker(klass: Type) -> Type:
     """Marker registration decorator.
 
     Registers the marker so it can be used by name.
@@ -80,7 +81,7 @@ def register_marker(klass: type) -> type:
     return klass
 
 
-def register_storage(klass: type) -> type:
+def register_storage(klass: Type) -> Type:
     """Storage registration decorator.
 
     Registers the storage so it can be used by name.
