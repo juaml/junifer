@@ -25,17 +25,17 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
     with pytest.raises(TypeError, match=r"`types` must be a list"):
         PatternDataGrabber(
             datadir="/tmp",
-            types="wrong",
+            types="wrong",  # type: ignore
             patterns={"wrong": "pattern"},
-            replacements="subject",
+            replacements="subject",  # type: ignore
         )
 
     with pytest.raises(TypeError, match=r"`types` must be a list of strings"):
         PatternDataGrabber(
-            datadir="/tmp",
-            types=[1, 2, 3],
+            datadir="/tmp",  # type: ignore
+            types=[1, 2, 3],  # type: ignore
             patterns={"1": "pattern", "2": "pattern", "3": "pattern"},
-            replacements="subject",
+            replacements="subject",  # type: ignore
         )
 
     with pytest.raises(ValueError, match=r"must have the same length"):
@@ -43,15 +43,15 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
             datadir="/tmp",
             types=["func", "anat"],
             patterns={"1": "pattern", "2": "pattern", "3": "pattern"},
-            replacements=1,
+            replacements=1,  # type: ignore
         )
 
     with pytest.raises(TypeError, match=r"`patterns` must be a dict"):
         PatternDataGrabber(
             datadir="/tmp",
             types=["func", "anat"],
-            patterns="wrong",
-            replacements="subject",
+            patterns="wrong",  # type: ignore
+            replacements="subject",  # type: ignore
         )
 
     with pytest.raises(
@@ -61,7 +61,7 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
             datadir="/tmp",
             types=["func", "anat"],
             patterns={"wrong": "pattern"},
-            replacements="subject",
+            replacements="subject",  # type: ignore
         )
 
     with pytest.raises(
@@ -71,7 +71,7 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
             datadir="/tmp",
             types=["func", "anat"],
             patterns={"wrong": "pattern", "func": "pattern"},
-            replacements="subject",
+            replacements="subject",  # type: ignore
         )
 
     with pytest.raises(TypeError, match=r"must be a list of strings"):
@@ -79,7 +79,7 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
             datadir="/tmp",
             types=["func", "anat"],
             patterns={"func": "func/test", "anat": "anat/test"},
-            replacements=1,
+            replacements=1,  # type: ignore
         )
 
     with pytest.raises(ValueError, match=r"not part of any pattern"):

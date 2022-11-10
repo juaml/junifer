@@ -194,9 +194,10 @@ class DataladDataGrabber(BaseDataGrabber):
             logger.debug("Dataset installed")
         self._was_cloned = not isinstalled
 
-        self._datalad_commit_id = self._dataset.repo.get_hexsha(
-            self._dataset.repo.get_corresponding_branch()
-        )
+        self._datalad_commit_id = \
+            self._dataset.repo.get_hexsha(  # type: ignore
+                self._dataset.repo.get_corresponding_branch()  # type: ignore
+            )
 
     def cleanup(self) -> None:
         """Cleanup the datalad dataset."""
@@ -209,7 +210,7 @@ class DataladDataGrabber(BaseDataGrabber):
                 logger.debug(f"Dropping {f}")
                 self._dataset.drop(f, result_renderer="disabled")
 
-    def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:
+    def __getitem__(self, element: Union[str, Tuple]) -> Dict:
         """Implement single element indexing in the Datalad database.
 
         It will first obtain the paths from the parent class and then

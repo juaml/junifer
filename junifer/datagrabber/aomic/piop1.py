@@ -118,7 +118,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
             replacements=replacements,
         )
 
-    def get_item(self, subject: str, task: str) -> Dict[str, Path]:
+    def get_item(self, subject: str, task: str) -> Dict:
         """Index one element in the dataset.
 
         Parameters

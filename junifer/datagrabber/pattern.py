@@ -41,7 +41,7 @@ class PatternDataGrabber(BaseDataGrabber):
         self,
         types: List[str],
         patterns: Dict[str, str],
-        replacements: List[str],
+        replacements: Union[List[str], str],
         datadir: Union[str, Path],
     ) -> None:
         # Validate patterns
@@ -143,7 +143,7 @@ class PatternDataGrabber(BaseDataGrabber):
         """
         return self.replacements
 
-    def get_item(self, **element: Dict) -> Dict[str, Dict]:
+    def get_item(self, **element: str) -> Dict[str, Dict]:
         """Implement single element indexing in the database.
 
         This method constructs a real path to the requested item's data, by

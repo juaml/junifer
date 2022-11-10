@@ -115,7 +115,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             replacements=replacements,
         )
 
-    def get_elements(self):
+    def get_elements(self) -> List:
         """Implement fetching list of elements in the dataset.
 
         Returns

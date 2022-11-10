@@ -5,6 +5,8 @@
 
 import pytest
 
+from typing import Type
+
 from pathlib import Path
 
 import datalad.api as dl
@@ -29,11 +31,11 @@ _testing_dataset = {
 def test_datalad_base_abstractness() -> None:
     """Test datalad base is abstract."""
     with pytest.raises(TypeError, match=r"abstract"):
-        DataladDataGrabber()
+        DataladDataGrabber()  # type: ignore
 
 
 @pytest.fixture
-def concrete_datagrabber() -> DataladDataGrabber:
+def concrete_datagrabber() -> Type[DataladDataGrabber]:
     """Return a concrete datagrabber class.
 
     Returns
@@ -75,7 +77,7 @@ def concrete_datagrabber() -> DataladDataGrabber:
 
 
 def test_datalad_install_errors(
-    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+    tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
     """Test datalad base install errors / warnings.
 
@@ -113,7 +115,7 @@ def test_datalad_install_errors(
 
 
 def test_datalad_clone_cleanup(
-    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+    tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
     """Test datalad base clone and remove.
 
@@ -160,7 +162,7 @@ def test_datalad_clone_cleanup(
 
 
 def test_datalad_previously_cloned(
-    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+    tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
     """Test datalad base on cloned dataset.
 
@@ -227,7 +229,7 @@ def test_datalad_previously_cloned(
 
 
 def test_datalad_previously_cloned_and_get(
-    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+    tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
     """Test datalad base on cloned dataset with files present.
 
@@ -308,7 +310,7 @@ def test_datalad_previously_cloned_and_get(
 
 
 def test_datalad_previously_cloned_and_get_dirty(
-    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+    tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
     """Test datalad base on a dirty cloned dataset.
 

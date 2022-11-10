@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from nilearn.maskers import NiftiSpheresMasker
 
@@ -51,7 +51,7 @@ class SphereAggregation(BaseMarker):
         radius: Optional[float] = None,
         method: str = "mean",
         method_params: Optional[Dict] = None,
-        on: Optional[List[str]] = None,
+        on: Optional[Union[List[str], str]] = None,
         name: Optional[str] = None,
     ) -> None:
         self.coords = coords
