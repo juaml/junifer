@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
 
 import datalad.api as dl
+from datalad.support.gitrepo import GitRepo
 
 from ..api.decorators import register_datagrabber
 from ..utils import logger
@@ -90,6 +91,28 @@ class DataladDataGrabber(BaseDataGrabber):
         """Get data directory path."""
         return super().datadir / self._rootdir
 
+    def _get_dataset_id_remote(self) -> str:
+        """Get the dataset id from the remote.
+
+        Returns
+        -------
+        str
+            The dataset id.
+
+        """
+        remote_id = None
+        with tempfile.TemporaryDirectory() as tmpdir:
+            logger.debug(f"Querying {self.uri} for dataset id")
+            repo = GitRepo.clone(
+                self.uri, path=tmpdir,
+                clone_options=["-n", "--depth=1"])
+            repo.checkout(name=".datalad/config", options=["HEAD"])
+            remote_id = repo.config.get("datalad.dataset.id", None)
+            logger.debug(f"Got remote dataset ID = {remote_id}")
+        if remote_id is None:
+            raise_error("Could not get dataset id from remote")
+        return remote_id
+
     def _dataset_get(self, out: Dict) -> Dict:
         """Get the dataset found from the path in `out`.
 
@@ -137,7 +160,7 @@ class DataladDataGrabber(BaseDataGrabber):
         Raises
         ------
         ValueError
-            If the dataset is already installed but from a different URI.
+            If the dataset is already installed but with a different ID
         """
         isinstalled = dl.Dataset(self._datadir).is_installed()
         if isinstalled:
@@ -145,36 +168,22 @@ class DataladDataGrabber(BaseDataGrabber):
             self._got_files = []
             self._dataset: dl.Dataset = dl.Dataset(self._datadir)
 
-            siblings = {
-                x["name"]: x["url"]
-                for x in self._dataset.siblings()
-                if "url" in x and x["name"] != "here"
-            }
-            logger.debug(f"Found siblings {siblings}")
-            if self.uri not in siblings.values():
+            remote_id = self._get_dataset_id_remote()
+            if remote_id != self._dataset.id:
                 raise_error(
                     "Dataset already installed but with a different "
-                    f"URI: {siblings}"
+                    f"ID: {self._dataset.id} (local) != {remote_id} (remote)"
                 )
 
             # Check for dirty datasets:
-            # 1) URI mismatch -> dirty
-            if len(siblings) > 1:
+            status = self._dataset.status()
+            if any([x["state"] != "clean" for x in status]):
                 self._dataset_dirty = True
                 warn_with_log(
-                    "More than one sibling found, Junifer will consider this "
-                    "dataset as dirty."
+                    "At least one file is not clean, Junifer will "
+                    "consider this dataset as dirty."
                 )
-            # 2) At least one file not clean -> dirty
-            if self._dataset_dirty is False:
-                status = self._dataset.status()
-                if any([x["state"] != "clean" for x in status]):
-                    self._dataset_dirty = True
-                    warn_with_log(
-                        "At least one file is not clean, Junifer will "
-                        "consider this dataset as dirty."
-                    )
-            if self._dataset_dirty is False:
+            else:
                 logger.debug("Dataset is clean")
 
         else:

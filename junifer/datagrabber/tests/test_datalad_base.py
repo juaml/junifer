@@ -32,13 +32,15 @@ def test_datalad_base_abstractness() -> None:
         DataladDataGrabber()
 
 
-def test_datalad_install_errors(tmp_path: Path) -> None:
-    """Test datalad base install errors / warnings.
+@pytest.fixture
+def concrete_datagrabber() -> DataladDataGrabber:
+    """Return a concrete datagrabber class.
 
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
+    Returns
+    -------
+    DataladDataGrabber
+        A concrete datagrabber class.
+
     """
 
     class MyDataGrabber(DataladDataGrabber):  # type: ignore
@@ -69,65 +71,63 @@ def test_datalad_install_errors(tmp_path: Path) -> None:
         def get_element_keys(self):
             return ["subject"]
 
-    # Dataset cloned outside of datagrabber
-    datadir = tmp_path / "cloned_uri"
-    uri = _testing_dataset["example_bids"]["uri"]
-
-    # Files are not there
-    assert datadir.exists() is False
-    # Clone dataset
-    dataset = dl.clone(uri, datadir)  # type: ignore
-
-    dg = MyDataGrabber(datadir=datadir, uri="different")
-    with pytest.raises(ValueError, match=r"different URI"):
-        with dg:
-            pass
-
-    dataset.siblings("add", name="other", url="different")
-    dg = MyDataGrabber(datadir=datadir, uri=uri)
-    with pytest.warns(RuntimeWarning, match=r"More than one sibling"):
-        with dg:
-            pass
+    return MyDataGrabber
 
 
-def test_datalad_selective_cleanup(tmp_path: Path) -> None:
-    """Test datalad base get and cleanup procedures.
+def test_datalad_install_errors(
+    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+) -> None:
+    """Test datalad base install errors / warnings.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    concrete_datagrabber : DataladDataGrabber
+        A concrete datagrabber class to use.
     """
-    class MyDataGrabber(DataladDataGrabber):  # type: ignore
-        def __init__(self, datadir):
-            super().__init__(
-                datadir=datadir,
-                rootdir="example_bids",
-                uri=_testing_dataset["example_bids"]["uri"],
-                types=["T1w", "BOLD"],
-            )
 
-        def get_item(self, subject):
-            out = {
-                "T1w": {
-                    "path": self.datadir
-                    / f"{subject}/anat/{subject}_T1w.nii.gz"
-                },
-                "BOLD": {
-                    "path": self.datadir
-                    / f"{subject}/func/{subject}_task-rest_bold.nii.gz"
-                },
-            }
-            return out
+    # Dataset cloned outside of datagrabber
+    datadir = tmp_path / "cloned_uri"
+    uri = _testing_dataset["example_bids"]["uri"]
+    uri2 = _testing_dataset["example_bids_ses"]["uri"]
 
-        def get_elements(self):
-            return [f"sub-{i:02d}" for i in range(1, 10)]
+    # Files are not there
+    assert datadir.exists() is False
+    # Clone dataset
+    dl.clone(uri, datadir)  # type: ignore
+    dg = concrete_datagrabber(datadir=datadir, uri=uri2)
+    with pytest.raises(ValueError, match=r"different ID"):
+        with dg:
+            pass
 
-        def get_element_keys(self):
-            return ["subject"]
+    elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
+    elem1_t1w.unlink()
+    with open(elem1_t1w, "w") as f:
+        f.write("modified!")
+
+    dg = concrete_datagrabber(datadir=datadir, uri=uri)
+    with pytest.warns(RuntimeWarning, match=r"one file is not clean"):
+        with dg:
+            pass
+
+
+def test_datalad_clone_cleanup(
+    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+) -> None:
+    """Test datalad base clone and remove.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    concrete_datagrabber : DataladDataGrabber
+        A concrete datagrabber class to use.
+    """
 
     # Clone whole dataset
     datadir = tmp_path / "newclone"
+    uri = _testing_dataset["example_bids"]["uri"]
     elem1_bold = (
         datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
     )
@@ -136,7 +136,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert datadir.exists() is False
     assert elem1_bold.is_file() is False
     assert elem1_t1w.is_file() is False
-    with MyDataGrabber(datadir=datadir) as dg:
+    with concrete_datagrabber(datadir=datadir, uri=uri) as dg:
         assert datadir.exists() is True
         assert dg._was_cloned is True
         assert elem1_bold.is_file() is False
@@ -158,6 +158,20 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert datadir.exists() is False
     assert len(list(datadir.glob("*"))) == 0
 
+
+def test_datalad_previously_cloned(
+    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+) -> None:
+    """Test datalad base on cloned dataset.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    concrete_datagrabber : DataladDataGrabber
+        A concrete datagrabber class to use.
+    """
+
     # Dataset cloned outside of datagrabber
     datadir = tmp_path / "cloned"
     elem1_bold = (
@@ -166,7 +180,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
     uri = _testing_dataset["example_bids"]["uri"]
     commit = _testing_dataset["example_bids"]["commit"]
-    id = _testing_dataset["example_bids"]["id"]
+    remote_id = _testing_dataset["example_bids"]["id"]
     # Files are not there
     assert datadir.exists() is False
     assert elem1_bold.exists() is False
@@ -181,7 +195,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert elem1_bold.is_file() is False
     assert elem1_t1w.is_symlink() is True
     assert elem1_t1w.is_file() is False
-    with MyDataGrabber(datadir=datadir) as dg:
+    with concrete_datagrabber(datadir=datadir, uri=uri) as dg:
         assert datadir.exists() is True
         assert dg._was_cloned is False
         elem1 = dg["sub-01"]
@@ -192,7 +206,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
         assert "datalad_commit_id" in elem1["meta"]["datagrabber"]
         assert elem1["meta"]["datagrabber"]["datalad_commit_id"] == commit
         assert "datalad_id" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_id"] == id
+        assert elem1["meta"]["datagrabber"]["datalad_id"] == remote_id
 
         assert hasattr(dg, "_got_files") is True
         # Files are there and symlinks are fixed
@@ -211,6 +225,20 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert datadir.exists() is True
     assert len(list(datadir.glob("*"))) > 0
 
+
+def test_datalad_previously_cloned_and_get(
+    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+) -> None:
+    """Test datalad base on cloned dataset with files present.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    concrete_datagrabber : DataladDataGrabber
+        A concrete datagrabber class to use.
+    """
+
     # Dataset cloned outside of datagrabber with some files present
     datadir = tmp_path / "cloned_clean"
     elem1_bold = (
@@ -219,6 +247,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
     uri = _testing_dataset["example_bids"]["uri"]
     commit = _testing_dataset["example_bids"]["commit"]
+    remote_id = _testing_dataset["example_bids"]["id"]
 
     # Files are not there
     assert datadir.exists() is False
@@ -236,14 +265,15 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert elem1_t1w.is_file() is False
 
     dl.get(  # type: ignore
-        elem1_t1w, dataset=datadir, result_renderer="disabled")
+        elem1_t1w, dataset=datadir, result_renderer="disabled"
+    )
 
     assert elem1_bold.is_symlink() is True
     assert elem1_bold.is_file() is False
     assert elem1_t1w.is_symlink() is True
     assert elem1_t1w.is_file() is True
 
-    with MyDataGrabber(datadir=datadir) as dg:
+    with concrete_datagrabber(datadir=datadir, uri=uri) as dg:
         assert datadir.exists() is True
         assert dg._was_cloned is False
         elem1 = dg["sub-01"]
@@ -254,7 +284,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
         assert "datalad_commit_id" in elem1["meta"]["datagrabber"]
         assert elem1["meta"]["datagrabber"]["datalad_commit_id"] == commit
         assert "datalad_id" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_id"] == id
+        assert elem1["meta"]["datagrabber"]["datalad_id"] == remote_id
 
         assert hasattr(dg, "_got_files") is True
         # Files are there and symlinks are fixed
@@ -276,6 +306,20 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert elem1_t1w.is_symlink() is True
     assert elem1_t1w.is_file() is True
 
+
+def test_datalad_previously_cloned_and_get_dirty(
+    tmp_path: Path, concrete_datagrabber: DataladDataGrabber
+) -> None:
+    """Test datalad base on a dirty cloned dataset.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    concrete_datagrabber : DataladDataGrabber
+        A concrete datagrabber class to use.
+    """
+
     # Dataset cloned outside of datagrabber with some files present and dirty
     datadir = tmp_path / "cloned_dirty"
     elem1_bold = (
@@ -284,6 +328,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
     uri = _testing_dataset["example_bids"]["uri"]
     commit = _testing_dataset["example_bids"]["commit"]
+    remote_id = _testing_dataset["example_bids"]["id"]
 
     # Files are not there
     assert datadir.exists() is False
@@ -301,7 +346,8 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     assert elem1_t1w.is_file() is False
 
     dl.get(  # type: ignore
-        elem1_t1w, dataset=datadir, result_renderer="disabled")
+        elem1_t1w, dataset=datadir, result_renderer="disabled"
+    )
 
     assert elem1_bold.is_symlink() is True
     assert elem1_bold.is_file() is False
@@ -312,7 +358,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
     with open(elem1_t1w, "w") as f:
         f.write("modified!")
 
-    with MyDataGrabber(datadir=datadir) as dg:
+    with concrete_datagrabber(datadir=datadir, uri=uri) as dg:
         assert datadir.exists() is True
         assert dg._was_cloned is False
         elem1 = dg["sub-01"]
@@ -323,7 +369,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
         assert "datalad_commit_id" in elem1["meta"]["datagrabber"]
         assert elem1["meta"]["datagrabber"]["datalad_commit_id"] == commit
         assert "datalad_id" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_id"] == id
+        assert elem1["meta"]["datagrabber"]["datalad_id"] == remote_id
 
         assert hasattr(dg, "_got_files") is True
         # Files are there and symlinks are fixed
@@ -337,7 +383,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
         assert dg._got_files[0].name == "sub-01_task-rest_bold.nii.gz"
 
     # Now get another subject that has not been modified
-    with MyDataGrabber(datadir=datadir) as dg:
+    with concrete_datagrabber(datadir=datadir, uri=uri) as dg:
         assert datadir.exists() is True
         assert dg._was_cloned is False
         elem2 = dg["sub-02"]
@@ -351,7 +397,7 @@ def test_datalad_selective_cleanup(tmp_path: Path) -> None:
         assert "datalad_commit_id" in elem2["meta"]["datagrabber"]
         assert elem2["meta"]["datagrabber"]["datalad_commit_id"] == commit
         assert "datalad_id" in elem2["meta"]["datagrabber"]
-        assert elem2["meta"]["datagrabber"]["datalad_id"] == id
+        assert elem2["meta"]["datagrabber"]["datalad_id"] == remote_id
 
         assert hasattr(dg, "_got_files") is True
         # Files are there and symlinks are fixed
