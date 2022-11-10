@@ -19,7 +19,7 @@ aspects of datagrabbers are covedered in the
 .. _extending_datagrabbers_think:
 
 Step 1: Think about the element
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 
 Like with any programming-related task, the first step is to think. When
 creating a DataGrabber, we need to first define what an *element* is.
@@ -54,7 +54,7 @@ sessions (`ses-01`, `ses-02`, `ses-03`) and each session included a `T1w` and
 a `BOLD` image (resting-state), except for `ses-03` which was only anatomical.
 
 Step 2: Think about the dataset's structure
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------------------
 
 Now that we have our element defined, we need to think about the structure of
 the dataset. Mainly, because the structure of the dataset will determine how
@@ -94,7 +94,7 @@ to create a DataGrabber from scratch.
 .. _extending_datagrabbers_pattern:
 
 Option A: Extending from PatternDataGrabber
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------------------
 
 The :py:class:`~junifer.datagrabber.PatternDataGrabber` class is an
 abstract class that has the functionality of understanding patterns embeded
@@ -188,7 +188,7 @@ set the ``datadir``.
 
 
 Optional: Using datalad 
------------------------
+^^^^^^^^^^^^^^^^^^^^^^^
 
 If you are using datalad, you can use the 
 :py:class:`~junifer.datagrabber.PatternDataladDataGrabber` instead of the 
@@ -265,4 +265,103 @@ And we can create our datagrabber:
 .. _extending_datagrabbers_base:
 
 Option B: Extending from BaseDataGrabber
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+----------------------------------------
+
+While we could not think of a use case in which the pattern-based data grabber would not be suitable, it is still
+possible to create a datagrabber extending from the :py:class:`~junifer.datagrabber.base.BaseDataGrabber` class.
+
+In order to create a datagrabber extending from :py:class:`~junifer.datagrabber.base.BaseDataGrabber`, we need to
+implement the following methods:
+
+- ``get_item``: to get a single item from the dataset.
+- ``get_elements``: to get the list fo all elements present in the dataset
+- ``get_element_keys``: to get the keys of the elements in the dataset.
+
+.. note::
+   The ``__init__`` method could also be implemented, but it is not mandatory. This is required if the datagrabber
+   requires any parameter.
+
+We will now implement our BIDS example with this method. 
+
+The first method, ``get_item``, needs to obtain a single
+item from the dataset. Since this dataset requires two variables, ``subject`` and ``session``, we will use them
+as parameters of ``get_item``:
+
+.. code-block:: python
+
+   def get_item(self, subject, session):
+      out = {
+         "T1w": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+         "BOLD": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+      }
+      return out
+
+
+The second method, ``get_elements``, needs to return a list of all the elements in the dataset. In this case, we
+know that the dataset contains 3 subjects and 3 sessions, so we can create a list of all the possible combinations.
+However, we need to remember that for session *ses-03* there is no bold.
+
+.. code-block:: python
+
+   def get_elements(self):
+      subjects = ["sub-01", "sub-02", "sub-03"]
+      sessions = ["ses-01", "ses-02"]
+
+      # If we are not working on BOLD data, we can add "ses-03"
+      if "BOLD" not in self.types:
+         sessions.append("ses-03")
+      elements = []
+      for subject in subjects:
+         for session in sessions:
+            elements.append({"subject": subject, "session": session})
+      return elements
+
+
+And finally, we cna implement the ``get_element_keys`` method. This method needs to return a list of the keys that
+are represent each of the items in the element tuple. As a rule of thumb, they should be the parameters of the
+``get_item`` method, in the same order.
+
+.. code-block:: python
+
+   def get_element_keys(self):
+      return ["subject", "session"]
+
+
+So, to summarize, our datagrabber will look like this:
+
+.. code-block:: python
+
+   from junifer.datagrabber.base import BaseDataGrabber
+   from junifer.api.decorators import register_datagrabber
+
+   @register_datagrabber
+   class ExampleBIDSDataGrabber(BaseDataGrabber):
+
+      def get_item(self, subject, session):
+         out = {
+            "T1w": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+            "BOLD": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+         }
+      return out
+
+      def get_elements(self):
+         subjects = ["sub-01", "sub-02", "sub-03"]
+         sessions = ["ses-01", "ses-02"]
+
+         # If we are not working on BOLD data, we can add "ses-03"
+         if "BOLD" not in self.types:
+            sessions.append("ses-03")
+         elements = []
+         for subject in subjects:
+            for session in sessions:
+               elements.append({"subject": subject, "session": session})
+         return elements
+
+      def get_element_keys(self):
+         return ["subject", "session"]
+
+Optional: Using datalad 
+^^^^^^^^^^^^^^^^^^^^^^^
+
+If this dataset is in a datalad dataset, we can extend from :class:`junifer.datagrabber.DataladDataGrabber` instead of
+:class:`junifer.datagrabber.BaseDataGrabber`. This will allow us to use the datalad API to obtain the data.

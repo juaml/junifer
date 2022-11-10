@@ -459,6 +459,92 @@ be used to specify the path to the root directory of the dataset after doing
 </section>
 <section id="option-b-extending-from-basedatagrabber">
 <span id="extending-datagrabbers-base"></span><h2><span class="section-number">4.1.4. </span>Option B: Extending from BaseDataGrabber<a class="headerlink" href="#option-b-extending-from-basedatagrabber" title="Permalink to this heading">#</a></h2>
+<p>While we could not think of a use case in which the pattern-based data grabber would not be suitable, it is still
+possible to create a datagrabber extending from the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.base.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a> class.</p>
+<p>In order to create a datagrabber extending from <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.base.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a>, we need to
+implement the following methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">get_item</span></code>: to get a single item from the dataset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_elements</span></code>: to get the list fo all elements present in the dataset</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code>: to get the keys of the elements in the dataset.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method could also be implemented, but it is not mandatory. This is required if the datagrabber
+requires any parameter.</p>
+</div>
+<p>We will now implement our BIDS example with this method.</p>
+<p>The first method, <code class="docutils literal notranslate"><span class="pre">get_item</span></code>, needs to obtain a single
+item from the dataset. Since this dataset requires two variables, <code class="docutils literal notranslate"><span class="pre">subject</span></code> and <code class="docutils literal notranslate"><span class="pre">session</span></code>, we will use them
+as parameters of <code class="docutils literal notranslate"><span class="pre">get_item</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+   <span class="n">out</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/anat/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+   <span class="p">}</span>
+   <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+<p>The second method, <code class="docutils literal notranslate"><span class="pre">get_elements</span></code>, needs to return a list of all the elements in the dataset. In this case, we
+know that the dataset contains 3 subjects and 3 sessions, so we can create a list of all the possible combinations.
+However, we need to remember that for session <em>ses-03</em> there is no bold.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sub-01&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-02&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-03&quot;</span><span class="p">]</span>
+   <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ses-01&quot;</span><span class="p">,</span> <span class="s2">&quot;ses-02&quot;</span><span class="p">]</span>
+
+   <span class="c1"># If we are not working on BOLD data, we can add &quot;ses-03&quot;</span>
+   <span class="k">if</span> <span class="s2">&quot;BOLD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
+      <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;ses-03&quot;</span><span class="p">)</span>
+   <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+   <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects</span><span class="p">:</span>
+      <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="n">sessions</span><span class="p">:</span>
+         <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="n">subject</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">:</span> <span class="n">session</span><span class="p">})</span>
+   <span class="k">return</span> <span class="n">elements</span>
+</pre></div>
+</div>
+<p>And finally, we cna implement the <code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code> method. This method needs to return a list of the keys that
+are represent each of the items in the element tuple. As a rule of thumb, they should be the parameters of the
+<code class="docutils literal notranslate"><span class="pre">get_item</span></code> method, in the same order.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_element_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>So, to summarize, our datagrabber will look like this:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.datagrabber.base</span> <span class="kn">import</span> <span class="n">BaseDataGrabber</span>
+<span class="kn">from</span> <span class="nn">junifer.api.decorators</span> <span class="kn">import</span> <span class="n">register_datagrabber</span>
+
+<span class="nd">@register_datagrabber</span>
+<span class="k">class</span> <span class="nc">ExampleBIDSDataGrabber</span><span class="p">(</span><span class="n">BaseDataGrabber</span><span class="p">):</span>
+
+   <span class="k">def</span> <span class="nf">get_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">session</span><span class="p">):</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="p">{</span>
+         <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/anat/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+      <span class="p">}</span>
+   <span class="k">return</span> <span class="n">out</span>
+
+   <span class="k">def</span> <span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sub-01&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-02&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-03&quot;</span><span class="p">]</span>
+      <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ses-01&quot;</span><span class="p">,</span> <span class="s2">&quot;ses-02&quot;</span><span class="p">]</span>
+
+      <span class="c1"># If we are not working on BOLD data, we can add &quot;ses-03&quot;</span>
+      <span class="k">if</span> <span class="s2">&quot;BOLD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
+         <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;ses-03&quot;</span><span class="p">)</span>
+      <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects</span><span class="p">:</span>
+         <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="n">sessions</span><span class="p">:</span>
+            <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="n">subject</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">:</span> <span class="n">session</span><span class="p">})</span>
+      <span class="k">return</span> <span class="n">elements</span>
+
+   <span class="k">def</span> <span class="nf">get_element_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="id1">
+<h3><span class="section-number">4.1.4.1. </span>Optional: Using datalad<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<p>If this dataset is in a datalad dataset, we can extend from <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladDataGrabber</span></code></a> instead of
+<a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.BaseDataGrabber</span></code></a>. This will allow us to use the datalad API to obtain the data.</p>
+</section>
 </section>
 </section>
 
@@ -526,7 +612,10 @@ be used to specify the path to the root directory of the dataset after doing
 <li><a class="reference internal" href="#optional-using-datalad">4.1.3.1. Optional: Using datalad</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#option-b-extending-from-basedatagrabber">4.1.4. Option B: Extending from BaseDataGrabber</a></li>
+<li><a class="reference internal" href="#option-b-extending-from-basedatagrabber">4.1.4. Option B: Extending from BaseDataGrabber</a><ul>
+<li><a class="reference internal" href="#id1">4.1.4.1. Optional: Using datalad</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
