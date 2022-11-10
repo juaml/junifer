@@ -102,7 +102,7 @@ class DataladDataGrabber(BaseDataGrabber):
         """
         remote_id = None
         with tempfile.TemporaryDirectory() as tmpdir:
-            logger.debug(f"Querying {self.uri} for dataset id")
+            logger.debug(f"Querying {self.uri} for dataset ID")
             repo = GitRepo.clone(
                 self.uri, path=tmpdir,
                 clone_options=["-n", "--depth=1"])
@@ -110,7 +110,7 @@ class DataladDataGrabber(BaseDataGrabber):
             remote_id = repo.config.get("datalad.dataset.id", None)
             logger.debug(f"Got remote dataset ID = {remote_id}")
         if remote_id is None:
-            raise_error("Could not get dataset id from remote")
+            raise_error("Could not get dataset ID from remote")
         return remote_id
 
     def _dataset_get(self, out: Dict) -> Dict:
@@ -132,7 +132,7 @@ class DataladDataGrabber(BaseDataGrabber):
         if len(to_get) > 0:
             logger.debug(f"Getting {len(to_get)} files using datalad:")
             for fname in to_get:
-                logger.debug(f"\t: {fname.as_posix()}")
+                logger.debug(f"\t: {fname}")
 
             dl_out = self._dataset.get(to_get, result_renderer="disabled")
             if not self._was_cloned:
@@ -142,11 +142,11 @@ class DataladDataGrabber(BaseDataGrabber):
                 for t_out in dl_out:
                     t_path = Path(t_out["path"])
                     if t_out["status"] == "ok":
-                        logger.debug(f"File {t_path.as_posix()} downloaded")
+                        logger.debug(f"File {t_path} downloaded")
                         self._got_files.append(t_path)
                     elif t_out["status"] == "notneeded":
                         logger.debug(
-                            f"File {t_path.as_posix()} was already present"
+                            f"File {t_path} was already present"
                         )
                     else:
                         raise_error(f"File download failed: {t_out}")
@@ -160,7 +160,7 @@ class DataladDataGrabber(BaseDataGrabber):
         Raises
         ------
         ValueError
-            If the dataset is already installed but with a different ID
+            If the dataset is already installed but with a different ID.
         """
         isinstalled = dl.Dataset(self._datadir).is_installed()
         if isinstalled:
@@ -198,7 +198,7 @@ class DataladDataGrabber(BaseDataGrabber):
             self._dataset.repo.get_corresponding_branch()
         )
 
-    def cleanup(self):
+    def cleanup(self) -> None:
         """Cleanup the datalad dataset."""
         if self._was_cloned:
             logger.debug("Removing dataset with reckless='kill'")
@@ -206,7 +206,7 @@ class DataladDataGrabber(BaseDataGrabber):
         else:
             logger.debug("Dropping files that were downloaded")
             for f in self._got_files:
-                logger.debug(f"Dropping {f.as_posix()}")
+                logger.debug(f"Dropping {f}")
                 self._dataset.drop(f, result_renderer="disabled")
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:
