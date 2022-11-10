@@ -306,7 +306,7 @@ is the replacement for the session id.</p>
 the BOLD images can be expressed as a pattern:</p>
 <p><code class="docutils literal notranslate"><span class="pre">{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz</span></code></p>
 <p>This will be the norm in most of the datasets. If your dataset can be expressed
-in terms of patterns, then follow <a class="reference internal" href="#extending-datagrabbers-pattern"><span class="std std-ref">Option A: Extending from PatternDataGrabber</span></a>.
+in terms of patterns, then follow <a class="reference internal" href="#extending-datagrabbers-pattern"><span class="std std-ref">Step 3: Create a DataGrabber</span></a>.
 Otherwise, we recommend that you take time to re-think about your dataset
 structure and why it does not have clear <em>patterns</em>. Feel free to open a
 discussion in the <a class="reference external" href="https://github.com/juaml/junifer/discussions">junifer Discussions</a> page. Most probably we can help you
@@ -314,8 +314,10 @@ get your dataset in order.</p>
 <p>If there is no other way, then you can follow <a class="reference internal" href="#extending-datagrabbers-base"><span class="std std-ref">Option B: Extending from BaseDataGrabber</span></a>
 to create a DataGrabber from scratch.</p>
 </section>
+<section id="step-3-create-a-datagrabber">
+<span id="extending-datagrabbers-pattern"></span><h2><span class="section-number">4.1.3. </span>Step 3: Create a DataGrabber<a class="headerlink" href="#step-3-create-a-datagrabber" title="Permalink to this heading">#</a></h2>
 <section id="option-a-extending-from-patterndatagrabber">
-<span id="extending-datagrabbers-pattern"></span><h2><span class="section-number">4.1.3. </span>Option A: Extending from PatternDataGrabber<a class="headerlink" href="#option-a-extending-from-patterndatagrabber" title="Permalink to this heading">#</a></h2>
+<h3><span class="section-number">4.1.3.1. </span>Option A: Extending from PatternDataGrabber<a class="headerlink" href="#option-a-extending-from-patterndatagrabber" title="Permalink to this heading">#</a></h3>
 <p>The <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> class is an
 abstract class that has the functionality of understanding patterns embeded
 in it.</p>
@@ -394,7 +396,7 @@ set the <code class="docutils literal notranslate"><span class="pre">datadir</sp
 </pre></div>
 </div>
 <section id="optional-using-datalad">
-<h3><span class="section-number">4.1.3.1. </span>Optional: Using datalad<a class="headerlink" href="#optional-using-datalad" title="Permalink to this heading">#</a></h3>
+<h4><span class="section-number">4.1.3.1.1. </span>Optional: Using datalad<a class="headerlink" href="#optional-using-datalad" title="Permalink to this heading">#</a></h4>
 <p>If you are using datalad, you can use the
 <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a> instead of the
 <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a>. This class will also
@@ -458,7 +460,7 @@ be used to specify the path to the root directory of the dataset after doing
 </section>
 </section>
 <section id="option-b-extending-from-basedatagrabber">
-<span id="extending-datagrabbers-base"></span><h2><span class="section-number">4.1.4. </span>Option B: Extending from BaseDataGrabber<a class="headerlink" href="#option-b-extending-from-basedatagrabber" title="Permalink to this heading">#</a></h2>
+<span id="extending-datagrabbers-base"></span><h3><span class="section-number">4.1.3.2. </span>Option B: Extending from BaseDataGrabber<a class="headerlink" href="#option-b-extending-from-basedatagrabber" title="Permalink to this heading">#</a></h3>
 <p>While we could not think of a use case in which the pattern-based data grabber would not be suitable, it is still
 possible to create a datagrabber extending from the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.base.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a> class.</p>
 <p>In order to create a datagrabber extending from <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.base.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a>, we need to
@@ -541,10 +543,56 @@ are represent each of the items in the element tuple. As a rule of thumb, they s
 </pre></div>
 </div>
 <section id="id1">
-<h3><span class="section-number">4.1.4.1. </span>Optional: Using datalad<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<h4><span class="section-number">4.1.3.2.1. </span>Optional: Using datalad<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h4>
 <p>If this dataset is in a datalad dataset, we can extend from <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladDataGrabber</span></code></a> instead of
 <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.BaseDataGrabber</span></code></a>. This will allow us to use the datalad API to obtain the data.</p>
 </section>
+</section>
+</section>
+<section id="step-4-optional-adding-bold-confounds">
+<h2><span class="section-number">4.1.4. </span>Step 4: Optional: Adding <em>BOLD confounds</em><a class="headerlink" href="#step-4-optional-adding-bold-confounds" title="Permalink to this heading">#</a></h2>
+<p>For some analyses, it is useful to have the confounds associated with the BOLD data. This corresponds to the
+<code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> item in the <a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a> (see <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">Data types</span></a>). However, the <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code>
+element does not only consists of a <code class="docutils literal notranslate"><span class="pre">path</span></code>, but it requries more information about the format of the confounds file.
+Thus, the <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> element is a dictionary with the following keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: the path to the confounds file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">format</span></code>: the format of the confounds file. Currently, this can be either <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> or <code class="docutils literal notranslate"><span class="pre">adhoc</span></code>.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> format corresponds to the format of the confounds files generated by <a class="reference external" href="https://fmriprep.org">fMRIPrep</a>. The
+<code class="docutils literal notranslate"><span class="pre">adhoc</span></code> format corresponds to a format that is not standardized.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">mappings</span></code> key is only required if the <code class="docutils literal notranslate"><span class="pre">format</span></code> is <code class="docutils literal notranslate"><span class="pre">adhoc</span></code>. If the <code class="docutils literal notranslate"><span class="pre">format</span></code> is <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code>, the
+<code class="docutils literal notranslate"><span class="pre">mappings</span></code> key is not required.</p>
+</div>
+<p>Currently, Junifer provides only one confound remover step
+(<a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.preprocess.fMRIPrepConfoundRemover</span></code></a>), which relies entirely on the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> confound
+variable names. Thus, if the confounds are not in <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> format, the user will need to provide the mappings
+between the <em>ad-hoc</em> variable names and the the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> variable names.
+This is done by specifying the <code class="docutils literal notranslate"><span class="pre">adhoc</span></code> format and providing the mappings as a dictionary in the <code class="docutils literal notranslate"><span class="pre">mappings</span></code> key.</p>
+<p>In the following example, the confounds file has 3 variables that are not in the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> format. Thus, we will
+provide the mappings for these variables to the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> format.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">out</span><span class="p">[</span><span class="s2">&quot;BOLD_confounds&quot;</span><span class="p">]:</span> <span class="p">{</span>
+   <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_confounds.tsv&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;adhoc&quot;</span><span class="p">,</span>
+   <span class="s2">&quot;mappings&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="s2">&quot;fmriprep&quot;</span><span class="p">:</span> <span class="p">{</span>
+         <span class="s2">&quot;variable1&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_x&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;variable2&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_z&quot;</span><span class="p">,</span>
+         <span class="s2">&quot;variable3&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_y&quot;</span><span class="p">,</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not all of the mappings need to be provided. For the moment, this is used only by the
+<a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.preprocess.fMRIPrepConfoundRemover</span></code></a> step, which requires variables based on the
+strategy selected. However, it is recommended to provide all the mappings, as this will allow the user to
+choose different strategies with the same dataset.</p>
+</div>
 </section>
 </section>
 
@@ -608,14 +656,18 @@ are represent each of the items in the element tuple. As a rule of thumb, they s
 <li><a class="reference internal" href="#">4.1. Creating DataGrabbers</a><ul>
 <li><a class="reference internal" href="#step-1-think-about-the-element">4.1.1. Step 1: Think about the element</a></li>
 <li><a class="reference internal" href="#step-2-think-about-the-dataset-s-structure">4.1.2. Step 2: Think about the dataset’s structure</a></li>
-<li><a class="reference internal" href="#option-a-extending-from-patterndatagrabber">4.1.3. Option A: Extending from PatternDataGrabber</a><ul>
-<li><a class="reference internal" href="#optional-using-datalad">4.1.3.1. Optional: Using datalad</a></li>
+<li><a class="reference internal" href="#step-3-create-a-datagrabber">4.1.3. Step 3: Create a DataGrabber</a><ul>
+<li><a class="reference internal" href="#option-a-extending-from-patterndatagrabber">4.1.3.1. Option A: Extending from PatternDataGrabber</a><ul>
+<li><a class="reference internal" href="#optional-using-datalad">4.1.3.1.1. Optional: Using datalad</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#option-b-extending-from-basedatagrabber">4.1.4. Option B: Extending from BaseDataGrabber</a><ul>
-<li><a class="reference internal" href="#id1">4.1.4.1. Optional: Using datalad</a></li>
+<li><a class="reference internal" href="#option-b-extending-from-basedatagrabber">4.1.3.2. Option B: Extending from BaseDataGrabber</a><ul>
+<li><a class="reference internal" href="#id1">4.1.3.2.1. Optional: Using datalad</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-4-optional-adding-bold-confounds">4.1.4. Step 4: Optional: Adding <em>BOLD confounds</em></a></li>
 </ul>
 </li>
 </ul>

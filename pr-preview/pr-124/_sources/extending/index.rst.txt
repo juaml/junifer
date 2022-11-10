@@ -20,7 +20,7 @@ datagrabbers, preprocessing and markers, following the *junifer* way.
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
 
    datagrabber
