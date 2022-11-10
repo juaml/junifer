@@ -8,11 +8,7 @@ from typing import Dict, List, Tuple, Union
 
 import pytest
 
-from junifer.storage.utils import (
-    element_to_index,
-    element_to_prefix,
-    process_meta,
-)
+from junifer.storage.utils import element_to_index, element_to_prefix, process_meta
 
 
 def test_process_meta_invalid_metadata_type() -> None:
@@ -118,9 +114,7 @@ def test_process_meta_element(meta: Dict, elements: List[str]) -> None:
         ((1, 2), "element_1_2_"),
     ],
 )
-def test_element_to_prefix(
-    element: Union[str, int, Dict, Tuple], prefix: str
-) -> None:
+def test_element_to_prefix(element: Union[str, int, Dict, Tuple], prefix: str) -> None:
     """Test converting element to prefix (for file naming).
 
     Parameters

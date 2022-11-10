@@ -123,9 +123,7 @@ def test_log_file(tmp_path: Path) -> None:
             assert any("Warn2 message" in line for line in lines)
             assert any("Error2 message" in line for line in lines)
 
-    configure_logging(
-        fname=tmp_path / "test4.log", level="WARNING", overwrite=True
-    )
+    configure_logging(fname=tmp_path / "test4.log", level="WARNING", overwrite=True)
     logger.debug("Debug3 message")
     logger.info("Info3 message")
     logger.warning("Warn3 message")

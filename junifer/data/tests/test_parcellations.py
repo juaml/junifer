@@ -47,10 +47,7 @@ def test_register_parcellation_already_registered() -> None:
         parcellation_path="testparc.nii.gz",
         parcels_labels=["1", "2", "3"],
     )
-    assert (
-        load_parcellation("testparc", path_only=True)[2].name
-        == "testparc.nii.gz"
-    )
+    assert load_parcellation("testparc", path_only=True)[2].name == "testparc.nii.gz"
 
     # Try registering again
     with pytest.raises(ValueError, match=r"already registered."):
@@ -66,10 +63,7 @@ def test_register_parcellation_already_registered() -> None:
         overwrite=True,
     )
 
-    assert (
-        load_parcellation("testparc", path_only=True)[2].name
-        == "testparc2.nii.gz"
-    )
+    assert load_parcellation("testparc", path_only=True)[2].name == "testparc2.nii.gz"
 
 
 @pytest.mark.parametrize(
@@ -293,9 +287,7 @@ def test_suit(tmp_path: Path) -> None:
     assert "SUITxMNI" in parcellations
 
     # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="SUITxSUIT", parcellations_dir=tmp_path
-    )
+    img, lbl, fname = load_parcellation(name="SUITxSUIT", parcellations_dir=tmp_path)
     fname1 = "SUIT_SUITSpace_1mm.nii"
     assert img is not None
     assert fname.name == fname1
@@ -303,9 +295,7 @@ def test_suit(tmp_path: Path) -> None:
     assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
     # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="SUITxSUIT", parcellations_dir=tmp_path
-    )
+    img, lbl, fname = load_parcellation(name="SUITxSUIT", parcellations_dir=tmp_path)
     fname1 = "SUIT_SUITSpace_1mm.nii"
     assert img is not None
     assert fname.name == fname1
@@ -313,9 +303,7 @@ def test_suit(tmp_path: Path) -> None:
     assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
     # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="SUITxMNI", parcellations_dir=tmp_path
-    )
+    img, lbl, fname = load_parcellation(name="SUITxMNI", parcellations_dir=tmp_path)
     fname1 = "SUIT_MNISpace_1mm.nii"
     assert img is not None
     assert fname.name == fname1

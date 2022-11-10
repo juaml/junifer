@@ -452,9 +452,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             raise_error("No BOLD_confounds data provided", ValueError)
         # Confounds must be a dataframe
         if not isinstance(extra_input["BOLD_confounds"]["data"], pd.DataFrame):
-            raise_error(
-                "Confounds data must be a pandas dataframe", ValueError
-            )
+            raise_error("Confounds data must be a pandas dataframe", ValueError)
 
         confound_df = extra_input["BOLD_confounds"]["data"]
         bold_img = input["data"]
@@ -467,8 +465,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         if "format" not in extra_input["BOLD_confounds"]:
             raise_error(
-                "Confounds format must be specified in "
-                'input["BOLD_confounds"]'
+                "Confounds format must be specified in " 'input["BOLD_confounds"]'
             )
 
         t_format = extra_input["BOLD_confounds"]["format"]
@@ -486,13 +483,9 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                     "the variables names mappings to fmriprep format in "
                     'input["BOLD_confounds"]["mappings"]["fmriprep"]'
                 )
-            fmriprep_mappings = extra_input["BOLD_confounds"]["mappings"][
-                "fmriprep"
-            ]
+            fmriprep_mappings = extra_input["BOLD_confounds"]["mappings"]["fmriprep"]
             wrong_names = [
-                x
-                for x in fmriprep_mappings.values()
-                if x not in FMRIPREP_VALID_NAMES
+                x for x in fmriprep_mappings.values() if x not in FMRIPREP_VALID_NAMES
             ]
             if len(wrong_names) > 0:
                 raise_error(
@@ -501,9 +494,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 )
             # Check that all the required columns are present
             missing = [
-                x
-                for x in fmriprep_mappings.keys()
-                if x not in confound_df.columns
+                x for x in fmriprep_mappings.keys() if x not in confound_df.columns
             ]
 
             if len(missing) > 0:

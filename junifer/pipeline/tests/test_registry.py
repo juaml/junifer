@@ -11,12 +11,7 @@ from typing import Type
 import pytest
 
 from junifer.datagrabber import PatternDataGrabber
-from junifer.pipeline.registry import (
-    build,
-    get_class,
-    get_step_names,
-    register,
-)
+from junifer.pipeline.registry import build, get_class, get_step_names, register
 from junifer.storage import SQLiteFeatureStorage
 
 

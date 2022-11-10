@@ -82,7 +82,5 @@ def test_juseless_ucla_datagrabber_task_params(tasks: Optional[str]) -> None:
 
 def test_juseless_ucla_datagrabber_invalid_tasks() -> None:
     """Test juseless ucla datagrabber with invalid task parameters."""
-    with pytest.raises(
-        ValueError, match="invalid is not a valid task in the UCLA"
-    ):
+    with pytest.raises(ValueError, match="invalid is not a valid task in the UCLA"):
         JuselessUCLA(tasks="invalid")

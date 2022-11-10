@@ -69,9 +69,7 @@ def test_parse_yaml_failure_with_multi_module_autoload(tmp_path: Path) -> None:
     """
     # Write test file
     fname = tmp_path / "test_parse_yaml_with_multi_module_autoload.yaml"
-    fname.write_text(
-        "foo: bar\nwith:\n  - numpy\n  - junifer.testing.wrong_config"
-    )
+    fname.write_text("foo: bar\nwith:\n  - numpy\n  - junifer.testing.wrong_config")
     # Check test file
     with pytest.raises(ImportError, match="wrong_config"):
         parse_yaml(fname)

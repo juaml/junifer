@@ -173,9 +173,7 @@ def test_bids_PatternDataladDataGrabber_session():
     ) as dg:
         subs = [x for x in dg]
         expected_subs = [
-            (f"sub-{i:02d}", f"ses-{j:02d}")
-            for j in range(1, 3)
-            for i in range(1, 10)
+            (f"sub-{i:02d}", f"ses-{j:02d}") for j in range(1, 3) for i in range(1, 10)
         ]
         assert set(subs) == set(expected_subs)
 
@@ -193,8 +191,6 @@ def test_bids_PatternDataladDataGrabber_session():
     ) as dg:
         subs = [x for x in dg]
         expected_subs = [
-            (f"sub-{i:02d}", f"ses-{j:02d}")
-            for j in range(1, 4)
-            for i in range(1, 10)
+            (f"sub-{i:02d}", f"ses-{j:02d}") for j in range(1, 4) for i in range(1, 10)
         ]
         assert set(subs) == set(expected_subs)

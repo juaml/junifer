@@ -199,9 +199,7 @@ def queue(
                 "or set overwrite=True."
             )
         else:
-            logger.info(
-                f"Deleting existing job directory at {str(jobdir.absolute())}"
-            )
+            logger.info(f"Deleting existing job directory at {str(jobdir.absolute())}")
             shutil.rmtree(jobdir)
     jobdir.mkdir(exist_ok=True, parents=True)
 
@@ -325,9 +323,7 @@ def _queue_condor(
         f"run {str(yaml_config.absolute())} "
         f"--verbose {verbose} --element $(element)"
     )
-    collect_junifer_args = (
-        f"collect {str(yaml_config.absolute())} --verbose {verbose} "
-    )
+    collect_junifer_args = f"collect {str(yaml_config.absolute())} --verbose {verbose} "
 
     # Set up the env_name, executable and arguments according to the
     # environment type
@@ -449,9 +445,7 @@ def _queue_condor(
         logger.info("HTCondor job submitted")
     else:
         cmd = f"condor_submit_dag {str(dag_fname.absolute())}"
-        logger.info(
-            f"HTCondor job files created, to submit the job, run `{cmd}`"
-        )
+        logger.info(f"HTCondor job files created, to submit the job, run `{cmd}`")
 
 
 def _queue_slurm(

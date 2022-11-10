@@ -54,8 +54,7 @@ def test_aomic_piop2_datagrabber() -> None:
             assert "BOLD_confounds" in out
 
             assert (
-                out["BOLD_confounds"]["path"].name
-                == f"sub-{sub}_task-{new_task}_"
+                out["BOLD_confounds"]["path"].name == f"sub-{sub}_task-{new_task}_"
                 "desc-confounds_regressors.tsv"
             )
 
@@ -66,8 +65,7 @@ def test_aomic_piop2_datagrabber() -> None:
             assert "T1w" in out
 
             assert (
-                out["T1w"]["path"].name
-                == f"sub-{sub}_space-MNI152NLin2009cAsym_"
+                out["T1w"]["path"].name == f"sub-{sub}_space-MNI152NLin2009cAsym_"
                 "desc-preproc_T1w.nii.gz"
             )
 
@@ -113,9 +111,7 @@ def test_aomic_piop2_datagrabber() -> None:
             # asserts type "DWI"
             assert "DWI" in out
 
-            assert (
-                out["DWI"]["path"].name == f"sub-{sub}_desc-preproc_dwi.nii.gz"
-            )
+            assert out["DWI"]["path"].name == f"sub-{sub}_desc-preproc_dwi.nii.gz"
 
             assert out["DWI"]["path"].exists()
             assert out["DWI"]["path"].is_file()
@@ -132,10 +128,7 @@ def test_piop2_invalid_tasks():
     """Test whether invalid task fails."""
     with pytest.raises(
         ValueError,
-        match=(
-            "thisisnotarealtask is not a valid task in "
-            "the AOMIC PIOP2 dataset!"
-        ),
+        match=("thisisnotarealtask is not a valid task in " "the AOMIC PIOP2 dataset!"),
     ):
 
         DataladAOMICPIOP2(tasks="thisisnotarealtask")

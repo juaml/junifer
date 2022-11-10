@@ -31,8 +31,7 @@ def test_aomic1000_datagrabber() -> None:
         assert "BOLD" in out
 
         assert (
-            out["BOLD"]["path"].name
-            == f"sub-{test_element}_task-moviewatching_"
+            out["BOLD"]["path"].name == f"sub-{test_element}_task-moviewatching_"
             "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
         )
 
@@ -55,8 +54,7 @@ def test_aomic1000_datagrabber() -> None:
         assert "T1w" in out
 
         assert (
-            out["T1w"]["path"].name
-            == f"sub-{test_element}_space-MNI152NLin2009cAsym_"
+            out["T1w"]["path"].name == f"sub-{test_element}_space-MNI152NLin2009cAsym_"
             "desc-preproc_T1w.nii.gz"
         )
 
@@ -102,10 +100,7 @@ def test_aomic1000_datagrabber() -> None:
         # asserts type "DWI"
         assert "DWI" in out
 
-        assert (
-            out["DWI"]["path"].name
-            == f"sub-{test_element}_desc-preproc_dwi.nii.gz"
-        )
+        assert out["DWI"]["path"].name == f"sub-{test_element}_desc-preproc_dwi.nii.gz"
 
         assert out["DWI"]["path"].exists()
         assert out["DWI"]["path"].is_file()

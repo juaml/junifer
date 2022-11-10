@@ -24,9 +24,7 @@ def validate_types(types: List[str]) -> None:
         raise_error(msg="`types` must be a list of strings", klass=TypeError)
 
 
-def validate_replacements(
-    replacements: List[str], patterns: Dict[str, str]
-) -> None:
+def validate_replacements(replacements: List[str], patterns: Dict[str, str]) -> None:
     """Validate the replacements.
 
     Parameters
@@ -44,9 +42,7 @@ def validate_replacements(
         raise_error(msg="`patterns` must be a dict.", klass=TypeError)
 
     if any(not isinstance(x, str) for x in replacements):
-        raise_error(
-            msg="`replacements` must be a list of strings.", klass=TypeError
-        )
+        raise_error(msg="`replacements` must be a list of strings.", klass=TypeError)
 
     for x in replacements:
         if all(x not in y for y in patterns.values()):
@@ -84,9 +80,7 @@ def validate_patterns(types: List[str], patterns: Dict[str, str]) -> None:
         )
 
     if any(x not in patterns for x in types):
-        raise_error(
-            msg="`patterns` must contain all `types`", klass=ValueError
-        )
+        raise_error(msg="`patterns` must contain all `types`", klass=ValueError)
 
     if any("}*" in pattern for pattern in patterns.values()):
         raise_error(

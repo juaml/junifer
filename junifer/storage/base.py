@@ -249,8 +249,6 @@ class BaseFeatureStorage(ABC):
 
         """
         single = (
-            "(single output)"
-            if self.single_output is True
-            else "(multiple output)"
+            "(single output)" if self.single_output is True else "(multiple output)"
         )
         return f"<{self.__class__.__name__} @ {self.uri} {single}>"
