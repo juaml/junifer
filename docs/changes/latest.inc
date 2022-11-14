@@ -95,6 +95,8 @@ Bugs
 
 - Fix a bug in which a datalad dataset could remove a user-cloned dataset (:gh:`53` by `Fede Raimondo`_)
 
+- Fix a bug in which CLI command would not work using elements with more than one field (by `Fede Raimondo`_).
+
 API changes
 ~~~~~~~~~~~
 

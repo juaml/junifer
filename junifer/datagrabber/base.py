@@ -76,6 +76,7 @@ class BaseDataGrabber(ABC):
         if not isinstance(element, tuple):
             element = (element,)
         named_element = dict(zip(self.get_element_keys(), element))
+        logger.debug(f"Named element: {named_element}")
         out = self.get_item(**named_element)
         out["meta"] = {
             "datagrabber": self.get_meta(),

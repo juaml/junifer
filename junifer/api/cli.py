@@ -47,7 +47,7 @@ def _parse_elements(element: str, config: Dict) -> Union[List, None]:
     if len(element) == 0:
         return None
     # TODO: If len == 1, check if its a file, then parse elements from file
-    elements = [x.split(",") if "," in x else x for x in element]
+    elements = [tuple(x.split(",")) if "," in x else x for x in element]
     logger.debug(f"Parsed elements: {elements}")
     if elements is not None and "elements" in config:
         warn_with_log(
