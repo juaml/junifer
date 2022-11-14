@@ -1,5 +1,20 @@
 """Provide tests for JuniferNiftiSpheresMasker class."""
 
+# Authors: Synchon Mandal <s.mandal@fz-juelich.de>
+# License: AGPL
+
+import warnings
+
+import nibabel
+import numpy as np
+import pytest
+from nilearn._utils import data_gen
+from nilearn.image import get_data
+from numpy.testing import assert_array_equal
+
+from junifer.external.nilearn import JuniferNiftiSpheresMasker
+
+
 """
 New BSD License
 
@@ -33,20 +48,6 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGE.
 """
-
-# Authors: Synchon Mandal <s.mandal@fz-juelich.de>
-# License: AGPL
-
-import warnings
-
-import nibabel
-import numpy as np
-import pytest
-from nilearn._utils import data_gen
-from nilearn.image import get_data
-from numpy.testing import assert_array_equal
-
-from junifer.external.nilearn import JuniferNiftiSpheresMasker
 
 
 def test_seed_extraction() -> None:
