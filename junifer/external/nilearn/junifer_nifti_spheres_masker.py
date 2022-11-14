@@ -1,5 +1,29 @@
 """Provide JuniferNiftiSpheresMasker class."""
 
+# Authors: Synchon Mandal <s.mandal@fz-juelich.de>
+# License: AGPL
+
+from typing import TYPE_CHECKING, Callable, List, Optional, Tuple, Union
+
+import numpy as np
+from nilearn._utils.class_inspect import get_params
+from nilearn._utils.niimg import img_data_dtype
+from nilearn._utils.niimg_conversions import check_niimg_4d
+from nilearn.maskers import NiftiSpheresMasker
+from nilearn.maskers.base_masker import _filter_and_extract
+from nilearn.maskers.nifti_spheres_masker import _iter_signals_from_spheres
+
+from ...utils import raise_error
+
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from nibabel import Nifti1Image, Nifti2Image
+    from numpy.typing import ArrayLike, DTypeLike
+    from pandas import DataFrame
+
+
 """
 New BSD License
 
@@ -33,29 +57,6 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 DAMAGE.
 """
-
-# Authors: Synchon Mandal <s.mandal@fz-juelich.de>
-# License: AGPL
-
-from typing import TYPE_CHECKING, Callable, List, Optional, Tuple, Union
-
-import numpy as np
-from nilearn._utils.class_inspect import get_params
-from nilearn._utils.niimg import img_data_dtype
-from nilearn._utils.niimg_conversions import check_niimg_4d
-from nilearn.maskers import NiftiSpheresMasker
-from nilearn.maskers.base_masker import _filter_and_extract
-from nilearn.maskers.nifti_spheres_masker import _iter_signals_from_spheres
-
-from ...utils import raise_error
-
-
-if TYPE_CHECKING:
-    from pathlib import Path
-
-    from nibabel import Nifti1Image, Nifti2Image
-    from numpy.typing import ArrayLike, DTypeLike
-    from pandas import DataFrame
 
 
 class _JuniferExtractionFunctor:
