@@ -398,7 +398,8 @@ def _queue_condor(
     with open(dag_fname, "w") as dag_file:
         # Get all subject and session names from file list
         for i_job, t_elem in enumerate(elements):
-            str_elem = ','.join(t_elem) if isinstance(t_elem, tuple) else t_elem
+            str_elem = (','.join(t_elem) if isinstance(t_elem, tuple)
+                        else t_elem)
             dag_file.write(f"JOB run{i_job} {submit_run_fname}\n")
             dag_file.write(f'VARS run{i_job} element="{str_elem}"\n\n')
         if collect is True:
