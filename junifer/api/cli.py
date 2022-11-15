@@ -84,7 +84,7 @@ def cli() -> None:  # pragma: no cover
 )
 def run(filepath: click.Path, element: str, verbose: click.Choice) -> None:
     """Run command for CLI.
-
+    \f
     Parameters
     ----------
     filepath : click.Path
@@ -128,7 +128,7 @@ def run(filepath: click.Path, element: str, verbose: click.Choice) -> None:
 )
 def collect(filepath: click.Path, verbose: click.Choice) -> None:
     """Collect command for CLI.
-
+    \f
     Parameters
     ----------
     filepath : click.Path
@@ -169,7 +169,7 @@ def queue(
     verbose: click.Choice,
 ) -> None:
     """Queue command for CLI.
-
+    \f
     Parameters
     ----------
     filepath : click.Path
@@ -204,7 +204,7 @@ def queue(
 @click.option("--long", "long_", is_flag=True)
 def wtf(long_: bool) -> None:
     """Wtf command for CLI.
-
+    \f
     Parameters
     ----------
     long_ : bool
@@ -225,7 +225,7 @@ def wtf(long_: bool) -> None:
 @click.argument("subpkg", type=str)
 def selftest(subpkg: str) -> None:
     """Selftest command for CLI.
-
+    \f
     Parameters
     ----------
     subpkg : {"all", "api", "configs", "data", "datagrabber", "datareader",
