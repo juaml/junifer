@@ -454,8 +454,7 @@ def _queue_slurm(
     jobdir: Path,
     yaml_config: Path,
     elements: List[Union[str, Tuple]],
-    config: Dict,
-
+    config: Dict
 ) -> None:
     """Submit job to SLURM.
 
