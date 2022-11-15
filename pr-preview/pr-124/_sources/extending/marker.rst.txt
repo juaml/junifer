@@ -31,5 +31,240 @@ a new marker.
 Step 1: Configure input and output
 ----------------------------------
 
+This step is quite simple: we need to define the input and output of the marker. Based on the current
+:ref:`data types <data_types>`, we can define as valid inputs ``BOLD``, ``VBM_WM`` and ``VBM_GM``.
+
+.. code-block:: python
+
+    def get_valid_inputs(self):
+        return ['BOLD', 'VBM_WM', 'VBM_GM']
+
+The output of the marker depends on the input. For ``BOLD``, it will be ``timeseries``, while for the rest of the inputs,
+it will be ``table``. Thus, we can define the output as:
+
+.. code-block:: python
+
+    def get_output_kind(self, input_kind):
+        if input_kind == 'BOLD':
+            return 'timeseries'
+        else:
+            return 'table'
+
+.. _extending_markers_init:
+
+Step 2: Initialize the marker
+-----------------------------
+
+In this step we need to define the parameters of the marker. That is, all the parameters that the user can provide
+to configure how the marker will behave.
+
+The parameters of the marker are defined in the ``__init__`` method. The :class:`junifer.markers.BaseMarker` class
+requires two optional parameters:
+
+1. ``name``: the name of the marker. This is used to identify the marker in the configuration file.
+2. ``on``: a list or string with the names of the inputs that the marker will be applied to.
+
+.. attention:: Only basic types (*int*, *bool* and *str*) as well as Lists, Tuples and Dictionaries are allowed as
+               parameters. This is because the parameters are stored in a JSON file, and JSON only supports these types.
 
 
+In this example, the is only paramater required for the computation is the name of the parcelation to use. Thus, we can
+define the ``__init__`` method as follows:
+
+.. code-block:: python
+    
+    def __init__(self, parcelation_name, on=None, name=None):
+        self.parcelation_name = parcelation_name
+        super().__init__(on=on, name=name)
+
+.. caution:: Parameters of the marker must be stored as object attributes without using ``_`` as prefix. This is
+             because any attribute that starts with ``_`` will not be considered as a parameter and not stored as 
+             part of the metadata of the marker.
+
+
+.. _extending_markers_compute:
+
+Step 3: Compute the marker
+--------------------------
+
+In this step, we will define the method that computes the marker. This method will be called by junifer when needed,
+using the data provided by the datagrabber, as configured by the user. The function ``compute`` has two arguments:
+
+* ``input``: a dictionary with the data to be used to compute the marker. This will be the corresponding element in the 
+    :ref:`Data Object<data_object>` alredy indexing. Thus, the dictionary has at least two keys: ``data`` and ``path``.
+    The first one contains the data, while the second one contains the path to the data. The dictionary can also contain
+    other keys, depending on the data type.
+* ``extra_input``: the rest of the :ref:`Data Object<data_object>`. This is usefull if you want to use other data to
+    compute the marker (e.g.: ``BOLD_confounds`` can be used to de-confound the ``BOLD`` data).
+
+Following the example, we will compute the mean of the data in each parcel using
+:class:`nilearn.maskers.NiftiLabelsMasker`. Importantly, the output of the compute function must be a dictionary.
+This dictionary will later be passed onto the ``store`` method.
+
+.. hint:: To simplify the ``store`` method, define keys of the dictionary based on the corresponding store functions
+          in the :ref:`storage types <storage_types>`. For example, if the output is a ``table``, the keys of the
+          dictionary should be ``data`` and ``columns``.
+
+.. code-block:: python
+
+    from nilearn.maskers import NiftiLabelsMasker
+    from junifer.data import load_parcellation
+
+    def compute(self, input, extra_input):
+        # Get the data
+        data = input["data"]
+
+        # Get the min of the voxels sizes and use it as the resolution
+        resolution = np.min(data.header.get_zooms()[:3])
+
+        # Load the parcellation
+        t_parcellation, t_labels, _ = load_parcellation(
+            name=self.parcelation_name,
+            resolution=resolution,
+        )
+
+        # Create a masker
+        masker = NiftiLabelsMasker(
+            labels_img=t_parcellation, standardize=True,
+            memory='nilearn_cache', verbose=5)
+
+        # mask the data
+        out_values = masker.fit_transform([data])
+
+        # Create the output dictionary
+        out = {"data": out_values, "columns": t_labels}
+
+        # If its 3D (BOLD), name each row as "scan"
+        if out_values.shape[0] > 1:
+            out["row_names"] = "scan"
+        return out
+
+
+.. _extending_markers_store:
+
+Step 4: Store the marker
+------------------------
+
+In this step, we will define the method that stores the marker. This method will be called by junifer when needed,
+using the data provided by the ``compute`` method. The function ``store`` has three arguments:
+
+* ``kind``: A string indicating the :ref:`type of data <data_types>` that was used to compute the marker.
+* ``out``: The output of the ``compute`` method.
+* ``storage``: The storage object, that will be used to store the marker.
+
+.. code-block:: python
+
+    def store(self, kind, out, storage):
+        if kind in ["VBM_GM", "VBM_WM"]:
+            storage.store(kind="table", **out)
+        elif kind in ["BOLD"]:
+            storage.store(kind="timeseries", **out)
+
+.. hint:: Check the hint on :ref:`extending_markers_compute`. If the output of the ``compute`` method is a dictionary
+          with keys based on the :ref:`storage types <storage_types>`, the ``store`` method can simple call the right
+          storage function, based on the ``kind`` parameter, with ``**out``.
+
+
+.. _extending_markers_finalize:
+
+Step 5: Finalize the marker
+---------------------------
+
+One all of the above-mentioned methods are defined, we just need to give our marker a name an register it using the
+``@register_marker`` decorator:
+
+.. code-block:: python
+
+    from nilearn.maskers import NiftiLabelsMasker
+    from junifer.data import load_parcellation
+    from junifer.api.decorators import register_marker
+    from junifer.markers.base import BaseMarker
+
+    @register_marker
+    class ParcelMean(BaseMarker):
+
+        def __init__(self, parcelation_name, on=None, name=None):
+            self.parcelation_name = parcelation_name
+            super().__init__(on=on, name=name)
+        
+        def get_valid_inputs(self):
+            return ['BOLD', 'VBM_WM', 'VBM_GM']
+
+        def get_output_kind(self, input_kind):
+            if input_kind == 'BOLD':
+                return 'timeseries'
+            else:
+                return 'table'
+
+        def compute(self, input, extra_input):
+            # Get the data
+            data = input["data"]
+
+            # Get the min of the voxels sizes and use it as the resolution
+            resolution = np.min(data.header.get_zooms()[:3])
+
+            # Load the parcellation
+            t_parcellation, t_labels, _ = load_parcellation(
+                name=self.parcelation_name,
+                resolution=resolution,
+            )
+
+            # Create a masker
+            masker = NiftiLabelsMasker(
+                labels_img=t_parcellation, standardize=True,
+                memory='nilearn_cache', verbose=5)
+
+            # mask the data
+            out_values = masker.fit_transform([data])
+
+            # Create the output dictionary
+            out = {"data": out_values, "columns": t_labels}
+
+            # If its 3D (BOLD), name each row as "scan"
+            if out_values.shape[0] > 1:
+                out["row_names"] = "scan"
+            return out
+
+        def store(self, kind, out, storage):
+            if kind in ["VBM_GM", "VBM_WM"]:
+                storage.store(kind="table", **out)
+            elif kind in ["BOLD"]:
+                storage.store(kind="timeseries", **out)
+
+
+.. _extending_markers_template:
+
+Template for a custom Marker
+----------------------------
+
+.. code-block:: python
+
+    from junifer.api.decorators import register_marker
+    from junifer.markers.base import BaseMarker
+
+    @register_marker
+    class TemplateMarker(BaseMarker):
+
+        def __init__(self, on=None, name=None):
+            # TODO: add marker-specific parameters
+            super().__init__(on=on, name=name)
+        
+        def get_valid_inputs(self):
+            # TODO: Complete with the valid inputs
+            valid = []
+            return valid
+
+        def get_output_kind(self, input_kind):
+            # TODO: Return the valid output kind for each input kind
+            pass
+
+        def compute(self, input, extra_input):
+            # TODO: compute the marker and create the output dictionary
+
+            # Create the output dictionary
+            out = {"data": None, "columns": None}
+            return out
+
+        def store(self, kind, out, storage):
+            # TODO: store out using the storage object, based on the kind of data
+            pass

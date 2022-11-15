@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="4. Extending junifer" href="extending/index.html" /><link rel="prev" title="2.6. Storage" href="understanding/storage.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="5. Extending junifer" href="extending/index.html" /><link rel="prev" title="3.3. Queueing jobs (HPC, HTC)" href="using/queueing.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>3. Built-in Pipeline steps and data - junifer documentation</title>
+        <title>4. Built-in Pipeline steps and data - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css" />
@@ -166,51 +166,59 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installing junifer</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="understanding/index.html">2. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="understanding/data.html">2.1. The Data Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="understanding/datagrabber.html">2.2. DataGrabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="understanding/datareader.html">2.3. DataReader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="understanding/preprocess.html">2.4. Preprocess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="understanding/marker.html">2.5. Marker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="understanding/storage.html">2.6. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding/pipeline.html">2.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding/data.html">2.2. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding/datagrabber.html">2.3. DataGrabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding/datareader.html">2.4. DataReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding/preprocess.html">2.5. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding/marker.html">2.6. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding/storage.html">2.7. Storage</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">3. Built-in Pipeline steps and data</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="extending/index.html">4. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="extending/datagrabber.html">4.1. Creating DataGrabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extending/marker.html">4.2. Creating Markers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="using/index.html">3. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="using/codeless.html">3.1. Code-less configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/running.html">3.2. Running jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/queueing.html">3.3. Queueing jobs (HPC, HTC)</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">5. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_compute_parcel_mean.html">5.1. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_datagrabber_bids_datalad.html">5.2. Generic BIDS datagrabber for datalad.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_ukbvm_gmd.html">5.3. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_run_gmd_mean.html">5.4. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_ets_rss_marker.html">5.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_hcpfc_pearson.html">5.6. HCP FC Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_junifer_julearn.html">5.7. Run junifer and julearn.</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">4. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="extending/index.html">5. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="extending/extension.html">5.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending/datagrabber.html">5.2. Creating DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending/marker.html">5.3. Creating Markers</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">6. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/datagrabbers.html">6.1.1. DataGrabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/datareaders.html">6.1.2. DataReaders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/preprocessing.html">6.1.3. Pre-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/markers.html">6.1.4. Markers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/storage.html">6.1.5. Storage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data.html">6.2.1. Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/data.html#module-junifer.data.coordinates">6.2.2. Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/stats.html">6.2.3. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/pipeline.html">6.2.4. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/pipeline.html#module-junifer.pipeline.registry">6.2.5. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/api.html">6.2.6. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/utils.html">6.2.7. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/testing.html">6.2.8. Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/configs.html">6.3.1. Configs</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">6. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_compute_parcel_mean.html">6.1. Computer Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_datagrabber_bids_datalad.html">6.2. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_ukbvm_gmd.html">6.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_run_gmd_mean.html">6.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_ets_rss_marker.html">6.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_hcpfc_pearson.html">6.6. HCP FC Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_junifer_julearn.html">6.7. Run junifer and julearn.</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="contribution.html">7. Contributing to junifer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="maintaining.html">8. Maintaining</a></li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">9. FAQs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="whats_new.html">10. What’s new</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">7. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/datagrabbers.html">7.1.1. DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/datareaders.html">7.1.2. DataReaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/preprocessing.html">7.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/markers.html">7.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/storage.html">7.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data.html">7.2.1. Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/data.html#module-junifer.data.coordinates">7.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/stats.html">7.2.3. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/pipeline.html">7.2.4. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/pipeline.html#module-junifer.pipeline.registry">7.2.5. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/api.html">7.2.6. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/utils.html">7.2.7. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/testing.html">7.2.8. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/configs.html">7.3.1. Configs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">8. Contributing to junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maintaining.html">9. Maintaining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">10. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whats_new.html">11. What’s new</a></li>
 </ul>
 
 </div>
@@ -245,11 +253,11 @@
         </div>
         <article role="main">
           <section id="built-in-pipeline-steps-and-data">
-<h1><span class="section-number">3. </span>Built-in Pipeline steps and data<a class="headerlink" href="#built-in-pipeline-steps-and-data" title="Permalink to this heading">#</a></h1>
+<h1><span class="section-number">4. </span>Built-in Pipeline steps and data<a class="headerlink" href="#built-in-pipeline-steps-and-data" title="Permalink to this heading">#</a></h1>
 <section id="datagrabbers">
-<h2><span class="section-number">3.1. </span>DataGrabbers<a class="headerlink" href="#datagrabbers" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">4.1. </span>DataGrabbers<a class="headerlink" href="#datagrabbers" title="Permalink to this heading">#</a></h2>
 <section id="available">
-<h3><span class="section-number">3.1.1. </span>Available<a class="headerlink" href="#available" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.1.1. </span>Available<a class="headerlink" href="#available" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -330,7 +338,7 @@
 </div>
 </section>
 <section id="planned">
-<h3><span class="section-number">3.1.2. </span>Planned<a class="headerlink" href="#planned" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.1.2. </span>Planned<a class="headerlink" href="#planned" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -354,9 +362,9 @@
 </section>
 </section>
 <section id="markers">
-<h2><span class="section-number">3.2. </span>Markers<a class="headerlink" href="#markers" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">4.2. </span>Markers<a class="headerlink" href="#markers" title="Permalink to this heading">#</a></h2>
 <section id="id1">
-<h3><span class="section-number">3.2.1. </span>Available<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.2.1. </span>Available<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -402,7 +410,7 @@
 </div>
 </section>
 <section id="id2">
-<h3><span class="section-number">3.2.2. </span>Planned<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.2.2. </span>Planned<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -438,9 +446,9 @@
 </section>
 </section>
 <section id="parcellations">
-<h2><span class="section-number">3.3. </span>Parcellations<a class="headerlink" href="#parcellations" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">4.3. </span>Parcellations<a class="headerlink" href="#parcellations" title="Permalink to this heading">#</a></h2>
 <section id="id3">
-<h3><span class="section-number">3.3.1. </span>Available<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.3.1. </span>Available<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -517,7 +525,7 @@
 </div>
 </section>
 <section id="id4">
-<h3><span class="section-number">3.3.2. </span>Planned<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.3.2. </span>Planned<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -609,12 +617,12 @@
 </section>
 </section>
 <section id="coordinates">
-<h2><span class="section-number">3.4. </span>Coordinates<a class="headerlink" href="#coordinates" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">4.4. </span>Coordinates<a class="headerlink" href="#coordinates" title="Permalink to this heading">#</a></h2>
 <section id="id5">
-<h3><span class="section-number">3.4.1. </span>Available<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.4.1. </span>Available<a class="headerlink" href="#id5" title="Permalink to this heading">#</a></h3>
 </section>
 <section id="id6">
-<h3><span class="section-number">3.4.2. </span>Planned<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">4.4.2. </span>Planned<a class="headerlink" href="#id6" title="Permalink to this heading">#</a></h3>
 </section>
 </section>
 </section>
@@ -629,18 +637,18 @@
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">4. </span>Extending junifer</div>
+                <div class="title"><span class="section-number">5. </span>Extending junifer</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="understanding/storage.html">
+          <a class="prev-page" href="using/queueing.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">2.6. </span>Storage</div>
+                <div class="title"><span class="section-number">3.3. </span>Queueing jobs (HPC, HTC)</div>
                 
               </div>
             </a>
@@ -676,25 +684,25 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">3. Built-in Pipeline steps and data</a><ul>
-<li><a class="reference internal" href="#datagrabbers">3.1. DataGrabbers</a><ul>
-<li><a class="reference internal" href="#available">3.1.1. Available</a></li>
-<li><a class="reference internal" href="#planned">3.1.2. Planned</a></li>
+<li><a class="reference internal" href="#">4. Built-in Pipeline steps and data</a><ul>
+<li><a class="reference internal" href="#datagrabbers">4.1. DataGrabbers</a><ul>
+<li><a class="reference internal" href="#available">4.1.1. Available</a></li>
+<li><a class="reference internal" href="#planned">4.1.2. Planned</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#markers">3.2. Markers</a><ul>
-<li><a class="reference internal" href="#id1">3.2.1. Available</a></li>
-<li><a class="reference internal" href="#id2">3.2.2. Planned</a></li>
+<li><a class="reference internal" href="#markers">4.2. Markers</a><ul>
+<li><a class="reference internal" href="#id1">4.2.1. Available</a></li>
+<li><a class="reference internal" href="#id2">4.2.2. Planned</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#parcellations">3.3. Parcellations</a><ul>
-<li><a class="reference internal" href="#id3">3.3.1. Available</a></li>
-<li><a class="reference internal" href="#id4">3.3.2. Planned</a></li>
+<li><a class="reference internal" href="#parcellations">4.3. Parcellations</a><ul>
+<li><a class="reference internal" href="#id3">4.3.1. Available</a></li>
+<li><a class="reference internal" href="#id4">4.3.2. Planned</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#coordinates">3.4. Coordinates</a><ul>
-<li><a class="reference internal" href="#id5">3.4.1. Available</a></li>
-<li><a class="reference internal" href="#id6">3.4.2. Planned</a></li>
+<li><a class="reference internal" href="#coordinates">4.4. Coordinates</a><ul>
+<li><a class="reference internal" href="#id5">4.4.1. Available</a></li>
+<li><a class="reference internal" href="#id6">4.4.2. Planned</a></li>
 </ul>
 </li>
 </ul>

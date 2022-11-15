@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5. Examples" href="../auto_examples/index.html" /><link rel="prev" title="4.1. Creating DataGrabbers" href="datagrabber.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="6. Examples" href="../auto_examples/index.html" /><link rel="prev" title="5.2. Creating DataGrabbers" href="datagrabber.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>4.2. Creating Markers - junifer documentation</title>
+        <title>5.3. Creating Markers - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
@@ -166,51 +166,59 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">2.1. The Data Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.2. DataGrabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.3. DataReader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">2.4. Preprocess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">2.5. Marker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.6. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">2.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">2.2. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.3. DataGrabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.4. DataReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">2.5. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">2.6. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.7. Storage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Built-in Pipeline steps and data</a></li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">4. Extending junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="datagrabber.html">4.1. Creating DataGrabbers</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">4.2. Creating Markers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">3. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">3.1. Code-less configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html">3.2. Running jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">3.3. Queueing jobs (HPC, HTC)</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">5. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">5.1. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">5.2. Generic BIDS datagrabber for datalad.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">5.3. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">5.4. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">5.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">5.6. HCP FC Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_junifer_julearn.html">5.7. Run junifer and julearn.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">4. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">5. Extending junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="extension.html">5.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagrabber.html">5.2. Creating DataGrabbers</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.3. Creating Markers</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">6. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">6.1.1. DataGrabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">6.1.2. DataReaders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">6.1.3. Pre-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">6.1.4. Markers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">6.1.5. Storage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html">6.2.1. Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">6.2.2. Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">6.2.3. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">6.2.4. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">6.2.5. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api.html">6.2.6. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">6.2.7. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">6.2.8. Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">6.3.1. Configs</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">6. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">6.1. Computer Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">6.2. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">6.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">6.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">6.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">6.6. HCP FC Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_junifer_julearn.html">6.7. Run junifer and julearn.</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">7. Contributing to junifer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">8. Maintaining</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">9. FAQs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">10. What’s new</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">7. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">7.1.2. DataReaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">7.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">7.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">7.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">7.2.1. Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">7.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">7.2.3. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">7.2.4. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">7.2.5. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">7.2.6. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">7.2.7. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">7.2.8. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">7.3.1. Configs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">8. Contributing to junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">9. Maintaining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">10. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">11. What’s new</a></li>
 </ul>
 
 </div>
@@ -245,7 +253,7 @@
         </div>
         <article role="main">
           <section id="creating-markers">
-<span id="extending-markers"></span><h1><span class="section-number">4.2. </span>Creating Markers<a class="headerlink" href="#creating-markers" title="Permalink to this heading">#</a></h1>
+<span id="extending-markers"></span><h1><span class="section-number">5.3. </span>Creating Markers<a class="headerlink" href="#creating-markers" title="Permalink to this heading">#</a></h1>
 <p>Computing a marker (a.k.a. <em>feature</em>) is the main goal of junifer. While we aim to provide as many markers as possible,
 it might be the case that the marker you are looking for is not available. In this case, you can create your own marker
 by following this tutorial.</p>
@@ -266,7 +274,231 @@ of the marker is compatible with the storage. This method should return a string
 then computes the mean of the data in each parcel. This is a very simple example, but it will show you how to create
 a new marker.</p>
 <section id="step-1-configure-input-and-output">
-<span id="extending-markers-input-output"></span><h2><span class="section-number">4.2.1. </span>Step 1: Configure input and output<a class="headerlink" href="#step-1-configure-input-and-output" title="Permalink to this heading">#</a></h2>
+<span id="extending-markers-input-output"></span><h2><span class="section-number">5.3.1. </span>Step 1: Configure input and output<a class="headerlink" href="#step-1-configure-input-and-output" title="Permalink to this heading">#</a></h2>
+<p>This step is quite simple: we need to define the input and output of the marker. Based on the current
+<a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a>, we can define as valid inputs <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, <code class="docutils literal notranslate"><span class="pre">VBM_WM</span></code> and <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_WM&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_GM&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The output of the marker depends on the input. For <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, it will be <code class="docutils literal notranslate"><span class="pre">timeseries</span></code>, while for the rest of the inputs,
+it will be <code class="docutils literal notranslate"><span class="pre">table</span></code>. Thus, we can define the output as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_output_kind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">input_kind</span> <span class="o">==</span> <span class="s1">&#39;BOLD&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;timeseries&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;table&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-initialize-the-marker">
+<span id="extending-markers-init"></span><h2><span class="section-number">5.3.2. </span>Step 2: Initialize the marker<a class="headerlink" href="#step-2-initialize-the-marker" title="Permalink to this heading">#</a></h2>
+<p>In this step we need to define the parameters of the marker. That is, all the parameters that the user can provide
+to configure how the marker will behave.</p>
+<p>The parameters of the marker are defined in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method. The <a class="reference internal" href="../api/markers.html#junifer.markers.BaseMarker" title="junifer.markers.BaseMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.BaseMarker</span></code></a> class
+requires two optional parameters:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: the name of the marker. This is used to identify the marker in the configuration file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on</span></code>: a list or string with the names of the inputs that the marker will be applied to.</p></li>
+</ol>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Only basic types (<em>int</em>, <em>bool</em> and <em>str</em>) as well as Lists, Tuples and Dictionaries are allowed as
+parameters. This is because the parameters are stored in a JSON file, and JSON only supports these types.</p>
+</div>
+<p>In this example, the is only paramater required for the computation is the name of the parcelation to use. Thus, we can
+define the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parcelation_name</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">parcelation_name</span> <span class="o">=</span> <span class="n">parcelation_name</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Parameters of the marker must be stored as object attributes without using <code class="docutils literal notranslate"><span class="pre">_</span></code> as prefix. This is
+because any attribute that starts with <code class="docutils literal notranslate"><span class="pre">_</span></code> will not be considered as a parameter and not stored as
+part of the metadata of the marker.</p>
+</div>
+</section>
+<section id="step-3-compute-the-marker">
+<span id="extending-markers-compute"></span><h2><span class="section-number">5.3.3. </span>Step 3: Compute the marker<a class="headerlink" href="#step-3-compute-the-marker" title="Permalink to this heading">#</a></h2>
+<p>In this step, we will define the method that computes the marker. This method will be called by junifer when needed,
+using the data provided by the datagrabber, as configured by the user. The function <code class="docutils literal notranslate"><span class="pre">compute</span></code> has two arguments:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">input</span></code>: a dictionary with the data to be used to compute the marker. This will be the corresponding element in the</dt><dd><p><a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a> alredy indexing. Thus, the dictionary has at least two keys: <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code>.
+The first one contains the data, while the second one contains the path to the data. The dictionary can also contain
+other keys, depending on the data type.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">extra_input</span></code>: the rest of the <a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a>. This is usefull if you want to use other data to</dt><dd><p>compute the marker (e.g.: <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> can be used to de-confound the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Following the example, we will compute the mean of the data in each parcel using
+<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.maskers.NiftiLabelsMasker.html#nilearn.maskers.NiftiLabelsMasker" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiLabelsMasker</span></code></a>. Importantly, the output of the compute function must be a dictionary.
+This dictionary will later be passed onto the <code class="docutils literal notranslate"><span class="pre">store</span></code> method.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>To simplify the <code class="docutils literal notranslate"><span class="pre">store</span></code> method, define keys of the dictionary based on the corresponding store functions
+in the <a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a>. For example, if the output is a <code class="docutils literal notranslate"><span class="pre">table</span></code>, the keys of the
+dictionary should be <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">columns</span></code>.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
+<span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">load_parcellation</span>
+
+<span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">extra_input</span><span class="p">):</span>
+    <span class="c1"># Get the data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Get the min of the voxels sizes and use it as the resolution</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()[:</span><span class="mi">3</span><span class="p">])</span>
+
+    <span class="c1"># Load the parcellation</span>
+    <span class="n">t_parcellation</span><span class="p">,</span> <span class="n">t_labels</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load_parcellation</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parcelation_name</span><span class="p">,</span>
+        <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Create a masker</span>
+    <span class="n">masker</span> <span class="o">=</span> <span class="n">NiftiLabelsMasker</span><span class="p">(</span>
+        <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;nilearn_cache&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="c1"># mask the data</span>
+    <span class="n">out_values</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
+
+    <span class="c1"># Create the output dictionary</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">}</span>
+
+    <span class="c1"># If its 3D (BOLD), name each row as &quot;scan&quot;</span>
+    <span class="k">if</span> <span class="n">out_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">out</span><span class="p">[</span><span class="s2">&quot;row_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;scan&quot;</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</section>
+<section id="step-4-store-the-marker">
+<span id="extending-markers-store"></span><h2><span class="section-number">5.3.4. </span>Step 4: Store the marker<a class="headerlink" href="#step-4-store-the-marker" title="Permalink to this heading">#</a></h2>
+<p>In this step, we will define the method that stores the marker. This method will be called by junifer when needed,
+using the data provided by the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method. The function <code class="docutils literal notranslate"><span class="pre">store</span></code> has three arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: A string indicating the <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">type of data</span></a> that was used to compute the marker.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">out</span></code>: The output of the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">storage</span></code>: The storage object, that will be used to store the marker.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;VBM_GM&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_WM&quot;</span><span class="p">]:</span>
+        <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">out</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">]:</span>
+        <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;timeseries&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Check the hint on <a class="reference internal" href="#extending-markers-compute"><span class="std std-ref">Step 3: Compute the marker</span></a>. If the output of the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method is a dictionary
+with keys based on the <a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a>, the <code class="docutils literal notranslate"><span class="pre">store</span></code> method can simple call the right
+storage function, based on the <code class="docutils literal notranslate"><span class="pre">kind</span></code> parameter, with <code class="docutils literal notranslate"><span class="pre">**out</span></code>.</p>
+</div>
+</section>
+<section id="step-5-finalize-the-marker">
+<span id="extending-markers-finalize"></span><h2><span class="section-number">5.3.5. </span>Step 5: Finalize the marker<a class="headerlink" href="#step-5-finalize-the-marker" title="Permalink to this heading">#</a></h2>
+<p>One all of the above-mentioned methods are defined, we just need to give our marker a name an register it using the
+<code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
+<span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">load_parcellation</span>
+<span class="kn">from</span> <span class="nn">junifer.api.decorators</span> <span class="kn">import</span> <span class="n">register_marker</span>
+<span class="kn">from</span> <span class="nn">junifer.markers.base</span> <span class="kn">import</span> <span class="n">BaseMarker</span>
+
+<span class="nd">@register_marker</span>
+<span class="k">class</span> <span class="nc">ParcelMean</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parcelation_name</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parcelation_name</span> <span class="o">=</span> <span class="n">parcelation_name</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_WM&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_GM&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_output_kind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">input_kind</span> <span class="o">==</span> <span class="s1">&#39;BOLD&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;timeseries&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;table&#39;</span>
+
+    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">extra_input</span><span class="p">):</span>
+        <span class="c1"># Get the data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Get the min of the voxels sizes and use it as the resolution</span>
+        <span class="n">resolution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()[:</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="c1"># Load the parcellation</span>
+        <span class="n">t_parcellation</span><span class="p">,</span> <span class="n">t_labels</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load_parcellation</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parcelation_name</span><span class="p">,</span>
+            <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create a masker</span>
+        <span class="n">masker</span> <span class="o">=</span> <span class="n">NiftiLabelsMasker</span><span class="p">(</span>
+            <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;nilearn_cache&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="c1"># mask the data</span>
+        <span class="n">out_values</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
+
+        <span class="c1"># Create the output dictionary</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">}</span>
+
+        <span class="c1"># If its 3D (BOLD), name each row as &quot;scan&quot;</span>
+        <span class="k">if</span> <span class="n">out_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;row_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;scan&quot;</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;VBM_GM&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_WM&quot;</span><span class="p">]:</span>
+            <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">out</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">]:</span>
+            <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;timeseries&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="template-for-a-custom-marker">
+<span id="extending-markers-template"></span><h2><span class="section-number">5.3.6. </span>Template for a custom Marker<a class="headerlink" href="#template-for-a-custom-marker" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.api.decorators</span> <span class="kn">import</span> <span class="n">register_marker</span>
+<span class="kn">from</span> <span class="nn">junifer.markers.base</span> <span class="kn">import</span> <span class="n">BaseMarker</span>
+
+<span class="nd">@register_marker</span>
+<span class="k">class</span> <span class="nc">TemplateMarker</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># TODO: add marker-specific parameters</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO: Complete with the valid inputs</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">valid</span>
+
+    <span class="k">def</span> <span class="nf">get_output_kind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
+        <span class="c1"># TODO: Return the valid output kind for each input kind</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">extra_input</span><span class="p">):</span>
+        <span class="c1"># TODO: compute the marker and create the output dictionary</span>
+
+        <span class="c1"># Create the output dictionary</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
+        <span class="c1"># TODO: store out using the storage object, based on the kind of data</span>
+        <span class="k">pass</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -280,7 +512,7 @@ a new marker.</p>
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">5. </span>Examples</div>
+                <div class="title"><span class="section-number">6. </span>Examples</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -291,7 +523,7 @@ a new marker.</p>
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">4.1. </span>Creating DataGrabbers</div>
+                <div class="title"><span class="section-number">5.2. </span>Creating DataGrabbers</div>
                 
               </div>
             </a>
@@ -327,8 +559,13 @@ a new marker.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">4.2. Creating Markers</a><ul>
-<li><a class="reference internal" href="#step-1-configure-input-and-output">4.2.1. Step 1: Configure input and output</a></li>
+<li><a class="reference internal" href="#">5.3. Creating Markers</a><ul>
+<li><a class="reference internal" href="#step-1-configure-input-and-output">5.3.1. Step 1: Configure input and output</a></li>
+<li><a class="reference internal" href="#step-2-initialize-the-marker">5.3.2. Step 2: Initialize the marker</a></li>
+<li><a class="reference internal" href="#step-3-compute-the-marker">5.3.3. Step 3: Compute the marker</a></li>
+<li><a class="reference internal" href="#step-4-store-the-marker">5.3.4. Step 4: Store the marker</a></li>
+<li><a class="reference internal" href="#step-5-finalize-the-marker">5.3.5. Step 5: Finalize the marker</a></li>
+<li><a class="reference internal" href="#template-for-a-custom-marker">5.3.6. Template for a custom Marker</a></li>
 </ul>
 </li>
 </ul>

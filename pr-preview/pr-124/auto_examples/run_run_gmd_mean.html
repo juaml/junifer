@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5.5. Extracting root sum of squares from edge-wise timeseries." href="run_ets_rss_marker.html" /><link rel="prev" title="5.3. UKB VBM GMD Extraction" href="norun_ukbvm_gmd.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="6.5. Extracting root sum of squares from edge-wise timeseries." href="run_ets_rss_marker.html" /><link rel="prev" title="6.3. UKB VBM GMD Extraction" href="norun_ukbvm_gmd.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>5.4. UKB VBM GMD Extraction - junifer documentation</title>
+        <title>6.4. UKB VBM GMD Extraction - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
@@ -166,51 +166,59 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">2.1. The Data Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.2. DataGrabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.3. DataReader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">2.4. Preprocess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">2.5. Marker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.6. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">2.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">2.2. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.3. DataGrabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.4. DataReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">2.5. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">2.6. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.7. Storage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Built-in Pipeline steps and data</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">4. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">4.1. Creating DataGrabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">4.2. Creating Markers</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">3. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">3.1. Code-less configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html">3.2. Running jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">3.3. Queueing jobs (HPC, HTC)</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">5. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="run_compute_parcel_mean.html">5.1. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">5.2. Generic BIDS datagrabber for datalad.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="norun_ukbvm_gmd.html">5.3. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.4. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="run_ets_rss_marker.html">5.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="norun_hcpfc_pearson.html">5.6. HCP FC Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="run_junifer_julearn.html">5.7. Run junifer and julearn.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">4. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">5. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">5.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">5.2. Creating DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">5.3. Creating Markers</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">6. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">6.1.1. DataGrabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">6.1.2. DataReaders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">6.1.3. Pre-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">6.1.4. Markers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">6.1.5. Storage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html">6.2.1. Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">6.2.2. Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">6.2.3. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">6.2.4. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">6.2.5. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api.html">6.2.6. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">6.2.7. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">6.2.8. Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">6.3.1. Configs</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">6. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_compute_parcel_mean.html">6.1. Computer Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">6.2. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="norun_ukbvm_gmd.html">6.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">6.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_ets_rss_marker.html">6.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="norun_hcpfc_pearson.html">6.6. HCP FC Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_junifer_julearn.html">6.7. Run junifer and julearn.</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">7. Contributing to junifer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">8. Maintaining</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">9. FAQs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">10. What’s new</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">7. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">7.1.2. DataReaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">7.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">7.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">7.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">7.2.1. Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">7.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">7.2.3. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">7.2.4. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">7.2.5. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">7.2.6. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">7.2.7. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">7.2.8. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">7.3.1. Configs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">8. Contributing to junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">9. Maintaining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">10. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">11. What’s new</a></li>
 </ul>
 
 </div>
@@ -250,338 +258,338 @@
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="ukb-vbm-gmd-extraction">
-<span id="sphx-glr-auto-examples-run-run-gmd-mean-py"></span><h1><span class="section-number">5.4. </span>UKB VBM GMD Extraction<a class="headerlink" href="#ukb-vbm-gmd-extraction" title="Permalink to this heading">#</a></h1>
+<span id="sphx-glr-auto-examples-run-run-gmd-mean-py"></span><h1><span class="section-number">6.4. </span>UKB VBM GMD Extraction<a class="headerlink" href="#ukb-vbm-gmd-extraction" title="Permalink to this heading">#</a></h1>
 <p>Authors: Federico Raimondo</p>
 <p>License: BSD 3 clause</p>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-15 14:12:20,894 - JUNIFER - INFO - Registering OasisVBMTestingDatagrabber in datagrabber
-2022-11-15 14:12:20,894 - JUNIFER - INFO - Registering SPMAuditoryTestingDatagrabber in datagrabber
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-15 15:47:12,883 - JUNIFER - INFO - Registering OasisVBMTestingDatagrabber in datagrabber
+2022-11-15 15:47:12,884 - JUNIFER - INFO - Registering SPMAuditoryTestingDatagrabber in datagrabber
 /opt/hostedtoolcache/Python/3.10.8/x64/lib/python3.10/site-packages/nilearn/datasets/struct.py:774: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
   warnings.warn(_LEGACY_FORMAT_MSG)
-2022-11-15 14:12:20,901 - JUNIFER - INFO - Getting element sub-01
-2022-11-15 14:12:20,902 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:12:20,902 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:12:20,902 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:12:20,903 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:12:20,903 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:20,903 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:20,903 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:20,903 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:20,903 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:20,903 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:20,903 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+2022-11-15 15:47:12,893 - JUNIFER - INFO - Getting element sub-01
+2022-11-15 15:47:12,893 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:47:12,893 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:47:12,893 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:47:12,894 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:47:12,894 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:12,895 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:12,895 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:12,895 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:12,895 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:12,895 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:12,895 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_1000Parcels_7Networks_order.txt ...
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2022-11-15 14:12:20,937 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:21,952 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:22,491 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:12:22,491 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:22,491 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:22,492 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:22,492 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:22,492 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:22,492 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:22,495 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:23,508 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:24,031 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:12:24,032 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:24,032 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:24,032 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:24,032 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:24,032 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:24,032 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:24,035 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:24,997 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:25,999 - JUNIFER - INFO - Marker collection fitting done
-2022-11-15 14:12:25,999 - JUNIFER - INFO - Getting element sub-02
-2022-11-15 14:12:26,000 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:12:26,000 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:12:26,000 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:12:26,001 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:12:26,001 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:26,001 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:26,001 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:26,001 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:26,001 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:26,001 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:26,004 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:26,987 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:27,477 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:12:27,477 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:27,477 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:27,477 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:27,477 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:27,477 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:27,477 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:27,480 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:28,423 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:28,941 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:12:28,941 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:28,941 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:28,941 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:28,941 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:28,941 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:28,941 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:28,945 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:29,906 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:30,430 - JUNIFER - INFO - Marker collection fitting done
-2022-11-15 14:12:30,430 - JUNIFER - INFO - Getting element sub-03
-2022-11-15 14:12:30,431 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:12:30,431 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:12:30,431 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:12:30,432 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:12:30,432 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:30,432 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:30,432 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:30,432 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:30,432 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:30,432 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:30,435 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:31,413 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:31,909 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:12:31,909 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:31,909 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:31,909 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:31,909 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:31,909 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:31,909 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:31,913 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:32,870 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:33,383 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:12:33,383 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:33,384 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:33,384 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:33,384 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:33,384 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:33,384 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:33,387 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:34,339 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:34,864 - JUNIFER - INFO - Marker collection fitting done
-2022-11-15 14:12:34,865 - JUNIFER - INFO - Getting element sub-04
-2022-11-15 14:12:34,865 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:12:34,865 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:12:34,865 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:12:34,866 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:12:34,866 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:34,866 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:34,866 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:34,866 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:34,866 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:34,866 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:34,870 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:35,836 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:36,329 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:12:36,329 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:36,329 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:36,329 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:36,329 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:36,329 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:36,329 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:36,333 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:37,270 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:37,780 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:12:37,780 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:37,781 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:37,781 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:37,781 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:37,781 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:37,781 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:37,784 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:38,742 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:39,272 - JUNIFER - INFO - Marker collection fitting done
-2022-11-15 14:12:39,272 - JUNIFER - INFO - Getting element sub-05
-2022-11-15 14:12:39,272 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:12:39,273 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:12:39,273 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:12:39,274 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:12:39,274 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:39,274 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:39,274 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:39,274 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:39,274 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:39,274 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:39,277 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:40,262 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:40,756 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:12:40,756 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:40,756 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:40,756 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:40,757 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:40,757 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:40,757 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:40,760 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:41,695 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:42,202 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:12:42,202 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:42,202 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:42,203 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:42,203 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:42,203 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:42,203 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:42,206 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:43,178 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:43,707 - JUNIFER - INFO - Marker collection fitting done
-2022-11-15 14:12:43,708 - JUNIFER - INFO - Getting element sub-06
-2022-11-15 14:12:43,708 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:12:43,708 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:12:43,708 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:12:43,709 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:12:43,709 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:43,709 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:43,709 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:43,709 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:43,709 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:43,710 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:43,713 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:44,694 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:45,184 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:12:45,184 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:45,184 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:45,184 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:45,184 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:45,184 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:45,184 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:45,188 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:46,131 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:46,642 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:12:46,642 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:46,643 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:46,643 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:46,643 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:46,643 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:46,643 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:46,646 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:47,595 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:48,120 - JUNIFER - INFO - Marker collection fitting done
-2022-11-15 14:12:48,121 - JUNIFER - INFO - Getting element sub-07
-2022-11-15 14:12:48,121 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:12:48,121 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:12:48,121 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:12:48,122 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:12:48,122 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:48,122 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:48,122 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:48,122 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:48,122 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:48,122 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:48,126 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:49,100 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:49,594 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:12:49,594 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:49,595 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:49,595 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:49,595 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:49,595 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:49,595 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:49,598 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:50,529 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:51,044 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:12:51,044 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:51,045 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:51,045 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:51,045 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:51,045 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:51,045 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:51,048 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:52,014 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:52,543 - JUNIFER - INFO - Marker collection fitting done
-2022-11-15 14:12:52,543 - JUNIFER - INFO - Getting element sub-08
-2022-11-15 14:12:52,543 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:12:52,543 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:12:52,544 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:12:52,544 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:12:52,545 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:52,545 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:52,545 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:52,545 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:52,545 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:52,545 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:52,548 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:53,511 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:54,013 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:12:54,013 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:54,014 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:54,014 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:54,014 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:54,014 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:54,014 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:54,017 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:54,962 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:55,474 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:12:55,474 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:55,474 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:55,474 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:55,474 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:55,474 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:55,474 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:55,478 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:56,420 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:56,947 - JUNIFER - INFO - Marker collection fitting done
-2022-11-15 14:12:56,948 - JUNIFER - INFO - Getting element sub-09
-2022-11-15 14:12:56,948 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:12:56,948 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:12:56,948 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:12:56,949 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:12:56,949 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:56,949 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:56,949 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:56,949 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:56,949 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:56,949 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:56,953 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:57,944 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:58,432 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:12:58,432 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:58,433 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:58,433 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:58,433 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:58,433 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:58,433 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:58,436 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:12:59,418 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:12:59,933 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:12:59,933 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:12:59,933 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:12:59,933 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:12:59,933 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:12:59,933 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:12:59,933 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:12:59,937 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:13:00,895 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:13:01,420 - JUNIFER - INFO - Marker collection fitting done
-2022-11-15 14:13:01,421 - JUNIFER - INFO - Getting element sub-10
-2022-11-15 14:13:01,421 - JUNIFER - INFO - Fitting pipeline
-2022-11-15 14:13:01,421 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2022-11-15 14:13:01,421 - JUNIFER - INFO - VBM_GM is type NIFTI
-2022-11-15 14:13:01,422 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
-2022-11-15 14:13:01,422 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:13:01,422 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:13:01,422 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:13:01,422 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:13:01,422 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:13:01,422 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:13:01,426 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:13:02,398 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:13:02,890 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
-2022-11-15 14:13:02,890 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:13:02,890 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:13:02,891 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:13:02,891 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:13:02,891 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:13:02,891 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:13:02,894 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:13:03,838 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:13:04,349 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
-2022-11-15 14:13:04,350 - JUNIFER - INFO - Computing VBM_GM
-2022-11-15 14:13:04,350 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2022-11-15 14:13:04,350 - JUNIFER - INFO - Parcellatikon parameters:
-2022-11-15 14:13:04,350 - JUNIFER - INFO -      n_rois: 1000
-2022-11-15 14:13:04,350 - JUNIFER - INFO -      yeo_networks: 7
-2022-11-15 14:13:04,350 - JUNIFER - INFO -      resolution: 2.0
-2022-11-15 14:13:04,353 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2022-11-15 14:13:05,309 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpdslktd0o/test.db (multiple output)&gt;
-2022-11-15 14:13:05,839 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:47:12,965 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:14,064 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:14,786 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:47:14,787 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:14,787 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:14,787 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:14,787 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:14,787 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:14,787 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:14,791 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:15,847 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:16,561 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:47:16,561 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:16,562 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:16,562 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:16,562 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:16,562 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:16,562 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:16,566 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:17,786 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:18,540 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:47:18,540 - JUNIFER - INFO - Getting element sub-02
+2022-11-15 15:47:18,541 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:47:18,541 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:47:18,541 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:47:18,542 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:47:18,542 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:18,543 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:18,543 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:18,543 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:18,543 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:18,543 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:18,547 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:19,627 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:20,296 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:47:20,296 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:20,297 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:20,297 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:20,297 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:20,297 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:20,297 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:20,301 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:21,325 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:22,072 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:47:22,072 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:22,073 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:22,073 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:22,073 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:22,073 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:22,073 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:22,077 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:23,216 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:23,961 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:47:23,961 - JUNIFER - INFO - Getting element sub-03
+2022-11-15 15:47:23,962 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:47:23,962 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:47:23,962 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:47:23,963 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:47:23,963 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:23,964 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:23,964 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:23,964 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:23,964 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:23,964 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:23,968 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:25,106 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:26,349 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:47:26,349 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:26,350 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:26,350 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:26,350 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:26,350 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:26,350 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:26,354 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:27,360 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:28,101 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:47:28,101 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:28,102 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:28,102 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:28,102 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:28,102 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:28,102 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:28,106 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:29,277 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:30,027 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:47:30,028 - JUNIFER - INFO - Getting element sub-04
+2022-11-15 15:47:30,028 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:47:30,028 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:47:30,028 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:47:30,029 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:47:30,030 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:30,030 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:30,030 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:30,030 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:30,030 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:30,030 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:30,034 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:31,103 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:31,785 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:47:31,785 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:31,785 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:31,785 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:31,786 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:31,786 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:31,786 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:31,790 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:32,907 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:33,671 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:47:33,671 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:33,672 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:33,672 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:33,672 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:33,672 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:33,672 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:33,676 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:34,818 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:35,568 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:47:35,568 - JUNIFER - INFO - Getting element sub-05
+2022-11-15 15:47:35,569 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:47:35,569 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:47:35,569 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:47:35,570 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:47:35,570 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:35,571 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:35,571 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:35,571 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:35,571 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:35,571 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:35,575 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:36,707 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:37,405 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:47:37,406 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:37,406 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:37,406 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:37,406 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:37,406 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:37,406 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:37,410 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:38,461 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:39,191 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:47:39,192 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:39,192 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:39,192 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:39,192 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:39,192 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:39,192 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:39,196 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:40,317 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:41,027 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:47:41,028 - JUNIFER - INFO - Getting element sub-06
+2022-11-15 15:47:41,028 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:47:41,028 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:47:41,028 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:47:41,029 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:47:41,030 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:41,030 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:41,030 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:41,030 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:41,030 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:41,030 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:41,035 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:42,138 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:42,846 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:47:42,847 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:42,847 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:42,847 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:42,847 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:42,847 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:42,847 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:42,852 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:44,076 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:44,796 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:47:44,797 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:44,797 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:44,797 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:44,797 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:44,797 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:44,797 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:44,801 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:45,954 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:46,710 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:47:46,710 - JUNIFER - INFO - Getting element sub-07
+2022-11-15 15:47:46,710 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:47:46,710 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:47:46,710 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:47:46,712 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:47:46,712 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:46,712 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:46,712 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:46,712 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:46,712 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:46,712 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:46,715 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:47,756 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:48,432 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:47:48,432 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:48,433 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:48,433 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:48,433 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:48,433 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:48,433 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:48,437 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:49,460 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:50,219 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:47:50,219 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:50,220 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:50,220 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:50,220 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:50,220 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:50,220 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:50,223 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:51,364 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:52,129 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:47:52,129 - JUNIFER - INFO - Getting element sub-08
+2022-11-15 15:47:52,130 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:47:52,130 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:47:52,130 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:47:52,131 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:47:52,131 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:52,131 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:52,132 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:52,132 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:52,132 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:52,132 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:52,136 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:53,232 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:53,951 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:47:53,951 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:53,951 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:53,952 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:53,952 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:53,952 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:53,952 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:53,955 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:55,048 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:55,795 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:47:55,796 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:55,796 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:55,796 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:55,796 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:55,796 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:55,796 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:55,800 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:56,996 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:57,740 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:47:57,741 - JUNIFER - INFO - Getting element sub-09
+2022-11-15 15:47:57,742 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:47:57,742 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:47:57,742 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:47:57,743 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:47:57,743 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:57,744 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:57,744 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:57,744 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:57,744 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:57,744 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:57,747 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:47:58,891 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:47:59,609 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:47:59,610 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:47:59,610 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:47:59,610 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:47:59,610 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:47:59,610 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:47:59,610 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:47:59,614 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:48:00,745 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:48:01,479 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:48:01,480 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:48:01,480 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:48:01,480 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:48:01,480 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:48:01,480 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:48:01,480 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:48:01,484 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:48:02,771 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:48:03,557 - JUNIFER - INFO - Marker collection fitting done
+2022-11-15 15:48:03,557 - JUNIFER - INFO - Getting element sub-10
+2022-11-15 15:48:03,557 - JUNIFER - INFO - Fitting pipeline
+2022-11-15 15:48:03,557 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2022-11-15 15:48:03,557 - JUNIFER - INFO - VBM_GM is type NIFTI
+2022-11-15 15:48:03,559 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2022-11-15 15:48:03,559 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:48:03,559 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:48:03,559 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:48:03,559 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:48:03,559 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:48:03,559 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:48:03,563 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:48:04,725 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:48:05,455 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2022-11-15 15:48:05,455 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:48:05,456 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:48:05,456 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:48:05,456 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:48:05,456 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:48:05,456 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:48:05,460 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:48:06,620 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:48:07,351 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2022-11-15 15:48:07,351 - JUNIFER - INFO - Computing VBM_GM
+2022-11-15 15:48:07,352 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2022-11-15 15:48:07,352 - JUNIFER - INFO - Parcellatikon parameters:
+2022-11-15 15:48:07,352 - JUNIFER - INFO -      n_rois: 1000
+2022-11-15 15:48:07,352 - JUNIFER - INFO -      yeo_networks: 7
+2022-11-15 15:48:07,352 - JUNIFER - INFO -      resolution: 2.0
+2022-11-15 15:48:07,357 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2022-11-15 15:48:08,517 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpm4laasty/test.db (multiple output)&gt;
+2022-11-15 15:48:09,244 - JUNIFER - INFO - Marker collection fitting done
 </pre></div>
 </div>
 <div class="line-block">
@@ -634,7 +642,7 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
     <span class="p">)</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  44.947 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  56.364 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-run-gmd-mean-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/042dd4fe6bffbb0ea320b529af464ace/run_run_gmd_mean.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_run_gmd_mean.py</span></code></a></p>
@@ -656,7 +664,7 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">5.5. </span>Extracting root sum of squares from edge-wise timeseries.</div>
+                <div class="title"><span class="section-number">6.5. </span>Extracting root sum of squares from edge-wise timeseries.</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -667,7 +675,7 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">5.3. </span>UKB VBM GMD Extraction</div>
+                <div class="title"><span class="section-number">6.3. </span>UKB VBM GMD Extraction</div>
                 
               </div>
             </a>
