@@ -21,6 +21,7 @@
 .. _`matplotlib`: https://matplotlib.org
 .. _`fMRIPrep`: https://fmriprep.org
 .. _`nilearn`: https://nilearn.github.io
+.. _`nipype`: https://nipype.readthedocs.io
 
 .. _`venv`: https://docs.python.org/3/tutorial/venv.html
 .. _`conda env`: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
@@ -30,6 +31,7 @@
 .. _`junifer Discussions`: https://github.com/juaml/junifer/discussions
 
 .. _`Wikipedia`: https://wikipedia.org
+.. _`YAML`: https://yaml.org
 
 .. _`setuptools_scm`: https://github.com/pypa/setuptools_scm/
 

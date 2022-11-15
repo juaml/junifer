@@ -51,3 +51,12 @@ Data types
    * - ``VBM_WM``
      - VBM White Matter segmentation (3D)
      - CAT output (`m0wp2` images)
+   * - ``fALFF``
+     - Voxel-wise fALFF image (3D)
+     - fALFF computed with CONN toolbox
+   * - ``GCOR``
+     - Global Correlation image (3D)
+     - GCOR computed with conn-toolbox
+   * - ``LCOR``
+     - Local Correlation image (3D)
+     - LCOR computed with conn-toolbox

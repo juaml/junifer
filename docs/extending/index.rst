@@ -23,5 +23,6 @@ datagrabbers, preprocessing and markers, following the *junifer* way.
    :maxdepth: 2
    :caption: Contents:
 
+   extension
    datagrabber
    marker

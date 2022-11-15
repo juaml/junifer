@@ -44,11 +44,11 @@ Currently supported storage types
      -  :meth:`junifer.storage.BaseFeatureStorage.store_matrix`
    * - ``table``
      - A vector of values with column names
-     - ``columns``
+     - ``columns``, ``row_names``
      -  :meth:`junifer.storage.BaseFeatureStorage.store_table`
    * - ``timeseries``
      - A 2D matrix of values with column names
-     - ``columns``
+     - ``columns``, ``row_names``
      -  :meth:`junifer.storage.BaseFeatureStorage.store_timeseries`
   
 .. _storage_interfaces:

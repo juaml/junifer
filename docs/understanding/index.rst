@@ -18,11 +18,15 @@ structural MRI, diffusion MRI, etc.) and you want to extract features to
 later use in statistical analyses or machine learning (for example, using
 julearn_).
 
+.. important:: Junifer is not a toolbox to create pipelines, but a tool to configure the junifer pipeline, which is
+   intended to be fixed and not to be changed. If you want to create a pipeline, you should use
+   other tools like nipype_.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   pipeline
    data
    datagrabber
    datareader
