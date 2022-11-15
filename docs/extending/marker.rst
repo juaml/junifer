@@ -22,6 +22,9 @@ Thus, only a few methods are required:
 4. ``store``: the method that stores the computed marker.
 5. ``__init__``: the initialization method, where the marker is configured.
 
+As an example, we will develop a Parcel Mean marker, that is, a marker that first applies a parecellation and
+then computes the mean of the data in each parcel. This is a very simple example, but it will show you how to create
+a new marker.
 
 .. _extending_markers_input_output:
 
