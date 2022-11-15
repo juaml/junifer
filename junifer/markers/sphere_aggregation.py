@@ -6,11 +6,11 @@
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
-from nilearn.maskers import NiftiSpheresMasker
-
 from ..api.decorators import register_marker
 from ..data import load_coordinates
-from ..utils import logger, raise_error
+from ..external.nilearn import JuniferNiftiSpheresMasker
+from ..stats import get_aggfunc_by_name
+from ..utils import logger
 from .base import BaseMarker
 
 if TYPE_CHECKING:
@@ -27,21 +27,24 @@ class SphereAggregation(BaseMarker):
         The name of the coordinates list to use. See
         :func:`junifer.data.coordinates.list_coordinates` for options.
     radius : float, optional
-        The radius of the sphere in mm. If None, the signal will be extracted
-        from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
-        for more information (default None).
+        The radius of the sphere in millimeters. If None, the signal will be
+        extracted from a single voxel. See
+        :class:`nilearn.maskers.NiftiSpheresMasker` for more information
+        (default None).
     method : str, optional
         The aggregation method to use.
         See :func:`junifer.stats.get_aggfunc_by_name` for more information
         (default "mean").
     method_params : dict, optional
         The parameters to pass to the aggregation method (default None).
-    on : list of str, optional
-        The kind of data to apply the marker to. By default, will work on all
+    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or \
+         list of the options, optional
+        The data types to apply the marker to. If None, will work on all
         available data (default None).
     name : str, optional
         The name of the marker. By default, it will use KIND_SphereAggregation
         where KIND is the kind of data it was applied to (default None).
+
     """
 
     def __init__(
@@ -49,21 +52,12 @@ class SphereAggregation(BaseMarker):
         coords: str,
         radius: Optional[float] = None,
         method: str = "mean",
-        method_params: Optional[Dict] = None,
-        on: Optional[Union[List[str], str]] = None,
+        method_params: Optional[Dict[str, Any]] = None,
+        on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.coords = coords
         self.radius = radius
-
-        if method != "mean":
-            raise_error(
-                "Only mean aggregation is supported for sphere aggregation. "
-                "If you need other aggregation methods, please open an issue "
-                "on `junifer github`_.",
-                NotImplementedError,
-            )
-
         self.method = method
         self.method_params = {} if method_params is None else method_params
         super().__init__(on=on, name=name)
@@ -90,7 +84,7 @@ class SphereAggregation(BaseMarker):
         Returns
         -------
         list of str
-            The kind of output.
+            The list of storage kinds.
 
         """
         outputs = []
@@ -159,17 +153,21 @@ class SphereAggregation(BaseMarker):
         """
         t_input = input["data"]
         logger.debug(f"Sphere aggregation using {self.method}")
-        # agg_func = get_aggfunc_by_name(
-        #     self.method, func_params=self.method_params
-        # )
-        coords, out_labels = load_coordinates(self.coords)
-        masker = NiftiSpheresMasker(
+        # Get aggregation function
+        agg_func = get_aggfunc_by_name(
+            self.method, func_params=self.method_params
+        )
+        # Get seeds and labels
+        coords, out_labels = load_coordinates(name=self.coords)
+        masker = JuniferNiftiSpheresMasker(
             seeds=coords,
             radius=self.radius,
             mask_img=None,  # TODO: support this (needs #79)
+            agg_func=agg_func,
         )
-
+        # Fit and transform the marker on the data
         out_values = masker.fit_transform(t_input)
+        # Format the output
         out = {"data": out_values, "columns": out_labels}
         if out_values.shape[0] > 1:
             out["row_names"] = "scan"

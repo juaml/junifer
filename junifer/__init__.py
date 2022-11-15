@@ -16,5 +16,6 @@ from . import (
     stats,
     storage,
     utils,
+    external,
 )
 from ._version import __version__

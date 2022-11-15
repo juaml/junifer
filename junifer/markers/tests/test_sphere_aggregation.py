@@ -16,11 +16,15 @@ from junifer.data import load_coordinates
 from junifer.markers.sphere_aggregation import SphereAggregation
 from junifer.storage import SQLiteFeatureStorage
 
+# Define common variables
+COORDS = "DMNBuckner"
+RADIUS = 8
+
 
 def test_SphereAggregation_input_output() -> None:
     """Test SphereAggregation input and output types."""
     marker = SphereAggregation(
-        coords="DMNBuckner", method="mean", radius=8, on="VBM_GM"
+        coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
 
     output = marker.get_output_kind(["VBM_GM", "BOLD"])
@@ -33,9 +37,7 @@ def test_SphereAggregation_input_output() -> None:
 def test_SphereAggregation_3D() -> None:
     """Test SphereAggregation object on 3D images."""
     # Get the testing coordinates (for nilearn)
-    coord_names = "DMNBuckner"
-    radius = 8
-    coordinates, labels = load_coordinates(coord_names)
+    coordinates, labels = load_coordinates(COORDS)
 
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
@@ -43,12 +45,12 @@ def test_SphereAggregation_3D() -> None:
     img = nib.load(vbm)
 
     # Create NiftiLabelsMasker
-    nifti_masker = NiftiSpheresMasker(seeds=coordinates, radius=radius)
+    nifti_masker = NiftiSpheresMasker(seeds=coordinates, radius=RADIUS)
     auto4d = nifti_masker.fit_transform(img)
 
     # Create SphereAggregation object
     marker = SphereAggregation(
-        coords=coord_names, method="mean", radius=radius, on="VBM_GM"
+        coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
     input = {"VBM_GM": {"data": img}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]
@@ -59,37 +61,30 @@ def test_SphereAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
-    assert meta["coords"] == coord_names
-    assert meta["radius"] == radius
+    assert meta["coords"] == COORDS
+    assert meta["radius"] == RADIUS
     assert meta["name"] == "VBM_GM_SphereAggregation"
     assert meta["class"] == "SphereAggregation"
     assert meta["kind"] == "VBM_GM"
     assert meta["method_params"] == {}
 
-    with pytest.raises(NotImplementedError, match="mean aggregation"):
-        marker = SphereAggregation(
-            coords=coord_names, method="std", radius=radius, on="BOLD"
-        )
-
 
 def test_SphereAggregation_4D() -> None:
     """Test SphereAggregation object on 4D images."""
     # Get the testing coordinates (for nilearn)
-    coord_names = "DMNBuckner"
-    radius = 8
-    coordinates, labels = load_coordinates(coord_names)
+    coordinates, labels = load_coordinates(COORDS)
 
-    # Get the SPM auditory data:
+    # Get the SPM auditory data
     subject_data = datasets.fetch_spm_auditory()
     fmri_img = concat_imgs(subject_data.func)  # type: ignore
 
     # Create NiftiLabelsMasker
-    nifti_masker = NiftiSpheresMasker(seeds=coordinates, radius=radius)
+    nifti_masker = NiftiSpheresMasker(seeds=coordinates, radius=RADIUS)
     auto4d = nifti_masker.fit_transform(fmri_img)
 
     # Create SphereAggregation object
     marker = SphereAggregation(
-        coords=coord_names, method="mean", radius=radius
+        coords=COORDS, method="mean", radius=RADIUS
     )
     input = {"BOLD": {"data": fmri_img}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
@@ -100,8 +95,8 @@ def test_SphereAggregation_4D() -> None:
 
     meta = marker.get_meta("BOLD")["marker"]
     assert meta["method"] == "mean"
-    assert meta["coords"] == coord_names
-    assert meta["radius"] == radius
+    assert meta["coords"] == COORDS
+    assert meta["radius"] == RADIUS
     assert meta["name"] == "BOLD_SphereAggregation"
     assert meta["class"] == "SphereAggregation"
     assert meta["kind"] == "BOLD"
@@ -133,7 +128,7 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     }
     input = {"VBM_GM": {"data": img}, "meta": meta}
     marker = SphereAggregation(
-        coords="DMNBuckner", method="mean", radius=8, on="VBM_GM"
+        coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
 
     marker.fit_transform(input, storage=storage)
@@ -143,12 +138,12 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
         "version": "0.0.1",
         "marker": {"name": "BOLD_fcname"},
     }
-    # Get the SPM auditory data:
+    # Get the SPM auditory data
     subject_data = datasets.fetch_spm_auditory()
     fmri_img = concat_imgs(subject_data.func)  # type: ignore
     input = {"BOLD": {"data": fmri_img}, "meta": meta}
     marker = SphereAggregation(
-        coords="DMNBuckner", method="mean", radius=8, on="BOLD"
+        coords=COORDS, method="mean", radius=RADIUS, on="BOLD"
     )
 
     marker.fit_transform(input, storage=storage)

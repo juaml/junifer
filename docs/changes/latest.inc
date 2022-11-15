@@ -85,6 +85,8 @@ Enhancements
 
 - Refactor the :class:`junifer.datagrabber.BaseDataGrabber` class to allow for easier subclassing (:gh:`123` by `Fede Raimondo`_).
 
+- Allow custom aggregation method for :class:`junifer.markers.SphereAggregation` (:gh:`102` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
@@ -99,7 +101,3 @@ Bugs
 
 API changes
 ~~~~~~~~~~~
-
-- Add new argument ``check_file_existence`` for PatternDataGrabber which allows skipping actual file existence check.
-  This is needed for datagrabbers which extend from PatternDataGrabber and DataladDataGrabber and have one or more
-  Datalad subdatasets inside the dataset, for example, DataladHCP1200.
