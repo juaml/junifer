@@ -177,6 +177,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">3. Built-in Pipeline steps and data</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">4. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">4.1. Creating DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">4.2. Creating Markers</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">5. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -284,8 +285,10 @@ implementation of this abstract class.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber.get_element_keys">
-<span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.get_element_keys" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.get_element_keys" title="Permalink to this definition">#</a></dt>
 <dd><p>Get element keys.</p>
+<p>For each item in the <code class="docutils literal notranslate"><span class="pre">element</span></code> tuple passed to <code class="docutils literal notranslate"><span class="pre">__getitem__()</span></code>,
+this method returns the corresponding key(s).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -306,6 +309,27 @@ implementation of this abstract class.</p>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></dt><dd><p>List of elements that can be grabbed. The elements can be strings,
 tuples or any object that will be then used as a key to index the
 datagrabber.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber.get_item">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.get_item" title="Permalink to this definition">#</a></dt>
+<dd><p>Get the specified item from the dataset.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element to be indexed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>Dictionary of paths for each type of data required for the
+specified element.</p>
 </dd>
 </dl>
 </dd>
@@ -344,7 +368,7 @@ datagrabber.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICID1000">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICID1000</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICID1000" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICID1000</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICID1000" title="Permalink to this definition">#</a></dt>
 <dd><p>Concrete implementation for pattern-based data fetching of AOMICID1000.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -353,8 +377,6 @@ datagrabber.</p>
 the datalad dataset will be cloned into a temporary directory
 (default None).</p>
 </dd>
-<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
-</dd>
 </dl>
 </dd>
 </dl>
@@ -362,7 +384,7 @@ the datalad dataset will be cloned into a temporary directory
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICPIOP1">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICPIOP1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP1" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICPIOP1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP1" title="Permalink to this definition">#</a></dt>
 <dd><p>Concrete implementation for pattern-based data fetching of AOMICPIOP1.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -373,8 +395,6 @@ the datalad dataset will be cloned into a temporary directory
 </dd>
 <dt><strong>tasks</strong><span class="classifier">{“restingstate”, “anticipation”, “emomatching”, “faces”,             “gstroop”, “workingmemory”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>AOMIC PIOP1 task sessions. If None, all available task sessions are
 selected (default None).</p>
-</dd>
-<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
 </dd>
 </dl>
 </dd>
@@ -393,11 +413,34 @@ selected (default None).</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICPIOP1.get_item">
+<span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP1.get_item" title="Permalink to this definition">#</a></dt>
+<dd><p>Index one element in the dataset.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>subject</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The subject ID.</p>
+</dd>
+<dt><strong>task</strong><span class="classifier">{“restingstate”, “anticipation”, “emomatching”, “faces”,                 “gstroop”, “workingmemory”}</span></dt><dd><p>The task to get.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>out</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Dictionary of paths for each type of data required for the
+specified element.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICPIOP2">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICPIOP2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP2" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICPIOP2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP2" title="Permalink to this definition">#</a></dt>
 <dd><p>Concrete implementation for pattern-based data fetching of AOMICPIOP2.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -408,8 +451,6 @@ the datalad dataset will be cloned into a temporary directory
 </dd>
 <dt><strong>tasks</strong><span class="classifier">{“restingstate”, “stopsignal”, “emomatching”, “workingmemory”}             or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>AOMIC PIOP2 task sessions. If None, all available task sessions are
 selected (default None).</p>
-</dd>
-<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
 </dd>
 </dl>
 </dd>
@@ -478,6 +519,14 @@ with multiple inheritance.</p>
 </tbody>
 </table>
 </div>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber.cleanup">
+<span class="sig-name descname"><span class="pre">cleanup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.cleanup" title="Permalink to this definition">#</a></dt>
+<dd><p>Cleanup the datalad dataset.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber.datadir">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><span class="pre">Path</span></a></em><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.datadir" title="Permalink to this definition">#</a></dt>
@@ -485,24 +534,38 @@ with multiple inheritance.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber.install">
-<span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.install" title="Permalink to this definition">#</a></dt>
-<dd><p>Install the datalad dataset into the datadir.</p>
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber.get_meta">
+<span class="sig-name descname"><span class="pre">get_meta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.get_meta" title="Permalink to this definition">#</a></dt>
+<dd><p>Get metadata.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The metadata as dictionary.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber.remove">
-<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.remove" title="Permalink to this definition">#</a></dt>
-<dd><p>Remove the datalad dataset from the datadir.</p>
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladDataGrabber.install">
+<span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladDataGrabber.install" title="Permalink to this definition">#</a></dt>
+<dd><p>Install the datalad dataset into the datadir.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the dataset is already installed but with a different ID.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.datagrabber.DataladHCP1200">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladHCP1200</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_encodings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladHCP1200" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladHCP1200</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_encodings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladHCP1200" title="Permalink to this definition">#</a></dt>
 <dd><p>Concrete implementation for datalad-based data fetching of HCP1200.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -517,8 +580,6 @@ the datalad dataset will be cloned into a temporary directory
 <dt><strong>phase_encodings</strong><span class="classifier">{“LR”, “RL”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP phase encoding directions. If None, both will be used
 (default None).</p>
 </dd>
-<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
-</dd>
 </dl>
 </dd>
 </dl>
@@ -532,14 +593,12 @@ the datalad dataset will be cloned into a temporary directory
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.datagrabber.HCP1200">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">HCP1200</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_encodings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.HCP1200" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">HCP1200</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_encodings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.HCP1200" title="Permalink to this definition">#</a></dt>
 <dd><p>Concrete implementation for pattern-based data fetching of HCP1200.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a>, optional</span></dt><dd><p>The directory where the datalad dataset will be cloned. If None,
-the datalad dataset will be cloned into a temporary directory
-(default None).</p>
+<dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a>, optional</span></dt><dd><p>The directory where the datalad dataset will be cloned.</p>
 </dd>
 <dt><strong>tasks</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”,             “LANGUAGE”, “GAMBLING”, “MOTOR”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP task sessions. If None, all available task sessions are selected
 (default None).</p>
@@ -566,6 +625,31 @@ the datalad dataset will be cloned into a temporary directory
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.HCP1200.get_item">
+<span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase_encoding</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.HCP1200.get_item" title="Permalink to this definition">#</a></dt>
+<dd><p>Index one element in the dataset.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>subject</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The subject ID.</p>
+</dd>
+<dt><strong>task</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”,                “LANGUAGE”, “GAMBLING”, “MOTOR”}</span></dt><dd><p>The task.</p>
+</dd>
+<dt><strong>phase_encoding</strong><span class="classifier">{“LR”, “RL”}</span></dt><dd><p>The phase encoding.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>out</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Dictionary of paths for each type of data required for the
+specified element.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -585,6 +669,22 @@ datagrabbers.</p>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_element_keys">
+<span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.MultipleDataGrabber.get_element_keys" title="Permalink to this definition">#</a></dt>
+<dd><p>Get element keys.</p>
+<p>For each item in the <code class="docutils literal notranslate"><span class="pre">element</span></code> tuple passed to <code class="docutils literal notranslate"><span class="pre">__getitem__()</span></code>,
+this method returns the corresponding key(s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_elements">
 <span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.MultipleDataGrabber.get_elements" title="Permalink to this definition">#</a></dt>
 <dd><p>Get elements.</p>
@@ -598,6 +698,29 @@ related datagrabbers.</p>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_item">
+<span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.MultipleDataGrabber.get_item" title="Permalink to this definition">#</a></dt>
+<dd><p>Get item.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element to be indexed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>Dictionary of paths for each type of data required for the
+specified element.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>This function is not implemented for this class as it is useless.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -652,6 +775,23 @@ and the values are the patterns. Each occurrence of the string
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber.get_element_keys">
+<span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.get_element_keys" title="Permalink to this definition">#</a></dt>
+<dd><p>Get element keys.</p>
+<p>For each item in the “element” tuple, this functions returns the
+corresponding key, that is, the <code class="docutils literal notranslate"><span class="pre">replacements</span></code> of patterns defined
+in the constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber.get_elements">
 <span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.get_elements" title="Permalink to this definition">#</a></dt>
 <dd><p>Implement fetching list of elements in the dataset.</p>
@@ -662,6 +802,30 @@ list of elements that have all the required types.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></dt><dd><p>The list of elements that can be grabbed in the dataset.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber.get_item">
+<span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.get_item" title="Permalink to this definition">#</a></dt>
+<dd><p>Implement single element indexing in the database.</p>
+<p>This method constructs a real path to the requested item’s data, by
+replacing the <code class="docutils literal notranslate"><span class="pre">patterns</span></code> with actual values passed via <code class="docutils literal notranslate"><span class="pre">**element</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element to be indexed. The keys must be the same as the
+replacements.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>Dictionary of dictionaries for each type of data required for the
+specified element.</p>
 </dd>
 </dl>
 </dd>
@@ -772,6 +936,7 @@ and the values are the patterns. Each occurrence of the string
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.datadir"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.datadir</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_element_keys"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_element_keys()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_elements"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_elements()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_item"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_item()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_meta"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_meta()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_types"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_types()</span></code></a></li>
 </ul>
@@ -779,6 +944,7 @@ and the values are the patterns. Each occurrence of the string
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICID1000"><code class="docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1.get_elements"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1.get_elements()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1.get_item"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1.get_item()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP2"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a><ul>
@@ -786,9 +952,10 @@ and the values are the patterns. Each occurrence of the string
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladDataGrabber"><code class="docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.datagrabber.DataladDataGrabber.cleanup"><code class="docutils literal notranslate"><span class="pre">DataladDataGrabber.cleanup()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladDataGrabber.datadir"><code class="docutils literal notranslate"><span class="pre">DataladDataGrabber.datadir</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.DataladDataGrabber.get_meta"><code class="docutils literal notranslate"><span class="pre">DataladDataGrabber.get_meta()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladDataGrabber.install"><code class="docutils literal notranslate"><span class="pre">DataladDataGrabber.install()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.datagrabber.DataladDataGrabber.remove"><code class="docutils literal notranslate"><span class="pre">DataladDataGrabber.remove()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladHCP1200"><code class="docutils literal notranslate"><span class="pre">DataladHCP1200</span></code></a><ul>
@@ -797,16 +964,21 @@ and the values are the patterns. Each occurrence of the string
 </li>
 <li><a class="reference internal" href="#junifer.datagrabber.HCP1200"><code class="docutils literal notranslate"><span class="pre">HCP1200</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.datagrabber.HCP1200.get_elements"><code class="docutils literal notranslate"><span class="pre">HCP1200.get_elements()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.HCP1200.get_item"><code class="docutils literal notranslate"><span class="pre">HCP1200.get_item()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_element_keys"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_element_keys()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_elements"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_elements()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_item"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_item()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_meta"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_meta()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_types"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_types()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_element_keys"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.get_element_keys()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_elements"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.get_elements()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_item"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.get_item()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.skip_file_check"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.skip_file_check</span></code></a></li>
 </ul>
 </li>

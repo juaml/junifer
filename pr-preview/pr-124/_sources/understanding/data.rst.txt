@@ -22,7 +22,7 @@ The :ref:`DataGrabber <datagrabber>` step will only fill the ``path`` value.
 The ``data`` value will be filled by the :ref:`DataReader <datareader>` step, if it is one of the possible file types
 that the datareader can read.
 
-A point to note is that you never directly interact with the *data object* but it's important to know where and how the object is being manipulated to reason about your pipeine.
+A point to note is that you never directly interact with the *data object* but it's important to know where and how the object is being manipulated to reason about your pipeline.
 
 .. _data_types:
 

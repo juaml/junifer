@@ -24,3 +24,4 @@ datagrabbers, preprocessing and markers, following the *junifer* way.
    :caption: Contents:
 
    datagrabber
+   marker

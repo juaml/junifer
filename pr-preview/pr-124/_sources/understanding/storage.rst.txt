@@ -24,6 +24,35 @@ methods respectively.
 For storage interfaces not supported by junifer yet, you can either make your own ``Storage`` by providing a concrete
 implementation of :class:`junifer.storage.BaseFeatureStorage` or open an issue on `junifer Github`_ and we can help you out.
 
+
+.. _storage_types:
+
+Currently supported storage types
+---------------------------------
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Storage Type
+     - Description
+     - Options
+     - Reference
+   * - ``matrix``
+     - A 2D matrix with row and column names
+     -  ``col_names``, ``row_names``, ``matrix_kind``, ``diagonal``
+     -  :meth:`junifer.storage.BaseFeatureStorage.store_matrix`
+   * - ``table``
+     - A vector of values with column names
+     - ``columns``
+     -  :meth:`junifer.storage.BaseFeatureStorage.store_table`
+   * - ``timeseries``
+     - A 2D matrix of values with column names
+     - ``columns``
+     -  :meth:`junifer.storage.BaseFeatureStorage.store_timeseries`
+  
+.. _storage_interfaces:
+
 Currently supported storage interfaces
 --------------------------------------
 
