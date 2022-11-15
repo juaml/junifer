@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 import junifer.testing.registry  # noqa: F401
-from junifer.api.functions import collect, run
+from junifer.api.functions import collect, queue, run
 from junifer.datagrabber.base import BaseDataGrabber
 from junifer.pipeline.registry import build
 
@@ -142,6 +142,29 @@ def test_run_and_collect(tmp_path: Path) -> None:
     collect(storage)
     # Now the file exists
     assert uri.exists()
+
+
+def test_queue_invalid_job_queue(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test queue function for invalid job queue.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+
+    """
+    with pytest.raises(ValueError, match="Unknown queue kind"):
+        with monkeypatch.context() as m:
+            m.chdir(tmp_path)
+            queue(
+                config={"elements": ["sub-001"]},
+                kind="ABC",
+            )
 
 
 @pytest.mark.skip(reason="HTCondor not installed on system.")
