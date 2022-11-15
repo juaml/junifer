@@ -201,6 +201,22 @@ def queue(
             shutil.rmtree(jobdir)
     jobdir.mkdir(exist_ok=True, parents=True)
 
+    if "with" in config:
+        to_load = config["with"]
+        # If there is a list of files to load, copy and remove the path
+        # component
+        fixed_load = []
+        if not isinstance(to_load, list):
+            to_load = [to_load]
+        for item in to_load:
+            if item.endswith(".py"):
+                logger.debug(f"Copying {item} to jobdir ({jobdir.absolute()})")
+                shutil.copy(item, jobdir)
+                fixed_load.append(Path(item).name)
+            else:
+                fixed_load.append(item)
+        config["with"] = fixed_load
+
     yaml_config = jobdir / "config.yaml"
     logger.info(f"Writing YAML config to {str(yaml_config.absolute())}")
     with open(yaml_config, "w") as f:
@@ -331,15 +347,6 @@ def _queue_condor(
         arguments = ""
     else:
         raise ValueError(f'Unknown env kind: {env["kind"]}')
-
-    if "with" in config:
-        to_load = config["with"]
-        if not isinstance(to_load, list):
-            to_load = [to_load]
-        for item in to_load:
-            if item.endswith(".py"):
-                logger.debug(f"Copying {item} to jobdir ({jobdir.absolute()})")
-                shutil.copy(item, jobdir)
 
     # Create log directory
     log_dir = jobdir / "logs"
