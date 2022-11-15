@@ -7,6 +7,9 @@
 import importlib
 from pathlib import Path
 from typing import Dict, Union
+import importlib.util
+import os
+import sys
 
 import yaml
 
@@ -41,11 +44,23 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
     # Autload modules
     if "with" in contents:
         to_load = contents["with"]
-        # Convert autload modules to list
+        # Convert load modules to list
         if not isinstance(to_load, list):
             to_load = [to_load]
         for t_module in to_load:
-            logger.info(f"Importing module: {t_module}")
-            importlib.import_module(t_module)
+            if t_module.endswith(".py"):
+                logger.debug(f"Importing file: {t_module}")
+                file_path = Path(os.getcwd()) / t_module
+                if not file_path.exists():
+                    raise_error(
+                        f"File in 'with' section does not exist: {file_path}")
+                spec = importlib.util.spec_from_file_location(
+                    t_module, file_path)
+                module = importlib.util.module_from_spec(spec)
+                sys.modules[t_module] = module
+                spec.loader.exec_module(module)
+            else:
+                logger.info(f"Importing module: {t_module}")
+                importlib.import_module(t_module)
 
     return contents

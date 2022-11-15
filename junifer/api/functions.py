@@ -11,6 +11,7 @@ import typing
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
+import textwrap
 import yaml
 
 from ..datagrabber.base import BaseDataGrabber
@@ -228,6 +229,7 @@ def queue(
             jobdir=jobdir,
             yaml_config=yaml_config,
             elements=elements,  # type: ignore
+            config=config,
             **kwargs,
         )
     elif kind == "SLURM":
@@ -236,6 +238,7 @@ def queue(
             jobdir=jobdir,
             yaml_config=yaml_config,
             elements=elements,  # type: ignore
+            config=config,
             **kwargs,
         )
     else:
@@ -249,6 +252,7 @@ def _queue_condor(
     jobdir: Path,
     yaml_config: Path,
     elements: List[Union[str, Tuple]],
+    config: Dict,
     env: Optional[Dict[str, str]] = None,
     mem: str = "8G",
     cpus: int = 1,
@@ -270,6 +274,8 @@ def _queue_condor(
         The path to the YAML config file.
     elements : list of str or tuple
         Element(s) to process. Will be used to index the datagrabber.
+    config : dict
+        The configuration to be used for queueing the job.
     env : dict, optional
         The environment variables passed as dictionary (default None).
     mem : str, optional
@@ -311,8 +317,8 @@ def _queue_condor(
         env_name = env["name"]
         executable = "run_conda.sh"
         arguments = f"{env_name} junifer"
-        # TODO: Copy run_conda.sh to jobdir
         exec_path = jobdir / executable
+        logger.info(f"Copying {executable} to {str(exec_path.absolute())}")
         shutil.copy(Path(__file__).parent / "res" / executable, exec_path)
         make_executable(exec_path)
     elif env["kind"] == "venv":
@@ -325,6 +331,15 @@ def _queue_condor(
         arguments = ""
     else:
         raise ValueError(f'Unknown env kind: {env["kind"]}')
+
+    if "with" in config:
+        to_load = config["with"]
+        if not isinstance(to_load, list):
+            to_load = [to_load]
+        for item in to_load:
+            if item.endswith(".py"):
+                logger.debug(f"Copying {item} to jobdir ({jobdir.absolute()})")
+                shutil.copy(item, jobdir)
 
     # Create log directory
     log_dir = jobdir / "logs"
@@ -362,7 +377,7 @@ def _queue_condor(
 
     # Write to run submit files
     with open(submit_run_fname, "w") as submit_file:
-        submit_file.write(run_preamble)
+        submit_file.write(textwrap.dedent(run_preamble))
         submit_file.write("queue\n")
 
     collect_preamble = f"""
@@ -392,14 +407,15 @@ def _queue_condor(
 
     # Now create the collect submit file
     with open(submit_collect_fname, "w") as submit_file:
-        submit_file.write(collect_preamble)  # Eval preamble here
+        submit_file.write(textwrap.dedent(collect_preamble))
         submit_file.write("queue\n")
 
     with open(dag_fname, "w") as dag_file:
         # Get all subject and session names from file list
         for i_job, t_elem in enumerate(elements):
-            str_elem = (','.join(t_elem) if isinstance(t_elem, tuple)
-                        else t_elem)
+            str_elem = (
+                ",".join(t_elem) if isinstance(t_elem, tuple) else t_elem
+            )
             dag_file.write(f"JOB run{i_job} {submit_run_fname}\n")
             dag_file.write(f'VARS run{i_job} element="{str_elem}"\n\n')
         if collect is True:
@@ -426,6 +442,8 @@ def _queue_slurm(
     jobdir: Path,
     yaml_config: Path,
     elements: List[Union[str, Tuple]],
+    config: Dict,
+
 ) -> None:
     """Submit job to SLURM.
 
@@ -440,7 +458,8 @@ def _queue_slurm(
     elements : str or tuple or list[str or tuple], optional
         Element(s) to process. Will be used to index the datagrabber
         (default None).
-
+    config : dict
+        The configuration to be used for queueing the job.
     """
     pass
     # logger.debug("Creating SLURM job")

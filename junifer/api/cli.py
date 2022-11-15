@@ -13,7 +13,12 @@ from typing import Dict, List, Union
 import click
 import yaml
 
-from ..utils.logging import configure_logging, logger, warn_with_log
+from ..utils.logging import (
+    configure_logging,
+    logger,
+    warn_with_log,
+    raise_error,
+)
 from .functions import collect as api_collect
 from .functions import queue as api_queue
 from .functions import run as api_run
@@ -188,6 +193,8 @@ def queue(
     # TODO: add validation
     config = parse_yaml(filepath)  # type: ignore
     elements = _parse_elements(element, config)
+    if "queue" not in config:
+        raise_error(f"No queue configuration found in {filepath}.")
     queue_config = config.pop("queue")
     kind = queue_config.pop("kind")
     api_queue(
