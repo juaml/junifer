@@ -84,7 +84,7 @@ def run(
     # Convert str to Path
     if isinstance(workdir, str):
         workdir = Path(workdir)
-    if not isinstance(elements, List) and elements is not None:
+    if not isinstance(elements, list) and elements is not None:
         elements = [elements]
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber)
@@ -234,7 +234,7 @@ def queue(
                 elements = dg.get_elements()
 
     # TODO: Fix typing of elements
-    if not isinstance(elements, List):
+    if not isinstance(elements, list):
         elements = [elements]  # type: ignore
 
     typing.cast(List[Union[str, Tuple]], elements)
