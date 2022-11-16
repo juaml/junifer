@@ -7,7 +7,7 @@
 
 import logging
 from pathlib import Path
-from typing import List, Union
+from typing import List, Tuple, Union
 
 import pytest
 
@@ -291,13 +291,16 @@ def test_queue_with_imports(
         "sub-001",
         ["sub-001"],
         ["sub-001", "sub-002"],
+        ("sub-001", "ses-001"),
+        [("sub-001", "ses-001")],
+        [("sub-001", "ses-001"), ("sub-001", "ses-002")],
     ],
 )
 def test_queue_with_elements(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
-    elements: Union[str, List[str]],
+    elements: Union[str, List[Union[str, Tuple[str]]], Tuple[str]],
 ) -> None:
     """Test queue with elements.
 
