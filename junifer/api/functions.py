@@ -258,7 +258,7 @@ def queue(
             **kwargs,
         )
     else:
-        raise ValueError(f"Unknown queue kind: {kind}")
+        raise_error(f"Unknown queue kind: {kind}")
 
     logger.info("Queue done")
 
