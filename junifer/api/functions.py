@@ -186,7 +186,7 @@ def queue(
     jobdir = cwd / "junifer_jobs" / jobname
     logger.info(f"Creating job in {str(jobdir.absolute())}")
     if jobdir.exists():
-        if overwrite is not True:
+        if not overwrite:
             raise_error(
                 f"Job folder for {jobname} already exists. "
                 "This error is raised to prevent overwriting job files "
