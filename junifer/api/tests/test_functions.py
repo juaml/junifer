@@ -345,10 +345,30 @@ def test_queue_without_elements(
             assert "Queue done" in caplog.text
 
 
-@pytest.mark.skip(reason="HTCondor not installed on system.")
-def test_queue_condor() -> None:
-    """Test job queueing in HTCondor."""
-    pass
+def test_queue_condor_invalid_python_env(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test invalid Python environment check for HTCondor.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+
+    """
+    with pytest.raises(ValueError, match="Unknown env kind"):
+        with monkeypatch.context() as m:
+            m.chdir(tmp_path)
+            queue(
+                config={"elements": "sub-001"},
+                kind="HTCondor",
+                env={"kind": "galaxy"},
+            )
+
+
 
 
 @pytest.mark.skip(reason="SLURM not installed on system.")
