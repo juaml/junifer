@@ -279,6 +279,45 @@ def test_queue_with_imports(
             assert "Queue done" in caplog.text
 
 
+@pytest.mark.parametrize(
+    "elements",
+    [
+        "sub-001",
+        ["sub-001"],
+        ["sub-001", "sub-002"],
+    ],
+)
+def test_queue_with_elements(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+    elements: Union[str, List[str]],
+) -> None:
+    """Test queue with elements.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+    caplog : pytest.LogCaptureFixture
+        The logcapturefixture object.
+    elements : str of list of str
+        The parametrized elements for the queue.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        with caplog.at_level(logging.INFO):
+            queue(
+                config={},
+                kind="HTCondor",
+                elements=elements,
+            )
+            assert "Queue done" in caplog.text
+
+
 @pytest.mark.skip(reason="HTCondor not installed on system.")
 def test_queue_condor() -> None:
     """Test job queueing in HTCondor."""
