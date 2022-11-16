@@ -409,6 +409,32 @@ def test_queue_condor_conda_python(
             )
 
 
+def test_queue_condor_venv_python(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Test venv Python environment check for HTCondor.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+    caplog : pytest.LogCaptureFixture
+        The logcapturefixture object.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        with caplog.at_level(logging.INFO):
+            queue(
+                config={"elements": "sub-001"},
+                kind="HTCondor",
+                env={"kind": "venv", "name": "venv-env"},
+            )
+            # TODO: needs implementation for testing
 
 
 @pytest.mark.skip(reason="SLURM not installed on system.")
