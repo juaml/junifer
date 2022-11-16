@@ -273,10 +273,16 @@ def test_queue_with_imports(
             queue(
                 config={"with": with_},
                 kind="HTCondor",
+                jobname="with_import_check",
                 elements="sub-001",
             )
             assert "Copying" in caplog.text
             assert "Queue done" in caplog.text
+
+        # Check that file is copied
+        assert Path(
+            tmp_path / "junifer_jobs" / "with_import_check" / "a.py"
+        ).is_file()
 
 
 @pytest.mark.parametrize(
