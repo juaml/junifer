@@ -167,6 +167,37 @@ def test_queue_invalid_job_queue(
             )
 
 
+def test_queue_assets_disallow_overwrite(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test overwrite prevention of queue files.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+
+    """
+    with pytest.raises(ValueError, match="Either delete the directory"):
+        with monkeypatch.context() as m:
+            m.chdir(tmp_path)
+            # First generate assets
+            queue(
+                config={"elements": ["sub-001"]},
+                kind="HTCondor",
+                jobname="prevent_overwrite",
+            )
+            # Re-run to trigger error
+            queue(
+                config={"elements": ["sub-001"]},
+                kind="HTCondor",
+                jobname="prevent_overwrite",
+            )
+
+
 @pytest.mark.skip(reason="HTCondor not installed on system.")
 def test_queue_condor() -> None:
     """Test job queueing in HTCondor."""
