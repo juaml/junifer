@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import logging
 from pathlib import Path
 
 import pytest
@@ -13,6 +14,7 @@ import junifer.testing.registry  # noqa: F401
 from junifer.api.functions import collect, queue, run
 from junifer.datagrabber.base import BaseDataGrabber
 from junifer.pipeline.registry import build
+
 
 # Define datagrabber
 datagrabber = {
@@ -196,6 +198,42 @@ def test_queue_assets_disallow_overwrite(
                 kind="HTCondor",
                 jobname="prevent_overwrite",
             )
+
+
+def test_queue_assets_allow_overwrite(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Test overwriting of queue files.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+    caplog : pytest.LogCaptureFixture
+        The logcapturefixture object.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        # First generate assets
+        queue(
+            config={"elements": ["sub-001"]},
+            kind="HTCondor",
+            jobname="allow_overwrite",
+        )
+        with caplog.at_level(logging.INFO):
+            # Re-run to overwrite
+            queue(
+                config={"elements": ["sub-001"]},
+                kind="HTCondor",
+                jobname="allow_overwrite",
+                overwrite=True,
+            )
+            assert "Deleting existing job directory" in caplog.text
 
 
 @pytest.mark.skip(reason="HTCondor not installed on system.")
