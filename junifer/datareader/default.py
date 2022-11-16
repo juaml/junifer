@@ -10,6 +10,7 @@ from typing import Dict, List, Optional
 import nibabel as nib
 import pandas as pd
 
+from ..api.decorators import register_datareader
 from ..pipeline import PipelineStepMixin
 from ..utils.logging import logger, warn_with_log
 
@@ -28,6 +29,7 @@ _readers["CSV"] = {"func": pd.read_csv, "params": None}
 _readers["TSV"] = {"func": pd.read_csv, "params": {"sep": "\t"}}
 
 
+@register_datareader
 class DefaultDataReader(PipelineStepMixin):
     """Mixin class for default data reader."""
 
