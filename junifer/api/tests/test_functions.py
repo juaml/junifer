@@ -369,6 +369,46 @@ def test_queue_condor_invalid_python_env(
             )
 
 
+def test_queue_condor_conda_python(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Test conda Python environment check for HTCondor.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+    caplog : pytest.LogCaptureFixture
+        The logcapturefixture object.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        with caplog.at_level(logging.INFO):
+            queue(
+                config={"elements": "sub-001"},
+                kind="HTCondor",
+                jobname="conda_env_check",
+                env={"kind": "conda", "name": "conda-env"},
+            )
+            assert "Copying" in caplog.text
+            assert (
+                Path(
+                    tmp_path
+                    / "junifer_jobs"
+                    / "conda_env_check"
+                    / "run_conda.sh"
+                )
+                .stat()
+                .st_mode
+                == 33261
+            )
+
+
 
 
 @pytest.mark.skip(reason="SLURM not installed on system.")
