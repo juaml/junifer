@@ -7,6 +7,7 @@
 
 import logging
 from pathlib import Path
+from typing import List, Union
 
 import pytest
 
@@ -234,6 +235,48 @@ def test_queue_assets_allow_overwrite(
                 overwrite=True,
             )
             assert "Deleting existing job directory" in caplog.text
+
+
+@pytest.mark.parametrize(
+    "with_",
+    [
+        "a.py",
+        ["a.py"],
+        ["a.py", "b"],
+    ],
+)
+def test_queue_with_imports(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+    with_: Union[str, List[str]],
+) -> None:
+    """Test queue with `with` imports.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+    caplog : pytest.LogCaptureFixture
+        The logcapturefixture object.
+    with_ : str or list of str
+        The parametrized imports.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        # Create test file, keeping it simple without conditionals
+        (tmp_path / "a.py").touch()
+        with caplog.at_level(logging.DEBUG):
+            queue(
+                config={"with": with_},
+                kind="HTCondor",
+                elements="sub-001",
+            )
+            assert "Copying" in caplog.text
+            assert "Queue done" in caplog.text
 
 
 @pytest.mark.skip(reason="HTCondor not installed on system.")
