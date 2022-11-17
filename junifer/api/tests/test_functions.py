@@ -501,6 +501,40 @@ def test_queue_condor_venv_python(
             # TODO: needs implementation for testing
 
 
+def test_queue_condor_submission_fail(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Test HTCondor job submission failure.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+    caplog : pytest.LogCaptureFixture
+        The logcapturefixture object.
+
+    """
+    with pytest.raises(
+        FileNotFoundError,
+        match="No such file or directory: 'condor_submit_dag'",
+    ):
+        with monkeypatch.context() as m:
+            m.chdir(tmp_path)
+            with caplog.at_level(logging.INFO):
+                queue(
+                    config={"elements": ["sub-001"]},
+                    kind="HTCondor",
+                    jobname="condor_job_submission_fail",
+                    submit=True,
+                )
+            # Check submit log
+            assert "Submitting HTCondor job" in caplog.text
+
+
 @pytest.mark.skip(reason="SLURM not installed on system.")
 def test_queue_slurm() -> None:
     """Test job queueing in SLURM."""
