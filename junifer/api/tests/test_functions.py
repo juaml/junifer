@@ -501,6 +501,133 @@ def test_queue_condor_venv_python(
             # TODO: needs implementation for testing
 
 
+@pytest.mark.parametrize(
+    "elements, env, mem, cpus, disk, collect",
+    [
+        (
+            ["sub-001"],
+            {"kind": "conda", "name": "conda-env"},
+            "4G",
+            4,
+            "4G",
+            True,
+        ),
+        (
+            ["sub-001"],
+            {"kind": "venv", "name": "venv-env"},
+            "8G",
+            8,
+            "8G",
+            False,
+        ),
+        (["sub-001"], {"kind": "local"}, "12G", 12, "12G", True),
+    ],
+)
+def test_queue_condor_assets_generation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+    elements: str,
+    env: str,
+    mem: str,
+    cpus: int,
+    disk: str,
+    collect: bool,
+) -> None:
+    """Test HTCondor generated assets.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+    caplog : pytest.LogCaptureFixture
+        The logcapturefixture object.
+    elements : str
+        The parametrized element names.
+    env : dict
+        The parametrized env names.
+    mem : str
+        The parametrized memory size.
+    cpus : int
+        The parametrized CPUs.
+    disk : str
+        The parametrized disk size.
+    collect : bool
+        The parametrized collect option.
+
+    """
+    jobname = "condor_assets_gen_check"
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        with caplog.at_level(logging.INFO):
+            queue(
+                config={"elements": elements},
+                kind="HTCondor",
+                jobname=jobname,
+                env=env,
+                mem=mem,
+                cpus=cpus,
+                disk=disk,
+                collect=collect,
+            )
+
+            # Check log directory creation
+            assert Path(tmp_path / "junifer_jobs" / jobname / "logs").is_dir()
+
+            run_submit_file_path = Path(
+                tmp_path / "junifer_jobs" / jobname / f"run_{jobname}.submit"
+            )
+            # Check junifer run submit file
+            assert run_submit_file_path.is_file()
+            # Read run submit file to check if resources are correct
+            with open(run_submit_file_path, "r") as f:
+                for line in f.read().splitlines():
+                    if "request_cpus" in line:
+                        assert int(line.split("=")[1].strip()) == cpus
+                    if "request_memory" in line:
+                        assert line.split("=")[1].strip() == mem
+                    if "request_disk" in line:
+                        assert line.split("=")[1].strip() == disk
+
+            # Check junifer collect submit file
+            assert Path(
+                tmp_path
+                / "junifer_jobs"
+                / jobname
+                / f"collect_{jobname}.submit"
+            ).is_file()
+
+            dag_file_path = Path(
+                tmp_path / "junifer_jobs" / jobname / f"{jobname}.dag"
+            )
+            # Check junifer dag file
+            assert dag_file_path.is_file()
+            # Read dag file to check if collect job is found
+            element_count = 0
+            has_collect_job = False
+            with open(dag_file_path, "r") as f:
+                for line in f.read().splitlines():
+                    if "JOB" in line:
+                        element_count += 1
+                    if "collect" in line:
+                        has_collect_job = True
+
+            if collect:
+                assert len(elements) == element_count - 1
+                assert has_collect_job is True
+            else:
+                assert len(elements) == element_count
+                assert has_collect_job is False
+
+            # Check submit log
+            assert (
+                "HTCondor job files created, to submit the job, run"
+                in caplog.text
+            )
+
+
 def test_queue_condor_submission_fail(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
