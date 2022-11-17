@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import List, Tuple, Union
 
 import pytest
+import yaml
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api.functions import collect, queue, run
@@ -145,6 +146,60 @@ def test_run_and_collect(tmp_path: Path) -> None:
     collect(storage)
     # Now the file exists
     assert uri.exists()
+
+
+def test_queue_correct_yaml_config(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test proper YAML config generation for queueing.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        queue(
+            config={
+                "with": "junifer.testing.registry",
+                "workdir": str(Path(tmp_path).resolve()),
+                "datagrabber": datagrabber,
+                "markers": markers,
+                "storage": storage,
+                "env": {
+                    "kind": "conda",
+                    "name": "junifer",
+                },
+                "mem": "8G",
+            },
+            kind="HTCondor",
+            jobname="yaml_config_gen_check",
+        )
+
+        generated_config_yaml_path = Path(
+            tmp_path / "junifer_jobs" / "yaml_config_gen_check" / "config.yaml"
+        )
+        with open(generated_config_yaml_path, "r") as f:
+            yaml_config = yaml.unsafe_load(f)
+        # Check for correct YAML config generation
+        assert all(
+            key in yaml_config.keys()
+            for key in [
+                "with",
+                "workdir",
+                "datagrabber",
+                "markers",
+                "storage",
+                "env",
+                "mem",
+            ]
+        )
+        assert "queue" not in yaml_config.keys()
 
 
 def test_queue_invalid_job_queue(
