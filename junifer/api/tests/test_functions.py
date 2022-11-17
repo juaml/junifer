@@ -628,6 +628,50 @@ def test_queue_condor_assets_generation(
             )
 
 
+def test_queue_condor_extra_preamble(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Test HTCondor extra preamble addition.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The monkeypatch object.
+
+    """
+    jobname = "condor_extra_preamble_check"
+    extra_preamble = "FOO = BAR"
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        queue(
+            config={"elements": ["sub-001"]},
+            kind="HTCondor",
+            jobname=jobname,
+            extra_preamble=extra_preamble,
+        )
+
+        # Check extra preamble in run submit file
+        run_submit_file_path = Path(
+            tmp_path / "junifer_jobs" / jobname / f"run_{jobname}.submit"
+        )
+        with open(run_submit_file_path, "r") as f:
+            for line in f.read().splitlines():
+                if "FOO" in line:
+                    assert line.strip() == extra_preamble
+
+        # Check extra preamble in collect submit file
+        collect_submit_file_path = Path(
+            tmp_path / "junifer_jobs" / jobname / f"collect_{jobname}.submit"
+        )
+        with open(collect_submit_file_path, "r") as f:
+            for line in f.read().splitlines():
+                if "FOO" in line:
+                    assert line.strip() == extra_preamble
+
+
 def test_queue_condor_submission_fail(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
