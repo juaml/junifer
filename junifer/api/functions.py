@@ -84,7 +84,7 @@ def run(
     # Convert str to Path
     if isinstance(workdir, str):
         workdir = Path(workdir)
-    if not isinstance(elements, List) and elements is not None:
+    if not isinstance(elements, list) and elements is not None:
         elements = [elements]
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber)
@@ -186,7 +186,7 @@ def queue(
     jobdir = cwd / "junifer_jobs" / jobname
     logger.info(f"Creating job in {str(jobdir.absolute())}")
     if jobdir.exists():
-        if overwrite is not True:
+        if not overwrite:
             raise_error(
                 f"Job folder for {jobname} already exists. "
                 "This error is raised to prevent overwriting job files "
@@ -234,7 +234,7 @@ def queue(
                 elements = dg.get_elements()
 
     # TODO: Fix typing of elements
-    if not isinstance(elements, List):
+    if not isinstance(elements, list):
         elements = [elements]  # type: ignore
 
     typing.cast(List[Union[str, Tuple]], elements)
@@ -258,7 +258,7 @@ def queue(
             **kwargs,
         )
     else:
-        raise ValueError(f"Unknown queue kind: {kind}")
+        raise_error(f"Unknown queue kind: {kind}")
 
     logger.info("Queue done")
 
