@@ -117,3 +117,73 @@ def _correlate_dataframes(
         .corr(method=method)  # type: ignore
         .loc["df2", "df1"]
     )
+
+def _calculate_complexity(
+    bold_ts: np.ndarray, 
+    feature_kinds: dict,
+    ) -> np.ndarray:
+    """Compute the region-wise complexity measures from 2d BOLD time series.
+
+    - Permutation entropy: Take a timeseries of brain areas, and calculate
+      permutation entropy according to the method outlined in [1].
+
+    - Range entropy: Take a timeseries of brain areas, and calculate
+      range entropy according to the method outlined in [2].
+
+    Parameters
+    ----------
+    bold_ts : np.ndarray
+        BOLD time series (time x ROIs)
+
+    Returns
+    -------
+    np.ndarray
+        ROI-wise brain map, i.e. estimate of range entropy at each ROI.
+
+    References
+    ----------
+    .. [1] A. Omidvarnia et al. (2018)
+           Range Entropy: A Bridge between Signal Complexity and
+           Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
+
+    .. [2] A. Omidvarnia et al. (2018)
+           Range Entropy: A Bridge between Signal Complexity and
+           Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
+
+    """
+    _, n_roi = bold_ts.shape
+    # Number of complexity measures to be computed.
+    n_feat = len(feature_kinds)
+    out = dict()
+    features = np.zeros((n_roi, n_feat))
+    for feature, feature_params in feature_kinds.items():
+        func = feature_kinds[feature]  # Complexity measure (function name)
+        feature_map = func(bold_ts, **feature_params) # n_roi x 1
+
+    return out
+
+def _range_entropy(bold_ts: np.ndarray) -> np.ndarray:
+    """Compute the region-wise range entropy from 2d BOLD time series.
+
+    - Range entropy: Take a timeseries of brain areas, and calculate
+      range entropy according to the method outlined in [1].
+
+    Parameters
+    ----------
+    bold_ts : np.ndarray
+        BOLD time series (time x ROIs)
+
+    Returns
+    -------
+    np.ndarray
+        ROI-wise brain map, i.e. estimate of range entropy at each ROI.
+
+    References
+    ----------
+    .. [1] A. Omidvarnia et al. (2018)
+           Range Entropy: A Bridge between Signal Complexity and
+           Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
+
+    """
+    bold_ts = out["data"]
+    n_roi, _ = bold_ts.shape
