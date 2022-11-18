@@ -114,6 +114,7 @@ Planned
      - ``junifer.configs.juseless``
      - :gh:`47`
 
+
 Markers
 -------
 
@@ -193,6 +194,7 @@ Planned
      - Calculate edge-centric functional connectivity
      - :gh:`64`
 
+
 Parcellations
 -------------
 
@@ -204,28 +206,49 @@ Parcellations
 Available
 ~~~~~~~~~
 
-========  =================  =================================================================================  =============  ====================================================
-Name      Options            Keys                                                                               Version added  Publication
-========  =================  =================================================================================  =============  ====================================================
-Schaefer  ``n_rois``,        | ``Schaefer900x7``, ``Schaefer1000x7``, ``Schaefer100x17``, ``Schaefer200x17``,   0.0.1          | Alexander Schaefer, Ru Kong, Evan M Gordon,
-          ``yeo_networks``   | ``Schaefer300x17``, ``Schaefer400x17``, ``Schaefer500x17``, ``Schaefer600x17``,                 | Timothy O Laumann, Xi-Nian Zuo, Avram J Holmes,
-                             | ``Schaefer700x17``, ``Schaefer800x17``, ``Schaefer900x17``, ``Schaefer1000x17``                 | Simon B Eickhoff, B T Thomas Yeo. Local-Global
-                                                                                                                               | Parcellation of the Human Cerebral Cortex from
-                                                                                                                               | Intrinsic Functional Connectivity MRI, Cerebral
-                                                                                                                               | Cortex, Volume 28, Issue 9, September 2018, Pages
-                                                                                                                               | 3095–3114.
-                                                                                                                               | https://doi.org/10.1093/cercor/bhx179
-SUIT      ``space``          | ``SUITxMNI``, ``SUITxSUIT``                                                      0.0.1          | Diedrichsen J. (2006). A spatially unbiased atlas
-                                                                                                                               | template of the human cerebellum. NeuroImage,
-                                                                                                                               | 33(1), 127–138.
-                                                                                                                               | https://doi.org/10.1016/j.neuroimage.2006.05.056
-TIAN      ``scale``,         | ``TianxS1x3TxMNI6thgeneration``, ``TianxS1x3TxMNInonlinear2009cAsym``,           0.0.1          | Tian, Y., Margulies, D.S., Breakspear, M. et al.
-          ``space``,         | ``TianxS1x7TxMNI6thgeneration``, ``TianxS2x3TxMNI6thgeneration``,                               | Topographic organization of the human subcortex
-          ``magneticfield``  | ``TianxS2x3TxMNInonlinear2009cAsym``, ``TianxS2x7TxMNI6thgeneration``,                          | unveiled with functional connectivity gradients.
-                             | ``TianxS3x3TxMNI6thgeneration``, ``TianxS3x3TxMNInonlinear2009cAsym``,                          | Nat Neurosci 23, 1421–1432 (2020).
-                             | ``TianxS3x7TxMNI6thgeneration``, ``TianxS4x3TxMNI6thgeneration``,                               | https://doi.org/10.1038/s41593-020-00711-6
-                             | ``TianxS4x3TxMNInonlinear2009cAsym``, ``TianxS4x7TxMNI6thgeneration``
-========  =================  =================================================================================  =============  ====================================================
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Name
+     - Options
+     - Keys
+     - Version added
+     - Publication
+   * - Schaefer
+     - ``n_rois``, ``yeo_networks``
+     - | ``Schaefer900x7``, ``Schaefer1000x7``, ``Schaefer100x17``,
+       | ``Schaefer200x17``, ``Schaefer300x17``, ``Schaefer400x17``,
+       | ``Schaefer500x17``, ``Schaefer600x17``, ``Schaefer700x17``,
+       | ``Schaefer800x17``, ``Schaefer900x17``, ``Schaefer1000x17``
+     - 0.0.1
+     - | Schaefer, A., Kong, R., Gordon, E.M. et al.
+       | Local-Global Parcellation of the Human Cerebral Cortex from
+       | Intrinsic Functional Connectivity MRI
+       | Cerebral Cortex, Volume 28(9), Pages 3095–3114 (2018).
+       | https://doi.org/10.1093/cercor/bhx179
+   * - SUIT
+     - ``space``
+     - ``SUITxMNI``, ``SUITxSUIT``
+     - 0.0.1
+     - | Diedrichsen, J.
+       | A spatially unbiased atlas template of the human cerebellum.
+       | NeuroImage, Volume 33(1), Pages 127–138 (2006).
+       | https://doi.org/10.1016/j.neuroimage.2006.05.056
+   * - TIAN
+     - ``scale``, ``space``, ``magneticfield``
+     - | ``TianxS1x3TxMNI6thgeneration``, ``TianxS1x7TxMNI6thgeneration``,
+       | ``TianxS2x3TxMNI6thgeneration``, ``TianxS2x7TxMNI6thgeneration``,
+       | ``TianxS3x3TxMNI6thgeneration``, ``TianxS3x7TxMNI6thgeneration``,
+       | ``TianxS4x3TxMNI6thgeneration``, ``TianxS4x7TxMNI6thgeneration``,
+       | ``TianxS1x3TxMNInonlinear2009cAsym``, ``TianxS2x3TxMNInonlinear2009cAsym``,
+       | ``TianxS3x3TxMNInonlinear2009cAsym``, ``TianxS4x3TxMNInonlinear2009cAsym``
+     - 0.0.1
+     - | Tian, Y., Margulies, D.S., Breakspear, M. et al.
+       | Topographic organization of the human subcortex
+       | unveiled with functional connectivity gradients.
+       | Nature Neuroscience, Volume 23, Pages 1421–1432 (2020).
+       | https://doi.org/10.1038/s41593-020-00711-6
 
 
 Planned
