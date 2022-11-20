@@ -53,7 +53,15 @@ class Complexity(BaseMarker):
                     'm': 2,
                     'tol': 0.5
                     },
+                    '_range_entropy_auc': {
+                    'm': 2,
+                    'n_r': 100
+                    },
                 '_perm_entropy': {
+                    'm': 4,
+                    'tau': 1
+                    },
+                '_weighted_perm_entropy': {
                     'm': 4,
                     'tau': 1
                     }
