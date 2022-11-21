@@ -103,6 +103,8 @@ def run(
     # Get storage engine to use
     storage_params = storage.copy()
     storage_kind = storage_params.pop("kind")
+    if 'single_output' not in storage_params:
+        storage_params['single_output'] = False
     storage_object = build(
         step="storage",
         name=storage_kind,
@@ -137,6 +139,8 @@ def collect(storage: Dict) -> None:
     storage_kind = storage_params.pop("kind")
     logger.info(f"Collecting data using {storage_kind}")
     logger.debug(f"\tStorage params: {storage_params}")
+    if 'single_output' not in storage_params:
+        storage_params['single_output'] = False
     storage_object = build(
         step="storage",
         name=storage_kind,

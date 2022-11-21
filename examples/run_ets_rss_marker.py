@@ -52,8 +52,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # Define the storage interface
     storage = {
         "kind": "SQLiteFeatureStorage",
-        "uri": f"{tmpdir}/test.db",
-        "single_output": False,
+        "uri": f"{tmpdir}/test.db"
     }
     # Run the defined junifer feature extraction pipeline
     run(
@@ -66,10 +65,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # Collect extracted features data
     collect(storage=storage)
     # Create storage object to read in extracted features
-    db = SQLiteFeatureStorage(
-        uri=storage["uri"],
-        single_output=True,  # as we ran collect, we have single output now
-    )
+    db = SQLiteFeatureStorage(uri=storage["uri"])
     # Read extracted features
     df_vbm = db.read_df(feature_name="BOLD_Schaefer100x17_RSSETS")
 

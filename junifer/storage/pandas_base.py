@@ -24,7 +24,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     uri : str or pathlib.Path
         The path to the storage.
     single_output : bool, optional
-        Whether to have single output (default False).
+        Whether to have single output (default True).
     **kwargs
         Keyword arguments passed to superclass.
 
@@ -35,7 +35,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     """
 
     def __init__(
-        self, uri: Union[str, Path], single_output: bool = False, **kwargs
+        self, uri: Union[str, Path], single_output: bool = True, **kwargs
     ) -> None:
         super().__init__(uri=uri, single_output=single_output, **kwargs)
 

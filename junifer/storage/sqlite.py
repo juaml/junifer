@@ -37,7 +37,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         If True, will create only one file as specified in the `uri` and
         store all the elements in the same file. This behaviour is only
         suitable for non-parallel executions. SQLite does not support
-        concurrency (default False).
+        concurrency (default True).
     upsert : {"ignore", "update"}, optional
         Upsert mode. If "ignore" is used, the existing elements are ignored.
         If "update", the existing elements are updated (default "update").
@@ -53,7 +53,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     def __init__(
         self,
         uri: Union[str, Path],
-        single_output: bool = False,
+        single_output: bool = True,
         upsert: str = "update",
         **kwargs: str,
     ) -> None:
@@ -604,14 +604,12 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
         )
         # Create new instance
-        out_storage = SQLiteFeatureStorage(
-            uri=self.uri, single_output=True, upsert="ignore"
-        )
+        out_storage = SQLiteFeatureStorage(uri=self.uri, upsert="ignore")
         # Glob files
         files = self.uri.parent.glob(f"*{self.uri.name}")  # type: ignore
         for elem in tqdm(files, desc="file"):
             logger.debug(f"Reading from {str(elem.absolute())}")
-            in_storage = SQLiteFeatureStorage(uri=elem, single_output=True)
+            in_storage = SQLiteFeatureStorage(uri=elem)
             in_engine = in_storage.get_engine()
             # Open "meta" table
             t_meta_df = pd.read_sql(

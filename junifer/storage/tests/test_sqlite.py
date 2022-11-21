@@ -94,9 +94,7 @@ def test_get_engine_single_output(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_single_output.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     assert storage.single_output is True
     engine = storage.get_engine()
     assert engine.url.drivername == "sqlite"
@@ -133,7 +131,7 @@ def test_get_engine_single_output_creation(tmp_path: Path) -> None:
     # Path does not exist yet
     assert not tocreate.exists()
     uri = tocreate.absolute() / "test_single_output.db"
-    _ = SQLiteFeatureStorage(uri=uri, single_output=True, upsert="ignore")
+    _ = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Path exists now
     assert tocreate.exists()
 
@@ -149,9 +147,7 @@ def test_upsert_replace(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_upsert_replace.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
     # Save to database
@@ -185,9 +181,7 @@ def test_upsert_ignore(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_upsert_ignore.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
     # Save to database
@@ -224,7 +218,7 @@ def test_upsert_update(tmp_path: Path) -> None:
 
     """
     uri = tmp_path / "test_upsert_delete.db"
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
     # Save to database
@@ -258,7 +252,7 @@ def test_upsert_invalid_option(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_upsert_invalid.db"
     with pytest.raises(ValueError):
-        SQLiteFeatureStorage(uri=uri, single_output=True, upsert="wrong")
+        SQLiteFeatureStorage(uri=uri, upsert="wrong")
 
 
 # TODO: can the tests be separated?
@@ -272,9 +266,7 @@ def test_store_df_and_read_df(tmp_path: Path) -> None:
 
     """
     uri = tmp_path / "test_store_df_and_read_df.db"
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
     meta = {
         "element": "test",
@@ -336,9 +328,7 @@ def test_store_metadata(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_metadata_store.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
     # Store metadata
@@ -356,7 +346,7 @@ def test_store_table(tmp_path: Path) -> None:
 
     """
     uri = tmp_path / "test_store_table.db"
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
     # Data to store
@@ -415,7 +405,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     """
     uri = tmp_path / "test_store_table.db"
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
 
@@ -446,7 +436,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     assert list(read_df.columns) == stored_names
     # Store without row and column names
     uri = tmp_path / "test_store_table_nonames.db"
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(data=data, meta=meta)
     stored_names = [
         f"r{i}~c{j}"
@@ -478,7 +468,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     row_names = ["row1", "row2", "row3"]
     col_names = ["col1", "col2", "col3"]
     uri = tmp_path / "test_store_table_triu.db"
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(
         data=data,
         meta=meta,
@@ -507,7 +497,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     # Store upper triangular matrix without diagonal
     uri = tmp_path / "test_store_table_triu_nodiagonal.db"
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(
         data=data,
         meta=meta,
@@ -537,7 +527,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     row_names = ["row1", "row2", "row3"]
     col_names = ["col1", "col2", "col3"]
     uri = tmp_path / "test_store_table_tril.db"
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(
         data=data,
         meta=meta,
@@ -566,7 +556,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     # Store lower triangular matrix without diagonal
     uri = tmp_path / "test_store_table_tril_nodiagonal.db"
-    storage = SQLiteFeatureStorage(uri=uri, single_output=True)
+    storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(
         data,
         meta,
@@ -702,7 +692,7 @@ def test_collect(tmp_path: Path) -> None:
 
     """
     uri = tmp_path / "test_collect.db"
-    storage = SQLiteFeatureStorage(uri=uri)
+    storage = SQLiteFeatureStorage(uri=uri, single_output=False)
     # Metadata for storage
     meta1 = {
         "element": {"subject": "test-01", "session": "ses-01"},

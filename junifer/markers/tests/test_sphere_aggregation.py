@@ -118,9 +118,7 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     img = nib.load(vbm)
     uri = tmp_path / "test_sphere_storage_3D.db"
 
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {
         "element": "test",
         "version": "0.0.1",
