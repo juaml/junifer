@@ -101,3 +101,5 @@ Bugs
 
 API changes
 ~~~~~~~~~~~
+
+- Change the ``single_output`` default parameter in storage classes from ``False`` to ``True`` (:gh:`134` by `Fede Raimondo`_).
