@@ -83,7 +83,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # read in extracted features and add confounds and targets
     # for julearn run cross validation
     collect(storage)
-    db = SQLiteFeatureStorage(uri=storage["uri"], single_output=True)
+    db = SQLiteFeatureStorage(uri=storage["uri"])
 
     df_vbm = db.read_df(feature_name="VBM_GM_Schaefer200x17_Mean")
     oasis_subjects = [x[0] for x in df_vbm.index]

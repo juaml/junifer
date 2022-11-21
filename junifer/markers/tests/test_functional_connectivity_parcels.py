@@ -80,9 +80,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
 
     uri = tmp_path / "test_fc_parcellation.db"
     # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(
-        uri=uri, single_output=True, upsert="ignore"
-    )
+    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {
         "element": "test",
         "version": "0.0.1",

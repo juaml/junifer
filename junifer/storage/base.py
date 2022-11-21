@@ -27,7 +27,7 @@ class BaseFeatureStorage(ABC):
     storage_types : str or list of str
         The available storage types for the class.
     single_output : bool, optional
-        Whether to have single output (default False).
+        Whether to have single output (default True).
 
     """
 
@@ -35,7 +35,7 @@ class BaseFeatureStorage(ABC):
         self,
         uri: Union[str, Path],
         storage_types: Union[List[str], str],
-        single_output: bool = False,
+        single_output: bool = True,
     ) -> None:
         self.uri = uri
         if not isinstance(storage_types, list):
