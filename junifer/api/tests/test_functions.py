@@ -94,6 +94,7 @@ def test_run_multi_element(tmp_path: Path) -> None:
     # Create storage
     uri = outdir / "test.db"
     storage["uri"] = uri  # type: ignore
+    storage["single_output"] = False  # type: ignore
     # Run operations
     run(
         workdir=workdir,
@@ -105,6 +106,39 @@ def test_run_multi_element(tmp_path: Path) -> None:
     # Check files
     files = list(outdir.glob("*.db"))
     assert len(files) == 2
+
+
+def test_run_multi_element_single_output(tmp_path: Path) -> None:
+    """Test run function with multi element.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Create working directory
+    workdir = tmp_path / "workdir_multi"
+    workdir.mkdir()
+    # Create output directory
+    outdir = tmp_path / "out"
+    outdir.mkdir()
+    # Create storage
+    uri = outdir / "test.db"
+    storage["uri"] = uri  # type: ignore
+    storage["single_output"] = True  # type: ignore
+    # Run operations
+    run(
+        workdir=workdir,
+        datagrabber=datagrabber,
+        markers=markers,
+        storage=storage,
+        elements=["sub-01", "sub-03"],
+    )
+    # Check files
+    files = list(outdir.glob("*.db"))
+    assert len(files) == 1
+    assert files[0].name == "test.db"
 
 
 def test_run_and_collect(tmp_path: Path) -> None:
@@ -125,6 +159,7 @@ def test_run_and_collect(tmp_path: Path) -> None:
     # Create storage
     uri = outdir / "test.db"
     storage["uri"] = uri  # type: ignore
+    storage["single_output"] = False  # type: ignore
     # Run operations
     run(
         workdir=workdir,
