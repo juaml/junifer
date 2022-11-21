@@ -159,7 +159,7 @@ def queue(
     jobname: str = "junifer_job",
     overwrite: bool = False,
     elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
-    **kwargs: Union[str, int, bool],
+    **kwargs: Union[str, int, bool, Dict, Tuple, List],
 ) -> None:
     """Queue a job to be executed later.
 
