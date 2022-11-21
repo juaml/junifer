@@ -103,8 +103,8 @@ def run(
     # Get storage engine to use
     storage_params = storage.copy()
     storage_kind = storage_params.pop("kind")
-    if 'single_output' not in storage_params:
-        storage_params['single_output'] = False
+    if "single_output" not in storage_params:
+        storage_params["single_output"] = False
     storage_object = build(
         step="storage",
         name=storage_kind,
@@ -139,8 +139,8 @@ def collect(storage: Dict) -> None:
     storage_kind = storage_params.pop("kind")
     logger.info(f"Collecting data using {storage_kind}")
     logger.debug(f"\tStorage params: {storage_params}")
-    if 'single_output' not in storage_params:
-        storage_params['single_output'] = False
+    if "single_output" not in storage_params:
+        storage_params["single_output"] = False
     storage_object = build(
         step="storage",
         name=storage_kind,
@@ -433,7 +433,8 @@ def _queue_condor(
             dag_file.write(f"JOB run{i_job} {submit_run_fname}\n")
             dag_file.write(
                 f'VARS run{i_job} element="{str_elem} '
-                f'log_element="{log_elem}"\n\n')
+                f'log_element="{log_elem}"\n\n'
+            )
         if collect is True:
             dag_file.write(f"JOB collect {submit_collect_fname}\n")
             dag_file.write("PARENT ")
@@ -458,7 +459,7 @@ def _queue_slurm(
     jobdir: Path,
     yaml_config: Path,
     elements: List[Union[str, Tuple]],
-    config: Dict
+    config: Dict,
 ) -> None:
     """Submit job to SLURM.
 
