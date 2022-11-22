@@ -20,3 +20,9 @@ In the following example, we instruct junifer to first import ``my_module`` and 
       - my_module
       - my_file.py
 
+Thus, the code from ``my_file.py`` will be executed before running junifer. This is the ideal place to create junifer
+extensions.
+
+.. important:: Some junifer commands will not consider files imported from files included in the ``with`` statement.
+   That is, if ``my_file.py`` imports ``my_other_file.py``, some of the junifer commands will not consider
+   ``my_other_file.py``. Either place all the code in one file or add multiple files to the ``with`` statement.

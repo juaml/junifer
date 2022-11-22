@@ -178,7 +178,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">3. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">3.1. Code-less configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/running.html">3.2. Running jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">3.3. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">3.3. Collecting results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">3.4. Queueing jobs (HPC, HTC)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">4. Built-in Pipeline steps and data</a></li>
@@ -264,6 +265,14 @@ junifer.</p>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_module</span><span class="w"></span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_file.py</span><span class="w"></span>
 </pre></div>
+</div>
+<p>Thus, the code from <code class="docutils literal notranslate"><span class="pre">my_file.py</span></code> will be executed before running junifer. This is the ideal place to create junifer
+extensions.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Some junifer commands will not consider files imported from files included in the <code class="docutils literal notranslate"><span class="pre">with</span></code> statement.
+That is, if <code class="docutils literal notranslate"><span class="pre">my_file.py</span></code> imports <code class="docutils literal notranslate"><span class="pre">my_other_file.py</span></code>, some of the junifer commands will not consider
+<code class="docutils literal notranslate"><span class="pre">my_other_file.py</span></code>. Either place all the code in one file or add multiple files to the <code class="docutils literal notranslate"><span class="pre">with</span></code> statement.</p>
 </div>
 </section>
 

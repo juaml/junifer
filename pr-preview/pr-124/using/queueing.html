@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="4. Built-in Pipeline steps and data" href="../builtin.html" /><link rel="prev" title="3.2. Running jobs" href="running.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>3.3. Queueing jobs (HPC, HTC) - junifer documentation</title>
+        <title>3.4. Queueing jobs (HPC, HTC) - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
@@ -139,7 +139,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -178,7 +178,8 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">3. Using junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="codeless.html">3.1. Code-less configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running.html">3.2. Running jobs</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">3.3. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="running.html#collecting-results">3.3. Collecting results</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">3.4. Queueing jobs (HPC, HTC)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">4. Built-in Pipeline steps and data</a></li>
@@ -246,14 +247,81 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main">
           <section id="queueing-jobs-hpc-htc">
-<span id="queueing"></span><h1><span class="section-number">3.3. </span>Queueing jobs (HPC, HTC)<a class="headerlink" href="#queueing-jobs-hpc-htc" title="Permalink to this heading">#</a></h1>
+<span id="queueing"></span><h1><span class="section-number">3.4. </span>Queueing jobs (HPC, HTC)<a class="headerlink" href="#queueing-jobs-hpc-htc" title="Permalink to this heading">#</a></h1>
+<p>Yet another interesting feature of junifer is the ability to queue jobs on computational clusters. This is done by
+adding the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section in the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less configuration</span></a> file and executing the  <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">queue</span></code> command.</p>
+<p>While junifer is meant to support <a class="reference external" href="https://research.cs.wisc.edu/htcondor/">HTCondor</a>, <a class="reference external" href="https://slurm.schedmd.com">SLURM</a> and local queueing using <a class="reference external" href="https://www.gnu.org/software/parallel/">GNU Parallel</a>, only HTCondor is
+currently supported. This will be implemented in future relases of junifer. If you are in immediate need of any of this
+schedulers, please create an issue on the <a class="reference external" href="https://github.com/juaml/junifer">junifer github</a> repository.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> section of the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less configuration</span></a> must start by defining the following general parameters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">jobname</span></code>: name of the job to be queued. This will be used to name the folder where the job files will be created,
+as well as any relevant file. Depending on the schduler, it will also be listed in the queueing system with this
+name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: The kind of schduler to be used. Currently, only <code class="docutils literal notranslate"><span class="pre">htcondor</span></code> is supported.</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">jobname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TestHTCondorQueue</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTCondor</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The rest of the parameters depend on the scheduler you are using.</p>
+<section id="queueing-condor">
+<span id="id1"></span><h2><span class="section-number">3.4.1. </span>HTCondor<a class="headerlink" href="#queueing-condor" title="Permalink to this heading">#</a></h2>
+<p>When using HTCondor, junifer will use a DAG to queue one job per element (<code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">run</span></code>). As an option, the DAG can
+include a final job (<code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code>) to collect the results once all of the individual element jobs are finished.</p>
+<p>The following parameters are avilable for HTCondor:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">env</span></code>: Definition of the python enviroment. It must provide two variables: <code class="docutils literal notranslate"><span class="pre">kind</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code>. The <code class="docutils literal notranslate"><span class="pre">kind</span></code>
+corresponds to the kind of virtual environment to use: <code class="docutils literal notranslate"><span class="pre">conda</span></code>,  <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> (not yet supported) or
+<code class="docutils literal notranslate"><span class="pre">local</span></code> (no virtual enviroment). The <code class="docutils literal notranslate"><span class="pre">name</span></code> is the name of the enviroment to use in case a virtual environment
+is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mem</span></code>: Memory to be used by the job. It must be provided as a string with the units (e.g. <code class="docutils literal notranslate"><span class="pre">2GB</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cpus</span></code>: Number of CPUs to be used by the job. It must be provided as an int.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">disk</span></code>: Disk space to be used by the job. It must be provided as a string with the units (e.g. <code class="docutils literal notranslate"><span class="pre">2GB</span></code>). Keep in
+mind that junifer uses a local working directory for each job, and datalad datasets might be cloned in this temporary
+directory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extra_preamble</span></code>: Extra lines to be added to the HTCondor submit file. This can be used to add
+extra parameters to the job, such as <code class="docutils literal notranslate"><span class="pre">requirements</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collect</span></code>: If <code class="docutils literal notranslate"><span class="pre">True</span></code>, a final job will be added to the DAG to collect the results once all of the individual
+element jobs are finished. This is useful if you want to run a <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code> job only once all of the
+individual element jobs are finished. If not specified, it will default to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+<p>Example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">jobname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TestHTCondorQueue</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTCondor</span><span class="w"></span>
+<span class="w">  </span><span class="nt">env</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda</span><span class="w"></span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer</span><span class="w"></span>
+<span class="w">  </span><span class="nt">mem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8G</span><span class="w"></span>
+<span class="w">  </span><span class="nt">disk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2GB</span><span class="w"></span>
+<span class="w">  </span><span class="nt">collect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+</pre></div>
+</div>
+<p>Once the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less configuration</span></a> file is ready, including the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section, you can queue the jobs by executing
+the <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">queue</span></code> command.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> command will create a folder with the name of the job (<code class="docutils literal notranslate"><span class="pre">jobname</span></code>) under the <code class="docutils literal notranslate"><span class="pre">junifer_jobs</span></code> directory
+in the current working directory.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> command accepts the following arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show a help message.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> Set the verbosity level. Options are <code class="docutils literal notranslate"><span class="pre">warning</span></code>, <code class="docutils literal notranslate"><span class="pre">info</span></code>, <code class="docutils literal notranslate"><span class="pre">debug</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--submit</span></code>: Submit the jobs to the queueing system. If not specified, the job submit files will be created but not
+submitted.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--overwrite</span></code>: Overwrite the job folder if it already exists. If not specified, the command will fail if the job
+folder already exists.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--element</span></code>: Queue only the specified element(s). If not specified, all elements will be queued.</p></li>
+</ul>
+</section>
 </section>
 
         </article>
@@ -301,8 +369,27 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">3.4. Queueing jobs (HPC, HTC)</a><ul>
+<li><a class="reference internal" href="#queueing-condor">3.4.1. HTCondor</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

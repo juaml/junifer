@@ -114,6 +114,7 @@ Planned
      - ``junifer.configs.juseless``
      - :gh:`47`
 
+
 Markers
 -------
 
@@ -193,6 +194,7 @@ Planned
      - Calculate edge-centric functional connectivity
      - :gh:`64`
 
+
 Parcellations
 -------------
 
@@ -204,74 +206,111 @@ Parcellations
 Available
 ~~~~~~~~~
 
-========  =================  =================================================================================  =============  ====================================================
-Name      Options            Keys                                                                               Version added  Publication
-========  =================  =================================================================================  =============  ====================================================
-Schaefer  ``n_rois``,        | ``Schaefer900x7``, ``Schaefer1000x7``, ``Schaefer100x17``, ``Schaefer200x17``,   0.0.1          | Alexander Schaefer, Ru Kong, Evan M Gordon,
-          ``yeo_networks``   | ``Schaefer300x17``, ``Schaefer400x17``, ``Schaefer500x17``, ``Schaefer600x17``,                 | Timothy O Laumann, Xi-Nian Zuo, Avram J Holmes,
-                             | ``Schaefer700x17``, ``Schaefer800x17``, ``Schaefer900x17``, ``Schaefer1000x17``                 | Simon B Eickhoff, B T Thomas Yeo. Local-Global
-                                                                                                                               | Parcellation of the Human Cerebral Cortex from
-                                                                                                                               | Intrinsic Functional Connectivity MRI, Cerebral
-                                                                                                                               | Cortex, Volume 28, Issue 9, September 2018, Pages
-                                                                                                                               | 3095–3114.
-                                                                                                                               | https://doi.org/10.1093/cercor/bhx179
-SUIT      ``space``          | ``SUITxMNI``, ``SUITxSUIT``                                                      0.0.1          | Diedrichsen J. (2006). A spatially unbiased atlas
-                                                                                                                               | template of the human cerebellum. NeuroImage,
-                                                                                                                               | 33(1), 127–138.
-                                                                                                                               | https://doi.org/10.1016/j.neuroimage.2006.05.056
-TIAN      ``scale``,         | ``TianxS1x3TxMNI6thgeneration``, ``TianxS1x3TxMNInonlinear2009cAsym``,           0.0.1          | Tian, Y., Margulies, D.S., Breakspear, M. et al.
-          ``space``,         | ``TianxS1x7TxMNI6thgeneration``, ``TianxS2x3TxMNI6thgeneration``,                               | Topographic organization of the human subcortex
-          ``magneticfield``  | ``TianxS2x3TxMNInonlinear2009cAsym``, ``TianxS2x7TxMNI6thgeneration``,                          | unveiled with functional connectivity gradients.
-                             | ``TianxS3x3TxMNI6thgeneration``, ``TianxS3x3TxMNInonlinear2009cAsym``,                          | Nat Neurosci 23, 1421–1432 (2020).
-                             | ``TianxS3x7TxMNI6thgeneration``, ``TianxS4x3TxMNI6thgeneration``,                               | https://doi.org/10.1038/s41593-020-00711-6
-                             | ``TianxS4x3TxMNInonlinear2009cAsym``, ``TianxS4x7TxMNI6thgeneration``
-========  =================  =================================================================================  =============  ====================================================
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Name
+     - Options
+     - Keys
+     - Version added
+     - Publication
+   * - Schaefer
+     - ``n_rois``, ``yeo_networks``
+     - | ``Schaefer900x7``, ``Schaefer1000x7``, ``Schaefer100x17``,
+       | ``Schaefer200x17``, ``Schaefer300x17``, ``Schaefer400x17``,
+       | ``Schaefer500x17``, ``Schaefer600x17``, ``Schaefer700x17``,
+       | ``Schaefer800x17``, ``Schaefer900x17``, ``Schaefer1000x17``
+     - 0.0.1
+     - | Schaefer, A., Kong, R., Gordon, E.M. et al.
+       | Local-Global Parcellation of the Human Cerebral Cortex from
+       | Intrinsic Functional Connectivity MRI
+       | Cerebral Cortex, Volume 28(9), Pages 3095–3114 (2018).
+       | https://doi.org/10.1093/cercor/bhx179
+   * - SUIT
+     - ``space``
+     - ``SUITxMNI``, ``SUITxSUIT``
+     - 0.0.1
+     - | Diedrichsen, J.
+       | A spatially unbiased atlas template of the human cerebellum.
+       | NeuroImage, Volume 33(1), Pages 127–138 (2006).
+       | https://doi.org/10.1016/j.neuroimage.2006.05.056
+   * - TIAN
+     - ``scale``, ``space``, ``magneticfield``
+     - | ``TianxS1x3TxMNI6thgeneration``, ``TianxS1x7TxMNI6thgeneration``,
+       | ``TianxS2x3TxMNI6thgeneration``, ``TianxS2x7TxMNI6thgeneration``,
+       | ``TianxS3x3TxMNI6thgeneration``, ``TianxS3x7TxMNI6thgeneration``,
+       | ``TianxS4x3TxMNI6thgeneration``, ``TianxS4x7TxMNI6thgeneration``,
+       | ``TianxS1x3TxMNInonlinear2009cAsym``, ``TianxS2x3TxMNInonlinear2009cAsym``,
+       | ``TianxS3x3TxMNInonlinear2009cAsym``, ``TianxS4x3TxMNInonlinear2009cAsym``
+     - 0.0.1
+     - | Tian, Y., Margulies, D.S., Breakspear, M. et al.
+       | Topographic organization of the human subcortex
+       | unveiled with functional connectivity gradients.
+       | Nature Neuroscience, Volume 23, Pages 1421–1432 (2020).
+       | https://doi.org/10.1038/s41593-020-00711-6
 
 
 Planned
 ~~~~~~~
 
-=================  ==============================================================================
-Name               Publication
-=================  ==============================================================================
-Desikan-Killiany   | Desikan, R. S., Ségonne, F., Fischl, B., Quinn, B. T., Dickerson, B. C.,
-                   | Blacker, D., et al. (2006). An automated labeling system for
-                   | subdividing the human cerebral cortex on MRI scans into gyral based
-                   | regions of interest. NeuroImage, 31(3), 968-980.
-                   | http://doi.org/10.1016/j.neuroimage.2006.01.021
-Glasser            | Glasser, M. F., Coalson, T. S., Robinson, E. C., Hacker, C. D.,
-                   | Harwell, J., Yacoub, E., et al. (2016). A multi-modal  parcellation
-                   | of human cerebral cortex. Nature.
-                   | http://doi.org/10.1038/nature18933
-AAL                | Rolls, E. T., Huang, C. C., Lin, C. P., Feng, J., & Joliot, M. (2020).
-                   | Automated anatomical labelling atlas 3. Neuroimage, 206, 116189.
-                   | https://doi.org/10.1016/j.neuroimage.2019.116189
-Shen               | Shen X, Tokoglu F, Papademetris X, Constable RT. Groupwise whole-brain
-                   | parcellation from resting-state fMRI data for network node identification.
-                   | Neuroimage. 2013 Nov 15;82:403-15.
-                   | https://doi.org/10.1016/j.neuroimage.2013.05.081.
-Mindboggle 101     | Klein, A., & Tourville, J. (2012). 101 labeled brain images and a
-                   | consistent human cortical labeling protocol. Frontiers in Neuroscience.
-                   | http://doi.org/10.3389/fnins.2012.00171/abstract
-Destrieux          | Destrieux, C., Fischl, B., Dale, A., & Halgren, E. (2010). Automatic
-                   | parcellation of human cortical gyri and sulci using standard anatomical
-                   | nomenclature. NeuroImage, 53(1), 1–15.
-                   | http://doi.org/10.1016/j.neuroimage.2010.06.010.
-Fan                | Fan, L., Li, H., Zhuo, J., Zhang, Y., Wang, J., Chen, L., ...
-                   | & Jiang, T. (2016). The human brainnetome atlas: a new brain atlas based
-                   | on connectional architecture. Cerebral cortex, 26(8), 3508-3526.
-                   | https://doi.org/10.1093/cercor/bhw157
-Buckner            | Buckner, R. L., Krienen, F. M., Castellanos, A., Diaz, J. C.,
-                   | & Yeo, B. T. T. (2011). The organization of the human cerebellum
-                   | estimated by intrinsic functional connectivity. Journal of Neurophysiology,
-                   | 106(5), 2322–2345.
-                   | https://doi.org/10.1152/jn.00339.2011
-                   | Yeo, B. T. T., Krienen, F. M., Sepulcre, J., Sabuncu, M. R., Lashkari, D.,
-                   | Hollinshead, M., et al. (2011). The organization of the human cerebral
-                   | cortex estimated by intrinsic functional connectivity.
-                   | Journal of Neurophysiology, 106(3), 1125–1165.
-                   | https://doi.org/10.1152/jn.00338.2011
-=================  ==============================================================================
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Name
+     - Publication
+   * - Desikan-Killiany
+     - | Desikan, R.S., Ségonne, F., Fischl, B. et al.
+       | An automated labeling system for subdividing the human cerebral cortex
+       | on MRI scans into gyral based regions of interest.
+       | NeuroImage, Volume 31(3), Pages 968-980 (2006).
+       | http://doi.org/10.1016/j.neuroimage.2006.01.021
+   * - Glasser
+     - | Glasser, M.F., Coalson, T.S., Robinson, E.C. et al.
+       | A multi-modal parcellation of human cerebral cortex.
+       | Nature (2016).
+       | http://doi.org/10.1038/nature18933
+   * - AAL
+     - | Rolls, E.T., Huang, C.C., Lin, C.P., et al.
+       | Automated anatomical labelling atlas 3.
+       | Neuroimage, Volume 206 (2020).
+       | https://doi.org/10.1016/j.neuroimage.2019.116189
+   * - Shen
+     - | Shen, X., Tokoglu, F., Papademetris, X., Constable, R.T.
+       | Groupwise whole-brain parcellation from resting-state fMRI data
+       | for network node identification.
+       | Neuroimage, Volume 82 (2013).
+       | https://doi.org/10.1016/j.neuroimage.2013.05.081.
+   * - Mindboggle 101
+     - | Klein, A., & Tourville, J.
+       | 101 labeled brain images and a consistent human cortical labeling protocol.
+       | Frontiers in Neuroscience (2012).
+       | http://doi.org/10.3389/fnins.2012.00171/abstract
+   * - Destrieux
+     - | Destrieux, C., Fischl, B., Dale, A., & Halgren, E.
+       | Automatic parcellation of human cortical gyri and sulci using standard
+       | anatomical nomenclature.
+       | NeuroImage, Volume 53(1), Pages 1–15 (2010).
+       | http://doi.org/10.1016/j.neuroimage.2010.06.010.
+   * - Fan
+     - | Fan, L., Li, H., Zhuo, J. et al.
+       | The human brainnetome atlas: a new brain atlas based on connectional
+       | architecture.
+       | Cerebral cortex, Volume 26(8), Pages 3508-3526 (2016).
+       | https://doi.org/10.1093/cercor/bhw157
+   * - Buckner
+     - | Buckner, R.L., Krienen, F.M., Castellanos, A., Diaz, J.C., Yeo, B.T.T.
+       | The organization of the human cerebellum estimated by intrinsic functional
+       | connectivity.
+       | Journal of Neurophysiology, Volume 106(5), Pages 2322–2345 (2011).
+       | https://doi.org/10.1152/jn.00339.2011
+       | Yeo, B.T.T., Krienen, F.M., Sepulcre, J. et al.
+       | The organization of the human cerebral cortex estimated by intrinsic functional
+       | connectivity.
+       | Journal of Neurophysiology, Volume 106(3), Pages 1125–1165 (2011).
+       | https://doi.org/10.1152/jn.00338.2011
+
 
 Coordinates
 -----------

@@ -66,14 +66,14 @@ Set the logging level to info to see extra information:
 
  .. code-block:: none
 
-    2022-11-15 15:48:09,379 - JUNIFER - INFO - ===== Lib Versions =====
-    2022-11-15 15:48:09,379 - JUNIFER - INFO - numpy: 1.23.4
-    2022-11-15 15:48:09,379 - JUNIFER - INFO - scipy: 1.9.3
-    2022-11-15 15:48:09,379 - JUNIFER - INFO - pandas: 1.5.1
-    2022-11-15 15:48:09,379 - JUNIFER - INFO - nilearn: 0.9.2
-    2022-11-15 15:48:09,379 - JUNIFER - INFO - nibabel: 4.0.2
-    2022-11-15 15:48:09,379 - JUNIFER - INFO - junifer: 0.0.1.dev1
-    2022-11-15 15:48:09,379 - JUNIFER - INFO - ========================
+    2022-11-22 14:52:51,350 - JUNIFER - INFO - ===== Lib Versions =====
+    2022-11-22 14:52:51,350 - JUNIFER - INFO - numpy: 1.23.5
+    2022-11-22 14:52:51,350 - JUNIFER - INFO - scipy: 1.9.3
+    2022-11-22 14:52:51,350 - JUNIFER - INFO - pandas: 1.5.1
+    2022-11-22 14:52:51,350 - JUNIFER - INFO - nilearn: 0.9.2
+    2022-11-22 14:52:51,350 - JUNIFER - INFO - nibabel: 4.0.2
+    2022-11-22 14:52:51,350 - JUNIFER - INFO - junifer: 0.0.1.dev1
+    2022-11-22 14:52:51,351 - JUNIFER - INFO - ========================
 
 
 
@@ -130,7 +130,7 @@ Define the markers interface
 Create a temporary directory for junifer feature extraction:
 At the end you can read the extracted data into a ``pandas.DataFrame``.
 
-.. GENERATED FROM PYTHON SOURCE LINES 51-76
+.. GENERATED FROM PYTHON SOURCE LINES 51-72
 
 .. code-block:: default
 
@@ -139,7 +139,6 @@ At the end you can read the extracted data into a ``pandas.DataFrame``.
         storage = {
             "kind": "SQLiteFeatureStorage",
             "uri": f"{tmpdir}/test.db",
-            "single_output": False,
         }
         # Run the defined junifer feature extraction pipeline
         run(
@@ -152,10 +151,7 @@ At the end you can read the extracted data into a ``pandas.DataFrame``.
         # Collect extracted features data
         collect(storage=storage)
         # Create storage object to read in extracted features
-        db = SQLiteFeatureStorage(
-            uri=storage["uri"],
-            single_output=True,  # as we ran collect, we have single output now
-        )
+        db = SQLiteFeatureStorage(uri=storage["uri"])
         # Read extracted features
         df_vbm = db.read_df(feature_name="BOLD_Schaefer100x17_RSSETS")
 
@@ -167,56 +163,56 @@ At the end you can read the extracted data into a ``pandas.DataFrame``.
 
  .. code-block:: none
 
-    2022-11-15 15:48:09,381 - JUNIFER - INFO - Getting element sub001
-    2022-11-15 15:48:12,539 - JUNIFER - INFO - Fitting pipeline
-    2022-11-15 15:48:12,539 - JUNIFER - INFO - Reading BOLD from /tmp/tmp0jffcbr9/sub001_bold.nii.gz
-    2022-11-15 15:48:12,539 - JUNIFER - INFO - BOLD is type NIFTI
-    2022-11-15 15:48:12,541 - JUNIFER - INFO - Reading T1w from /tmp/tmp0jffcbr9/sub001_T1w.nii.gz
-    2022-11-15 15:48:12,541 - JUNIFER - INFO - T1w is type NIFTI
-    2022-11-15 15:48:12,542 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
-    2022-11-15 15:48:12,542 - JUNIFER - INFO - Computing BOLD
-    2022-11-15 15:48:12,543 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2022-11-15 15:48:12,543 - JUNIFER - INFO - Parcellatikon parameters:
-    2022-11-15 15:48:12,543 - JUNIFER - INFO -      n_rois: 100
-    2022-11-15 15:48:12,543 - JUNIFER - INFO -      yeo_networks: 17
-    2022-11-15 15:48:12,543 - JUNIFER - INFO -      resolution: 3.0
-    2022-11-15 15:48:12,543 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+    2022-11-22 14:52:51,352 - JUNIFER - INFO - Getting element sub001
+    2022-11-22 14:52:54,537 - JUNIFER - INFO - Fitting pipeline
+    2022-11-22 14:52:54,538 - JUNIFER - INFO - Reading BOLD from /tmp/tmp3i4jhd22/sub001_bold.nii.gz
+    2022-11-22 14:52:54,538 - JUNIFER - INFO - BOLD is type NIFTI
+    2022-11-22 14:52:54,539 - JUNIFER - INFO - Reading T1w from /tmp/tmp3i4jhd22/sub001_T1w.nii.gz
+    2022-11-22 14:52:54,539 - JUNIFER - INFO - T1w is type NIFTI
+    2022-11-22 14:52:54,539 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
+    2022-11-22 14:52:54,540 - JUNIFER - INFO - Computing BOLD
+    2022-11-22 14:52:54,540 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+    2022-11-22 14:52:54,540 - JUNIFER - INFO - Parcellatikon parameters:
+    2022-11-22 14:52:54,540 - JUNIFER - INFO -      n_rois: 100
+    2022-11-22 14:52:54,540 - JUNIFER - INFO -      yeo_networks: 17
+    2022-11-22 14:52:54,540 - JUNIFER - INFO -      resolution: 3.0
+    2022-11-22 14:52:54,540 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
     Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_17Networks_order.txt ...
      ...done. (0 seconds, 0 min)
     Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz ...
      ...done. (0 seconds, 0 min)
-    2022-11-15 15:48:12,610 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2022-11-15 15:48:15,916 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmp2k39pqan/test.db (multiple output)>
-    2022-11-15 15:48:15,955 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
-    2022-11-15 15:48:15,955 - JUNIFER - INFO - Computing BOLD
-    2022-11-15 15:48:15,955 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2022-11-15 15:48:15,956 - JUNIFER - INFO - Parcellatikon parameters:
-    2022-11-15 15:48:15,956 - JUNIFER - INFO -      n_rois: 200
-    2022-11-15 15:48:15,956 - JUNIFER - INFO -      yeo_networks: 17
-    2022-11-15 15:48:15,956 - JUNIFER - INFO -      resolution: 3.0
-    2022-11-15 15:48:15,956 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+    2022-11-22 14:52:54,790 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+    2022-11-22 14:52:57,681 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpowq0vcg5/test.db (multiple output)>
+    2022-11-22 14:52:57,707 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
+    2022-11-22 14:52:57,707 - JUNIFER - INFO - Computing BOLD
+    2022-11-22 14:52:57,707 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+    2022-11-22 14:52:57,707 - JUNIFER - INFO - Parcellatikon parameters:
+    2022-11-22 14:52:57,708 - JUNIFER - INFO -      n_rois: 200
+    2022-11-22 14:52:57,708 - JUNIFER - INFO -      yeo_networks: 17
+    2022-11-22 14:52:57,708 - JUNIFER - INFO -      resolution: 3.0
+    2022-11-22 14:52:57,708 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
     Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_200Parcels_17Networks_order.txt ...
      ...done. (0 seconds, 0 min)
     Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz ...
      ...done. (0 seconds, 0 min)
-    2022-11-15 15:48:16,022 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2022-11-15 15:48:18,181 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmp2k39pqan/test.db (multiple output)>
-    2022-11-15 15:48:18,223 - JUNIFER - INFO - Marker collection fitting done
-    2022-11-15 15:48:18,224 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
-    2022-11-15 15:48:18,225 - JUNIFER - INFO - Collecting data from /tmp/tmp2k39pqan/*test.db
+    2022-11-22 14:52:57,922 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+    2022-11-22 14:52:59,899 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpowq0vcg5/test.db (multiple output)>
+    2022-11-22 14:52:59,930 - JUNIFER - INFO - Marker collection fitting done
+    2022-11-22 14:52:59,931 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
+    2022-11-22 14:52:59,931 - JUNIFER - INFO - Collecting data from /tmp/tmpowq0vcg5/*test.db
     file: 0it [00:00, ?it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|##########| 2/2 [00:00<00:00, 33.71it/s]
-    file: 1it [00:00, 12.49it/s]
-    2022-11-15 15:48:18,306 - JUNIFER - INFO - Collect done
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|##########| 2/2 [00:00<00:00, 50.27it/s]
+    file: 1it [00:00, 17.73it/s]
+    2022-11-22 14:52:59,988 - JUNIFER - INFO - Collect done
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 77-78
+.. GENERATED FROM PYTHON SOURCE LINES 73-74
 
 Now we take a look at the dataframe
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-79
+.. GENERATED FROM PYTHON SOURCE LINES 74-75
 
 .. code-block:: default
 
@@ -288,7 +284,7 @@ Now we take a look at the dataframe
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  8.957 seconds)
+   **Total running time of the script:** ( 0 minutes  8.660 seconds)
 
 
 .. _sphx_glr_download_auto_examples_run_ets_rss_marker.py:

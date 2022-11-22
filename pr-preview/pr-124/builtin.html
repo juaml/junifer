@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="5. Extending junifer" href="extending/index.html" /><link rel="prev" title="3.3. Queueing jobs (HPC, HTC)" href="using/queueing.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="5. Extending junifer" href="extending/index.html" /><link rel="prev" title="3.4. Queueing jobs (HPC, HTC)" href="using/queueing.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>4. Built-in Pipeline steps and data - junifer documentation</title>
@@ -178,7 +178,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="using/index.html">3. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="using/codeless.html">3.1. Code-less configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="using/running.html">3.2. Running jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="using/queueing.html">3.3. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/running.html#collecting-results">3.3. Collecting results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/queueing.html">3.4. Queueing jobs (HPC, HTC)</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">4. Built-in Pipeline steps and data</a></li>
@@ -449,7 +450,7 @@
 <h2><span class="section-number">4.3. </span>Parcellations<a class="headerlink" href="#parcellations" title="Permalink to this heading">#</a></h2>
 <section id="id3">
 <h3><span class="section-number">4.3.1. </span>Available<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
-<div class="table-wrapper docutils container">
+<div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -461,53 +462,45 @@
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Schaefer</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">n_rois</span></code>,
-<code class="docutils literal notranslate"><span class="pre">yeo_networks</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">n_rois</span></code>, <code class="docutils literal notranslate"><span class="pre">yeo_networks</span></code></p></td>
 <td><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Schaefer900x7</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer1000x7</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer100x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer200x17</span></code>,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Schaefer300x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer400x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer500x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer600x17</span></code>,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">Schaefer700x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer800x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer900x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer1000x17</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Schaefer900x7</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer1000x7</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer100x17</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Schaefer200x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer300x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer400x17</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Schaefer500x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer600x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer700x17</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Schaefer800x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer900x17</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer1000x17</span></code></div>
 </div>
 </td>
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
-<div class="line">Alexander Schaefer, Ru Kong, Evan M Gordon,</div>
-<div class="line">Timothy O Laumann, Xi-Nian Zuo, Avram J Holmes,</div>
-<div class="line">Simon B Eickhoff, B T Thomas Yeo. Local-Global</div>
-<div class="line">Parcellation of the Human Cerebral Cortex from</div>
-<div class="line">Intrinsic Functional Connectivity MRI, Cerebral</div>
-<div class="line">Cortex, Volume 28, Issue 9, September 2018, Pages</div>
-<div class="line">3095–3114.</div>
+<div class="line">Schaefer, A., Kong, R., Gordon, E.M. et al.</div>
+<div class="line">Local-Global Parcellation of the Human Cerebral Cortex from</div>
+<div class="line">Intrinsic Functional Connectivity MRI</div>
+<div class="line">Cerebral Cortex, Volume 28(9), Pages 3095–3114 (2018).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1093/cercor/bhx179">https://doi.org/10.1093/cercor/bhx179</a></div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><p>SUIT</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">space</span></code></p></td>
-<td><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">SUITxMNI</span></code>, <code class="docutils literal notranslate"><span class="pre">SUITxSUIT</span></code></div>
-</div>
-</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SUITxMNI</span></code>, <code class="docutils literal notranslate"><span class="pre">SUITxSUIT</span></code></p></td>
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
-<div class="line">Diedrichsen J. (2006). A spatially unbiased atlas</div>
-<div class="line">template of the human cerebellum. NeuroImage,</div>
-<div class="line">33(1), 127–138.</div>
+<div class="line">Diedrichsen, J.</div>
+<div class="line">A spatially unbiased atlas template of the human cerebellum.</div>
+<div class="line">NeuroImage, Volume 33(1), Pages 127–138 (2006).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2006.05.056">https://doi.org/10.1016/j.neuroimage.2006.05.056</a></div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><p>TIAN</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">scale</span></code>,
-<code class="docutils literal notranslate"><span class="pre">space</span></code>,
-<code class="docutils literal notranslate"><span class="pre">magneticfield</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">scale</span></code>, <code class="docutils literal notranslate"><span class="pre">space</span></code>, <code class="docutils literal notranslate"><span class="pre">magneticfield</span></code></p></td>
 <td><div class="line-block">
-<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS1x3TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS1x3TxMNInonlinear2009cAsym</span></code>,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS1x7TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS2x3TxMNI6thgeneration</span></code>,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS2x3TxMNInonlinear2009cAsym</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS2x7TxMNI6thgeneration</span></code>,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS3x3TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS3x3TxMNInonlinear2009cAsym</span></code>,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS3x7TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS4x3TxMNI6thgeneration</span></code>,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS4x3TxMNInonlinear2009cAsym</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS4x7TxMNI6thgeneration</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS1x3TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS1x7TxMNI6thgeneration</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS2x3TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS2x7TxMNI6thgeneration</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS3x3TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS3x7TxMNI6thgeneration</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS4x3TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS4x7TxMNI6thgeneration</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS1x3TxMNInonlinear2009cAsym</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS2x3TxMNInonlinear2009cAsym</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS3x3TxMNInonlinear2009cAsym</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS4x3TxMNInonlinear2009cAsym</span></code></div>
 </div>
 </td>
 <td><p>0.0.1</p></td>
@@ -515,7 +508,7 @@
 <div class="line">Tian, Y., Margulies, D.S., Breakspear, M. et al.</div>
 <div class="line">Topographic organization of the human subcortex</div>
 <div class="line">unveiled with functional connectivity gradients.</div>
-<div class="line">Nat Neurosci 23, 1421–1432 (2020).</div>
+<div class="line">Nature Neuroscience, Volume 23, Pages 1421–1432 (2020).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1038/s41593-020-00711-6">https://doi.org/10.1038/s41593-020-00711-6</a></div>
 </div>
 </td>
@@ -526,7 +519,7 @@
 </section>
 <section id="id4">
 <h3><span class="section-number">4.3.2. </span>Planned<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
-<div class="table-wrapper docutils container">
+<div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
@@ -536,77 +529,82 @@
 <tbody>
 <tr class="row-even"><td><p>Desikan-Killiany</p></td>
 <td><div class="line-block">
-<div class="line">Desikan, R. S., Ségonne, F., Fischl, B., Quinn, B. T., Dickerson, B. C.,</div>
-<div class="line">Blacker, D., et al. (2006). An automated labeling system for</div>
-<div class="line">subdividing the human cerebral cortex on MRI scans into gyral based</div>
-<div class="line">regions of interest. NeuroImage, 31(3), 968-980.</div>
+<div class="line">Desikan, R.S., Ségonne, F., Fischl, B. et al.</div>
+<div class="line">An automated labeling system for subdividing the human cerebral cortex</div>
+<div class="line">on MRI scans into gyral based regions of interest.</div>
+<div class="line">NeuroImage, Volume 31(3), Pages 968-980 (2006).</div>
 <div class="line"><a class="reference external" href="http://doi.org/10.1016/j.neuroimage.2006.01.021">http://doi.org/10.1016/j.neuroimage.2006.01.021</a></div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><p>Glasser</p></td>
 <td><div class="line-block">
-<div class="line">Glasser, M. F., Coalson, T. S., Robinson, E. C., Hacker, C. D.,</div>
-<div class="line">Harwell, J., Yacoub, E., et al. (2016). A multi-modal  parcellation</div>
-<div class="line">of human cerebral cortex. Nature.</div>
+<div class="line">Glasser, M.F., Coalson, T.S., Robinson, E.C. et al.</div>
+<div class="line">A multi-modal parcellation of human cerebral cortex.</div>
+<div class="line">Nature (2016).</div>
 <div class="line"><a class="reference external" href="http://doi.org/10.1038/nature18933">http://doi.org/10.1038/nature18933</a></div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><p>AAL</p></td>
 <td><div class="line-block">
-<div class="line">Rolls, E. T., Huang, C. C., Lin, C. P., Feng, J., &amp; Joliot, M. (2020).</div>
-<div class="line">Automated anatomical labelling atlas 3. Neuroimage, 206, 116189.</div>
+<div class="line">Rolls, E.T., Huang, C.C., Lin, C.P., et al.</div>
+<div class="line">Automated anatomical labelling atlas 3.</div>
+<div class="line">Neuroimage, Volume 206 (2020).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2019.116189">https://doi.org/10.1016/j.neuroimage.2019.116189</a></div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><p>Shen</p></td>
 <td><div class="line-block">
-<div class="line">Shen X, Tokoglu F, Papademetris X, Constable RT. Groupwise whole-brain</div>
-<div class="line">parcellation from resting-state fMRI data for network node identification.</div>
-<div class="line">Neuroimage. 2013 Nov 15;82:403-15.</div>
+<div class="line">Shen, X., Tokoglu, F., Papademetris, X., Constable, R.T.</div>
+<div class="line">Groupwise whole-brain parcellation from resting-state fMRI data</div>
+<div class="line">for network node identification.</div>
+<div class="line">Neuroimage, Volume 82 (2013).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2013.05.081">https://doi.org/10.1016/j.neuroimage.2013.05.081</a>.</div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><p>Mindboggle 101</p></td>
 <td><div class="line-block">
-<div class="line">Klein, A., &amp; Tourville, J. (2012). 101 labeled brain images and a</div>
-<div class="line">consistent human cortical labeling protocol. Frontiers in Neuroscience.</div>
+<div class="line">Klein, A., &amp; Tourville, J.</div>
+<div class="line">101 labeled brain images and a consistent human cortical labeling protocol.</div>
+<div class="line">Frontiers in Neuroscience (2012).</div>
 <div class="line"><a class="reference external" href="http://doi.org/10.3389/fnins.2012.00171/abstract">http://doi.org/10.3389/fnins.2012.00171/abstract</a></div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><p>Destrieux</p></td>
 <td><div class="line-block">
-<div class="line">Destrieux, C., Fischl, B., Dale, A., &amp; Halgren, E. (2010). Automatic</div>
-<div class="line">parcellation of human cortical gyri and sulci using standard anatomical</div>
-<div class="line">nomenclature. NeuroImage, 53(1), 1–15.</div>
+<div class="line">Destrieux, C., Fischl, B., Dale, A., &amp; Halgren, E.</div>
+<div class="line">Automatic parcellation of human cortical gyri and sulci using standard</div>
+<div class="line">anatomical nomenclature.</div>
+<div class="line">NeuroImage, Volume 53(1), Pages 1–15 (2010).</div>
 <div class="line"><a class="reference external" href="http://doi.org/10.1016/j.neuroimage.2010.06.010">http://doi.org/10.1016/j.neuroimage.2010.06.010</a>.</div>
 </div>
 </td>
 </tr>
 <tr class="row-even"><td><p>Fan</p></td>
 <td><div class="line-block">
-<div class="line">Fan, L., Li, H., Zhuo, J., Zhang, Y., Wang, J., Chen, L., …</div>
-<div class="line">&amp; Jiang, T. (2016). The human brainnetome atlas: a new brain atlas based</div>
-<div class="line">on connectional architecture. Cerebral cortex, 26(8), 3508-3526.</div>
+<div class="line">Fan, L., Li, H., Zhuo, J. et al.</div>
+<div class="line">The human brainnetome atlas: a new brain atlas based on connectional</div>
+<div class="line">architecture.</div>
+<div class="line">Cerebral cortex, Volume 26(8), Pages 3508-3526 (2016).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1093/cercor/bhw157">https://doi.org/10.1093/cercor/bhw157</a></div>
 </div>
 </td>
 </tr>
 <tr class="row-odd"><td><p>Buckner</p></td>
 <td><div class="line-block">
-<div class="line">Buckner, R. L., Krienen, F. M., Castellanos, A., Diaz, J. C.,</div>
-<div class="line">&amp; Yeo, B. T. T. (2011). The organization of the human cerebellum</div>
-<div class="line">estimated by intrinsic functional connectivity. Journal of Neurophysiology,</div>
-<div class="line">106(5), 2322–2345.</div>
+<div class="line">Buckner, R.L., Krienen, F.M., Castellanos, A., Diaz, J.C., Yeo, B.T.T.</div>
+<div class="line">The organization of the human cerebellum estimated by intrinsic functional</div>
+<div class="line">connectivity.</div>
+<div class="line">Journal of Neurophysiology, Volume 106(5), Pages 2322–2345 (2011).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1152/jn.00339.2011">https://doi.org/10.1152/jn.00339.2011</a></div>
-<div class="line">Yeo, B. T. T., Krienen, F. M., Sepulcre, J., Sabuncu, M. R., Lashkari, D.,</div>
-<div class="line">Hollinshead, M., et al. (2011). The organization of the human cerebral</div>
-<div class="line">cortex estimated by intrinsic functional connectivity.</div>
-<div class="line">Journal of Neurophysiology, 106(3), 1125–1165.</div>
+<div class="line">Yeo, B.T.T., Krienen, F.M., Sepulcre, J. et al.</div>
+<div class="line">The organization of the human cerebral cortex estimated by intrinsic functional</div>
+<div class="line">connectivity.</div>
+<div class="line">Journal of Neurophysiology, Volume 106(3), Pages 1125–1165 (2011).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1152/jn.00338.2011">https://doi.org/10.1152/jn.00338.2011</a></div>
 </div>
 </td>
@@ -648,7 +646,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">3.3. </span>Queueing jobs (HPC, HTC)</div>
+                <div class="title"><span class="section-number">3.4. </span>Queueing jobs (HPC, HTC)</div>
                 
               </div>
             </a>
