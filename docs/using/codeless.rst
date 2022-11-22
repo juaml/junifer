@@ -34,8 +34,8 @@ Since the example uses a specific datagrabber for testing, we need to add ``juni
 
 .. code-block:: yaml
 
-    with: junifer.testing.registry
-    workdir: /tmp
+  with: junifer.testing.registry
+  workdir: /tmp
 
 Step-by-step configuration
 --------------------------
@@ -63,24 +63,24 @@ specify its name as the ``kind`` key.
 
 .. code-block:: yaml
 
-    datagrabber:
-      kind: DataladAOMICPIOP1
+  datagrabber:
+    kind: DataladAOMICPIOP1
 
 However, it is also possible to pass parameters to the datagrabber. In this case, we can restrict the datagrabber to
 fetch only the  ``restingstate`` task.
 
 .. code-block:: yaml
 
-    datagrabber:
-      kind: DataladAOMICPIOP1
-      tasks: restingstate
+  datagrabber:
+    kind: DataladAOMICPIOP1
+    tasks: restingstate
 
 In the *Oasis VBM Testing dataset* example, the section will look like this:
 
 .. code-block:: yaml
 
-    datagrabber:
-      kind: OasisVBMTesting
+  datagrabber:
+    kind: OasisVBMTesting
 
 
 Data Reader
@@ -113,15 +113,15 @@ name as the ``kind`` key, as well as its parameters.
 
 .. code-block:: yaml
 
-    preproces:
-      kind: fMRIPrepConfoundRemover
-      strategy:
-        motion: full
-        wm_csf: full
-        global_signal: basic
-      spike: 0.2
-      detrend: False
-      standardize: True
+  preproces:
+    kind: fMRIPrepConfoundRemover
+    strategy:
+      motion: full
+      wm_csf: full
+      global_signal: basic
+    spike: 0.2
+    detrend: False
+    standardize: True
 
 
 For the *Oasis VBM Testing dataset* example, we will not specify a preprocessing step.
@@ -139,20 +139,20 @@ network, using 5mm spheres. Thus, we will configure the ``markers`` section as f
 
 .. code-block:: yaml
 
-    markers:
-      - name: Schaefer100x7_mean
-        kind: ParcelAggregation
-        parcellation: Schaefer100x7
-        method: mean
-      - name: Schaefer200x7_mean
-        kind: ParcelAggregation
-        parcellation: Schaefer200x7
-        method: mean
-      - name: DMNBuckner_5mm_mean
-        kind: SphereAggregation
-        coords: DMNBuckner
-        radius: 5
-        method: mean
+  markers:
+    - name: Schaefer100x7_mean
+      kind: ParcelAggregation
+      parcellation: Schaefer100x7
+      method: mean
+    - name: Schaefer200x7_mean
+      kind: ParcelAggregation
+      parcellation: Schaefer200x7
+      method: mean
+    - name: DMNBuckner_5mm_mean
+      kind: SphereAggregation
+      coords: DMNBuckner
+      radius: 5
+      method: mean
 
 
 Storage
@@ -178,27 +178,27 @@ This is how the full *Oasis VBM Testing dataset* example configuration file look
 
 .. code-block:: yaml
 
-    with: junifer.testing.registry
-    workdir: /tmp
+  with: junifer.testing.registry
+  workdir: /tmp
 
-    datagrabber:
-      kind: OasisVBMTesting
+  datagrabber:
+    kind: OasisVBMTesting
 
-    markers:
-      - name: Schaefer100x7_mean
-        kind: ParcelAggregation
-        parcellation: Schaefer100x7
-        method: mean
-      - name: Schaefer200x7_mean
-        kind: ParcelAggregation
-        parcellation: Schaefer200x7
-        method: mean
-      - name: DMNBuckner_5mm_mean
-        kind: SphereAggregation
-        coords: DMNBuckner
-        radius: 5
-        method: mean
+  markers:
+    - name: Schaefer100x7_mean
+      kind: ParcelAggregation
+      parcellation: Schaefer100x7
+      method: mean
+    - name: Schaefer200x7_mean
+      kind: ParcelAggregation
+      parcellation: Schaefer200x7
+      method: mean
+    - name: DMNBuckner_5mm_mean
+      kind: SphereAggregation
+      coords: DMNBuckner
+      radius: 5
+      method: mean
 
-    storage: 
-      kind: SQLiteFeatureStorage
-      uri: /data/junifer/example/oasis_vbm_testing.sqlite
+  storage: 
+    kind: SQLiteFeatureStorage
+    uri: /data/junifer/example/oasis_vbm_testing.sqlite

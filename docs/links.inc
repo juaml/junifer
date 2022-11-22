@@ -37,3 +37,7 @@
 
 .. _`sphinx gallery`: https://sphinx-gallery.github.io/stable/index.html
 .. _`sphinx reST reference`: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#inline-markup
+
+.. _`HTCondor`: https://research.cs.wisc.edu/htcondor/
+.. _`SLURM`: https://slurm.schedmd.com
+.. _`GNU Parallel`: https://www.gnu.org/software/parallel/

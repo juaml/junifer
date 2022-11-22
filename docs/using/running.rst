@@ -18,8 +18,6 @@ Assuming that we have a configuration file named ``config.yaml``, the following 
 
     junifer run config.yaml
 
-Additional arguments
-
 The ``run`` command accepts the following additional arguments:
 
 * ``--help``: Show a help message.
@@ -45,3 +43,18 @@ Example on elements with multiple parameters and verbose output:
 
 Collecting results
 ==================
+
+Once the ``run`` command has been executed, the results are stored in the output directory. However, depending on the
+storage interface, this may create one file per subject. The ``collect`` command is then used to collect all of the
+individual results into a single file.
+
+Assuming that we have a configuration file named ``config.yaml``, the following commands will collect the results:
+
+.. code-block:: bash
+
+    junifer collect config.yaml
+
+The ``collect`` command accepts the following additional arguments:
+
+* ``--help``: Show a help message.
+* ``--verbose`` Set the verbosity level. Options are ``warning``, ``info``, ``debug``.
