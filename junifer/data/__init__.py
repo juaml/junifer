@@ -14,3 +14,6 @@ from .parcellations import (
     load_parcellation,
     register_parcellation,
 )
+
+
+from . import utils
