@@ -6,10 +6,9 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import List
 
 import pytest
-from numpy.testing import assert_array_almost_equal, assert_array_equal
+from numpy.testing import assert_array_almost_equal
 
 from junifer.data.masks import load_mask, register_mask, list_masks
 
@@ -124,7 +123,6 @@ def test_load_mask_incorrect() -> None:
     """Test loading of invalid masks."""
     with pytest.raises(ValueError, match=r"not found"):
         load_mask("wrongmask")
-
 
 
 def test_vickery_patil() -> None:
