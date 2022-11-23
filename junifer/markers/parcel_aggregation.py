@@ -7,7 +7,7 @@
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import numpy as np
-from nilearn.image import math_img, resample_to_img
+from nilearn.image import math_img, resample_to_img, new_img_like
 from nilearn.maskers import NiftiMasker
 
 from ..api.decorators import register_marker
@@ -50,13 +50,15 @@ class ParcelAggregation(BaseMarker):
 
     def __init__(
         self,
-        parcellation: str,
+        parcellation: Union[str, List[str]],
         method: str,
         method_params: Optional[Dict[str, Any]] = None,
         mask: Optional[str] = None,
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
+        if not isinstance(parcellation, list):
+            parcellation = [parcellation]
         self.parcellation = parcellation
         self.method = method
         self.method_params = method_params or {}
@@ -160,17 +162,50 @@ class ParcelAggregation(BaseMarker):
         )
         # Get the min of the voxels sizes and use it as the resolution
         resolution = np.min(t_input.header.get_zooms()[:3])
-        t_parcellation, t_labels, _ = load_parcellation(
-            name=self.parcellation,
-            resolution=resolution,
-        )
 
-        parcellation_img_res = resample_to_img(
-            t_parcellation,
-            t_input,
-            interpolation="nearest",
-            copy=True,
-        )
+        # Load the parcellations
+        all_parcelations = []
+        all_labels = []
+        for t_parc_name in self.parcellation:
+            t_parcellation, t_labels, _ = load_parcellation(
+                name=t_parc_name,
+                resolution=resolution,
+            )
+            # Resample all of them to the image
+            t_parcellation_img_res = resample_to_img(
+                t_parcellation,
+                t_input,
+                interpolation="nearest",
+                copy=True,
+            )
+            all_parcelations.append(t_parcellation_img_res)
+            all_labels.append(t_labels)
+
+        # Avoid merging if there is only one parcellation
+        if len(all_parcelations) == 1:
+            parcellation_img_res = all_parcelations[0]
+            labels = all_labels[0]
+        else:
+            # Merge the parcellations
+            parc_data = all_parcelations[0].get_fdata()
+            labels = all_labels[0]
+            for t_parc, t_labels in zip(all_parcelations[1:], all_labels[1:]):
+                # Get the data from this parcellation
+                t_parc_data = t_parc.get_fdata()
+                # Increase the values of each ROI to match the labels
+                t_parc_data[t_parc_data != 0] += len(labels)
+
+                # Only set new values for the voxels that are 0
+                # This makes sure that the voxels that are in multiple
+                # parcellations are assigned to the parcellation that was
+                # first in the list.
+                parc_data[parc_data == 0] += t_parc_data[parc_data == 0]
+                labels.extend(t_labels)
+
+            parcellation_img_res = new_img_like(
+                all_parcelations[0],
+                parc_data,
+            )
 
         parcellation_bin = math_img(
             "img != 0",
@@ -213,7 +248,7 @@ class ParcelAggregation(BaseMarker):
             out_values.append(t_values)
             # Update the labels just in case a parcel has no voxels
             # in it
-            out_labels.append(t_labels[t_v - 1])
+            out_labels.append(labels[t_v - 1])
 
         out_values = np.array(out_values).T
         out = {"data": out_values, "columns": out_labels}

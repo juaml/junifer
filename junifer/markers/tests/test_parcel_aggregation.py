@@ -86,7 +86,7 @@ def test_ParcelAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
@@ -111,7 +111,7 @@ def test_ParcelAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "std"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
@@ -144,7 +144,7 @@ def test_ParcelAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "trim_mean"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
@@ -178,7 +178,7 @@ def test_ParcelAggregation_4D():
 
     meta = marker.get_meta("BOLD")["marker"]
     assert meta["method"] == "mean"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] is None
     assert meta["name"] == "BOLD_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
@@ -223,9 +223,55 @@ def test_ParcelAggregation_3D_mask() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] == "GM_prob0.2"
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
     assert meta["method_params"] == {}
+
+
+def test_ParcelAggregation_3D_multiple() -> None:
+    """Test ParcelAggregation object on 3D images, multiple parcellations."""
+
+    # Get the testing parcellation (for nilearn)
+    parcellation = datasets.fetch_atlas_schaefer_2018(n_rois=100)
+
+    # Get the oasis VBM data
+    oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
+    vbm = oasis_dataset.gray_matter_maps[0]
+    img = nib.load(vbm)
+
+    # Create NiftiLabelsMasker for schaefer 100
+    nifti_masker = NiftiLabelsMasker(labels_img=parcellation.maps)
+    auto_schaefer = nifti_masker.fit_transform(img)
+
+    # Create NiftiLabelsMasker for Tian 2012
+    nifti_masker = NiftiLabelsMasker(labels_img=parcellation.maps)
+    auto_schaefer = nifti_masker.fit_transform(img)
+
+
+    # Use the ParcelAggregation object
+    marker = ParcelAggregation(
+        parcellation=["Schaefer100x7", "SUITxMNI"],
+        method="mean",
+        mask="GM_prob0.2",
+        name="gmd_schaefer100x7_mean",
+        on="VBM_GM",
+    )  # Test passing "on" as a keyword argument
+    input = dict(VBM_GM=dict(data=img))
+    jun_values3d_mean = marker.fit_transform(input)["VBM_GM"]["data"]
+
+    assert jun_values3d_mean.ndim == 2
+    assert jun_values3d_mean.shape[0] == 1
+    # assert_array_almost_equal(auto, jun_values3d_mean)
+
+    meta = marker.get_meta("VBM_GM")["marker"]
+    assert meta["method"] == "mean"
+    assert meta["parcellation"] == ["Schaefer100x7", "SUITxMNI"]
+    assert meta["mask"] == "GM_prob0.2"
+    assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
+    assert meta["class"] == "ParcelAggregation"
+    assert meta["kind"] == "VBM_GM"
+    assert meta["method_params"] == {}
+

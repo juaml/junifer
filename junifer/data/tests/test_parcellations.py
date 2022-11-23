@@ -72,6 +72,9 @@ def test_register_parcellation_already_registered() -> None:
     )
 
 
+# TODO: Add tests to verify wrong number of labels and wrong values
+
+
 @pytest.mark.parametrize(
     "name, parcellation_path, parcels_labels, overwrite",
     [
