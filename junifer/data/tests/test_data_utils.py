@@ -32,7 +32,7 @@ def test_closest_resolution(
     ----------
     resolution: float
         The resolution to test.
-    valid_resolutions: List[float]
+    valid_resolutions: list of float
         The valid resolutions.
     expected: float
         The expected result.
