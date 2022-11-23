@@ -14,3 +14,11 @@ from .parcellations import (
     load_parcellation,
     register_parcellation,
 )
+
+from .masks import (
+    list_masks,
+    load_mask,
+    register_mask,
+)
+
+from . import utils

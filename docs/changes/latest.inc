@@ -87,6 +87,8 @@ Enhancements
 
 - Allow custom aggregation method for :class:`junifer.markers.SphereAggregation` (:gh:`102` by `Synchon Mandal`_).
 
+- Add support for "masks" (:gh:`79` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 

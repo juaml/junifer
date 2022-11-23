@@ -40,6 +40,10 @@ class FunctionalConnectivityParcels(BaseMarker):
     cor_method_params : dict, optional
         Parameters to pass to the correlation function. Check valid options in
         :class:`nilearn.connectome.ConnectivityMeasure` (default None).
+    mask : str, optional
+        The name of the mask to apply to regions before extracting signals.
+        Check valid options by calling :func:`junifer.data.masks.list_masks`
+        (default None).
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
@@ -52,21 +56,20 @@ class FunctionalConnectivityParcels(BaseMarker):
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
         cor_method_params: Optional[Dict] = None,
+        mask: Optional[str] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
         self.agg_method = agg_method
-        self.agg_method_params = (
-            {} if agg_method_params is None else agg_method_params
-        )
+        self.agg_method_params = agg_method_params
         self.cor_method = cor_method
-        self.cor_method_params = (
-            {} if cor_method_params is None else cor_method_params
-        )
+        self.cor_method_params = cor_method_params or {}
+
         # default to nilearn behavior
         self.cor_method_params["empirical"] = self.cor_method_params.get(
             "empirical", False
         )
+        self.mask = mask
 
         super().__init__(name=name)
 
@@ -131,6 +134,7 @@ class FunctionalConnectivityParcels(BaseMarker):
             parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
+            mask=self.mask,
             on="BOLD",
         )
         # get the 2D timeseries after parcel aggregation

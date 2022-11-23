@@ -7,7 +7,7 @@
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from ..api.decorators import register_marker
-from ..data import load_coordinates
+from ..data import load_coordinates, load_mask
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
 from ..utils import logger
@@ -37,6 +37,10 @@ class SphereAggregation(BaseMarker):
         (default "mean").
     method_params : dict, optional
         The parameters to pass to the aggregation method (default None).
+    mask : str, optional
+        The name of the mask to apply to regions before extracting signals.
+        Check valid options by calling :func:`junifer.data.masks.list_masks`
+        (default None).
     on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or \
          list of the options, optional
         The data types to apply the marker to. If None, will work on all
@@ -53,13 +57,15 @@ class SphereAggregation(BaseMarker):
         radius: Optional[float] = None,
         method: str = "mean",
         method_params: Optional[Dict[str, Any]] = None,
+        mask: Optional[str] = None,
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.coords = coords
         self.radius = radius
         self.method = method
-        self.method_params = {} if method_params is None else method_params
+        self.method_params = method_params or {}
+        self.mask = mask
         super().__init__(on=on, name=name)
 
     def get_valid_inputs(self) -> List[str]:
@@ -157,12 +163,17 @@ class SphereAggregation(BaseMarker):
         agg_func = get_aggfunc_by_name(
             self.method, func_params=self.method_params
         )
+        # Load mask
+        mask_img = None
+        if self.mask is not None:
+            logger.debug(f"Masking with {self.mask}")
+            mask_img, _ = load_mask(self.mask)
         # Get seeds and labels
         coords, out_labels = load_coordinates(name=self.coords)
         masker = JuniferNiftiSpheresMasker(
             seeds=coords,
             radius=self.radius,
-            mask_img=None,  # TODO: support this (needs #79)
+            mask_img=mask_img,
             agg_func=agg_func,
         )
         # Fit and transform the marker on the data

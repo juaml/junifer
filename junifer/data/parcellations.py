@@ -18,6 +18,7 @@ import pandas as pd
 import requests
 from nilearn import datasets
 
+from .utils import closest_resolution
 from ..utils.logging import logger, raise_error
 
 if TYPE_CHECKING:
@@ -315,41 +316,6 @@ def _retrieve_parcellation(
     return parcellation_fname, parcellation_labesl
 
 
-def _closest_resolution(
-    resolution: Optional[float],
-    valid_resolution: Union[List[float], List[int], np.ndarray],
-) -> Union[float, int]:
-    """Find the closest resolution.
-
-    Parameters
-    ----------
-    resolution : float
-        The given resolution.
-    valid_resolution : list of float or np.ndarray
-        The array of valid resolutions.
-
-    Returns
-    -------
-    float
-        The closest valid resolution.
-    """
-    # Convert list of int to numpy.ndarray
-    if not isinstance(valid_resolution, np.ndarray):
-        valid_resolution = np.array(valid_resolution)
-
-    if resolution is None:
-        logger.info("Resolution set to None, using highest resolution.")
-        closest = np.min(valid_resolution)
-    elif any(x <= resolution for x in valid_resolution):
-        # Case 1: get the highest closest resolution
-        closest = np.max(valid_resolution[valid_resolution <= resolution])
-    else:
-        # Case 2: get the lower closest resolution
-        closest = np.min(valid_resolution)
-
-    return closest
-
-
 def _retrieve_schaefer(
     parcellations_dir: Path,
     resolution: Optional[float] = None,
@@ -406,7 +372,7 @@ def _retrieve_schaefer(
             f"of the following: {_valid_networks}"
         )
 
-    resolution = _closest_resolution(resolution, _valid_resolutions)
+    resolution = closest_resolution(resolution, _valid_resolutions)
 
     # define file names
     parcellation_fname = (
@@ -532,7 +498,7 @@ def _retrieve_tian(
             f"one of the following: 3T or 7T"
         )
 
-    resolution = _closest_resolution(resolution, _valid_resolutions)
+    resolution = closest_resolution(resolution, _valid_resolutions)
 
     # define file names
     if magneticfield == "3T":
@@ -667,7 +633,7 @@ def _retrieve_suit(
     # TODO: Validate this with Vera
     _valid_resolutions = [1]
 
-    resolution = _closest_resolution(resolution, _valid_resolutions)
+    resolution = closest_resolution(resolution, _valid_resolutions)
 
     # define file names
     parcellation_fname = (

@@ -29,9 +29,16 @@ class RSSETSMarker(BaseMarker):
     parcellation : str
         The name of the parcellation. Check valid options by calling
         :func:`junifer.data.parcellations.list_parcellations`.
-    aggregation_method : str, optional
+    agg_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
+    agg_method_params : dict, optional
+        Parameters to pass to the aggregation function. Check valid options in
+        :func:`junifer.stats.get_aggfunc_by_name` (default None).
+    mask : str, optional
+        The name of the mask to apply to regions before extracting signals.
+        Check valid options by calling :func:`junifer.data.masks.list_masks`
+        (default None).
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
@@ -41,11 +48,15 @@ class RSSETSMarker(BaseMarker):
     def __init__(
         self,
         parcellation: str,
-        aggregation_method: str = "mean",
+        agg_method: str = "mean",
+        agg_method_params: Optional[Dict] = None,
+        mask: Optional[str] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
-        self.aggregation_method = aggregation_method
+        self.agg_method = agg_method
+        self.agg_method_params = agg_method_params
+        self.mask = mask
         super().__init__(name=name)
 
     def get_valid_inputs(self) -> List[str]:
@@ -136,7 +147,9 @@ class RSSETSMarker(BaseMarker):
         # Initialize a ParcelAggregation
         parcel_aggregation = ParcelAggregation(
             parcellation=self.parcellation,
-            method=self.aggregation_method,
+            method=self.agg_method,
+            method_params=self.agg_method_params,
+            mask=self.mask
         )
         # Compute the parcel aggregation
         out = parcel_aggregation.compute(input=input, extra_input=extra_input)

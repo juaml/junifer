@@ -12,6 +12,7 @@ from nilearn.maskers import NiftiLabelsMasker, NiftiMasker
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 from scipy.stats import trim_mean
 
+from junifer.data import load_mask
 from junifer.markers.parcel_aggregation import ParcelAggregation
 
 
@@ -86,6 +87,7 @@ def test_ParcelAggregation_3D() -> None:
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
     assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
@@ -110,6 +112,7 @@ def test_ParcelAggregation_3D() -> None:
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "std"
     assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
@@ -142,6 +145,7 @@ def test_ParcelAggregation_3D() -> None:
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "trim_mean"
     assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
@@ -175,7 +179,53 @@ def test_ParcelAggregation_4D():
     meta = marker.get_meta("BOLD")["marker"]
     assert meta["method"] == "mean"
     assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["mask"] is None
     assert meta["name"] == "BOLD_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "BOLD"
+    assert meta["method_params"] == {}
+
+
+def test_ParcelAggregation_3D_mask() -> None:
+    """Test ParcelAggregation object on 3D images with mask."""
+
+    # Get the testing parcellation (for nilearn)
+    parcellation = datasets.fetch_atlas_schaefer_2018(n_rois=100)
+
+    # Get one mask
+    mask_img, _ = load_mask("GM_prob0.2")
+
+    # Get the oasis VBM data
+    oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
+    vbm = oasis_dataset.gray_matter_maps[0]
+    img = nib.load(vbm)
+
+    # Create NiftiLabelsMasker
+    nifti_masker = NiftiLabelsMasker(
+        labels_img=parcellation.maps,
+        mask_img=mask_img)
+    auto = nifti_masker.fit_transform(img)
+
+    # Use the ParcelAggregation object
+    marker = ParcelAggregation(
+        parcellation="Schaefer100x7",
+        method="mean",
+        mask="GM_prob0.2",
+        name="gmd_schaefer100x7_mean",
+        on="VBM_GM",
+    )  # Test passing "on" as a keyword argument
+    input = dict(VBM_GM=dict(data=img))
+    jun_values3d_mean = marker.fit_transform(input)["VBM_GM"]["data"]
+
+    assert jun_values3d_mean.ndim == 2
+    assert jun_values3d_mean.shape[0] == 1
+    assert_array_almost_equal(auto, jun_values3d_mean)
+
+    meta = marker.get_meta("VBM_GM")["marker"]
+    assert meta["method"] == "mean"
+    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["mask"] == "GM_prob0.2"
+    assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
+    assert meta["class"] == "ParcelAggregation"
+    assert meta["kind"] == "VBM_GM"
     assert meta["method_params"] == {}
