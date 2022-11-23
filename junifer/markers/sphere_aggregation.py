@@ -39,7 +39,8 @@ class SphereAggregation(BaseMarker):
         The parameters to pass to the aggregation method (default None).
     mask : str, optional
         The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`.
+        Check valid options by calling :func:`junifer.data.masks.list_masks`
+        (default None).
     on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or \
          list of the options, optional
         The data types to apply the marker to. If None, will work on all

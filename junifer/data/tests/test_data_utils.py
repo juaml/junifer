@@ -26,7 +26,18 @@ from junifer.data.utils import closest_resolution
 def test_closest_resolution(
     resolution: float, valid_resolutions: List[float], expected: float
 ):
-    """Test closest_resolution."""
+    """Test closest_resolution.
+
+    Parameters
+    ----------
+
+    resolution: float
+        The resolution to test.
+    valid_resolutions: List[float]
+        The valid resolutions.
+    expected: float
+        The expected result.
+    """
     assert closest_resolution(resolution, valid_resolutions) == expected
     assert (
         closest_resolution(resolution, np.array(valid_resolutions)) == expected

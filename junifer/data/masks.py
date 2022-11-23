@@ -25,7 +25,7 @@ data.
 The built-in masks are files that are shipped with the package in the
 data/masks directory. The user can also register their own masks.
 """
-_available_masks: Dict[str, Dict[Any, Any]] = {
+_available_masks: Dict[str, Dict[str, Any]] = {
     "GM_prob0.2": {"family": "Vickery-Patil"},
     "GM_prob0.2_cortex": {"family": "Vickery-Patil"},
 }

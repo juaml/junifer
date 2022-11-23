@@ -34,7 +34,8 @@ class CrossParcellationFC(BaseMarker):
         :any:`pandas.DataFrame.corr` (default "pearson").
     mask : str, optional
         The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`.
+        Check valid options by calling :func:`junifer.data.masks.list_masks`
+        (default None).
     name : str, optional
         The name of the marker. If None, will use the class name
         (default None).
