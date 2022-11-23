@@ -9,3 +9,10 @@ Coordinates
 
 .. automodule:: junifer.data.coordinates
    :members:
+
+
+Masks
+=====
+
+.. automodule:: junifer.data.masks
+   :members:

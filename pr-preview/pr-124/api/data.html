@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="7.2.3. Stats" href="stats.html" /><link rel="prev" title="7.1.5. Storage" href="storage.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="7.2.4. Stats" href="stats.html" /><link rel="prev" title="7.1.5. Storage" href="storage.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>7.2.1. Parcellations - junifer documentation</title>
@@ -207,12 +207,13 @@
 <li class="toctree-l2"><a class="reference internal" href="storage.html">7.1.5. Storage</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">7.2.1. Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-junifer.data.coordinates">7.2.2. Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stats.html">7.2.3. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline.html">7.2.4. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline.html#module-junifer.pipeline.registry">7.2.5. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">7.2.6. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">7.2.7. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html">7.2.8. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-junifer.data.masks">7.2.3. Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html">7.2.4. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline.html">7.2.5. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline.html#module-junifer.pipeline.registry">7.2.6. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">7.2.7. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">7.2.8. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">7.2.9. Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configs.html">7.3.1. Configs</a></li>
 </ul>
 </li>
@@ -397,6 +398,79 @@ Does not apply to built-in coordinates (default False).</p>
 </dd></dl>
 
 </section>
+<section id="module-junifer.data.masks">
+<span id="masks"></span><h1><span class="section-number">7.2.3. </span>Masks<a class="headerlink" href="#module-junifer.data.masks" title="Permalink to this heading">#</a></h1>
+<p>Provide functions for masks.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.masks.list_masks">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">list_masks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.list_masks" title="Permalink to this definition">#</a></dt>
+<dd><p>List all the available masks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>A list with all available masks names.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.masks.load_mask">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">load_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.load_mask" title="Permalink to this definition">#</a></dt>
+<dd><p>Load mask.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the mask.</p>
+</dd>
+<dt><strong>resolution</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The desired resolution of the mask to load. If it is not
+available, the closest resolution will be loaded. Preferably, use a
+resolution higher than the desired one. By default, will load the
+highest one (default None).</p>
+</dd>
+<dt><strong>path_only</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, the mask image will not be loaded (default False).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v4.0.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Loaded mask image.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></dt><dd><p>File path to the mask image.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.masks.register_mask">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">register_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.register_mask" title="Permalink to this definition">#</a></dt>
+<dd><p>Register a custom user mask.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the mask.</p>
+</dd>
+<dt><strong>mask_path</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The path to the mask file.</p>
+</dd>
+<dt><strong>overwrite</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, overwrite an existing mask with the same name.
+Does not apply to built-in mask (default False).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the mask name is already registered and overwrite is set to
+False or if the mask name is a built-in mask.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 
         </article>
       </div>
@@ -408,7 +482,7 @@ Does not apply to built-in coordinates (default False).</p>
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">7.2.3. </span>Stats</div>
+                <div class="title"><span class="section-number">7.2.4. </span>Stats</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -465,6 +539,12 @@ Does not apply to built-in coordinates (default False).</p>
 <li><a class="reference internal" href="#junifer.data.coordinates.list_coordinates"><code class="docutils literal notranslate"><span class="pre">list_coordinates()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.coordinates.load_coordinates"><code class="docutils literal notranslate"><span class="pre">load_coordinates()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.coordinates.register_coordinates"><code class="docutils literal notranslate"><span class="pre">register_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-junifer.data.masks">7.2.3. Masks</a><ul>
+<li><a class="reference internal" href="#junifer.data.masks.list_masks"><code class="docutils literal notranslate"><span class="pre">list_masks()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.data.masks.load_mask"><code class="docutils literal notranslate"><span class="pre">load_mask()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.data.masks.register_mask"><code class="docutils literal notranslate"><span class="pre">register_mask()</span></code></a></li>
 </ul>
 </li>
 </ul>

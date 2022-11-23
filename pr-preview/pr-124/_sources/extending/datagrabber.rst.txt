@@ -198,7 +198,7 @@ Optional: Using datalad
 If you are using `datalad`_, you can use the 
 :py:class:`~junifer.datagrabber.PatternDataladDataGrabber` instead of the 
 :py:class:`~junifer.datagrabber.PatternDataGrabber`. This class will not only
-interpret patterns, but will also use datalad to `clone` and `get` the data.
+interpret patterns, but also use `datalad`_ to `clone` and `get` the data.
 
 The main difference between the two is that the ``datadir`` is not the actual
 location of the dataset, but the location where the dataset will be cloned. It 
