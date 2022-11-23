@@ -8,7 +8,7 @@ from typing import Dict, Optional
 import numpy as np
 import pytest
 
-from junifer.stats import get_aggfunc_by_name, winsorized_mean
+from junifer.stats import get_aggfunc_by_name, kendall_w, winsorized_mean
 
 
 @pytest.mark.parametrize(
@@ -74,3 +74,41 @@ def test_winsorized_mean() -> None:
     input = np.array([22, 4, 9, 8, 5, 3, 7, 2, 1, 6])
     output = winsorized_mean(input, limits=[0.1, 0.1])
     assert output == 5.5
+
+
+@pytest.mark.parametrize(
+    "data, axis, expected_value",
+    [
+        [np.array([[1, 2, 3], [1, 2, 3], [1, 2, 3], [2, 3, 1]]), 0, 0.4375],
+        [np.array([[1, 1, 1, 2], [2, 2, 2, 3], [3, 3, 3, 1]]), 1, 0.4375],
+    ],
+)
+def test_kendwall_w(
+    data: np.ndarray, axis: int, expected_value: float
+) -> None:
+    """Test kendall_w function.
+
+    Parameters
+    ----------
+    data : 2D np.ndarray
+        The parametrized 2D data array.
+    axis : int
+        The parametrized axis.
+    expected_value : float
+        The parametrized expected value.
+
+    """
+    value = kendall_w(data, axis=axis)
+    assert value == pytest.approx(expected_value)
+
+
+def test_kendall_w_invalid_dimension() -> None:
+    """Test kendall_w invalid dimension."""
+    with pytest.raises(ValueError, match="no meaning"):
+        kendall_w(np.array([1, 2]), axis=0)
+
+
+def test_kendall_w_invalid_axis() -> None:
+    """Test kendall_w invalid axis."""
+    with pytest.raises(ValueError, match="Unknown axis"):
+        kendall_w(np.array([[1, 2], [3, 4]]), axis=2)
