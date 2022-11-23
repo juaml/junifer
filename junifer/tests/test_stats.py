@@ -79,6 +79,7 @@ def test_winsorized_mean() -> None:
 @pytest.mark.parametrize(
     "data, axis, expected_value",
     [
+        [np.array([[1, 1, 1, 2], [2, 2, 2, 3], [3, 3, 3, 1]]), -1, 0.4375],
         [np.array([[1, 2, 3], [1, 2, 3], [1, 2, 3], [2, 3, 1]]), 0, 0.4375],
         [np.array([[1, 1, 1, 2], [2, 2, 2, 3], [3, 3, 3, 1]]), 1, 0.4375],
     ],
