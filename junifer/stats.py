@@ -124,9 +124,9 @@ def kendall_w(data: np.ndarray, axis=0) -> float:
     ----------
     data : 2D numpy.ndarray
         Data to calculate Kendall's coefficient of concordance (Kendall's W).
-    axis : {0, 1}, optional
+    axis : {-1, 0, 1}, optional
         The axis decides the dimensions to consider annotators and items.
-        0 means data has shape (annotators, items) and 1 means data has
+        0 means data has shape (annotators, items) and -1 and 1 mean data has
         shape (items, annotators).
 
     Returns
@@ -165,7 +165,7 @@ def kendall_w(data: np.ndarray, axis=0) -> float:
     # Axis validation
     if axis == 0:
         m, n = data.shape  # annotators X items
-    elif axis == 1:
+    elif axis in (-1, 1):
         n, m = data.shape  # items X annotators
     else:
         raise_error(f"Unknown axis value {axis} for Kendall's W.")
