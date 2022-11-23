@@ -28,6 +28,7 @@ def get_aggfunc_by_name(
         * ``mean`` -> :func:`numpy.mean`
         * ``std`` -> :func:`numpy.std`
         * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
+        * ``kendall_w`` -> :func:`junifer.stats.kendall_w`
 
     func_params : dict, optional
         Parameters to pass to the function.
@@ -74,6 +75,8 @@ def get_aggfunc_by_name(
         func = np.std
     elif name == "trim_mean":
         func = partial(trim_mean, **func_params)
+    elif name == "kendall_w":
+        func = kendall_w
     else:
         raise_error(
             f"Function {name} unknown. Please provide any of "
