@@ -3,7 +3,7 @@
 .. _datagrabber:
 
 Data Grabber
-===========
+============
 
 Description
 -----------
