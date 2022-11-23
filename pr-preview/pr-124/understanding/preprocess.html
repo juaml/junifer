@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.6. Marker" href="marker.html" /><link rel="prev" title="2.4. DataReader" href="datareader.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.6. Marker" href="marker.html" /><link rel="prev" title="2.4. Data Reader" href="datareader.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
         <title>2.5. Preprocess - junifer documentation</title>
@@ -168,8 +168,8 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">2. Understanding junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pipeline.html">2.1. The Junifer Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html">2.2. The Data Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datagrabber.html">2.3. DataGrabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datareader.html">2.4. DataReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagrabber.html">2.3. Data Grabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datareader.html">2.4. Data Reader</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.5. Preprocess</a></li>
 <li class="toctree-l2"><a class="reference internal" href="marker.html">2.6. Marker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.html">2.7. Storage</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">4. Built-in Pipeline steps and data</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">5. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">5.1. Creating a Junifer extension</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">5.2. Creating DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">5.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">5.3. Creating Markers</a></li>
 </ul>
 </li>
@@ -200,7 +200,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">7. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">7.1.2. DataReaders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">7.1.3. Pre-processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/markers.html">7.1.4. Markers</a></li>
@@ -265,7 +265,7 @@ feature extraction.</p>
 <section id="confound-removal">
 <span id="preprocess-confounds"></span><h2><span class="section-number">2.5.2. </span>Confound Removal<a class="headerlink" href="#confound-removal" title="Permalink to this heading">#</a></h2>
 <p>The <em>Confound Removal</em> step is meant to remove <em>confounds</em> from the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data. The confounds are
-extracted from the <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> data (must be provided by the <a class="reference internal" href="datagrabber.html#datagrabber"><span class="std std-ref">DataGrabber</span></a>).
+extracted from the <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> data (must be provided by the <a class="reference internal" href="datagrabber.html#datagrabber"><span class="std std-ref">Data Grabber</span></a>).
 The confounds are then regressed out from the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data using <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.image.clean_img.html#nilearn.image.clean_img" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.image.clean_img()</span></code></a>.</p>
 <p>Currently, junifer supports only one confound removal class:
 <a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.preprocess.fMRIPrepConfoundRemover</span></code></a>. This class is meant to remove confounds as described
@@ -390,7 +390,7 @@ square of each derivative of each basic confound.</p></li>
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">2.4. </span>DataReader</div>
+                <div class="title"><span class="section-number">2.4. </span>Data Reader</div>
                 
               </div>
             </a>

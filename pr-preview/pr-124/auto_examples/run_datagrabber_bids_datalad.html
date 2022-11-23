@@ -168,8 +168,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">2.1. The Junifer Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">2.2. The Data Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.3. DataGrabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.4. DataReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.3. Data Grabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.4. Data Reader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">2.5. Preprocess</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">2.6. Marker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.7. Storage</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">4. Built-in Pipeline steps and data</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">5. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">5.1. Creating a Junifer extension</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">5.2. Creating DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">5.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">5.3. Creating Markers</a></li>
 </ul>
 </li>
@@ -200,7 +200,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">7. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">7.1.2. DataReaders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">7.1.3. Pre-processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/markers.html">7.1.4. Markers</a></li>
@@ -272,14 +272,14 @@ store in a datalad remote sibling.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-23 14:36:47,967 - JUNIFER - INFO - ===== Lib Versions =====
-2022-11-23 14:36:47,967 - JUNIFER - INFO - numpy: 1.23.5
-2022-11-23 14:36:47,967 - JUNIFER - INFO - scipy: 1.9.3
-2022-11-23 14:36:47,967 - JUNIFER - INFO - pandas: 1.5.2
-2022-11-23 14:36:47,967 - JUNIFER - INFO - nilearn: 0.9.2
-2022-11-23 14:36:47,967 - JUNIFER - INFO - nibabel: 4.0.2
-2022-11-23 14:36:47,967 - JUNIFER - INFO - junifer: 0.0.1.dev1
-2022-11-23 14:36:47,967 - JUNIFER - INFO - ========================
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-23 15:39:14,370 - JUNIFER - INFO - ===== Lib Versions =====
+2022-11-23 15:39:14,371 - JUNIFER - INFO - numpy: 1.23.5
+2022-11-23 15:39:14,371 - JUNIFER - INFO - scipy: 1.9.3
+2022-11-23 15:39:14,371 - JUNIFER - INFO - pandas: 1.5.2
+2022-11-23 15:39:14,371 - JUNIFER - INFO - nilearn: 0.9.2
+2022-11-23 15:39:14,371 - JUNIFER - INFO - nibabel: 4.0.2
+2022-11-23 15:39:14,371 - JUNIFER - INFO - junifer: 0.0.1.dev1
+2022-11-23 15:39:14,371 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>The BIDS datagrabber requires three parameters: the types of data we want,
@@ -313,17 +313,17 @@ In this case, each element of the datagrabber is one session.</p>
         <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">elem</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-23 14:36:47,968 - JUNIFER - WARNING - `datadir` is None, creating a temporary directory
-2022-11-23 14:36:47,968 - JUNIFER - INFO - `datadir` set to /tmp/tmprbyjbjbd
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-23 15:39:14,372 - JUNIFER - WARNING - `datadir` is None, creating a temporary directory
+2022-11-23 15:39:14,372 - JUNIFER - INFO - `datadir` set to /tmp/tmp3o696gqz
+sub-05
 sub-01
-sub-07
 sub-06
 sub-04
+sub-07
+sub-02
 sub-09
 sub-03
 sub-08
-sub-05
-sub-02
 </pre></div>
 </div>
 <p>Another feature of the datagrabber is the ability to get a specific
@@ -340,13 +340,13 @@ paths for the two types of data we want (T1w and bold).</p>
     <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sub01</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-23 14:36:51,229 - JUNIFER - WARNING - `datadir` is None, creating a temporary directory
-2022-11-23 14:36:51,229 - JUNIFER - INFO - `datadir` set to /tmp/tmpspiu751k
-2022-11-23 14:36:53,484 - JUNIFER - INFO - Getting element sub-01
-{&#39;T1w&#39;: {&#39;path&#39;: PosixPath(&#39;/tmp/tmpspiu751k/example_bids/sub-01/anat/sub-01_T1w.nii.gz&#39;)}, &#39;BOLD&#39;: {&#39;path&#39;: PosixPath(&#39;/tmp/tmpspiu751k/example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz&#39;)}, &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;BOLD&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;}, &#39;replacements&#39;: [&#39;subject&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_commit_id&#39;: &#39;522dfb203afcd2cd55799bf347f9b211919a7338&#39;, &#39;datalad_id&#39;: &#39;fec92475-d9c0-4409-92ba-f041b6a12c40&#39;, &#39;datalad_dirty&#39;: False}, &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2022-11-23 15:39:17,625 - JUNIFER - WARNING - `datadir` is None, creating a temporary directory
+2022-11-23 15:39:17,625 - JUNIFER - INFO - `datadir` set to /tmp/tmp8w8h4xuu
+2022-11-23 15:39:20,096 - JUNIFER - INFO - Getting element sub-01
+{&#39;T1w&#39;: {&#39;path&#39;: PosixPath(&#39;/tmp/tmp8w8h4xuu/example_bids/sub-01/anat/sub-01_T1w.nii.gz&#39;)}, &#39;BOLD&#39;: {&#39;path&#39;: PosixPath(&#39;/tmp/tmp8w8h4xuu/example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz&#39;)}, &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;BOLD&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;}, &#39;replacements&#39;: [&#39;subject&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_commit_id&#39;: &#39;522dfb203afcd2cd55799bf347f9b211919a7338&#39;, &#39;datalad_id&#39;: &#39;fec92475-d9c0-4409-92ba-f041b6a12c40&#39;, &#39;datalad_dirty&#39;: False}, &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  6.581 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  7.295 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-datagrabber-bids-datalad-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/7bdf714a1446ae07ef3fa9d23e9b27c3/run_datagrabber_bids_datalad.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_datagrabber_bids_datalad.py</span></code></a></p>

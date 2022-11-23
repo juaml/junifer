@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5.3. Creating Markers" href="marker.html" /><link rel="prev" title="5.1. Creating a Junifer extension" href="extension.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>5.2. Creating DataGrabbers - junifer documentation</title>
+        <title>5.2. Creating Data Grabbers - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
@@ -168,8 +168,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">2.1. The Junifer Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">2.2. The Data Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.3. DataGrabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.4. DataReader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.3. Data Grabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.4. Data Reader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">2.5. Preprocess</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">2.6. Marker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.7. Storage</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">4. Built-in Pipeline steps and data</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">5. Extending junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="extension.html">5.1. Creating a Junifer extension</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.2. Creating DataGrabbers</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="marker.html">5.3. Creating Markers</a></li>
 </ul>
 </li>
@@ -200,7 +200,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">7. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">7.1.2. DataReaders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">7.1.3. Pre-processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/markers.html">7.1.4. Markers</a></li>
@@ -253,9 +253,9 @@
           </label>
         </div>
         <article role="main">
-          <section id="creating-datagrabbers">
-<span id="extending-datagrabbers"></span><h1><span class="section-number">5.2. </span>Creating DataGrabbers<a class="headerlink" href="#creating-datagrabbers" title="Permalink to this heading">#</a></h1>
-<p>DataGrabbers are the first step of the pipeline. Its purpose is to interpret
+          <section id="creating-data-grabbers">
+<span id="extending-datagrabbers"></span><h1><span class="section-number">5.2. </span>Creating Data Grabbers<a class="headerlink" href="#creating-data-grabbers" title="Permalink to this heading">#</a></h1>
+<p>Data Grabbers are the first step of the pipeline. Its purpose is to interpret
 the structure of a dataset and provide two specific functionalities:</p>
 <ol class="arabic simple">
 <li><p>Given an <em>element</em>, provide the path to each kind of data available for this
@@ -264,11 +264,11 @@ element (e.g. the path to the T1 image, the path to the T2 image, etc.)</p></li>
 </ol>
 <p>In this section, we will see how to create a datagrabber for a dataset. Basic
 aspects of datagrabbers are covered in the
-<a class="reference internal" href="../understanding/datagrabber.html#datagrabber"><span class="std std-ref">Understanding DataGrabbers</span></a> section.</p>
+<a class="reference internal" href="../understanding/datagrabber.html#datagrabber"><span class="std std-ref">Understanding Data Grabbers</span></a> section.</p>
 <section id="step-1-think-about-the-element">
 <span id="extending-datagrabbers-think"></span><h2><span class="section-number">5.2.1. </span>Step 1: Think about the element<a class="headerlink" href="#step-1-think-about-the-element" title="Permalink to this heading">#</a></h2>
 <p>Like with any programming-related task, the first step is to think. When
-creating a DataGrabber, we need to first define what an <em>element</em> is.
+creating a Data Grabber, we need to first define what an <em>element</em> is.
 The <em>element</em> should be the smallest unit of data that can be processed. That
 is, for each element, there should be a set of data that can be processed, but
 only one of each <em>data type</em> (see <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">Data types</span></a>).</p>
@@ -300,7 +300,7 @@ a <cite>BOLD</cite> image (resting-state), except for <cite>ses-03</cite> which 
 <h2><span class="section-number">5.2.2. </span>Step 2: Think about the dataset’s structure<a class="headerlink" href="#step-2-think-about-the-dataset-s-structure" title="Permalink to this heading">#</a></h2>
 <p>Now that we have our element defined, we need to think about the structure of
 the dataset. Mainly, because the structure of the dataset will determine how
-the DataGrabber needs to be implemented.</p>
+the Data Grabber needs to be implemented.</p>
 <p>Junifer provides an abstract class to deal with datasets that can be thought in
 terms of <em>patterns</em>. A <em>pattern</em> is a string that contains placeholders that are
 replaced by the actual values of the element. In our BIDS example, the path
@@ -316,16 +316,16 @@ is the replacement for the session id.</p>
 the BOLD images can be expressed as a pattern:</p>
 <p><code class="docutils literal notranslate"><span class="pre">{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz</span></code></p>
 <p>This will be the norm in most of the datasets. If your dataset can be expressed
-in terms of patterns, then follow <a class="reference internal" href="#extending-datagrabbers-pattern"><span class="std std-ref">Step 3: Create a DataGrabber</span></a>.
+in terms of patterns, then follow <a class="reference internal" href="#extending-datagrabbers-pattern"><span class="std std-ref">Step 3: Create a Data Grabber</span></a>.
 Otherwise, we recommend that you take time to re-think about your dataset
 structure and why it does not have clear <em>patterns</em>. Feel free to open a
 discussion in the <a class="reference external" href="https://github.com/juaml/junifer/discussions">junifer Discussions</a> page. Most probably we can help you
 get your dataset in order.</p>
 <p>If there is no other way, then you can follow <a class="reference internal" href="#extending-datagrabbers-base"><span class="std std-ref">Option B: Extending from BaseDataGrabber</span></a>
-to create a DataGrabber from scratch.</p>
+to create a Data Grabber from scratch.</p>
 </section>
-<section id="step-3-create-a-datagrabber">
-<span id="extending-datagrabbers-pattern"></span><h2><span class="section-number">5.2.3. </span>Step 3: Create a DataGrabber<a class="headerlink" href="#step-3-create-a-datagrabber" title="Permalink to this heading">#</a></h2>
+<section id="step-3-create-a-data-grabber">
+<span id="extending-datagrabbers-pattern"></span><h2><span class="section-number">5.2.3. </span>Step 3: Create a Data Grabber<a class="headerlink" href="#step-3-create-a-data-grabber" title="Permalink to this heading">#</a></h2>
 <section id="option-a-extending-from-patterndatagrabber">
 <h3><span class="section-number">5.2.3.1. </span>Option A: Extending from PatternDataGrabber<a class="headerlink" href="#option-a-extending-from-patterndatagrabber" title="Permalink to this heading">#</a></h3>
 <p>The <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> class is an
@@ -666,10 +666,10 @@ choose different strategies with the same dataset.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">5.2. Creating DataGrabbers</a><ul>
+<li><a class="reference internal" href="#">5.2. Creating Data Grabbers</a><ul>
 <li><a class="reference internal" href="#step-1-think-about-the-element">5.2.1. Step 1: Think about the element</a></li>
 <li><a class="reference internal" href="#step-2-think-about-the-dataset-s-structure">5.2.2. Step 2: Think about the dataset’s structure</a></li>
-<li><a class="reference internal" href="#step-3-create-a-datagrabber">5.2.3. Step 3: Create a DataGrabber</a><ul>
+<li><a class="reference internal" href="#step-3-create-a-data-grabber">5.2.3. Step 3: Create a Data Grabber</a><ul>
 <li><a class="reference internal" href="#option-a-extending-from-patterndatagrabber">5.2.3.1. Option A: Extending from PatternDataGrabber</a><ul>
 <li><a class="reference internal" href="#optional-using-datalad">5.2.3.1.1. Optional: Using datalad</a></li>
 </ul>

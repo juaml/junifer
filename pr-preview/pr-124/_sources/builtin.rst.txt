@@ -4,8 +4,8 @@ Built-in Pipeline steps and data
 ================================
 
 
-DataGrabbers
-------------
+Data Grabbers
+-------------
 
 ..
     Provide a list of the DataGrabbers that are implemented or planned.

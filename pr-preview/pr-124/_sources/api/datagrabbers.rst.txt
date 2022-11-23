@@ -1,5 +1,5 @@
-DataGrabbers
-============
+Data Grabbers
+=============
 
 .. automodule:: junifer.datagrabber
    :members:

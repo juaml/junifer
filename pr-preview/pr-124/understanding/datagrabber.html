@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.4. DataReader" href="datareader.html" /><link rel="prev" title="2.2. The Data Object" href="data.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="2.4. Data Reader" href="datareader.html" /><link rel="prev" title="2.2. The Data Object" href="data.html" />
 
     <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>2.3. DataGrabber - junifer documentation</title>
+        <title>2.3. Data Grabber - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
@@ -168,8 +168,8 @@
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">2. Understanding junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="pipeline.html">2.1. The Junifer Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html">2.2. The Data Object</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.3. DataGrabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="datareader.html">2.4. DataReader</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">2.3. Data Grabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="datareader.html">2.4. Data Reader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="preprocess.html">2.5. Preprocess</a></li>
 <li class="toctree-l2"><a class="reference internal" href="marker.html">2.6. Marker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="storage.html">2.7. Storage</a></li>
@@ -185,7 +185,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">4. Built-in Pipeline steps and data</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">5. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">5.1. Creating a Junifer extension</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">5.2. Creating DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">5.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">5.3. Creating Markers</a></li>
 </ul>
 </li>
@@ -200,7 +200,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">7. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. DataGrabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">7.1.2. DataReaders</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">7.1.3. Pre-processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/markers.html">7.1.4. Markers</a></li>
@@ -253,11 +253,11 @@
           </label>
         </div>
         <article role="main">
-          <section id="datagrabber">
-<span id="id1"></span><h1><span class="section-number">2.3. </span>DataGrabber<a class="headerlink" href="#datagrabber" title="Permalink to this heading">#</a></h1>
+          <section id="data-grabber">
+<span id="datagrabber"></span><h1><span class="section-number">2.3. </span>Data Grabber<a class="headerlink" href="#data-grabber" title="Permalink to this heading">#</a></h1>
 <section id="description">
 <h2><span class="section-number">2.3.1. </span>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">DataGrabber</span></code> is an object that can provide an interface to datasets you want to work with in junifer.
+<p>The <em>Data Grabber</em> is an object that can provide an interface to datasets you want to work with in junifer.
 Every concrete implementation of a datagrabber is aware of a particular dataset’s structure and thus allows
 you to fetch specific elements of interest from the dataset. It adds the <code class="docutils literal notranslate"><span class="pre">path</span></code> key to each <a class="reference internal" href="data.html#data-types"><span class="std std-ref">data type</span></a>
 in the <a class="reference internal" href="data.html#data-object"><span class="std std-ref">Data object</span></a>.</p>
@@ -330,7 +330,7 @@ provided.</p>
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">2.4. </span>DataReader</div>
+                <div class="title"><span class="section-number">2.4. </span>Data Reader</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -377,7 +377,7 @@ provided.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">2.3. DataGrabber</a><ul>
+<li><a class="reference internal" href="#">2.3. Data Grabber</a><ul>
 <li><a class="reference internal" href="#description">2.3.1. Description</a></li>
 <li><a class="reference internal" href="#base-classes">2.3.2. Base classes</a></li>
 </ul>

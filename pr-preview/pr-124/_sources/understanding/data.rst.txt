@@ -18,7 +18,7 @@ The second level of keys are the actual data. So far, there are two keys used:
 - ``path``: path to the file containing the data.
 - ``data``: the data loaded in memory.
 
-The :ref:`DataGrabber <datagrabber>` step will only fill the ``path`` value.
+The :ref:`Data Grabber <datagrabber>` step will only fill the ``path`` value.
 The ``data`` value will be filled by the :ref:`DataReader <datareader>` step, if it is one of the possible file types
 that the datareader can read.
 

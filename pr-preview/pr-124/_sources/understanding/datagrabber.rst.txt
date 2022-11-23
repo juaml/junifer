@@ -2,13 +2,13 @@
 
 .. _datagrabber:
 
-DataGrabber
-===========
+Data Grabber
+============
 
 Description
 -----------
 
-The ``DataGrabber`` is an object that can provide an interface to datasets you want to work with in junifer.
+The *Data Grabber* is an object that can provide an interface to datasets you want to work with in junifer.
 Every concrete implementation of a datagrabber is aware of a particular dataset's structure and thus allows
 you to fetch specific elements of interest from the dataset. It adds the ``path`` key to each :ref:`data type <data_types>`
 in the :ref:`Data object <data_object>`.
