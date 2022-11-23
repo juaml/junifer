@@ -112,3 +112,61 @@ def winsorized_mean(
     win_mean = win_dat.mean(axis=axis)
 
     return win_mean
+
+
+def kendall_w(data: np.ndarray, axis=0) -> float:
+    r"""Calculate Kendall's coefficient of concordance (Kendall's W).
+
+    Parameters
+    ----------
+    data : 2D numpy.ndarray
+        Data to calculate Kendall's coefficient of concordance (Kendall's W).
+    axis : {0, 1}, optional
+        The axis decides the dimensions to consider annotators and items.
+        0 means data has shape (annotators, items) and 1 means data has
+        shape (items, annotators).
+
+    Returns
+    -------
+    float
+        Kendall's W value for the ``data``. A value close to 0 means there is
+        no inter-annotator agreement whereas a value close to 1 means there is
+        high inter-annotator agreement.
+
+    Raises
+    ------
+    ValueError
+        If invalid value for axis is given.
+
+    Notes
+    -----
+    The formula used is:
+
+    .. math ::
+
+        W = \frac{12 \ \Sigma_{i=1}^n (R_i - \overline{R})^2}{m^2 \ (n^3 - n)}
+
+
+    where,
+           | :math:`m` is the number of annotators.
+           | :math:`n` is the number of items to annotate.
+           | :math:`R_i` is sum of ranks for an item.
+           | :math:`\overline{R}` is the mean of the sum of ranks for all items.
+
+    """
+    # Dimension validation
+    if data.ndim != 2:
+        raise_error(
+            f"Kendall's W has no meaning for data with dimension {data.shape}."
+        )
+    # Axis validation
+    if axis == 0:
+        m, n = data.shape  # annotators X items
+    elif axis == 1:
+        n, m = data.shape  # items X annotators
+    else:
+        raise_error(f"Unknown axis value {axis} for Kendall's W.")
+    # Computation
+    denominator = m**2 * (n**3 - n)
+    S = n * np.var(np.sum(data, axis=axis))
+    return (12 * S) / denominator  # type: ignore
