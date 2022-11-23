@@ -255,7 +255,7 @@
         <article role="main">
           <section id="creating-datagrabbers">
 <span id="extending-datagrabbers"></span><h1><span class="section-number">5.2. </span>Creating DataGrabbers<a class="headerlink" href="#creating-datagrabbers" title="Permalink to this heading">#</a></h1>
-<p>DataGrabbers are the first step of the pipeline. It’s purpose is to interpret
+<p>DataGrabbers are the first step of the pipeline. Its purpose is to interpret
 the structure of a dataset and provide two specific functionalities:</p>
 <ol class="arabic simple">
 <li><p>Given an <em>element</em>, provide the path to each kind of data available for this
@@ -263,7 +263,7 @@ element (e.g. the path to the T1 image, the path to the T2 image, etc.)</p></li>
 <li><p>Provide the list of <em>elements</em> available in the dataset.</p></li>
 </ol>
 <p>In this section, we will see how to create a datagrabber for a dataset. Basic
-aspects of datagrabbers are covedered in the
+aspects of datagrabbers are covered in the
 <a class="reference internal" href="../understanding/datagrabber.html#datagrabber"><span class="std std-ref">Understanding DataGrabbers</span></a> section.</p>
 <section id="step-1-think-about-the-element">
 <span id="extending-datagrabbers-think"></span><h2><span class="section-number">5.2.1. </span>Step 1: Think about the element<a class="headerlink" href="#step-1-think-about-the-element" title="Permalink to this heading">#</a></h2>
@@ -275,7 +275,7 @@ only one of each <em>data type</em> (see <a class="reference internal" href="../
 <p>For example, if we have a dataset from an fMRI study in which:</p>
 <ol class="loweralpha simple">
 <li><p>both T1w and fMRI was acquired</p></li>
-<li><p>20 subjects went through a experiment twice</p></li>
+<li><p>20 subjects went through an experiment twice</p></li>
 <li><p>the experiment included resting-stage fMRI and a task named <em>stroop</em></p></li>
 </ol>
 <p>then the <em>element</em> should be composed of 3 items:</p>
@@ -284,7 +284,7 @@ only one of each <em>data type</em> (see <a class="reference internal" href="../
 <li><p><code class="docutils literal notranslate"><span class="pre">session</span></code>: The sesion number, e.g. <cite>ses1</cite>, <cite>ses2</cite></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">task</span></code>: The task performed, e.g. <cite>rest</cite>, <cite>stroop</cite></p></li>
 </ul>
-<p>If any of this items were not part of the element, then we will have more than
+<p>If any of these items were not part of the element, then we will have more than
 one <code class="docutils literal notranslate"><span class="pre">T1w</span></code> and/or <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> image for each subject, which is not allowed.</p>
 <p>Importantly, nothing prevents that one image is part of two different elements.
 For example, it is usually the case that the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image is not acquired for
@@ -292,7 +292,7 @@ each task, but once in the entire session. So in this case, the <code class="doc
 for the element (<code class="docutils literal notranslate"><span class="pre">sub001</span></code>, <code class="docutils literal notranslate"><span class="pre">ses1</span></code>, <code class="docutils literal notranslate"><span class="pre">rest</span></code>) will be the same as the
 <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image for the element (<code class="docutils literal notranslate"><span class="pre">sub001</span></code>, <code class="docutils literal notranslate"><span class="pre">ses1</span></code>, <code class="docutils literal notranslate"><span class="pre">stroop</span></code>).</p>
 <p>We will now continue this section using as an example, a dataset in BIDS format
-in which each 9 subjects (<cite>sub-01</cite> to <cite>sub-09</cite>) were scanned each in 3
+in which 9 subjects (<cite>sub-01</cite> to <cite>sub-09</cite>) were scanned each during 3
 sessions (<cite>ses-01</cite>, <cite>ses-02</cite>, <cite>ses-03</cite>) and each session included a <cite>T1w</cite> and
 a <cite>BOLD</cite> image (resting-state), except for <cite>ses-03</cite> which was only anatomical.</p>
 </section>
@@ -310,7 +310,7 @@ replacing <code class="docutils literal notranslate"><span class="pre">sub-01</s
 session of the second subject. Indeed, the path to the T1w images can be
 expressed as a pattern:</p>
 <p><code class="docutils literal notranslate"><span class="pre">{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz</span></code></p>
-<p>where <code class="docutils literal notranslate"><span class="pre">{subject}</span></code> is the replacement for the subject id and <code class="docutils literal notranslate"><span class="pre">{session}}</span></code>
+<p>where <code class="docutils literal notranslate"><span class="pre">{subject}</span></code> is the replacement for the subject id and <code class="docutils literal notranslate"><span class="pre">{session}</span></code>
 is the replacement for the session id.</p>
 <p>Since it is a BIDS dataaset, the same happens with the BOLD images. The path to
 the BOLD images can be expressed as a pattern:</p>
@@ -370,7 +370,8 @@ this example</p>
            <span class="n">datadir</span><span class="o">=</span><span class="n">datadir</span><span class="p">,</span>
            <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
            <span class="n">patterns</span><span class="o">=</span><span class="n">patterns</span><span class="p">,</span>
-           <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">)</span>
+           <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
+        <span class="p">)</span>
 </pre></div>
 </div>
 <p>Our datagrabber is ready to be used by junifer. However, it is still unknown
@@ -394,7 +395,8 @@ use the <a class="reference internal" href="../api/api.html#junifer.api.decorato
            <span class="n">datadir</span><span class="o">=</span><span class="n">datadir</span><span class="p">,</span>
            <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
            <span class="n">patterns</span><span class="o">=</span><span class="n">patterns</span><span class="p">,</span>
-           <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">)</span>
+           <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
+        <span class="p">)</span>
 </pre></div>
 </div>
 <p>Now, we can use our datagrabber in junifer, by setting the <code class="docutils literal notranslate"><span class="pre">datagrabber</span></code> kind
@@ -407,9 +409,9 @@ set the <code class="docutils literal notranslate"><span class="pre">datadir</sp
 </div>
 <section id="optional-using-datalad">
 <h4><span class="section-number">5.2.3.1.1. </span>Optional: Using datalad<a class="headerlink" href="#optional-using-datalad" title="Permalink to this heading">#</a></h4>
-<p>If you are using datalad, you can use the
+<p>If you are using <a class="reference external" href="https://datalad.org">datalad</a>, you can use the
 <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a> instead of the
-<a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a>. This class will also
+<a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a>. This class will not only
 interpret patterns, but will also use datalad to <cite>clone</cite> and <cite>get</cite> the data.</p>
 <p>The main difference between the two is that the <code class="docutils literal notranslate"><span class="pre">datadir</span></code> is not the actual
 location of the dataset, but the location where the dataset will be cloned. It
@@ -417,7 +419,7 @@ can now be <code class="docutils literal notranslate"><span class="pre">None</sp
 temporary directory. To set the location of the dataset, you can use the
 <code class="docutils literal notranslate"><span class="pre">uri</span></code> argument in the constructor. Additionally, a <code class="docutils literal notranslate"><span class="pre">rootdir</span></code> argument can
 be used to specify the path to the root directory of the dataset after doing
-<code class="docutils literal notranslate"><span class="pre">datalad</span> <span class="pre">clone</span></code></p>
+<code class="docutils literal notranslate"><span class="pre">datalad</span> <span class="pre">clone</span></code>.</p>
 <p>In the example, the dataset is hosted in gin
 (<code class="docutils literal notranslate"><span class="pre">https://gin.g-node.org/juaml/datalad-example-bids</span></code>).</p>
 <p>When we clone this dataset, we will see the following structure:</p>
@@ -464,7 +466,8 @@ be used to specify the path to the root directory of the dataset after doing
            <span class="n">rootdir</span><span class="o">=</span><span class="n">rootdir</span><span class="p">,</span>
            <span class="n">types</span><span class="o">=</span><span class="n">types</span><span class="p">,</span>
            <span class="n">patterns</span><span class="o">=</span><span class="n">patterns</span><span class="p">,</span>
-           <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">)</span>
+           <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
+        <span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -477,7 +480,7 @@ possible to create a datagrabber extending from the <a class="reference internal
 implement the following methods:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">get_item</span></code>: to get a single item from the dataset.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">get_elements</span></code>: to get the list fo all elements present in the dataset</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_elements</span></code>: to get the list of all elements present in the dataset</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code>: to get the keys of the elements in the dataset.</p></li>
 </ul>
 <div class="admonition note">
@@ -499,7 +502,7 @@ as parameters of <code class="docutils literal notranslate"><span class="pre">ge
 </div>
 <p>The second method, <code class="docutils literal notranslate"><span class="pre">get_elements</span></code>, needs to return a list of all the elements in the dataset. In this case, we
 know that the dataset contains 3 subjects and 3 sessions, so we can create a list of all the possible combinations.
-However, we need to remember that for session <em>ses-03</em> there is no bold.</p>
+However, we need to remember that for session <em>ses-03</em> there is no BOLD data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
    <span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sub-01&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-02&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-03&quot;</span><span class="p">]</span>
    <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ses-01&quot;</span><span class="p">,</span> <span class="s2">&quot;ses-02&quot;</span><span class="p">]</span>
@@ -514,8 +517,8 @@ However, we need to remember that for session <em>ses-03</em> there is no bold.<
    <span class="k">return</span> <span class="n">elements</span>
 </pre></div>
 </div>
-<p>And finally, we cna implement the <code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code> method. This method needs to return a list of the keys that
-are represent each of the items in the element tuple. As a rule of thumb, they should be the parameters of the
+<p>And finally, we can implement the <code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code> method. This method needs to return a list of the keys that
+represent each of the items in the element tuple. As a rule of thumb, they should be the parameters of the
 <code class="docutils literal notranslate"><span class="pre">get_item</span></code> method, in the same order.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_element_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">]</span>
@@ -579,7 +582,7 @@ Thus, the <code class="docutils literal notranslate"><span class="pre">BOLD_conf
 <p>Currently, Junifer provides only one confound remover step
 (<a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.preprocess.fMRIPrepConfoundRemover</span></code></a>), which relies entirely on the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> confound
 variable names. Thus, if the confounds are not in <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> format, the user will need to provide the mappings
-between the <em>ad-hoc</em> variable names and the the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> variable names.
+between the <em>ad-hoc</em> variable names and the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> variable names.
 This is done by specifying the <code class="docutils literal notranslate"><span class="pre">adhoc</span></code> format and providing the mappings as a dictionary in the <code class="docutils literal notranslate"><span class="pre">mappings</span></code> key.</p>
 <p>In the following example, the confounds file has 3 variables that are not in the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> format. Thus, we will
 provide the mappings for these variables to the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> format.</p>

@@ -5,7 +5,7 @@
 Creating DataGrabbers
 =====================
 
-DataGrabbers are the first step of the pipeline. It's purpose is to interpret
+DataGrabbers are the first step of the pipeline. Its purpose is to interpret
 the structure of a dataset and provide two specific functionalities:
 
 1) Given an *element*, provide the path to each kind of data available for this
@@ -13,7 +13,7 @@ the structure of a dataset and provide two specific functionalities:
 2) Provide the list of *elements* available in the dataset.
 
 In this section, we will see how to create a datagrabber for a dataset. Basic
-aspects of datagrabbers are covedered in the 
+aspects of datagrabbers are covered in the 
 :ref:`Understanding DataGrabbers <datagrabber>` section.
 
 .. _extending_datagrabbers_think:
@@ -30,7 +30,7 @@ only one of each *data type* (see :ref:`data_types`).
 For example, if we have a dataset from an fMRI study in which:
 
 a) both T1w and fMRI was acquired 
-b) 20 subjects went through a experiment twice
+b) 20 subjects went through an experiment twice
 c) the experiment included resting-stage fMRI and a task named *stroop*
 
 then the *element* should be composed of 3 items:
@@ -39,7 +39,7 @@ then the *element* should be composed of 3 items:
 *  ``session``: The sesion number, e.g. `ses1`, `ses2`
 *  ``task``: The task performed, e.g. `rest`, `stroop`
 
-If any of this items were not part of the element, then we will have more than
+If any of these items were not part of the element, then we will have more than
 one ``T1w`` and/or ``BOLD`` image for each subject, which is not allowed.
 
 Importantly, nothing prevents that one image is part of two different elements.
@@ -49,7 +49,7 @@ for the element (``sub001``, ``ses1``, ``rest``) will be the same as the
 ``T1w`` image for the element (``sub001``, ``ses1``, ``stroop``).
 
 We will now continue this section using as an example, a dataset in BIDS format
-in which each 9 subjects (`sub-01` to `sub-09`) were scanned each in 3
+in which 9 subjects (`sub-01` to `sub-09`) were scanned each during 3
 sessions (`ses-01`, `ses-02`, `ses-03`) and each session included a `T1w` and
 a `BOLD` image (resting-state), except for `ses-03` which was only anatomical.
 
@@ -71,7 +71,7 @@ expressed as a pattern:
 
 ``{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz``
 
-where ``{subject}`` is the replacement for the subject id and ``{session}}``
+where ``{subject}`` is the replacement for the subject id and ``{session}``
 is the replacement for the session id.
 
 Since it is a BIDS dataaset, the same happens with the BOLD images. The path to
@@ -149,7 +149,8 @@ With this defined, we can now create our datagrabber, we will name it
                datadir=datadir,
                types=types, 
                patterns=patterns,
-               replacements=replacements)
+               replacements=replacements,
+            )
 
 Our datagrabber is ready to be used by junifer. However, it is still unknown
 to the library. We need to register it in the library. To do so, we need to
@@ -176,7 +177,8 @@ use the :py:func:`~junifer.api.decorators.register_datagrabber` decorator.
                datadir=datadir,
                types=types, 
                patterns=patterns,
-               replacements=replacements)
+               replacements=replacements,
+            )
 
 
 Now, we can use our datagrabber in junifer, by setting the ``datagrabber`` kind
@@ -193,9 +195,9 @@ set the ``datadir``.
 Optional: Using datalad 
 """""""""""""""""""""""
 
-If you are using datalad, you can use the 
+If you are using `datalad`_, you can use the 
 :py:class:`~junifer.datagrabber.PatternDataladDataGrabber` instead of the 
-:py:class:`~junifer.datagrabber.PatternDataGrabber`. This class will also
+:py:class:`~junifer.datagrabber.PatternDataGrabber`. This class will not only
 interpret patterns, but will also use datalad to `clone` and `get` the data.
 
 The main difference between the two is that the ``datadir`` is not the actual
@@ -204,7 +206,7 @@ can now be ``None``, which means that the data will be downloaded to a
 temporary directory. To set the location of the dataset, you can use the
 ``uri`` argument in the constructor. Additionally, a ``rootdir`` argument can
 be used to specify the path to the root directory of the dataset after doing
-``datalad clone``
+``datalad clone``.
 
 In the example, the dataset is hosted in gin 
 (``https://gin.g-node.org/juaml/datalad-example-bids``).
@@ -262,7 +264,8 @@ And we can create our datagrabber:
                rootdir=rootdir,
                types=types, 
                patterns=patterns,
-               replacements=replacements)
+               replacements=replacements,
+            )
 
 
 .. _extending_datagrabbers_base:
@@ -277,7 +280,7 @@ In order to create a datagrabber extending from :py:class:`~junifer.datagrabber.
 implement the following methods:
 
 - ``get_item``: to get a single item from the dataset.
-- ``get_elements``: to get the list fo all elements present in the dataset
+- ``get_elements``: to get the list of all elements present in the dataset
 - ``get_element_keys``: to get the keys of the elements in the dataset.
 
 .. note::
@@ -302,7 +305,7 @@ as parameters of ``get_item``:
 
 The second method, ``get_elements``, needs to return a list of all the elements in the dataset. In this case, we
 know that the dataset contains 3 subjects and 3 sessions, so we can create a list of all the possible combinations.
-However, we need to remember that for session *ses-03* there is no bold.
+However, we need to remember that for session *ses-03* there is no BOLD data.
 
 .. code-block:: python
 
@@ -320,8 +323,8 @@ However, we need to remember that for session *ses-03* there is no bold.
       return elements
 
 
-And finally, we cna implement the ``get_element_keys`` method. This method needs to return a list of the keys that
-are represent each of the items in the element tuple. As a rule of thumb, they should be the parameters of the
+And finally, we can implement the ``get_element_keys`` method. This method needs to return a list of the keys that
+represent each of the items in the element tuple. As a rule of thumb, they should be the parameters of the
 ``get_item`` method, in the same order.
 
 .. code-block:: python
@@ -392,7 +395,7 @@ The ``fmriprep`` format corresponds to the format of the confounds files generat
 Currently, Junifer provides only one confound remover step
 (:class:`junifer.preprocess.fMRIPrepConfoundRemover`), which relies entirely on the ``fmriprep`` confound
 variable names. Thus, if the confounds are not in ``fmriprep`` format, the user will need to provide the mappings 
-between the *ad-hoc* variable names and the the ``fmriprep`` variable names. 
+between the *ad-hoc* variable names and the ``fmriprep`` variable names. 
 This is done by specifying the ``adhoc`` format and providing the mappings as a dictionary in the ``mappings`` key.
 
 In the following example, the confounds file has 3 variables that are not in the ``fmriprep`` format. Thus, we will

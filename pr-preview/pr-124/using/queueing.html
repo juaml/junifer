@@ -258,14 +258,14 @@
 <p>Yet another interesting feature of junifer is the ability to queue jobs on computational clusters. This is done by
 adding the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section in the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less configuration</span></a> file and executing the  <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">queue</span></code> command.</p>
 <p>While junifer is meant to support <a class="reference external" href="https://research.cs.wisc.edu/htcondor/">HTCondor</a>, <a class="reference external" href="https://slurm.schedmd.com">SLURM</a> and local queueing using <a class="reference external" href="https://www.gnu.org/software/parallel/">GNU Parallel</a>, only HTCondor is
-currently supported. This will be implemented in future relases of junifer. If you are in immediate need of any of this
+currently supported. This will be implemented in future relases of junifer. If you are in immediate need of any of these
 schedulers, please create an issue on the <a class="reference external" href="https://github.com/juaml/junifer">junifer github</a> repository.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> section of the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less configuration</span></a> must start by defining the following general parameters:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">jobname</span></code>: name of the job to be queued. This will be used to name the folder where the job files will be created,
-as well as any relevant file. Depending on the schduler, it will also be listed in the queueing system with this
+as well as any relevant file. Depending on the scheduler, it will also be listed in the queueing system with this
 name.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: The kind of schduler to be used. Currently, only <code class="docutils literal notranslate"><span class="pre">htcondor</span></code> is supported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: The kind of scheduler to be used. Currently, only <code class="docutils literal notranslate"><span class="pre">HTCondor</span></code> is supported.</p></li>
 </ul>
 <p>Example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span><span class="w"></span>
@@ -280,7 +280,7 @@ name.</p></li>
 include a final job (<code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code>) to collect the results once all of the individual element jobs are finished.</p>
 <p>The following parameters are avilable for HTCondor:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">env</span></code>: Definition of the python enviroment. It must provide two variables: <code class="docutils literal notranslate"><span class="pre">kind</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code>. The <code class="docutils literal notranslate"><span class="pre">kind</span></code>
+<li><p><code class="docutils literal notranslate"><span class="pre">env</span></code>: Definition of the Python enviroment. It must provide two variables: <code class="docutils literal notranslate"><span class="pre">kind</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code>. The <code class="docutils literal notranslate"><span class="pre">kind</span></code>
 corresponds to the kind of virtual environment to use: <code class="docutils literal notranslate"><span class="pre">conda</span></code>,  <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> (not yet supported) or
 <code class="docutils literal notranslate"><span class="pre">local</span></code> (no virtual enviroment). The <code class="docutils literal notranslate"><span class="pre">name</span></code> is the name of the enviroment to use in case a virtual environment
 is used.</p></li>
@@ -291,9 +291,9 @@ mind that junifer uses a local working directory for each job, and datalad datas
 directory.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">extra_preamble</span></code>: Extra lines to be added to the HTCondor submit file. This can be used to add
 extra parameters to the job, such as <code class="docutils literal notranslate"><span class="pre">requirements</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">collect</span></code>: If <code class="docutils literal notranslate"><span class="pre">True</span></code>, a final job will be added to the DAG to collect the results once all of the individual
+<li><p><code class="docutils literal notranslate"><span class="pre">collect</span></code>: If <code class="docutils literal notranslate"><span class="pre">true</span></code>, a final job will be added to the DAG to collect the results once all of the individual
 element jobs are finished. This is useful if you want to run a <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code> job only once all of the
-individual element jobs are finished. If not specified, it will default to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+individual element jobs are finished. If not specified, it will default to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
 </ul>
 <p>Example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span><span class="w"></span>
@@ -304,7 +304,7 @@ individual element jobs are finished. If not specified, it will default to <code
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer</span><span class="w"></span>
 <span class="w">  </span><span class="nt">mem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8G</span><span class="w"></span>
 <span class="w">  </span><span class="nt">disk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2GB</span><span class="w"></span>
-<span class="w">  </span><span class="nt">collect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">  </span><span class="nt">collect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Once the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less configuration</span></a> file is ready, including the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section, you can queue the jobs by executing

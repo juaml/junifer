@@ -9,15 +9,15 @@ Yet another interesting feature of junifer is the ability to queue jobs on compu
 adding the ``queue`` section in the :ref:`codeless` file and executing the  ``junifer queue`` command.
 
 While junifer is meant to support `HTCondor`_, `SLURM`_ and local queueing using `GNU Parallel`_, only HTCondor is
-currently supported. This will be implemented in future relases of junifer. If you are in immediate need of any of this
+currently supported. This will be implemented in future relases of junifer. If you are in immediate need of any of these
 schedulers, please create an issue on the `junifer github`_ repository.
 
 The ``queue`` section of the :ref:`codeless` must start by defining the following general parameters:
 
 * ``jobname``: name of the job to be queued. This will be used to name the folder where the job files will be created,
-  as well as any relevant file. Depending on the schduler, it will also be listed in the queueing system with this
+  as well as any relevant file. Depending on the scheduler, it will also be listed in the queueing system with this
   name.
-* ``kind``: The kind of schduler to be used. Currently, only ``htcondor`` is supported.
+* ``kind``: The kind of scheduler to be used. Currently, only ``HTCondor`` is supported.
 
 Example:
 
@@ -40,7 +40,7 @@ include a final job (``junifer collect``) to collect the results once all of the
 
 The following parameters are avilable for HTCondor:
 
-* ``env``: Definition of the python enviroment. It must provide two variables: ``kind`` and ``name``. The ``kind``
+* ``env``: Definition of the Python enviroment. It must provide two variables: ``kind`` and ``name``. The ``kind``
   corresponds to the kind of virtual environment to use: ``conda``,  ``virtualenv`` (not yet supported) or 
   ``local`` (no virtual enviroment). The ``name`` is the name of the enviroment to use in case a virtual environment
   is used.
@@ -51,9 +51,9 @@ The following parameters are avilable for HTCondor:
   directory.
 * ``extra_preamble``: Extra lines to be added to the HTCondor submit file. This can be used to add
   extra parameters to the job, such as ``requirements``.
-* ``collect``: If ``True``, a final job will be added to the DAG to collect the results once all of the individual
+* ``collect``: If ``true``, a final job will be added to the DAG to collect the results once all of the individual
   element jobs are finished. This is useful if you want to run a ``junifer collect`` job only once all of the
-  individual element jobs are finished. If not specified, it will default to ``True``.
+  individual element jobs are finished. If not specified, it will default to ``true``.
 
 
 Example:
@@ -68,7 +68,7 @@ Example:
       name: junifer
     mem: 8G
     disk: 2GB
-    collect: True
+    collect: true
 
 
 Once the :ref:`codeless` file is ready, including the ``queue`` section, you can queue the jobs by executing 

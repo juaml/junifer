@@ -271,7 +271,7 @@ of the marker is compatible with the storage. This method should return a string
 <li><p><code class="docutils literal notranslate"><span class="pre">store</span></code>: the method that stores the computed marker.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: the initialization method, where the marker is configured.</p></li>
 </ol>
-<p>As an example, we will develop a Parcel Mean marker, that is, a marker that first applies a parecellation and
+<p>As an example, we will develop a Parcel Mean marker, that is, a marker that first applies a parcellation and
 then computes the mean of the data in each parcel. This is a very simple example, but it will show you how to create
 a new marker.</p>
 <section id="step-1-configure-input-and-output">
@@ -300,17 +300,17 @@ to configure how the marker will behave.</p>
 requires two optional parameters:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: the name of the marker. This is used to identify the marker in the configuration file.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on</span></code>: a list or string with the names of the inputs that the marker will be applied to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on</span></code>: a list or string with the data types that the marker will be applied to.</p></li>
 </ol>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
 <p>Only basic types (<em>int</em>, <em>bool</em> and <em>str</em>) as well as Lists, Tuples and Dictionaries are allowed as
 parameters. This is because the parameters are stored in a JSON file, and JSON only supports these types.</p>
 </div>
-<p>In this example, the is only paramater required for the computation is the name of the parcelation to use. Thus, we can
+<p>In this example, the is only paramater required for the computation is the name of the parcellation to use. Thus, we can
 define the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parcelation_name</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">parcelation_name</span> <span class="o">=</span> <span class="n">parcelation_name</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parcellation_name</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">parcellation_name</span> <span class="o">=</span> <span class="n">parcellation_name</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -326,18 +326,12 @@ part of the metadata of the marker.</p>
 <p>In this step, we will define the method that computes the marker. This method will be called by junifer when needed,
 using the data provided by the datagrabber, as configured by the user. The function <code class="docutils literal notranslate"><span class="pre">compute</span></code> has two arguments:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">input</span></code>: a dictionary with the data to be used to compute the marker. This will be the corresponding element in the</dt><dd><p><a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a> alredy indexing. Thus, the dictionary has at least two keys: <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code>.
+<li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: a dictionary with the data to be used to compute the marker. This will be the corresponding element in the
+<a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a> alredy indexing. Thus, the dictionary has at least two keys: <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code>.
 The first one contains the data, while the second one contains the path to the data. The dictionary can also contain
-other keys, depending on the data type.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">extra_input</span></code>: the rest of the <a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a>. This is usefull if you want to use other data to</dt><dd><p>compute the marker (e.g.: <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> can be used to de-confound the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data).</p>
-</dd>
-</dl>
-</li>
+other keys, depending on the data type.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extra_input</span></code>: the rest of the <a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a>. This is useful if you want to use other data to
+compute the marker (e.g.: <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> can be used to de-confound the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data).</p></li>
 </ul>
 <p>Following the example, we will compute the mean of the data in each parcel using
 <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.maskers.NiftiLabelsMasker.html#nilearn.maskers.NiftiLabelsMasker" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiLabelsMasker</span></code></a>. Importantly, the output of the compute function must be a dictionary.
@@ -360,14 +354,17 @@ dictionary should be <code class="docutils literal notranslate"><span class="pre
 
     <span class="c1"># Load the parcellation</span>
     <span class="n">t_parcellation</span><span class="p">,</span> <span class="n">t_labels</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load_parcellation</span><span class="p">(</span>
-        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parcelation_name</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parcellation_name</span><span class="p">,</span>
         <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># Create a masker</span>
     <span class="n">masker</span> <span class="o">=</span> <span class="n">NiftiLabelsMasker</span><span class="p">(</span>
-        <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;nilearn_cache&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span>
+        <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;nilearn_cache&#39;</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="c1"># mask the data</span>
     <span class="n">out_values</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
@@ -385,9 +382,9 @@ dictionary should be <code class="docutils literal notranslate"><span class="pre
 <section id="step-4-store-the-marker">
 <span id="extending-markers-store"></span><h2><span class="section-number">5.3.4. </span>Step 4: Store the marker<a class="headerlink" href="#step-4-store-the-marker" title="Permalink to this heading">#</a></h2>
 <p>In this step, we will define the method that stores the marker. This method will be called by junifer when needed,
-using the data provided by the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method. The function <code class="docutils literal notranslate"><span class="pre">store</span></code> has three arguments:</p>
+using the data provided by the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method. The method <code class="docutils literal notranslate"><span class="pre">store</span></code> has three arguments:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: A string indicating the <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">type of data</span></a> that was used to compute the marker.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: A string indicating the <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data type</span></a> that was used to compute the marker.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">out</span></code>: The output of the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">storage</span></code>: The storage object, that will be used to store the marker.</p></li>
 </ul>
@@ -401,13 +398,13 @@ using the data provided by the <code class="docutils literal notranslate"><span 
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>Check the hint on <a class="reference internal" href="#extending-markers-compute"><span class="std std-ref">Step 3: Compute the marker</span></a>. If the output of the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method is a dictionary
-with keys based on the <a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a>, the <code class="docutils literal notranslate"><span class="pre">store</span></code> method can simple call the right
+with keys based on the <a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a>, the <code class="docutils literal notranslate"><span class="pre">store</span></code> method can simply call the right
 storage function, based on the <code class="docutils literal notranslate"><span class="pre">kind</span></code> parameter, with <code class="docutils literal notranslate"><span class="pre">**out</span></code>.</p>
 </div>
 </section>
 <section id="step-5-finalize-the-marker">
 <span id="extending-markers-finalize"></span><h2><span class="section-number">5.3.5. </span>Step 5: Finalize the marker<a class="headerlink" href="#step-5-finalize-the-marker" title="Permalink to this heading">#</a></h2>
-<p>One all of the above-mentioned methods are defined, we just need to give our marker a name an register it using the
+<p>Once all of the above steps are done, we just need to give our marker a name an register it using the
 <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
 <span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">load_parcellation</span>
@@ -417,8 +414,8 @@ storage function, based on the <code class="docutils literal notranslate"><span 
 <span class="nd">@register_marker</span>
 <span class="k">class</span> <span class="nc">ParcelMean</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parcelation_name</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parcelation_name</span> <span class="o">=</span> <span class="n">parcelation_name</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parcellation_name</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parcellation_name</span> <span class="o">=</span> <span class="n">parcellation_name</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -439,14 +436,17 @@ storage function, based on the <code class="docutils literal notranslate"><span 
 
         <span class="c1"># Load the parcellation</span>
         <span class="n">t_parcellation</span><span class="p">,</span> <span class="n">t_labels</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load_parcellation</span><span class="p">(</span>
-            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parcelation_name</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parcellation_name</span><span class="p">,</span>
             <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Create a masker</span>
         <span class="n">masker</span> <span class="o">=</span> <span class="n">NiftiLabelsMasker</span><span class="p">(</span>
-            <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span> <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;nilearn_cache&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+            <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span>
+            <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;nilearn_cache&#39;</span><span class="p">,</span>
+            <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="c1"># mask the data</span>
         <span class="n">out_values</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>

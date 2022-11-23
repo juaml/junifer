@@ -56,7 +56,7 @@ Data types
      - fALFF computed with CONN toolbox
    * - ``GCOR``
      - Global Correlation image (3D)
-     - GCOR computed with conn-toolbox
+     - GCOR computed with CONN toolbox
    * - ``LCOR``
      - Local Correlation image (3D)
-     - LCOR computed with conn-toolbox
+     - LCOR computed with CONN toolbox

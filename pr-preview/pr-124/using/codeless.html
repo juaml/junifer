@@ -285,7 +285,7 @@ junifer as a whole. These parameters are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">datagrabber</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">datareader</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">preproces</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">preprocess</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">markers</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">storage</span></code></p></li>
 </ul>
@@ -327,7 +327,7 @@ specify the data reader to use, and additional keys to pass parameters to the da
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DefaultDataReader</span><span class="w"></span>
 </pre></div>
 </div>
-<p>For the <em>Oasis VBM Testing dataset</em> example, we will not specify a data reader step.</p>
+<p>For the <em>Oasis VBM Testing dataset</em> example, we will not specify a <code class="docutils literal notranslate"><span class="pre">datareader</span></code> step.</p>
 </section>
 <section id="preprocessing">
 <h3><span class="section-number">3.1.2.3. </span>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this heading">#</a></h3>
@@ -343,8 +343,8 @@ name as the <code class="docutils literal notranslate"><span class="pre">kind</s
 <span class="w">    </span><span class="nt">wm_csf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">full</span><span class="w"></span>
 <span class="w">    </span><span class="nt">global_signal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
 <span class="w">  </span><span class="nt">spike</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w"></span>
-<span class="w">  </span><span class="nt">detrend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">  </span><span class="nt">standardize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">True</span><span class="w"></span>
+<span class="w">  </span><span class="nt">detrend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">  </span><span class="nt">standardize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
 </pre></div>
 </div>
 <p>For the <em>Oasis VBM Testing dataset</em> example, we will not specify a preprocessing step.</p>
@@ -353,7 +353,7 @@ name as the <code class="docutils literal notranslate"><span class="pre">kind</s
 <h3><span class="section-number">3.1.2.4. </span>Markers<a class="headerlink" href="#markers" title="Permalink to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">markers</span></code> section diverges from the previous ones, as we need to specify a list of markers. Each marker has a
 name that we can use to refer to it later, and a set of parameters that will be passed to the marker.</p>
-<p>For the <em>Oasis VBM Testing dataset</em> example, we want to comute the mean <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> value for each parcel using the
+<p>For the <em>Oasis VBM Testing dataset</em> example, we want to compute the mean <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> value for each parcel using the
 Schaefer parcellation (100 parcels, 7 networks), Schaefer parcellation (200 parcels, 7 networks), and the <em>DMNBuckner</em>
 network, using 5mm spheres. Thus, we will configure the <code class="docutils literal notranslate"><span class="pre">markers</span></code> section as follows:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">markers</span><span class="p">:</span><span class="w"></span>

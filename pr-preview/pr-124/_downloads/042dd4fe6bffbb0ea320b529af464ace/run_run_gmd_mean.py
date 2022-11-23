@@ -43,7 +43,7 @@ storage = {
 }
 
 with tempfile.TemporaryDirectory() as tmpdir:
-    uri = f"{tmpdir}/test.db"
+    uri = f"{tmpdir}/test.sqlite"
     storage["uri"] = uri
     run(
         workdir="/tmp",

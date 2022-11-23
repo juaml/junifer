@@ -44,7 +44,7 @@ In order to configure the pipeline, we need to configure each step:
 
 * ``datagrabber``
 * ``datareader``
-* ``preproces``
+* ``preprocess``
 * ``markers``
 * ``storage``
 
@@ -98,7 +98,7 @@ specify the data reader to use, and additional keys to pass parameters to the da
       kind: DefaultDataReader
 
 
-For the *Oasis VBM Testing dataset* example, we will not specify a data reader step.
+For the *Oasis VBM Testing dataset* example, we will not specify a ``datareader`` step.
 
 Preprocessing
 ^^^^^^^^^^^^^
@@ -120,8 +120,8 @@ name as the ``kind`` key, as well as its parameters.
       wm_csf: full
       global_signal: basic
     spike: 0.2
-    detrend: False
-    standardize: True
+    detrend: false
+    standardize: true
 
 
 For the *Oasis VBM Testing dataset* example, we will not specify a preprocessing step.
@@ -133,7 +133,7 @@ Markers
 The ``markers`` section diverges from the previous ones, as we need to specify a list of markers. Each marker has a
 name that we can use to refer to it later, and a set of parameters that will be passed to the marker.
 
-For the *Oasis VBM Testing dataset* example, we want to comute the mean ``VBM_GM`` value for each parcel using the 
+For the *Oasis VBM Testing dataset* example, we want to compute the mean ``VBM_GM`` value for each parcel using the 
 Schaefer parcellation (100 parcels, 7 networks), Schaefer parcellation (200 parcels, 7 networks), and the *DMNBuckner*
 network, using 5mm spheres. Thus, we will configure the ``markers`` section as follows:
 

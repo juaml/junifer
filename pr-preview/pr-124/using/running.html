@@ -261,26 +261,23 @@ features. This is achieved in a two-step process: <code class="docutils literal 
 storage interface, this may create one file per subject. The <code class="docutils literal notranslate"><span class="pre">collect</span></code> command is then used to collect all of the
 individual results into a single file.</p>
 <p>Assuming that we have a configuration file named <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>, the following commands will extract the features:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer run config.yaml
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">junifer run config.yaml</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> command accepts the following additional arguments:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show a help message.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> Set the verbosity level. Options are <code class="docutils literal notranslate"><span class="pre">warning</span></code>, <code class="docutils literal notranslate"><span class="pre">info</span></code>, <code class="docutils literal notranslate"><span class="pre">debug</span></code>.</p></li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">--element</span></code>: The <em>element</em> to run. If not specified, all elements will be run. This parameter can be specified</dt><dd><p>multiple times to run multiple elements. If the <em>element</em> requires several parameters, they can be specified
-by separating them with <code class="docutils literal notranslate"><span class="pre">,</span></code>.</p>
-</dd>
-</dl>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--element</span></code>: The <em>element</em> to run. If not specified, all elements will be run. This parameter can be specified
+multiple times to run multiple elements. If the <em>element</em> requires several parameters, they can be specified
+by separating them with <code class="docutils literal notranslate"><span class="pre">,</span></code>.</p></li>
 </ul>
 <p>Example on running two elements:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer run config.yaml --element sub-01 --element sub-02
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">junifer run config.yaml --element sub-01 --element sub-02</span>
 </pre></div>
 </div>
 <p>Example on elements with multiple parameters and verbose output:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer run --verbose info config.yaml --element sub-01,ses-01
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">junifer run --verbose info config.yaml --element sub-01,ses-01</span>
 </pre></div>
 </div>
 </section>
@@ -290,7 +287,7 @@ by separating them with <code class="docutils literal notranslate"><span class="
 storage interface, this may create one file per subject. The <code class="docutils literal notranslate"><span class="pre">collect</span></code> command is then used to collect all of the
 individual results into a single file.</p>
 <p>Assuming that we have a configuration file named <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>, the following commands will collect the results:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer collect config.yaml
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">junifer collect config.yaml</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">collect</span></code> command accepts the following additional arguments:</p>
