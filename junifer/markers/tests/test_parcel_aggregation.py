@@ -235,21 +235,20 @@ def test_ParcelAggregation_3D_multiple() -> None:
     """Test ParcelAggregation object on 3D images, multiple parcellations."""
 
     # Get the testing parcellation (for nilearn)
-    parcellation = datasets.fetch_atlas_schaefer_2018(n_rois=100)
+    # parcellation = datasets.fetch_atlas_schaefer_2018(n_rois=100)
 
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
     vbm = oasis_dataset.gray_matter_maps[0]
     img = nib.load(vbm)
 
-    # Create NiftiLabelsMasker for schaefer 100
-    nifti_masker = NiftiLabelsMasker(labels_img=parcellation.maps)
-    auto_schaefer = nifti_masker.fit_transform(img)
+    # # Create NiftiLabelsMasker for schaefer 100
+    # nifti_masker = NiftiLabelsMasker(labels_img=parcellation.maps)
+    # auto_schaefer = nifti_masker.fit_transform(img)
 
-    # Create NiftiLabelsMasker for Tian 2012
-    nifti_masker = NiftiLabelsMasker(labels_img=parcellation.maps)
-    auto_schaefer = nifti_masker.fit_transform(img)
-
+    # # Create NiftiLabelsMasker for Tian 2012
+    # nifti_masker = NiftiLabelsMasker(labels_img=parcellation.maps)
+    # auto_tian = nifti_masker.fit_transform(img)
 
     # Use the ParcelAggregation object
     marker = ParcelAggregation(
@@ -274,4 +273,3 @@ def test_ParcelAggregation_3D_multiple() -> None:
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
     assert meta["method_params"] == {}
-
