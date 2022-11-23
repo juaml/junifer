@@ -19,7 +19,7 @@ def test_validate_types() -> None:
     with pytest.raises(TypeError, match="must be a list of strings"):
         validate_types([1])  # type: ignore
 
-    validate_types(["T1w", "bold"])
+    validate_types(["T1w", "BOLD"])
 
 
 def test_validate_replacements() -> None:
@@ -31,7 +31,7 @@ def test_validate_replacements() -> None:
 
     patterns = {
         "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
-        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+        "BOLD": "{subject}/func/{subject}_task-rest_bold.nii.gz",
     }
 
     with pytest.raises(TypeError, match="must be a list of strings"):
@@ -42,7 +42,7 @@ def test_validate_replacements() -> None:
 
     wrong_patterns = {
         "T1w": "{subject}/anat/_T1w.nii.gz",
-        "bold": "{session}/func/_task-rest_bold.nii.gz",
+        "BOLD": "{session}/func/_task-rest_bold.nii.gz",
     }
 
     with pytest.raises(ValueError, match="At least one pattern"):
@@ -53,7 +53,7 @@ def test_validate_replacements() -> None:
 
 def test_validate_patterns() -> None:
     """Test validation of patterns."""
-    types = ["T1w", "bold"]
+    types = ["T1w", "BOLD"]
     with pytest.raises(TypeError, match="must be a dict"):
         validate_patterns(types, "wrong")  # type: ignore
 
@@ -74,12 +74,12 @@ def test_validate_patterns() -> None:
 
     patterns = {
         "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
-        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+        "BOLD": "{subject}/func/{subject}_task-rest_bold.nii.gz",
     }
 
     wrongpatterns = {
         "T1w": "{subject}/anat/{subject}*.nii",
-        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+        "BOLD": "{subject}/func/{subject}_task-rest_bold.nii.gz",
     }
 
     with pytest.raises(ValueError, match="following a replacement"):

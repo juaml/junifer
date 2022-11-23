@@ -21,7 +21,7 @@ from .base import BaseDataGrabber
 class DataladDataGrabber(BaseDataGrabber):
     """Abstract base class for data fetching via Datalad.
 
-    Defines a DataGrabber that gets data from a datalad sibling.
+    Defines a Data Grabber that gets data from a datalad sibling.
 
     Parameters
     ----------

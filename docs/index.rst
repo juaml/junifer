@@ -24,7 +24,9 @@ enabling others to extend it easily.
 
    installation
    understanding/index.rst
+   using/index.rst
    builtin
+   extending/index.rst
    auto_examples/index.rst
    api/index.rst
    contribution

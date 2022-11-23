@@ -14,9 +14,9 @@ from ....datagrabber import PatternDataladDataGrabber
 
 @register_datagrabber
 class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
-    """Juseless CamCAN VBM DataGrabber class.
+    """Juseless CamCAN VBM Data Grabber class.
 
-    Implements a DataGrabber to access the CamCAN VBM data in Juseless.
+    Implements a Data Grabber to access the CamCAN VBM data in Juseless.
 
     Parameters
     ----------

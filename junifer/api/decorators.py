@@ -33,6 +33,30 @@ def register_datagrabber(klass: Type) -> Type:
     return klass
 
 
+def register_datareader(klass: Type) -> Type:
+    """Datareader registration decorator.
+
+    Registers the datareader so it can be used by name.
+
+    Parameters
+    ----------
+    klass: class
+        The class of the datareader to register.
+
+    Returns
+    -------
+    klass: class
+        The unmodified input class.
+
+    """
+    register(
+        step="datareader",
+        name=klass.__name__,
+        klass=klass,
+    )
+    return klass
+
+
 def register_preprocessor(klass: Type) -> Type:
     """Preprocessor registration decorator.
 

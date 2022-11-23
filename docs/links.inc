@@ -21,16 +21,24 @@
 .. _`matplotlib`: https://matplotlib.org
 .. _`fMRIPrep`: https://fmriprep.org
 .. _`nilearn`: https://nilearn.github.io
+.. _`nipype`: https://nipype.readthedocs.io
+.. _`datalad`: https://datalad.org
 
 .. _`venv`: https://docs.python.org/3/tutorial/venv.html
 .. _`conda env`: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
 
 .. _`Github`: https://github.com/
 .. _`junifer Github`: https://github.com/juaml/junifer
+.. _`junifer Discussions`: https://github.com/juaml/junifer/discussions
 
 .. _`Wikipedia`: https://wikipedia.org
+.. _`YAML`: https://yaml.org
 
 .. _`setuptools_scm`: https://github.com/pypa/setuptools_scm/
 
 .. _`sphinx gallery`: https://sphinx-gallery.github.io/stable/index.html
 .. _`sphinx reST reference`: https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html#inline-markup
+
+.. _`HTCondor`: https://research.cs.wisc.edu/htcondor/
+.. _`SLURM`: https://slurm.schedmd.com
+.. _`GNU Parallel`: https://www.gnu.org/software/parallel/

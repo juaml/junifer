@@ -62,7 +62,7 @@ class MarkerCollection:
         ----------
         input : dict
             The input data to fit the pipeline on. Should be the output of
-            indexing the DataGrabber with one element.
+            indexing the Data Grabber with one element.
 
         Returns
         -------

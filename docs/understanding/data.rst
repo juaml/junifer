@@ -18,7 +18,7 @@ The second level of keys are the actual data. So far, there are two keys used:
 - ``path``: path to the file containing the data.
 - ``data``: the data loaded in memory.
 
-The :ref:`DataGrabber <datagrabber>` step will only fill the ``path`` value.
+The :ref:`Data Grabber <datagrabber>` step will only fill the ``path`` value.
 The ``data`` value will be filled by the :ref:`DataReader <datareader>` step, if it is one of the possible file types
 that the datareader can read.
 
@@ -42,9 +42,21 @@ Data types
    * - ``BOLD``
      - BOLD image (4D)
      - Preprocessed/Denoised BOLD image (fmriprep output)
+   * - ``BOLD_confounds``
+     - BOLD image confounds (CSV/TSV file)
+     - Confounds that can be applied to the BOLD image.
    * - ``VBM_GM``
      - VBM Gray Matter segmentation (3D)
      - CAT output (`m0wp1` images)
    * - ``VBM_WM``
      - VBM White Matter segmentation (3D)
      - CAT output (`m0wp2` images)
+   * - ``fALFF``
+     - Voxel-wise fALFF image (3D)
+     - fALFF computed with CONN toolbox
+   * - ``GCOR``
+     - Global Correlation image (3D)
+     - GCOR computed with CONN toolbox
+   * - ``LCOR``
+     - Local Correlation image (3D)
+     - LCOR computed with CONN toolbox

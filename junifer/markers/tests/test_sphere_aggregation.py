@@ -118,7 +118,7 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
     vbm = oasis_dataset.gray_matter_maps[0]
     img = nib.load(vbm)
-    uri = tmp_path / "test_sphere_storage_3D.db"
+    uri = tmp_path / "test_sphere_storage_3D.sqlite"
 
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {

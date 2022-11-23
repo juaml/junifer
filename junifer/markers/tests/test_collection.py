@@ -134,7 +134,7 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     # Test storage
     dg = OasisVBMTestingDatagrabber()
 
-    uri = tmp_path / "test_marker_collection_storage.db"
+    uri = tmp_path / "test_marker_collection_storage.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     mc = MarkerCollection(
         markers=markers,

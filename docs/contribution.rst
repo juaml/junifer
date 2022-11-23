@@ -173,11 +173,11 @@ texts.
     ###############################################################################
     # The BIDS datagrabber requires three parameters: the types of data we want,
     # the specific pattern that matches each type, and the variables that will be
-    # replaced int he patterns.
-    types = ["T1w", "bold"]
+    # replaced in the patterns.
+    types = ["T1w", "BOLD"]
     patterns = {
         "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
-        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+        "BOLD": "{subject}/func/{subject}_task-rest_bold.nii.gz",
     }
     replacements = ["subject"]
     ###############################################################################

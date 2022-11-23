@@ -15,9 +15,9 @@ from ....utils import raise_error
 
 @register_datagrabber
 class JuselessDataladIXIVBM(PatternDataladDataGrabber):
-    """Juseless IXI VBM DataGrabber class.
+    """Juseless IXI VBM Data Grabber class.
 
-    Implements a DataGrabber to access the IXI VBM data in Juseless.
+    Implements a Data Grabber to access the IXI VBM data in Juseless.
 
     Parameters
     ----------
