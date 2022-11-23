@@ -26,8 +26,8 @@ The built-in masks are files that are shipped with the package in the
 data/masks directory. The user can also register their own masks.
 """
 _available_masks: Dict[str, Dict[Any, Any]] = {
-    "GM_prob0.2": {"family": "Vikery-Patil"},
-    "GM_prob0.2_cortex": {"family": "Vikery-Patil"},
+    "GM_prob0.2": {"family": "Vickery-Patil"},
+    "GM_prob0.2_cortex": {"family": "Vickery-Patil"},
 }
 
 
@@ -126,7 +126,7 @@ def load_mask(
 
     if t_family == "CustomUserMask":
         mask_fname = Path(mask_definition["path"])
-    elif t_family == 'Vikery-Patil':
+    elif t_family == 'Vickery-Patil':
         mask_fname = _load_vickery_patil_mask(name, resolution)
     else:
         raise_error(
@@ -146,7 +146,7 @@ def _load_vickery_patil_mask(
     name: str,
     resolution: Optional[float] = None,
 ) -> Path:
-    """Load Vikery-Patil mask.
+    """Load Vickery-Patil mask.
 
     Parameters
     ----------
@@ -179,7 +179,7 @@ def _load_vickery_patil_mask(
         mask_fname = "GMprob0.2_cortex_3mm_NA_rm.nii.gz"
     else:
         raise_error(
-            f"Cannot find a Vikery-Patil mask called {name}"
+            f"Cannot find a Vickery-Patil mask called {name}"
         )
     mask_fname = _masks_path / "vickery-patil" / mask_fname
 

@@ -11,7 +11,7 @@ from nilearn.image import math_img, resample_to_img
 from nilearn.maskers import NiftiMasker
 
 from ..api.decorators import register_marker
-from ..data import load_parcellation
+from ..data import load_parcellation, load_mask
 from ..stats import get_aggfunc_by_name
 from ..utils import logger
 from .base import BaseMarker
@@ -35,6 +35,9 @@ class ParcelAggregation(BaseMarker):
     method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name`.
+    mask : str, optional
+        The name of the mask to apply to regions before extracting signals.
+        Check valid options by calling :func:`junifer.data.masks.list_masks`.
     on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} \
          or list of the options, optional
         The data types to apply the marker to. If None, will work on all
@@ -49,12 +52,14 @@ class ParcelAggregation(BaseMarker):
         parcellation: str,
         method: str,
         method_params: Optional[Dict[str, Any]] = None,
+        mask: Optional[str] = None,
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
         self.method = method
-        self.method_params = {} if method_params is None else method_params
+        self.method_params = method_params or {}
+        self.mask = mask
         super().__init__(on=on, name=name)
 
     def get_valid_inputs(self) -> List[str]:
@@ -158,15 +163,34 @@ class ParcelAggregation(BaseMarker):
             name=self.parcellation,
             resolution=resolution,
         )
+
         parcellation_img_res = resample_to_img(
             t_parcellation,
             t_input,
             interpolation="nearest",
+            copy=True,
         )
+
         parcellation_bin = math_img(
             "img != 0",
             img=parcellation_img_res,
         )
+
+        if self.mask is not None:
+            logger.debug(f"Masking with {self.mask}")
+            mask_img, _ = load_mask(name=self.mask, resolution=resolution)
+            mask_img = resample_to_img(
+                mask_img,
+                t_input,
+                interpolation="nearest",
+                copy=True,
+            )
+            parcellation_bin = math_img(
+                "np.logical_and(img, mask)",
+                img=parcellation_bin,
+                mask=mask_img,
+            )
+
         logger.debug("Masking")
         masker = NiftiMasker(
             parcellation_bin, target_affine=t_input.affine

@@ -10,7 +10,12 @@ from pathlib import Path
 import pytest
 from numpy.testing import assert_array_almost_equal
 
-from junifer.data.masks import load_mask, register_mask, list_masks
+from junifer.data.masks import (
+    load_mask,
+    register_mask,
+    list_masks,
+    _load_vickery_patil_mask,
+)
 
 
 def test_register_mask_built_in_check() -> None:
@@ -36,10 +41,7 @@ def test_register_mask_already_registered() -> None:
         name="testmask",
         mask_path="testmask.nii.gz",
     )
-    assert (
-        load_mask("testmask", path_only=True)[1].name
-        == "testmask.nii.gz"
-    )
+    assert load_mask("testmask", path_only=True)[1].name == "testmask.nii.gz"
 
     # Try registering again
     with pytest.raises(ValueError, match=r"already registered."):
@@ -53,10 +55,7 @@ def test_register_mask_already_registered() -> None:
         overwrite=True,
     )
 
-    assert (
-        load_mask("testmask", path_only=True)[1].name
-        == "testmask2.nii.gz"
-    )
+    assert load_mask("testmask", path_only=True)[1].name == "testmask2.nii.gz"
 
 
 @pytest.mark.parametrize(
@@ -139,8 +138,9 @@ def test_vickery_patil() -> None:
         mask.header["pixdim"][1:4], [3.0, 3.0, 3.0]  # type: ignore
     )
 
-    assert fname.name == \
-        "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean_3mm.nii.gz"
+    assert (
+        fname.name == "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean_3mm.nii.gz"
+    )
 
     mask, fname = load_mask("GM_prob0.2_cortex")
     assert_array_almost_equal(
@@ -148,3 +148,6 @@ def test_vickery_patil() -> None:
     )
 
     assert fname.name == "GMprob0.2_cortex_3mm_NA_rm.nii.gz"
+
+    with pytest.raises(ValueError, match=r"find a Vickery-Patil mask "):
+        _load_vickery_patil_mask("wrong", resolution=2)

@@ -45,7 +45,8 @@ def test_compute() -> None:
         # Assert the meta
         meta = ets_rss_marker.get_meta("BOLD")["marker"]
         assert meta["parcellation"] == "Schaefer100x17"
-        assert meta["aggregation_method"] == "mean"
+        assert meta["agg_method"] == "mean"
+        assert meta["agg_method_params"] is None
         assert meta["class"] == "RSSETSMarker"
 
 

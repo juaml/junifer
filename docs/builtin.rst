@@ -321,5 +321,42 @@ Available
 Planned
 ~~~~~~~
 
+
+Masks
+-----
+
+..
+    Provide a list of the masks that are implemented or planned.
+
+    Version added: The Junifer version in which the mask was added.
+
+Available
+~~~~~~~~~
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Name
+     - Keys
+     - Version added
+     - Publication
+   * - Vickery-Patil (Gray Matter)
+     - | ``GM_prob0.2``
+     - 0.0.1
+     - | Vickery, Sam, & Patil, Kaustubh. (2022). 
+       | Chimpanzee and Human Gray Matter Masks [Data set]. Zenodo.
+       | https://doi.org/10.5281/zenodo.6463123
+   * - Vickery-Patil (Cortex + Basal Ganglia)
+     - | ``GM_prob0.2_cortex``
+     - 0.0.1
+     - | Vickery, Sam, & Patil, Kaustubh. (2022). 
+       | Chimpanzee and Human Gray Matter Masks [Data set]. Zenodo.
+       | https://doi.org/10.5281/zenodo.6463123
+
+Planned
+~~~~~~~
+
+
 ..
   helpful site for creating tables: https://rest-sphinx-memo.readthedocs.io/en/latest/ReST.html#tables
