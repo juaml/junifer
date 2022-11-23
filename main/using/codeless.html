@@ -311,7 +311,7 @@ junifer as a whole. These parameters are:</p>
 it is possible to extend junifer with custom datareaders, and thus, it is also possible to configure this step.</p>
 </div>
 <section id="data-grabber">
-<h3><span class="section-number">3.1.2.1. </span>Data Grabber<a class="headerlink" href="#data-grabber" title="Permalink to this heading">#</a></h3>
+<h3>Data Grabber<a class="headerlink" href="#data-grabber" title="Permalink to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">datagrabber</span></code> section must be configured using the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key to specify the datagrabber to use. Additional
 keys correspond to the parameters of the datagrabber.</p>
 <p>For example, to use the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladAOMICPIOP1</span></code></a> datagrabber, we just need to
@@ -334,7 +334,7 @@ fetch only the  <code class="docutils literal notranslate"><span class="pre">res
 </div>
 </section>
 <section id="data-reader">
-<h3><span class="section-number">3.1.2.2. </span>Data Reader<a class="headerlink" href="#data-reader" title="Permalink to this heading">#</a></h3>
+<h3>Data Reader<a class="headerlink" href="#data-reader" title="Permalink to this heading">#</a></h3>
 <p>As mentioned before, this section is entirely optional, as junifer only provides one data reader
 (<a class="reference internal" href="../api/datareaders.html#junifer.datareader.DefaultDataReader" title="junifer.datareader.DefaultDataReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datareader.DefaultDataReader</span></code></a>), which is the default in case the section is not specified.</p>
 <p>In any case, the syntax of the section is the same as for the <code class="docutils literal notranslate"><span class="pre">datagrabber</span></code> section, using the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key to
@@ -346,7 +346,7 @@ specify the data reader to use, and additional keys to pass parameters to the da
 <p>For the <em>Oasis VBM Testing dataset</em> example, we will not specify a <code class="docutils literal notranslate"><span class="pre">datareader</span></code> step.</p>
 </section>
 <section id="preprocessing">
-<h3><span class="section-number">3.1.2.3. </span>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this heading">#</a></h3>
+<h3>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this heading">#</a></h3>
 <p>Preprocessing is also an optional step, as it might be the case that no pre-processing is needed. In the case that
 preprocessing is needed, the section must be configured using the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key to specify the preprocessor to use,
 and additional keys to pass parameters to the preprocessor.</p>
@@ -366,7 +366,7 @@ name as the <code class="docutils literal notranslate"><span class="pre">kind</s
 <p>For the <em>Oasis VBM Testing dataset</em> example, we will not specify a preprocessing step.</p>
 </section>
 <section id="markers">
-<h3><span class="section-number">3.1.2.4. </span>Markers<a class="headerlink" href="#markers" title="Permalink to this heading">#</a></h3>
+<h3>Markers<a class="headerlink" href="#markers" title="Permalink to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">markers</span></code> section diverges from the previous ones, as we need to specify a list of markers. Each marker has a
 name that we can use to refer to it later, and a set of parameters that will be passed to the marker.</p>
 <p>For the <em>Oasis VBM Testing dataset</em> example, we want to compute the mean <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> value for each parcel using the
@@ -390,7 +390,7 @@ network, using 5mm spheres. Thus, we will configure the <code class="docutils li
 </div>
 </section>
 <section id="storage">
-<h3><span class="section-number">3.1.2.5. </span>Storage<a class="headerlink" href="#storage" title="Permalink to this heading">#</a></h3>
+<h3>Storage<a class="headerlink" href="#storage" title="Permalink to this heading">#</a></h3>
 <p>Finally, we need to define how and where the results will be stored. This is done using the <code class="docutils literal notranslate"><span class="pre">storage</span></code> section,
 which must be configured using the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key to specify the storage to use, and additional keys to pass parameters.</p>
 <p>For example, to use the <a class="reference internal" href="../api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.storage.SQLiteFeatureStorage</span></code></a> storage, we just need to specify where we want
@@ -494,11 +494,11 @@ to store the results:</p>
 <li><a class="reference internal" href="#">3.1. Code-less configuration</a><ul>
 <li><a class="reference internal" href="#general-parameters">3.1.1. General Parameters</a></li>
 <li><a class="reference internal" href="#step-by-step-configuration">3.1.2. Step-by-step configuration</a><ul>
-<li><a class="reference internal" href="#data-grabber">3.1.2.1. Data Grabber</a></li>
-<li><a class="reference internal" href="#data-reader">3.1.2.2. Data Reader</a></li>
-<li><a class="reference internal" href="#preprocessing">3.1.2.3. Preprocessing</a></li>
-<li><a class="reference internal" href="#markers">3.1.2.4. Markers</a></li>
-<li><a class="reference internal" href="#storage">3.1.2.5. Storage</a></li>
+<li><a class="reference internal" href="#data-grabber">Data Grabber</a></li>
+<li><a class="reference internal" href="#data-reader">Data Reader</a></li>
+<li><a class="reference internal" href="#preprocessing">Preprocessing</a></li>
+<li><a class="reference internal" href="#markers">Markers</a></li>
+<li><a class="reference internal" href="#storage">Storage</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#the-full-example">3.1.3. The full example</a></li>
