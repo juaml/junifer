@@ -151,10 +151,10 @@ def kendall_w(data: np.ndarray, axis=0) -> float:
 
 
     where,
-           | :math:`m` is the number of annotators.
-           | :math:`n` is the number of items to annotate.
-           | :math:`R_i` is sum of ranks for an item.
-           | :math:`\overline{R}` is the mean of the sum of ranks for all items.
+           | :math:`m` is the number of annotators
+           | :math:`n` is the number of items to annotate
+           | :math:`R_i` is sum of ranks for an item
+           | :math:`\overline{R}` is the mean of the sum of ranks for all items
 
     """
     # Dimension validation
