@@ -18,7 +18,7 @@ and Behaviour (`INM-7`_), it is designed to be as modular as possible thus
 enabling others to extend it easily.
 
 .. toctree::
-   :numbered:
+   :numbered: 3
    :maxdepth: 2
    :caption: Contents:
 
