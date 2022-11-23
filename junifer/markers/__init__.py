@@ -12,4 +12,5 @@ from .functional_connectivity_parcels import FunctionalConnectivityParcels
 from .functional_connectivity_spheres import FunctionalConnectivitySpheres
 from .parcel_aggregation import ParcelAggregation
 from .sphere_aggregation import SphereAggregation
+from .reho_parcels import ReHOParcels
 from .reho_spheres import ReHOSpheres
