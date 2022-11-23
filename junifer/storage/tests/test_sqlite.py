@@ -92,7 +92,7 @@ def test_get_engine_single_output(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_single_output.db"
+    uri = tmp_path / "test_single_output.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     assert storage.single_output is True
@@ -110,7 +110,7 @@ def test_get_engine_multi_output(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_multi_output.db"
+    uri = tmp_path / "test_multi_output.sqlite"
     storage = SQLiteFeatureStorage(
         uri=uri, single_output=False, upsert="ignore"
     )
@@ -130,7 +130,7 @@ def test_get_engine_single_output_creation(tmp_path: Path) -> None:
     tocreate = tmp_path / "tocreate"
     # Path does not exist yet
     assert not tocreate.exists()
-    uri = tocreate.absolute() / "test_single_output.db"
+    uri = tocreate.absolute() / "test_single_output.sqlite"
     _ = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Path exists now
     assert tocreate.exists()
@@ -145,7 +145,7 @@ def test_upsert_replace(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_upsert_replace.db"
+    uri = tmp_path / "test_upsert_replace.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
@@ -179,7 +179,7 @@ def test_upsert_ignore(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_upsert_ignore.db"
+    uri = tmp_path / "test_upsert_ignore.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
@@ -217,7 +217,7 @@ def test_upsert_update(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_upsert_delete.db"
+    uri = tmp_path / "test_upsert_delete.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1"}
@@ -250,7 +250,7 @@ def test_upsert_invalid_option(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_upsert_invalid.db"
+    uri = tmp_path / "test_upsert_invalid.sqlite"
     with pytest.raises(ValueError):
         SQLiteFeatureStorage(uri=uri, upsert="wrong")
 
@@ -265,7 +265,7 @@ def test_store_df_and_read_df(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_store_df_and_read_df.db"
+    uri = tmp_path / "test_store_df_and_read_df.sqlite"
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
     meta = {
@@ -326,7 +326,7 @@ def test_store_metadata(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_metadata_store.db"
+    uri = tmp_path / "test_metadata_store.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
@@ -345,7 +345,7 @@ def test_store_table(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_store_table.db"
+    uri = tmp_path / "test_store_table.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
@@ -404,7 +404,7 @@ def test_store_matrix(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_store_table.db"
+    uri = tmp_path / "test_store_table.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
     meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
@@ -435,7 +435,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     assert_array_equal(read_df.values[0], data.flatten())
     assert list(read_df.columns) == stored_names
     # Store without row and column names
-    uri = tmp_path / "test_store_table_nonames.db"
+    uri = tmp_path / "test_store_table_nonames.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(data=data, meta=meta)
     stored_names = [
@@ -467,7 +467,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     data = np.array([[1, 2, 3], [11, 22, 33], [111, 222, 333]])
     row_names = ["row1", "row2", "row3"]
     col_names = ["col1", "col2", "col3"]
-    uri = tmp_path / "test_store_table_triu.db"
+    uri = tmp_path / "test_store_table_triu.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(
         data=data,
@@ -496,7 +496,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     )
 
     # Store upper triangular matrix without diagonal
-    uri = tmp_path / "test_store_table_triu_nodiagonal.db"
+    uri = tmp_path / "test_store_table_triu_nodiagonal.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(
         data=data,
@@ -526,7 +526,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     data = np.array([[1, 2, 3], [11, 22, 33], [111, 222, 333]])
     row_names = ["row1", "row2", "row3"]
     col_names = ["col1", "col2", "col3"]
-    uri = tmp_path / "test_store_table_tril.db"
+    uri = tmp_path / "test_store_table_tril.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(
         data=data,
@@ -555,7 +555,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     )
 
     # Store lower triangular matrix without diagonal
-    uri = tmp_path / "test_store_table_tril_nodiagonal.db"
+    uri = tmp_path / "test_store_table_tril_nodiagonal.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     storage.store_matrix(
         data,
@@ -592,7 +592,7 @@ def test_store_multiple_output(tmp_path: Path):
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_store_multiple_output.db"
+    uri = tmp_path / "test_store_multiple_output.sqlite"
     storage = SQLiteFeatureStorage(uri=uri, single_output=False)
     # Metadata to store
     meta1 = {
@@ -691,7 +691,7 @@ def test_collect(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_collect.db"
+    uri = tmp_path / "test_collect.sqlite"
     storage = SQLiteFeatureStorage(uri=uri, single_output=False)
     # Metadata for storage
     meta1 = {

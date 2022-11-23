@@ -7,7 +7,7 @@ The Junifer Pipeline
 
 The junifer pipeline is the main execution path of junifer. It consists of five steps:
 
-1. :ref:`Data Grabber <datagrabber>`: Interpret the database and provide a list of files.
+1. :ref:`Data Grabber <datagrabber>`: Interpret the dataset and provide a list of files.
 2. :ref:`Data Reader <datareader>`: Read the files.
 3. :ref:`Pre-processing <preprocess>`: Prepare the images for marker computation.
 4. :ref:`Marker Computation <marker>`: Compute the marker.

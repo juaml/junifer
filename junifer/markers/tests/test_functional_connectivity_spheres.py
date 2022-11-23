@@ -62,7 +62,7 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
     # check correct output
     assert fc.get_output_kind(["BOLD"]) == ["matrix"]
 
-    uri = tmp_path / "test_fc_parcel.db"
+    uri = tmp_path / "test_fc_parcel.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {

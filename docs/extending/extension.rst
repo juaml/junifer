@@ -6,7 +6,7 @@ Creating a Junifer extension
 ============================
 
 Junifer is designed to be easily extensible. Through the use of a registry and decorators, we can easily add new
-functinality to junifer on runtime. This is done by creating a new python module and importing it before running
+functionality to junifer on runtime. This is done by creating a new python module and importing it before running
 junifer.
 
 A special consideration has to be made when using the :ref:`code-less configuration<codeless>`. In this case, the

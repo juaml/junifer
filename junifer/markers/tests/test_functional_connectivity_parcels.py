@@ -78,7 +78,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
 
     all_out = fc.fit_transform({"BOLD": {"data": fmri_img}})
 
-    uri = tmp_path / "test_fc_parcellation.db"
+    uri = tmp_path / "test_fc_parcellation.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {

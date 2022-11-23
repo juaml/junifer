@@ -52,7 +52,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # Define the storage interface
     storage = {
         "kind": "SQLiteFeatureStorage",
-        "uri": f"{tmpdir}/test.db",
+        "uri": f"{tmpdir}/test.sqlite",
     }
     # Run the defined junifer feature extraction pipeline
     run(

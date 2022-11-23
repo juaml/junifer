@@ -61,7 +61,7 @@ def test_run_single_element(tmp_path: Path) -> None:
     outdir = tmp_path / "out"
     outdir.mkdir()
     # Create storage
-    uri = outdir / "test.db"
+    uri = outdir / "test.sqlite"
     storage["uri"] = uri  # type: ignore
     # Run operations
     run(
@@ -72,7 +72,7 @@ def test_run_single_element(tmp_path: Path) -> None:
         elements=["sub-01"],
     )
     # Check files
-    files = list(outdir.glob("*.db"))
+    files = list(outdir.glob("*.sqlite"))
     assert len(files) == 1
 
 
@@ -92,7 +92,7 @@ def test_run_multi_element(tmp_path: Path) -> None:
     outdir = tmp_path / "out"
     outdir.mkdir()
     # Create storage
-    uri = outdir / "test.db"
+    uri = outdir / "test.sqlite"
     storage["uri"] = uri  # type: ignore
     storage["single_output"] = False  # type: ignore
     # Run operations
@@ -104,7 +104,7 @@ def test_run_multi_element(tmp_path: Path) -> None:
         elements=["sub-01", "sub-03"],
     )
     # Check files
-    files = list(outdir.glob("*.db"))
+    files = list(outdir.glob("*.sqlite"))
     assert len(files) == 2
 
 
@@ -124,7 +124,7 @@ def test_run_multi_element_single_output(tmp_path: Path) -> None:
     outdir = tmp_path / "out"
     outdir.mkdir()
     # Create storage
-    uri = outdir / "test.db"
+    uri = outdir / "test.sqlite"
     storage["uri"] = uri  # type: ignore
     storage["single_output"] = True  # type: ignore
     # Run operations
@@ -136,9 +136,9 @@ def test_run_multi_element_single_output(tmp_path: Path) -> None:
         elements=["sub-01", "sub-03"],
     )
     # Check files
-    files = list(outdir.glob("*.db"))
+    files = list(outdir.glob("*.sqlite"))
     assert len(files) == 1
-    assert files[0].name == "test.db"
+    assert files[0].name == "test.sqlite"
 
 
 def test_run_and_collect(tmp_path: Path) -> None:
@@ -157,7 +157,7 @@ def test_run_and_collect(tmp_path: Path) -> None:
     outdir = tmp_path / "out"
     outdir.mkdir()
     # Create storage
-    uri = outdir / "test.db"
+    uri = outdir / "test.sqlite"
     storage["uri"] = uri  # type: ignore
     storage["single_output"] = False  # type: ignore
     # Run operations
@@ -173,9 +173,9 @@ def test_run_and_collect(tmp_path: Path) -> None:
     )
     elements = dg.get_elements()  # type: ignore
     # This should create 10 files
-    files = list(outdir.glob("*.db"))
+    files = list(outdir.glob("*.sqlite"))
     assert len(files) == len(elements)
-    # But the test.db file should not exist
+    # But the test.sqlite file should not exist
     assert not uri.exists()
     # Collect in storage
     collect(storage)

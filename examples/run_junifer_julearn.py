@@ -71,7 +71,7 @@ sex = (
 # Create a temporary directory for junifer feature extraction:
 with tempfile.TemporaryDirectory() as tmpdir:
 
-    storage = {"kind": "SQLiteFeatureStorage", "uri": f"{tmpdir}/test.db"}
+    storage = {"kind": "SQLiteFeatureStorage", "uri": f"{tmpdir}/test.sqlite"}
     # run the defined junifer feature extraction pipeline
     run(
         workdir="/tmp",

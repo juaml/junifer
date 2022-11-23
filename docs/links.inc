@@ -22,6 +22,7 @@
 .. _`fMRIPrep`: https://fmriprep.org
 .. _`nilearn`: https://nilearn.github.io
 .. _`nipype`: https://nipype.readthedocs.io
+.. _`datalad`: https://datalad.org
 
 .. _`venv`: https://docs.python.org/3/tutorial/venv.html
 .. _`conda env`: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html

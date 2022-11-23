@@ -41,7 +41,7 @@ def register_datareader(klass: Type) -> Type:
     Parameters
     ----------
     klass: class
-        The class of the datagrabber to register.
+        The class of the datareader to register.
 
     Returns
     -------

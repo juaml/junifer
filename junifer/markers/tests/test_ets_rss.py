@@ -77,6 +77,6 @@ def test_store(tmp_path: Path) -> None:
         ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(
-            uri=str((tmp_path / "test.db").absolute()))
+            uri=str((tmp_path / "test.sqlite").absolute()))
         # Store
         ets_rss_marker.fit_transform(input=input_dict, storage=storage)

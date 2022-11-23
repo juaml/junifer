@@ -22,7 +22,7 @@ Thus, only a few methods are required:
 4. ``store``: the method that stores the computed marker.
 5. ``__init__``: the initialization method, where the marker is configured.
 
-As an example, we will develop a Parcel Mean marker, that is, a marker that first applies a parecellation and
+As an example, we will develop a Parcel Mean marker, that is, a marker that first applies a parcellation and
 then computes the mean of the data in each parcel. This is a very simple example, but it will show you how to create
 a new marker.
 
@@ -62,19 +62,19 @@ The parameters of the marker are defined in the ``__init__`` method. The :class:
 requires two optional parameters:
 
 1. ``name``: the name of the marker. This is used to identify the marker in the configuration file.
-2. ``on``: a list or string with the names of the inputs that the marker will be applied to.
+2. ``on``: a list or string with the data types that the marker will be applied to.
 
 .. attention:: Only basic types (*int*, *bool* and *str*) as well as Lists, Tuples and Dictionaries are allowed as
                parameters. This is because the parameters are stored in a JSON file, and JSON only supports these types.
 
 
-In this example, the is only paramater required for the computation is the name of the parcelation to use. Thus, we can
+In this example, the is only paramater required for the computation is the name of the parcellation to use. Thus, we can
 define the ``__init__`` method as follows:
 
 .. code-block:: python
     
-    def __init__(self, parcelation_name, on=None, name=None):
-        self.parcelation_name = parcelation_name
+    def __init__(self, parcellation_name, on=None, name=None):
+        self.parcellation_name = parcellation_name
         super().__init__(on=on, name=name)
 
 .. caution:: Parameters of the marker must be stored as object attributes without using ``_`` as prefix. This is
@@ -91,11 +91,11 @@ In this step, we will define the method that computes the marker. This method wi
 using the data provided by the datagrabber, as configured by the user. The function ``compute`` has two arguments:
 
 * ``input``: a dictionary with the data to be used to compute the marker. This will be the corresponding element in the 
-    :ref:`Data Object<data_object>` alredy indexing. Thus, the dictionary has at least two keys: ``data`` and ``path``.
-    The first one contains the data, while the second one contains the path to the data. The dictionary can also contain
-    other keys, depending on the data type.
-* ``extra_input``: the rest of the :ref:`Data Object<data_object>`. This is usefull if you want to use other data to
-    compute the marker (e.g.: ``BOLD_confounds`` can be used to de-confound the ``BOLD`` data).
+  :ref:`Data Object<data_object>` alredy indexing. Thus, the dictionary has at least two keys: ``data`` and ``path``.
+  The first one contains the data, while the second one contains the path to the data. The dictionary can also contain
+  other keys, depending on the data type.
+* ``extra_input``: the rest of the :ref:`Data Object<data_object>`. This is useful if you want to use other data to
+  compute the marker (e.g.: ``BOLD_confounds`` can be used to de-confound the ``BOLD`` data).
 
 Following the example, we will compute the mean of the data in each parcel using
 :class:`nilearn.maskers.NiftiLabelsMasker`. Importantly, the output of the compute function must be a dictionary.
@@ -119,14 +119,17 @@ This dictionary will later be passed onto the ``store`` method.
 
         # Load the parcellation
         t_parcellation, t_labels, _ = load_parcellation(
-            name=self.parcelation_name,
+            name=self.parcellation_name,
             resolution=resolution,
         )
 
         # Create a masker
         masker = NiftiLabelsMasker(
-            labels_img=t_parcellation, standardize=True,
-            memory='nilearn_cache', verbose=5)
+            labels_img=t_parcellation,
+            standardize=True,
+            memory='nilearn_cache',
+            verbose=5,
+        )
 
         # mask the data
         out_values = masker.fit_transform([data])
@@ -146,9 +149,9 @@ Step 4: Store the marker
 ------------------------
 
 In this step, we will define the method that stores the marker. This method will be called by junifer when needed,
-using the data provided by the ``compute`` method. The function ``store`` has three arguments:
+using the data provided by the ``compute`` method. The method ``store`` has three arguments:
 
-* ``kind``: A string indicating the :ref:`type of data <data_types>` that was used to compute the marker.
+* ``kind``: A string indicating the :ref:`data type <data_types>` that was used to compute the marker.
 * ``out``: The output of the ``compute`` method.
 * ``storage``: The storage object, that will be used to store the marker.
 
@@ -161,7 +164,7 @@ using the data provided by the ``compute`` method. The function ``store`` has th
             storage.store(kind="timeseries", **out)
 
 .. hint:: Check the hint on :ref:`extending_markers_compute`. If the output of the ``compute`` method is a dictionary
-          with keys based on the :ref:`storage types <storage_types>`, the ``store`` method can simple call the right
+          with keys based on the :ref:`storage types <storage_types>`, the ``store`` method can simply call the right
           storage function, based on the ``kind`` parameter, with ``**out``.
 
 
@@ -170,7 +173,7 @@ using the data provided by the ``compute`` method. The function ``store`` has th
 Step 5: Finalize the marker
 ---------------------------
 
-One all of the above-mentioned methods are defined, we just need to give our marker a name an register it using the
+Once all of the above steps are done, we just need to give our marker a name an register it using the
 ``@register_marker`` decorator:
 
 .. code-block:: python
@@ -183,8 +186,8 @@ One all of the above-mentioned methods are defined, we just need to give our mar
     @register_marker
     class ParcelMean(BaseMarker):
 
-        def __init__(self, parcelation_name, on=None, name=None):
-            self.parcelation_name = parcelation_name
+        def __init__(self, parcellation_name, on=None, name=None):
+            self.parcellation_name = parcellation_name
             super().__init__(on=on, name=name)
         
         def get_valid_inputs(self):
@@ -205,14 +208,17 @@ One all of the above-mentioned methods are defined, we just need to give our mar
 
             # Load the parcellation
             t_parcellation, t_labels, _ = load_parcellation(
-                name=self.parcelation_name,
+                name=self.parcellation_name,
                 resolution=resolution,
             )
 
             # Create a masker
             masker = NiftiLabelsMasker(
-                labels_img=t_parcellation, standardize=True,
-                memory='nilearn_cache', verbose=5)
+                labels_img=t_parcellation,
+                standardize=True,
+                memory='nilearn_cache',
+                verbose=5,
+            )
 
             # mask the data
             out_values = masker.fit_transform([data])

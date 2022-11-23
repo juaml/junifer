@@ -65,6 +65,6 @@ Currently supported storage interfaces
      - File type
      - Storage kinds
    * - :class:`junifer.storage.SQLiteFeatureStorage`
-     - ``.db``
+     - ``.sqlite``
      - SQLite
      - ``matrix``, ``table``, ``timeseries``
