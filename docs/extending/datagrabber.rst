@@ -2,10 +2,10 @@
 
 .. _extending_datagrabbers:
 
-Creating DataGrabbers
-=====================
+Creating Data Grabbers
+======================
 
-DataGrabbers are the first step of the pipeline. Its purpose is to interpret
+Data Grabbers are the first step of the pipeline. Its purpose is to interpret
 the structure of a dataset and provide two specific functionalities:
 
 1) Given an *element*, provide the path to each kind of data available for this
@@ -14,7 +14,7 @@ the structure of a dataset and provide two specific functionalities:
 
 In this section, we will see how to create a datagrabber for a dataset. Basic
 aspects of datagrabbers are covered in the 
-:ref:`Understanding DataGrabbers <datagrabber>` section.
+:ref:`Understanding Data Grabbers <datagrabber>` section.
 
 .. _extending_datagrabbers_think:
 
@@ -22,7 +22,7 @@ Step 1: Think about the element
 -------------------------------
 
 Like with any programming-related task, the first step is to think. When
-creating a DataGrabber, we need to first define what an *element* is.
+creating a Data Grabber, we need to first define what an *element* is.
 The *element* should be the smallest unit of data that can be processed. That
 is, for each element, there should be a set of data that can be processed, but
 only one of each *data type* (see :ref:`data_types`).
@@ -58,7 +58,7 @@ Step 2: Think about the dataset's structure
 
 Now that we have our element defined, we need to think about the structure of
 the dataset. Mainly, because the structure of the dataset will determine how
-the DataGrabber needs to be implemented.
+the Data Grabber needs to be implemented.
 
 Junifer provides an abstract class to deal with datasets that can be thought in
 terms of *patterns*. A *pattern* is a string that contains placeholders that are
@@ -88,13 +88,13 @@ discussion in the `junifer Discussions`_ page. Most probably we can help you
 get your dataset in order.
 
 If there is no other way, then you can follow :ref:`extending_datagrabbers_base`
-to create a DataGrabber from scratch.
+to create a Data Grabber from scratch.
 
 
 .. _extending_datagrabbers_pattern:
 
-Step 3: Create a DataGrabber
-----------------------------
+Step 3: Create a Data Grabber
+-----------------------------
 
 Option A: Extending from PatternDataGrabber
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -13,9 +13,9 @@ from ....datagrabber import PatternDataladDataGrabber
 
 @register_datagrabber
 class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
-    """Juseless AOMICID1000 VBM DataGrabber class.
+    """Juseless AOMICID1000 VBM Data Grabber class.
 
-    Implements a DataGrabber to access the AOMICID1000 VBM data in Juseless.
+    Implements a Data Grabber to access the AOMICID1000 VBM data in Juseless.
 
     Parameters
     ----------

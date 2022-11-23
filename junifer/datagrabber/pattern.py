@@ -19,9 +19,9 @@ from .utils import validate_patterns, validate_replacements
 
 @register_datagrabber
 class PatternDataGrabber(BaseDataGrabber):
-    """Concrete implementation for data fetching using patterns.
+    """Concrete implementation for data grabbing using patterns.
 
-    Implements a DataGrabber that understands patterns to grab data.
+    Implements a Data Grabber that understands patterns to grab data.
 
     Parameters
     ----------

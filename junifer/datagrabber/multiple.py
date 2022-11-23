@@ -12,9 +12,9 @@ from .base import BaseDataGrabber
 
 
 class MultipleDataGrabber(BaseDataGrabber):
-    """Datagrabber class for data fetching from multiple sources.
+    """Data Grabber class for data fetching from multiple sources.
 
-    Defines a DataGrabber which can be used to fetch data from multiple
+    Defines a Data Grabber which can be used to fetch data from multiple
     datagrabbers.
 
     Parameters

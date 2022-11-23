@@ -20,7 +20,7 @@ Confound Removal
 ----------------
 
 The *Confound Removal* step is meant to remove *confounds* from the ``BOLD`` data. The confounds are
-extracted from the ``BOLD_confounds`` data (must be provided by the :ref:`DataGrabber <datagrabber>`).
+extracted from the ``BOLD_confounds`` data (must be provided by the :ref:`Data Grabber <datagrabber>`).
 The confounds are then regressed out from the ``BOLD`` data using :func:`nilearn.image.clean_img`.
 
 Currently, junifer supports only one confound removal class: 

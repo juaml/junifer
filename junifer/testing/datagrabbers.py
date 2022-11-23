@@ -15,7 +15,7 @@ from ..datagrabber.base import BaseDataGrabber
 
 
 class OasisVBMTestingDatagrabber(BaseDataGrabber):
-    """DataGrabber for Oasis VBM testing data."""
+    """Data Grabber for Oasis VBM testing data."""
 
     def __init__(self) -> None:
         # Create temporary directory
@@ -79,7 +79,7 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
 
 
 class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
-    """DataGrabber for SPM Auditory dataset.
+    """Data Grabber for SPM Auditory dataset.
 
     Wrapper for :func:`nilearn.datasets.fetch_spm_auditory`.
 
@@ -143,7 +143,7 @@ class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
 
 
 class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
-    """DataGrabber for Partly Cloudy dataset.
+    """Data Grabber for Partly Cloudy dataset.
 
     Wrapper for :func:`nilearn.datasets.fetch_development_fmri`
 
