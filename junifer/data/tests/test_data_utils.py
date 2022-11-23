@@ -30,7 +30,6 @@ def test_closest_resolution(
 
     Parameters
     ----------
-
     resolution: float
         The resolution to test.
     valid_resolutions: List[float]

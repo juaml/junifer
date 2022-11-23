@@ -14,14 +14,15 @@ def closest_resolution(
 
     Parameters
     ----------
-    resolution : float
-        The given resolution.
-    valid_resolution : list of float or np.ndarray
+    resolution : float, optional
+        The given resolution. If None, will return the highest resolution
+        (default None).
+    valid_resolution : list of float or int, or np.ndarray
         The array of valid resolutions.
 
     Returns
     -------
-    float
+    float or int
         The closest valid resolution.
     """
     # Convert list of int to numpy.ndarray
