@@ -359,13 +359,18 @@ Available
        | The brain's default network: anatomy, function, and relevance to disease.
        | Annals of the New York Academy of Sciences, Volume 1124(1), Pages 1-38 (2008).
        | https://doi.org/10.1196/annals.1440.011
-   * - Extended multiple-demand network
+   * - Missing formal name
      - ``eMDN``
      - 0.0.1
-     - | Camilleri, J.A., Müller, V.I., Fox, P. et al.
-       | Definition and characterization of an extended multiple-demand network.
-       | NeuroImage, Volume 165, Pages 138-147 (2018).
-       | https://doi.org/10.1016/j.neuroimage.2017.10.020.
+     - Missing publication details
+   * - Empathic processing
+     - ``Empathy``
+     - 0.0.1
+     - | Bzdok, D., Schilbach, L., Vogeley, K. et al.
+       | Parsing the neural correlates of moral cognition: ALE meta-analysis on morality,
+       | theory of mind, and empathy.
+       | Brain Structure and Function, Volume 217(4), Pages 783-796 (2012).
+       | https://doi.org/10.1007/s00429-012-0380-y
    * - Extended social-affective default
      - ``eSAD``
      - 0.0.1
@@ -373,6 +378,21 @@ Available
        | Definition and characterization of an extended social-affective default network.
        | Brain structure & function, Volume 220, Pages 1031–1049 (2015).
        | https://doi.org/10.1007/s00429-013-0698-0
+   * - Extended multiple-demand network
+     - ``extMDN``
+     - 0.0.1
+     - | Camilleri, J.A., Müller, V.I., Fox, P. et al.
+       | Definition and characterization of an extended multiple-demand network.
+       | NeuroImage, Volume 165, Pages 138-147 (2018).
+       | https://doi.org/10.1016/j.neuroimage.2017.10.020.
+   * - Motor execution
+     - ``Motor``
+     - 0.0.1
+     - | Witt, S.T., Laird, A.R., Meyerand, M.E.
+       | Functional neuroimaging correlates of finger-tapping task variations:
+       | An ALE meta-analysis,
+       | NeuroImage, Volume 42(1), Pages 343-356 (2008).
+       | https://doi.org/10.1016/j.neuroimage.2008.04.025.
    * - Multitasking
      - ``MultiTask``
      - 0.0.1
@@ -381,6 +401,14 @@ Available
        | a meta-analytic review and a neuro-cognitive processing model of human multitasking.
        | Brain structure & function, Volume 224(5), Pages 1845–1869 (2019).
        | https://doi.org/10.1007/s00429-019-01870-4
+   * - Physiological stress
+     - ``PhysioStress``
+     - 0.0.1
+     - | Kogler, L., Müller, V.I., Chang, A. et al.
+       | Psychosocial versus physiological stress — Meta-analyses on deactivations and
+       | activations of the neural correlates of stress reactions.
+       | NeuroImage, Volume 119, Pages 235-251 (2015).
+       | https://doi.org/10.1016/j.neuroimage.2015.06.059.
    * - Reward-related decision making
      - ``Rew``
      - 0.0.1
@@ -389,6 +417,18 @@ Available
        | A meta-analysis of functional neuroimaging studies.
        | Neuroscience & Biobehavioral Reviews, Volume 35(5), Pages 1219-1236 (2011).
        | https://doi.org/10.1016/j.neubiorev.2010.12.012.
+   * - Missing formal name
+     - ``Somatosensory``
+     - 0.0.1
+     - Missing publication details
+   * - Theory-of-mind cognition
+     - ``ToM``
+     - 0.0.1
+     - | Bzdok, D., Schilbach, L., Vogeley, K. et al.
+       | Parsing the neural correlates of moral cognition: ALE meta-analysis on morality,
+       | theory of mind, and empathy.
+       | Brain Structure and Function, Volume 217(4), Pages 783-796 (2012).
+       | https://doi.org/10.1007/s00429-012-0380-y
    * - Vigilant attention
      - ``VigAtt``
      - 0.0.1
@@ -415,7 +455,7 @@ Planned
 
    * - Name
      - Publication
-   * - Emotional scene and face processing
+   * - Emotional scene and face processing (EmoSF)
      - | Sabatinelli, D., Fortune, E.E., Li, Q. et al.
        | Emotional perception: Meta-analyses of face and natural scene processing.
        | NeuroImage, Volume 54(3), Pages 2524-2533 (2011).
@@ -426,12 +466,6 @@ Planned
        | and Functional-Connectivity Evidence.
        | Journal of Cognitive Neuroscience, Volume 33(9), Pages 1716–1752 (2021).
        | https://doi.org/10.1162/jocn_a_01616
-   * - Motor execution network
-     - | Witt, S.T., Laird, A.R., Meyerand, M.E.
-       | Functional neuroimaging correlates of finger-tapping task variations:
-       | An ALE meta-analysis,
-       | NeuroImage, Volume 42(1), Pages 343-356 (2008).
-       | https://doi.org/10.1016/j.neuroimage.2008.04.025.
 
 
 Masks
