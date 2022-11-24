@@ -119,7 +119,6 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
         load_parcellation("WrongValues2")
 
 
-
 @pytest.mark.parametrize(
     "name, parcellation_path, parcels_labels, overwrite",
     [

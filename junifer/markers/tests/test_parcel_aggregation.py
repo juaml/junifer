@@ -293,7 +293,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
     meta = marker_original.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
     assert meta["parcellation"] == ["Schaefer100x7"]
-    assert meta["mask"] == None
+    assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
@@ -317,7 +317,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
     meta = marker_split.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
     assert meta["parcellation"] == ["Schaefer100x7_low", "Schaefer100x7_high"]
-    assert meta["mask"] == None
+    assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
@@ -391,7 +391,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
     meta = marker_original.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
     assert meta["parcellation"] == ["Schaefer100x7"]
-    assert meta["mask"] == None
+    assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
@@ -418,7 +418,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
         "Schaefer100x7_low2",
         "Schaefer100x7_high2",
     ]
-    assert meta["mask"] == None
+    assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
