@@ -315,8 +315,96 @@ Planned
 Coordinates
 -----------
 
+..
+    Provide a list of the Coordinates that are implemented or planned.
+
+    Version added: The Junifer version in which the parcellation was added.
+
 Available
 ~~~~~~~~~
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Name
+     - Keys
+     - Version added
+     - Publication
+   * - Cognitive action control
+     - ``CogAC``
+     - 0.0.1
+     - | Cieslik, E.C., Mueller, V.I., Eickhoff, C.R., Langner, R., Eickhoff, S.B.
+       | Three key regions for supervisory attentional control: Evidence from neuroimaging
+       | meta-analyses.
+       | Neuroscience & Biobehavioral Reviews, Volume 48, Pages 22-34 (2015).
+       | https://doi.org/10.1016/j.neubiorev.2014.11.003.
+   * - Cognitive action regulation
+     - ``CogAR``
+     - 0.0.1
+     - | Langner, R., Leiberg, S., Hoffstaedter, F., Eickhoff, S.B.
+       | Towards a human self-regulation system: Common and distinct neural signatures
+       | of emotional and behavioural control.
+       | Neuroscience & Biobehavioral Reviews, Volume 90, Pages 400-410 (2018).
+       | https://doi.org/10.1016/j.neubiorev.2018.04.022.
+   * - Default mode network
+     - ``DMNBuckner``
+     - 0.0.1
+     - | Van Dijk, K.R., Hedden, T., Venkataraman, A. et al.
+       | Intrinsic functional connectivity as a tool for human connectomics:
+       | theory, properties, and optimization.
+       | Journal of neurophysiology, Volume 103(1), Pages 297-321 (2010).
+       | https://doi.org/10.1152/jn.00783.2009
+       | Buckner, R.L., Andrews‐Hanna, J.R., & Schacter, D.L.
+       | The brain's default network: anatomy, function, and relevance to disease.
+       | Annals of the New York Academy of Sciences, Volume 1124(1), Pages 1-38 (2008).
+       | https://doi.org/10.1196/annals.1440.011
+   * - Extended multiple-demand network
+     - ``eMDN``
+     - 0.0.1
+     - | Camilleri, J.A., Müller, V.I., Fox, P. et al.
+       | Definition and characterization of an extended multiple-demand network.
+       | NeuroImage, Volume 165, Pages 138-147 (2018).
+       | https://doi.org/10.1016/j.neuroimage.2017.10.020.
+   * - Extended social-affective default
+     - ``eSAD``
+     - 0.0.1
+     - | Amft, M., Bzdok, D., Laird, A.R. et al.
+       | Definition and characterization of an extended social-affective default network.
+       | Brain structure & function, Volume 220, Pages 1031–1049 (2015).
+       | https://doi.org/10.1007/s00429-013-0698-0
+   * - Multitasking
+     - ``MultiTask``
+     - 0.0.1
+     - | Worringer, B., Langner, R., Koch, I. et al.
+       | Common and distinct neural correlates of dual-tasking and task-switching:
+       | a meta-analytic review and a neuro-cognitive processing model of human multitasking.
+       | Brain structure & function, Volume 224(5), Pages 1845–1869 (2019).
+       | https://doi.org/10.1007/s00429-019-01870-4
+   * - Reward-related decision making
+     - ``Rew``
+     - 0.0.1
+     - | Liu, X., Hairston, J., Schrier, M., Fan, J.
+       | Common and distinct networks underlying reward valence and processing stages:
+       | A meta-analysis of functional neuroimaging studies.
+       | Neuroscience & Biobehavioral Reviews, Volume 35(5), Pages 1219-1236 (2011).
+       | https://doi.org/10.1016/j.neubiorev.2010.12.012.
+   * - Vigilant attention
+     - ``VigAtt``
+     - 0.0.1
+     - | Langner, R., & Eickhoff, S.B.
+       | Sustaining attention to simple tasks: a meta-analytic review of the neural
+       | mechanisms of vigilant attention.
+       | Psychological bulletin, Volume 139 4, Pages 870-900 (2013).
+       | https://doi.org/10.1037/a0030694
+   * - Working memory
+     - ``WM``
+     - 0.0.1
+     - | Rottschy, C., Langner, R., Dogan, I. et al.
+       | Modelling neural correlates of working memory: A coordinate-based meta-analysis.
+       | NeuroImage, Volume 60, Pages 830-846 (2012).
+       | https://doi.org/10.1016/j.neuroimage.2011.11.050.
+
 
 Planned
 ~~~~~~~
