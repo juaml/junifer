@@ -144,15 +144,13 @@ class ReHoSpheres(BaseMarker):
             on="BOLD",
         )
         # Perform aggregation
-        aggregated_values = sphere_aggregation.compute(
+        output = sphere_aggregation.compute(
             input=input, extra_input=extra_input
         )
-        # Create a new dictionary for returning
-        output = {}
         # Only use the first row and expand row dimension
-        output["data"] = np.expand_dims(aggregated_values["data"][0], axis=0)
-        # Set column labels
-        output["columns"] = aggregated_values["columns"]
+        output["data"] = output["data"][0][np.newaxis, :]
+        # Delete row_names
+        del output["row_names"]
         # Set row_cols_name to None
         output["rows_col_name"] = None
         return output
