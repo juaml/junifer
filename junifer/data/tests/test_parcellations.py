@@ -11,6 +11,9 @@ from typing import List
 import pytest
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
+import nibabel as nib
+from nilearn.image import new_img_like
+
 from junifer.data.parcellations import (
     _retrieve_parcellation,
     _retrieve_schaefer,
@@ -72,7 +75,49 @@ def test_register_parcellation_already_registered() -> None:
     )
 
 
-# TODO: Add tests to verify wrong number of labels and wrong values
+def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
+    """Test parcellation with wrong labels and values.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    """
+    schaefer, labels, schaefer_path = load_parcellation("Schaefer100x7")
+    assert schaefer is not None
+
+    # Test wrong number of labels
+    register_parcellation("WrongLabels", schaefer_path, labels[:10])
+
+    with pytest.raises(ValueError, match=r"has 100 parcels but 10"):
+        load_parcellation("WrongLabels")
+
+    # Test wrong number of labels
+    register_parcellation("WrongLabels2", schaefer_path, labels + ["wrong"])
+
+    with pytest.raises(ValueError, match=r"has 100 parcels but 101"):
+        load_parcellation("WrongLabels2")
+
+    schaefer_data = schaefer.get_fdata().copy()
+    schaefer_data[schaefer_data == 50] = 0
+    new_schaefer_path = tmp_path / "new_schaefer.nii.gz"
+    new_schaefer_img = new_img_like(schaefer, schaefer_data)
+    nib.save(new_schaefer_img, new_schaefer_path)
+
+    register_parcellation("WrongValues", new_schaefer_path, labels[:-1])
+    with pytest.raises(ValueError, match=r"the range [0, 99]"):
+        load_parcellation("WrongValues")
+
+    schaefer_data = schaefer.get_fdata().copy()
+    schaefer_data[schaefer_data == 50] = 200
+    new_schaefer_path = tmp_path / "new_schaefer2.nii.gz"
+    new_schaefer_img = new_img_like(schaefer, schaefer_data)
+    nib.save(new_schaefer_img, new_schaefer_path)
+
+    register_parcellation("WrongValues2", new_schaefer_path, labels)
+    with pytest.raises(ValueError, match=r"the range [0, 100]"):
+        load_parcellation("WrongValues2")
+
 
 
 @pytest.mark.parametrize(

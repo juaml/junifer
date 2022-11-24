@@ -216,15 +216,13 @@ def load_parcellation(
         parcel_values = np.unique(parcellation_img.get_fdata())
         if len(parcel_values) - 1 != len(parcellation_labels):
             raise_error(
-                f"Parcellation {name} has {len(parcel_values) - 1} parcels"
+                f"Parcellation {name} has {len(parcel_values) - 1} parcels "
                 f"but {len(parcellation_labels)} labels."
             )
-        if (
-            parcel_values.min() != 0
-            and parcel_values.max() != len(parcel_values) - 1
-        ):
+        parcel_values.sort()
+        if np.any(np.diff(parcel_values) != 1):
             raise_error(
-                f"Parcellation {name} has parcel values outside the range "
+                f"Parcellation {name} must have all the values in the range  "
                 f"[0, {len(parcel_values)}]."
             )
 

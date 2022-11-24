@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from nilearn.connectome import ConnectivityMeasure
 from sklearn.covariance import EmpiricalCovariance
@@ -24,8 +24,8 @@ class FunctionalConnectivityParcels(BaseMarker):
 
     Parameters
     ----------
-    parcellation : str
-        The name of the parcellation. Check valid options by calling
+    parcellation : str or list of str
+        The name(s) of the parcellation(s). Check valid options by calling
         :func:`junifer.data.parcellations.list_parcellations`.
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
@@ -51,7 +51,7 @@ class FunctionalConnectivityParcels(BaseMarker):
 
     def __init__(
         self,
-        parcellation: str,
+        parcellation: Union[str, List[str]],
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",

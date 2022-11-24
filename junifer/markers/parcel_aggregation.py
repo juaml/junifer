@@ -26,8 +26,8 @@ class ParcelAggregation(BaseMarker):
 
     Parameters
     ----------
-    parcellation : str
-        The name of the parcellation. Check valid options by calling
+    parcellation : str or list of str
+        The name(s) of the parcellation(s). Check valid options by calling
         :func:`junifer.data.parcellations.list_parcellations`.
     method : str
         The method to perform aggregation using. Check valid options in
@@ -191,7 +191,7 @@ class ParcelAggregation(BaseMarker):
             labels = all_labels[0]
             for t_parc, t_labels in zip(all_parcelations[1:], all_labels[1:]):
                 # Get the data from this parcellation
-                t_parc_data = t_parc.get_fdata()
+                t_parc_data = t_parc.get_fdata().copy()  # must be copied
                 # Increase the values of each ROI to match the labels
                 t_parc_data[t_parc_data != 0] += len(labels)
 
