@@ -27,12 +27,12 @@ class AmplitudeLowFrequencyFluctuationSpheres(
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
         for more information (default None).
-    highpass : float
-        The highpass cutoff frequency for the bandpass filter.
+    highpass : float, optional
+        The highpass cutoff frequency for the bandpass filter (default 0.01).
     lowpass : float
-        The lowpass cutoff frequency for the bandpass filter.
+        The lowpass cutoff frequency for the bandpass filter (default 0.1).
     order : int
-        The order of the bandpass filter.
+        The order of the bandpass filter (default 4).
     mask : str, optional
         The name of the mask to apply to regions before extracting signals.
         Check valid options by calling :func:`junifer.data.masks.list_masks`
@@ -62,9 +62,9 @@ class AmplitudeLowFrequencyFluctuationSpheres(
     def __init__(
         self,
         coords: str,
-        highpass: float,
-        lowpass: float,
-        order: int,
+        highpass: float = 0.01,
+        lowpass: float = 0.1,
+        order: int = 4,
         radius: Optional[float] = None,
         mask: Optional[str] = None,
         tr: Optional[float] = None,

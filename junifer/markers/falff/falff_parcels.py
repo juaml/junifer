@@ -23,12 +23,12 @@ class AmplitudeLowFrequencyFluctuationParcels(
     parcellation : str or list of str
         The name(s) of the parcellation(s). Check valid options by calling
         :func:`junifer.data.parcellations.list_parcellations`.
-    highpass : float
-        The highpass cutoff frequency for the bandpass filter.
+    highpass : float, optional
+        The highpass cutoff frequency for the bandpass filter (default 0.01).
     lowpass : float
-        The lowpass cutoff frequency for the bandpass filter.
+        The lowpass cutoff frequency for the bandpass filter (default 0.1).
     order : int
-        The order of the bandpass filter.
+        The order of the bandpass filter (default 4).
     mask : str, optional
         The name of the mask to apply to regions before extracting signals.
         Check valid options by calling :func:`junifer.data.masks.list_masks`
@@ -58,9 +58,9 @@ class AmplitudeLowFrequencyFluctuationParcels(
     def __init__(
         self,
         parcellation: Union[str, List[str]],
-        highpass: float,
-        lowpass: float,
-        order: int,
+        highpass: float = 0.01,
+        lowpass: float = 0.1,
+        order: int = 4,
         mask: Optional[str] = None,
         tr: Optional[float] = None,
         name: Optional[str] = None,
