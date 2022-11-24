@@ -409,6 +409,30 @@ Available
 Planned
 ~~~~~~~
 
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Name
+     - Publication
+   * - Emotional scene and face processing
+     - | Sabatinelli, D., Fortune, E.E., Li, Q. et al.
+       | Emotional perception: Meta-analyses of face and natural scene processing.
+       | NeuroImage, Volume 54(3), Pages 2524-2533 (2011).
+       | https://doi.org/10.1016/j.neuroimage.2010.10.011.
+   * - Perceptuo-motor network
+     - | Heckner, M.K., Cieslik, E.C., Eickhoff, S.B. et al.
+       | The Aging Brain and Executive Functions Revisited: Implications from Meta-analytic
+       | and Functional-Connectivity Evidence.
+       | Journal of Cognitive Neuroscience, Volume 33(9), Pages 1716–1752 (2021).
+       | https://doi.org/10.1162/jocn_a_01616
+   * - Motor execution network
+     - | Witt, S.T., Laird, A.R., Meyerand, M.E.
+       | Functional neuroimaging correlates of finger-tapping task variations:
+       | An ALE meta-analysis,
+       | NeuroImage, Volume 42(1), Pages 343-356 (2008).
+       | https://doi.org/10.1016/j.neuroimage.2008.04.025.
+
 
 Masks
 -----
