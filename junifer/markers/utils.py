@@ -182,9 +182,9 @@ def _calculate_complexity(
 
     # Start the analysis
     feat_idx = 0
-    for compl_measure, feature_params in measure_types.items():
+    for compl_measure, params in measure_types.items():
         func_name = globals()[compl_measure]
-        feature_map = func_name(bold_ts, measure_types)  # n_roi x 1
+        feature_map = func_name(bold_ts, params)  # n_roi x 1
         complexity_features[:, feat_idx] = feature_map.T
         feat_idx = feat_idx + 1
 
