@@ -456,13 +456,13 @@ Available
    * - Vickery-Patil (Gray Matter)
      - | ``GM_prob0.2``
      - 0.0.1
-     - | Vickery, Sam, & Patil, Kaustubh. (2022). 
+     - | Vickery, Sam, & Patil, Kaustubh. (2022).
        | Chimpanzee and Human Gray Matter Masks [Data set]. Zenodo.
        | https://doi.org/10.5281/zenodo.6463123
    * - Vickery-Patil (Cortex + Basal Ganglia)
      - | ``GM_prob0.2_cortex``
      - 0.0.1
-     - | Vickery, Sam, & Patil, Kaustubh. (2022). 
+     - | Vickery, Sam, & Patil, Kaustubh. (2022).
        | Chimpanzee and Human Gray Matter Masks [Data set]. Zenodo.
        | https://doi.org/10.5281/zenodo.6463123
 
