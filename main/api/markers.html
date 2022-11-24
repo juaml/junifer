@@ -449,7 +449,7 @@ available Junifer Data dictionary keys.</p>
 <dt><strong>aggregation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method (default “mean”).</p>
 </dd>
 <dt><strong>correlation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Any method that can be passed to
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.0.0.dev0+743.g9df44ea055)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.0.0.dev0+753.g22363469b1)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
 </dd>
 <dt><strong>mask</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the mask to apply to regions before extracting signals.
 Check valid options by calling <a class="reference internal" href="data.html#junifer.data.masks.list_masks" title="junifer.data.masks.list_masks"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.masks.list_masks()</span></code></a>
@@ -1018,10 +1018,12 @@ check <a class="reference external" href="https://github.com/brain-networks/edge
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. The dictionary has the following
-keys:
-- data : the actual computed values as a numpy.ndarray
-- columns : the column labels for the computed values as a list
-- row_names (if more than one row is present in data): “scan”</p>
+keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">columns</span></code> : the column labels for the computed values as a list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">row_names</span></code> (if more than one row is present in data): “scan”</p></li>
+</ul>
 </dd>
 </dl>
 </dd>
