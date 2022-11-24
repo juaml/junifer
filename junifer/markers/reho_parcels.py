@@ -1,4 +1,4 @@
-"""Provide class for regional homogeneity (ReHO) on parcels."""
+"""Provide class for regional homogeneity (ReHo) on parcels."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 @register_marker
-class ReHOParcels(BaseMarker):
+class ReHoParcels(BaseMarker):
     """Class for regional homogeneity on parcels.
 
     Parameters
