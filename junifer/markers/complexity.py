@@ -6,13 +6,12 @@
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
-import numpy as np
-
 from ..api.decorators import register_marker
 from ..utils import logger
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
 from .utils import _calculate_complexity
+
 
 if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
@@ -39,35 +38,26 @@ class Complexity(BaseMarker):
     def __init__(
         self,
         parcellation: str,
+        measure_types: dict = None,
         aggregation_method: str = "mean",
-        feature_kinds: Optional[Union[str, List[str]]] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
         self.aggregation_method = aggregation_method
-        # feature_kinds should be a dctionary with keys as the function names,
-        # and values as another dictionary with function parameters.  
-        if feature_kinds is None:
-            self.feature_kinds = {
-                '_range_entropy': {
-                    'm': 2,
-                    'tol': 0.5
-                    },
-                    '_range_entropy_auc': {
-                    'm': 2,
-                    'n_r': 100
-                    },
-                '_perm_entropy': {
-                    'm': 4,
-                    'tau': 1
-                    },
-                '_weighted_perm_entropy': {
-                    'm': 4,
-                    'tau': 1
-                    }
-                }
-        elif isinstance(feature_kinds, str):
-            self.feature_kinds = [feature_kinds]          
+        # measure_types should be a dctionary with keys as the function names,
+        # and values as another dictionary with function parameters.
+        if measure_types is None:
+            self.measure_types = {
+                "_range_entropy": {"m": 2, "tol": 0.5},
+                "_range_entropy_auc": {"m": 2, "n_r": 10},
+                "_perm_entropy": {"m": 4, "tau": 1},
+                "_weighted_perm_entropy": {"m": 4, "tau": 1},
+                "_sample_entropy": {"m": 2, "tau": 1, "tol": 0.5},
+                "_multiscale_entropy_auc": {"m": 2, "tol": 0.5, "scale": 10},
+                "_hurst_exponent": {"reserved": None},
+            }
+        else:
+            self.measure_types = measure_types
 
         super().__init__(name=name)
 
@@ -128,7 +118,11 @@ class Complexity(BaseMarker):
         """Compute.
 
         Change: Take a timeseries of brain areas, and calculate several
-        measures of complexity ROI-wise.
+        region-wise measures of complexity including range entropy and its
+        area under the curve [1], permutation entropy [2], weighted
+        permutation entropy [3], sample entropy [4], multiscale entropy based
+        on sample entropy [5], and Hurst exponent based on the detrended
+        fluctuation analysis method [6].
 
         Parameters
         ----------
@@ -148,9 +142,33 @@ class Complexity(BaseMarker):
 
         References
         ----------
-        .. [1] A. Omidvarnia et al. (2018)
+        .. [1] A. Omidvarnia et al.
                Range Entropy: A Bridge between Signal Complexity and
                Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
+
+        .. [2] Bandt, C., & Pompe, B.
+               Permutation entropy: a natural complexity measure for time
+               series. Physical review letters, 88(17), 174102, 2002
+
+        .. [3] Fadlallah, B., Chen, B., Keil, A., & Principe, J.
+               Weighted-permutation entropy: A complexity measure for time
+               series incorporating amplitude information.
+               Physical Review E, 87(2), 022911., 2013.
+
+        .. [4] Richman, J., Moorman, J.
+               Physiological time-series analysis using approximate entropy
+               and sample entropy, Am. J. Physiol. Heart Circ. Physiol.,
+               278 (6), pp. H2039-2049, 2000.
+
+        .. [5] Costa, M., Goldberger, A. L., & Peng, C. K.
+               Multiscale entropy analysis of complex physiologic time series.
+               Physical review letters, 89(6), 068102, 2002.
+
+        .. [6] Peng, C.; Havlin, S.; Stanley, H.E.; Goldberger, A.L.
+               Quantification of scaling exponents and crossover phenomena in
+               nonstationary heartbeat time series.
+               Chaos Interdiscip. J. Nonlinear Sci., 5, 82–87, 1995
+
 
         """
         logger.debug("Calculating root sum of squares of edgewise timeseries.")
@@ -159,13 +177,17 @@ class Complexity(BaseMarker):
             parcellation=self.parcellation,
             method=self.aggregation_method,
         )
-        # Compute the parcel aggregation
-        out = parcel_aggregation.compute(input=input, extra_input=extra_input)
+        # Compute the parcel aggregation dict
+        pa_dict = parcel_aggregation.compute(
+            input=input, extra_input=extra_input
+        )
 
-        # Calculate complexity
-        out["data"] = _calculate_complexity(out["data"], self.feature_kinds)
+        # Calculate complexity and et correct column/row labels
+        bold_ts = pa_dict["data"]
+        tmp = _calculate_complexity(bold_ts, self.measure_types)
+        out = {}
+        out["data"] = tmp
+        out["col_names"] = self.measure_types.keys()
+        out["row_names"] = pa_dict["columns"]
 
-        # Set correct column label
-        out["columns"] = ["complexity"]
         return out
-        
