@@ -22,7 +22,7 @@ PARCELLATION = "Schaefer100x17"
 
 
 def test_compute() -> None:
-    """Test RSS ETS compute()."""
+    """Test COMPLEXITY compute()."""
     with SPMAuditoryTestingDatagrabber() as dg:
         # Fetch element
         out = dg["sub001"]
@@ -31,7 +31,7 @@ def test_compute() -> None:
         # Create input data
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Create input data
-        feature_kinds = {
+        measure_types = {
                 "_range_entropy": {"m": 2, "tol": 0.5},
                 "_range_entropy_auc": {"m": 2, "n_r": 10},
                 "_perm_entropy": {"m": 4, "tau": 1},
@@ -41,7 +41,10 @@ def test_compute() -> None:
                 "_hurst_exponent": {"reserved": None},
             }
         # Compute the Complexity markers
-        complexity = Complexity(parcellation=PARCELLATION)
+        complexity = Complexity(
+            parcellation=PARCELLATION,
+            measure_types=measure_types
+        )
         new_out = complexity.compute(input_dict)
 
         # Load parcellation
