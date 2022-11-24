@@ -4,7 +4,7 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from ..api.decorators import register_marker
 from ..utils import logger

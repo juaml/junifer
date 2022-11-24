@@ -5,6 +5,7 @@
 #          Sami Hamdan <s.hamdan@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
 from typing import Callable, List, Optional, Tuple, Union
