@@ -293,7 +293,7 @@ git pull --rebase origin main
 <ol class="arabic simple" start="4">
 <li><p>Create tag (replace <code class="docutils literal notranslate"><span class="pre">X.Y.Z</span></code> with the proper version).</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git tag vX.Y.Z
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git tag -a vX.Y.Z -m <span class="s2">&quot;Release X.Y.Z&quot;</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="5">
@@ -305,7 +305,14 @@ git pull --rebase origin main
 <ol class="arabic simple" start="6">
 <li><p>Push the tag</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git push origin vX.Y.Z
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git push origin --follow-tags
+</pre></div>
+</div>
+<ol class="arabic simple" start="7">
+<li><p>Optional: bump the <em>MAJOR</em> or <em>MINOR</em> segment of next release (replace <code class="docutils literal notranslate"><span class="pre">D.E.0</span></code> with the proper version).</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git tag -a vD.E.0.dev -m <span class="s2">&quot;Set next release to D.E.0&quot;</span>
+git push origin --follow-tags
 </pre></div>
 </div>
 </section>
