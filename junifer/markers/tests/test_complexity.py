@@ -30,6 +30,16 @@ def test_compute() -> None:
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         # Create input data
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
+        # Create input data
+        feature_kinds = {
+                "_range_entropy": {"m": 2, "tol": 0.5},
+                "_range_entropy_auc": {"m": 2, "n_r": 10},
+                "_perm_entropy": {"m": 4, "tau": 1},
+                "_weighted_perm_entropy": {"m": 4, "tau": 1},
+                "_sample_entropy": {"m": 2, "tau": 1, "tol": 0.5},
+                "_multiscale_entropy_auc": {"m": 2, "tol": 0.5, "scale": 2},
+                "_hurst_exponent": {"reserved": None},
+            }
         # Compute the Complexity markers
         complexity = Complexity(parcellation=PARCELLATION)
         new_out = complexity.compute(input_dict)
