@@ -1,4 +1,4 @@
-"""Provide class for regional homogeneity (ReHO) on spheres."""
+"""Provide class for regional homogeneity (ReHo) on spheres."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 @register_marker
-class ReHOSpheres(BaseMarker):
+class ReHoSpheres(BaseMarker):
     """Class for regional homogeneity on spheres.
 
     Parameters
