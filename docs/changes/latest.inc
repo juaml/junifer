@@ -103,6 +103,8 @@ Bugs
 
 - Fix a bug in which CLI command would not work using elements with more than one field (by `Fede Raimondo`_).
 
+- Fix a bug in which the generated DAG for HTCondor will not work (:gh:`143` by `Fede Raimondo`_).
+
 API changes
 ~~~~~~~~~~~
 
