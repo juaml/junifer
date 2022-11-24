@@ -63,5 +63,5 @@ release.
 .. code-block:: bash
 
     git tag -a vD.E.0.dev -m "Set next release to D.E.0"
-    git push origin vD.E.0.dev
+    git push origin --follow-tags
 
