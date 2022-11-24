@@ -44,7 +44,7 @@ release.
 
 .. code-block:: bash
 
-    git tag vX.Y.Z
+    git tag -a vX.Y.Z -m "Release X.Y.Z"
 
 5. Check that the build system is creating the proper version
 
@@ -56,4 +56,12 @@ release.
 
 .. code-block:: bash
 
-    git push origin vX.Y.Z
+    git push origin --follow-tags
+
+7. Optional: bump the *MAJOR* or *MINOR* segment of next release (replace ``D.E.0`` with the proper version).
+
+.. code-block:: bash
+
+    git tag -a vD.E.0.dev -m "Set next release to D.E.0"
+    git push origin --follow-tags
+
