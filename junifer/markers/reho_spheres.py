@@ -104,6 +104,11 @@ class ReHOSpheres(BaseMarker):
     ) -> Dict[str, Any]:
         """Compute.
 
+        For a given voxel, identifies the set of neighbours within a certain
+        radius and then calculates Kendall's W for the voxel and its
+        neighbours for the timepoints in the BOLD signal. For more
+        information about the method, please check [1]_.
+
         Parameters
         ----------
         input : dict
@@ -120,6 +125,14 @@ class ReHOSpheres(BaseMarker):
             * ``data`` : the actual computed values as a 1D numpy.ndarray
             * ``columns`` : the column labels for the spheres as a list
             * ``rows_col_name`` : ``None``
+
+        References
+        ----------
+        .. [1] Jiang, L., & Zuo, X. N. (2016).
+               Regional Homogeneity: A Multimodal, Multiscale Neuroimaging
+               Marker of the Human Connectome.
+               The Neuroscientist, Volume 22(5), Pages 486–505.
+               https://doi.org/10.1177/1073858415595004
 
         """
         logger.debug("Calculating ReHO for spheres.")
