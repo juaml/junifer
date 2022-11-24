@@ -6,13 +6,14 @@
 import nibabel as nib
 import numpy as np
 import pytest
+from pathlib import Path
 from nilearn import datasets
-from nilearn.image import concat_imgs, math_img, resample_to_img
+from nilearn.image import concat_imgs, math_img, resample_to_img, new_img_like
 from nilearn.maskers import NiftiLabelsMasker, NiftiMasker
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 from scipy.stats import trim_mean
 
-from junifer.data import load_mask
+from junifer.data import load_mask, load_parcellation, register_parcellation
 from junifer.markers.parcel_aggregation import ParcelAggregation
 
 
@@ -86,7 +87,7 @@ def test_ParcelAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
@@ -111,7 +112,7 @@ def test_ParcelAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "std"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
@@ -144,7 +145,7 @@ def test_ParcelAggregation_3D() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "trim_mean"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] is None
     assert meta["name"] == "VBM_GM_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
@@ -178,7 +179,7 @@ def test_ParcelAggregation_4D():
 
     meta = marker.get_meta("BOLD")["marker"]
     assert meta["method"] == "mean"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] is None
     assert meta["name"] == "BOLD_ParcelAggregation"
     assert meta["class"] == "ParcelAggregation"
@@ -202,8 +203,8 @@ def test_ParcelAggregation_3D_mask() -> None:
 
     # Create NiftiLabelsMasker
     nifti_masker = NiftiLabelsMasker(
-        labels_img=parcellation.maps,
-        mask_img=mask_img)
+        labels_img=parcellation.maps, mask_img=mask_img
+    )
     auto = nifti_masker.fit_transform(img)
 
     # Use the ParcelAggregation object
@@ -223,9 +224,209 @@ def test_ParcelAggregation_3D_mask() -> None:
 
     meta = marker.get_meta("VBM_GM")["marker"]
     assert meta["method"] == "mean"
-    assert meta["parcellation"] == "Schaefer100x7"
+    assert meta["parcellation"] == ["Schaefer100x7"]
     assert meta["mask"] == "GM_prob0.2"
     assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
     assert meta["class"] == "ParcelAggregation"
     assert meta["kind"] == "VBM_GM"
     assert meta["method_params"] == {}
+
+
+def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
+    """Test ParcelAggregation with multiple non-overlapping parcellations.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+
+    # Get the testing parcellation
+    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+
+    assert parcellation is not None
+
+    # Get the oasis VBM data
+    oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
+    vbm = oasis_dataset.gray_matter_maps[0]
+    img = nib.load(vbm)
+
+    # Create two parcellations from it
+    parcellation_data = parcellation.get_fdata()
+    parcellation1_data = parcellation_data.copy()
+    parcellation1_data[parcellation1_data > 50] = 0
+    parcellation2_data = parcellation_data.copy()
+    parcellation2_data[parcellation2_data <= 50] = 0
+    parcellation2_data[parcellation2_data > 0] -= 50
+    labels1 = labels[:50]
+    labels2 = labels[50:]
+
+    parcellation1_img = new_img_like(parcellation, parcellation1_data)
+    parcellation2_img = new_img_like(parcellation, parcellation2_data)
+
+    parcellation1_path = tmp_path / "parcellation1.nii.gz"
+    parcellation2_path = tmp_path / "parcellation2.nii.gz"
+
+    nib.save(parcellation1_img, parcellation1_path)
+    nib.save(parcellation2_img, parcellation2_path)
+
+    register_parcellation("Schaefer100x7_low", parcellation1_path, labels1)
+    register_parcellation("Schaefer100x7_high", parcellation2_path, labels2)
+
+    # Use the ParcelAggregation object on the original parcellation
+    marker_original = ParcelAggregation(
+        parcellation="Schaefer100x7",
+        method="mean",
+        name="gmd_schaefer100x7_mean",
+        on="VBM_GM",
+    )  # Test passing "on" as a keyword argument
+    input = dict(VBM_GM=dict(data=img))
+    orig_mean = marker_original.fit_transform(input)["VBM_GM"]
+
+    orig_mean_data = orig_mean["data"]
+    assert orig_mean_data.ndim == 2
+    assert orig_mean_data.shape[0] == 1
+    assert orig_mean_data.shape[1] == 100
+    # assert_array_almost_equal(auto, jun_values3d_mean)
+
+    meta = marker_original.get_meta("VBM_GM")["marker"]
+    assert meta["method"] == "mean"
+    assert meta["parcellation"] == ["Schaefer100x7"]
+    assert meta["mask"] is None
+    assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
+    assert meta["class"] == "ParcelAggregation"
+    assert meta["kind"] == "VBM_GM"
+    assert meta["method_params"] == {}
+
+    # Use the ParcelAggregation object on the two parcellations
+    marker_split = ParcelAggregation(
+        parcellation=["Schaefer100x7_low", "Schaefer100x7_high"],
+        method="mean",
+        name="gmd_schaefer100x7_mean",
+        on="VBM_GM",
+    )  # Test passing "on" as a keyword argument
+    input = dict(VBM_GM=dict(data=img))
+    split_mean = marker_split.fit_transform(input)["VBM_GM"]
+    split_mean_data = split_mean["data"]
+
+    assert split_mean_data.ndim == 2
+    assert split_mean_data.shape[0] == 1
+    assert split_mean_data.shape[1] == 100
+
+    meta = marker_split.get_meta("VBM_GM")["marker"]
+    assert meta["method"] == "mean"
+    assert meta["parcellation"] == ["Schaefer100x7_low", "Schaefer100x7_high"]
+    assert meta["mask"] is None
+    assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
+    assert meta["class"] == "ParcelAggregation"
+    assert meta["kind"] == "VBM_GM"
+    assert meta["method_params"] == {}
+
+    # Data and labels should be the same
+    assert_array_equal(orig_mean_data, split_mean_data)
+    assert orig_mean["columns"] == split_mean["columns"]
+
+
+def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
+    """Test ParcelAggregation with multiple overlapping parcellations.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+
+    # Get the testing parcellation
+    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+
+    assert parcellation is not None
+
+    # Get the oasis VBM data
+    oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
+    vbm = oasis_dataset.gray_matter_maps[0]
+    img = nib.load(vbm)
+
+    # Create two parcellations from it
+    parcellation_data = parcellation.get_fdata()
+    parcellation1_data = parcellation_data.copy()
+    parcellation1_data[parcellation1_data > 50] = 0
+    parcellation2_data = parcellation_data.copy()
+
+    # Make the second parcellation overlap with the first
+    parcellation2_data[parcellation2_data <= 45] = 0
+    parcellation2_data[parcellation2_data > 0] -= 45
+    labels1 = [f"low_{x}" for x in labels[:50]]  # Change the labels
+    labels2 = [f"high_{x}" for x in labels[45:]]  # Change the labels
+
+    parcellation1_img = new_img_like(parcellation, parcellation1_data)
+    parcellation2_img = new_img_like(parcellation, parcellation2_data)
+
+    parcellation1_path = tmp_path / "parcellation1.nii.gz"
+    parcellation2_path = tmp_path / "parcellation2.nii.gz"
+
+    nib.save(parcellation1_img, parcellation1_path)
+    nib.save(parcellation2_img, parcellation2_path)
+
+    register_parcellation("Schaefer100x7_low2", parcellation1_path, labels1)
+    register_parcellation("Schaefer100x7_high2", parcellation2_path, labels2)
+
+    # Use the ParcelAggregation object on the original parcellation
+    marker_original = ParcelAggregation(
+        parcellation="Schaefer100x7",
+        method="mean",
+        name="gmd_schaefer100x7_mean",
+        on="VBM_GM",
+    )  # Test passing "on" as a keyword argument
+    input = dict(VBM_GM=dict(data=img))
+    orig_mean = marker_original.fit_transform(input)["VBM_GM"]
+
+    orig_mean_data = orig_mean["data"]
+    assert orig_mean_data.ndim == 2
+    assert orig_mean_data.shape[0] == 1
+    assert orig_mean_data.shape[1] == 100
+    # assert_array_almost_equal(auto, jun_values3d_mean)
+
+    meta = marker_original.get_meta("VBM_GM")["marker"]
+    assert meta["method"] == "mean"
+    assert meta["parcellation"] == ["Schaefer100x7"]
+    assert meta["mask"] is None
+    assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
+    assert meta["class"] == "ParcelAggregation"
+    assert meta["kind"] == "VBM_GM"
+    assert meta["method_params"] == {}
+
+    # Use the ParcelAggregation object on the two parcellations
+    marker_split = ParcelAggregation(
+        parcellation=["Schaefer100x7_low2", "Schaefer100x7_high2"],
+        method="mean",
+        name="gmd_schaefer100x7_mean",
+        on="VBM_GM",
+    )  # Test passing "on" as a keyword argument
+    input = dict(VBM_GM=dict(data=img))
+    split_mean = marker_split.fit_transform(input)["VBM_GM"]
+    split_mean_data = split_mean["data"]
+
+    assert split_mean_data.ndim == 2
+    assert split_mean_data.shape[0] == 1
+    assert split_mean_data.shape[1] == 100
+
+    meta = marker_split.get_meta("VBM_GM")["marker"]
+    assert meta["method"] == "mean"
+    assert meta["parcellation"] == [
+        "Schaefer100x7_low2",
+        "Schaefer100x7_high2",
+    ]
+    assert meta["mask"] is None
+    assert meta["name"] == "VBM_GM_gmd_schaefer100x7_mean"
+    assert meta["class"] == "ParcelAggregation"
+    assert meta["kind"] == "VBM_GM"
+    assert meta["method_params"] == {}
+
+    # Data should be the same
+    assert_array_equal(orig_mean_data, split_mean_data)
+
+    # Labels should be "low" for the first 50 and "high" for the second 50
+    assert all(x.startswith("low") for x in split_mean["columns"][:50])
+    assert all(x.startswith("high") for x in split_mean["columns"][50:])

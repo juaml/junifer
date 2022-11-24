@@ -213,6 +213,18 @@ def load_parcellation(
     parcellation_img = None
     if path_only is False:
         parcellation_img = nib.load(parcellation_fname)
+        parcel_values = np.unique(parcellation_img.get_fdata())
+        if len(parcel_values) - 1 != len(parcellation_labels):
+            raise_error(
+                f"Parcellation {name} has {len(parcel_values) - 1} parcels "
+                f"but {len(parcellation_labels)} labels."
+            )
+        parcel_values.sort()
+        if np.any(np.diff(parcel_values) != 1):
+            raise_error(
+                f"Parcellation {name} must have all the values in the range  "
+                f"[0, {len(parcel_values)}]."
+            )
 
     return parcellation_img, parcellation_labels, parcellation_fname
 

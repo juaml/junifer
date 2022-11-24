@@ -6,7 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import numpy as np
 
@@ -26,8 +26,8 @@ class RSSETSMarker(BaseMarker):
 
     Parameters
     ----------
-    parcellation : str
-        The name of the parcellation. Check valid options by calling
+    parcellation : str or list of str
+        The name(s) of the parcellation(s). Check valid options by calling
         :func:`junifer.data.parcellations.list_parcellations`.
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
@@ -47,7 +47,7 @@ class RSSETSMarker(BaseMarker):
 
     def __init__(
         self,
-        parcellation: str,
+        parcellation: Union[str, List[str]],
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         mask: Optional[str] = None,

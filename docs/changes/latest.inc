@@ -89,6 +89,8 @@ Enhancements
 
 - Add support for "masks" (:gh:`79` by `Fede Raimondo`_).
 
+- Allow :class:`junifer.markers.ParcelAggregation` to apply multiple parcellations at once (:gh:`131` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
