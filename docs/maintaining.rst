@@ -57,3 +57,11 @@ release.
 .. code-block:: bash
 
     git push origin vX.Y.Z
+
+7. Optional: bump the *MAJOR* or *MINOR* segment of next release (replace ``D.E.0`` with the proper version).
+
+.. code-block:: bash
+
+    git tag -a vD.E.0.dev -m "Set next release to D.E.0"
+    git push origin vD.E.0.dev
+
