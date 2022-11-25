@@ -79,8 +79,8 @@ class SphereAggregation(BaseMarker):
         """
         return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
-        """Get output kind.
+    def get_output_type(self, input: List[str]) -> List[str]:
+        """Get output type.
 
         Parameters
         ----------

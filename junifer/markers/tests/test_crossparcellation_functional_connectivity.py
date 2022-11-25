@@ -83,14 +83,14 @@ def test_store(tmp_path: Path) -> None:
         out = crossparcellation.fit_transform(input_dict, storage=storage)
 
 
-def test_get_output_kind() -> None:
-    """Test CrossParcellationFC get_output_kind()."""
+def test_get_output_type() -> None:
+    """Test CrossParcellationFC get_output_type()."""
 
     crossparcellation = CrossParcellationFC(
         parcellation_one=parcellation_ONE, parcellation_two=parcellation_TWO
     )
     input_list = ["BOLD"]
-    input_list = crossparcellation.get_output_kind(input_list)
+    input_list = crossparcellation.get_output_type(input_list)
     assert len(input_list) == 1
     assert input_list[0] in ["matrix"]
 

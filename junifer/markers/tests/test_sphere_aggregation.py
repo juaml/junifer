@@ -27,11 +27,11 @@ def test_SphereAggregation_input_output() -> None:
         coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
 
-    output = marker.get_output_kind(["VBM_GM", "BOLD"])
+    output = marker.get_output_type(["VBM_GM", "BOLD"])
     assert output == ["table", "timeseries"]
 
     with pytest.raises(ValueError, match="Unknown input"):
-        marker.get_output_kind(["VBM_GM", "BOLD", "unknown"])
+        marker.get_output_type(["VBM_GM", "BOLD", "unknown"])
 
 
 def test_SphereAggregation_3D() -> None:

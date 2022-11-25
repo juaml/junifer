@@ -19,10 +19,14 @@ def test_base_marker_subclassing() -> None:
     """Test proper subclassing of BaseMarker."""
     # Create concrete class
     class MyBaseMarker(BaseMarker):
+        def __init__(self, on, name=None) -> None:
+            self.parameter = 1
+            super().__init__(on, name)
+
         def get_valid_inputs(self):
             return ["BOLD", "T1w"]
 
-        def get_output_kind(self, input):
+        def get_output_type(self, input):
             return ["timeseries"]
 
         def compute(self, input, extra_input):
@@ -40,10 +44,14 @@ def test_base_marker_subclassing() -> None:
 
     # Create input for marker
     input_ = {
-        "meta": {"datagrabber": "dg", "element": "elem", "datareader": "dr"},
         "BOLD": {
             "path": ".",
             "data": "data",
+            "meta": {
+                "datagrabber": "dg",
+                "element": "elem",
+                "datareader": "dr",
+            },
         },
     }
     marker = MyBaseMarker(on=["BOLD"])
@@ -57,10 +65,16 @@ def test_base_marker_subclassing() -> None:
     assert "data" in output["BOLD"]
     assert "columns" in output["BOLD"]
     assert "row_names" in output["BOLD"]
+
     assert "meta" in output["BOLD"]
-    assert "datagrabber" in output["BOLD"]["meta"]
-    assert "element" in output["BOLD"]["meta"]
-    assert "datareader" in output["BOLD"]["meta"]
+    meta = output["BOLD"]["meta"]
+    assert "datagrabber" in meta
+    assert "element" in meta
+    assert "datareader" in meta
+    assert "marker" in meta
+    assert "name" in meta["marker"]
+    assert "parameter" in meta["marker"]
+    assert meta["marker"]["parameter"] == 1
 
     # Check no implementation check
     with pytest.raises(NotImplementedError):

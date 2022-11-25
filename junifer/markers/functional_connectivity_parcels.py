@@ -83,8 +83,8 @@ class FunctionalConnectivityParcels(BaseMarker):
         """
         return ["BOLD"]
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
-        """Get output kind.
+    def get_output_type(self, input: List[str]) -> List[str]:
+        """Get output type.
 
         Parameters
         ----------

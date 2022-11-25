@@ -15,13 +15,6 @@ def test_PipelineStepMixin() -> None:
     with pytest.raises(NotImplementedError):
         mixin.validate_input([])
     with pytest.raises(NotImplementedError):
-        mixin.get_output_kind([])
+        mixin.get_output_type([])
     with pytest.raises(NotImplementedError):
         mixin.fit_transform({})
-
-
-def test_pipeline_step_mixin_meta():
-    """Test metadata for PipelineStepMixin."""
-    pipemixin = PipelineStepMixin()
-    t_meta = pipemixin.get_meta()
-    assert t_meta["class"] == "PipelineStepMixin"

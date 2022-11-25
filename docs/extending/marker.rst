@@ -15,7 +15,7 @@ Thus, only a few methods are required:
 1. ``get_valid_inputs``: a method to obtain the list of valid inputs for the marker. This is used to check that the
    inputs provided by the user are valid. This method should return a list of strings, representing 
    :ref:`data types <data_types>`
-2. ``get_output_kind``: a method to obtain the kind of output of the marker. This is used to check that the output
+2. ``get_output_type``: a method to obtain the kind of output of the marker. This is used to check that the output
    of the marker is compatible with the storage. This method should return a string, representing 
    :ref:`storage types <storage_types>`
 3. ``compute``: the method that given the data, computes the marker.
@@ -44,7 +44,7 @@ it will be ``table``. Thus, we can define the output as:
 
 .. code-block:: python
 
-    def get_output_kind(self, input_kind):
+    def get_output_type(self, input_kind):
         if input_kind == 'BOLD':
             return 'timeseries'
         else:
@@ -193,7 +193,7 @@ Once all of the above steps are done, we just need to give our marker a name an 
         def get_valid_inputs(self):
             return ['BOLD', 'VBM_WM', 'VBM_GM']
 
-        def get_output_kind(self, input_kind):
+        def get_output_type(self, input_kind):
             if input_kind == 'BOLD':
                 return 'timeseries'
             else:
@@ -260,7 +260,7 @@ Template for a custom Marker
             valid = []
             return valid
 
-        def get_output_kind(self, input_kind):
+        def get_output_type(self, input_kind):
             # TODO: Return the valid output kind for each input kind
             pass
 

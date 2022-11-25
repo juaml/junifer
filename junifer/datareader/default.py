@@ -11,10 +11,10 @@ import nibabel as nib
 import pandas as pd
 
 from ..api.decorators import register_datareader
-from ..pipeline import PipelineStepMixin
+from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils.logging import logger, warn_with_log
 
-# Map each file extension to a kind
+# Map each file extension to a type
 _extensions = {
     ".nii": "NIFTI",
     ".nii.gz": "NIFTI",
@@ -22,7 +22,7 @@ _extensions = {
     ".tsv": "TSV",
 }
 
-# Map each kind to a function and arguments
+# Map each type to a function and arguments
 _readers = {}
 _readers["NIFTI"] = {"func": nib.load, "params": None}
 _readers["CSV"] = {"func": pd.read_csv, "params": None}
@@ -30,7 +30,7 @@ _readers["TSV"] = {"func": pd.read_csv, "params": {"sep": "\t"}}
 
 
 @register_datareader
-class DefaultDataReader(PipelineStepMixin):
+class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
     """Mixin class for default data reader."""
 
     def validate_input(self, input: List[str]) -> None:
@@ -46,8 +46,8 @@ class DefaultDataReader(PipelineStepMixin):
         # Nothing to validate, any input is fine
         pass
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
-        """Get output kind.
+    def get_output_type(self, input: List[str]) -> List[str]:
+        """Get output type.
 
         Parameters
         ----------
@@ -58,10 +58,10 @@ class DefaultDataReader(PipelineStepMixin):
         Returns
         -------
         list of str
-            The updated list of output kinds, as reading possibilities.
+            The updated list of output types, as reading possibilities.
 
         """
-        # It will output the same kind of data as the input
+        # It will output the same type of data as the input
         return input
 
     def fit_transform(
@@ -82,36 +82,33 @@ class DefaultDataReader(PipelineStepMixin):
         -------
         dict
             The processed output as dictionary. The "data" key is added to
-            each data type dictionary except "meta".
+            each data type dictionary.
 
         """
-        # For each kind of data, try to read it
+        # For each type of data, try to read it
         out = input.copy()
         if params is None:
             params = {}
-        for kind in input.keys():
-            if kind == "meta":
-                out["meta"] = input["meta"]
-                continue
-            if "path" not in input[kind]:
+        for type_ in input.keys():
+            if "path" not in input[type_]:
                 warn_with_log(
-                    f"Input kind {kind} does not provide a path. Skipping."
+                    f"Input type {type_} does not provide a path. Skipping."
                 )
                 continue
-            t_path = input[kind]["path"]
-            t_params = params.get(kind, {})
+            t_path = input[type_]["path"]
+            t_params = params.get(type_, {})
 
             # Convert to Path if datareader is not well done
             if not isinstance(t_path, Path):
                 t_path = Path(t_path)
-                out[kind]["path"] = t_path
-            logger.info(f"Reading {kind} from {t_path.as_posix()}")
+                out[type_]["path"] = t_path
+            logger.info(f"Reading {type_} from {t_path.as_posix()}")
             fread = None
 
             fname = t_path.name.lower()
             for ext, ftype in _extensions.items():
                 if fname.endswith(ext):
-                    logger.info(f"{kind} is type {ftype}")
+                    logger.info(f"{type_} is type {ftype}")
                     reader_func = _readers[ftype]["func"]
                     reader_params = _readers[ftype]["params"]
                     if reader_params is not None:
@@ -123,8 +120,6 @@ class DefaultDataReader(PipelineStepMixin):
                 logger.info(
                     f"Unknown file type {t_path.as_posix()}, skipping reading"
                 )
-            out[kind]["data"] = fread
-            if "meta" not in out:
-                out["meta"] = {}
-            out["meta"]["datareader"] = self.get_meta()
+            out[type_]["data"] = fread
+            self.update_meta(out[type_], "datareader")
         return out

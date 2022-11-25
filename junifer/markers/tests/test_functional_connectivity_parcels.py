@@ -69,7 +69,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
     assert_array_almost_equal(out_ni, out["data"], decimal=3)
 
     # check correct output
-    assert fc.get_output_kind(["BOLD"]) == ["matrix"]
+    assert fc.get_output_type(["BOLD"]) == ["matrix"]
 
     # Check empirical correlation method parameters
     fc = FunctionalConnectivityParcels(

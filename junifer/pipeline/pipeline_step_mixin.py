@@ -12,22 +12,6 @@ from ..utils import raise_error
 class PipelineStepMixin:
     """Mixin class for pipeline."""
 
-    def get_meta(self) -> Dict:
-        """Get metadata.
-
-        Returns
-        -------
-        dict
-            The metadata as a dictionary.
-
-        """
-        t_meta = {}
-        t_meta["class"] = self.__class__.__name__
-        for k, v in vars(self).items():
-            if not k.startswith("_"):
-                t_meta[k] = v
-        return t_meta
-
     def validate_input(self, input: List[str]) -> None:
         """Validate the input to the pipeline step.
 
@@ -48,7 +32,7 @@ class PipelineStepMixin:
             klass=NotImplementedError,
         )
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input: List[str]) -> List[str]:
         """Get the kind of the pipeline step.
 
         Parameters
@@ -65,7 +49,7 @@ class PipelineStepMixin:
 
         """
         raise_error(
-            msg="Concrete classes need to implement get_output_kind().",
+            msg="Concrete classes need to implement get_output_type().",
             klass=NotImplementedError,
         )
 
@@ -89,7 +73,7 @@ class PipelineStepMixin:
 
         """
         self.validate_input(input=input)
-        return self.get_output_kind(input=input)
+        return self.get_output_type(input=input)
 
     def fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
         """Fit and transform.

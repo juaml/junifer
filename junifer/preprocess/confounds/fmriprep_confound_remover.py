@@ -141,6 +141,8 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
     """
 
+    _DEPENDENCIES = {"numpy", "nilearn"}
+
     def __init__(
         self,
         strategy: Optional[Dict[str, str]] = None,
@@ -222,7 +224,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 klass=ValueError,
             )
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input: List[str]) -> List[str]:
         """Get the kind of the pipeline step.
 
         Parameters

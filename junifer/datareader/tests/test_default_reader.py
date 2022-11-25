@@ -17,37 +17,36 @@ from junifer.datareader import DefaultDataReader
 
 
 @pytest.mark.parametrize(
-    "kind", [["T1w", "BOLD", "T2", "dwi"], [], None, ["whatever"]]
+    "type_", [["T1w", "BOLD", "T2", "dwi"], [], None, ["whatever"]]
 )
-def test_validation(kind) -> None:
+def test_validation(type_) -> None:
     """Test validating input/output.
 
     Parameters
     ----------
-    kind : list of str or str or None
-        The parametrized kind of data.
+    type_ : list of str or str or None
+        The parametrized type_ of data.
 
     """
     reader = DefaultDataReader()
-    assert reader.validate_input(kind) is None
-    assert reader.get_output_kind(kind) == kind
-    assert reader.validate(kind) == kind
+    assert reader.validate_input(type_) is None
+    assert reader.get_output_type(type_) == type_
+    assert reader.validate(type_) == type_
 
 
 def test_meta() -> None:
     """Test reader metadata."""
     reader = DefaultDataReader()
-    t_meta = reader.get_meta()
-    assert t_meta["class"] == "DefaultDataReader"
 
     nib_data_path = Path(nib_testing.data_path)
     t_path = nib_data_path / "example4d.nii.gz"
     input = {"BOLD": {"path": t_path}}
     output = reader.fit_transform(input)
-    assert "meta" in output
-    assert "datareader" in output["meta"]
-    assert "class" in output["meta"]["datareader"]
-    assert output["meta"]["datareader"]["class"] == "DefaultDataReader"
+    assert "meta" in output["BOLD"]
+    meta = output["BOLD"]["meta"]
+    assert "datareader" in meta
+    assert "class" in meta["datareader"]
+    assert meta["datareader"]["class"] == "DefaultDataReader"
 
 
 @pytest.mark.parametrize(

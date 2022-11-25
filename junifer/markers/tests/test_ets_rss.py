@@ -50,11 +50,11 @@ def test_compute() -> None:
         assert meta["class"] == "RSSETSMarker"
 
 
-def test_get_output_kind() -> None:
-    """Test RSS ETS get_output_kind()."""
+def test_get_output_type() -> None:
+    """Test RSS ETS get_output_type()."""
     ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
     input_list = ["BOLD"]
-    input_list = ets_rss_marker.get_output_kind(input_list)
+    input_list = ets_rss_marker.get_output_type(input_list)
     assert len(input_list) == 1
     assert input_list[0] in ["timeseries"]
 
