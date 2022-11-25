@@ -31,18 +31,18 @@ def test_compute() -> None:
         # Create input data
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Create input data
-        measure_types = {
-            "_range_entropy": {"m": 2, "tol": 0.5},
-            "_range_entropy_auc": {"m": 2, "n_r": 10},
-            "_perm_entropy": {"m": 4, "tau": 1},
-            "_weighted_perm_entropy": {"m": 4, "tau": 1},
-            "_sample_entropy": {"m": 2, "tau": 1, "tol": 0.5},
-            "_multiscale_entropy_auc": {"m": 2, "tol": 0.5, "scale": 2},
-            "_hurst_exponent": {"reserved": None},
-        }
+        measure_type = {"_range_entropy": {"m": 2, "tol": 0.5}}
+        # measure_type = {"_range_entropy_auc": {"m": 2, "n_r": 10}}
+        # measure_type = {"_perm_entropy": {"m": 4, "tau": 1}}
+        # measure_type = {"_weighted_perm_entropy": {"m": 4, "tau": 1}}
+        # measure_type = {"_sample_entropy": {"m": 2, "tau": 1, "tol": 0.5}}
+        # measure_type = {"_multiscale_entropy_auc":
+        #                {"m": 2, "tol": 0.5, "scale": 10}}
+        # measure_type = {"_hurst_exponent": {"reserved": None}}
+
         # Compute the Complexity markers
         complexity = Complexity(
-            parcellation=PARCELLATION, measure_types=measure_types
+            parcellation=PARCELLATION, measure_type=measure_type
         )
         new_out = complexity.compute(input_dict)
 

@@ -6,6 +6,7 @@
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
+# from ptpython.repl import embed
 from ..api.decorators import register_marker
 from ..utils import logger
 from .base import BaseMarker
@@ -29,6 +30,19 @@ class Complexity(BaseMarker):
     aggregation_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
+    measure_type: dict
+        A dictionary including the name of the desired complexity measure
+        to be extracted and its associated parameters. The measures and
+        their default values include:
+
+        {"_range_entropy": {"m": 2, "tol": 0.5}}
+        {"_range_entropy_auc": {"m": 2, "n_r": 10}}
+        {"_perm_entropy": {"m": 4, "tau": 1}}
+        {"_weighted_perm_entropy": {"m": 4, "tau": 1}}
+        {"_sample_entropy": {"m": 2, "tau": 1, "tol": 0.5}}
+        {"_multiscale_entropy_auc": {"m": 2, "tol": 0.5, "scale": 10}}
+        {"_hurst_exponent": {"reserved": None}}
+
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
@@ -38,26 +52,18 @@ class Complexity(BaseMarker):
     def __init__(
         self,
         parcellation: str,
-        measure_types: dict = None,
+        measure_type: dict = None,
         aggregation_method: str = "mean",
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
         self.aggregation_method = aggregation_method
-        # measure_types should be a dctionary with keys as the function names,
+        # measure_type should be a dctionary with keys as the function names,
         # and values as another dictionary with function parameters.
-        if measure_types is None:
-            self.measure_types = {
-                "_range_entropy": {"m": 2, "tol": 0.5},
-                "_range_entropy_auc": {"m": 2, "n_r": 10},
-                "_perm_entropy": {"m": 4, "tau": 1},
-                "_weighted_perm_entropy": {"m": 4, "tau": 1},
-                "_sample_entropy": {"m": 2, "tau": 1, "tol": 0.5},
-                "_multiscale_entropy_auc": {"m": 2, "tol": 0.5, "scale": 10},
-                "_hurst_exponent": {"reserved": None},
-            }
+        if measure_type is None:
+            self.measure_type = {"_range_entropy": {"m": 2, "tol": 0.5}}
         else:
-            self.measure_types = measure_types
+            self.measure_type = measure_type
 
         super().__init__(name=name)
 
@@ -142,13 +148,13 @@ class Complexity(BaseMarker):
 
         References
         ----------
-        .. [1] A. Omidvarnia et al.
+        .. [1] Omidvarnia, A., et al.
                Range Entropy: A Bridge between Signal Complexity and
                Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
 
         .. [2] Bandt, C., & Pompe, B.
                Permutation entropy: a natural complexity measure for time
-               series. Physical review letters, 88(17), 174102, 2002
+               series. Physical review letters, 88(17), 174102, 2002.
 
         .. [3] Fadlallah, B., Chen, B., Keil, A., & Principe, J.
                Weighted-permutation entropy: A complexity measure for time
@@ -167,10 +173,13 @@ class Complexity(BaseMarker):
         .. [6] Peng, C.; Havlin, S.; Stanley, H.E.; Goldberger, A.L.
                Quantification of scaling exponents and crossover phenomena in
                nonstationary heartbeat time series.
-               Chaos Interdiscip. J. Nonlinear Sci., 5, 82–87, 1995
+               Chaos Interdiscip. J. Nonlinear Sci., 5, 82–87, 1995.
 
 
         """
+        # print('Stop: complexity_compute')
+        # embed(globals(), locals())
+
         logger.debug("Calculating root sum of squares of edgewise timeseries.")
         # Initialize a ParcelAggregation
         parcel_aggregation = ParcelAggregation(
@@ -184,10 +193,10 @@ class Complexity(BaseMarker):
 
         # Calculate complexity and et correct column/row labels
         bold_ts = pa_dict["data"]
-        tmp = _calculate_complexity(bold_ts, self.measure_types)
+        tmp = _calculate_complexity(bold_ts, self.measure_type)
         out = {}
-        out["data"] = tmp
-        out["col_names"] = self.measure_types.keys()
+        out["data"] = tmp.T
+        out["col_names"] = self.measure_type.keys()
         out["row_names"] = pa_dict["columns"]
 
         return out

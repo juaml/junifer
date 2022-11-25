@@ -125,9 +125,19 @@ def _correlate_dataframes(
 
 def _calculate_complexity(
     bold_ts: np.ndarray,
-    measure_types: dict,
+    measure_type: dict,
 ) -> np.ndarray:
     """Compute the region-wise complexity measures from 2d BOLD time series.
+
+    Available options and their default values:
+
+    {"_range_entropy": {"m": 2, "tol": 0.5}}
+    {"_range_entropy_auc": {"m": 2, "n_r": 10}}
+    {"_perm_entropy": {"m": 4, "tau": 1}}
+    {"_weighted_perm_entropy": {"m": 4, "tau": 1}}
+    {"_sample_entropy": {"m": 2, "tau": 1, "tol": 0.5}}
+    {"_multiscale_entropy_auc": {"m": 2, "tol": 0.5, "scale": 10}}
+    {"_hurst_exponent": {"reserved": None}}
 
     - Range entropy: Take a timeseries of brain areas, and calculate
       range entropy according to the method outlined in [1].
@@ -142,6 +152,17 @@ def _calculate_complexity(
     - Weighted permutation entropy: Take a timeseries of brain areas, and
       calculate permutation entropy according to the method outlined in [3].
 
+    - Sample entropy: Take a timeseries of brain areas, and calculate
+      sample entropy [4].
+
+    - Multiscale entropy: Take a timeseries of brain areas, calculate
+      multiscale entropy for each region and calculate the AUC of the entropy
+      curves leading to a region-wise map of the brain [5].
+
+    - Hurst exponent: Take a timeseries of brain areas, and calculate
+      Hurst exponent using the detrended fluctuation analysis method assuming
+      the data is monofractal (q = 2 in nk.fractal_dfa) [6].
+
     Parameters
     ----------
     bold_ts : np.ndarray
@@ -154,44 +175,52 @@ def _calculate_complexity(
 
     References
     ----------
-    .. [1] A. Omidvarnia et al. (2018)
+    .. [1] Omidvarnia, A., et al.
            Range Entropy: A Bridge between Signal Complexity and
-           Self-Similarity, Entropy, vol. 20, no. 12, p. 962.
+           Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
 
-    .. [2] [1] Bandt, C., & Pompe, B. (2002)
+    .. [2] Bandt, C., & Pompe, B.
            Permutation entropy: a natural complexity measure for time
-           series. Physical review letters, 88(17), 174102.
+           series. Physical review letters, 88(17), 174102, 2002.
 
-    .. [3] B. Fadlallah et al. (2013)
+    .. [3] Fadlallah, B., et al.
            Weighted-permutation entropy: A complexity measure for time series
            incorporating amplitude information.
-           Physical Review E, 87(2), 022911.
+           Physical Review E, 87(2), 022911, 2013.
+
+    .. [4] Richman, J., Moorman, J.
+           Physiological time-series analysis using approximate entropy and
+           sample entropy, Am. J. Physiol. Heart Circ. Physiol.,
+           278 (6), pp. H2039-2049, 2000.
+
+    .. [5] Costa, M., Goldberger, A. L., & Peng, C. K.
+           Multiscale entropy analysis of complex physiologic time series.
+           Physical review letters, 89(6), 068102, 2002.
+
+    .. [6] Peng, C.; Havlin, S.; Stanley, H.E.; Goldberger, A.L.
+           Quantification of scaling exponents and crossover phenomena in
+           nonstationary heartbeat time series.
+           Chaos Interdiscip. J. Nonlinear Sci., 5, 82–87, 1995.
 
     See also
     ---------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
 
     """
-    _, n_roi = bold_ts.shape
-
-    # Number of complexity measures to be computed.
-    n_feat = len(measure_types)
-
-    # Initialize the matrix of all feature maps for bold_ts
-    complexity_features = np.zeros((n_roi, n_feat))
+    # print('Stop: _calculate_complexity')
+    # embed(globals(), locals())
 
     # Start the analysis
-    feat_idx = 0
-    for compl_measure, params in measure_types.items():
-        func_name = globals()[compl_measure]
-        feature_map = func_name(bold_ts, params)  # n_roi x 1
-        complexity_features[:, feat_idx] = feature_map.T
-        feat_idx = feat_idx + 1
+    complexity_measure = list(measure_type.keys())[0]
+    params = list(measure_type.values())[0]
+    func_name = globals()[complexity_measure]
+    feature_map = func_name(bold_ts, params)  # n_roi x 1
+    complexity_features = feature_map.T
 
     return complexity_features
 
 
-def _range_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
+def _range_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise range entropy from 2d BOLD time series.
 
     - Range entropy: Take a timeseries of brain areas, and calculate
@@ -201,9 +230,8 @@ def _range_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     ----------
     bold_ts : np.ndarray
         BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+    params : dict
+        The dictionary of input parameters.
 
     Returns
     -------
@@ -224,7 +252,6 @@ def _range_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     # print('Stop: _range_entropy')
     # embed(globals(), locals())
 
-    params = measure_types["_range_entropy"]
     emb_dim = params["m"]
     tolerance = params["tol"]
     _, n_roi = bold_ts.shape
@@ -243,7 +270,7 @@ def _range_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     return range_en_roi
 
 
-def _range_entropy_auc(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
+def _range_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise AUC of range entropy from 2d BOLD time series.
 
     - AUC of range entropy: Take a timeseries of brain areas, calculate
@@ -254,9 +281,8 @@ def _range_entropy_auc(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     ----------
     bold_ts : np.ndarray
         BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+    params : dict
+        The dictionary of input parameters.
 
     Returns
     -------
@@ -277,7 +303,6 @@ def _range_entropy_auc(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     # print('Stop: _range_entropy_auc')
     # embed(globals(), locals())
 
-    params = measure_types["_range_entropy_auc"]
     emb_dim = params["m"]
     n_r = params["n_r"]
     r_span = np.arange(1 / n_r, (1 + 1 / n_r), 1 / n_r)  # Tolerance r span
@@ -312,7 +337,7 @@ def _range_entropy_auc(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     return range_en_auc_roi
 
 
-def _perm_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
+def _perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise permutation entropy from 2d BOLD time series.
 
     - Permutation entropy: Take a timeseries of brain areas, and calculate
@@ -322,9 +347,8 @@ def _perm_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     ----------
     bold_ts : np.ndarray
         BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+    params : dict
+        The dictionary of input parameters.
 
     Returns
     -------
@@ -345,7 +369,6 @@ def _perm_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     # print('Stop: _perm_entropy')
     # embed(globals(), locals())
 
-    params = measure_types["_perm_entropy"]
     emb_dim = params["m"]
     delay = params["tau"]
     _, n_roi = bold_ts.shape
@@ -369,9 +392,7 @@ def _perm_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     return perm_en_roi
 
 
-def _weighted_perm_entropy(
-    bold_ts: np.ndarray, measure_types: dict
-) -> np.ndarray:
+def _weighted_perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise weighted permutation entropy from bold_ts.
 
     - Weighted permutation entropy: Take a timeseries of brain areas, and
@@ -382,9 +403,8 @@ def _weighted_perm_entropy(
     ----------
     bold_ts : np.ndarray
         BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+    params : dict
+        The dictionary of input parameters.
 
     Returns
     -------
@@ -406,7 +426,6 @@ def _weighted_perm_entropy(
     # print('Stop: _weighted_perm_entropy')
     # embed(globals(), locals())
 
-    params = measure_types["_weighted_perm_entropy"]
     emb_dim = params["m"]
     delay = params["tau"]
     _, n_roi = bold_ts.shape
@@ -430,7 +449,7 @@ def _weighted_perm_entropy(
     return wperm_en_roi
 
 
-def _sample_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
+def _sample_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise weighted permutation entropy from bold_ts.
 
     - Sample entropy: Take a timeseries of brain areas, and
@@ -440,9 +459,8 @@ def _sample_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     ----------
     bold_ts : np.ndarray
         BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+    params : dict
+        The dictionary of input parameters.
 
     Returns
     -------
@@ -464,7 +482,6 @@ def _sample_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     # print('Stop: _sample_entropy')
     # embed(globals(), locals())
 
-    params = measure_types["_sample_entropy"]
     emb_dim = params["m"]
     delay = params["tau"]
     tol = params["tol"]
@@ -487,9 +504,7 @@ def _sample_entropy(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     return samp_en_roi
 
 
-def _multiscale_entropy_auc(
-    bold_ts: np.ndarray, measure_types: dict
-) -> np.ndarray:
+def _multiscale_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise AUC of multiscale entropy of bold_ts.
 
     - Multiscale entropy: Take a timeseries of brain areas,
@@ -500,9 +515,8 @@ def _multiscale_entropy_auc(
     ----------
     bold_ts : np.ndarray
         BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+    params : dict
+        The dictionary of input parameters.
 
     Returns
     -------
@@ -523,7 +537,6 @@ def _multiscale_entropy_auc(
     # print('Stop: _multiscale_entropy_auc')
     # embed(globals(), locals())
 
-    params = measure_types["_multiscale_entropy_auc"]
     emb_dim = params["m"]
     tol = params["tol"]
     scale = params["scale"]
@@ -557,7 +570,7 @@ def _multiscale_entropy_auc(
     return MSEn_auc_roi
 
 
-def _hurst_exponent(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
+def _hurst_exponent(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise Hurst exponent of bold_ts.
 
     - Hurst exponent: Take a timeseries of brain areas, and
@@ -568,9 +581,8 @@ def _hurst_exponent(bold_ts: np.ndarray, measure_types: dict) -> np.ndarray:
     ----------
     bold_ts : np.ndarray
         BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+    params : dict
+        The dictionary of input parameters.
 
     Returns
     -------
