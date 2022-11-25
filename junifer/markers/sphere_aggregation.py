@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from ..api.decorators import register_marker
 from ..data import load_coordinates, load_mask
@@ -12,9 +12,6 @@ from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
 from ..utils import logger
 from .base import BaseMarker
-
-if TYPE_CHECKING:
-    from junifer.storage import BaseFeatureStorage
 
 
 @register_marker
@@ -79,53 +76,27 @@ class SphereAggregation(BaseMarker):
         """
         return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
 
-    def get_output_type(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The kind of data to work on.
+        input_type : str
+            The data type input to the marker.
 
         Returns
         -------
-        list of str
-            The list of storage kinds.
+        str
+            The storage type output by the marker.
 
         """
-        outputs = []
-        for t_input in input:
-            if t_input in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
-                outputs.append("table")
-            elif t_input in ["BOLD"]:
-                outputs.append("timeseries")
-            else:
-                raise ValueError(f"Unknown input kind for {t_input}")
-        return outputs
 
-    def store(
-        self,
-        kind: str,
-        out: Dict[str, Any],
-        storage: "BaseFeatureStorage",
-    ) -> None:
-        """Store.
-
-        Parameters
-        ----------
-        kind : {"BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"}
-            The data kind to store.
-        out : dict
-            The computed result as a dictionary to store.
-        storage : storage-like
-            The storage class, for example, SQLiteFeatureStorage.
-
-        """
-        logger.debug(f"Storing {kind} in {storage}")
-        if kind in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
-            storage.store(kind="table", **out)
-        elif kind in ["BOLD"]:
-            storage.store(kind="timeseries", **out)
+        if input_type in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
+            return "table"
+        elif input_type == "BOLD":
+            return "timeseries"
+        else:
+            raise ValueError(f"Unknown input kind for {input_type}")
 
     def compute(
         self,

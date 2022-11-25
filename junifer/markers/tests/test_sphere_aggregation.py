@@ -24,14 +24,13 @@ RADIUS = 8
 def test_SphereAggregation_input_output() -> None:
     """Test SphereAggregation input and output types."""
     marker = SphereAggregation(
-        coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
+        coords="DMNBuckner", method="mean", on="VBM_GM"
     )
-
-    output = marker.get_output_type(["VBM_GM", "BOLD"])
-    assert output == ["table", "timeseries"]
+    for in_, out_ in [("VBM_GM", "table"), ("BOLD", "timeseries")]:
+        assert marker.get_output_type(in_) == out_
 
     with pytest.raises(ValueError, match="Unknown input"):
-        marker.get_output_type(["VBM_GM", "BOLD", "unknown"])
+        marker.get_output_type("unknown")
 
 
 def test_SphereAggregation_3D() -> None:
@@ -52,22 +51,12 @@ def test_SphereAggregation_3D() -> None:
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
-    input = {"VBM_GM": {"data": img}}
+    input = {"VBM_GM": {"data": img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
-
-    meta = marker.get_meta("VBM_GM")["marker"]
-    assert meta["method"] == "mean"
-    assert meta["coords"] == COORDS
-    assert meta["radius"] == RADIUS
-    assert meta["mask"] is None
-    assert meta["name"] == "VBM_GM_SphereAggregation"
-    assert meta["class"] == "SphereAggregation"
-    assert meta["kind"] == "VBM_GM"
-    assert meta["method_params"] == {}
 
 
 def test_SphereAggregation_4D() -> None:
@@ -87,22 +76,12 @@ def test_SphereAggregation_4D() -> None:
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS
     )
-    input = {"BOLD": {"data": fmri_img}}
+    input = {"BOLD": {"data": fmri_img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
-
-    meta = marker.get_meta("BOLD")["marker"]
-    assert meta["method"] == "mean"
-    assert meta["coords"] == COORDS
-    assert meta["radius"] == RADIUS
-    assert meta["mask"] is None
-    assert meta["name"] == "BOLD_SphereAggregation"
-    assert meta["class"] == "SphereAggregation"
-    assert meta["kind"] == "BOLD"
-    assert meta["method_params"] == {}
 
 
 def test_SphereAggregation_storage(tmp_path: Path) -> None:
@@ -126,7 +105,7 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
         "version": "0.0.1",
         "marker": {"name": "fcname"},
     }
-    input = {"VBM_GM": {"data": img}, "meta": meta}
+    input = {"VBM_GM": {"data": img, "meta": meta}}
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
@@ -141,7 +120,7 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     # Get the SPM auditory data
     subject_data = datasets.fetch_spm_auditory()
     fmri_img = concat_imgs(subject_data.func)  # type: ignore
-    input = {"BOLD": {"data": fmri_img}, "meta": meta}
+    input = {"BOLD": {"data": fmri_img, "meta": meta}}
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, on="BOLD"
     )
@@ -172,18 +151,9 @@ def test_SphereAggregation_3D_mask() -> None:
         coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM",
         mask="GM_prob0.2"
     )
-    input = {"VBM_GM": {"data": img}}
+    input = {"VBM_GM": {"data": img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
-
-    meta = marker.get_meta("VBM_GM")["marker"]
-    assert meta["method"] == "mean"
-    assert meta["coords"] == COORDS
-    assert meta["radius"] == RADIUS
-    assert meta["name"] == "VBM_GM_SphereAggregation"
-    assert meta["class"] == "SphereAggregation"
-    assert meta["kind"] == "VBM_GM"
-    assert meta["method_params"] == {}

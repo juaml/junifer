@@ -36,9 +36,6 @@ def test_base_marker_subclassing() -> None:
                 "row_names": "row_names",
             }
 
-        def store(self, kind, out, storage):
-            return super().store(kind=kind, out=out, storage=storage)
-
     with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
         MyBaseMarker(on=["BOLD", "T2w"])
 
@@ -75,10 +72,6 @@ def test_base_marker_subclassing() -> None:
     assert "name" in meta["marker"]
     assert "parameter" in meta["marker"]
     assert meta["marker"]["parameter"] == 1
-
-    # Check no implementation check
-    with pytest.raises(NotImplementedError):
-        marker.store(kind="kind", out="out", storage="storage")  # type: ignore
 
     # Check attributes
     assert marker.name == "MyBaseMarker"

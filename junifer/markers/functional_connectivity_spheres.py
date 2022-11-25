@@ -4,18 +4,15 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from nilearn.connectome import ConnectivityMeasure
 from sklearn.covariance import EmpiricalCovariance
 
 from ..api.decorators import register_marker
-from ..utils import logger, raise_error
+from ..utils import raise_error
 from .base import BaseMarker
 from .sphere_aggregation import SphereAggregation
-
-if TYPE_CHECKING:
-    from junifer.storage import BaseFeatureStorage
 
 
 @register_marker
@@ -93,23 +90,21 @@ class FunctionalConnectivitySpheres(BaseMarker):
         """
         return ["BOLD"]
 
-    def get_output_type(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the marker. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the marker.
 
         Returns
         -------
-        list of str
-            The updated list of output kinds, as storage possibilities.
+        str
+            The storage type output by the marker.
 
         """
-        outputs = ["matrix"]
-        return outputs
+        return "matrix"
 
     def compute(
         self,
@@ -166,24 +161,3 @@ class FunctionalConnectivitySpheres(BaseMarker):
         out["col_names"] = ts["columns"]
         out["matrix_kind"] = "tril"
         return out
-
-    def store(
-        self,
-        kind: str,
-        out: Dict[str, Any],
-        storage: "BaseFeatureStorage",
-    ) -> None:
-        """Store.
-
-        Parameters
-        ----------
-        kind : {"BOLD"}
-            The data kind to store.
-        out : dict
-            The computed result as a dictionary to store.
-        storage : storage-like
-            The storage class, for example, SQLiteFeatureStorage.
-
-        """
-        logger.debug(f"Storing {kind} in {storage}")
-        storage.store(kind="matrix", **out)

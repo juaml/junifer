@@ -32,20 +32,18 @@ class PipelineStepMixin:
             klass=NotImplementedError,
         )
 
-    def get_output_type(self, input: List[str]) -> List[str]:
-        """Get the kind of the pipeline step.
+    def get_output_type(self, input_type: str) -> str:
+        """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the pipeline step. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the marker.
 
         Returns
         -------
-        list of str
-            The updated list of available Junifer Data dictionary keys after
-            the pipeline step.
+        str
+            The storage type output by the marker.
 
         """
         raise_error(
@@ -73,7 +71,8 @@ class PipelineStepMixin:
 
         """
         self.validate_input(input=input)
-        return self.get_output_type(input=input)
+        outputs = [self.get_output_type(t_input) for t_input in input]
+        return outputs
 
     def fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
         """Fit and transform.

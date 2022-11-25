@@ -29,6 +29,7 @@ def _meta_hash(meta: Dict) -> str:
 
     """
     logger.debug(f"Hashing metadata: {meta}")
+    meta["dependencies"] = list(meta["dependencies"])
     meta_md5 = hashlib.md5(
         json.dumps(meta, sort_keys=True).encode("utf-8")
     ).hexdigest()

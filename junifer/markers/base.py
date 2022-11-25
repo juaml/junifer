@@ -80,19 +80,18 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             )
 
     @abstractmethod
-    def get_output_type(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the marker. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the marker.
 
         Returns
         -------
-        list of str
-            The updated list of output kinds, as storage possibilities.
+        str
+            The storage type output by the marker.
 
         """
         raise_error(
@@ -128,10 +127,9 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             klass=NotImplementedError,
         )
 
-    @abstractmethod
     def store(
         self,
-        kind: str,
+        type_: str,
         out: Dict[str, Any],
         storage: "BaseFeatureStorage",
     ) -> None:
@@ -139,18 +137,17 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
 
         Parameters
         ----------
-        kind : str
-            The data kind to store.
+        type_ : str
+            The data type to store.
         out : dict
             The computed result as a dictionary to store.
         storage : storage-like
-            The storage class.
+            The storage class, for example, SQLiteFeatureStorage.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement store().",
-            klass=NotImplementedError,
-        )
+        output_type_ = self.get_output_type(type_)
+        logger.debug(f"Storing {output_type_} in {storage}")
+        storage.store(kind=output_type_, **out)
 
     def fit_transform(
         self,
@@ -181,12 +178,15 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
                 extra_input = input.copy()
                 extra_input.pop(type_)
                 t_meta = t_input["meta"].copy()
+                t_meta["type"] = type_
+
                 t_out = self.compute(input=t_input, extra_input=extra_input)
                 t_out["meta"] = t_meta
+
                 self.update_meta(t_out, "marker")
                 if storage is not None:
                     logger.info(f"Storing in {storage}")
-                    self.store(kind=type_, out=t_out, storage=storage)
+                    self.store(type_=type_, out=t_out, storage=storage)
                 else:
                     logger.info("No storage specified, returning dictionary")
                     out[type_] = t_out

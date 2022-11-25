@@ -42,21 +42,13 @@ def test_compute() -> None:
         n_time, _ = test_ts.shape
         assert n_time == len(new_out["data"])
 
-        # Assert the meta
-        meta = ets_rss_marker.get_meta("BOLD")["marker"]
-        assert meta["parcellation"] == "Schaefer100x17"
-        assert meta["agg_method"] == "mean"
-        assert meta["agg_method_params"] is None
-        assert meta["class"] == "RSSETSMarker"
-
 
 def test_get_output_type() -> None:
     """Test RSS ETS get_output_type()."""
     ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
-    input_list = ["BOLD"]
-    input_list = ets_rss_marker.get_output_type(input_list)
-    assert len(input_list) == 1
-    assert input_list[0] in ["timeseries"]
+    input_ = "BOLD"
+    output = ets_rss_marker.get_output_type(input_)
+    assert output == "timeseries"
 
 
 def test_store(tmp_path: Path) -> None:
