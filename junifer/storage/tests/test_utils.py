@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List
 
 import pytest
 
