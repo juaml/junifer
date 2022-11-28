@@ -6,11 +6,12 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Iterable
 
+import numpy as np
 import pandas as pd
 
-from .._version import __version__
+from .utils import process_meta
 from ..utils import raise_error
 
 
@@ -40,23 +41,29 @@ class BaseFeatureStorage(ABC):
         self.uri = uri
         if not isinstance(storage_types, list):
             storage_types = [storage_types]
+        if any(x not in self.get_valid_inputs() for x in storage_types):
+            wrong_storage_types = [
+                x for x in storage_types if x not in self.get_valid_inputs()
+            ]
+            raise ValueError(
+                f"{self.__class__.__name__} cannot store {wrong_storage_types}"
+            )
         self._valid_inputs = storage_types
         self.single_output = single_output
 
-    def get_meta(self) -> Dict:
-        """Get metadata.
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid storage types for input.
 
         Returns
         -------
-        dict
-            The metadata as a dictionary.
-
+        list of str
+            The list of storage types that can be used as input for this "
+            "storage.
         """
-        meta = {}
-        meta["versions"] = {
-            "junifer": __version__,
-        }
-        return meta
+        raise_error(
+            msg="Concrete classes need to implement get_valid_inputs().",
+            klass=NotImplementedError,
+        )
 
     def validate(self, input_: List[str]) -> None:
         """Validate the input to the pipeline step.
@@ -131,19 +138,17 @@ class BaseFeatureStorage(ABC):
         )
 
     @abstractmethod
-    def store_metadata(self, meta: Dict) -> str:
+    def store_metadata(self, meta_md5: str, element: Dict, meta: Dict) -> None:
         """Store metadata.
 
         Parameters
         ----------
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
         meta : dict
             The metadata as a dictionary.
-
-        Returns
-        -------
-        str
-            The metadata column.
-
         """
         raise_error(
             msg="Concrete classes need to implement store_metadata().",
@@ -166,65 +171,117 @@ class BaseFeatureStorage(ABC):
             If ``kind`` is invalid.
 
         """
+        # Do the check before calling the abstract methods, otherwise the
+        # meta might be stored even if the data is not stored.
+        if kind not in self._valid_inputs:
+            raise_error(
+                msg=f"I don't know how to store {kind}.",
+                klass=ValueError,
+            )
+        t_meta = kwargs.pop("meta")
+        meta_md5, t_meta, t_element = process_meta(t_meta)
+        self.store_metadata(meta_md5=meta_md5, element=t_element, meta=t_meta)
         if kind == "matrix":
-            self.store_matrix(**kwargs)
+            self.store_matrix(meta_md5=meta_md5, element=t_element, **kwargs)
         elif kind == "timeseries":
-            self.store_timeseries(**kwargs)
+            self.store_timeseries(
+                meta_md5=meta_md5, element=t_element, **kwargs
+            )
         elif kind == "table":
-            self.store_table(**kwargs)
-        else:
-            raise ValueError(f"I don't know how to store {kind}")
+            self.store_table(meta_md5=meta_md5, element=t_element, **kwargs)
 
-    def store_df(self, **kwargs) -> None:
-        """Store pandas DataFrame.
-
-        Parameters
-        ----------
-        **kwargs : dict
-            The keyword arguments.
-
-        """
-        raise_error(
-            msg="Concrete classes need to implement store_df().",
-            klass=NotImplementedError,
-        )
-
-    def store_matrix(self, **kwargs) -> None:
+    def store_matrix(
+        self,
+        meta_md5: str,
+        element: Dict,
+        data: np.ndarray,
+        col_names: Optional[Iterable[str]] = None,
+        row_names: Optional[Iterable[str]] = None,
+        matrix_kind: Optional[str] = "full",
+        diagonal: bool = True,
+    ) -> None:
         """Store matrix.
 
         Parameters
         ----------
-        **kwargs : dict
-            The keyword arguments.
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
+        data : numpy.ndarray
+            The matrix data to store.
+        col_names : list or tuple of str, optional
+            The column names (default None).
+        row_names : str, optional
+            The column name to use in case number of rows greater than 1.
+            If None and number of rows greater than 1, then the name will be
+            "index" (default None).
+        matrix_kind : str, optional
+            The kind of matrix:
 
+            * ``triu`` : store upper triangular only
+            * ``tril`` : store lower triangular
+            * ``full`` : full matrix
+
+            (default "full").
+        diagonal : bool, optional
+            Whether to store the diagonal. If `matrix_kind` is "full", setting
+            this to False will raise an error (default True).
         """
         raise_error(
             msg="Concrete classes need to implement store_matrix2d().",
             klass=NotImplementedError,
         )
 
-    def store_table(self, **kwargs) -> None:
+    def store_table(
+        self,
+        meta_md5: str,
+        element: Dict,
+        data: Union[np.ndarray, List],
+        columns: Optional[Iterable[str]] = None,
+        rows_col_name: Optional[str] = None,
+    ) -> None:
         """Store table.
 
         Parameters
         ----------
-        **kwargs : dict
-            The keyword arguments.
-
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
+        data : numpy.ndarray or list
+            The table data to store.
+        columns : list or tuple of str, optional
+            The columns (default None).
+        rows_col_name : str, optional
+            The column name to use in case number of rows greater than 1.
+            If None and number of rows greater than 1, then the name will be
+            "index" (default None).
         """
         raise_error(
             msg="Concrete classes need to implement store_table().",
             klass=NotImplementedError,
         )
 
-    def store_timeseries(self, **kwargs) -> None:
-        """Store timeseries.
+    def store_timeseries(
+        self,
+        meta_md5: str,
+        element: Dict,
+        data: np.ndarray,
+        columns: Optional[Iterable[str]] = None,
+    ) -> None:
+        """Implement timeseries storing.
 
         Parameters
         ----------
-        **kwargs : dict
-            The keyword arguments.
-
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
+        data : numpy.ndarray
+            The timeseries data to store.
+        columns : list or tuple of str, optional
+            The column labels (default None).
         """
         raise_error(
             msg="Concrete classes need to implement store_timeseries().",

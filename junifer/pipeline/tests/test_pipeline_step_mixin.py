@@ -15,6 +15,6 @@ def test_PipelineStepMixin() -> None:
     with pytest.raises(NotImplementedError):
         mixin.validate_input([])
     with pytest.raises(NotImplementedError):
-        mixin.get_output_type([])
+        mixin.get_output_type("")
     with pytest.raises(NotImplementedError):
         mixin.fit_transform({})

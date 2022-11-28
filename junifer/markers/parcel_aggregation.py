@@ -223,6 +223,4 @@ class ParcelAggregation(BaseMarker):
 
         out_values = np.array(out_values).T
         out = {"data": out_values, "columns": out_labels}
-        if out_values.shape[0] > 1:
-            out["row_names"] = "scan"
         return out

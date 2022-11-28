@@ -121,8 +121,8 @@ def test_aomic_piop2_datagrabber() -> None:
             assert out["DWI"]["path"].is_file()
 
             # asserts meta
-            assert "meta" in out
-            meta = out["meta"]
+            assert "meta" in out["BOLD"]
+            meta = out["BOLD"]["meta"]
             assert "element" in meta
             assert "subject" in meta["element"]
             assert sub == meta["element"]["subject"]

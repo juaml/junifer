@@ -66,9 +66,8 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {
-        "element": "test",
-        "version": "0.0.1",
-        "marker": {"name": "fcname"},
+        "element": {"subject": "test"},
+        "dependencies": {"numpy", "nilearn"},
     }
     input = {"BOLD": {"data": fmri_img, "meta": meta}}
     all_out = fc.fit_transform(input, storage=storage)

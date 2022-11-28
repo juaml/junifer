@@ -151,6 +151,4 @@ class SphereAggregation(BaseMarker):
         out_values = masker.fit_transform(t_input)
         # Format the output
         out = {"data": out_values, "columns": out_labels}
-        if out_values.shape[0] > 1:
-            out["row_names"] = "scan"
         return out

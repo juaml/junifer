@@ -17,7 +17,7 @@ from junifer.datareader import DefaultDataReader
 
 
 @pytest.mark.parametrize(
-    "type_", [["T1w", "BOLD", "T2", "dwi"], [], None, ["whatever"]]
+    "type_", [["T1w", "BOLD", "T2", "dwi"], [], ["whatever"]]
 )
 def test_validation(type_) -> None:
     """Test validating input/output.

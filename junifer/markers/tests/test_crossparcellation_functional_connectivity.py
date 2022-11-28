@@ -31,7 +31,7 @@ def test_compute() -> None:
                 "path": out["BOLD"]["path"],
                 "meta": {"element": "sub001"},
             }
-      }
+        }
 
         crossparcellation = CrossParcellationFC(
             parcellation_one=parcellation_ONE,
@@ -57,13 +57,17 @@ def test_store(tmp_path: Path) -> None:
     with SPMAuditoryTestingDatagrabber() as dg:
         out = dg["sub001"]
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
+        meta = {
+            "element": {"subject": "sub001"},
+            "dependencies": {"nilearn", "nibabel"},
+        }
+
         input_dict = {
             "BOLD": {
                 "data": niimg,
                 "path": out["BOLD"]["path"],
-                "meta": {"element": "sub001"},
+                "meta": meta,
             },
-            "meta": {"element": "sub001"},
         }
 
         crossparcellation = CrossParcellationFC(

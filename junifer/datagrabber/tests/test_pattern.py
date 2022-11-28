@@ -256,6 +256,6 @@ def test_PatternDataGrabber(tmp_path: Path) -> None:
     out1 = datagrabber[("sub000", "ses000", "task002")]
     out2 = datagrabber[("sub000", "ses000", "task003")]
 
-    assert out1["func"] == out2["func"]
-    assert out1["anat"] == out2["anat"]
-    assert out1["vbm"] != out2["vbm"]
+    assert out1["func"]["path"] == out2["func"]["path"]
+    assert out1["anat"]["path"] == out2["anat"]["path"]
+    assert out1["vbm"]["path"] != out2["vbm"]["path"]

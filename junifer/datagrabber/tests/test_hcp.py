@@ -79,8 +79,8 @@ def test_dataladhcp1200_datagrabber(
         # Assert data file path is a file
         assert out["BOLD"]["path"].is_file()
         # Assert metadata
-        assert "meta" in out
-        meta = out["meta"]
+        assert "meta" in out["BOLD"]
+        meta = out["BOLD"]["meta"]
         assert "element" in meta
         assert "subject" in meta["element"]
         assert test_element[0] == meta["element"]["subject"]

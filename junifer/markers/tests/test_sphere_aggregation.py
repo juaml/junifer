@@ -101,9 +101,8 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
 
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {
-        "element": "test",
-        "version": "0.0.1",
-        "marker": {"name": "fcname"},
+        "element": {"subject": "sub-01", "session": "ses-01"},
+        "dependencies": {"nilearn", "nibabel"},
     }
     input = {"VBM_GM": {"data": img, "meta": meta}}
     marker = SphereAggregation(
@@ -113,9 +112,8 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     marker.fit_transform(input, storage=storage)
 
     meta = {
-        "element": "test",
-        "version": "0.0.1",
-        "marker": {"name": "BOLD_fcname"},
+        "element": {"subject": "sub-01", "session": "ses-01"},
+        "dependencies": {"nilearn", "nibabel"},
     }
     # Get the SPM auditory data
     subject_data = datasets.fetch_spm_auditory()

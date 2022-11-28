@@ -143,10 +143,11 @@ def test_datalad_clone_cleanup(
         assert elem1_t1w.is_file() is False
         assert elem1_t1w.is_symlink() is True
         elem1 = dg["sub-01"]
-        assert "meta" in elem1
-        assert "datagrabber" in elem1["meta"]
-        assert "datalad_dirty" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_dirty"] is False
+        assert "meta" in elem1["BOLD"]
+        meta = elem1["BOLD"]["meta"]
+        assert "datagrabber" in meta
+        assert "datalad_dirty" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_dirty"] is False
         assert hasattr(dg, "_got_files") is False
         assert datadir.exists() is True
         assert elem1_bold.is_file() is True
@@ -198,14 +199,15 @@ def test_datalad_previously_cloned(
         assert datadir.exists() is True
         assert dg._was_cloned is False
         elem1 = dg["sub-01"]
-        assert "meta" in elem1
-        assert "datagrabber" in elem1["meta"]
-        assert "datalad_dirty" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_dirty"] is False
-        assert "datalad_commit_id" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_commit_id"] == commit
-        assert "datalad_id" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_id"] == remote_id
+        assert "meta" in elem1["BOLD"]
+        meta = elem1["BOLD"]["meta"]
+        assert "datagrabber" in meta
+        assert "datalad_dirty" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_dirty"] is False
+        assert "datalad_commit_id" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_commit_id"] == commit
+        assert "datalad_id" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_id"] == remote_id
 
         assert hasattr(dg, "_got_files") is True
         # Files are there and symlinks are fixed
@@ -275,14 +277,15 @@ def test_datalad_previously_cloned_and_get(
         assert datadir.exists() is True
         assert dg._was_cloned is False
         elem1 = dg["sub-01"]
-        assert "meta" in elem1
-        assert "datagrabber" in elem1["meta"]
-        assert "datalad_dirty" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_dirty"] is False
-        assert "datalad_commit_id" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_commit_id"] == commit
-        assert "datalad_id" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_id"] == remote_id
+        assert "meta" in elem1["BOLD"]
+        meta = elem1["BOLD"]["meta"]
+        assert "datagrabber" in meta
+        assert "datalad_dirty" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_dirty"] is False
+        assert "datalad_commit_id" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_commit_id"] == commit
+        assert "datalad_id" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_id"] == remote_id
 
         assert hasattr(dg, "_got_files") is True
         # Files are there and symlinks are fixed
@@ -359,14 +362,15 @@ def test_datalad_previously_cloned_and_get_dirty(
         assert datadir.exists() is True
         assert dg._was_cloned is False
         elem1 = dg["sub-01"]
-        assert "meta" in elem1
-        assert "datagrabber" in elem1["meta"]
-        assert "datalad_dirty" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_dirty"] is True
-        assert "datalad_commit_id" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_commit_id"] == commit
-        assert "datalad_id" in elem1["meta"]["datagrabber"]
-        assert elem1["meta"]["datagrabber"]["datalad_id"] == remote_id
+        assert "meta" in elem1["BOLD"]
+        meta = elem1["BOLD"]["meta"]
+        assert "datagrabber" in meta
+        assert "datalad_dirty" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_dirty"] is True
+        assert "datalad_commit_id" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_commit_id"] == commit
+        assert "datalad_id" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_id"] == remote_id
 
         assert hasattr(dg, "_got_files") is True
         # Files are there and symlinks are fixed
@@ -384,17 +388,18 @@ def test_datalad_previously_cloned_and_get_dirty(
         assert datadir.exists() is True
         assert dg._was_cloned is False
         elem2 = dg["sub-02"]
-        assert "meta" in elem2
-        assert "datagrabber" in elem2["meta"]
-        assert "datalad_dirty" in elem2["meta"]["datagrabber"]
+        assert "meta" in elem1["BOLD"]
+        meta = elem2["BOLD"]["meta"]
+        assert "datagrabber" in meta
+        assert "datalad_dirty" in meta["datagrabber"]
 
         # Dataset is still dirty due to subject sub-01
-        assert elem2["meta"]["datagrabber"]["datalad_dirty"] is True
+        assert meta["datagrabber"]["datalad_dirty"] is True
 
-        assert "datalad_commit_id" in elem2["meta"]["datagrabber"]
-        assert elem2["meta"]["datagrabber"]["datalad_commit_id"] == commit
-        assert "datalad_id" in elem2["meta"]["datagrabber"]
-        assert elem2["meta"]["datagrabber"]["datalad_id"] == remote_id
+        assert "datalad_commit_id" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_commit_id"] == commit
+        assert "datalad_id" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_id"] == remote_id
 
         assert hasattr(dg, "_got_files") is True
         # Files are there and symlinks are fixed

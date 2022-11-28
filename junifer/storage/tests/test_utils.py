@@ -9,7 +9,6 @@ from typing import Dict, List, Tuple, Union
 import pytest
 
 from junifer.storage.utils import (
-    element_to_index,
     element_to_prefix,
     process_meta,
 )
@@ -25,58 +24,105 @@ def test_process_meta_invalid_metadata_type() -> None:
 # TODO: parameterize
 def test_process_meta_hash() -> None:
     """Test metadata hash processing."""
-    meta = {"element": "foo", "A": 1, "B": [2, 3, 4, 5, 6]}
-    hash1, _ = process_meta(meta)
+    meta = {
+        "element": {"foo": "bar"},
+        "A": 1,
+        "B": [2, 3, 4, 5, 6],
+        "dependencies": ["numpy"],
+    }
+    hash1, _, element1 = process_meta(meta)
+    assert element1 == {"foo": "bar"}
 
-    meta = {"element": "foo", "B": [2, 3, 4, 5, 6], "A": 1}
-    hash2, _ = process_meta(meta)
+    meta = {
+        "element": {"foo": "baz"},
+        "B": [2, 3, 4, 5, 6],
+        "A": 1,
+        "dependencies": ["numpy"],
+    }
+    hash2, _, element2 = process_meta(meta)
     assert hash1 == hash2
+    assert element2 == {"foo": "baz"}
 
-    meta = {"element": "foo", "A": 1, "B": [2, 3, 1, 5, 6]}
-    hash3, _ = process_meta(meta)
+    meta = {
+        "element": {"foo": "bar"},
+        "A": 1,
+        "B": [2, 3, 1, 5, 6],
+        "dependencies": ["numpy"],
+    }
+    hash3, _, element3 = process_meta(meta)
     assert hash1 != hash3
+    assert element3 == element1
 
-    meta1 = {
-        "element": "foo",
+    meta4 = {
+        "element": {"foo": "bar"},
         "B": {
             "B2": [2, 3, 4, 5, 6],
             "B1": [9.22, 3.14, 1.41, 5.67, 6.28],
             "B3": (1, "car"),
         },
         "A": 1,
+        "dependencies": ["numpy"],
     }
 
-    meta2 = {
+    meta5 = {
         "A": 1,
         "B": {
             "B3": (1, "car"),
             "B1": [9.22, 3.14, 1.41, 5.67, 6.28],
             "B2": [2, 3, 4, 5, 6],
         },
-        "element": "foo",
+        "element": {"foo": "baz"},
+        "dependencies": ["numpy"],
     }
 
-    hash4, _ = process_meta(meta1)
-    hash5, _ = process_meta(meta2)
+    hash4, _, _ = process_meta(meta4)
+    hash5, _, _ = process_meta(meta5)
     assert hash4 == hash5
+
+    # Different element keys should give a different hash
+    meta6 = {
+        "A": 1,
+        "B": {
+            "B3": (1, "car"),
+            "B1": [9.22, 3.14, 1.41, 5.67, 6.28],
+            "B2": [2, 3, 4, 5, 6],
+        },
+        "element": {"bar": "baz"},
+        "dependencies": ["numpy"],
+    }
+    hash6, _, _ = process_meta(meta6)
+    assert hash4 != hash6
 
 
 def test_process_meta_invalid_metadata_key() -> None:
     """Test invalid metadata key check for metadata hash processing."""
     meta = {}
-    with pytest.raises(ValueError, match=r"_element_keys"):
+    with pytest.raises(ValueError, match=r"element"):
+        process_meta(meta)
+
+    meta = {"element": {}}
+    with pytest.raises(ValueError, match=r"dependencies"):
         process_meta(meta)
 
 
 @pytest.mark.parametrize(
     "meta,elements",
     [
-        ({"element": "foo", "A": 1, "B": [2, 3, 4, 5, 6]}, ["element"]),
+        (
+            {
+                "element": {"foo": "bar"},
+                "A": 1,
+                "B": [2, 3, 4, 5, 6],
+                "dependencies": ["numpy"],
+            },
+            ["foo"],
+        ),
         (
             {
                 "element": {"subject": "foo", "session": "bar"},
                 "B": [2, 3, 4, 5, 6],
                 "A": 1,
+                "dependencies": ["numpy"],
             },
             ["subject", "session"],
         ),
@@ -93,33 +139,25 @@ def test_process_meta_element(meta: Dict, elements: List[str]) -> None:
         The parametrized elements to assert against.
 
     """
-    hash1, processed_meta = process_meta(meta)
+    hash1, processed_meta, _ = process_meta(meta)
     assert "_element_keys" in processed_meta
     assert processed_meta["_element_keys"] == elements
     assert "A" in processed_meta
     assert "B" in processed_meta
     assert "element" not in processed_meta
-    hash2, processed_meta2 = process_meta(processed_meta)
-
-    assert hash1, hash2
-    assert processed_meta == processed_meta2
 
 
 @pytest.mark.parametrize(
     "element,prefix",
     [
-        ("sub-01", "element_sub-01_"),
-        (1, "element_1_"),
         ({"subject": "sub-01"}, "element_sub-01_"),
         ({"subject": 1}, "element_1_"),
         ({"subject": "sub-01", "session": "ses-02"}, "element_sub-01_ses-02_"),
         ({"subject": 1, "session": 2}, "element_1_2_"),
-        (("sub-01", "ses-02"), "element_sub-01_ses-02_"),
-        ((1, 2), "element_1_2_"),
     ],
 )
 def test_element_to_prefix(
-    element: Union[str, int, Dict, Tuple], prefix: str
+    element: Dict, prefix: str
 ) -> None:
     """Test converting element to prefix (for file naming).
 
@@ -138,75 +176,5 @@ def test_element_to_prefix(
 def test_element_to_prefix_invalid_type() -> None:
     """Test element to prefix type checking."""
     element = 2.3
-    with pytest.raises(ValueError, match=r"convert element of type"):
+    with pytest.raises(ValueError, match=r"must be a dict"):
         element_to_prefix(element)  # type: ignore
-
-
-def test_element_to_index_check_meta_invalid_key() -> None:
-    """Test element to index metadata key checking."""
-    meta = {"noelement": "foo"}
-    with pytest.raises(ValueError, match=r"metadata must contain the key"):
-        element_to_index(meta)
-
-
-def test_element_to_index() -> None:
-    """Test element to index."""
-    meta = {"element": "foo", "A": 1, "B": [2, 3, 4, 5, 6]}
-    index = element_to_index(meta)
-    assert index.names == ["element", "idx"]
-    assert index.levels[0].name == "element"
-    assert index.levels[0].values[0] == "foo"
-    assert all(x == "foo" for x in index.levels[0].values)
-    assert index.levels[0].values.shape == (1,)
-    assert index.levels[1].name == "idx"
-    assert all(x == i for i, x in enumerate(index.levels[1].values))
-    assert index.levels[1].values.shape == (1,)
-
-    index = element_to_index(meta, n_rows=10)
-    assert index.names == ["element", "idx"]
-    assert index.levels[0].name == "element"
-    assert all(x == "foo" for x in index.levels[0].values)
-    assert index.levels[0].values.shape == (1,)
-
-    assert index.levels[1].name == "idx"
-    assert all(x == i for i, x in enumerate(index.levels[1].values))
-    assert index.levels[1].values.shape == (10,)
-
-    index = element_to_index(meta, n_rows=1, rows_col_name="scan")
-    assert index.names == ["element", "scan"]
-    assert index.levels[0].name == "element"
-    assert index.levels[0].values[0] == "foo"
-    assert all(x == "foo" for x in index.levels[0].values)
-    assert index.levels[0].values.shape == (1,)
-    assert index.levels[1].name == "scan"
-    assert all(x == i for i, x in enumerate(index.levels[1].values))
-    assert index.levels[1].values.shape == (1,)
-
-    index = element_to_index(meta, n_rows=7, rows_col_name="scan")
-    assert index.names == ["element", "scan"]
-    assert index.levels[0].name == "element"
-    assert all(x == "foo" for x in index.levels[0].values)
-    assert index.levels[0].values.shape == (1,)
-
-    assert index.levels[1].name == "scan"
-    assert all(x == i for i, x in enumerate(index.levels[1].values))
-    assert index.levels[1].values.shape == (7,)
-
-    meta = {
-        "element": {"subject": "sub-01", "session": "ses-01"},
-        "A": 1,
-        "B": [2, 3, 4, 5, 6],
-    }
-    index = element_to_index(meta, n_rows=10)
-
-    assert index.levels[0].name == "subject"
-    assert all(x == "sub-01" for x in index.levels[0].values)
-    assert index.levels[0].values.shape == (1,)
-
-    assert index.levels[1].name == "session"
-    assert all(x == "ses-01" for x in index.levels[1].values)
-    assert index.levels[1].values.shape == (1,)
-
-    assert index.levels[2].name == "idx"
-    assert all(x == i for i, x in enumerate(index.levels[2].values))
-    assert index.levels[2].values.shape == (10,)

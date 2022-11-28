@@ -63,17 +63,17 @@ def test_multiple() -> None:
         subs = [x for x in dg]
         assert set(subs) == set(expected_subs)
 
-        data = dg[("sub-01", "ses-01")]
-        assert "T1w" in data
-        assert "BOLD" in data
-
-    meta = dg.get_meta()
-    assert "class" in meta
-    assert meta["class"] == "MultipleDataGrabber"
-    assert "datagrabbers" in meta
-    assert len(meta["datagrabbers"]) == 2
-    assert meta["datagrabbers"][0]["class"] == "PatternDataladDataGrabber"
-    assert meta["datagrabbers"][1]["class"] == "PatternDataladDataGrabber"
+        elem = dg[("sub-01", "ses-01")]
+        assert "T1w" in elem
+        assert "BOLD" in elem
+        assert "meta" in elem["BOLD"]
+        meta = elem["BOLD"]["meta"]["datagrabber"]
+        assert "class" in meta
+        assert meta["class"] == "MultipleDataGrabber"
+        assert "datagrabbers" in meta
+        assert len(meta["datagrabbers"]) == 2
+        assert meta["datagrabbers"][0]["class"] == "PatternDataladDataGrabber"
+        assert meta["datagrabbers"][1]["class"] == "PatternDataladDataGrabber"
 
 
 def test_multiple_no_intersection() -> None:
