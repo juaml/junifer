@@ -45,6 +45,8 @@ class ParcelAggregation(BaseMarker):
         None).
     """
 
+    _DEPENDENCIES = {"nilearn", "numpy"}
+
     def __init__(
         self,
         parcellation: Union[str, List[str]],

@@ -40,6 +40,8 @@ class CrossParcellationFC(BaseMarker):
         (default None).
     """
 
+    _DEPENDENCIES = {"nilearn"}
+
     def __init__(
         self,
         parcellation_one: str,

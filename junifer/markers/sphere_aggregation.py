@@ -48,6 +48,8 @@ class SphereAggregation(BaseMarker):
 
     """
 
+    _DEPENDENCIES = {"nilearn", "numpy"}
+
     def __init__(
         self,
         coords: str,

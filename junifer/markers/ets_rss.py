@@ -42,6 +42,8 @@ class RSSETSMarker(BaseMarker):
 
     """
 
+    _DEPENDENCIES = {"nilearn"}
+
     def __init__(
         self,
         parcellation: Union[str, List[str]],

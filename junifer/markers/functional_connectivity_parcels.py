@@ -45,6 +45,8 @@ class FunctionalConnectivityParcels(BaseMarker):
         None).
     """
 
+    _DEPENDENCIES = {"nilearn", "scikit-learn"}
+
     def __init__(
         self,
         parcellation: Union[str, List[str]],

@@ -147,8 +147,19 @@ This dictionary will later be passed onto the ``store`` method.
 Step 4: Finalize the marker
 ---------------------------
 
-Once all of the above steps are done, we just need to give our marker a name an register it using the
-``@register_marker`` decorator:
+Once all of the above steps are done, we just need to give our marker a name, state its *dependencies* and register it
+using the ``@register_marker`` decorator.
+
+The *dependencies* are the core packages that are required to compute the marker. This will be later used to keep track
+of the versions of the packages used to compute the marker. To inform junifer about the dependencies of a marker,
+we need to define a ``_DEPENDENCIES`` attribute in the class. This attribute must be a set, with the names of the
+packages as strings. For example, the ``ParcelMean`` marker has the following dependencies:
+
+.. code-block:: python
+
+    _DEPENDENCIES = {"nilearn"}
+
+Finally, we need to register the marker using the ``@register_marker`` decorator. This decorator takes the name of the
 
 .. code-block:: python
 
@@ -159,6 +170,8 @@ Once all of the above steps are done, we just need to give our marker a name an 
 
     @register_marker
     class ParcelMean(BaseMarker):
+
+         _DEPENDENCIES = {"nilearn", "numpy"}
 
         def __init__(self, parcellation_name, on=None, name=None):
             self.parcellation_name = parcellation_name

@@ -51,6 +51,8 @@ class FunctionalConnectivitySpheres(BaseMarker):
 
     """
 
+    _DEPENDENCIES = {"nilearn", "scikit-learn"}
+
     def __init__(
         self,
         coords: str,
