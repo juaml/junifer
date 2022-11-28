@@ -19,8 +19,7 @@ Thus, only a few methods are required:
    of the marker is compatible with the storage. This method should return a string, representing 
    :ref:`storage types <storage_types>`
 3. ``compute``: the method that given the data, computes the marker.
-4. ``store``: the method that stores the computed marker.
-5. ``__init__``: the initialization method, where the marker is configured.
+4. ``__init__``: the initialization method, where the marker is configured.
 
 As an example, we will develop a Parcel Mean marker, that is, a marker that first applies a parcellation and
 then computes the mean of the data in each parcel. This is a very simple example, but it will show you how to create
@@ -143,34 +142,9 @@ This dictionary will later be passed onto the ``store`` method.
         return out
 
 
-.. _extending_markers_store:
-
-Step 4: Store the marker
-------------------------
-
-In this step, we will define the method that stores the marker. This method will be called by junifer when needed,
-using the data provided by the ``compute`` method. The method ``store`` has three arguments:
-
-* ``kind``: A string indicating the :ref:`data type <data_types>` that was used to compute the marker.
-* ``out``: The output of the ``compute`` method.
-* ``storage``: The storage object, that will be used to store the marker.
-
-.. code-block:: python
-
-    def store(self, kind, out, storage):
-        if kind in ["VBM_GM", "VBM_WM"]:
-            storage.store(kind="table", **out)
-        elif kind in ["BOLD"]:
-            storage.store(kind="timeseries", **out)
-
-.. hint:: Check the hint on :ref:`extending_markers_compute`. If the output of the ``compute`` method is a dictionary
-          with keys based on the :ref:`storage types <storage_types>`, the ``store`` method can simply call the right
-          storage function, based on the ``kind`` parameter, with ``**out``.
-
-
 .. _extending_markers_finalize:
 
-Step 5: Finalize the marker
+Step 4: Finalize the marker
 ---------------------------
 
 Once all of the above steps are done, we just need to give our marker a name an register it using the
@@ -231,12 +205,6 @@ Once all of the above steps are done, we just need to give our marker a name an 
                 out["row_names"] = "scan"
             return out
 
-        def store(self, kind, out, storage):
-            if kind in ["VBM_GM", "VBM_WM"]:
-                storage.store(kind="table", **out)
-            elif kind in ["BOLD"]:
-                storage.store(kind="timeseries", **out)
-
 
 .. _extending_markers_template:
 
@@ -270,7 +238,3 @@ Template for a custom Marker
             # Create the output dictionary
             out = {"data": None, "columns": None}
             return out
-
-        def store(self, kind, out, storage):
-            # TODO: store out using the storage object, based on the kind of data
-            pass
