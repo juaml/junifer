@@ -52,8 +52,10 @@ def _meta_hash(meta: Dict) -> str:
     logger.debug(f"Hashing metadata: {meta}")
     if "dependencies" not in meta:
         raise_error("The metadata must contain the key 'dependencies'")
-    # TODO: Convert dependencies into versions
-    meta["dependencies"] = list(meta["dependencies"])
+    # Convert dependencies set into {dependency: version} dictionary
+    meta["dependencies"] = {
+        dep: get_dependency_version(dep) for dep in meta["dependencies"]
+    }
     meta_md5 = hashlib.md5(
         json.dumps(meta, sort_keys=True).encode("utf-8")
     ).hexdigest()
