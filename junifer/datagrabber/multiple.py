@@ -5,7 +5,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
 from .base import BaseDataGrabber
