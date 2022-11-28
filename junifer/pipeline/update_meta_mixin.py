@@ -8,7 +8,7 @@ from typing import Dict
 
 
 class UpdateMetaMixin:
-    """Mixin class for upating meta."""
+    """Mixin class for updating meta."""
 
     def update_meta(
         self,
