@@ -54,7 +54,7 @@ Contributions are welcome and greatly appreciated. Please read the [guidelines](
 
 junifer is released under the AGPL v3 license:
 
-julearn, FZJuelich AML neuroimaging feature extraction library.
+junifer, FZJuelich AML neuroimaging feature extraction library.
 Copyright (C) 2022, authors of junifer.
 
 This program is free software: you can redistribute it and/or modify
