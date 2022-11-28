@@ -10,8 +10,42 @@ import pytest
 
 from junifer.storage.utils import (
     element_to_prefix,
+    get_dependency_version,
     process_meta,
 )
+
+
+@pytest.mark.parametrize(
+    "dependency, max_version",
+    [
+        ("click", "8.2"),
+        ("numpy", "1.24"),
+        ("datalad", "0.18"),
+        ("pandas", "1.6"),
+        ("nibabel", "4.1"),
+        ("nilearn", "1.0"),
+        ("sqlalchemy", "1.5.0"),
+        ("pyyaml", "7.0"),
+    ],
+)
+def test_get_dependency_version(dependency: str, max_version: str) -> None:
+    """Test dependency resolution for installed dependencies.
+
+    Parameters
+    ----------
+    dependency : str
+        The parametrized depedency name.
+    max_version : str
+        The parametrized maximum version of the dependency.
+
+    """
+    version = get_dependency_version(dependency)
+    assert version < max_version
+
+
+def test_get_dependency_version_invalid() -> None:
+    """Test invalid package name handling for dependency resolution."""
+    assert get_dependency_version("foobar") == ""
 
 
 def test_process_meta_invalid_metadata_type() -> None:
