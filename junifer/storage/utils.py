@@ -6,9 +6,33 @@
 
 import hashlib
 import json
+from importlib.metadata import PackageNotFoundError, version
 from typing import Dict, Tuple
 
 from ..utils.logging import logger, raise_error
+
+
+def get_dependency_version(dependency: str) -> str:
+    """Get dependency version.
+
+    Parameters
+    ----------
+    dependency : str
+         The depedency to fetch version for.
+
+    Returns
+    -------
+    str
+        The version of the dependency.
+
+    """
+    dep_version = ""
+    try:
+        dep_version = version(dependency)
+    except PackageNotFoundError:
+        dep_version = ""
+    finally:
+        return dep_version
 
 
 def _meta_hash(meta: Dict) -> str:
