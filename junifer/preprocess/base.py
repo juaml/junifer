@@ -93,7 +93,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             klass=NotImplementedError,
         )
 
-    def fit_transform(
+    def _fit_transform(
         self,
         input: Dict[str, Dict],
     ) -> Dict:

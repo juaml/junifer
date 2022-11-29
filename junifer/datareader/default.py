@@ -65,7 +65,7 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
         # It will output the same type of data as the input
         return input
 
-    def fit_transform(
+    def _fit_transform(
         self,
         input: Dict[str, Dict],
         params: Optional[Dict] = None,
