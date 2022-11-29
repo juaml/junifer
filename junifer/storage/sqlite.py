@@ -4,10 +4,10 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import json
 from pathlib import Path
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
-import json
 import numpy as np
 import pandas as pd
 from pandas.core.base import NoNewAttributesMixin

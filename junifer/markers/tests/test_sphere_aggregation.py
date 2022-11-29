@@ -4,8 +4,8 @@
 # License: AGPL
 
 import typing
-from typing import Dict
 from pathlib import Path
+from typing import Dict
 
 import nibabel as nib
 import pytest

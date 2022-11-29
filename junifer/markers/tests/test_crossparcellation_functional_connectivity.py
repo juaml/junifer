@@ -71,8 +71,7 @@ def test_store(tmp_path: Path) -> None:
         crossparcellation.fit_transform(input_dict, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_CrossParcellationFC"
-            for x in features.values()
+            x["name"] == "BOLD_CrossParcellationFC" for x in features.values()
         )
 
 
