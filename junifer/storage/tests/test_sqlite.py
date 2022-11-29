@@ -274,6 +274,7 @@ def test_store_df_and_read_df(tmp_path: Path) -> None:
         "marker": {
             "name": "markername",
         },
+        "type": "BOLD",
     }
 
     _, meta_to_store, element_to_store = process_meta(meta)
@@ -308,21 +309,23 @@ def test_store_df_and_read_df(tmp_path: Path) -> None:
     assert "feature_md5" in features
     # Check for missing feature
     with pytest.raises(ValueError, match="not found"):
-        storage.read_df("wrong_md5")
+        storage.read_df(feature_md5="wrong_md5")
+    with pytest.raises(ValueError, match="not found"):
+        storage.read_df(feature_name="wrong_name")
     # Check for missing feature to fetch
     with pytest.raises(ValueError, match="least one"):
         storage.read_df()
     # Check for multiple features to fetch
     with pytest.raises(ValueError, match="Only one"):
-        storage.read_df("wrong_md5", "wrong_name")
+        storage.read_df(feature_name="wrong_name", feature_md5="wrong_md5")
     # Get MD5 hash of features
     feature_md5 = list(features.keys())[0]
     assert "feature_md5" == feature_md5
     # Check for key
-    assert "markername" == features[feature_md5]["name"]
+    assert "BOLD_markername" == features[feature_md5]["name"]
     # Read into dataframes
     read_df1 = storage.read_df(feature_md5=feature_md5)
-    read_df2 = storage.read_df(feature_name="markername")
+    read_df2 = storage.read_df(feature_name="BOLD_markername")
     # Check if dataframes are equal
     assert_frame_equal(read_df1, read_df2)
     assert_frame_equal(read_df1, to_store)
@@ -344,6 +347,8 @@ def test_store_metadata(tmp_path: Path) -> None:
     meta = {
         "element": {"subject": "test"},
         "dependencies": ["numpy"],
+        "marker": {"name": "test"},
+        "type": "BOLD",
     }
 
     meta_md5, meta_to_store, element_to_store = process_meta(meta)
@@ -374,6 +379,7 @@ def test_store_table(tmp_path: Path) -> None:
         "element": element,
         "dependencies": dependencies,
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
 
     meta_md5, meta_to_store, element_to_store = process_meta(meta)
@@ -456,6 +462,7 @@ def test_store_matrix(tmp_path: Path) -> None:
         "element": element,
         "dependencies": dependencies,
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
 
     meta_md5, meta_to_store, element_to_store = process_meta(meta)
@@ -483,7 +490,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
 
     read_df = storage.read_df(feature_md5=feature_md5)
     assert read_df.shape == (1, 12)
@@ -507,7 +514,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     ]
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
 
@@ -572,7 +579,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
@@ -604,7 +611,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
@@ -641,7 +648,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
@@ -672,7 +679,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
@@ -697,16 +704,19 @@ def test_store_multiple_output(tmp_path: Path):
         "element": {"subject": "test-01", "session": "ses-01"},
         "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     meta2 = {
         "element": {"subject": "test-02", "session": "ses-01"},
         "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     meta3 = {
         "element": {"subject": "test-01", "session": "ses-02"},
         "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     # Data to store
     data1 = np.array(
@@ -822,16 +832,19 @@ def test_collect(tmp_path: Path) -> None:
         "element": {"subject": "test-01", "session": "ses-01"},
         "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     meta2 = {
         "element": {"subject": "test-02", "session": "ses-01"},
         "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     meta3 = {
         "element": {"subject": "test-01", "session": "ses-02"},
         "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     # Data for storage
     data1 = np.array(

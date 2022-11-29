@@ -296,8 +296,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                     )
                 )
             table_name = f"meta_{t_df.index[0]}"
+        if table_name not in inspect(engine).get_table_names():
+            raise_error(msg=f"Feature MD5 {feature_md5} not found")
         # Read metadata from table
         df = pd.read_sql(sql=table_name, con=engine)
+
         # Read the index
         query = (
             "SELECT ii.name FROM sqlite_master AS m, "

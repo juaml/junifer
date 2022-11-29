@@ -66,15 +66,23 @@ def test_BaseFeatureStorage() -> None:
     with pytest.raises(NotImplementedError):
         st.read_df(None)
 
+    element = {"subject": "test"}
+    dependencies = ["numpy"]
+    meta = {
+        "element": element,
+        "dependencies": dependencies,
+        "marker": {"name": "fc"},
+        "type": "BOLD",
+    }
+
     with pytest.raises(NotImplementedError):
-        st.store_metadata("md5", {}, {})
+        st.store(kind="matrix", meta=meta)
+
+    with pytest.raises(NotImplementedError):
+        st.store_metadata("md5", meta=meta, element={})
 
     with pytest.raises(NotImplementedError):
         st.collect()
-
-    meta = {"element": {"subject": "sub01"}, "dependencies": ["numpy"]}
-    with pytest.raises(NotImplementedError):
-        st.store(kind="matrix", meta=meta)
 
     with pytest.raises(NotImplementedError):
         st.store(kind="timeseries", meta=meta)

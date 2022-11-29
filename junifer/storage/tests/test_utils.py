@@ -64,6 +64,8 @@ def test_process_meta_hash() -> None:
         "A": 1,
         "B": [2, 3, 4, 5, 6],
         "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     hash1, _, element1 = process_meta(meta)
     assert element1 == {"foo": "bar"}
@@ -73,6 +75,8 @@ def test_process_meta_hash() -> None:
         "B": [2, 3, 4, 5, 6],
         "A": 1,
         "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     hash2, _, element2 = process_meta(meta)
     assert hash1 == hash2
@@ -83,6 +87,8 @@ def test_process_meta_hash() -> None:
         "A": 1,
         "B": [2, 3, 1, 5, 6],
         "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     hash3, _, element3 = process_meta(meta)
     assert hash1 != hash3
@@ -97,6 +103,8 @@ def test_process_meta_hash() -> None:
         },
         "A": 1,
         "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "BOLD",
     }
 
     meta5 = {
@@ -108,6 +116,8 @@ def test_process_meta_hash() -> None:
         },
         "element": {"foo": "baz"},
         "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "BOLD",
     }
 
     hash4, _, _ = process_meta(meta4)
@@ -124,6 +134,8 @@ def test_process_meta_hash() -> None:
         },
         "element": {"bar": "baz"},
         "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     hash6, _, _ = process_meta(meta6)
     assert hash4 != hash6
@@ -136,8 +148,21 @@ def test_process_meta_invalid_metadata_key() -> None:
         process_meta(meta)
 
     meta = {"element": {}}
+    with pytest.raises(ValueError, match=r"marker"):
+        process_meta(meta)
+
+    meta = {"element": {}, "marker": {}}
+    with pytest.raises(ValueError, match=r"key 'name'"):
+        process_meta(meta)
+
+    meta = {"element": {}, "marker": {"name": "test"}}
+    with pytest.raises(ValueError, match=r"key 'type'"):
+        process_meta(meta)
+
+    meta = {"element": {}, "marker": {"name": "test"}, "type": "BOLD"}
     with pytest.raises(ValueError, match=r"dependencies"):
         process_meta(meta)
+
 
 
 @pytest.mark.parametrize(
@@ -149,6 +174,8 @@ def test_process_meta_invalid_metadata_key() -> None:
                 "A": 1,
                 "B": [2, 3, 4, 5, 6],
                 "dependencies": ["numpy"],
+                "marker": {"name": "fc"},
+                "type": "BOLD",
             },
             ["foo"],
         ),
@@ -158,6 +185,8 @@ def test_process_meta_invalid_metadata_key() -> None:
                 "B": [2, 3, 4, 5, 6],
                 "A": 1,
                 "dependencies": ["numpy"],
+                "marker": {"name": "fc"},
+                "type": "BOLD",
             },
             ["subject", "session"],
         ),
@@ -184,6 +213,8 @@ def test_process_meta_element(meta: Dict, elements: List[str]) -> None:
     assert all(
         x in processed_meta["dependencies"] for x in meta["dependencies"]
     )
+    assert "name" in processed_meta
+    assert processed_meta["name"] == f"{meta['type']}_{meta['marker']['name']}"
 
 
 @pytest.mark.parametrize(

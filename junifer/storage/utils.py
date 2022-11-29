@@ -101,11 +101,17 @@ def process_meta(meta: Dict) -> Tuple[str, Dict, Dict]:
     element = t_meta.pop("element", None)
     if element is None:
         raise_error(msg="`meta` must contain the key 'element'")
+    if "marker" not in t_meta:
+        raise_error(msg="`meta` must contain the key 'marker'") 
+    if "name" not in t_meta["marker"]:
+        raise_error(msg="`meta['marker']` must contain the key 'name'")
+    if "type" not in t_meta:
+        raise_error(msg="`meta` must contain the key 'type'")
+
     t_meta["_element_keys"] = list(element.keys())
-    if "marker" in t_meta and "type" in t_meta:
-        type_ = t_meta["type"]
-        name = t_meta["marker"]["name"]
-        t_meta["name"] = f"{type_}_{name}"
+    type_ = t_meta["type"]
+    name = t_meta["marker"]["name"]
+    t_meta["name"] = f"{type_}_{name}"
     # MD5 hash of the metadata
     md5_hash = _meta_hash(t_meta)
     return md5_hash, t_meta, element
