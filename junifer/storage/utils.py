@@ -18,7 +18,7 @@ def get_dependency_version(dependency: str) -> str:
     Parameters
     ----------
     dependency : str
-         The depedency to fetch version for.
+         The dependency to fetch version for.
 
     Returns
     -------

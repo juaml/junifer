@@ -34,7 +34,7 @@ def test_get_dependency_version(dependency: str, max_version: str) -> None:
     Parameters
     ----------
     dependency : str
-        The parametrized depedency name.
+        The parametrized dependency name.
     max_version : str
         The parametrized maximum version of the dependency.
 
