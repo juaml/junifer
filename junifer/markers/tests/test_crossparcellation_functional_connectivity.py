@@ -56,20 +56,10 @@ def test_store(tmp_path: Path) -> None:
     """
 
     with SPMAuditoryTestingDatagrabber() as dg:
-        out = dg["sub001"]
-        niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
-        meta = {
-            "element": {"subject": "sub001"},
-            "dependencies": {"nilearn", "nibabel"},
-        }
+        input_dict = dg["sub001"]
+        niimg = image.load_img(str(input_dict["BOLD"]["path"].absolute()))
 
-        input_dict = {
-            "BOLD": {
-                "data": niimg,
-                "path": out["BOLD"]["path"],
-                "meta": meta,
-            },
-        }
+        input_dict["BOLD"]["data"] = niimg
 
         crossparcellation = CrossParcellationFC(
             parcellation_one=parcellation_ONE,
@@ -78,7 +68,12 @@ def test_store(tmp_path: Path) -> None:
         )
         uri = tmp_path / "test_crossparcellation.sqlite"
         storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
-        out = crossparcellation.fit_transform(input_dict, storage=storage)
+        crossparcellation.fit_transform(input_dict, storage=storage)
+        features = storage.list_features()
+        assert any(
+            x["name"] == "BOLD_CrossParcellationFC"
+            for x in features.values()
+        )
 
 
 def test_get_output_type() -> None:

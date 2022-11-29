@@ -69,8 +69,6 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         data_df = {}
         for k, v in meta.items():
             data_df[k] = json.dumps(v, sort_keys=True)
-        if "marker" in meta:
-            data_df["name"] = meta["marker"]["name"]
         df = pd.DataFrame(data_df, index=[meta_md5])
         df.index.name = "meta_md5"
         return df

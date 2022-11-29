@@ -66,6 +66,9 @@ with tempfile.TemporaryDirectory() as tmpdir:
     collect(storage=storage)
     # Create storage object to read in extracted features
     db = SQLiteFeatureStorage(uri=storage["uri"])
+
+    # List all the features
+    print(db.list_features())
     # Read extracted features
     df_vbm = db.read_df(feature_name="BOLD_Schaefer100x17_RSSETS")
 

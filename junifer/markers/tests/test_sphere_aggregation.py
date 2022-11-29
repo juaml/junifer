@@ -3,6 +3,8 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+import typing
+from typing import Dict
 from pathlib import Path
 
 import nibabel as nib
@@ -108,6 +110,11 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
 
     marker.fit_transform(input, storage=storage)
 
+    features: Dict = typing.cast(Dict, storage.list_features())
+    assert any(
+        x["name"] == "VBM_GM_SphereAggregation" for x in features.values()
+    )
+
     meta = {
         "element": {"subject": "sub-01", "session": "ses-01"},
         "dependencies": {"nilearn", "nibabel"},
@@ -121,6 +128,10 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     )
 
     marker.fit_transform(input, storage=storage)
+    features: Dict = typing.cast(Dict, storage.list_features())
+    assert any(
+        x["name"] == "BOLD_SphereAggregation" for x in features.values()
+    )
 
 
 def test_SphereAggregation_3D_mask() -> None:

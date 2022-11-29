@@ -63,10 +63,10 @@ def test_store(tmp_path: Path) -> None:
     """
     with SPMAuditoryTestingDatagrabber() as dg:
         # Fetch element
-        out = dg["sub001"]
+        elem = dg["sub001"]
         # Load BOLD image
-        niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
-        input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
+        niimg = image.load_img(str(elem["BOLD"]["path"].absolute()))
+        elem["BOLD"]["data"] = niimg
         # Compute the RSSETSMarker
         ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
         # Create storage
@@ -74,4 +74,7 @@ def test_store(tmp_path: Path) -> None:
             uri=str((tmp_path / "test.sqlite").absolute())
         )
         # Store
-        ets_rss_marker.fit_transform(input=input_dict, storage=storage)
+        ets_rss_marker.fit_transform(input=elem, storage=storage)
+
+        features = storage.list_features()
+        assert any(x["name"] == "BOLD_RSSETSMarker" for x in features.values())

@@ -17,6 +17,7 @@ from scipy.stats import trim_mean
 
 from junifer.data import load_mask, load_parcellation, register_parcellation
 from junifer.markers.parcel_aggregation import ParcelAggregation
+from junifer.storage import SQLiteFeatureStorage
 
 
 def test_ParcelAggregation_input_output() -> None:
@@ -150,6 +151,57 @@ def test_ParcelAggregation_4D():
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
+
+
+def test_ParcelAggregation_storage(tmp_path: Path) -> None:
+    """Test ParcelAggregation storage.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Get the oasis VBM data
+    oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
+    vbm = oasis_dataset.gray_matter_maps[0]
+    img = nib.load(vbm)
+    uri = tmp_path / "test_sphere_storage_3D.sqlite"
+
+    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
+    meta = {
+        "element": {"subject": "sub-01", "session": "ses-01"},
+        "dependencies": {"nilearn", "nibabel"},
+    }
+    input = {"VBM_GM": {"data": img, "meta": meta}}
+    marker = ParcelAggregation(
+        parcellation="Schaefer100x7", method="mean", on="VBM_GM"
+    )
+
+    marker.fit_transform(input, storage=storage)
+
+    features = storage.list_features()
+    assert any(
+        x["name"] == "VBM_GM_ParcelAggregation" for x in features.values()
+    )
+
+    meta = {
+        "element": {"subject": "sub-01", "session": "ses-01"},
+        "dependencies": {"nilearn", "nibabel"},
+    }
+    # Get the SPM auditory data
+    subject_data = datasets.fetch_spm_auditory()
+    fmri_img = concat_imgs(subject_data.func)  # type: ignore
+    input = {"BOLD": {"data": fmri_img, "meta": meta}}
+    marker = ParcelAggregation(
+        parcellation="Schaefer100x7", method="mean", on="BOLD"
+    )
+
+    marker.fit_transform(input, storage=storage)
+    features = storage.list_features()
+    assert any(
+        x["name"] == "BOLD_ParcelAggregation" for x in features.values()
+    )
 
 
 def test_ParcelAggregation_3D_mask() -> None:

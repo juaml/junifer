@@ -88,3 +88,9 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
     meta = {"element": {"subject": "test"}, "dependencies": {"numpy"}}
     input = {"BOLD": {"data": fmri_img, "meta": meta}}
     all_out = fc.fit_transform(input, storage=storage)
+
+    features = storage.list_features()
+    assert any(
+        x["name"] == "BOLD_FunctionalConnectivityParcels"
+        for x in features.values()
+    )

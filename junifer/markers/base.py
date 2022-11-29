@@ -185,6 +185,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
                 t_out["meta"] = t_meta
 
                 self.update_meta(t_out, "marker")
+
                 if storage is not None:
                     logger.info(f"Storing in {storage}")
                     self.store(type_=type_, out=t_out, storage=storage)

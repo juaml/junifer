@@ -7,6 +7,7 @@
 from pathlib import Path
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
+import json
 import numpy as np
 import pandas as pd
 from pandas.core.base import NoNewAttributesMixin
@@ -204,23 +205,15 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                         msg=f"Invalid option {if_exists} for if_exists."
                     )
 
-    def list_features(
-        self, return_df: bool = False
-    ) -> Union[Dict, pd.DataFrame]:
-        """Implement features listing from the storage.
-
-        Parameters
-        ----------
-        return_df : bool, optional
-            If True, returns a pandas DataFrame. If False, returns a
-            dictionary (default False).
+    def list_features(self) -> Dict:
+        """List the features in the storage.
 
         Returns
         -------
-        dict or pandas.DataFrame
-            List of features in the storage. If dictionary is returned, the
-            keys are the feature names to be used in read_features() and the
-            values are the metadata of each feature.
+        dict
+            List of features in the storage. The keys are the feature names to
+            be used in read_features() and the values are the metadata of each
+            feature.
 
         """
         meta_df = pd.read_sql(
@@ -229,10 +222,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             index_col="meta_md5",
         )
         meta_df.index = meta_df.index.str.replace(r"meta_", "")
-        out = meta_df
-        # Return dictionary
-        if return_df is False:
-            out = meta_df.to_dict(orient="index")  # type: ignore
+        out = meta_df.to_dict(orient="index")  # type: ignore
+        for md5, t_meta in out.items():
+            for k, v in t_meta.items():
+                out[md5][k] = json.loads(v)
         return out
 
     def read_df(
@@ -289,7 +282,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 con=engine,
                 index_col="meta_md5",
             )
-            t_df = meta_df.query(f"name == '{feature_name}'")
+
+            # Wrap in double quotes as the fields are in JSON format
+            t_df = meta_df.query(f"name == '\"{feature_name}\"'")
             if len(t_df) == 0:
                 raise_error(msg=f"Feature {feature_name} not found")
             elif len(t_df) > 1:

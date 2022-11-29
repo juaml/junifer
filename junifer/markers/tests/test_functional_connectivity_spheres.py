@@ -72,6 +72,12 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
     input = {"BOLD": {"data": fmri_img, "meta": meta}}
     all_out = fc.fit_transform(input, storage=storage)
 
+    features = storage.list_features()
+    assert any(
+        x["name"] == "BOLD_FunctionalConnectivitySpheres"
+        for x in features.values()
+    )
+
 
 def test_FunctionalConnectivitySpheres_empirical(tmp_path: Path) -> None:
     """Test FunctionalConnectivitySpheres with empirical covariance.

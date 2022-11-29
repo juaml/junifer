@@ -87,23 +87,15 @@ class BaseFeatureStorage(ABC):
             )
 
     @abstractmethod
-    def list_features(
-        self, return_df: bool = False
-    ) -> Union[Dict[str, Dict], pd.DataFrame]:
+    def list_features(self) -> Dict:
         """List the features in the storage.
-
-        Parameters
-        ----------
-        return_df : bool, optional
-            If True, returns a pandas DataFrame. If False, returns a
-            dictionary (default False).
 
         Returns
         -------
-        dict or pandas.DataFrame
-            List of features in the storage. If dictionary is returned, the
-            keys are the feature names to be used in read_features() and the
-            values are the metadata of each feature.
+        dict
+            List of features in the storage. The keys are the feature names to
+            be used in read_features() and the values are the metadata of each
+            feature.
 
         """
         raise_error(
