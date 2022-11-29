@@ -31,8 +31,8 @@ def get_dependency_version(dependency: str) -> str:
         dep_version = version(dependency)
     except PackageNotFoundError:
         dep_version = ""
-    finally:
-        return dep_version
+
+    return dep_version
 
 
 def _meta_hash(meta: Dict) -> str:

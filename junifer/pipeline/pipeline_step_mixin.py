@@ -78,7 +78,7 @@ class PipelineStepMixin:
         dependencies_not_found = []
         if hasattr(self, "_DEPENDENCIES"):
             # Check if dependencies are importable
-            for dependency in getattr(self, "_DEPENDENCIES"):
+            for dependency in self._DEPENDENCIES:  # type: ignore
                 if find_spec(dependency) is None:
                     dependencies_not_found.append(dependency)
         # Raise error if any dependency is not found
