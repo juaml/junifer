@@ -7,7 +7,7 @@ from pathlib import Path
 
 from nilearn import image as nimg
 
-from junifer.markers.reho_parcels import ReHoParcels
+from junifer.markers.reho.reho_parcels import ReHoParcels
 from junifer.storage.sqlite import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
