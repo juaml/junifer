@@ -262,7 +262,11 @@ def configure_logging(
     log_versions()  # log versions of installed packages
 
 
-def raise_error(msg: str, klass: Type[Exception] = ValueError) -> NoReturn:
+def raise_error(
+    msg: str,
+    klass: Type[Exception] = ValueError,
+    exception: Optional[Exception] = None,
+) -> NoReturn:
     """Raise error, but first log it.
 
     Parameters
@@ -271,10 +275,15 @@ def raise_error(msg: str, klass: Type[Exception] = ValueError) -> NoReturn:
         The message for the exception.
     klass : subclass of Exception, optional
         The subclass of Exception to raise using (default ValueError).
+    exception : Exception, optional
+        The original exception to follow up on (default None).
 
     """
     logger.error(msg)
-    raise klass(msg)
+    if exception is not None:
+        raise klass(msg) from exception
+    else:
+        raise klass(msg)
 
 
 def warn_with_log(

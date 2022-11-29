@@ -179,6 +179,10 @@ def test_process_meta_element(meta: Dict, elements: List[str]) -> None:
     assert "A" in processed_meta
     assert "B" in processed_meta
     assert "element" not in processed_meta
+    assert isinstance(processed_meta["dependencies"], Dict)
+    assert all(
+        x in processed_meta["dependencies"] for x in meta["dependencies"]
+    )
 
 
 @pytest.mark.parametrize(
@@ -190,9 +194,7 @@ def test_process_meta_element(meta: Dict, elements: List[str]) -> None:
         ({"subject": 1, "session": 2}, "element_1_2_"),
     ],
 )
-def test_element_to_prefix(
-    element: Dict, prefix: str
-) -> None:
+def test_element_to_prefix(element: Dict, prefix: str) -> None:
     """Test converting element to prefix (for file naming).
 
     Parameters
