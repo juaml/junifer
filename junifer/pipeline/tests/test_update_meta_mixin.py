@@ -4,7 +4,10 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from typing import Dict, List, Set, Union
+
 import pytest
+
 from junifer.pipeline.update_meta_mixin import UpdateMetaMixin
 
 
@@ -17,7 +20,12 @@ from junifer.pipeline.update_meta_mixin import UpdateMetaMixin
         ({}, "step_name", set(["numpy"]), set(["numpy"])),
     ],
 )
-def test_UpdateMetaMixin(input, step_name, dependencies, expected) -> None:
+def test_UpdateMetaMixin(
+    input: Dict,
+    step_name: str,
+    dependencies: Union[Set, List, str, None],
+    expected: Set,
+) -> None:
     """Test UpdateMetaMixin.
 
     Parameters
@@ -31,6 +39,7 @@ def test_UpdateMetaMixin(input, step_name, dependencies, expected) -> None:
     expected : set
         The expected dependencies.
     """
+
     class TestUpdateMetaMixin(UpdateMetaMixin):
         """Test UpdateMetaMixin."""
 
