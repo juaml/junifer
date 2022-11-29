@@ -45,7 +45,8 @@ def test_get_dependency_version(dependency: str, max_version: str) -> None:
 
 def test_get_dependency_version_invalid() -> None:
     """Test invalid package name handling for dependency resolution."""
-    assert get_dependency_version("foobar") == ""
+    with pytest.raises(ValueError, match="Could not obtain"):
+        get_dependency_version("foobar")
 
 
 def test_process_meta_invalid_metadata_type() -> None:
