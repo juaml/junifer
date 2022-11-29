@@ -69,7 +69,8 @@ def _parse_elements(element: str, config: Dict) -> Union[List, None]:
             raise_error(
                 "The 'elements' key is set in the configuration, but its value"
                 " is 'None'. It is likely that there is an empty 'elements' "
-                "section in the yaml configuration file.")
+                "section in the yaml configuration file."
+            )
     return elements
 
 

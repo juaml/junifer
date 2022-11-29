@@ -19,7 +19,6 @@ def test_base_preprocessor_subclassing() -> None:
     """Test proper subclassing of BasePreprocessor."""
     # Create concrete class
     class MyBasePreprocessor(BasePreprocessor):
-
         def __init__(self, on):
             self.parameter = 1
             super().__init__(on=on)

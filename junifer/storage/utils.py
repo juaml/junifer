@@ -33,7 +33,8 @@ def get_dependency_version(dependency: str) -> str:
         raise_error(
             f"Could not obtain the version of {dependency}. "
             "Have you specified the DEPENDENCIES variable correctly?",
-            exception=e)
+            exception=e,
+        )
 
     return dep_version
 

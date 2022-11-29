@@ -266,7 +266,8 @@ def test_datalad_previously_cloned_and_get(
     assert elem1_t1w.is_file() is False
 
     dl.get(  # type: ignore
-        elem1_t1w, dataset=datadir, result_renderer="disabled")
+        elem1_t1w, dataset=datadir, result_renderer="disabled"
+    )
 
     assert elem1_bold.is_symlink() is True
     assert elem1_bold.is_file() is False
@@ -347,7 +348,8 @@ def test_datalad_previously_cloned_and_get_dirty(
     assert elem1_t1w.is_file() is False
 
     dl.get(  # type: ignore
-        elem1_t1w, dataset=datadir, result_renderer="disabled")
+        elem1_t1w, dataset=datadir, result_renderer="disabled"
+    )
 
     assert elem1_bold.is_symlink() is True
     assert elem1_bold.is_file() is False

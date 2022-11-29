@@ -127,7 +127,7 @@ class RSSETSMarker(BaseMarker):
             parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
-            mask=self.mask
+            mask=self.mask,
         )
         # Compute the parcel aggregation
         out = parcel_aggregation.compute(input=input, extra_input=extra_input)

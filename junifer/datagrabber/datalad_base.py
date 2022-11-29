@@ -191,10 +191,8 @@ class DataladDataGrabber(BaseDataGrabber):
             logger.debug("Dataset installed")
         self._was_cloned = not isinstalled
 
-        self.datalad_commit_id = (
-            self._dataset.repo.get_hexsha(  # type: ignore
-                self._dataset.repo.get_corresponding_branch()  # type: ignore
-            )
+        self.datalad_commit_id = self._dataset.repo.get_hexsha(  # type: ignore
+            self._dataset.repo.get_corresponding_branch()  # type: ignore
         )
         self.datalad_id = self._dataset.id
 

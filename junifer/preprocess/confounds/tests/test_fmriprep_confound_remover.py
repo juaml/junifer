@@ -460,8 +460,8 @@ def test_fMRIPrepConfoundRemover__remove_confounds() -> None:
         clean_bold = typing.cast(nib.Nifti1Image, clean_bold)
         # TODO: Find a better way to test functionality here
         assert (
-            clean_bold.header.get_zooms() ==  # type: ignore
-            raw_bold.header.get_zooms()
+            clean_bold.header.get_zooms()  # type: ignore
+            == raw_bold.header.get_zooms()  # type: ignore
         )
         assert clean_bold.get_fdata().shape == raw_bold.get_fdata().shape
     # TODO: Test confound remover with mask, needs #79 to be implemented

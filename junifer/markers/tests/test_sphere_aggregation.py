@@ -23,9 +23,7 @@ RADIUS = 8
 
 def test_SphereAggregation_input_output() -> None:
     """Test SphereAggregation input and output types."""
-    marker = SphereAggregation(
-        coords="DMNBuckner", method="mean", on="VBM_GM"
-    )
+    marker = SphereAggregation(coords="DMNBuckner", method="mean", on="VBM_GM")
     for in_, out_ in [("VBM_GM", "table"), ("BOLD", "timeseries")]:
         assert marker.get_output_type(in_) == out_
 
@@ -73,9 +71,7 @@ def test_SphereAggregation_4D() -> None:
     auto4d = nifti_masker.fit_transform(fmri_img)
 
     # Create SphereAggregation object
-    marker = SphereAggregation(
-        coords=COORDS, method="mean", radius=RADIUS
-    )
+    marker = SphereAggregation(coords=COORDS, method="mean", radius=RADIUS)
     input = {"BOLD": {"data": fmri_img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
@@ -141,13 +137,17 @@ def test_SphereAggregation_3D_mask() -> None:
 
     # Create NiftSpheresMasker
     nifti_masker = NiftiSpheresMasker(
-        seeds=coordinates, radius=RADIUS, mask_img=mask_img)
+        seeds=coordinates, radius=RADIUS, mask_img=mask_img
+    )
     auto4d = nifti_masker.fit_transform(img)
 
     # Create SphereAggregation object
     marker = SphereAggregation(
-        coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM",
-        mask="GM_prob0.2"
+        coords=COORDS,
+        method="mean",
+        radius=RADIUS,
+        on="VBM_GM",
+        mask="GM_prob0.2",
     )
     input = {"VBM_GM": {"data": img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]

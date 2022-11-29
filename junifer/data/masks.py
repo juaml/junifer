@@ -58,10 +58,9 @@ def register_mask(
     if name in _available_masks:
         if overwrite is True:
             logger.info(f"Overwriting {name} mask")
-            if (_available_masks[name]["family"] != "CustomUserMask"):
+            if _available_masks[name]["family"] != "CustomUserMask":
                 raise_error(
-                    f"Cannot overwrite {name} mask. "
-                    "It is a built-in mask."
+                    f"Cannot overwrite {name} mask. " "It is a built-in mask."
                 )
         else:
             raise_error(
@@ -117,8 +116,7 @@ def load_mask(
     """
     if name not in _available_masks:
         raise_error(
-            f"Mask {name} not found. "
-            f"Valid options are: {list_masks()}"
+            f"Mask {name} not found. " f"Valid options are: {list_masks()}"
         )
 
     mask_definition = _available_masks[name].copy()
@@ -126,12 +124,10 @@ def load_mask(
 
     if t_family == "CustomUserMask":
         mask_fname = Path(mask_definition["path"])
-    elif t_family == 'Vickery-Patil':
+    elif t_family == "Vickery-Patil":
         mask_fname = _load_vickery_patil_mask(name, resolution)
     else:
-        raise_error(
-            f"I don't know about the {t_family} mask family."
-        )
+        raise_error(f"I don't know about the {t_family} mask family.")
 
     logger.info(f"Loading mask {mask_fname.absolute()}")
 
@@ -167,8 +163,9 @@ def _load_vickery_patil_mask(
         available_resolutions = [1.5, 3.0]
         to_load = closest_resolution(resolution, available_resolutions)
         if to_load == 3.0:
-            mask_fname = \
+            mask_fname = (
                 "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean_3mm.nii.gz"
+            )
         elif to_load == 1.5:
             mask_fname = "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean.nii.gz"
         else:
@@ -178,9 +175,7 @@ def _load_vickery_patil_mask(
     elif name == "GM_prob0.2_cortex":
         mask_fname = "GMprob0.2_cortex_3mm_NA_rm.nii.gz"
     else:
-        raise_error(
-            f"Cannot find a Vickery-Patil mask called {name}"
-        )
+        raise_error(f"Cannot find a Vickery-Patil mask called {name}")
     mask_fname = _masks_path / "vickery-patil" / mask_fname
 
     return mask_fname

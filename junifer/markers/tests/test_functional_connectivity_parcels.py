@@ -80,9 +80,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
         parcellation="Schaefer100x7", cor_method_params={"empirical": True}
     )
 
-    all_out = fc.fit_transform(
-        {"BOLD": {"data": fmri_img, "meta": meta}}
-    )
+    all_out = fc.fit_transform({"BOLD": {"data": fmri_img, "meta": meta}})
 
     uri = tmp_path / "test_fc_parcellation.sqlite"
     # Single storage, must be the uri
