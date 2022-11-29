@@ -15,6 +15,7 @@ from junifer.markers.crossparcellation_functional_connectivity import (
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
+
 parcellation_ONE = "Schaefer100x17"
 parcellation_TWO = "Schaefer200x17"
 

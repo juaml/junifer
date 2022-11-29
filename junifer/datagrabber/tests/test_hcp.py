@@ -10,6 +10,7 @@ import pytest
 from junifer.datagrabber.hcp import DataladHCP1200
 from junifer.utils import configure_logging
 
+
 URI = "https://gin.g-node.org/juaml/datalad-example-hcp1200"
 
 

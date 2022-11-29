@@ -13,6 +13,7 @@ from numpy.typing import ArrayLike
 
 from ..utils.logging import logger, raise_error
 
+
 # Path to the VOIs
 _vois_path = Path(__file__).parent / "VOIs"
 

@@ -11,6 +11,7 @@ import pytest
 
 from junifer.datagrabber.datalad_base import DataladDataGrabber
 
+
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",

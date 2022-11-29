@@ -6,13 +6,13 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, List, Optional, Union, Iterable
+from typing import Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
 
-from .utils import process_meta
 from ..utils import raise_error
+from .utils import process_meta
 
 
 class BaseFeatureStorage(ABC):

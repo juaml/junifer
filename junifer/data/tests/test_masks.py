@@ -11,10 +11,10 @@ import pytest
 from numpy.testing import assert_array_almost_equal
 
 from junifer.data.masks import (
+    _load_vickery_patil_mask,
+    list_masks,
     load_mask,
     register_mask,
-    list_masks,
-    _load_vickery_patil_mask,
 )
 
 

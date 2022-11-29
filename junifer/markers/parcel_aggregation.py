@@ -7,11 +7,11 @@
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
-from nilearn.image import math_img, resample_to_img, new_img_like
+from nilearn.image import math_img, new_img_like, resample_to_img
 from nilearn.maskers import NiftiMasker
 
 from ..api.decorators import register_marker
-from ..data import load_parcellation, load_mask
+from ..data import load_mask, load_parcellation
 from ..stats import get_aggfunc_by_name
 from ..utils import logger
 from .base import BaseMarker

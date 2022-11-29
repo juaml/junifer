@@ -5,11 +5,11 @@
 # License: AGPL
 
 import importlib
-from pathlib import Path
-from typing import Dict, Union
 import importlib.util
 import os
 import sys
+from pathlib import Path
+from typing import Dict, Union
 
 import yaml
 

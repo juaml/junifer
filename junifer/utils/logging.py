@@ -14,6 +14,7 @@ from warnings import warn
 
 import datalad
 
+
 logger = logging.getLogger("JUNIFER")
 
 # Set up datalad logger level to warning by default

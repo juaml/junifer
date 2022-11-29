@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 import nibabel as nib
 
-from .utils import closest_resolution
 from ..utils.logging import logger, raise_error
+from .utils import closest_resolution
 
 
 if TYPE_CHECKING:

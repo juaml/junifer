@@ -14,6 +14,7 @@ from ..api.decorators import register_datareader
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils.logging import logger, warn_with_log
 
+
 # Map each file extension to a type
 _extensions = {
     ".nii": "NIFTI",

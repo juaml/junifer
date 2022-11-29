@@ -16,8 +16,8 @@ import yaml
 from ..utils.logging import (
     configure_logging,
     logger,
-    warn_with_log,
     raise_error,
+    warn_with_log,
 )
 from .functions import collect as api_collect
 from .functions import queue as api_queue

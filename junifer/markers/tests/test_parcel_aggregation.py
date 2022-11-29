@@ -3,12 +3,14 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+
+from pathlib import Path
+
 import nibabel as nib
 import numpy as np
 import pytest
-from pathlib import Path
 from nilearn import datasets
-from nilearn.image import concat_imgs, math_img, resample_to_img, new_img_like
+from nilearn.image import concat_imgs, math_img, new_img_like, resample_to_img
 from nilearn.maskers import NiftiLabelsMasker, NiftiMasker
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 from scipy.stats import trim_mean

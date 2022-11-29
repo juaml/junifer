@@ -16,6 +16,7 @@ from junifer.markers.ets_rss import RSSETSMarker
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
+
 # Set parcellation
 PARCELLATION = "Schaefer100x17"
 

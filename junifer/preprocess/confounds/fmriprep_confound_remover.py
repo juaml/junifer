@@ -17,6 +17,7 @@ from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 
+
 if TYPE_CHECKING:
     from nibabel import MGHImage, Nifti1Image, Nifti2Image
 

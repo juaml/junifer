@@ -16,6 +16,7 @@ from junifer.data import load_coordinates, load_mask
 from junifer.markers.sphere_aggregation import SphereAggregation
 from junifer.storage import SQLiteFeatureStorage
 
+
 # Define common variables
 COORDS = "DMNBuckner"
 RADIUS = 8

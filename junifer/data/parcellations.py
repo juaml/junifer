@@ -18,8 +18,9 @@ import pandas as pd
 import requests
 from nilearn import datasets
 
-from .utils import closest_resolution
 from ..utils.logging import logger, raise_error
+from .utils import closest_resolution
+
 
 if TYPE_CHECKING:
     from nibabel import Nifti1Image

@@ -7,6 +7,7 @@ import pytest
 
 from junifer.datagrabber import MultipleDataGrabber, PatternDataladDataGrabber
 
+
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",

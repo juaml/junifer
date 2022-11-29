@@ -15,10 +15,8 @@ from pandas.testing import assert_frame_equal
 from sqlalchemy import create_engine
 
 from junifer.storage.sqlite import SQLiteFeatureStorage
-from junifer.storage.utils import (
-    element_to_prefix,
-    process_meta,
-)
+from junifer.storage.utils import element_to_prefix, process_meta
+
 
 df1 = pd.DataFrame(
     {

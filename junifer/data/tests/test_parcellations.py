@@ -8,11 +8,10 @@
 from pathlib import Path
 from typing import List
 
-import pytest
-from numpy.testing import assert_array_almost_equal, assert_array_equal
-
 import nibabel as nib
+import pytest
 from nilearn.image import new_img_like
+from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 from junifer.data.parcellations import (
     _retrieve_parcellation,

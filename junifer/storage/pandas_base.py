@@ -6,7 +6,7 @@
 
 import json
 from pathlib import Path
-from typing import Dict, Union, Optional, Any, Iterable, List
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
