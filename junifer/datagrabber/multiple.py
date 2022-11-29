@@ -5,7 +5,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
 from .base import BaseDataGrabber
@@ -38,7 +37,7 @@ class MultipleDataGrabber(BaseDataGrabber):
             raise ValueError("Datagrabbers have overlapping types.")
         self._datagrabbers = datagrabbers
 
-    def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Path]:
+    def __getitem__(self, element: Union[str, Tuple]) -> Dict:
         """Implement indexing.
 
         Parameters
@@ -58,9 +57,20 @@ class MultipleDataGrabber(BaseDataGrabber):
         """
 
         out = {}
+        metas = []
         for dg in self._datagrabbers:
             t_out = dg[element]
             out.update(t_out)
+            # Now get the meta for this datagrabber
+            t_meta = {}
+            dg.update_meta(t_meta, "datagrabber")
+            # Store all the sub-datagrabbers meta
+            metas.append(t_meta["meta"]["datagrabber"])
+
+        # Update all the metas again
+        for kind in out:
+            self.update_meta(out[kind], "datagrabber")
+            out[kind]["meta"]["datagrabber"]["datagrabbers"] = metas
         return out
 
     def get_item(self, **element: Dict) -> Dict[str, Dict]:
@@ -136,17 +146,3 @@ class MultipleDataGrabber(BaseDataGrabber):
         """
         types = [x for dg in self._datagrabbers for x in dg.get_types()]
         return types
-
-    def get_meta(self) -> Dict:
-        """Get metadata.
-
-        Returns
-        -------
-        dict
-            The metadata as dictionary.
-
-        """
-        t_meta = {}
-        t_meta["class"] = self.__class__.__name__
-        t_meta["datagrabbers"] = [dg.get_meta() for dg in self._datagrabbers]
-        return t_meta

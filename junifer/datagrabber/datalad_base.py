@@ -83,7 +83,7 @@ class DataladDataGrabber(BaseDataGrabber):
         self._rootdir = rootdir
         # Flag to indicate if the dataset was cloned before and it might be
         # dirty
-        self._dataset_dirty = False
+        self.datalad_dirty = False
 
     @property
     def datadir(self) -> Path:
@@ -175,7 +175,7 @@ class DataladDataGrabber(BaseDataGrabber):
             # Check for dirty datasets:
             status = self._dataset.status()
             if any([x["state"] != "clean" for x in status]):
-                self._dataset_dirty = True
+                self.datalad_dirty = True
                 warn_with_log(
                     "At least one file is not clean, Junifer will "
                     "consider this dataset as dirty."
@@ -191,11 +191,10 @@ class DataladDataGrabber(BaseDataGrabber):
             logger.debug("Dataset installed")
         self._was_cloned = not isinstalled
 
-        self._datalad_commit_id = (
-            self._dataset.repo.get_hexsha(  # type: ignore
-                self._dataset.repo.get_corresponding_branch()  # type: ignore
-            )
+        self.datalad_commit_id = self._dataset.repo.get_hexsha(  # type: ignore
+            self._dataset.repo.get_corresponding_branch()  # type: ignore
         )
+        self.datalad_id = self._dataset.id
 
     def cleanup(self) -> None:
         """Cleanup the datalad dataset."""
@@ -245,21 +244,3 @@ class DataladDataGrabber(BaseDataGrabber):
         logger.debug("Cleaning up dataset")
         self.cleanup()
         logger.debug("Dataset state restored")
-
-    def get_meta(self) -> Dict:
-        """Get metadata.
-
-        Returns
-        -------
-        dict
-            The metadata as dictionary.
-
-        """
-        t_meta = super().get_meta()
-        t_meta["datalad_commit_id"] = self._datalad_commit_id
-
-        t_meta["datalad_id"] = self._dataset.id
-
-        # Set a flag to indicate that the dataset was dirty
-        t_meta["datalad_dirty"] = self._dataset_dirty
-        return t_meta

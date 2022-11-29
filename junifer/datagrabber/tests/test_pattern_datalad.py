@@ -11,6 +11,7 @@ import pytest
 
 from junifer.datagrabber.pattern_datalad import PatternDataladDataGrabber
 
+
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
@@ -81,9 +82,10 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
                 dg.datadir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
             )
 
-            assert "meta" in t_sub
-            assert "datagrabber" in t_sub["meta"]
-            dg_meta = t_sub["meta"]["datagrabber"]
+            assert "meta" in t_sub["BOLD"]
+            meta = t_sub["BOLD"]["meta"]
+            assert "datagrabber" in meta
+            dg_meta = meta["datagrabber"]
             assert "class" in dg_meta
             assert dg_meta["class"] == "PatternDataladDataGrabber"
             assert "uri" in dg_meta

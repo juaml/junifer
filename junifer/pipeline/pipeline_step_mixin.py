@@ -4,6 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from importlib.util import find_spec
 from typing import Dict, List
 
 from ..utils import raise_error
@@ -11,22 +12,6 @@ from ..utils import raise_error
 
 class PipelineStepMixin:
     """Mixin class for pipeline."""
-
-    def get_meta(self) -> Dict:
-        """Get metadata.
-
-        Returns
-        -------
-        dict
-            The metadata as a dictionary.
-
-        """
-        t_meta = {}
-        t_meta["class"] = self.__class__.__name__
-        for k, v in vars(self).items():
-            if not k.startswith("_"):
-                t_meta[k] = v
-        return t_meta
 
     def validate_input(self, input: List[str]) -> None:
         """Validate the input to the pipeline step.
@@ -48,24 +33,22 @@ class PipelineStepMixin:
             klass=NotImplementedError,
         )
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
-        """Get the kind of the pipeline step.
+    def get_output_type(self, input_type: str) -> str:
+        """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the pipeline step. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the marker.
 
         Returns
         -------
-        list of str
-            The updated list of available Junifer Data dictionary keys after
-            the pipeline step.
+        str
+            The storage type output by the marker.
 
         """
         raise_error(
-            msg="Concrete classes need to implement get_output_kind().",
+            msg="Concrete classes need to implement get_output_type().",
             klass=NotImplementedError,
         )
 
@@ -85,11 +68,30 @@ class PipelineStepMixin:
         Raises
         ------
         ValueError
-            If the input does not have the required data.
+            If the pipeline step object is missing dependencies required for
+            its working or if the input does not have the required data.
 
         """
+        # Check if _DEPENDENCIES attribute is found;
+        # (markers and preprocessors will have them but not datareaders
+        # as of now)
+        dependencies_not_found = []
+        if hasattr(self, "_DEPENDENCIES"):
+            # Check if dependencies are importable
+            for dependency in self._DEPENDENCIES:  # type: ignore
+                if find_spec(dependency) is None:
+                    dependencies_not_found.append(dependency)
+        # Raise error if any dependency is not found
+        if dependencies_not_found:
+            raise_error(
+                msg=f"{dependencies_not_found} are not installed but are "
+                "required for using {self.name}.",
+                klass=ImportError,
+            )
+
         self.validate_input(input=input)
-        return self.get_output_kind(input=input)
+        outputs = [self.get_output_type(t_input) for t_input in input]
+        return outputs
 
     def fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
         """Fit and transform.

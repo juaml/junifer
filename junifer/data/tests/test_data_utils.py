@@ -5,8 +5,8 @@
 
 from typing import List
 
-import pytest
 import numpy as np
+import pytest
 
 from junifer.data.utils import closest_resolution
 

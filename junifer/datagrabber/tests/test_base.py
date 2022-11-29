@@ -23,7 +23,7 @@ def test_BaseDataGrabber() -> None:
     # Create concrete class.
     class MyDataGrabber(BaseDataGrabber):
         def get_item(self, subject):
-            return {}
+            return {"BOLD": {}}
 
         def get_elements(self):
             return super().get_elements()
@@ -31,22 +31,24 @@ def test_BaseDataGrabber() -> None:
         def get_element_keys(self):
             return ["subject"]
 
-    dg = MyDataGrabber(datadir="/tmp", types=["func"])
-    elem = dg["elem"]
-    assert "meta" in elem
-    assert "datagrabber" in elem["meta"]
-    assert "class" in elem["meta"]["datagrabber"]
-    assert MyDataGrabber.__name__ in elem["meta"]["datagrabber"]["class"]
-    assert "element" in elem["meta"]
-    assert "subject" in elem["meta"]["element"]
-    assert "elem" in elem["meta"]["element"]["subject"]
+    dg = MyDataGrabber(datadir="/tmp", types=["BOLD"])
+    elem = dg["sub01"]
+    assert "BOLD" in elem
+    assert "meta" in elem["BOLD"]
+    meta = elem["BOLD"]["meta"]
+    assert "datagrabber" in meta
+    assert "class" in meta["datagrabber"]
+    assert MyDataGrabber.__name__ in meta["datagrabber"]["class"]
+    assert "element" in meta
+    assert "subject" in meta["element"]
+    assert "sub01" in meta["element"]["subject"]
 
     with pytest.raises(NotImplementedError):
         dg.get_elements()
 
     with dg:
         assert dg.datadir == Path("/tmp")
-        assert dg.types == ["func"]
+        assert dg.types == ["BOLD"]
 
     class MyDataGrabber2(BaseDataGrabber):
         def get_item(self, subject):
@@ -58,7 +60,7 @@ def test_BaseDataGrabber() -> None:
         def get_element_keys(self):
             return super().get_element_keys()
 
-    dg = MyDataGrabber2(datadir="/tmp", types=["func"])
+    dg = MyDataGrabber2(datadir="/tmp", types=["BOLD"])
     with pytest.raises(NotImplementedError):
         dg.get_element_keys()
 

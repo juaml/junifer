@@ -9,11 +9,12 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict, Iterator, List, Tuple, Union
 
+from ..pipeline import UpdateMetaMixin
 from ..utils import logger, raise_error
 from .utils import validate_types
 
 
-class BaseDataGrabber(ABC):
+class BaseDataGrabber(ABC, UpdateMetaMixin):
     """Abstract base class for datagrabber.
 
     For every interface that is required, one needs to provide a concrete
@@ -78,10 +79,11 @@ class BaseDataGrabber(ABC):
         named_element = dict(zip(self.get_element_keys(), element))
         logger.debug(f"Named element: {named_element}")
         out = self.get_item(**named_element)
-        out["meta"] = {
-            "datagrabber": self.get_meta(),
-            "element": named_element,
-        }
+
+        for _, t_val in out.items():
+            self.update_meta(t_val, "datagrabber")
+            t_val["meta"]["element"] = named_element
+
         return out
 
     def __enter__(self) -> "BaseDataGrabber":
@@ -102,22 +104,6 @@ class BaseDataGrabber(ABC):
 
         """
         return self.types.copy()
-
-    def get_meta(self) -> Dict:
-        """Get metadata.
-
-        Returns
-        -------
-        dict
-            The metadata as dictionary.
-
-        """
-        t_meta = {}
-        t_meta["class"] = self.__class__.__name__
-        for k, v in vars(self).items():
-            if not k.startswith("_"):
-                t_meta[k] = v
-        return t_meta
 
     @property
     def datadir(self) -> Path:

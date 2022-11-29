@@ -9,7 +9,6 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 
 from ..api.decorators import register_marker
-from ..storage import BaseFeatureStorage
 from ..utils import logger
 from ..utils.logging import raise_error
 from .base import BaseMarker
@@ -40,6 +39,8 @@ class CrossParcellationFC(BaseMarker):
         The name of the marker. If None, will use the class name
         (default None).
     """
+
+    _DEPENDENCIES = {"nilearn"}
 
     def __init__(
         self,
@@ -72,43 +73,21 @@ class CrossParcellationFC(BaseMarker):
         """
         return ["BOLD"]
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
-        """Get output kind.
+    def get_output_type(self, input_type: str) -> str:
+        """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the marker. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the marker.
 
         Returns
         -------
-        list of str
-            The updated list of output kinds, as storage possibilities.
+        str
+            The storage type output by the marker.
 
         """
-        return ["matrix"]
-
-    def store(
-        self,
-        kind,
-        out: Dict[str, Any],
-        storage: "BaseFeatureStorage",
-    ) -> None:
-        """Store.
-
-        Parameters
-        ----------
-        kind : {"BOLD"}
-            The data kind to store.
-        out : dict
-            The computed result as a dictionary to store.
-        storage : storage-like
-            The storage class, for example, SQLiteFeatureStorage.
-
-        """
-        logger.debug(f"Storing BOLD-based marker in {storage}")
-        storage.store(kind="matrix", **out)
+        return "matrix"
 
     def compute(
         self,

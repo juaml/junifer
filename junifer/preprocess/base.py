@@ -7,11 +7,11 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-from ..pipeline import PipelineStepMixin
+from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
 
 
-class BasePreprocessor(ABC, PipelineStepMixin):
+class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
     """Provide abstract base class for all preprocessors.
 
     Parameters
@@ -58,8 +58,8 @@ class BasePreprocessor(ABC, PipelineStepMixin):
             )
 
     @abstractmethod
-    def get_output_kind(self, input: List[str]) -> List[str]:
-        """Get output kind.
+    def get_output_type(self, input: List[str]) -> List[str]:
+        """Get output type.
 
         Parameters
         ----------
@@ -75,7 +75,7 @@ class BasePreprocessor(ABC, PipelineStepMixin):
 
         """
         raise_error(
-            msg="Concrete classes need to implement get_output_kind().",
+            msg="Concrete classes need to implement get_output_type().",
             klass=NotImplementedError,
         )
 
@@ -92,22 +92,6 @@ class BasePreprocessor(ABC, PipelineStepMixin):
             msg="Concrete classes need to implement get_valid_inputs().",
             klass=NotImplementedError,
         )
-
-    def get_meta(self, kind: str) -> Dict:
-        """Get metadata.
-
-        Parameters
-        ----------
-        kind : str
-            The kind of pipeline step.
-
-        Returns
-        -------
-        dict
-            The metadata as a dictionary with the only key 'preprocess'.
-        """
-        s_meta = super().get_meta()
-        return {"preprocess": s_meta}
 
     def fit_transform(
         self,
@@ -127,19 +111,17 @@ class BasePreprocessor(ABC, PipelineStepMixin):
 
         """
         out = input
-        for kind in self._on:
-            if kind in input.keys():
-                logger.info(f"Computing {kind}")
-                t_input = input[kind]
+        for type_ in self._on:
+            if type_ in input.keys():
+                logger.info(f"Computing {type_}")
+                t_input = input[type_]
                 extra_input = input.copy()
-                extra_input.pop(kind)
-                t_meta = t_input.get("meta", {})  # input kind meta
-                t_meta.update(self.get_meta(kind))
+                extra_input.pop(type_)
                 key, t_out = self.preprocess(
                     input=t_input, extra_input=extra_input
                 )
-                t_out.update(meta=t_meta)
                 out[key] = t_out
+                self.update_meta(out[key], "preprocess")
         return out
 
     @abstractmethod

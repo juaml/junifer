@@ -16,6 +16,7 @@ from junifer.markers.ets_rss import RSSETSMarker
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
+
 # Set parcellation
 PARCELLATION = "Schaefer100x17"
 
@@ -42,21 +43,13 @@ def test_compute() -> None:
         n_time, _ = test_ts.shape
         assert n_time == len(new_out["data"])
 
-        # Assert the meta
-        meta = ets_rss_marker.get_meta("BOLD")["marker"]
-        assert meta["parcellation"] == "Schaefer100x17"
-        assert meta["agg_method"] == "mean"
-        assert meta["agg_method_params"] is None
-        assert meta["class"] == "RSSETSMarker"
 
-
-def test_get_output_kind() -> None:
-    """Test RSS ETS get_output_kind()."""
+def test_get_output_type() -> None:
+    """Test RSS ETS get_output_type()."""
     ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
-    input_list = ["BOLD"]
-    input_list = ets_rss_marker.get_output_kind(input_list)
-    assert len(input_list) == 1
-    assert input_list[0] in ["timeseries"]
+    input_ = "BOLD"
+    output = ets_rss_marker.get_output_type(input_)
+    assert output == "timeseries"
 
 
 def test_store(tmp_path: Path) -> None:
@@ -70,14 +63,18 @@ def test_store(tmp_path: Path) -> None:
     """
     with SPMAuditoryTestingDatagrabber() as dg:
         # Fetch element
-        out = dg["sub001"]
+        elem = dg["sub001"]
         # Load BOLD image
-        niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
-        input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
+        niimg = image.load_img(str(elem["BOLD"]["path"].absolute()))
+        elem["BOLD"]["data"] = niimg
         # Compute the RSSETSMarker
         ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(
-            uri=str((tmp_path / "test.sqlite").absolute()))
+            uri=str((tmp_path / "test.sqlite").absolute())
+        )
         # Store
-        ets_rss_marker.fit_transform(input=input_dict, storage=storage)
+        ets_rss_marker.fit_transform(input=elem, storage=storage)
+
+        features = storage.list_features()
+        assert any(x["name"] == "BOLD_RSSETSMarker" for x in features.values())

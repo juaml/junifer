@@ -15,47 +15,44 @@ from pandas.testing import assert_frame_equal
 from sqlalchemy import create_engine
 
 from junifer.storage.sqlite import SQLiteFeatureStorage
-from junifer.storage.utils import (
-    element_to_index,
-    element_to_prefix,
-    process_meta,
-)
+from junifer.storage.utils import element_to_prefix, process_meta
+
 
 df1 = pd.DataFrame(
     {
-        "element": [1, 2, 3, 4, 5],
+        "subject": [1, 2, 3, 4, 5],
         "pk2": ["a", "b", "c", "d", "e"],
         "col1": [11, 22, 33, 44, 55],
         "col2": [111, 222, 333, 444, 555],
     }
-).set_index(["element", "pk2"])
+).set_index(["subject", "pk2"])
 
 df2 = pd.DataFrame(
     {
-        "element": [2, 5, 6],
+        "subject": [2, 5, 6],
         "pk2": ["b", "e", "f"],
         "col1": [2222, 5555, 66],
         "col2": [22222, 55555, 666],
     }
-).set_index(["element", "pk2"])
+).set_index(["subject", "pk2"])
 
 df_update = pd.DataFrame(
     {
-        "element": [1, 2, 3, 4, 5, 6],
+        "subject": [1, 2, 3, 4, 5, 6],
         "pk2": ["a", "b", "c", "d", "e", "f"],
         "col1": [11, 2222, 33, 44, 5555, 66],
         "col2": [111, 22222, 333, 444, 55555, 666],
     }
-).set_index(["element", "pk2"])
+).set_index(["subject", "pk2"])
 
 df_ignore = pd.DataFrame(
     {
-        "element": [1, 2, 3, 4, 5, 6],
+        "subject": [1, 2, 3, 4, 5, 6],
         "pk2": ["a", "b", "c", "d", "e", "f"],
         "col1": [11, 22, 33, 44, 55, 66],
         "col2": [111, 222, 333, 444, 555, 666],
     }
-).set_index(["element", "pk2"])
+).set_index(["subject", "pk2"])
 
 
 def _read_sql(
@@ -148,15 +145,14 @@ def test_upsert_replace(tmp_path: Path) -> None:
     uri = tmp_path / "test_upsert_replace.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
-    # Metadata to store
-    meta = {"element": "test", "version": "0.0.1"}
     # Save to database
-    storage.store_df(df=df1, meta=meta)
-    # Store metadata
-    table_name = storage.store_metadata(meta)
+    storage.store_df(
+        meta_md5="table_name", element={"subject": "test"}, df=df1
+    )
+    table_name = "meta_table_name"
     # Read stored table
     c_df1 = _read_sql(
-        table_name=table_name, uri=uri.as_posix(), index_col=["element", "pk2"]
+        table_name=table_name, uri=uri.as_posix(), index_col=["subject", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df1, c_df1)
@@ -164,7 +160,7 @@ def test_upsert_replace(tmp_path: Path) -> None:
     storage._save_upsert(df=df2, name=table_name, if_exists="replace")
     # Read stored table
     c_df2 = _read_sql(
-        table_name=table_name, uri=uri.as_posix(), index_col=["element", "pk2"]
+        table_name=table_name, uri=uri.as_posix(), index_col=["subject", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df2, c_df2)
@@ -182,24 +178,25 @@ def test_upsert_ignore(tmp_path: Path) -> None:
     uri = tmp_path / "test_upsert_ignore.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
-    # Metadata to store
-    meta = {"element": "test", "version": "0.0.1"}
     # Save to database
-    storage.store_df(df=df1, meta=meta)
-    # Store metadata
-    table_name = storage.store_metadata(meta=meta)
+    storage.store_df(
+        meta_md5="table_name", element={"subject": "test"}, df=df1
+    )
+    table_name = "meta_table_name"
     # Read stored table
     c_df1 = _read_sql(
-        table_name=table_name, uri=uri.as_posix(), index_col=["element", "pk2"]
+        table_name=table_name, uri=uri.as_posix(), index_col=["subject", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df1, c_df1)
     # Check for warning
     with pytest.warns(RuntimeWarning, match="are already present"):
-        storage.store_df(df2, meta)
+        storage.store_df(
+            meta_md5="table_name", element={"subject": "test"}, df=df2
+        )
     # Read stored table
     c_dfignore = _read_sql(
-        table_name, uri=uri.as_posix(), index_col=["element", "pk2"]
+        table_name, uri=uri.as_posix(), index_col=["subject", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(c_dfignore, df_ignore)
@@ -219,23 +216,24 @@ def test_upsert_update(tmp_path: Path) -> None:
     """
     uri = tmp_path / "test_upsert_delete.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
-    # Metadata to store
-    meta = {"element": "test", "version": "0.0.1"}
     # Save to database
-    storage.store_df(df1, meta)
-    # Store metadata
-    table_name = storage.store_metadata(meta)
+    storage.store_df(
+        meta_md5="table_name", element={"subject": "test"}, df=df1
+    )
+    table_name = "meta_table_name"
     # Read stored table
     c_df1 = _read_sql(
-        table_name=table_name, uri=uri.as_posix(), index_col=["element", "pk2"]
+        table_name=table_name, uri=uri.as_posix(), index_col=["subject", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(df1, c_df1)
     # Save to database
-    storage.store_df(df2, meta)
+    storage.store_df(
+        meta_md5="table_name", element={"subject": "test"}, df=df2
+    )
     # Read stored table
     c_dfupdate = _read_sql(
-        table_name, uri=uri.as_posix(), index_col=["element", "pk2"]
+        table_name, uri=uri.as_posix(), index_col=["subject", "pk2"]
     )
     # Check if dataframes are equal
     assert_frame_equal(c_dfupdate, df_update)
@@ -268,50 +266,66 @@ def test_store_df_and_read_df(tmp_path: Path) -> None:
     uri = tmp_path / "test_store_df_and_read_df.sqlite"
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
+    meta_md5 = "feature_md5"
+    element = {"subject": "test"}
     meta = {
-        "element": "test",
-        "version": "0.0.1",
-        "marker": {"name": "fcname"},
+        "element": element,
+        "dependencies": ["numpy"],
+        "marker": {
+            "name": "markername",
+        },
+        "type": "BOLD",
     }
+
+    _, meta_to_store, element_to_store = process_meta(meta)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5="feature_md5", element=element_to_store, meta=meta_to_store
+    )
+
     # Columns to store
     to_store = df1[["col1", "col2"]]
     # Check for error while storing
     with pytest.raises(ValueError, match=r"missing index items"):
-        storage.store_df(to_store.set_index("col1"), meta)
+        storage.store_df(
+            meta_md5=meta_md5, element=element, df=to_store.set_index("col1")
+        )
     # Set index
-    to_store = df1.reset_index().set_index(["element", "pk2", "col1"])
+    to_store = df1.reset_index().set_index(["subject", "pk2", "col1"])
     # Check for error while storing
     with pytest.raises(ValueError, match=r"extra items"):
-        storage.store_df(to_store, meta)
+        storage.store_df(meta_md5=meta_md5, element=element, df=to_store)
     # Convert element to index
-    idx = element_to_index(meta, n_rows=len(to_store))
+    idx = storage.element_to_index(element=element, n_rows=len(to_store))
     # Set index
     to_store = to_store.set_index(idx)
     # Store dataframe
-    storage.store_df(to_store, meta)
-    # Store metadata
-    table_name = storage.store_metadata(meta)
+    storage.store_df(meta_md5=meta_md5, element=element, df=to_store)
+
     # List stored features
     features = storage.list_features()
     # Check correct usage
     assert len(features) == 1
-    assert table_name.replace("meta_", "") in features
+    assert "feature_md5" in features
     # Check for missing feature
     with pytest.raises(ValueError, match="not found"):
-        storage.read_df("wrong_md5")
+        storage.read_df(feature_md5="wrong_md5")
+    with pytest.raises(ValueError, match="not found"):
+        storage.read_df(feature_name="wrong_name")
     # Check for missing feature to fetch
     with pytest.raises(ValueError, match="least one"):
         storage.read_df()
     # Check for multiple features to fetch
     with pytest.raises(ValueError, match="Only one"):
-        storage.read_df("wrong_md5", "wrong_name")
+        storage.read_df(feature_name="wrong_name", feature_md5="wrong_md5")
     # Get MD5 hash of features
     feature_md5 = list(features.keys())[0]
+    assert "feature_md5" == feature_md5
     # Check for key
-    assert "fcname" == features[feature_md5]["name"]
+    assert "BOLD_markername" == features[feature_md5]["name"]
     # Read into dataframes
     read_df1 = storage.read_df(feature_md5=feature_md5)
-    read_df2 = storage.read_df(feature_name="fcname")
+    read_df2 = storage.read_df(feature_name="BOLD_markername")
     # Check if dataframes are equal
     assert_frame_equal(read_df1, read_df2)
     assert_frame_equal(read_df1, to_store)
@@ -330,10 +344,21 @@ def test_store_metadata(tmp_path: Path) -> None:
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     # Metadata to store
-    meta = {"element": "test", "version": "0.0.1"}
+    meta = {
+        "element": {"subject": "test"},
+        "dependencies": ["numpy"],
+        "marker": {"name": "test"},
+        "type": "BOLD",
+    }
+
+    meta_md5, meta_to_store, element_to_store = process_meta(meta)
     # Store metadata
-    table_name = storage.store_metadata(meta)
-    assert table_name.startswith("meta_")
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
+    features = storage.list_features()
+    feature_md5 = list(features.keys())[0]
+    assert meta_md5 == feature_md5
 
 
 def test_store_table(tmp_path: Path) -> None:
@@ -348,7 +373,21 @@ def test_store_table(tmp_path: Path) -> None:
     uri = tmp_path / "test_store_table.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
-    meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
+    element = {"subject": "test"}
+    dependencies = ["numpy"]
+    meta = {
+        "element": element,
+        "dependencies": dependencies,
+        "marker": {"name": "fc"},
+        "type": "BOLD",
+    }
+
+    meta_md5, meta_to_store, element_to_store = process_meta(meta)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
+
     # Data to store
     data = [
         [1, 10],
@@ -358,18 +397,23 @@ def test_store_table(tmp_path: Path) -> None:
         [5, 50],
     ]
     # Convert element to index
-    idx = element_to_index(meta, n_rows=5, rows_col_name="scan")
+    idx = storage.element_to_index(element, n_rows=5, rows_col_name="scan")
     # Create dataframe
     df = pd.DataFrame(data, columns=["f1", "f2"], index=idx)
+
     # Store table
-    storage.store_table(data, meta, columns=["f1", "f2"], rows_col_name="scan")
-    # Store metadata
-    table_name = storage.store_metadata(meta)
+    storage.store_table(
+        meta_md5=meta_md5,
+        element=element_to_store,
+        data=data,
+        columns=["f1", "f2"],
+        rows_col_name="scan",
+    )
     # Read stored table
     c_df = _read_sql(
-        table_name=table_name,
+        table_name=f"meta_{meta_md5}",
         uri=uri.as_posix(),
-        index_col=["element", "scan"],
+        index_col=["subject", "scan"],
     )
     # Check if dataframes are equal
     assert_frame_equal(df, c_df)
@@ -377,19 +421,24 @@ def test_store_table(tmp_path: Path) -> None:
     # New data to store
     data_new = [[1, 10], [2, 20], [3, 300], [4, 40], [5, 50], [6, 600]]
     # Convert element to index
-    idx_new = element_to_index(meta, n_rows=6, rows_col_name="scan")
+    idx_new = storage.element_to_index(element, n_rows=6, rows_col_name="scan")
     # Create dataframe
     df_new = pd.DataFrame(data_new, columns=["f1", "f2"], index=idx_new)
     # Check warning
     with pytest.warns(RuntimeWarning, match=r"Some rows"):
+        # Store table
         storage.store_table(
-            data_new, meta, columns=["f1", "f2"], rows_col_name="scan"
+            meta_md5=meta_md5,
+            element=element_to_store,
+            data=data_new,
+            columns=["f1", "f2"],
+            rows_col_name="scan",
         )
     # Read stored table
     c_df_new = _read_sql(
-        table_name=table_name,
+        table_name=f"meta_{meta_md5}",
         uri=uri.as_posix(),
-        index_col=["element", "scan"],
+        index_col=["subject", "scan"],
     )
     # Check if dataframes are equal
     assert_frame_equal(df_new, c_df_new)
@@ -407,7 +456,20 @@ def test_store_matrix(tmp_path: Path) -> None:
     uri = tmp_path / "test_store_table.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
-    meta = {"element": "test", "version": "0.0.1", "marker": {"name": "fc"}}
+    element = {"subject": "test"}
+    dependencies = ["numpy"]
+    meta = {
+        "element": element,
+        "dependencies": dependencies,
+        "marker": {"name": "fc"},
+        "type": "BOLD",
+    }
+
+    meta_md5, meta_to_store, element_to_store = process_meta(meta)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
 
     # Store 4 x 3 full matrix
     data = np.array(
@@ -418,17 +480,17 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     # Store table
     storage.store_matrix(
+        meta_md5=meta_md5,
+        element=element_to_store,
         data=data,
-        meta=meta,
         row_names=row_names,
         col_names=col_names,
     )
-
     stored_names = [f"{i}~{j}" for i in row_names for j in col_names]
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
 
     read_df = storage.read_df(feature_md5=feature_md5)
     assert read_df.shape == (1, 12)
@@ -437,7 +499,14 @@ def test_store_matrix(tmp_path: Path) -> None:
     # Store without row and column names
     uri = tmp_path / "test_store_table_nonames.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
-    storage.store_matrix(data=data, meta=meta)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
+    # Store table
+    storage.store_matrix(
+        meta_md5=meta_md5, element=element_to_store, data=data
+    )
     stored_names = [
         f"r{i}~c{j}"
         for i in range(data.shape[0])
@@ -445,20 +514,37 @@ def test_store_matrix(tmp_path: Path) -> None:
     ]
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
 
     with pytest.raises(ValueError, match="Invalid kind"):
-        storage.store_matrix(data=data, meta=meta, matrix_kind="wrong")
+        storage.store_matrix(
+            meta_md5=meta_md5,
+            element=element_to_store,
+            data=data,
+            row_names=row_names,
+            col_names=col_names,
+            matrix_kind="wrong",
+        )
 
     with pytest.raises(ValueError, match="non-square"):
-        storage.store_matrix(data=data, meta=meta, matrix_kind="triu")
+        storage.store_matrix(
+            meta_md5=meta_md5,
+            element=element_to_store,
+            data=data,
+            row_names=row_names,
+            col_names=col_names,
+            matrix_kind="triu",
+        )
 
     with pytest.raises(ValueError, match="cannot be False"):
         storage.store_matrix(
+            meta_md5=meta_md5,
+            element=element_to_store,
             data=data,
-            meta=meta,
+            row_names=row_names,
+            col_names=col_names,
             matrix_kind="full",
             diagonal=False,
         )
@@ -469,12 +555,17 @@ def test_store_matrix(tmp_path: Path) -> None:
     col_names = ["col1", "col2", "col3"]
     uri = tmp_path / "test_store_table_triu.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
     storage.store_matrix(
+        meta_md5=meta_md5,
+        element=element_to_store,
         data=data,
-        meta=meta,
-        matrix_kind="triu",
         row_names=row_names,
         col_names=col_names,
+        matrix_kind="triu",
     )
 
     stored_names = [
@@ -488,7 +579,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
@@ -498,12 +589,17 @@ def test_store_matrix(tmp_path: Path) -> None:
     # Store upper triangular matrix without diagonal
     uri = tmp_path / "test_store_table_triu_nodiagonal.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
     storage.store_matrix(
+        meta_md5=meta_md5,
+        element=element_to_store,
         data=data,
-        meta=meta,
-        matrix_kind="triu",
         row_names=row_names,
         col_names=col_names,
+        matrix_kind="triu",
         diagonal=False,
     )
 
@@ -515,7 +611,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
@@ -528,12 +624,17 @@ def test_store_matrix(tmp_path: Path) -> None:
     col_names = ["col1", "col2", "col3"]
     uri = tmp_path / "test_store_table_tril.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
     storage.store_matrix(
+        meta_md5=meta_md5,
+        element=element_to_store,
         data=data,
-        meta=meta,
-        matrix_kind="tril",
         row_names=row_names,
         col_names=col_names,
+        matrix_kind="tril",
     )
 
     stored_names = [
@@ -547,7 +648,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
@@ -557,15 +658,19 @@ def test_store_matrix(tmp_path: Path) -> None:
     # Store lower triangular matrix without diagonal
     uri = tmp_path / "test_store_table_tril_nodiagonal.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
     storage.store_matrix(
-        data,
-        meta,
-        matrix_kind="tril",
+        meta_md5=meta_md5,
+        element=element_to_store,
+        data=data,
         row_names=row_names,
         col_names=col_names,
+        matrix_kind="tril",
         diagonal=False,
     )
-
     stored_names = [
         "row2~col1",
         "row3~col1",
@@ -574,7 +679,7 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     features = storage.list_features()
     feature_md5 = list(features.keys())[0]
-    assert "fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
     assert_array_equal(
@@ -597,18 +702,21 @@ def test_store_multiple_output(tmp_path: Path):
     # Metadata to store
     meta1 = {
         "element": {"subject": "test-01", "session": "ses-01"},
-        "version": "0.0.1",
+        "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     meta2 = {
         "element": {"subject": "test-02", "session": "ses-01"},
-        "version": "0.0.1",
+        "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     meta3 = {
         "element": {"subject": "test-01", "session": "ses-02"},
-        "version": "0.0.1",
+        "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     # Data to store
     data1 = np.array(
@@ -623,35 +731,62 @@ def test_store_multiple_output(tmp_path: Path):
     data2 = data1 * 10
     data3 = data1 * 20
     # Process metadata for storage
-    hash1, _ = process_meta(meta1)
+    hash1, meta_to_store1, element_to_store1 = process_meta(meta1)
     # Convert element to index
-    idx1 = element_to_index(meta1, n_rows=5, rows_col_name="scan")
+    idx1 = storage.element_to_index(
+        element_to_store1, n_rows=5, rows_col_name="scan"
+    )
     # Create dataframe
     df1 = pd.DataFrame(data1, columns=["f1", "f2"], index=idx1)
     # Process metadata for storage
-    hash2, _ = process_meta(meta2)
+    hash2, meta_to_store2, element_to_store2 = process_meta(meta2)
     # Convert element to index
-    idx2 = element_to_index(meta2, n_rows=5, rows_col_name="scan")
+    idx2 = storage.element_to_index(
+        element_to_store2, n_rows=5, rows_col_name="scan"
+    )
     # Create dataframe
     df2 = pd.DataFrame(data2, columns=["f1", "f2"], index=idx2)
     # Process metadata for storage
-    hash3, _ = process_meta(meta3)
+    hash3, meta_to_store3, element_to_store3 = process_meta(meta3)
     # Convert element to index
-    idx3 = element_to_index(meta3, n_rows=5, rows_col_name="scan")
+    idx3 = storage.element_to_index(
+        element_to_store3, n_rows=5, rows_col_name="scan"
+    )
     # Create dataframe
     df3 = pd.DataFrame(data3, columns=["f1", "f2"], index=idx3)
     # Check hash equality
     assert hash1 == hash2
     assert hash2 == hash3
     # Store tables
-    storage.store_table(
-        data1, meta1, columns=["f1", "f2"], rows_col_name="scan"
+    storage.store_metadata(
+        meta_md5=hash1, element=element_to_store1, meta=meta_to_store1
+    )
+    storage.store_metadata(
+        meta_md5=hash2, element=element_to_store2, meta=meta_to_store2
+    )
+    storage.store_metadata(
+        meta_md5=hash3, element=element_to_store3, meta=meta_to_store3
     )
     storage.store_table(
-        data2, meta2, columns=["f1", "f2"], rows_col_name="scan"
+        meta_md5=hash1,
+        element=element_to_store1,
+        data=data1,
+        columns=["f1", "f2"],
+        rows_col_name="scan",
     )
     storage.store_table(
-        data3, meta3, columns=["f1", "f2"], rows_col_name="scan"
+        meta_md5=hash2,
+        element=element_to_store2,
+        data=data2,
+        columns=["f1", "f2"],
+        rows_col_name="scan",
+    )
+    storage.store_table(
+        meta_md5=hash3,
+        element=element_to_store3,
+        data=data3,
+        columns=["f1", "f2"],
+        rows_col_name="scan",
     )
     # Check that URI does not exist yet
     assert not uri.exists()
@@ -667,10 +802,9 @@ def test_store_multiple_output(tmp_path: Path):
     assert uri1.exists()
     assert uri2.exists()
     assert uri3.exists()
-    # Store metadata
-    table_name = storage.store_metadata(meta1)
     # Set index columns
     cols = ["subject", "session", "scan"]
+    table_name = f"meta_{hash1}"
     # Read stored tables
     cdf1 = _read_sql(table_name, uri1.as_posix(), index_col=cols)
     cdf2 = _read_sql(table_name, uri2.as_posix(), index_col=cols)
@@ -696,18 +830,21 @@ def test_collect(tmp_path: Path) -> None:
     # Metadata for storage
     meta1 = {
         "element": {"subject": "test-01", "session": "ses-01"},
-        "version": "0.0.1",
+        "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     meta2 = {
         "element": {"subject": "test-02", "session": "ses-01"},
-        "version": "0.0.1",
+        "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     meta3 = {
         "element": {"subject": "test-01", "session": "ses-02"},
-        "version": "0.0.1",
+        "dependencies": ["numpy"],
         "marker": {"name": "fc"},
+        "type": "BOLD",
     }
     # Data for storage
     data1 = np.array(
@@ -722,14 +859,38 @@ def test_collect(tmp_path: Path) -> None:
     data2 = data1 * 10
     data3 = data1 * 20
     # Store tables
-    storage.store_table(
-        data1, meta1, columns=["f1", "f2"], rows_col_name="scan"
+    hash1, meta_to_store1, element_to_store1 = process_meta(meta1)
+    hash2, meta_to_store2, element_to_store2 = process_meta(meta2)
+    hash3, meta_to_store3, element_to_store3 = process_meta(meta3)
+    storage.store_metadata(
+        meta_md5=hash1, element=element_to_store1, meta=meta_to_store1
+    )
+    storage.store_metadata(
+        meta_md5=hash2, element=element_to_store2, meta=meta_to_store2
+    )
+    storage.store_metadata(
+        meta_md5=hash3, element=element_to_store3, meta=meta_to_store3
     )
     storage.store_table(
-        data2, meta2, columns=["f1", "f2"], rows_col_name="scan"
+        meta_md5=hash1,
+        element=element_to_store1,
+        data=data1,
+        columns=["f1", "f2"],
+        rows_col_name="scan",
     )
     storage.store_table(
-        data3, meta3, columns=["f1", "f2"], rows_col_name="scan"
+        meta_md5=hash2,
+        element=element_to_store2,
+        data=data2,
+        columns=["f1", "f2"],
+        rows_col_name="scan",
+    )
+    storage.store_table(
+        meta_md5=hash3,
+        element=element_to_store3,
+        data=data3,
+        columns=["f1", "f2"],
+        rows_col_name="scan",
     )
     # Convert element to prefix
     prefix1 = element_to_prefix(meta1["element"])
@@ -752,7 +913,7 @@ def test_collect(tmp_path: Path) -> None:
     # Set index columns
     cols = ["subject", "session", "scan"]
     # Store metadata
-    table_name = storage.store_metadata(meta1)
+    table_name = f"meta_{hash1}"
     # Read stored tables
     all_df = _read_sql(table_name, uri.as_posix(), index_col=cols)
     cdf1 = _read_sql(table_name, uri1.as_posix(), index_col=cols)

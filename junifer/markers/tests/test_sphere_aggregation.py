@@ -3,6 +3,8 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+import typing
+from typing import Dict
 from pathlib import Path
 
 import nibabel as nib
@@ -16,6 +18,7 @@ from junifer.data import load_coordinates, load_mask
 from junifer.markers.sphere_aggregation import SphereAggregation
 from junifer.storage import SQLiteFeatureStorage
 
+
 # Define common variables
 COORDS = "DMNBuckner"
 RADIUS = 8
@@ -23,15 +26,12 @@ RADIUS = 8
 
 def test_SphereAggregation_input_output() -> None:
     """Test SphereAggregation input and output types."""
-    marker = SphereAggregation(
-        coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
-    )
-
-    output = marker.get_output_kind(["VBM_GM", "BOLD"])
-    assert output == ["table", "timeseries"]
+    marker = SphereAggregation(coords="DMNBuckner", method="mean", on="VBM_GM")
+    for in_, out_ in [("VBM_GM", "table"), ("BOLD", "timeseries")]:
+        assert marker.get_output_type(in_) == out_
 
     with pytest.raises(ValueError, match="Unknown input"):
-        marker.get_output_kind(["VBM_GM", "BOLD", "unknown"])
+        marker.get_output_type("unknown")
 
 
 def test_SphereAggregation_3D() -> None:
@@ -52,22 +52,12 @@ def test_SphereAggregation_3D() -> None:
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
-    input = {"VBM_GM": {"data": img}}
+    input = {"VBM_GM": {"data": img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
-
-    meta = marker.get_meta("VBM_GM")["marker"]
-    assert meta["method"] == "mean"
-    assert meta["coords"] == COORDS
-    assert meta["radius"] == RADIUS
-    assert meta["mask"] is None
-    assert meta["name"] == "VBM_GM_SphereAggregation"
-    assert meta["class"] == "SphereAggregation"
-    assert meta["kind"] == "VBM_GM"
-    assert meta["method_params"] == {}
 
 
 def test_SphereAggregation_4D() -> None:
@@ -84,25 +74,13 @@ def test_SphereAggregation_4D() -> None:
     auto4d = nifti_masker.fit_transform(fmri_img)
 
     # Create SphereAggregation object
-    marker = SphereAggregation(
-        coords=COORDS, method="mean", radius=RADIUS
-    )
-    input = {"BOLD": {"data": fmri_img}}
+    marker = SphereAggregation(coords=COORDS, method="mean", radius=RADIUS)
+    input = {"BOLD": {"data": fmri_img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
-
-    meta = marker.get_meta("BOLD")["marker"]
-    assert meta["method"] == "mean"
-    assert meta["coords"] == COORDS
-    assert meta["radius"] == RADIUS
-    assert meta["mask"] is None
-    assert meta["name"] == "BOLD_SphereAggregation"
-    assert meta["class"] == "SphereAggregation"
-    assert meta["kind"] == "BOLD"
-    assert meta["method_params"] == {}
 
 
 def test_SphereAggregation_storage(tmp_path: Path) -> None:
@@ -122,31 +100,38 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
 
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {
-        "element": "test",
-        "version": "0.0.1",
-        "marker": {"name": "fcname"},
+        "element": {"subject": "sub-01", "session": "ses-01"},
+        "dependencies": {"nilearn", "nibabel"},
     }
-    input = {"VBM_GM": {"data": img}, "meta": meta}
+    input = {"VBM_GM": {"data": img, "meta": meta}}
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
 
     marker.fit_transform(input, storage=storage)
 
+    features: Dict = typing.cast(Dict, storage.list_features())
+    assert any(
+        x["name"] == "VBM_GM_SphereAggregation" for x in features.values()
+    )
+
     meta = {
-        "element": "test",
-        "version": "0.0.1",
-        "marker": {"name": "BOLD_fcname"},
+        "element": {"subject": "sub-01", "session": "ses-01"},
+        "dependencies": {"nilearn", "nibabel"},
     }
     # Get the SPM auditory data
     subject_data = datasets.fetch_spm_auditory()
     fmri_img = concat_imgs(subject_data.func)  # type: ignore
-    input = {"BOLD": {"data": fmri_img}, "meta": meta}
+    input = {"BOLD": {"data": fmri_img, "meta": meta}}
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, on="BOLD"
     )
 
     marker.fit_transform(input, storage=storage)
+    features: Dict = typing.cast(Dict, storage.list_features())
+    assert any(
+        x["name"] == "BOLD_SphereAggregation" for x in features.values()
+    )
 
 
 def test_SphereAggregation_3D_mask() -> None:
@@ -164,26 +149,21 @@ def test_SphereAggregation_3D_mask() -> None:
 
     # Create NiftSpheresMasker
     nifti_masker = NiftiSpheresMasker(
-        seeds=coordinates, radius=RADIUS, mask_img=mask_img)
+        seeds=coordinates, radius=RADIUS, mask_img=mask_img
+    )
     auto4d = nifti_masker.fit_transform(img)
 
     # Create SphereAggregation object
     marker = SphereAggregation(
-        coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM",
-        mask="GM_prob0.2"
+        coords=COORDS,
+        method="mean",
+        radius=RADIUS,
+        on="VBM_GM",
+        mask="GM_prob0.2",
     )
-    input = {"VBM_GM": {"data": img}}
+    input = {"VBM_GM": {"data": img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
-
-    meta = marker.get_meta("VBM_GM")["marker"]
-    assert meta["method"] == "mean"
-    assert meta["coords"] == COORDS
-    assert meta["radius"] == RADIUS
-    assert meta["name"] == "VBM_GM_SphereAggregation"
-    assert meta["class"] == "SphereAggregation"
-    assert meta["kind"] == "VBM_GM"
-    assert meta["method_params"] == {}

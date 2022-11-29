@@ -5,8 +5,9 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Iterable, List, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
+import json
 import numpy as np
 import pandas as pd
 from pandas.core.base import NoNewAttributesMixin
@@ -17,7 +18,8 @@ from tqdm import tqdm
 from ..api.decorators import register_storage
 from ..utils import logger, raise_error, warn_with_log
 from .pandas_base import PandasBaseFeatureStorage
-from .utils import element_to_index, element_to_prefix, process_meta
+from .utils import element_to_prefix
+
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
@@ -86,7 +88,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Set upsert
         self._upsert = upsert
 
-    def get_engine(self, meta: Optional[Dict] = None) -> "Engine":
+    def get_engine(self, element: Optional[Dict] = None) -> "Engine":
         """Get engine.
 
         Parameters
@@ -100,11 +102,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The sqlalchemy engine.
 
         """
-        # Set metadata as empty dictionary if None
-        if meta is None:
-            meta = {}
-        # Retrieve element key from metadata
-        element = meta.get("element", None)
         # Prefixed elements
         prefix = ""
         if self.single_output is False:
@@ -208,58 +205,15 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                         msg=f"Invalid option {if_exists} for if_exists."
                     )
 
-    def _store_2d(
-        self,
-        data: Dict,
-        meta: Dict,
-        columns: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
-    ) -> None:
-        """Store 2D dataframe.
-
-        Parameters
-        ----------
-        data : dict
-            The data to store.
-        meta : dict
-            The metadata as a dictionary.
-        columns : list or tuple of str, optional
-            The columns (default None).
-        rows_col_name : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
-
-        """
-        n_rows = len(data)
-        # Convert element metadata to index
-        idx = element_to_index(
-            meta=meta, n_rows=n_rows, rows_col_name=rows_col_name
-        )
-        # Prepare new dataframe
-        data_df = pd.DataFrame(  # type: ignore
-            data, columns=columns, index=idx  # type: ignore
-        )
-        # Store dataframe
-        self.store_df(df=data_df, meta=meta)
-
-    def list_features(
-        self, return_df: bool = False
-    ) -> Union[Dict, pd.DataFrame]:
-        """Implement features listing from the storage.
-
-        Parameters
-        ----------
-        return_df : bool, optional
-            If True, returns a pandas DataFrame. If False, returns a
-            dictionary (default False).
+    def list_features(self) -> Dict:
+        """List the features in the storage.
 
         Returns
         -------
-        dict or pandas.DataFrame
-            List of features in the storage. If dictionary is returned, the
-            keys are the feature names to be used in read_features() and the
-            values are the metadata of each feature.
+        dict
+            List of features in the storage. The keys are the feature names to
+            be used in read_features() and the values are the metadata of each
+            feature.
 
         """
         meta_df = pd.read_sql(
@@ -267,10 +221,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             con=self.get_engine(),
             index_col="meta_md5",
         )
-        out = meta_df
-        # Return dictionary
-        if return_df is False:
-            out = meta_df.to_dict(orient="index")  # type: ignore
+        meta_df.index = meta_df.index.str.replace(r"meta_", "")
+        out = meta_df.to_dict(orient="index")  # type: ignore
+        for md5, t_meta in out.items():
+            for k, v in t_meta.items():
+                out[md5][k] = json.loads(v)
         return out
 
     def read_df(
@@ -327,7 +282,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 con=engine,
                 index_col="meta_md5",
             )
-            t_df = meta_df.query(f"name == '{feature_name}'")
+
+            # Wrap in double quotes as the fields are in JSON format
+            t_df = meta_df.query(f"name == '\"{feature_name}\"'")
             if len(t_df) == 0:
                 raise_error(msg=f"Feature {feature_name} not found")
             elif len(t_df) > 1:
@@ -339,8 +296,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                     )
                 )
             table_name = f"meta_{t_df.index[0]}"
+        if table_name not in inspect(engine).get_table_names():
+            raise_error(msg=f"Feature MD5 {feature_md5} not found")
         # Read metadata from table
         df = pd.read_sql(sql=table_name, con=engine)
+
         # Read the index
         query = (
             "SELECT ii.name FROM sqlite_master AS m, "
@@ -356,36 +316,30 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         df = df.set_index(index_names)
         return df
 
-    def store_metadata(self, meta: Dict) -> str:
-        r"""Implement metadata storing in the storage.
+    def store_metadata(self, meta_md5: str, element: Dict, meta: Dict) -> None:
+        """Implement metadata storing in the storage.
 
         Parameters
         ----------
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
         meta : dict
             The metadata as a dictionary.
-
-        Returns
-        -------
-        str
-            The MD5 hash of the metadata prefixed with "meta\_".
-
         """
-        # Copy metadata
-        t_meta = meta.copy()
-        # Update metadata
-        t_meta.update(self.get_meta())
-        # Process metadata
-        meta_md5, t_meta_row = process_meta(t_meta)
         # Get sqlalchemy engine
-        engine = self.get_engine(meta=t_meta)
-        if meta_md5 not in inspect(engine).get_table_names():
+        engine = self.get_engine(element=element)
+        table_name = f"meta_{meta_md5}"
+        if table_name not in inspect(engine).get_table_names():
             # Convert metadata to dataframe
-            meta_df = self._meta_row(meta=t_meta_row, meta_md5=meta_md5)
+            meta_df = self._meta_row(meta=meta, meta_md5=meta_md5)
             # Save dataframe
             self._save_upsert(meta_df, "meta", engine)
-        return f"meta_{meta_md5}"
 
-    def store_df(self, df: Union[pd.DataFrame, pd.Series], meta: Dict) -> None:
+    def store_df(
+        self, meta_md5: str, element: Dict, df: Union[pd.DataFrame, pd.Series]
+    ) -> None:
         """Implement pandas DataFrame storing.
 
         Parameters
@@ -405,7 +359,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # TODO: Test this function
         # Check that the index generated by meta matches the one in
         # the dataframe.
-        idx = element_to_index(meta)
+        idx = self.element_to_index(element)
         # Given the meta, we might not know if there is an extra column added
         # when storing a timeseries or 2d elements. We need to check if the
         # extra element is only one.
@@ -418,24 +372,25 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         elif len(extra) == 1:
             # The df has one extra index item, this should be the new name
             # of the missing element in the index
-            idx = element_to_index(meta, rows_col_name=extra[0])
+            idx = self.element_to_index(element, rows_col_name=extra[0])
 
         if any(x not in df.index.names for x in idx.names):
             raise_error(
                 "The index of the dataframe is missing index items that are "
                 "generated from the metadata."
             )
-        # Get table name
-        table_name = self.store_metadata(meta)
+
+        table_name = f"meta_{meta_md5}"
         # Get sqlalchemy engine
-        engine = self.get_engine(meta)
+        engine = self.get_engine(element)
         # Save data
         self._save_upsert(df, table_name, engine)
 
     def store_matrix(
         self,
+        meta_md5: str,
+        element: Dict,
         data: np.ndarray,
-        meta: Dict,
         col_names: Optional[List[str]] = None,
         row_names: Optional[List[str]] = None,
         matrix_kind: Optional[str] = "full",
@@ -445,6 +400,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
         data : numpy.ndarray
             The matrix data to store.
         meta : dict
@@ -465,7 +424,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             (default "full").
         diagonal : bool, optional
             Whether to store the diagonal. If `matrix_kind` is "full", setting
-            this to False will raise an error (default True)..
+            this to False will raise an error (default True).
 
         """
         if diagonal is False and matrix_kind not in ["triu", "tril"]:
@@ -519,74 +478,27 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         # Convert element metadata to index
         n_rows = 1
-        idx = element_to_index(meta=meta, n_rows=n_rows, rows_col_name=None)
+        idx = self.element_to_index(
+            element=element, n_rows=n_rows, rows_col_name=None
+        )
         # Prepare new dataframe
         data_df = pd.DataFrame(flat_data[None, :], columns=columns, index=idx)
 
-        if len(columns) > 2000:  # TODO: check SQLITE_MAX_COLUMN
+        if len(columns) > 2000:
+            warn_with_log(
+                msg="The number of columns is greater than 2000. "
+                "The data will be stored in long format. "
+                "This will make it slower to collect the data. "
+                "Future versions of junifer will provide additional storage "
+                "options that will not raise this warning.",
+            )
             data_df = data_df.stack()
             new_names = [x for x in data_df.index.names[:-1]]
             new_names.append("pair")
             data_df.index.names = new_names
 
         # Store dataframe
-        self.store_df(df=data_df, meta=meta)
-
-    def store_table(
-        self,
-        data: Dict,
-        meta: Dict,
-        columns: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
-    ) -> None:
-        """Implement table storing.
-
-        Parameters
-        ----------
-        data : dict
-            The table data to store.
-        meta : dict
-            The metadata as a dictionary.
-        columns : list or tuple of str, optional
-            The columns (default None).
-        rows_col_name : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
-
-        """
-        self._store_2d(
-            data=data, meta=meta, columns=columns, rows_col_name=rows_col_name
-        )
-
-    def store_timeseries(
-        self,
-        data: Dict,
-        meta: Dict,
-        columns: Optional[Iterable[str]] = None,
-        row_names: str = "timepoint",
-    ) -> None:
-        """Implement timeseries storing.
-
-        Parameters
-        ----------
-        data : dict
-            The timeseries data to store.
-        meta : dict
-            The metadata as a dictionary.
-        columns : list or tuple of str, optional
-            The column labels (default None).
-        row_names : str, optional
-            The column name to use in case number of rows greater than 1
-            (default "timepoint").
-
-        """
-        self._store_2d(
-            data=data,
-            meta=meta,
-            columns=columns,
-            rows_col_name="timepoint",  # explicit so as to stop overriding
-        )
+        self.store_df(meta_md5=meta_md5, element=element, df=data_df)
 
     def collect(self) -> None:
         """Implement data collection.

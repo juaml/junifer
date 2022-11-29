@@ -6,7 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
@@ -15,9 +15,6 @@ from ..utils import logger
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
 from .utils import _ets
-
-if TYPE_CHECKING:
-    from junifer.storage import BaseFeatureStorage
 
 
 @register_marker
@@ -45,6 +42,8 @@ class RSSETSMarker(BaseMarker):
 
     """
 
+    _DEPENDENCIES = {"nilearn"}
+
     def __init__(
         self,
         parcellation: Union[str, List[str]],
@@ -70,43 +69,21 @@ class RSSETSMarker(BaseMarker):
         """
         return ["BOLD"]
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
-        """Get output kind.
+    def get_output_type(self, input_type: str) -> str:
+        """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the marker. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the marker.
 
         Returns
         -------
-        list of str
-            The updated list of output kinds, as storage possibilities.
+        str
+            The storage type output by the marker.
 
         """
-        return ["timeseries"]
-
-    def store(
-        self,
-        kind: str,
-        out: Dict[str, Any],
-        storage: "BaseFeatureStorage",
-    ) -> None:
-        """Store.
-
-        Parameters
-        ----------
-        kind : {"BOLD"}
-            The data kind to store.
-        out : dict
-            The computed result as a dictionary to store.
-        storage : storage-like
-            The storage class, for example, SQLiteFeatureStorage.
-
-        """
-        logger.debug(f"Storing BOLD in {storage}")
-        storage.store(kind="timeseries", **out)
+        return "timeseries"
 
     def compute(
         self,
@@ -150,7 +127,7 @@ class RSSETSMarker(BaseMarker):
             parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
-            mask=self.mask
+            mask=self.mask,
         )
         # Compute the parcel aggregation
         out = parcel_aggregation.compute(input=input, extra_input=extra_input)

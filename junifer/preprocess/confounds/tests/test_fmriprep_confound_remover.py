@@ -62,7 +62,7 @@ def test_fMRIPrepConfoundRemover_validate_input() -> None:
     confound_remover.validate_input(input)
 
 
-def test_fMRIPrepConfoundRemover_get_output_kind() -> None:
+def test_fMRIPrepConfoundRemover_get_output_type() -> None:
     """Test fMRIPrepConfoundRemover validate_input."""
     confound_remover = fMRIPrepConfoundRemover()
     inputs = [
@@ -72,7 +72,7 @@ def test_fMRIPrepConfoundRemover_get_output_kind() -> None:
     ]
     # Confound remover works in place
     for input in inputs:
-        assert confound_remover.get_output_kind(input) == input
+        assert confound_remover.get_output_type(input) == input
 
 
 def test_fMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
@@ -460,8 +460,8 @@ def test_fMRIPrepConfoundRemover__remove_confounds() -> None:
         clean_bold = typing.cast(nib.Nifti1Image, clean_bold)
         # TODO: Find a better way to test functionality here
         assert (
-            clean_bold.header.get_zooms() ==  # type: ignore
-            raw_bold.header.get_zooms()
+            clean_bold.header.get_zooms()  # type: ignore
+            == raw_bold.header.get_zooms()  # type: ignore
         )
         assert clean_bold.get_fdata().shape == raw_bold.get_fdata().shape
     # TODO: Test confound remover with mask, needs #79 to be implemented
@@ -521,7 +521,6 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
             AssertionError, assert_array_equal, orig_bold, trans_bold
         )
 
-        assert output["meta"] == input["meta"]  # general meta does not change
         assert "meta" in output["BOLD"]
         assert "preprocess" in output["BOLD"]["meta"]
         t_meta = output["BOLD"]["meta"]["preprocess"]
@@ -535,3 +534,7 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
         assert t_meta["high_pass"] is None
         assert t_meta["t_r"] is None
         assert t_meta["mask_img"] is None
+
+        assert "dependencies" in output["BOLD"]["meta"]
+        dependencies = output["BOLD"]["meta"]["dependencies"]
+        assert dependencies == {"numpy", "nilearn"}

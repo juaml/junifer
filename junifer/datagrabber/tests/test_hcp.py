@@ -10,6 +10,7 @@ import pytest
 from junifer.datagrabber.hcp import DataladHCP1200
 from junifer.utils import configure_logging
 
+
 URI = "https://gin.g-node.org/juaml/datalad-example-hcp1200"
 
 
@@ -79,8 +80,8 @@ def test_dataladhcp1200_datagrabber(
         # Assert data file path is a file
         assert out["BOLD"]["path"].is_file()
         # Assert metadata
-        assert "meta" in out
-        meta = out["meta"]
+        assert "meta" in out["BOLD"]
+        meta = out["BOLD"]["meta"]
         assert "element" in meta
         assert "subject" in meta["element"]
         assert test_element[0] == meta["element"]["subject"]

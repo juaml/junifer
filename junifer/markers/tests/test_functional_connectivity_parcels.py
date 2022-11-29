@@ -32,7 +32,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
     fmri_img = image.concat_imgs(ni_data.func)  # type: ignore
 
     fc = FunctionalConnectivityParcels(parcellation="Schaefer100x7")
-    all_out = fc.fit_transform({"BOLD": {"data": fmri_img}})
+    all_out = fc.fit_transform({"BOLD": {"data": fmri_img, "meta": {}}})
 
     out = all_out["BOLD"]
 
@@ -48,7 +48,11 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
     pa = ParcelAggregation(
         parcellation="Schaefer100x7", method="mean", on="BOLD"
     )
-    ts = pa.compute({"data": fmri_img})
+    meta = {
+        "element": {"subject": "sub001"},
+        "dependencies": {"nilearn"},
+    }
+    ts = pa.compute({"data": fmri_img, "meta": meta})
 
     # compare with nilearn
     # Get the testing parcellation (for nilearn)
@@ -69,22 +73,24 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
     assert_array_almost_equal(out_ni, out["data"], decimal=3)
 
     # check correct output
-    assert fc.get_output_kind(["BOLD"]) == ["matrix"]
+    assert fc.get_output_type("BOLD") == "matrix"
 
     # Check empirical correlation method parameters
     fc = FunctionalConnectivityParcels(
         parcellation="Schaefer100x7", cor_method_params={"empirical": True}
     )
 
-    all_out = fc.fit_transform({"BOLD": {"data": fmri_img}})
+    all_out = fc.fit_transform({"BOLD": {"data": fmri_img, "meta": meta}})
 
     uri = tmp_path / "test_fc_parcellation.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
-    meta = {
-        "element": "test",
-        "version": "0.0.1",
-        "marker": {"name": "fcname"},
-    }
-    input = {"BOLD": {"data": fmri_img}, "meta": meta}
+    meta = {"element": {"subject": "test"}, "dependencies": {"numpy"}}
+    input = {"BOLD": {"data": fmri_img, "meta": meta}}
     all_out = fc.fit_transform(input, storage=storage)
+
+    features = storage.list_features()
+    assert any(
+        x["name"] == "BOLD_FunctionalConnectivityParcels"
+        for x in features.values()
+    )
