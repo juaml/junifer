@@ -42,7 +42,10 @@ marker = ParcelAggregation(parcellation="Schaefer100x7", method="mean")
 
 ###############################################################################
 # Prepare the input
-input = {"BOLD": {"data": fmri_img}, "VBM_GM": {"data": vbm_img}}
+input = {
+    "BOLD": {"data": fmri_img, "meta": {"element": "subject1"}},
+    "VBM_GM": {"data": vbm_img, "meta": {"element": "subject1"}},
+}
 
 ###############################################################################
 # Fit transform the data
