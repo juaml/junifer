@@ -102,7 +102,7 @@ def process_meta(meta: Dict) -> Tuple[str, Dict, Dict]:
     if element is None:
         raise_error(msg="`meta` must contain the key 'element'")
     if "marker" not in t_meta:
-        raise_error(msg="`meta` must contain the key 'marker'") 
+        raise_error(msg="`meta` must contain the key 'marker'")
     if "name" not in t_meta["marker"]:
         raise_error(msg="`meta['marker']` must contain the key 'name'")
     if "type" not in t_meta:
