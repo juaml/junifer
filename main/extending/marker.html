@@ -190,9 +190,9 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">6. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">6.1. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">6.2. Generic BIDS datagrabber for datalad.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">6.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">6.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">6.2. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">6.3. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">6.4. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">6.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">6.6. HCP FC Extraction</a></li>
@@ -280,11 +280,10 @@ Thus, only a few methods are required:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">get_valid_inputs</span></code>: a method to obtain the list of valid inputs for the marker. This is used to check that the
 inputs provided by the user are valid. This method should return a list of strings, representing
 <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">get_output_kind</span></code>: a method to obtain the kind of output of the marker. This is used to check that the output
+<li><p><code class="docutils literal notranslate"><span class="pre">get_output_type</span></code>: a method to obtain the kind of output of the marker. This is used to check that the output
 of the marker is compatible with the storage. This method should return a string, representing
 <a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">compute</span></code>: the method that given the data, computes the marker.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">store</span></code>: the method that stores the computed marker.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: the initialization method, where the marker is configured.</p></li>
 </ol>
 <p>As an example, we will develop a Parcel Mean marker, that is, a marker that first applies a parcellation and
@@ -300,7 +299,7 @@ a new marker.</p>
 </div>
 <p>The output of the marker depends on the input. For <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, it will be <code class="docutils literal notranslate"><span class="pre">timeseries</span></code>, while for the rest of the inputs,
 it will be <code class="docutils literal notranslate"><span class="pre">table</span></code>. Thus, we can define the output as:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_output_kind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">input_kind</span> <span class="o">==</span> <span class="s1">&#39;BOLD&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="s1">&#39;timeseries&#39;</span>
     <span class="k">else</span><span class="p">:</span>
@@ -395,33 +394,18 @@ dictionary should be <code class="docutils literal notranslate"><span class="pre
 </pre></div>
 </div>
 </section>
-<section id="step-4-store-the-marker">
-<span id="extending-markers-store"></span><h2><span class="section-number">5.3.4. </span>Step 4: Store the marker<a class="headerlink" href="#step-4-store-the-marker" title="Permalink to this heading">#</a></h2>
-<p>In this step, we will define the method that stores the marker. This method will be called by junifer when needed,
-using the data provided by the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method. The method <code class="docutils literal notranslate"><span class="pre">store</span></code> has three arguments:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: A string indicating the <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data type</span></a> that was used to compute the marker.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">out</span></code>: The output of the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">storage</span></code>: The storage object, that will be used to store the marker.</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;VBM_GM&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_WM&quot;</span><span class="p">]:</span>
-        <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">out</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">]:</span>
-        <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;timeseries&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">out</span><span class="p">)</span>
+<section id="step-4-finalize-the-marker">
+<span id="extending-markers-finalize"></span><h2><span class="section-number">5.3.4. </span>Step 4: Finalize the marker<a class="headerlink" href="#step-4-finalize-the-marker" title="Permalink to this heading">#</a></h2>
+<p>Once all of the above steps are done, we just need to give our marker a name, state its <em>dependencies</em> and register it
+using the <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator.</p>
+<p>The <em>dependencies</em> are the core packages that are required to compute the marker. This will be later used to keep track
+of the versions of the packages used to compute the marker. To inform junifer about the dependencies of a marker,
+we need to define a <code class="docutils literal notranslate"><span class="pre">_DEPENDENCIES</span></code> attribute in the class. This attribute must be a set, with the names of the
+packages as strings. For example, the <code class="docutils literal notranslate"><span class="pre">ParcelMean</span></code> marker has the following dependencies:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
-<div class="admonition hint">
-<p class="admonition-title">Hint</p>
-<p>Check the hint on <a class="reference internal" href="#extending-markers-compute"><span class="std std-ref">Step 3: Compute the marker</span></a>. If the output of the <code class="docutils literal notranslate"><span class="pre">compute</span></code> method is a dictionary
-with keys based on the <a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a>, the <code class="docutils literal notranslate"><span class="pre">store</span></code> method can simply call the right
-storage function, based on the <code class="docutils literal notranslate"><span class="pre">kind</span></code> parameter, with <code class="docutils literal notranslate"><span class="pre">**out</span></code>.</p>
-</div>
-</section>
-<section id="step-5-finalize-the-marker">
-<span id="extending-markers-finalize"></span><h2><span class="section-number">5.3.5. </span>Step 5: Finalize the marker<a class="headerlink" href="#step-5-finalize-the-marker" title="Permalink to this heading">#</a></h2>
-<p>Once all of the above steps are done, we just need to give our marker a name an register it using the
-<code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator:</p>
+<p>Finally, we need to register the marker using the <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator. This decorator takes the name of the</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
 <span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">load_parcellation</span>
 <span class="kn">from</span> <span class="nn">junifer.api.decorators</span> <span class="kn">import</span> <span class="n">register_marker</span>
@@ -430,6 +414,8 @@ storage function, based on the <code class="docutils literal notranslate"><span 
 <span class="nd">@register_marker</span>
 <span class="k">class</span> <span class="nc">ParcelMean</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
 
+     <span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parcellation_name</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parcellation_name</span> <span class="o">=</span> <span class="n">parcellation_name</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
@@ -437,7 +423,7 @@ storage function, based on the <code class="docutils literal notranslate"><span 
     <span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_WM&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_GM&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">get_output_kind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">input_kind</span> <span class="o">==</span> <span class="s1">&#39;BOLD&#39;</span><span class="p">:</span>
             <span class="k">return</span> <span class="s1">&#39;timeseries&#39;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -474,17 +460,11 @@ storage function, based on the <code class="docutils literal notranslate"><span 
         <span class="k">if</span> <span class="n">out_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">out</span><span class="p">[</span><span class="s2">&quot;row_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;scan&quot;</span>
         <span class="k">return</span> <span class="n">out</span>
-
-    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;VBM_GM&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_WM&quot;</span><span class="p">]:</span>
-            <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;table&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">out</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">]:</span>
-            <span class="n">storage</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;timeseries&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">out</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="template-for-a-custom-marker">
-<span id="extending-markers-template"></span><h2><span class="section-number">5.3.6. </span>Template for a custom Marker<a class="headerlink" href="#template-for-a-custom-marker" title="Permalink to this heading">#</a></h2>
+<span id="extending-markers-template"></span><h2><span class="section-number">5.3.5. </span>Template for a custom Marker<a class="headerlink" href="#template-for-a-custom-marker" title="Permalink to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.api.decorators</span> <span class="kn">import</span> <span class="n">register_marker</span>
 <span class="kn">from</span> <span class="nn">junifer.markers.base</span> <span class="kn">import</span> <span class="n">BaseMarker</span>
 
@@ -500,7 +480,7 @@ storage function, based on the <code class="docutils literal notranslate"><span 
         <span class="n">valid</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="n">valid</span>
 
-    <span class="k">def</span> <span class="nf">get_output_kind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
         <span class="c1"># TODO: Return the valid output kind for each input kind</span>
         <span class="k">pass</span>
 
@@ -510,10 +490,6 @@ storage function, based on the <code class="docutils literal notranslate"><span 
         <span class="c1"># Create the output dictionary</span>
         <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
         <span class="k">return</span> <span class="n">out</span>
-
-    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">storage</span><span class="p">):</span>
-        <span class="c1"># TODO: store out using the storage object, based on the kind of data</span>
-        <span class="k">pass</span>
 </pre></div>
 </div>
 </section>
@@ -580,9 +556,8 @@ storage function, based on the <code class="docutils literal notranslate"><span 
 <li><a class="reference internal" href="#step-1-configure-input-and-output">5.3.1. Step 1: Configure input and output</a></li>
 <li><a class="reference internal" href="#step-2-initialize-the-marker">5.3.2. Step 2: Initialize the marker</a></li>
 <li><a class="reference internal" href="#step-3-compute-the-marker">5.3.3. Step 3: Compute the marker</a></li>
-<li><a class="reference internal" href="#step-4-store-the-marker">5.3.4. Step 4: Store the marker</a></li>
-<li><a class="reference internal" href="#step-5-finalize-the-marker">5.3.5. Step 5: Finalize the marker</a></li>
-<li><a class="reference internal" href="#template-for-a-custom-marker">5.3.6. Template for a custom Marker</a></li>
+<li><a class="reference internal" href="#step-4-finalize-the-marker">5.3.4. Step 4: Finalize the marker</a></li>
+<li><a class="reference internal" href="#template-for-a-custom-marker">5.3.5. Template for a custom Marker</a></li>
 </ul>
 </li>
 </ul>
