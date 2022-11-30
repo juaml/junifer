@@ -8,6 +8,7 @@ from importlib.util import find_spec
 from typing import Any, Dict, List
 
 from ..utils import raise_error
+from .utils import check_ext_dependencies
 
 
 class PipelineStepMixin:
@@ -111,6 +112,13 @@ class PipelineStepMixin:
                 "required for using {self.name}.",
                 klass=ImportError,
             )
+        # Check if _EXT_DEPENDENCIES attribute is found;
+        # (some markers might have them like ReHo-family)
+        if hasattr(self, "_EXT_DEPENDENCIES"):
+            for dependency in self._EXT_DEPENDENCIES:  # type: ignore
+                out = check_ext_dependencies(**dependency)
+                # Set attribute for using external tools
+                setattr(self, f"use_{dependency['name']}", out)
 
         self.validate_input(input=input)
         outputs = [self.get_output_type(t_input) for t_input in input]
