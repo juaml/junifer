@@ -148,6 +148,7 @@ def ReHoEstimator():
         else:
             reho_cmd.append(f"-nneigh {nneigh}")
         # Call 3dReHo
+        logger.info(f"3dReHo command to be executed: {reho_cmd}")
         reho_process = subprocess.run(
             reho_cmd,
             stdin=subprocess.DEVNULL,
@@ -157,7 +158,7 @@ def ReHoEstimator():
             check=False,
         )
         if reho_process.returncode == 0:
-           logger.debug(f"3dReHo succeeded with the following output: {reho_process.stdout}")
+           logger.info(f"3dReHo succeeded with the following output: {reho_process.stdout}")
         else:
             raise_error(
                 msg=f"3dReHo failed with the following error: {reho_process.stdout}",
@@ -165,8 +166,11 @@ def ReHoEstimator():
             )
         # Convert afni to nifti
         reho_afni_to_nifti_out_path_prefix = self.temp_dir_path / "output"
+        convert_cmd: List[str] = ["3dAFNItoNIFTI", f"-prefix {reho_afni_to_nifti_out_path_prefix.resolve()}", f"{reho_afni_out_path_prefix}+tlrc.BRIK"]
+        # Call 3dAFNItoNIFTI
+        logger.info(f"3dAFNItoNIFTI command to be executed: {convert_cmd}")
         convert_process = subprocess.run(
-            ["3dAFNItoNIFTI", f"-prefix {reho_afni_to_nifti_out_path_prefix.resolve()}", f"{reho_afni_out_path_prefix}+tlrc.BRIK"],
+            convert_cmd,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.STDOUT,
@@ -174,7 +178,7 @@ def ReHoEstimator():
             check=False,
         )
         if convert_process.returncode == 0:
-            logger.debug(f"3dAFNItoNIFTI succeeded with the following output: {convert_process.stdout}")
+            logger.info(f"3dAFNItoNIFTI succeeded with the following output: {convert_process.stdout}")
         else:
             raise_error(
                 msg=f"3dAFNItoNIFTI failed with the following error: {convert_process.stdout}",
