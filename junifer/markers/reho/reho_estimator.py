@@ -164,6 +164,7 @@ def ReHoEstimator():
                 msg=f"3dReHo failed with the following error: {reho_process.stdout}",
                 klass=RuntimeError,
             )
+
         # Convert afni to nifti
         reho_afni_to_nifti_out_path_prefix = self.temp_dir_path / "output"
         convert_cmd: List[str] = ["3dAFNItoNIFTI", f"-prefix {reho_afni_to_nifti_out_path_prefix.resolve()}", f"{reho_afni_out_path_prefix}+tlrc.BRIK"]
@@ -172,7 +173,7 @@ def ReHoEstimator():
         convert_process = subprocess.run(
             convert_cmd,
             stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
+            stdout=subprocess.STDOUT,
             stderr=subprocess.STDOUT,
             shell=True,
             check=False,
@@ -184,6 +185,7 @@ def ReHoEstimator():
                 msg=f"3dAFNItoNIFTI failed with the following error: {convert_process.stdout}",
                 klass=RuntimeError,
             )
+
         # Load nifti
         output_data = nib.load(f"{reho_afni_to_nifti_out_path_prefix}.nii")
         return output_data
