@@ -6,6 +6,8 @@
 
 from typing import Any, Dict, Optional
 
+import numpy as np
+
 from ...api.decorators import register_marker
 from ...utils import logger
 from ..sphere_aggregation import SphereAggregation
@@ -106,9 +108,5 @@ class ReHoSpheres(ReHoBase):
         sphere_aggregation_input = {"data": reho_map}
         output = sphere_aggregation.compute(input=sphere_aggregation_input)
         # Only use the first row and expand row dimension
-        # output["data"] = output["data"][0][np.newaxis, :]
-        # # Delete row_names
-        # del output["row_names"]
-        # # Set row_cols_name to None
-        # output["rows_col_name"] = None
+        output["data"] = output["data"][0][np.newaxis, :]
         return output
