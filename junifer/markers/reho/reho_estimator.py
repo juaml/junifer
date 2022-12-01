@@ -5,9 +5,9 @@
 # License: AGPL
 
 
+import shutil
 import subprocess
 import tempfile
-import shutil
 from functools import lru_cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
@@ -75,7 +75,7 @@ class ReHoEstimator:
         nneigh : {7, 19, 27}, optional
             Number of voxels in the neighbourhood, inclusive. Can be:
 
-            * 7 : for facewise neighours only
+            * 7 : for facewise neighbours only
             * 19 : for face- and edge-wise nieghbours
             * 27 : for face-, edge-, and node-wise neighbors
 
@@ -128,7 +128,7 @@ class ReHoEstimator:
         .. [1] Taylor, P.A., & Saad, Z.S. (2013).
                FATCAT: (An Efficient) Functional And Tractographic Connectivity
                Analysis Toolbox.
-               Brain connectivity, Volumne 3(5), Pages 523-35.
+               Brain connectivity, Volume 3(5), Pages 523-35.
                https://doi.org/10.1089/brain.2013.0154
 
         """
@@ -138,13 +138,21 @@ class ReHoEstimator:
 
         # Set 3dReHo command
         reho_afni_out_path_prefix = self.temp_dir_path / "reho"
-        reho_cmd: List[str] = ["3dReHo", f"-prefix {reho_afni_out_path_prefix.resolve()}", f"-inset {nifti_in_file_path.resolve()}"]
+        reho_cmd: List[str] = [
+            "3dReHo",
+            f"-prefix {reho_afni_out_path_prefix.resolve()}",
+            f"-inset {nifti_in_file_path.resolve()}",
+        ]
         # Check ellipsoidal / cuboidal volume arguments
         if neigh_rad:
             reho_cmd.append(f"-neigh_RAD {neigh_rad}")
         elif neigh_x and neigh_y and neigh_z:
             reho_cmd.extend(
-                [f"-neigh_X {neigh_x}", f"-neigh_Y {neigh_y}", f"-neigh_Z {neigh_z}"]
+                [
+                    f"-neigh_X {neigh_x}",
+                    f"-neigh_Y {neigh_y}",
+                    f"-neigh_Z {neigh_z}",
+                ]
             )
         elif box_rad:
             reho_cmd.append(f"-box_RAD {box_rad}")
@@ -165,16 +173,24 @@ class ReHoEstimator:
             check=False,
         )
         if reho_process.returncode == 0:
-           logger.info(f"3dReHo succeeded with the following output: {reho_process.stdout}")
+            logger.info(
+                "3dReHo succeeded with the following output: "
+                f"{reho_process.stdout}"
+            )
         else:
             raise_error(
-                msg=f"3dReHo failed with the following error: {reho_process.stdout}",
+                msg="3dReHo failed with the following error: "
+                f"{reho_process.stdout}",
                 klass=RuntimeError,
             )
 
         # Convert afni to nifti
         reho_afni_to_nifti_out_path_prefix = self.temp_dir_path / "output"
-        convert_cmd: List[str] = ["3dAFNItoNIFTI", f"-prefix {reho_afni_to_nifti_out_path_prefix.resolve()}", f"{reho_afni_out_path_prefix}+tlrc.BRIK"]
+        convert_cmd: List[str] = [
+            "3dAFNItoNIFTI",
+            f"-prefix {reho_afni_to_nifti_out_path_prefix.resolve()}",
+            f"{reho_afni_out_path_prefix}+tlrc.BRIK",
+        ]
         # Call 3dAFNItoNIFTI
         logger.info(f"3dAFNItoNIFTI command to be executed: {convert_cmd}")
         convert_process = subprocess.run(
@@ -186,10 +202,14 @@ class ReHoEstimator:
             check=False,
         )
         if convert_process.returncode == 0:
-            logger.info(f"3dAFNItoNIFTI succeeded with the following output: {convert_process.stdout}")
+            logger.info(
+                "3dAFNItoNIFTI succeeded with the following output: "
+                f"{convert_process.stdout}"
+            )
         else:
             raise_error(
-                msg=f"3dAFNItoNIFTI failed with the following error: {convert_process.stdout}",
+                msg="3dAFNItoNIFTI failed with the following error: "
+                f"{convert_process.stdout}",
                 klass=RuntimeError,
             )
 
@@ -207,7 +227,7 @@ class ReHoEstimator:
         self,
         data: Union["Nifti1Image", "Nifti2Image"],
         **reho_params: Any,
-    ):
+    ) -> "PARRECImage":
         """Compute the ReHo map with memoization.
 
         Parameters
@@ -219,6 +239,7 @@ class ReHoEstimator:
 
         Returns
         -------
+        Niimg-like object
 
         """
         if self.use_afni:
@@ -227,14 +248,21 @@ class ReHoEstimator:
             output = self._compute_reho_python(data, **reho_params)
         return output
 
-    def fit_transform(self, input_data: Dict[str, Any], **params: Any):
+    def fit_transform(
+        self, input_data: Dict[str, Any], **reho_params: Any
+    ) -> "PARRECImage":
         """Fit and transform for the estimator.
 
         Parameters
         ----------
         input_data : dict
+            The BOLD data as dictionary.
+        **reho_params : dict
+            Extra keyword arguments for ReHo.
 
-        **params : dict
+        Returns
+        -------
+        Niimg-like object
 
         """
         bold_path = input_data["BOLD"]["path"]
@@ -249,4 +277,4 @@ class ReHoEstimator:
             # Set the new file path
             self._file_path = bold_path
         # Compute
-        return self._compute(bold_data, **params)
+        return self._compute(bold_data, **reho_params)
