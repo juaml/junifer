@@ -6,6 +6,8 @@
 
 from typing import Any, Dict, Optional
 
+import numpy as np
+
 from ...api.decorators import register_marker
 from ...utils import logger
 from ..parcel_aggregation import ParcelAggregation
@@ -97,10 +99,6 @@ class ReHoParcels(ReHoBase):
         # Perform aggregation on reho map
         parcel_aggregation_input = {"data": reho_map}
         output = parcel_aggregation.compute(input=parcel_aggregation_input)
-        # # Expand row dimension
-        # output["data"] = output["data"][np.newaxis, :]
-        # # Delete row_names
-        # del output["row_names"]
-        # # Set row_cols_name to None
-        # output["rows_col_name"] = None
+        # Only use the first row and expand row dimension
+        output["data"] = output["data"][0][np.newaxis, :]
         return output
