@@ -265,8 +265,8 @@ class ReHoEstimator:
         Niimg-like object
 
         """
-        bold_path = input_data["BOLD"]["path"]
-        bold_data = input_data["BOLD"]["data"]
+        bold_path = input_data["path"]
+        bold_data = input_data["data"]
         # Clear cache if file path is different from when caching was done
         if self._file_path != bold_path:
             # Clear the cache
