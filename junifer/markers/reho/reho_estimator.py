@@ -458,7 +458,7 @@ class ReHoEstimator:
         self,
         data: Union["Nifti1Image", "Nifti2Image"],
         **reho_params: Any,
-    ) -> "PARRECImage":
+    ) -> Union["PARRECImage", "Nifti1Image"]:
         """Compute the ReHo map with memoization.
 
         Parameters
