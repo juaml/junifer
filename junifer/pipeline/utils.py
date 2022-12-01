@@ -5,10 +5,12 @@
 # License: AGPL
 
 import subprocess
+from typing import Any
+
 from junifer.utils.logging import raise_error
 
 
-def check_ext_dependencies(name: str, optional: bool) -> bool:
+def check_ext_dependencies(name: str, optional: bool, **kwargs: Any) -> bool:
     """Check if external dependency `name` is found if mandatory.
 
     Parameters
@@ -18,6 +20,8 @@ def check_ext_dependencies(name: str, optional: bool) -> bool:
     optional : bool
         Whether the dependency is optional. For external dependencies marked
         as optional, there should be an implementation provided with junfier.
+    **kwargs : dict
+        Extra keyword arguments.
 
     Returns
     -------
