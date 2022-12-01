@@ -22,6 +22,7 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image, Nifti2Image
     from nibabel.imageclasses import PARRECImage
 
+
 @singleton
 class ReHoEstimator:
     """Estimator class for regional homogeneity.
@@ -33,9 +34,15 @@ class ReHoEstimator:
     .. warning:: This class can only be used via ReHoBase() and is a deliberate
                  decision as it serves a specific purpose.
 
+    Parameters
+    ----------
+    use_afni : bool
+        Whether to use afni or not.
+
     """
 
-    def __init__(self) -> None:
+    def __init__(self, use_afni: bool) -> None:
+        self.use_afni = use_afni
         self._file_path = None
         # Create temporary directory for intermittent storage of assets during
         # computation via afni's 3dReHo
@@ -214,7 +221,7 @@ class ReHoEstimator:
         -------
 
         """
-        if self._use_afni:
+        if self.use_afni:
             output = self._compute_reho_afni(data, **reho_params)
         else:
             output = self._compute_reho_python(data, **reho_params)
