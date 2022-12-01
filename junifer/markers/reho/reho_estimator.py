@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from nibabel.imageclasses import PARRECImage
 
 @singleton
-def ReHoEstimator():
+class ReHoEstimator:
     """Estimator class for regional homogeneity.
 
     This class is a singleton and is used for efficient computation of ReHo,
@@ -35,7 +35,7 @@ def ReHoEstimator():
 
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._file_path = None
         # Create temporary directory for intermittent storage of assets during
         # computation via afni's 3dReHo
