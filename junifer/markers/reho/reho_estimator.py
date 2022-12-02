@@ -262,7 +262,7 @@ class ReHoEstimator:
 
         CUTNUMBER = 10
 
-        res_data = data.get_data()
+        res_data = data.get_fdata()
 
         (n_x, n_y, n_z, n_t) = res_data.shape
 
