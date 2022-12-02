@@ -481,7 +481,7 @@ class ReHoEstimator:
 
     def fit_transform(
         self, input_data: Dict[str, Any], **reho_params: Any
-    ) -> "PARRECImage":
+    ) -> Union["PARRECImage", "Nifti1Image"]:
         """Fit and transform for the estimator.
 
         Parameters
