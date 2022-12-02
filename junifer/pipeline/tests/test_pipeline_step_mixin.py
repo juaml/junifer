@@ -20,7 +20,7 @@ def test_PipelineStepMixin() -> None:
     with pytest.raises(NotImplementedError):
         mixin.get_output_type("")
     with pytest.raises(NotImplementedError):
-        mixin.fit_transform({})
+        mixin._fit_transform({})
 
 
 def test_pipeline_step_mixin_validate_correct_dependencies() -> None:
