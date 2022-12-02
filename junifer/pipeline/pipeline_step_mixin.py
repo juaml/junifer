@@ -4,7 +4,11 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from importlib.metadata import packages_distributions
+try:
+    from importlib.metadata import packages_distributions
+except ImportError:
+    from importlib_metadata import packages_distributions
+
 from importlib.util import find_spec
 from itertools import chain
 from typing import Any, Dict, List
