@@ -26,14 +26,13 @@ def test_reho_parcels_computation() -> None:
         reho_parcels_marker = ReHoParcels(parcellation=PARCELLATION)
         # Fit transform marker on data
         reho_parcels_output = reho_parcels_marker.fit_transform(
-            {"BOLD": {"data": fmri_img}}
+            {"BOLD": {"path": "/tmp", "data": fmri_img, "meta": {}}}
         )
         # Get BOLD output
         reho_parcels_output_bold = reho_parcels_output["BOLD"]
         # Assert BOLD output
         assert "data" in reho_parcels_output_bold
         assert "columns" in reho_parcels_output_bold
-        assert "rows_col_name" in reho_parcels_output_bold
         # TODO: add comparison with afni 3dReHo generated data
 
 
@@ -58,9 +57,11 @@ def test_reho_parcels_storage(tmp_path: Path) -> None:
             tmp_path / "reho_parcels.sqlite"
         )
         # Generate meta
-        meta = {"element": "sub001"}  # only requires element key for storing
+        meta = {
+            "element": {"subject": "sub001"}
+        }  # only requires element key for storing
         # Fit transform marker on data with storage
         reho_parcels_marker.fit_transform(
-            input={"BOLD": {"data": fmri_img}, "meta": meta},
+            input={"BOLD": {"path": "/tmp", "data": fmri_img, "meta": meta}},
             storage=reho_parcels_storage,
         )
