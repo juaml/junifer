@@ -19,6 +19,7 @@ from junifer.stats import get_aggfunc_by_name, kendall_w, winsorized_mean
         ("std", None),
         ("trim_mean", None),
         ("trim_mean", {"proportiontocut": 0.1}),
+        ("kendall_w", None),
     ],
 )
 def test_get_aggfunc_by_name(name: str, params: Optional[Dict]) -> None:
