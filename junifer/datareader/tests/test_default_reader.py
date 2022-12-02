@@ -145,7 +145,7 @@ def test_read_csv(tmp_path: Path) -> None:
     df.to_csv(tmp_path / "test_read_csv.csv", sep=";")
     input = {"csv": {"path": tmp_path / "test_read_csv.csv"}}
     params = {"csv": {"sep": ";"}}
-    output = reader.fit_transform(input, params)
+    output = reader.fit_transform(input, params=params)
 
     assert isinstance(output, dict)
     assert "csv" in output
