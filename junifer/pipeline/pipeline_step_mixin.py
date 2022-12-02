@@ -6,7 +6,7 @@
 
 try:
     from importlib.metadata import packages_distributions
-except ImportError:
+except ImportError:  # pragma: no cover
     from importlib_metadata import packages_distributions
 
 from importlib.util import find_spec
