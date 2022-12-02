@@ -500,6 +500,7 @@ class ReHoEstimator:
         bold_data = input_data["data"]
         # Clear cache if file path is different from when caching was done
         if self._file_path != bold_path:
+            logger.info(f"Removing ReHo map cache at {self._file_path}.")
             # Clear the cache
             self._compute.cache_clear()
             # Clear temporary directory files
@@ -507,5 +508,7 @@ class ReHoEstimator:
                 file_.unlink(missing_ok=True)
             # Set the new file path
             self._file_path = bold_path
+        else:
+            logger.info(f"Using ReHo map cache at {self._file_path}.")
         # Compute
         return self._compute(bold_data, **reho_params)
