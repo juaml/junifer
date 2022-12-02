@@ -4,7 +4,9 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from importlib.metadata import packages_distributions
 from importlib.util import find_spec
+from itertools import chain
 from typing import Any, Dict, List
 
 from ..utils import raise_error
@@ -103,8 +105,13 @@ class PipelineStepMixin:
         if hasattr(self, "_DEPENDENCIES"):
             # Check if dependencies are importable
             for dependency in self._DEPENDENCIES:  # type: ignore
+                # First perform an easy check
                 if find_spec(dependency) is None:
-                    dependencies_not_found.append(dependency)
+                    # Then check mapped names
+                    if dependency not in list(
+                        chain.from_iterable(packages_distributions().values())
+                    ):
+                        dependencies_not_found.append(dependency)
         # Raise error if any dependency is not found
         if dependencies_not_found:
             raise_error(
