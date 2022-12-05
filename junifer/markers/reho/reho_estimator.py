@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import nibabel as nib
 import numpy as np
+from nilearn import image as nimg
 
 from ...stats import kendall_w
 from ...utils import logger, raise_error
@@ -266,24 +267,28 @@ class ReHoEstimator:
 
         (n_x, n_y, n_z, n_t) = res_data.shape
 
+        # Create fake mask
+        # res_mask_data = np.ones((n_x, n_y, n_z))
+
         # "flatten" each volume of the timeseries into one big array instead of
         # x,y,z - produces (timepoints, N voxels) shaped data array
-        reshaped_res_data = np.reshape(
+        res_data = np.reshape(
             res_data, (n_x * n_y * n_z, n_t), order="F"
         ).T
 
         # create a blank array of zeroes of size n_voxels, one for each time
         # point
         ranks_res_data = np.tile(
-            np.zeros((1, reshaped_res_data.shape[1])),
-            (reshaped_res_data.shape[0], 1),
+            np.zeros((1, res_data.shape[1])),
+            (res_data.shape[0], 1),
         )
+        nties = np.zeros(res_data.shape[1], dtype=int)
 
         # divide the number of total voxels by the cutnumber (set to 10)
         # ex. end up with a number in the thousands if there are tens of
         # thousands of voxels
         segment_length = np.ceil(
-            float(reshaped_res_data.shape[1]) / float(CUTNUMBER)
+            float(res_data.shape[1]) / float(CUTNUMBER)
         )
 
         for icut in range(0, CUTNUMBER):
@@ -298,14 +303,15 @@ class ReHoEstimator:
                 )
             else:
                 segment = np.arange(
-                    icut * segment_length, reshaped_res_data.shape[1]
+                    icut * segment_length, res_data.shape[1]
                 )
 
-            segment = np.int64(segment[np.newaxis])
+            # segment = np.int64(segment[np.newaxis])
+            segment = (segment[np.newaxis]).astype(np.int64)
 
             # res_data_piece is a chunk of the original timeseries in_file, but
             # aligned with the current segment index spacing
-            res_data_piece = reshaped_res_data[:, segment[0]]
+            res_data_piece = res_data[:, segment[0]]
             nvoxels_piece = res_data_piece.shape[1]
 
             # run a merge sort across the time axis, re-ordering the flattened
@@ -323,11 +329,15 @@ class ReHoEstimator:
             # array of values, each value being the sum total of TRUE values
             # in "db"
             sumdb = np.sum(db, 0)
-
+            print(np.sum(sumdb > 160))
+            print(db.shape)
+            import pdb; pdb.set_trace()
             temp_array = np.arange(0, n_t)
             temp_array = temp_array[:, np.newaxis]
 
+            nties_segment = np.zeros(nvoxels_piece, dtype=np.int64)
             sorted_ranks = np.tile(temp_array, (1, nvoxels_piece))
+            # import pdb; pdb.set_trace()
 
             if np.any(sumdb[:]):
 
@@ -336,7 +346,7 @@ class ReHoEstimator:
                 for i in range(0, len(tie_adjust_index)):
 
                     ranks = sorted_ranks[:, tie_adjust_index[i]]
-
+                    # import pdb; pdb.set_trace()
                     ties = db[:, tie_adjust_index[i]]
 
                     tieloc = np.append(np.flatnonzero(ties), n_t + 2)
@@ -349,6 +359,8 @@ class ReHoEstimator:
                         while tieloc[tiecount + 1] == (tieloc[tiecount] + 1):
                             tiecount += 1
                             ntied += 1
+                        # import pdb; pdb.set_trace()
+                        nties_segment[tie_adjust_index[i]] += ntied * (ntied * ntied - 1)
 
                         ranks[tiestart : tiestart + ntied] = np.ceil(
                             np.float32(
@@ -382,12 +394,14 @@ class ReHoEstimator:
             del sort_index, sorted_ranks
 
             ranks_res_data[:, segment[0]] = ranks_piece
+            nties[segment[0]] = nties_segment
 
         ranks_res_data = np.reshape(
             ranks_res_data, (n_t, n_x, n_y, n_z), order="F"
         )
 
-        K = np.zeros((n_x, n_y, n_z))
+        # K = np.zeros((n_x, n_y, n_z))
+        K = np.ones((n_x, n_y, n_z))
 
         mask_cluster = np.ones((3, 3, 3))
 
@@ -431,26 +445,32 @@ class ReHoEstimator:
                     block = ranks_res_data[
                         :, i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2
                     ]
+                    # mask_block = res_mask_data[i-1:i+2, j-1:j+2, k-1:k+2]
                     mask_block = mask_cluster
 
-                    if not (int(mask_block[1, 1, 1]) == 0):
+                    # if not (int(mask_block[1, 1, 1]) == 0):
+                    if True:
 
-                        if nneigh == 19 or nneigh == 7:
-                            mask_block = np.multiply(mask_block, mask_cluster)
+                        # if nneigh == 19 or nneigh == 7:
+                        #     mask_block = np.multiply(mask_block, mask_cluster)
 
-                        R_block = np.reshape(
+                        r_block = np.reshape(
                             block, (block.shape[0], 27), order="F"
                         )
-                        mask_R_block = R_block[
-                            :,
-                            np.argwhere(
+                        mask_idx = np.argwhere(
                                 np.reshape(mask_block, (1, 27), order="F") > 0
-                            )[:, 1],
+                            )[:, 1]
+                        mask_r_block = r_block[
+                            :,
+                            mask_idx,
                         ]
+                        mask_nties = nties[mask_idx]
+                        # import pdb; pdb.set_trace()
+                        K[i, j, k] = f_kendall(mask_r_block, mask_nties)
 
-                        K[i, j, k] = kendall_w(mask_R_block, axis=1)
-
-        output = nib.Nifti1Image(K, header=data.header, affine=data.affine)
+        # output = nib.Nifti1Image(K, header=data.header, affine=data.affine)
+        output = nimg.new_img_like(data, K, copy_header=True)
+        nib.save(output, "/Users/synchon/reho-map-cpac.nii")
         return output
 
     @lru_cache(maxsize=None, typed=True)
@@ -512,3 +532,43 @@ class ReHoEstimator:
             logger.info(f"Using ReHo map cache at {self._file_path}.")
         # Compute
         return self._compute(bold_data, **reho_params)
+
+
+def f_kendall(timeseries_matrix, nties):
+
+    """
+    Calculates the Kendall's coefficient of concordance for a number of
+    time-series in the input matrix
+    Parameters
+    ----------
+    timeseries_matrix : ndarray
+        A matrix of ranks of a subset subject's brain voxels
+    Returns
+    -------
+    kcc : float
+        Kendall's coefficient of concordance on the given input matrix
+    """
+
+    import numpy as np
+    nk = timeseries_matrix.shape
+
+    n = nk[0]
+    k = nk[1]
+
+    sr = np.sum(timeseries_matrix, 1)
+    # sr_bar = np.mean(sr)
+
+    s1 = 12 * np.sum(sr**2)
+    s2 = 3 * k**2 * n * (n + 1)**2
+    s = s1 - s2
+
+    t1 = k**2 * n * (n**2 - 1)
+    t2 = k * np.sum(nties)
+    t = t1 - t2
+
+    if t == 0:
+        kcc = 1
+    else:
+        kcc = s / t
+    # import pdb; pdb.set_trace()
+    return kcc
