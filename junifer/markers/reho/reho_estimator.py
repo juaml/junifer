@@ -272,9 +272,7 @@ class ReHoEstimator:
 
         # "flatten" each volume of the timeseries into one big array instead of
         # x,y,z - produces (timepoints, N voxels) shaped data array
-        res_data = np.reshape(
-            res_data, (n_x * n_y * n_z, n_t), order="F"
-        ).T
+        res_data = np.reshape(res_data, (n_x * n_y * n_z, n_t), order="F").T
 
         # create a blank array of zeroes of size n_voxels, one for each time
         # point
@@ -287,9 +285,7 @@ class ReHoEstimator:
         # divide the number of total voxels by the cutnumber (set to 10)
         # ex. end up with a number in the thousands if there are tens of
         # thousands of voxels
-        segment_length = np.ceil(
-            float(res_data.shape[1]) / float(CUTNUMBER)
-        )
+        segment_length = np.ceil(float(res_data.shape[1]) / float(CUTNUMBER))
 
         for icut in range(0, CUTNUMBER):
 
@@ -302,9 +298,7 @@ class ReHoEstimator:
                     icut * segment_length, (icut + 1) * segment_length
                 )
             else:
-                segment = np.arange(
-                    icut * segment_length, res_data.shape[1]
-                )
+                segment = np.arange(icut * segment_length, res_data.shape[1])
 
             # segment = np.int64(segment[np.newaxis])
             segment = (segment[np.newaxis]).astype(np.int64)
@@ -329,9 +323,8 @@ class ReHoEstimator:
             # array of values, each value being the sum total of TRUE values
             # in "db"
             sumdb = np.sum(db, 0)
-            print(np.sum(sumdb > 160))
-            print(db.shape)
-            import pdb; pdb.set_trace()
+            # print(np.sum(sumdb > 160))
+            # print(db.shape)
             temp_array = np.arange(0, n_t)
             temp_array = temp_array[:, np.newaxis]
 
@@ -360,7 +353,9 @@ class ReHoEstimator:
                             tiecount += 1
                             ntied += 1
                         # import pdb; pdb.set_trace()
-                        nties_segment[tie_adjust_index[i]] += ntied * (ntied * ntied - 1)
+                        nties_segment[tie_adjust_index[i]] += ntied * (
+                            ntied * ntied - 1
+                        )
 
                         ranks[tiestart : tiestart + ntied] = np.ceil(
                             np.float32(
@@ -398,6 +393,10 @@ class ReHoEstimator:
 
         ranks_res_data = np.reshape(
             ranks_res_data, (n_t, n_x, n_y, n_z), order="F"
+        )
+
+        nties = np.reshape(
+            nties, (n_x, n_y, n_z), order="F"
         )
 
         # K = np.zeros((n_x, n_y, n_z))
@@ -445,6 +444,11 @@ class ReHoEstimator:
                     block = ranks_res_data[
                         :, i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2
                     ]
+
+                    nties_block = nties[
+                        i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2
+                    ]
+
                     # mask_block = res_mask_data[i-1:i+2, j-1:j+2, k-1:k+2]
                     mask_block = mask_cluster
 
@@ -457,14 +461,17 @@ class ReHoEstimator:
                         r_block = np.reshape(
                             block, (block.shape[0], 27), order="F"
                         )
+                        n_block = np.reshape(
+                            nties_block, (1, 27), order="F"
+                        )
                         mask_idx = np.argwhere(
-                                np.reshape(mask_block, (1, 27), order="F") > 0
-                            )[:, 1]
+                            np.reshape(mask_block, (1, 27), order="F") > 0
+                        )[:, 1]
                         mask_r_block = r_block[
                             :,
                             mask_idx,
                         ]
-                        mask_nties = nties[mask_idx]
+                        mask_nties = n_block[0, mask_idx]
                         # import pdb; pdb.set_trace()
                         K[i, j, k] = f_kendall(mask_r_block, mask_nties)
 
@@ -550,6 +557,7 @@ def f_kendall(timeseries_matrix, nties):
     """
 
     import numpy as np
+
     nk = timeseries_matrix.shape
 
     n = nk[0]
@@ -559,7 +567,7 @@ def f_kendall(timeseries_matrix, nties):
     # sr_bar = np.mean(sr)
 
     s1 = 12 * np.sum(sr**2)
-    s2 = 3 * k**2 * n * (n + 1)**2
+    s2 = 3 * k**2 * n * (n + 1) ** 2
     s = s1 - s2
 
     t1 = k**2 * n * (n**2 - 1)
