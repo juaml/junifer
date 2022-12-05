@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import nibabel as nib
 import numpy as np
+from scipy.stats import rankdata
 from nilearn import image as nimg
 
 from ...stats import kendall_w
@@ -261,146 +262,149 @@ class ReHoEstimator:
                 f"Invalid value for `nneigh`, should be one of {valid_nneigh}."
             )
 
-        CUTNUMBER = 10
+        # CUTNUMBER = 10
 
         res_data = data.get_fdata()
 
         (n_x, n_y, n_z, n_t) = res_data.shape
 
-        # Create fake mask
-        # res_mask_data = np.ones((n_x, n_y, n_z))
+        # # Create fake mask
+        # # res_mask_data = np.ones((n_x, n_y, n_z))
 
-        # "flatten" each volume of the timeseries into one big array instead of
-        # x,y,z - produces (timepoints, N voxels) shaped data array
-        res_data = np.reshape(res_data, (n_x * n_y * n_z, n_t), order="F").T
+        # # "flatten" each volume of the timeseries into one big array instead of
+        # # x,y,z - produces (timepoints, N voxels) shaped data array
+        # res_data = np.reshape(res_data, (n_x * n_y * n_z, n_t), order="F").T
 
-        # create a blank array of zeroes of size n_voxels, one for each time
-        # point
-        ranks_res_data = np.tile(
-            np.zeros((1, res_data.shape[1])),
-            (res_data.shape[0], 1),
-        )
-        nties = np.zeros(res_data.shape[1], dtype=int)
+        # # create a blank array of zeroes of size n_voxels, one for each time
+        # # point
+        # ranks_res_data = np.tile(
+        #     np.zeros((1, res_data.shape[1])),
+        #     (res_data.shape[0], 1),
+        # )
+        # nties = np.zeros(res_data.shape[1], dtype=int)
 
-        # divide the number of total voxels by the cutnumber (set to 10)
-        # ex. end up with a number in the thousands if there are tens of
-        # thousands of voxels
-        segment_length = np.ceil(float(res_data.shape[1]) / float(CUTNUMBER))
+        # # divide the number of total voxels by the cutnumber (set to 10)
+        # # ex. end up with a number in the thousands if there are tens of
+        # # thousands of voxels
+        # segment_length = np.ceil(float(res_data.shape[1]) / float(CUTNUMBER))
 
-        for icut in range(0, CUTNUMBER):
+        # for icut in range(0, CUTNUMBER):
 
-            segment = None
+        #     segment = None
 
-            # create a Numpy array of evenly spaced values from the segment
-            # starting point up until the segment_length integer
-            if not (icut == (CUTNUMBER - 1)):
-                segment = np.arange(
-                    icut * segment_length, (icut + 1) * segment_length
-                )
-            else:
-                segment = np.arange(icut * segment_length, res_data.shape[1])
+        #     # create a Numpy array of evenly spaced values from the segment
+        #     # starting point up until the segment_length integer
+        #     if not (icut == (CUTNUMBER - 1)):
+        #         segment = np.arange(
+        #             icut * segment_length, (icut + 1) * segment_length
+        #         )
+        #     else:
+        #         segment = np.arange(icut * segment_length, res_data.shape[1])
 
-            # segment = np.int64(segment[np.newaxis])
-            segment = (segment[np.newaxis]).astype(np.int64)
+        #     # segment = np.int64(segment[np.newaxis])
+        #     segment = (segment[np.newaxis]).astype(np.int64)
 
-            # res_data_piece is a chunk of the original timeseries in_file, but
-            # aligned with the current segment index spacing
-            res_data_piece = res_data[:, segment[0]]
-            nvoxels_piece = res_data_piece.shape[1]
+        #     # res_data_piece is a chunk of the original timeseries in_file, but
+        #     # aligned with the current segment index spacing
+        #     res_data_piece = res_data[:, segment[0]]
+        #     nvoxels_piece = res_data_piece.shape[1]
 
-            # run a merge sort across the time axis, re-ordering the flattened
-            # volume voxel arrays
-            res_data_sorted = np.sort(res_data_piece, 0, kind="mergesort")
-            sort_index = np.argsort(res_data_piece, axis=0, kind="mergesort")
+        #     # run a merge sort across the time axis, re-ordering the flattened
+        #     # volume voxel arrays
+        #     res_data_sorted = np.sort(res_data_piece, 0, kind="mergesort")
+        #     sort_index = np.argsort(res_data_piece, axis=0, kind="mergesort")
 
-            # subtract each volume from each other
-            db = np.diff(res_data_sorted, 1, 0)
+        #     # subtract each volume from each other
+        #     db = np.diff(res_data_sorted, 1, 0)
 
-            # convert any zero voxels into "True" flag
-            db = db == 0
+        #     # convert any zero voxels into "True" flag
+        #     db = db == 0
 
-            # return an n_voxel (n voxels within the current segment) sized
-            # array of values, each value being the sum total of TRUE values
-            # in "db"
-            sumdb = np.sum(db, 0)
-            # print(np.sum(sumdb > 160))
-            # print(db.shape)
-            temp_array = np.arange(0, n_t)
-            temp_array = temp_array[:, np.newaxis]
+        #     # return an n_voxel (n voxels within the current segment) sized
+        #     # array of values, each value being the sum total of TRUE values
+        #     # in "db"
+        #     sumdb = np.sum(db, 0)
+        #     # print(np.sum(sumdb > 160))
+        #     # print(db.shape)
+        #     temp_array = np.arange(1, n_t + 1)
+        #     temp_array = temp_array[:, np.newaxis].astype(np.float32)
 
-            nties_segment = np.zeros(nvoxels_piece, dtype=np.int64)
-            sorted_ranks = np.tile(temp_array, (1, nvoxels_piece))
-            # import pdb; pdb.set_trace()
+        #     nties_segment = np.zeros(nvoxels_piece, dtype=np.int64)
+        #     sorted_ranks = np.tile(temp_array, (1, nvoxels_piece))
+        #     # import pdb; pdb.set_trace()
 
-            if np.any(sumdb[:]):
+        #     if np.any(sumdb[:]):
 
-                tie_adjust_index = np.flatnonzero(sumdb)
+        #         tie_adjust_index = np.flatnonzero(sumdb)
 
-                for i in range(0, len(tie_adjust_index)):
+        #         for i in range(0, len(tie_adjust_index)):
 
-                    ranks = sorted_ranks[:, tie_adjust_index[i]]
-                    # import pdb; pdb.set_trace()
-                    ties = db[:, tie_adjust_index[i]]
+        #             ranks = sorted_ranks[:, tie_adjust_index[i]]
+        #             # import pdb; pdb.set_trace()
+        #             ties = db[:, tie_adjust_index[i]]
 
-                    tieloc = np.append(np.flatnonzero(ties), n_t + 2)
-                    maxties = len(tieloc)
-                    tiecount = 0
+        #             tieloc = np.append(np.flatnonzero(ties), n_t + 2)
+        #             maxties = len(tieloc)
+        #             tiecount = 0
 
-                    while tiecount < maxties - 1:
-                        tiestart = tieloc[tiecount]
-                        ntied = 2
-                        while tieloc[tiecount + 1] == (tieloc[tiecount] + 1):
-                            tiecount += 1
-                            ntied += 1
-                        # import pdb; pdb.set_trace()
-                        nties_segment[tie_adjust_index[i]] += ntied * (
-                            ntied * ntied - 1
-                        )
+        #             while tiecount < maxties - 1:
+        #                 tiestart = tieloc[tiecount]
+        #                 ntied = 2
+        #                 while tieloc[tiecount + 1] == (tieloc[tiecount] + 1):
+        #                     tiecount += 1
+        #                     ntied += 1
+        #                 # import pdb; pdb.set_trace()
+        #                 nties_segment[tie_adjust_index[i]] += ntied * (
+        #                     ntied * ntied - 1
+        #                 )
 
-                        ranks[tiestart : tiestart + ntied] = np.ceil(
-                            np.float32(
-                                np.sum(ranks[tiestart : tiestart + ntied])
-                            )
-                            / np.float32(ntied)
-                        )
-                        tiecount += 1
+        #                 ranks[tiestart : tiestart + ntied] = \
+        #                     ranks[tiestart : tiestart + ntied].mean()
+        #                 tiecount += 1
 
-                    sorted_ranks[:, tie_adjust_index[i]] = ranks
+        #             sorted_ranks[:, tie_adjust_index[i]] = ranks
 
-            del db, sumdb
-            sort_index_base = np.tile(
-                np.multiply(np.arange(0, nvoxels_piece), n_t), [n_t, 1]
-            )
-            sort_index += sort_index_base
-            del sort_index_base
+        #     del db, sumdb
+        #     sort_index_base = np.tile(
+        #         np.multiply(np.arange(0, nvoxels_piece), n_t), [n_t, 1]
+        #     )
+        #     sort_index += sort_index_base
+        #     del sort_index_base
 
-            ranks_piece = np.zeros((n_t, nvoxels_piece))
+        #     ranks_piece = np.zeros((n_t, nvoxels_piece))
 
-            ranks_piece = ranks_piece.flatten(order="F")
-            sort_index = sort_index.flatten(order="F")
-            sorted_ranks = sorted_ranks.flatten(order="F")
+        #     ranks_piece = ranks_piece.flatten(order="F")
+        #     sort_index = sort_index.flatten(order="F")
+        #     sorted_ranks = sorted_ranks.flatten(order="F")
 
-            ranks_piece[sort_index] = np.array(sorted_ranks)
+        #     ranks_piece[sort_index] = np.array(sorted_ranks)
 
-            ranks_piece = np.reshape(
-                ranks_piece, (n_t, nvoxels_piece), order="F"
-            )
+        #     ranks_piece = np.reshape(
+        #         ranks_piece, (n_t, nvoxels_piece), order="F"
+        #     )
 
-            del sort_index, sorted_ranks
+        #     del sort_index, sorted_ranks
 
-            ranks_res_data[:, segment[0]] = ranks_piece
-            nties[segment[0]] = nties_segment
+        #     ranks_res_data[:, segment[0]] = ranks_piece
+        #     nties[segment[0]] = nties_segment
 
-        ranks_res_data = np.reshape(
-            ranks_res_data, (n_t, n_x, n_y, n_z), order="F"
-        )
+        # ranks_res_data = np.reshape(
+        #     ranks_res_data, (n_t, n_x, n_y, n_z), order="F"
+        # )
 
-        nties = np.reshape(
-            nties, (n_x, n_y, n_z), order="F"
-        )
+        ranks_res_data = rankdata(res_data, axis=-1)
+        nties = np.zeros((n_x, n_y, n_z), dtype=np.float64)
+
+        for i_x in range(n_x):
+            for i_y in range(n_y):
+                for i_z in range(n_z):
+                    _, t_count = np.unique(
+                        ranks_res_data[i_x, i_y, i_z, :], return_counts=True)
+                    t_nties = np.sum(t_count ** 3 - t_count)
+                    nties[i_x, i_y, i_z] = t_nties
 
         # K = np.zeros((n_x, n_y, n_z))
-        K = np.ones((n_x, n_y, n_z))
+        K = np.ones((n_x, n_y, n_z), dtype=np.float32)
 
         mask_cluster = np.ones((3, 3, 3))
 
@@ -437,47 +441,27 @@ class ReHoEstimator:
             mask_cluster[2, 1, 2] = 0
             mask_cluster[2, 2, 2] = 0
 
+        mask_block = mask_cluster.astype(bool)
         for i in range(1, n_x - 1):
             for j in range(1, n_y - 1):
                 for k in range(1, n_z - 1):
 
                     block = ranks_res_data[
-                        :, i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2
+                        i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2, :
                     ]
 
                     nties_block = nties[
                         i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2
                     ]
 
-                    # mask_block = res_mask_data[i-1:i+2, j-1:j+2, k-1:k+2]
-                    mask_block = mask_cluster
-
-                    # if not (int(mask_block[1, 1, 1]) == 0):
-                    if True:
-
-                        # if nneigh == 19 or nneigh == 7:
-                        #     mask_block = np.multiply(mask_block, mask_cluster)
-
-                        r_block = np.reshape(
-                            block, (block.shape[0], 27), order="F"
-                        )
-                        n_block = np.reshape(
-                            nties_block, (1, 27), order="F"
-                        )
-                        mask_idx = np.argwhere(
-                            np.reshape(mask_block, (1, 27), order="F") > 0
-                        )[:, 1]
-                        mask_r_block = r_block[
-                            :,
-                            mask_idx,
-                        ]
-                        mask_nties = n_block[0, mask_idx]
-                        # import pdb; pdb.set_trace()
-                        K[i, j, k] = f_kendall(mask_r_block, mask_nties)
+                    mask_r_block = block[mask_block, :]
+                    mask_nties = nties_block[mask_block]
+                    # import pdb; pdb.set_trace()
+                    K[i, j, k] = f_kendall(mask_r_block, mask_nties)
 
         # output = nib.Nifti1Image(K, header=data.header, affine=data.affine)
-        output = nimg.new_img_like(data, K, copy_header=True)
-        nib.save(output, "/Users/synchon/reho-map-cpac.nii")
+        output = nimg.new_img_like(data, K, copy_header=False)
+        # nib.save(output, "/Users/synchon/reho-map-cpac.nii")
         return output
 
     @lru_cache(maxsize=None, typed=True)
@@ -558,20 +542,17 @@ def f_kendall(timeseries_matrix, nties):
 
     import numpy as np
 
-    nk = timeseries_matrix.shape
+    m, n = timeseries_matrix.shape
 
-    n = nk[0]
-    k = nk[1]
-
-    sr = np.sum(timeseries_matrix, 1)
+    sr = np.sum(timeseries_matrix, axis=0)
     # sr_bar = np.mean(sr)
 
     s1 = 12 * np.sum(sr**2)
-    s2 = 3 * k**2 * n * (n + 1) ** 2
+    s2 = 3 * (m * m) * n * ((n + 1) ** 2)
     s = s1 - s2
 
-    t1 = k**2 * n * (n**2 - 1)
-    t2 = k * np.sum(nties)
+    t1 = m**2 * n * (n**2 - 1)
+    t2 = m * np.sum(nties)
     t = t1 - t2
 
     if t == 0:
