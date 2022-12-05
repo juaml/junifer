@@ -4,6 +4,7 @@
 #          Nicolás Nieto <n.nieto@fz-juelich.de>
 #          Sami Hamdan <s.hamdan@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
+#          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
 from pathlib import Path
