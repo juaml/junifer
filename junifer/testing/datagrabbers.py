@@ -157,10 +157,10 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         question, other confounds might be more appropriate.
         If False, returns all :term:`fMRIPrep` confounds (default True).
 
-    age_group : {"adults", "child", "both"}, optional
+    age_group : {"adult", "child", "both"}, optional
        Which age group to fetch:
 
-        * ``adults`` : fetch adults only (n=33, ages 18-39)
+        * ``adult`` : fetch adults only (n=33, ages 18-39)
         * ``child`` : fetch children only (n=122, ages 3-12)
         * ``both`` : fetch full sample (n=155)
 
