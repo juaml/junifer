@@ -13,7 +13,7 @@ from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import load_parcellation
-from junifer.markers.complexity import Complexity
+from junifer.markers.hurst_exponent import HurstExponent
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
@@ -31,43 +31,31 @@ def test_compute() -> None:
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         # Create input data
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
-        # Create input data
-        measure_type = {"_range_entropy": {"m": 2, "tol": 0.5}}
-        # measure_type = {"_range_entropy_auc": {"m": 2, "n_r": 10}}
-        # measure_type = {"_perm_entropy": {"m": 4, "tau": 1}}
-        # measure_type = {"_weighted_perm_entropy": {"m": 4, "tau": 1}}
-        # measure_type = {"_sample_entropy": {"m": 2, "tau": 1, "tol": 0.5}}
-        # measure_type = {"_multiscale_entropy_auc":
-        #                {"m": 2, "tol": 0.5, "scale": 10}}
-        # measure_type = {"_hurst_exponent": {"reserved": None}}
 
         # Compute the Complexity markers
-        complexity = Complexity(
+        measure_type = measure_type = {"_hurst_exponent": {"method": "dfa"}}
+        hurst = HurstExponent(
             parcellation=PARCELLATION, measure_type=measure_type
         )
-        new_out = complexity.compute(input_dict)
+        new_out = hurst.compute(input_dict)
 
         # Load parcellation
         test_parcellation, _, _ = load_parcellation(PARCELLATION)
+
         # Compute the NiftiLabelsMasker
         test_masker = NiftiLabelsMasker(test_parcellation)
         test_ts = test_masker.fit_transform(niimg)
+
         # Assert the dimension of timeseries
         _, n_roi = test_ts.shape
         assert n_roi == len(new_out["data"])
 
-        # Assert the meta
-        meta = complexity.get_meta("BOLD")["marker"]
-        assert meta["parcellation"] == "Schaefer100x17"
-        assert meta["aggregation_method"] == "mean"
-        assert meta["class"] == "Complexity"
 
-
-def test_get_output_kind() -> None:
-    """Test COMPLEXITY get_output_kind()."""
-    complexity = Complexity(parcellation=PARCELLATION)
+def test_get_output_type() -> None:
+    """Test COMPLEXITY get_output_type()."""
+    hurst = HurstExponent(parcellation=PARCELLATION)
     input_list = ["BOLD"]
-    input_list = complexity.get_output_kind(input_list)
+    input_list = hurst.get_output_type(input_list)
     assert len(input_list) == 1
     assert input_list[0] in ["matrix"]
 
@@ -88,11 +76,11 @@ def test_store(tmp_path: Path) -> None:
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Compute the complexity measures
-        complexity = Complexity(parcellation=PARCELLATION)
+        hurst = HurstExponent(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(
             uri=str((tmp_path / "test.db").absolute()),
             single_output=True,
         )
         # Store
-        complexity.fit_transform(input=input_dict, storage=storage)
+        hurst.fit_transform(input=input_dict, storage=storage)

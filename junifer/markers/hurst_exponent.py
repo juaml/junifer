@@ -6,20 +6,21 @@
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
+import numpy as np
+
 # from ptpython.repl import embed
 from ..api.decorators import register_marker
-from ..utils import logger
+from ..utils import logger, warn_with_log
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
-from .utils import _calculate_complexity
-
+from .utils import _hurst_exponent
 
 if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 
 
 @register_marker
-class Complexity(BaseMarker):
+class HurstExponent(BaseMarker):
     """Class for the extraction of complexity features from a timeseries.
 
     Parameters
@@ -35,12 +36,6 @@ class Complexity(BaseMarker):
         to be extracted and its associated parameters. The measures and
         their default values include:
 
-        {"_range_entropy": {"m": 2, "tol": 0.5}}
-        {"_range_entropy_auc": {"m": 2, "n_r": 10}}
-        {"_perm_entropy": {"m": 4, "tau": 1}}
-        {"_weighted_perm_entropy": {"m": 4, "tau": 1}}
-        {"_sample_entropy": {"m": 2, "tau": 1, "tol": 0.5}}
-        {"_multiscale_entropy_auc": {"m": 2, "tol": 0.5, "scale": 10}}
         {"_hurst_exponent": {"reserved": None}}
 
     name : str, optional
@@ -61,7 +56,7 @@ class Complexity(BaseMarker):
         # measure_type should be a dctionary with keys as the function names,
         # and values as another dictionary with function parameters.
         if measure_type is None:
-            self.measure_type = {"_range_entropy": {"m": 2, "tol": 0.5}}
+            self.measure_type = {"_hurst_exponent": {"method": "dfa"}}
         else:
             self.measure_type = measure_type
 
@@ -78,7 +73,7 @@ class Complexity(BaseMarker):
         """
         return ["BOLD"]
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input: List[str]) -> List[str]:
         """Get output kind.
 
         Parameters
@@ -121,14 +116,10 @@ class Complexity(BaseMarker):
         input: Dict[str, Any],
         extra_input: Optional[Dict] = None,
     ) -> Dict:
-        """Compute.
+        """Compute Hurst exponent.
 
-        Change: Take a timeseries of brain areas, and calculate several
-        region-wise measures of complexity including range entropy and its
-        area under the curve [1], permutation entropy [2], weighted
-        permutation entropy [3], sample entropy [4], multiscale entropy based
-        on sample entropy [5], and Hurst exponent based on the detrended
-        fluctuation analysis method [6].
+        Change: Take a timeseries of brain areas, and calculate Hurst exponent
+        based on the detrended fluctuation analysis method [1].
 
         Parameters
         ----------
@@ -148,38 +139,12 @@ class Complexity(BaseMarker):
 
         References
         ----------
-        .. [1] Omidvarnia, A., et al.
-               Range Entropy: A Bridge between Signal Complexity and
-               Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
-
-        .. [2] Bandt, C., & Pompe, B.
-               Permutation entropy: a natural complexity measure for time
-               series. Physical review letters, 88(17), 174102, 2002.
-
-        .. [3] Fadlallah, B., Chen, B., Keil, A., & Principe, J.
-               Weighted-permutation entropy: A complexity measure for time
-               series incorporating amplitude information.
-               Physical Review E, 87(2), 022911., 2013.
-
-        .. [4] Richman, J., Moorman, J.
-               Physiological time-series analysis using approximate entropy
-               and sample entropy, Am. J. Physiol. Heart Circ. Physiol.,
-               278 (6), pp. H2039-2049, 2000.
-
-        .. [5] Costa, M., Goldberger, A. L., & Peng, C. K.
-               Multiscale entropy analysis of complex physiologic time series.
-               Physical review letters, 89(6), 068102, 2002.
-
-        .. [6] Peng, C.; Havlin, S.; Stanley, H.E.; Goldberger, A.L.
+        .. [1] Peng, C.; Havlin, S.; Stanley, H.E.; Goldberger, A.L.
                Quantification of scaling exponents and crossover phenomena in
                nonstationary heartbeat time series.
                Chaos Interdiscip. J. Nonlinear Sci., 5, 82–87, 1995.
 
-
         """
-        # print('Stop: complexity_compute')
-        # embed(globals(), locals())
-
         logger.debug("Calculating root sum of squares of edgewise timeseries.")
         # Initialize a ParcelAggregation
         parcel_aggregation = ParcelAggregation(
@@ -193,9 +158,11 @@ class Complexity(BaseMarker):
 
         # Calculate complexity and et correct column/row labels
         bold_ts = pa_dict["data"]
-        tmp = _calculate_complexity(bold_ts, self.measure_type)
+        measure_type = self.measure_type
+        params = list(measure_type.values())[0]
+        tmp = _hurst_exponent(bold_ts, params)  # n_roi x 1
         out = {}
-        out["data"] = tmp.T
+        out["data"] = tmp
         out["col_names"] = self.measure_type.keys()
         out["row_names"] = pa_dict["columns"]
 
