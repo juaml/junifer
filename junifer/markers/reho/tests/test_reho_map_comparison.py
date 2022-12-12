@@ -8,7 +8,6 @@ from typing import Callable, Type
 
 import nibabel as nib
 import numpy as np
-from scipy.stats import pearsonr
 import pytest
 from nibabel.imageclasses import PARRECImage
 
@@ -67,16 +66,9 @@ def reho_map_comparer() -> Type:
             # Load afni implementation data
             afni_reho_map = self._load_afni_reho_map(subject)
             # Compare
-            # assert np.testing.assert_array_equal(
-            #     python_reho_map.get_fdata(), afni_reho_map.get_fdata()
-            # )
-            print(
-                pearsonr(
-                    python_reho_map.get_fdata().flatten(),
-                    afni_reho_map.get_fdata().flatten(),
-                )
+            assert np.testing.assert_allclose(
+                python_reho_map.get_fdata(), afni_reho_map.get_fdata()
             )
-            print('done')
 
     return ReHoMapComparer
 
