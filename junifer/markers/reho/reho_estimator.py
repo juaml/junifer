@@ -9,15 +9,16 @@ import shutil
 import subprocess
 import tempfile
 from functools import lru_cache
+from itertools import product
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import nibabel as nib
-import numpy as np
-from scipy.stats import rankdata
-from nilearn import image as nimg
 
-from ...stats import kendall_w
+import numpy as np
+from nilearn import image as nimg
+from scipy.stats import rankdata
+
 from ...utils import logger, raise_error
 from ..utils import singleton
 
@@ -261,207 +262,100 @@ class ReHoEstimator:
             raise_error(
                 f"Invalid value for `nneigh`, should be one of {valid_nneigh}."
             )
+        # Get scan data
+        niimg_data = data.get_fdata()
+        # Get scan dimensions
+        n_x, n_y, n_z, _ = niimg_data.shape
 
-        # CUTNUMBER = 10
+        # Get rank of every voxel across time series
+        ranks_niimg_data = rankdata(niimg_data, axis=-1)
 
-        res_data = data.get_fdata()
+        # Initialize 3D array to store tied rank correction for every voxel
+        tied_rank_corrections = np.zeros((n_x, n_y, n_z), dtype=np.float64)
+        # Calculate tied rank correction for every voxel
+        for i_x, i_y, i_z in product(range(n_x), range(n_y), range(n_z)):
+            # Calculate tied rank count for every voxel across time series
+            _, tie_count = np.unique(
+                ranks_niimg_data[i_x, i_y, i_z, :],
+                return_counts=True,
+            )
+            # Calculate and store tied rank correction for every voxel across
+            # timeseries
+            tied_rank_corrections[i_x, i_y, i_z] = np.sum(
+                tie_count**3 - tie_count
+            )
 
-        (n_x, n_y, n_z, n_t) = res_data.shape
+        # Initialize 3D array to store reho map
+        reho_map = np.ones((n_x, n_y, n_z), dtype=np.float32)
 
-        # # Create fake mask
-        # # res_mask_data = np.ones((n_x, n_y, n_z))
+        # Create mask cluster
+        if nneigh in (7, 19, 27):
+            mask_cluster = np.ones((3, 3, 3))
 
-        # # "flatten" each volume of the timeseries into one big array instead of
-        # # x,y,z - produces (timepoints, N voxels) shaped data array
-        # res_data = np.reshape(res_data, (n_x * n_y * n_z, n_t), order="F").T
+            if nneigh == 7:
+                mask_cluster[0, 0, 0] = 0
+                mask_cluster[0, 1, 0] = 0
+                mask_cluster[0, 2, 0] = 0
+                mask_cluster[0, 0, 1] = 0
+                mask_cluster[0, 2, 1] = 0
+                mask_cluster[0, 0, 2] = 0
+                mask_cluster[0, 1, 2] = 0
+                mask_cluster[0, 2, 2] = 0
+                mask_cluster[1, 0, 0] = 0
+                mask_cluster[1, 2, 0] = 0
+                mask_cluster[1, 0, 2] = 0
+                mask_cluster[1, 2, 2] = 0
+                mask_cluster[2, 0, 0] = 0
+                mask_cluster[2, 1, 0] = 0
+                mask_cluster[2, 2, 0] = 0
+                mask_cluster[2, 0, 1] = 0
+                mask_cluster[2, 2, 1] = 0
+                mask_cluster[2, 0, 2] = 0
+                mask_cluster[2, 1, 2] = 0
+                mask_cluster[2, 2, 2] = 0
 
-        # # create a blank array of zeroes of size n_voxels, one for each time
-        # # point
-        # ranks_res_data = np.tile(
-        #     np.zeros((1, res_data.shape[1])),
-        #     (res_data.shape[0], 1),
-        # )
-        # nties = np.zeros(res_data.shape[1], dtype=int)
+            elif nneigh == 19:
+                mask_cluster[0, 0, 0] = 0
+                mask_cluster[0, 2, 0] = 0
+                mask_cluster[2, 0, 0] = 0
+                mask_cluster[2, 2, 0] = 0
+                mask_cluster[0, 0, 2] = 0
+                mask_cluster[0, 2, 2] = 0
+                mask_cluster[2, 0, 2] = 0
+                mask_cluster[2, 2, 2] = 0
 
-        # # divide the number of total voxels by the cutnumber (set to 10)
-        # # ex. end up with a number in the thousands if there are tens of
-        # # thousands of voxels
-        # segment_length = np.ceil(float(res_data.shape[1]) / float(CUTNUMBER))
-
-        # for icut in range(0, CUTNUMBER):
-
-        #     segment = None
-
-        #     # create a Numpy array of evenly spaced values from the segment
-        #     # starting point up until the segment_length integer
-        #     if not (icut == (CUTNUMBER - 1)):
-        #         segment = np.arange(
-        #             icut * segment_length, (icut + 1) * segment_length
-        #         )
-        #     else:
-        #         segment = np.arange(icut * segment_length, res_data.shape[1])
-
-        #     # segment = np.int64(segment[np.newaxis])
-        #     segment = (segment[np.newaxis]).astype(np.int64)
-
-        #     # res_data_piece is a chunk of the original timeseries in_file, but
-        #     # aligned with the current segment index spacing
-        #     res_data_piece = res_data[:, segment[0]]
-        #     nvoxels_piece = res_data_piece.shape[1]
-
-        #     # run a merge sort across the time axis, re-ordering the flattened
-        #     # volume voxel arrays
-        #     res_data_sorted = np.sort(res_data_piece, 0, kind="mergesort")
-        #     sort_index = np.argsort(res_data_piece, axis=0, kind="mergesort")
-
-        #     # subtract each volume from each other
-        #     db = np.diff(res_data_sorted, 1, 0)
-
-        #     # convert any zero voxels into "True" flag
-        #     db = db == 0
-
-        #     # return an n_voxel (n voxels within the current segment) sized
-        #     # array of values, each value being the sum total of TRUE values
-        #     # in "db"
-        #     sumdb = np.sum(db, 0)
-        #     # print(np.sum(sumdb > 160))
-        #     # print(db.shape)
-        #     temp_array = np.arange(1, n_t + 1)
-        #     temp_array = temp_array[:, np.newaxis].astype(np.float32)
-
-        #     nties_segment = np.zeros(nvoxels_piece, dtype=np.int64)
-        #     sorted_ranks = np.tile(temp_array, (1, nvoxels_piece))
-        #     # import pdb; pdb.set_trace()
-
-        #     if np.any(sumdb[:]):
-
-        #         tie_adjust_index = np.flatnonzero(sumdb)
-
-        #         for i in range(0, len(tie_adjust_index)):
-
-        #             ranks = sorted_ranks[:, tie_adjust_index[i]]
-        #             # import pdb; pdb.set_trace()
-        #             ties = db[:, tie_adjust_index[i]]
-
-        #             tieloc = np.append(np.flatnonzero(ties), n_t + 2)
-        #             maxties = len(tieloc)
-        #             tiecount = 0
-
-        #             while tiecount < maxties - 1:
-        #                 tiestart = tieloc[tiecount]
-        #                 ntied = 2
-        #                 while tieloc[tiecount + 1] == (tieloc[tiecount] + 1):
-        #                     tiecount += 1
-        #                     ntied += 1
-        #                 # import pdb; pdb.set_trace()
-        #                 nties_segment[tie_adjust_index[i]] += ntied * (
-        #                     ntied * ntied - 1
-        #                 )
-
-        #                 ranks[tiestart : tiestart + ntied] = \
-        #                     ranks[tiestart : tiestart + ntied].mean()
-        #                 tiecount += 1
-
-        #             sorted_ranks[:, tie_adjust_index[i]] = ranks
-
-        #     del db, sumdb
-        #     sort_index_base = np.tile(
-        #         np.multiply(np.arange(0, nvoxels_piece), n_t), [n_t, 1]
-        #     )
-        #     sort_index += sort_index_base
-        #     del sort_index_base
-
-        #     ranks_piece = np.zeros((n_t, nvoxels_piece))
-
-        #     ranks_piece = ranks_piece.flatten(order="F")
-        #     sort_index = sort_index.flatten(order="F")
-        #     sorted_ranks = sorted_ranks.flatten(order="F")
-
-        #     ranks_piece[sort_index] = np.array(sorted_ranks)
-
-        #     ranks_piece = np.reshape(
-        #         ranks_piece, (n_t, nvoxels_piece), order="F"
-        #     )
-
-        #     del sort_index, sorted_ranks
-
-        #     ranks_res_data[:, segment[0]] = ranks_piece
-        #     nties[segment[0]] = nties_segment
-
-        # ranks_res_data = np.reshape(
-        #     ranks_res_data, (n_t, n_x, n_y, n_z), order="F"
-        # )
-
-        ranks_res_data = rankdata(res_data, axis=-1)
-        nties = np.zeros((n_x, n_y, n_z), dtype=np.float64)
-
-        for i_x in range(n_x):
-            for i_y in range(n_y):
-                for i_z in range(n_z):
-                    _, t_count = np.unique(
-                        ranks_res_data[i_x, i_y, i_z, :], return_counts=True)
-                    t_nties = np.sum(t_count ** 3 - t_count)
-                    nties[i_x, i_y, i_z] = t_nties
-
-        # K = np.zeros((n_x, n_y, n_z))
-        K = np.ones((n_x, n_y, n_z), dtype=np.float32)
-
-        mask_cluster = np.ones((3, 3, 3))
-
-        if nneigh == 19:
-            mask_cluster[0, 0, 0] = 0
-            mask_cluster[0, 2, 0] = 0
-            mask_cluster[2, 0, 0] = 0
-            mask_cluster[2, 2, 0] = 0
-            mask_cluster[0, 0, 2] = 0
-            mask_cluster[0, 2, 2] = 0
-            mask_cluster[2, 0, 2] = 0
-            mask_cluster[2, 2, 2] = 0
-
-        elif nneigh == 7:
-
-            mask_cluster[0, 0, 0] = 0
-            mask_cluster[0, 1, 0] = 0
-            mask_cluster[0, 2, 0] = 0
-            mask_cluster[0, 0, 1] = 0
-            mask_cluster[0, 2, 1] = 0
-            mask_cluster[0, 0, 2] = 0
-            mask_cluster[0, 1, 2] = 0
-            mask_cluster[0, 2, 2] = 0
-            mask_cluster[1, 0, 0] = 0
-            mask_cluster[1, 2, 0] = 0
-            mask_cluster[1, 0, 2] = 0
-            mask_cluster[1, 2, 2] = 0
-            mask_cluster[2, 0, 0] = 0
-            mask_cluster[2, 1, 0] = 0
-            mask_cluster[2, 2, 0] = 0
-            mask_cluster[2, 0, 1] = 0
-            mask_cluster[2, 2, 1] = 0
-            mask_cluster[2, 0, 2] = 0
-            mask_cluster[2, 1, 2] = 0
-            mask_cluster[2, 2, 2] = 0
-
-        mask_block = mask_cluster.astype(bool)
-        for i in range(1, n_x - 1):
-            for j in range(1, n_y - 1):
-                for k in range(1, n_z - 1):
-
-                    block = ranks_res_data[
-                        i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2, :
-                    ]
-
-                    nties_block = nties[
-                        i - 1 : i + 2, j - 1 : j + 2, k - 1 : k + 2
-                    ]
-
-                    mask_r_block = block[mask_block, :]
-                    mask_nties = nties_block[mask_block]
-                    # import pdb; pdb.set_trace()
-                    K[i, j, k] = f_kendall(mask_r_block, mask_nties)
-
-        # output = nib.Nifti1Image(K, header=data.header, affine=data.affine)
-        output = nimg.new_img_like(data, K, copy_header=False)
-        # nib.save(output, "/Users/synchon/reho-map-cpac.nii")
+            # Convert 0 / 1 array to bool
+            logical_mask_cluster = mask_cluster.astype(bool)
+            for i, j, k in product(
+                range(1, n_x - 1), range(1, n_y - 1), range(1, n_z - 1)
+            ):
+                # Get ranks for the neighbourhood
+                neighbourhood_ranks = ranks_niimg_data[
+                    i - 1 : i + 2,
+                    j - 1 : j + 2,
+                    k - 1 : k + 2,
+                    :,
+                ]
+                # Get tied ranks corrections for the neighbourhood
+                neighbourhood_tied_ranks_corrections = tied_rank_corrections[
+                    i - 1 : i + 2,
+                    j - 1 : j + 2,
+                    k - 1 : k + 2,
+                ]
+                # Mask neighbourhood ranks
+                masked_neighbourhood_ranks = neighbourhood_ranks[
+                    logical_mask_cluster, :
+                ]
+                # Mask tied ranks corrections for the neighbourhood
+                masked_tied_rank_corrections = (
+                    neighbourhood_tied_ranks_corrections[logical_mask_cluster]
+                )
+                # Calculate KCC
+                reho_map[i, j, k] = _kendall_w_reho(
+                    timeseries_ranks=masked_neighbourhood_ranks,
+                    tied_rank_corrections=masked_tied_rank_corrections,
+                )
+        output = nimg.new_img_like(data, reho_map, copy_header=False)
         return output
 
     @lru_cache(maxsize=None, typed=True)
