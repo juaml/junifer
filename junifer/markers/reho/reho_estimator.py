@@ -242,6 +242,7 @@ class ReHoEstimator:
             * 7 : for facewise neighbours only
             * 19 : for face- and edge-wise nieghbours
             * 27 : for face-, edge-, and node-wise neighbors
+            * 125 : for 5x5 cuboidal volume
 
         Returns
         -------
@@ -257,7 +258,7 @@ class ReHoEstimator:
         .. [1] https://github.com/FCP-INDI/C-PAC/blob/main/CPAC/reho/utils.py
 
         """
-        valid_nneigh = (7, 19, 27)
+        valid_nneigh = (7, 19, 27, 125)
         if nneigh not in valid_nneigh:
             raise_error(
                 f"Invalid value for `nneigh`, should be one of {valid_nneigh}."
@@ -355,6 +356,41 @@ class ReHoEstimator:
                     timeseries_ranks=masked_neighbourhood_ranks,
                     tied_rank_corrections=masked_tied_rank_corrections,
                 )
+
+        elif nneigh == 125:
+            mask_cluster = np.ones((5, 5, 5))
+            # Convert 0 / 1 array to bool
+            logical_mask_cluster = mask_cluster.astype(bool)
+            for i, j, k in product(
+                range(2, n_x - 2), range(2, n_y - 2), range(2, n_z - 2)
+            ):
+                # Get ranks for the neighbourhood
+                neighbourhood_ranks = ranks_niimg_data[
+                    i - 2 : i + 3,
+                    j - 2 : j + 3,
+                    k - 2 : k + 3,
+                    :,
+                ]
+                # Get tied ranks corrections for the neighbourhood
+                neighbourhood_tied_ranks_corrections = tied_rank_corrections[
+                    i - 2 : i + 3,
+                    j - 2 : j + 3,
+                    k - 2 : k + 3,
+                ]
+                # Mask neighbourhood ranks
+                masked_neighbourhood_ranks = neighbourhood_ranks[
+                    logical_mask_cluster, :
+                ]
+                # Mask tied ranks corrections for the neighbourhood
+                masked_tied_rank_corrections = (
+                    neighbourhood_tied_ranks_corrections[logical_mask_cluster]
+                )
+                # Calculate KCC
+                reho_map[i, j, k] = _kendall_w_reho(
+                    timeseries_ranks=masked_neighbourhood_ranks,
+                    tied_rank_corrections=masked_tied_rank_corrections,
+                )
+
         output = nimg.new_img_like(data, reho_map, copy_header=False)
         return output
 
