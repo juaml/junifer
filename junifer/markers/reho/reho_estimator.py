@@ -14,7 +14,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import nibabel as nib
-
 import numpy as np
 from nilearn import image as nimg
 from scipy.stats import rankdata
