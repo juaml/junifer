@@ -525,39 +525,40 @@ class ReHoEstimator:
         return self._compute(bold_data, **reho_params)
 
 
-def f_kendall(timeseries_matrix, nties):
+def _kendall_w_reho(
+    timeseries_ranks: np.ndarray, tied_rank_corrections: np.ndarray
+) -> float:
+    """Calculate Kendall's coefficient of concordance (KCC) for ReHo map.
 
-    """
-    Calculates the Kendall's coefficient of concordance for a number of
-    time-series in the input matrix
+    ..note:: This function should only be used to calculate KCC for a ReHo map.
+             For general use, check out ``junifer.stats.kendall_w``.
+
     Parameters
     ----------
-    timeseries_matrix : ndarray
-        A matrix of ranks of a subset subject's brain voxels
+    timeseries_matrix : 2D numpy.ndarray
+        A matrix of ranks of a subset subject's brain voxels.
+    tied_rank_corrections : 3D numpy.ndarray
+        A 3D array consisting of the tied rank corrections for the ranks
+        of a subset subject's brain voxels.
+
     Returns
     -------
-    kcc : float
-        Kendall's coefficient of concordance on the given input matrix
+    float
+        Kendall's W (KCC) of the given timeseries matrix.
+
     """
+    m, n = timeseries_ranks.shape  # annotators X items
 
-    import numpy as np
+    numerator = (12 * np.sum(np.square(np.sum(timeseries_ranks, axis=0)))) - (
+        3 * m**2 * n * (n + 1) ** 2
+    )
+    denominator = (m**2 * n * (n**2 - 1)) - (
+        m * np.sum(tied_rank_corrections)
+    )
 
-    m, n = timeseries_matrix.shape
-
-    sr = np.sum(timeseries_matrix, axis=0)
-    # sr_bar = np.mean(sr)
-
-    s1 = 12 * np.sum(sr**2)
-    s2 = 3 * (m * m) * n * ((n + 1) ** 2)
-    s = s1 - s2
-
-    t1 = m**2 * n * (n**2 - 1)
-    t2 = m * np.sum(nties)
-    t = t1 - t2
-
-    if t == 0:
-        kcc = 1
+    if denominator == 0:
+        kcc = 1.0
     else:
-        kcc = s / t
-    # import pdb; pdb.set_trace()
+        kcc = numerator / denominator
+
     return kcc
