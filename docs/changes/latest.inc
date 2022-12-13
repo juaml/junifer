@@ -91,6 +91,8 @@ Enhancements
 
 - Allow :class:`junifer.markers.ParcelAggregation` to apply multiple parcellations at once (:gh:`131` by `Fede Raimondo`_).
 
+- Introduce a singleton decorator for marker computations (:gh:`151` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
