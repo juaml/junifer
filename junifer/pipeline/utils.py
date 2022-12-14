@@ -93,7 +93,9 @@ def _check_afni(commands: Optional[List[str]] = None) -> bool:
                 check=False,
             )
             command_found = command_process.returncode == 0
-            commands_found_results[command] = "found" if command_found else "not found"
+            commands_found_results[command] = (
+                "found" if command_found else "not found"
+            )
             # Set flag to trigger warning
             all_commands_found = all_commands_found and command_found
         # One or more commands were missing
