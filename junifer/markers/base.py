@@ -150,7 +150,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         logger.debug(f"Storing {output_type_} in {storage}")
         storage.store(kind=output_type_, **out)
 
-    def fit_transform(
+    def _fit_transform(
         self,
         input: Dict[str, Dict],
         storage: Optional["BaseFeatureStorage"] = None,

@@ -93,6 +93,9 @@ Enhancements
 
 - Introduce a singleton decorator for marker computations (:gh:`151` by `Synchon Mandal`_).
 
+- Refactor :class:`junifer.pipeline.PipelineStepMixin` to improve its implementation and validation for pipeline steps
+  (:gh:`152` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 

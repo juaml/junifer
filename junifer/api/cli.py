@@ -296,3 +296,31 @@ def selftest(subpkg: str) -> None:
         click.secho("Successful.", fg="green")
     else:
         click.secho("Failure.", fg="red")
+
+
+@cli.group()
+def setup() -> None:  # pragma: no cover
+    """Configure commands for Junifer."""
+    pass
+
+
+@setup.command("afni-docker")
+def afni_docker() -> None:  # pragma: no cover
+    """Configure AFNI-Docker wrappers."""
+    import junifer
+    pkg_path = Path(junifer.__path__[0])  # type: ignore
+    afni_wrappers_path = pkg_path / "api" / "res" / "afni"
+    msg = f"""
+    Installation instructions for AFNI-Docker wrappers:
+
+    1. Install Docker: https://docs.docker.com/get-docker/
+
+    2. Get the AFNI-Docker image by running this on the command line:
+
+        docker pull afni/afni
+
+    3. Add this line to the ~/.bashrc or ~/.zshrc file:
+
+    export PATH="$PATH:{afni_wrappers_path}"
+    """
+    click.secho(msg, fg="blue")
