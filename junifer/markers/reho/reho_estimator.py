@@ -327,9 +327,22 @@ class ReHoEstimator:
 
             # Convert 0 / 1 array to bool
             logical_mask_cluster = mask_cluster.astype(bool)
+
             for i, j, k in product(
                 range(1, n_x - 1), range(1, n_y - 1), range(1, n_z - 1)
             ):
+                # Get mask only for neighbourhood
+                logical_neighbourhood_mni152_whole_brain_mask = logical_mni152_whole_brain_mask[
+                    i - 1 : i + 2,
+                    j - 1 : j + 2,
+                    k - 1 : k + 2,
+                ]
+                # Perform logical AND to get neighbourhood mask; done to take care of brain boundaries
+                neighbourhood_mask = logical_mask_cluster & logical_neighbourhood_mni152_whole_brain_mask
+                # Continue if voxel is restricted by mask
+                if neighbourhood_mask[1, 1, 1] == 0:
+                    continue
+
                 # Get ranks for the neighbourhood
                 neighbourhood_ranks = ranks_niimg_data[
                     i - 1 : i + 2,
@@ -361,9 +374,22 @@ class ReHoEstimator:
             mask_cluster = np.ones((5, 5, 5))
             # Convert 0 / 1 array to bool
             logical_mask_cluster = mask_cluster.astype(bool)
+
             for i, j, k in product(
                 range(2, n_x - 2), range(2, n_y - 2), range(2, n_z - 2)
             ):
+                # Get mask only for neighbourhood
+                logical_neighbourhood_mni152_whole_brain_mask = logical_mni152_whole_brain_mask[
+                    i - 2 : i + 3,
+                    j - 2 : j + 3,
+                    k - 2 : k + 3,
+                ]
+                # Perform logical AND to get neighbourhood mask; done to take care of brain boundaries
+                neighbourhood_mask = logical_mask_cluster & logical_neighbourhood_mni152_whole_brain_mask
+                # Continue if voxel is restricted by mask
+                if neighbourhood_mask[2, 2, 2] == 0:
+                    continue
+
                 # Get ranks for the neighbourhood
                 neighbourhood_ranks = ranks_niimg_data[
                     i - 2 : i + 3,
