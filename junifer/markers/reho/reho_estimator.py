@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 import nibabel as nib
 import numpy as np
 from nilearn import image as nimg
+from nilearn import masking as nmask
 from scipy.stats import rankdata
 
 from ...utils import logger, raise_error
@@ -282,6 +283,11 @@ class ReHoEstimator:
 
         # Initialize 3D array to store reho map
         reho_map = np.ones((n_x, n_y, n_z), dtype=np.float32)
+
+        # Calculate whole brain mask
+        mni152_whole_brain_mask = nmask.compute_brain_mask(data, threshold=0.5, mask_type="whole-brain")
+        # Convert 0 / 1 array to bool
+        logical_mni152_whole_brain_mask = mni152_whole_brain_mask.get_fdata().astype(bool)
 
         # Create mask cluster
         if nneigh in (7, 19, 27):
