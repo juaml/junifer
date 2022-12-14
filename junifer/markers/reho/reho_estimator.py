@@ -228,9 +228,6 @@ class ReHoEstimator:
     ) -> "Nifti1Image":
         """Compute ReHo map.
 
-        The implementation is borrowed from [1]_ and is released under GPLv3.
-        For more information, please check there.
-
         Parameters
         ----------
         data : 4D Niimg-like object
@@ -251,10 +248,6 @@ class ReHoEstimator:
         ------
         ValueError
             If `nneigh` is invalid.
-
-        References
-        ----------
-        .. [1] https://github.com/FCP-INDI/C-PAC/blob/main/CPAC/reho/utils.py
 
         """
         valid_nneigh = (7, 19, 27, 125)
