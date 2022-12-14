@@ -5,7 +5,7 @@
 # License: AGPL
 
 import subprocess
-from typing import Any
+from typing import Any, List, Optional
 
 from junifer.utils.logging import raise_error, warn_with_log
 
@@ -48,8 +48,15 @@ def check_ext_dependencies(name: str, optional: bool, **kwargs: Any) -> bool:
     return found
 
 
-def _check_afni(commands=None) -> bool:
+def _check_afni(commands: Optional[List[str]] = None) -> bool:
     """Check if afni is present in the system.
+
+    Parameters
+    ----------
+    commands : list of str, optional
+        The commands to specifically check for from afni. If None, only
+        the basic afni version would be looked up, else, would also
+        check for specific commands (default None).
 
     Returns
     -------
@@ -67,13 +74,17 @@ def _check_afni(commands=None) -> bool:
     )
     afni_found = completed_process.returncode == 0
 
+    # Check for specific commands
     if afni_found and commands is not None:
         if not isinstance(commands, list):
             commands = [commands]
-        cmd_results = {}
-        cmds_found = True
+        # Store command found results
+        commands_found_results = {}
+        # Set all commands found flag to True
+        all_commands_found = True
+        # Check commands' existence
         for command in commands:
-            completed_process = subprocess.run(
+            command_process = subprocess.run(
                 [command],
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.DEVNULL,
@@ -81,12 +92,15 @@ def _check_afni(commands=None) -> bool:
                 shell=True,  # is unsafe but kept for resolution via PATH
                 check=False,
             )
-            t_cmd_found = completed_process.returncode == 0
-            cmd_results[command] = "found" if t_cmd_found else "not found"
-            cmds_found = cmds_found and t_cmd_found
-        if not cmds_found:
+            command_found = command_process.returncode == 0
+            commands_found_results[command] = "found" if command_found else "not found"
+            # Set flag to trigger warning
+            all_commands_found = all_commands_found and command_found
+        # One or more commands were missing
+        if not all_commands_found:
             warn_with_log(
-                f"AFNI is installed but some of the required commands "
-                f"are not found. These are the results: {cmd_results}"
+                "AFNI is installed but some of the required commands "
+                "were not found. These are the results: "
+                f"{commands_found_results}"
             )
     return afni_found
