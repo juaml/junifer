@@ -7,6 +7,7 @@
 from typing import Dict, List
 
 import pytest
+import warnings
 
 from junifer.pipeline.pipeline_step_mixin import PipelineStepMixin
 from junifer.pipeline.utils import _check_afni
@@ -113,7 +114,9 @@ def test_pipeline_step_mixin_validate_ext_deps_correct_commands() -> None:
             return {"input": input}
 
     mixer = CorrectMixer()
-    mixer.validate([])
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        mixer.validate([])
 
 
 @pytest.mark.skipif(

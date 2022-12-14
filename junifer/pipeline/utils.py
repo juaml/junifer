@@ -65,7 +65,7 @@ def _check_afni(commands: Optional[List[str]] = None) -> bool:
 
     """
     completed_process = subprocess.run(
-        ["afni", "--version"],
+        "afni --version",
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.STDOUT,

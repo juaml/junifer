@@ -69,11 +69,30 @@ To install AFNI, you can always follow the `AFNI official instructions
 <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/main_toc.html>`_. Additionally, you can also follow
 the following steps to install and configure the AFNI Docker container in your local system.
 
+.. important:: 
+
+  The AFNI Docker container wrappers add the commands required by Junifer. Using this commands have
+  some limitations, mostly related to handling files and paths. Junifer knows about this and uses this
+  commands in the proper way. Keep this in mind if you try to use the AFNI Docker wrappers outside of junifer. This
+  caveats and limitations are not documented.
+
 1. Install Docker. You can follow the `Docker official instructions <https://docs.docker.com/get-docker/>`_.
 2. Pull the AFNI Docker image from `Docker Hub <https://hub.docker.com/r/afni/afni>`_:
 
 .. code-block:: shell
 
-  docker pull afni/afni
+  docker pull afni/afni_make_build
 
-3. 
+3. Add the Junifer AFNI scripts to your PATH environmental variable. Run the following command:
+
+.. code-block:: shell
+
+  junifer setup afni-docker
+
+Take the last line and copy it to your ``.bashrc`` or ``.zshrc`` file. 
+
+Or, alternatively, you can exceute this command which will update the `~/.bashrc` for you:
+
+.. code-block:: shell
+
+  junifer setup afni-docker | grep "PATH=" | xargs | >> ~/.bashrc
