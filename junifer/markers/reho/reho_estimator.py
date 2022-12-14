@@ -255,6 +255,8 @@ class ReHoEstimator:
             raise_error(
                 f"Invalid value for `nneigh`, should be one of {valid_nneigh}."
             )
+
+        logger.info(f"Computing ReHo map using {nneigh} neighbours.")
         # Get scan data
         niimg_data = data.get_fdata()
         # Get scan dimensions
