@@ -91,7 +91,7 @@ the following steps to install and configure the AFNI Docker container in your l
 
 Take the last line and copy it to your ``.bashrc`` or ``.zshrc`` file. 
 
-Or, alternatively, you can exceute this command which will update the `~/.bashrc` for you:
+Or, alternatively, you can exceute this command which will update the ``~/.bashrc`` for you:
 
 .. code-block:: shell
 
