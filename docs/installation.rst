@@ -52,3 +52,28 @@ Local Git repository
 ~~~~~~~~~~~~~~~~~~~~
 
 Follow the `detailed contribution guidelines <contribution.rst>`_.
+
+
+.. _installation_ext:
+
+Installing external dependencies
+================================
+
+Some markers will require optional external dependencies to be installed. In this section you will
+find a list of all external dependencies that are required for specific markers.
+
+AFNI
+----
+
+To install AFNI, you can always follow the `AFNI official instructions 
+<https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/main_toc.html>`_. Additionally, you can also follow
+the following steps to install and configure the AFNI Docker container in your local system.
+
+1. Install Docker. You can follow the `Docker official instructions <https://docs.docker.com/get-docker/>`_.
+2. Pull the AFNI Docker image from `Docker Hub <https://hub.docker.com/r/afni/afni>`_:
+
+.. code-block:: shell
+
+  docker pull afni/afni
+
+3. 
