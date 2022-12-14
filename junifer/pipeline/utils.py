@@ -7,7 +7,7 @@
 import subprocess
 from typing import Any
 
-from junifer.utils.logging import raise_error
+from junifer.utils.logging import raise_error, warn_with_log
 
 
 def check_ext_dependencies(name: str, optional: bool, **kwargs: Any) -> bool:
@@ -31,7 +31,7 @@ def check_ext_dependencies(name: str, optional: bool, **kwargs: Any) -> bool:
     """
     # Check for afni
     if name == "afni":
-        found = _check_afni()
+        found = _check_afni(**kwargs)
     # Went off the rails
     else:
         raise_error(
@@ -48,7 +48,7 @@ def check_ext_dependencies(name: str, optional: bool, **kwargs: Any) -> bool:
     return found
 
 
-def _check_afni() -> bool:
+def _check_afni(commands=None) -> bool:
     """Check if afni is present in the system.
 
     Returns
@@ -65,7 +65,28 @@ def _check_afni() -> bool:
         shell=True,  # is unsafe but kept for resolution via PATH
         check=False,
     )
-    if completed_process.returncode == 0:
-        return True
-    else:
-        return False
+    afni_found = completed_process.returncode == 0
+
+    if afni_found and commands is not None:
+        if not isinstance(commands, list):
+            commands = [commands]
+        cmd_results = {}
+        cmds_found = True
+        for command in commands:
+            completed_process = subprocess.run(
+                [command],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.STDOUT,
+                shell=True,  # is unsafe but kept for resolution via PATH
+                check=False,
+            )
+            t_cmd_found = completed_process.returncode == 0
+            cmd_results[command] = "found" if t_cmd_found else "not found"
+            cmds_found = cmds_found and t_cmd_found
+        if not cmds_found:
+            warn_with_log(
+                f"AFNI is installed but some of the required commands "
+                f"are not found. These are the results: {cmd_results}"
+            )
+    return afni_found
