@@ -116,9 +116,11 @@ class ReHoBase(BaseMarker):
             )
         logger.info("Calculating ReHO map.")
         # Initialize reho estimator
-        reho_estimator = ReHoEstimator(use_afni=self.use_afni)
+        reho_estimator = ReHoEstimator()
         # Fit-transform reho estimator
         reho_map = reho_estimator.fit_transform(
-            input_data=input, **reho_params
+            use_afni=self.use_afni,
+            input_data=input,
+            **reho_params,
         )
         return reho_map
