@@ -6,7 +6,7 @@
 
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-from ...utils import logger
+from ...utils import logger, raise_error
 from ..base import BaseMarker
 from .reho_estimator import ReHoEstimator
 
@@ -20,6 +20,9 @@ class ReHoBase(BaseMarker):
 
     Parameters
     ----------
+    use_afni : bool, optional
+        Whether to use AFNI for computing. If None, will use AFNI only
+        if available (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
@@ -27,15 +30,20 @@ class ReHoBase(BaseMarker):
     """
 
     _EXT_DEPENDENCIES = [
-        {"name": "afni", "optional": True, "commands": ["3dReHo"]},
+        {
+            "name": "afni",
+            "optional": True,
+            "commands": ["3dReHo", "3dAFNItoNIFTI"],
+        },
     ]
-    use_afni: bool = False
 
     def __init__(
         self,
+        use_afni: Optional[bool] = None,
         name: Optional[str] = None,
     ) -> None:
         super().__init__(on="BOLD", name=name)
+        self.use_afni = use_afni
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -98,6 +106,14 @@ class ReHoBase(BaseMarker):
                https://doi.org/10.1177/1073858415595004
 
         """
+        if self.use_afni is None:
+            raise_error(
+                "Parameter `use_afni` must be set to True or False in order "
+                "to compute this marker. It is currently set to None (default "
+                "behaviour). This is intended to be for auto-detection. In "
+                "order for that to happen, please call the `validate` method "
+                "before calling the `compute` method."
+            )
         logger.info("Calculating ReHO map.")
         # Initialize reho estimator
         reho_estimator = ReHoEstimator(use_afni=self.use_afni)
