@@ -93,7 +93,7 @@ class ReHoSpheres(ReHoBase):
             * ``rows_col_name`` : ``None``
 
         """
-        logger.info("Calculating ReHO for spheres.")
+        logger.info("Calculating ReHo for spheres.")
         # Calculate reho map
         if self.reho_params is not None:
             reho_map = self.compute_reho_map(input=input, **self.reho_params)
