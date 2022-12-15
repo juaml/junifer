@@ -4,10 +4,10 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import warnings
 from typing import Dict, List
 
 import pytest
-import warnings
 
 from junifer.pipeline.pipeline_step_mixin import PipelineStepMixin
 from junifer.pipeline.utils import _check_afni
