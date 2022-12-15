@@ -3,12 +3,12 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="6.4. UKB VBM GMD Extraction" href="run_run_gmd_mean.html" /><link rel="prev" title="6.2. Generic BIDS datagrabber for datalad." href="run_datagrabber_bids_datalad.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="7.3. Computer Parcel Aggregation." href="run_compute_parcel_mean.html" /><link rel="prev" title="7.1. Generic BIDS datagrabber for datalad." href="run_datagrabber_bids_datalad.html" />
 
-    <meta name="generator" content="sphinx-5.3.0, furo 2022.09.29"/>
-        <title>6.3. UKB VBM GMD Extraction - junifer documentation</title>
+    <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+        <title>7.2. UKB VBM GMD Extraction - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=d81277517bee4d6b0349d71bb2661d4890b5617c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
@@ -157,7 +157,7 @@
   <span class="sidebar-brand-text">junifer  documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
@@ -165,62 +165,63 @@
   <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">2. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">2.1. The Junifer Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">2.2. The Data Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">2.3. Data Grabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">2.4. Data Reader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">2.5. Preprocess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">2.6. Marker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">2.7. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">3. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">3.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">3.2. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">3.3. Data Grabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">3.4. Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">3.5. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">3.6. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">3.7. Storage</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">3. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">3.1. Code-less configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/running.html">3.2. Running jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">3.3. Collecting results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">3.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">4. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">4.1. Code-less configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html">4.2. Running jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">4.3. Collecting results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">4.4. Queueing jobs (HPC, HTC)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../builtin.html">4. Built-in Pipeline steps and data</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">5. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">5.1. Creating a Junifer extension</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">5.2. Creating Data Grabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">5.3. Creating Markers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">5. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">6. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">6.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">6.2. Creating Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">6.3. Creating Markers</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">6. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="run_compute_parcel_mean.html">6.1. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">6.2. Generic BIDS datagrabber for datalad.</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">6.3. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="run_run_gmd_mean.html">6.4. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="run_ets_rss_marker.html">6.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="norun_hcpfc_pearson.html">6.6. HCP FC Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="run_junifer_julearn.html">6.7. Run junifer and julearn.</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">7. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">7.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">7.2. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_compute_parcel_mean.html">7.3. Computer Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_run_gmd_mean.html">7.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_ets_rss_marker.html">7.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="norun_hcpfc_pearson.html">7.6. HCP FC Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_junifer_julearn.html">7.7. Run junifer and julearn.</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">7. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">7.1.1. Data Grabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">7.1.2. DataReaders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">7.1.3. Pre-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">7.1.4. Markers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">7.1.5. Storage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html">7.2.1. Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">7.2.2. Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.masks">7.2.3. Masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">7.2.4. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">7.2.5. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">7.2.6. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api.html">7.2.7. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">7.2.8. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">7.2.9. Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">7.3.1. Configs</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">8. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">8.1.1. Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">8.1.2. DataReaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">8.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">8.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">8.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">8.2.1. Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">8.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.masks">8.2.3. Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">8.2.4. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">8.2.5. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">8.2.6. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">8.2.7. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">8.2.8. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">8.2.9. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">8.3.1. Configs</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">8. Contributing to junifer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">9. Maintaining</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">10. FAQs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">11. What’s new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">9. Contributing to junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">10. Maintaining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">11. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">12. What’s new</a></li>
 </ul>
 
 </div>
@@ -260,7 +261,7 @@
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="ukb-vbm-gmd-extraction">
-<span id="sphx-glr-auto-examples-norun-ukbvm-gmd-py"></span><h1><span class="section-number">6.3. </span>UKB VBM GMD Extraction<a class="headerlink" href="#ukb-vbm-gmd-extraction" title="Permalink to this heading">#</a></h1>
+<span id="sphx-glr-auto-examples-norun-ukbvm-gmd-py"></span><h1><span class="section-number">7.2. </span>UKB VBM GMD Extraction<a class="headerlink" href="#ukb-vbm-gmd-extraction" title="Permalink to this heading">#</a></h1>
 <p>Authors: Federico Raimondo</p>
 <p>License: BSD 3 clause</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.api</span> <span class="kn">import</span> <span class="n">run</span>
@@ -315,12 +316,12 @@ to download the full example code</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="run_run_gmd_mean.html">
+          <a class="next-page" href="run_compute_parcel_mean.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">6.4. </span>UKB VBM GMD Extraction</div>
+                <div class="title"><span class="section-number">7.3. </span>Computer Parcel Aggregation.</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -331,7 +332,7 @@ to download the full example code</p>
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">6.2. </span>Generic BIDS datagrabber for datalad.</div>
+                <div class="title"><span class="section-number">7.1. </span>Generic BIDS datagrabber for datalad.</div>
                 
               </div>
             </a>
@@ -347,9 +348,7 @@ to download the full example code</p>
             
           </div>
           <div class="right-details">
-            <div class="icons">
-              
-            </div>
+            
           </div>
         </div>
         
