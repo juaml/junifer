@@ -220,6 +220,10 @@ class ReHoEstimator:
                 klass=RuntimeError,
             )
 
+        # Cleanup intermediate files
+        for fname in self.temp_dir_path.glob("reho*"):
+            fname.unlink()
+
         # Load nifti
         output_data = nib.load(f"{reho_afni_to_nifti_out_path_prefix}.nii")
         return output_data
