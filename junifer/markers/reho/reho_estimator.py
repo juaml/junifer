@@ -5,6 +5,7 @@
 # License: AGPL
 
 
+import hashlib
 import shutil
 import subprocess
 import tempfile
@@ -189,11 +190,15 @@ class ReHoEstimator:
                 klass=RuntimeError,
             )
 
+        # SHA256 for bypassing memmap
+        sha256_params = hashlib.sha256(bytes(reho_cmd_str, "utf-8"))
         # Convert afni to nifti
-        reho_afni_to_nifti_out_path_prefix = self.temp_dir_path / "output"
+        reho_afni_to_nifti_out_path = (
+            self.temp_dir_path / f"output_{sha256_params.hexdigest()}.nii"
+        )
         convert_cmd: List[str] = [
             "3dAFNItoNIFTI",
-            f"-prefix {reho_afni_to_nifti_out_path_prefix.resolve()}",
+            f"-prefix {reho_afni_to_nifti_out_path.resolve()}",
             f"{reho_afni_out_path_prefix}+tlrc.BRIK",
         ]
         # Call 3dAFNItoNIFTI
@@ -224,7 +229,7 @@ class ReHoEstimator:
             fname.unlink()
 
         # Load nifti
-        output_data = nib.load(f"{reho_afni_to_nifti_out_path_prefix}.nii")
+        output_data = nib.load(reho_afni_to_nifti_out_path)
         # Stupid casting
         output_data = cast(Nifti1Image, output_data)
         return output_data
