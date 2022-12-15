@@ -23,6 +23,9 @@ class ReHoParcels(ReHoBase):
     parcellation : str
         The name of the parcellation. Check valid options by calling
         :func:`junifer.data.parcellations.list_parcellations`.
+    use_afni : bool, optional
+        Whether to use AFNI for computing. If None, will use AFNI only
+        if available (default None).
     reho_params : dict, optional
         Extra parameters for computing ReHo map as a dictionary (default None).
     agg_method : str, optional
@@ -44,6 +47,7 @@ class ReHoParcels(ReHoBase):
     def __init__(
         self,
         parcellation: str,
+        use_afni: Optional[bool] = None,
         reho_params: Optional[Dict] = None,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
@@ -55,7 +59,7 @@ class ReHoParcels(ReHoBase):
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
         self.mask = mask
-        super().__init__(name=name)
+        super().__init__(use_afni=use_afni, name=name)
 
     def compute(
         self,
