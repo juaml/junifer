@@ -128,8 +128,9 @@ class PipelineStepMixin:
         if hasattr(self, "_EXT_DEPENDENCIES"):
             for dependency in self._EXT_DEPENDENCIES:  # type: ignore
                 out = check_ext_dependencies(**dependency)
-                # Set attribute for using external tools
-                setattr(self, f"use_{dependency['name']}", out)
+                if getattr(self, f"use_{dependency['name']}", None) is None:
+                    # Set attribute for using external tools
+                    setattr(self, f"use_{dependency['name']}", out)
 
         self.validate_input(input=input)
         outputs = [self.get_output_type(t_input) for t_input in input]
