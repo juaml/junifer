@@ -168,13 +168,14 @@ class ReHoEstimator:
         else:
             reho_cmd.append(f"-nneigh {nneigh}")
         # Call 3dReHo
-        logger.info(f"3dReHo command to be executed: {reho_cmd}")
+        reho_cmd_str = " ".join(reho_cmd)
+        logger.info(f"3dReHo command to be executed: {reho_cmd_str}")
         reho_process = subprocess.run(
-            reho_cmd,
+            reho_cmd_str,  # string needed with shell=True
             stdin=subprocess.DEVNULL,
             stdout=subprocess.STDOUT,
             stderr=subprocess.STDOUT,
-            shell=True,
+            shell=True,  # needed for respecting $PATH
             check=False,
         )
         if reho_process.returncode == 0:
@@ -197,13 +198,14 @@ class ReHoEstimator:
             f"{reho_afni_out_path_prefix}+tlrc.BRIK",
         ]
         # Call 3dAFNItoNIFTI
-        logger.info(f"3dAFNItoNIFTI command to be executed: {convert_cmd}")
+        convert_cmd_str = " ".join(convert_cmd)
+        logger.info(f"3dAFNItoNIFTI command to be executed: {convert_cmd_str}")
         convert_process = subprocess.run(
-            convert_cmd,
+            convert_cmd_str,  # string needed with shell=True
             stdin=subprocess.DEVNULL,
             stdout=subprocess.STDOUT,
             stderr=subprocess.STDOUT,
-            shell=True,
+            shell=True,  # needed for respecting $PATH
             check=False,
         )
         if convert_process.returncode == 0:
