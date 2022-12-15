@@ -292,9 +292,13 @@ class ReHoEstimator:
         reho_map = np.ones((n_x, n_y, n_z), dtype=np.float32)
 
         # Calculate whole brain mask
-        mni152_whole_brain_mask = nmask.compute_brain_mask(data, threshold=0.5, mask_type="whole-brain")
+        mni152_whole_brain_mask = nmask.compute_brain_mask(
+            data, threshold=0.5, mask_type="whole-brain"
+        )
         # Convert 0 / 1 array to bool
-        logical_mni152_whole_brain_mask = mni152_whole_brain_mask.get_fdata().astype(bool)
+        logical_mni152_whole_brain_mask = (
+            mni152_whole_brain_mask.get_fdata().astype(bool)
+        )
 
         # Create mask cluster
         if nneigh in (7, 19, 27):
@@ -339,13 +343,19 @@ class ReHoEstimator:
                 range(1, n_x - 1), range(1, n_y - 1), range(1, n_z - 1)
             ):
                 # Get mask only for neighbourhood
-                logical_neighbourhood_mni152_whole_brain_mask = logical_mni152_whole_brain_mask[
-                    i - 1 : i + 2,
-                    j - 1 : j + 2,
-                    k - 1 : k + 2,
-                ]
-                # Perform logical AND to get neighbourhood mask; done to take care of brain boundaries
-                neighbourhood_mask = logical_mask_cluster & logical_neighbourhood_mni152_whole_brain_mask
+                logical_neighbourhood_mni152_whole_brain_mask = (
+                    logical_mni152_whole_brain_mask[
+                        i - 1 : i + 2,
+                        j - 1 : j + 2,
+                        k - 1 : k + 2,
+                    ]
+                )
+                # Perform logical AND to get neighbourhood mask;
+                # done to take care of brain boundaries
+                neighbourhood_mask = (
+                    logical_mask_cluster
+                    & logical_neighbourhood_mni152_whole_brain_mask
+                )
                 # Continue if voxel is restricted by mask
                 if neighbourhood_mask[1, 1, 1] == 0:
                     continue
@@ -386,13 +396,19 @@ class ReHoEstimator:
                 range(2, n_x - 2), range(2, n_y - 2), range(2, n_z - 2)
             ):
                 # Get mask only for neighbourhood
-                logical_neighbourhood_mni152_whole_brain_mask = logical_mni152_whole_brain_mask[
-                    i - 2 : i + 3,
-                    j - 2 : j + 3,
-                    k - 2 : k + 3,
-                ]
-                # Perform logical AND to get neighbourhood mask; done to take care of brain boundaries
-                neighbourhood_mask = logical_mask_cluster & logical_neighbourhood_mni152_whole_brain_mask
+                logical_neighbourhood_mni152_whole_brain_mask = (
+                    logical_mni152_whole_brain_mask[
+                        i - 2 : i + 3,
+                        j - 2 : j + 3,
+                        k - 2 : k + 3,
+                    ]
+                )
+                # Perform logical AND to get neighbourhood mask;
+                # done to take care of brain boundaries
+                neighbourhood_mask = (
+                    logical_mask_cluster
+                    & logical_neighbourhood_mni152_whole_brain_mask
+                )
                 # Continue if voxel is restricted by mask
                 if neighbourhood_mask[2, 2, 2] == 0:
                     continue
