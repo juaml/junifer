@@ -39,15 +39,11 @@ class ReHoEstimator:
     .. warning:: This class can only be used via ReHoBase() and is a deliberate
                  decision as it serves a specific purpose.
 
-    Parameters
     ----------
-    use_afni : bool
-        Whether to use afni or not.
 
     """
 
-    def __init__(self, use_afni: bool) -> None:
-        self.use_afni = use_afni
+    def __init__(self) -> None:
         self._file_path = None
         # Create temporary directory for intermittent storage of assets during
         # computation via afni's 3dReHo
@@ -451,6 +447,7 @@ class ReHoEstimator:
     @lru_cache(maxsize=None, typed=True)
     def _compute(
         self,
+        use_afni: bool,
         data: "Nifti1Image",
         **reho_params: Any,
     ) -> "Nifti1Image":
@@ -458,6 +455,8 @@ class ReHoEstimator:
 
         Parameters
         ----------
+        use_afni : bool
+            Whether to use afni or not.
         data : 4D Niimg-like object
             Images to process.
         **reho_params : dict
@@ -468,19 +467,24 @@ class ReHoEstimator:
         Niimg-like object
 
         """
-        if self.use_afni:
+        if use_afni:
             output = self._compute_reho_afni(data, **reho_params)
         else:
             output = self._compute_reho_python(data, **reho_params)
         return output
 
     def fit_transform(
-        self, input_data: Dict[str, Any], **reho_params: Any
+        self,
+        use_afni: bool,
+        input_data: Dict[str, Any],
+        **reho_params: Any,
     ) -> "Nifti1Image":
         """Fit and transform for the estimator.
 
         Parameters
         ----------
+        use_afni : bool
+            Whether to use afni or not.
         input_data : dict
             The BOLD data as dictionary.
         **reho_params : dict
@@ -506,7 +510,7 @@ class ReHoEstimator:
         else:
             logger.info(f"Using ReHo map cache at {self._file_path}.")
         # Compute
-        return self._compute(bold_data, **reho_params)
+        return self._compute(use_afni, bold_data, **reho_params)
 
 
 def _kendall_w_reho(
