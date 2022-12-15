@@ -86,7 +86,7 @@ class ReHoParcels(ReHoBase):
             * ``row_names`` : ``None``
 
         """
-        logger.info("Calculating ReHO for parcels.")
+        logger.info("Calculating ReHo for parcels.")
         # Calculate reho map
         if self.reho_params is not None:
             reho_map = self.compute_reho_map(input=input, **self.reho_params)
