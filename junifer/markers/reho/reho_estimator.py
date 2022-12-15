@@ -39,7 +39,10 @@ class ReHoEstimator:
     .. warning:: This class can only be used via ReHoBase() and is a deliberate
                  decision as it serves a specific purpose.
 
+    Attributes
     ----------
+    temp_dir_path : pathlib.Path
+        Path to the temporary directory for assets storage.
 
     """
 
