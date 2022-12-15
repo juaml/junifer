@@ -75,8 +75,8 @@ class AmplitudeLowFrequencyFluctuationEstimator:
         process = subprocess.run(
             cmd,
             stdin=subprocess.DEVNULL,
-            # stdout=subprocess.STDOUT,
-            # stderr=subprocess.STDOUT,
+            stdout=subprocess.STDOUT,
+            stderr=subprocess.STDOUT,
             shell=True,
             check=False,
         )
@@ -205,7 +205,7 @@ class AmplitudeLowFrequencyFluctuationEstimator:
             fALFF map.
         """
         timeseries = data.get_fdata()
-        tr = tr or data.header["pixdim"][4]
+        tr = tr or data.header["pixdim"][4]  # type: ignore
         # bandpass the data within the lowpass and highpass cutoff freqs
         Nq = 1 / (2 * tr)
         Wn = np.array([highpass / Nq, lowpass / Nq])

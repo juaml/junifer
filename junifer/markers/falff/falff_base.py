@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 
 from ..base import BaseMarker
@@ -176,6 +176,13 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
             * ``row_names`` (if more than one row is present in data): "scan"
 
         """
+        if self.use_afni is None:
+            raise_error(
+                "Parameter `use_afni` must be set to True or False in order "
+                "to compute this marker. It is currently set to None (default "
+                "behaviour). This is intended to be for auto-detection. In "
+                "order for that to happen, please call the `validate` method "
+                "before calling the `compute` method.")
         estimator = AmplitudeLowFrequencyFluctuationEstimator(
             use_afni=self.use_afni
         )
@@ -197,3 +204,13 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         out = self._postprocess(post_input)
 
         return out
+
+    def _postprocess(self, input: Dict) -> Dict:
+        """Postprocess the output of the estimator.
+
+        Parameters
+        ----------
+        input : dict
+            The output of the estimator. It must have the following
+        """
+        raise NotImplementedError("_postprocess must be implemented")
