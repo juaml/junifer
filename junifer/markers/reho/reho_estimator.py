@@ -172,8 +172,6 @@ class ReHoEstimator:
         reho_process = subprocess.run(
             reho_cmd_str,  # string needed with shell=True
             stdin=subprocess.DEVNULL,
-            stdout=subprocess.STDOUT,
-            stderr=subprocess.STDOUT,
             shell=True,  # needed for respecting $PATH
             check=False,
         )
@@ -206,8 +204,6 @@ class ReHoEstimator:
         convert_process = subprocess.run(
             convert_cmd_str,  # string needed with shell=True
             stdin=subprocess.DEVNULL,
-            stdout=subprocess.STDOUT,
-            stderr=subprocess.STDOUT,
             shell=True,  # needed for respecting $PATH
             check=False,
         )
