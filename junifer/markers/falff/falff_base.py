@@ -6,28 +6,34 @@
 
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
-import numpy as np
-from scipy import signal
 
-from junifer.markers.base import BaseMarker
-from junifer.utils import logger
-
-if TYPE_CHECKING:
-    from junifer.storage import BaseFeatureStorage
+from ..base import BaseMarker
+from .falff_estimator import AmplitudeLowFrequencyFluctuationEstimator
+from ...utils.logging import raise_error, warn_with_log
 
 
 class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
-    """Class for computing fALFF/ALFF.
+    """Base class for (fractional) Amplitude Low Frequency Fluctuation.
 
     Parameters
     ----------
+    fractional : bool
+        Whether to compute fractional ALFF.
+    highpass : float
+        Highpass cutoff frequency.
+    lowpass : float
+        Lowpass cutoff frequency.
+    order : int
+        Order of the filter.
     tr : float, optional
         The Repetition Time of the BOLD data. If None, will extract
         the TR from NIFTI header (default None).
+    use_afni : bool, optional
+        Whether to use AFNI for computing. If None, will use AFNI only
+        if available (default None).
     name : str, optional
-        The name of the marker. If None, will use the class name (default
-        None).
-
+        The name of the marker. If None, it will use the class name
+        (default None).
     Notes
     -----
         The `tr` parameter is crucial for the correctness of fALFF/ALFF
@@ -35,30 +41,82 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         extracted from the NIFTI without any issue. However, it has been
         reported that some preprocessed data might not have the correct TR in
         the NIFTI header.
+
     """
+
+    _EXT_DEPENDENCIES = [
+        {
+            "name": "afni",
+            "optional": True,
+            "commands": ["3dRSFC", "3dAFNItoNIFTI"],
+        },
+    ]
 
     def __init__(
         self,
+        fractional: bool,
         highpass: float,
         lowpass: float,
         order: int,
         tr: Optional[float] = None,
+        use_afni: Optional[bool] = None,
         name: Optional[str] = None,
     ) -> None:
         if highpass <= 0:
-            raise ValueError("Highpass must be positive")
+            raise_error("Highpass must be positive")
         if lowpass <= 0:
-            raise ValueError("Lowpass must be positive")
+            raise_error("Lowpass must be positive")
         if highpass >= lowpass:
-            raise ValueError("Highpass must be lower than lowpass")
+            raise_error("Highpass must be lower than lowpass")
         self.highpass = highpass
         self.lowpass = lowpass
-        if order <= 0:
-            raise ValueError("Order must be positive")
+        if order <= 0 and use_afni is False:
+            raise_error("Order must be positive")
         self.order = order
         self.tr = tr
+        self.use_afni = use_afni
+        self.fractional = fractional
 
+        # Create a name based on the class name if none is provided
+        if name is None:
+            suffix = "_fractional" if fractional else ""
+            name = f"{self.__class__.__name__}{suffix}"
         super().__init__(on="BOLD", name=name)
+
+    def validate(self, input: List[str]) -> List[str]:
+        """Validate the the pipeline step.
+
+        Parameters
+        ----------
+        input : list of str
+            The input to the pipeline step.
+
+        Returns
+        -------
+        list of str
+            The output of the pipeline step.
+
+        Raises
+        ------
+        ValueError
+            If the pipeline step object is missing dependencies required for
+            its working, if the input does not have the required data, or
+            if AFNI was not used and the order is not positive.
+
+        Warns
+        -----
+        UserWarning
+            If AFNI is used and the order is not 0.
+        """
+        out = super().validate(input)
+        if self.use_afni is True and self.order > 0:
+            warn_with_log(
+                "AFNI will not consider the order of the filter. Set this "
+                "parameter to 0 to avoid this warning.")
+        elif self.use_afni is False and self.order <= 0:
+            raise_error(
+                "Order must be positive if AFNI is not used.")
+        return out
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -72,152 +130,70 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         valid = ["BOLD"]
         return valid
 
-    def get_output_kind(self, input: List[str]) -> List[str]:
-        """Get output kind.
+    def get_output_type(self, input: List[str]) -> List[str]:
+        """Get output type.
 
         Parameters
         ----------
         input : list of str
-            The kind of data to work on.
+            The type of data to work on.
 
         Returns
         -------
         list of str
-            The list of storage kinds.
+            The list of storage types.
 
         """
         return ["table"]
 
-    def get_meta(self, kind: str, fractional: bool) -> Dict:
-        """Get metadata.
-
-        Parameters
-        ----------
-        kind : str
-            The kind of pipeline step.
-        fractional : bool
-            If true, get the meta for fractional ALFF.
-
-        Returns
-        -------
-        dict
-            The metadata as a dictionary with the only key 'marker'.
-
-        """
-        s_meta = super().get_meta(kind)
-        suffix = "_fALFF" if fractional else "_ALFF"
-        s_meta["marker"]["name"] += suffix
-        return s_meta
-
-    def fit_transform(
+    def compute(
         self,
         input: Dict[str, Dict],
-        storage: Optional["BaseFeatureStorage"] = None,
+        extra_input: Optional[Dict] = None,
     ) -> Dict:
-        """Fit and transform.
+        """Compute.
 
         Parameters
         ----------
         input : dict
-            The Junifer Data object.
-        storage : storage-like, optional
-            The storage class, for example, SQLiteFeatureStorage.
+            A single input from the pipeline data object in which to compute
+            the marker.
+        extra_input : dict, optional
+            The other fields in the pipeline data object. Useful for accessing
+            other data kind that needs to be used in the computation. For
+            example, the functional connectivity markers can make use of the
+            confounds if available (default None).
 
         Returns
         -------
         dict
-            The processed output as a dictionary. If `storage` is provided,
-            empty dictionary is returned.
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
+
+            * ``data`` : the actual computed values as a numpy.ndarray
+            * ``columns`` : the column labels for the computed values as a list
+            * ``row_names`` (if more than one row is present in data): "scan"
 
         """
-        out = {}
-        t_meta = input.get("meta", {}).copy()
-        logger.info("Computing fALFF on BOLD")
-        t_input = input["BOLD"]
-        t_meta.update(t_input.get("meta", {}))
-
-        # Compute ALFF and fALFF
-        alff, falff = self.compute(input=t_input)
-
-        alff_meta = t_meta.copy().update(
-            self.get_meta("BOLD", fractional=False)
-        )
-        falff_meta = t_meta.copy().update(
-            self.get_meta("BOLD", fractional=True)
+        estimator = AmplitudeLowFrequencyFluctuationEstimator(
+            use_afni=self.use_afni
         )
 
-        alff.update(meta=alff_meta)
-        falff.update(meta=falff_meta)
-        if storage is not None:
-            logger.info(f"Storing in {storage}")
-            self.store(kind="BOLD", out=alff, storage=storage)
-            self.store(kind="BOLD", out=falff, storage=storage)
-        else:
-            logger.info("No storage specified, returning dictionary")
-            out["BOLD"] = {
-                "ALFF": alff,
-                "fALFF": falff,
-            }
+        alff, falff = estimator.fit_transform(
+            input_data=input,
+            highpass=self.highpass,
+            lowpass=self.lowpass,
+            order=self.order,
+            tr=self.tr,
+        )
+        post_data = falff if self.fractional else alff
+
+        post_input = {
+            'data': post_data,
+            'path': None,
+        }
+
+        out = self._postprocess(post_input)
+
         return out
-
-    def compute_falff(
-        self, timeseries: np.ndarray, labels: List[str], tr: float
-    ) -> Tuple[Dict, Dict]:
-        """Compute ALFF and fALFF.
-
-        Parameters
-        ----------
-        timeseries : np.ndarray
-            The timeseries data.
-        labels : np.ndarray
-            The labels for each timeseries.
-        tr : float
-            The repetition time.
-
-        Returns
-        -------
-        alff: dict
-            The computed ALFF as dictionary. The dictionary has the following
-            keys:
-
-            * ``data`` : the actual computed values as a numpy.ndarray
-            * ``columns`` : the column labels for the computed values as a list
-
-        falff: dict
-            The computed fALFF as dictionary. The dictionary has the following
-            keys:
-
-            * ``data`` : the actual computed values as a numpy.ndarray
-            * ``columns`` : the column labels for the computed values as a list
-        """
-        # bandpass the data within the lowpass and highpass cutoff freqs
-        Nq = 1 / (2 * tr)
-        Wn = np.array([self.highpass / Nq, self.lowpass / Nq])
-
-        b, a = signal.butter(N=self.order, Wn=Wn, btype="bandpass")
-        ts_filt = signal.filtfilt(b, a, timeseries, axis=0)
-
-        ALFF = np.std(ts_filt, axis=0)
-        PSD_tot = np.std(timeseries, axis=0)
-
-        fALFF = np.divide(ALFF, PSD_tot)
-
-        out_alff = {"data": ALFF, "columns": labels}
-        out_falff = {"data": fALFF, "columns": labels}
-
-        return out_alff, out_falff
-
-    def store(self, kind, out, storage):
-        """Store.
-
-        Parameters
-        ----------
-        kind : {"BOLD"}
-            The data kind to store.
-        out : dict
-            The computed result as a dictionary to store.
-        storage : storage-like
-            The storage class, for example, SQLiteFeatureStorage.
-        """
-        logger.debug(f"Storing {kind} in {storage}")
-        storage.store(kind="table", **out)
