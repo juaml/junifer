@@ -12,7 +12,7 @@ from .reho_estimator import ReHoEstimator
 
 
 if TYPE_CHECKING:
-    from nibabel.imageclasses import PARRECImage
+    from nibabel import Nifti1Image
 
 
 class ReHoBase(BaseMarker):
@@ -68,7 +68,7 @@ class ReHoBase(BaseMarker):
         self,
         input: Dict[str, Any],
         **reho_params: Any,
-    ) -> "PARRECImage":
+    ) -> "Nifti1Image":
         """Compute.
 
         Calculates Kendall's W per voxel using neighborhood voxels.

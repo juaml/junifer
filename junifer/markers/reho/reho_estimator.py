@@ -11,7 +11,7 @@ import tempfile
 from functools import lru_cache
 from itertools import product
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, cast
 
 import nibabel as nib
 import numpy as np
@@ -24,8 +24,7 @@ from ..utils import singleton
 
 
 if TYPE_CHECKING:
-    from nibabel import Nifti1Image, Nifti2Image
-    from nibabel.imageclasses import PARRECImage
+    from nibabel import Nifti1Image
 
 
 @singleton
@@ -60,7 +59,7 @@ class ReHoEstimator:
 
     def _compute_reho_afni(
         self,
-        data: Union["Nifti1Image", "Nifti2Image"],
+        data: "Nifti1Image",
         nneigh: int = 27,
         neigh_rad: Optional[float] = None,
         neigh_x: Optional[float] = None,
@@ -70,7 +69,7 @@ class ReHoEstimator:
         box_x: Optional[int] = None,
         box_y: Optional[int] = None,
         box_z: Optional[int] = None,
-    ) -> "PARRECImage":
+    ) -> "Nifti1Image":
         """Compute ReHo map via afni's 3dReHo.
 
         Parameters
@@ -226,11 +225,13 @@ class ReHoEstimator:
 
         # Load nifti
         output_data = nib.load(f"{reho_afni_to_nifti_out_path_prefix}.nii")
+        # Stupid casting
+        output_data = cast(Nifti1Image, output_data)
         return output_data
 
     def _compute_reho_python(
         self,
-        data: Union["Nifti1Image", "Nifti2Image"],
+        data: "Nifti1Image",
         nneigh: int = 27,
     ) -> "Nifti1Image":
         """Compute ReHo map.
@@ -429,9 +430,9 @@ class ReHoEstimator:
     @lru_cache(maxsize=None, typed=True)
     def _compute(
         self,
-        data: Union["Nifti1Image", "Nifti2Image"],
+        data: "Nifti1Image",
         **reho_params: Any,
-    ) -> Union["PARRECImage", "Nifti1Image"]:
+    ) -> "Nifti1Image":
         """Compute the ReHo map with memoization.
 
         Parameters
@@ -454,7 +455,7 @@ class ReHoEstimator:
 
     def fit_transform(
         self, input_data: Dict[str, Any], **reho_params: Any
-    ) -> Union["PARRECImage", "Nifti1Image"]:
+    ) -> "Nifti1Image":
         """Fit and transform for the estimator.
 
         Parameters
