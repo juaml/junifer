@@ -35,6 +35,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python():
         fractional=False)
     jun_values4d = marker.fit_transform(input)["BOLD"]
 
+    assert marker.use_afni is False
     assert jun_values4d["data"].ndim == 2
 
 
@@ -53,9 +54,16 @@ def test_AmplitudeLowFrequencyFluctuationParcels_afni():
     marker = AmplitudeLowFrequencyFluctuationParcels(
         parcellation="Schaefer100x7", method="mean", use_afni=True,
         fractional=False)
+    assert marker.use_afni is True
     jun_values4d = marker.fit_transform(input)["BOLD"]
 
     assert jun_values4d["data"].ndim == 2
 
     # Again, should be blazing fast
+    marker = AmplitudeLowFrequencyFluctuationParcels(
+        parcellation="Schaefer100x7", method="mean",
+        fractional=False)
+    marker.validate(list(input.keys()))
+    assert marker.use_afni is True
     jun_values4d = marker.fit_transform(input)["BOLD"]
+    assert jun_values4d["data"].ndim == 2

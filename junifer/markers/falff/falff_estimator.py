@@ -75,8 +75,8 @@ class AmplitudeLowFrequencyFluctuationEstimator:
         process = subprocess.run(
             cmd,
             stdin=subprocess.DEVNULL,
-            stdout=subprocess.STDOUT,
-            stderr=subprocess.STDOUT,
+            # stdout=subprocess.STDOUT,
+            # stderr=subprocess.STDOUT,
             shell=True,
             check=False,
         )
