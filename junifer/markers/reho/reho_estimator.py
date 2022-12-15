@@ -231,7 +231,7 @@ class ReHoEstimator:
         # Load nifti
         output_data = nib.load(reho_afni_to_nifti_out_path)
         # Stupid casting
-        output_data = cast(Nifti1Image, output_data)
+        output_data = cast("Nifti1Image", output_data)
         return output_data
 
     def _compute_reho_python(
