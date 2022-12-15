@@ -1,10 +1,11 @@
 """Provide class for computing fALFF on parcels."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional, Union, Tuple
+from typing import Dict, List, Optional, Union
 
 
 from ...api.decorators import register_marker

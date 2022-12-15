@@ -109,8 +109,6 @@ class AmplitudeLowFrequencyFluctuationEstimator:
             Highpass cutoff frequency.
         lowpass : float
             Lowpass cutoff frequency.
-        order : int
-            Order of the filter. Not used by AFNI.
         tr : float, optional
             The Repetition Time of the BOLD data.
 
@@ -146,7 +144,9 @@ class AmplitudeLowFrequencyFluctuationEstimator:
             bp_cmd += f"-dt {tr} "
         self._run_afni_cmd(bp_cmd)
 
-        alff_fname = self.temp_dir_path / "alff.nii"
+        params_suffix = f"_{highpass}_{lowpass}_{tr}"
+
+        alff_fname = self.temp_dir_path / f"alff{params_suffix}.nii"
 
         convert_cmd = (
             "3dAFNItoNIFTI "
@@ -155,7 +155,7 @@ class AmplitudeLowFrequencyFluctuationEstimator:
         )
         self._run_afni_cmd(convert_cmd)
 
-        falff_fname = self.temp_dir_path / "falff.nii"
+        falff_fname = self.temp_dir_path / f"falff{params_suffix}.nii"
 
         convert_cmd = (
             "3dAFNItoNIFTI "
