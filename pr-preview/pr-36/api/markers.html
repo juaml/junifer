@@ -956,7 +956,78 @@ doi: 10.1073/pnas.2005531117</p>
 <dt><strong>use_afni</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to use AFNI for computing. If None, will use AFNI only
 if available (default None).</p>
 </dd>
-<dt><strong>reho_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Extra parameters for computing ReHo map as a dictionary (default None).</p>
+<dt><strong>reho_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Extra parameters for computing ReHo map as a dictionary (default None).
+If <code class="docutils literal notranslate"><span class="pre">use_afni</span> <span class="pre">=</span> <span class="pre">True</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">nneigh</span></code><span class="classifier">{7, 19, 27}, optional (default 27)</span></dt><dd><p>Number of voxels in the neighbourhood, inclusive. Can be:</p>
+<ul>
+<li><p>7 : for facewise neighbours only</p></li>
+<li><p>19 : for face- and edge-wise nieghbours</p></li>
+<li><p>27 : for face-, edge-, and node-wise neighbors</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_rad</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The radius of a desired neighbourhood (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_x</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for x-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_y</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for y-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_z</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for z-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_rad</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels outward in a given cardinal direction for a
+cubic box centered on a given voxel (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_x</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- x-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_y</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- y-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_z</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- z-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>else if <code class="docutils literal notranslate"><span class="pre">use_afni</span> <span class="pre">=</span> <span class="pre">False</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">nneigh</span></code><span class="classifier">{7, 19, 27, 125}, optional (default 27)</span></dt><dd><p>Number of voxels in the neighbourhood, inclusive. Can be:</p>
+<ul>
+<li><p>7 : for facewise neighbours only</p></li>
+<li><p>19 : for face- and edge-wise nieghbours</p></li>
+<li><p>27 : for face-, edge-, and node-wise neighbors</p></li>
+<li><p>125 : for 5x5 cuboidal volume</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </dd>
 <dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
 <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
@@ -1022,7 +1093,78 @@ extracted from a single voxel. See
 <dt><strong>use_afni</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to use AFNI for computing. If None, will use AFNI only
 if available (default None).</p>
 </dd>
-<dt><strong>reho_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Extra parameters for computing ReHo map as a dictionary (default None).</p>
+<dt><strong>reho_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Extra parameters for computing ReHo map as a dictionary (default None).
+If <code class="docutils literal notranslate"><span class="pre">use_afni</span> <span class="pre">=</span> <span class="pre">True</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">nneigh</span></code><span class="classifier">{7, 19, 27}, optional (default 27)</span></dt><dd><p>Number of voxels in the neighbourhood, inclusive. Can be:</p>
+<ul>
+<li><p>7 : for facewise neighbours only</p></li>
+<li><p>19 : for face- and edge-wise nieghbours</p></li>
+<li><p>27 : for face-, edge-, and node-wise neighbors</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_rad</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The radius of a desired neighbourhood (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_x</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for x-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_y</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for y-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_z</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for z-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_rad</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels outward in a given cardinal direction for a
+cubic box centered on a given voxel (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_x</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- x-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_y</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- y-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_z</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- z-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>else if <code class="docutils literal notranslate"><span class="pre">use_afni</span> <span class="pre">=</span> <span class="pre">False</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">nneigh</span></code><span class="classifier">{7, 19, 27, 125}, optional (default 27)</span></dt><dd><p>Number of voxels in the neighbourhood, inclusive. Can be:</p>
+<ul>
+<li><p>7 : for facewise neighbours only</p></li>
+<li><p>19 : for face- and edge-wise nieghbours</p></li>
+<li><p>27 : for face-, edge-, and node-wise neighbors</p></li>
+<li><p>125 : for 5x5 cuboidal volume</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </dd>
 <dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method to use.
 See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> for more information
