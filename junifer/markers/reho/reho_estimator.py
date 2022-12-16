@@ -300,7 +300,7 @@ class ReHoEstimator:
             mni152_whole_brain_mask.get_fdata().astype(bool)
         )
 
-        # Create mask cluster
+        # Create mask cluster and set start and end indices
         if nneigh in (7, 19, 27):
             mask_cluster = np.ones((3, 3, 3))
 
@@ -336,109 +336,66 @@ class ReHoEstimator:
                 mask_cluster[2, 0, 2] = 0
                 mask_cluster[2, 2, 2] = 0
 
-            # Convert 0 / 1 array to bool
-            logical_mask_cluster = mask_cluster.astype(bool)
-
-            for i, j, k in product(
-                range(1, n_x - 1), range(1, n_y - 1), range(1, n_z - 1)
-            ):
-                # Get mask only for neighbourhood
-                logical_neighbourhood_mni152_whole_brain_mask = (
-                    logical_mni152_whole_brain_mask[
-                        i - 1 : i + 2,
-                        j - 1 : j + 2,
-                        k - 1 : k + 2,
-                    ]
-                )
-                # Perform logical AND to get neighbourhood mask;
-                # done to take care of brain boundaries
-                neighbourhood_mask = (
-                    logical_mask_cluster
-                    & logical_neighbourhood_mni152_whole_brain_mask
-                )
-                # Continue if voxel is restricted by mask
-                if neighbourhood_mask[1, 1, 1] == 0:
-                    continue
-
-                # Get ranks for the neighbourhood
-                neighbourhood_ranks = ranks_niimg_data[
-                    i - 1 : i + 2,
-                    j - 1 : j + 2,
-                    k - 1 : k + 2,
-                    :,
-                ]
-                # Get tied ranks corrections for the neighbourhood
-                neighbourhood_tied_ranks_corrections = tied_rank_corrections[
-                    i - 1 : i + 2,
-                    j - 1 : j + 2,
-                    k - 1 : k + 2,
-                ]
-                # Mask neighbourhood ranks
-                masked_neighbourhood_ranks = neighbourhood_ranks[
-                    logical_mask_cluster, :
-                ]
-                # Mask tied ranks corrections for the neighbourhood
-                masked_tied_rank_corrections = (
-                    neighbourhood_tied_ranks_corrections[logical_mask_cluster]
-                )
-                # Calculate KCC
-                reho_map[i, j, k] = _kendall_w_reho(
-                    timeseries_ranks=masked_neighbourhood_ranks,
-                    tied_rank_corrections=masked_tied_rank_corrections,
-                )
+            start_idx = 1
+            end_idx = 2
 
         elif nneigh == 125:
             mask_cluster = np.ones((5, 5, 5))
-            # Convert 0 / 1 array to bool
-            logical_mask_cluster = mask_cluster.astype(bool)
+            start_idx = 2
+            end_idx = 3
 
-            for i, j, k in product(
-                range(2, n_x - 2), range(2, n_y - 2), range(2, n_z - 2)
-            ):
-                # Get mask only for neighbourhood
-                logical_neighbourhood_mni152_whole_brain_mask = (
-                    logical_mni152_whole_brain_mask[
-                        i - 2 : i + 3,
-                        j - 2 : j + 3,
-                        k - 2 : k + 3,
-                    ]
-                )
-                # Perform logical AND to get neighbourhood mask;
-                # done to take care of brain boundaries
-                neighbourhood_mask = (
-                    logical_mask_cluster
-                    & logical_neighbourhood_mni152_whole_brain_mask
-                )
-                # Continue if voxel is restricted by mask
-                if neighbourhood_mask[2, 2, 2] == 0:
-                    continue
+        # Convert 0 / 1 array to bool
+        logical_mask_cluster = mask_cluster.astype(bool)
 
-                # Get ranks for the neighbourhood
-                neighbourhood_ranks = ranks_niimg_data[
-                    i - 2 : i + 3,
-                    j - 2 : j + 3,
-                    k - 2 : k + 3,
-                    :,
+        for i, j, k in product(
+            range(start_idx, n_x - (end_idx - 1)),
+            range(start_idx, n_y - (end_idx - 1)),
+            range(start_idx, n_z - (end_idx - 1)),
+        ):
+            # Get mask only for neighbourhood
+            logical_neighbourhood_mni152_whole_brain_mask = (
+                logical_mni152_whole_brain_mask[
+                    i - start_idx : i + end_idx,
+                    j - start_idx : j + end_idx,
+                    k - start_idx : k + end_idx,
                 ]
-                # Get tied ranks corrections for the neighbourhood
-                neighbourhood_tied_ranks_corrections = tied_rank_corrections[
-                    i - 2 : i + 3,
-                    j - 2 : j + 3,
-                    k - 2 : k + 3,
-                ]
-                # Mask neighbourhood ranks
-                masked_neighbourhood_ranks = neighbourhood_ranks[
-                    logical_mask_cluster, :
-                ]
-                # Mask tied ranks corrections for the neighbourhood
-                masked_tied_rank_corrections = (
-                    neighbourhood_tied_ranks_corrections[logical_mask_cluster]
-                )
-                # Calculate KCC
-                reho_map[i, j, k] = _kendall_w_reho(
-                    timeseries_ranks=masked_neighbourhood_ranks,
-                    tied_rank_corrections=masked_tied_rank_corrections,
-                )
+            )
+            # Perform logical AND to get neighbourhood mask;
+            # done to take care of brain boundaries
+            neighbourhood_mask = (
+                logical_mask_cluster
+                & logical_neighbourhood_mni152_whole_brain_mask
+            )
+            # Continue if voxel is restricted by mask
+            if neighbourhood_mask[1, 1, 1] == 0:
+                continue
+
+            # Get ranks for the neighbourhood
+            neighbourhood_ranks = ranks_niimg_data[
+                i - start_idx : i + end_idx,
+                j - start_idx : j + end_idx,
+                k - start_idx : k + end_idx,
+                :,
+            ]
+            # Get tied ranks corrections for the neighbourhood
+            neighbourhood_tied_ranks_corrections = tied_rank_corrections[
+                i - start_idx : i + end_idx,
+                j - start_idx : j + end_idx,
+                k - start_idx : k + end_idx,
+            ]
+            # Mask neighbourhood ranks
+            masked_neighbourhood_ranks = neighbourhood_ranks[
+                logical_mask_cluster, :
+            ]
+            # Mask tied ranks corrections for the neighbourhood
+            masked_tied_rank_corrections = (
+                neighbourhood_tied_ranks_corrections[logical_mask_cluster]
+            )
+            # Calculate KCC
+            reho_map[i, j, k] = _kendall_w_reho(
+                timeseries_ranks=masked_neighbourhood_ranks,
+                tied_rank_corrections=masked_tied_rank_corrections,
+            )
 
         output = nimg.new_img_like(data, reho_map, copy_header=False)
         return output
