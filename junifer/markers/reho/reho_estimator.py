@@ -240,7 +240,7 @@ class ReHoEstimator:
         ----------
         data : 4D Niimg-like object
             Images to process.
-        nneigh : {7, 19, 27}, optional
+        nneigh : {7, 19, 27, 125}, optional
             Number of voxels in the neighbourhood, inclusive. Can be:
 
             * 7 : for facewise neighbours only
@@ -248,6 +248,7 @@ class ReHoEstimator:
             * 27 : for face-, edge-, and node-wise neighbors
             * 125 : for 5x5 cuboidal volume
 
+            (default 27).
         Returns
         -------
         Niimg-like object
