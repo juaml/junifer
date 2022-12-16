@@ -166,6 +166,14 @@ Available
      - Compute root sum of squares of edgewise timeseries
      - Done
      - 0.0.1
+   * - :class:`junifer.markers.ReHoParcels`
+     - Calculate regional homogeneity over parcellation
+     - Done
+     - 0.0.1
+   * - :class:`junifer.markers.ReHoSpheres`
+     - Calculate regional homogeneity over spheres placed on coordinates
+     - Done
+     - 0.0.1
 
 
 Planned
@@ -184,9 +192,6 @@ Planned
    * - ALFF and (f)ALFF
      - Detect amplitude of low-frequency fluctuation (ALFF) for resting-state fMRI
      - :gh:`35`
-   * - ReHo
-     - Calculate regional homogeneity
-     - :gh:`36`
    * - Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent
      - Calculate Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent
      - :gh:`61`
