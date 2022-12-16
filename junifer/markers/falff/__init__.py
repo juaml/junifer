@@ -4,3 +4,4 @@
 # License: AGPL
 
 from .falff_parcels import AmplitudeLowFrequencyFluctuationParcels
+from .falff_spheres import AmplitudeLowFrequencyFluctuationSpheres

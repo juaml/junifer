@@ -13,4 +13,7 @@ from .functional_connectivity_spheres import FunctionalConnectivitySpheres
 from .parcel_aggregation import ParcelAggregation
 from .sphere_aggregation import SphereAggregation
 from .reho import ReHoParcels, ReHoSpheres
-from .falff import AmplitudeLowFrequencyFluctuationParcels
+from .falff import (
+    AmplitudeLowFrequencyFluctuationParcels,
+    AmplitudeLowFrequencyFluctuationSpheres,
+)

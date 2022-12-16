@@ -7,19 +7,20 @@
 import pytest
 
 from pathlib import Path
+
 from numpy.testing import assert_array_equal
 from scipy.stats import pearsonr
 
 from junifer.datareader import DefaultDataReader
-from junifer.markers.falff import AmplitudeLowFrequencyFluctuationParcels
+from junifer.markers.falff import AmplitudeLowFrequencyFluctuationSpheres
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
 from junifer.utils import logger
 
 
-def test_AmplitudeLowFrequencyFluctuationParcels_python() -> None:
-    """Test AmplitudeLowFrequencyFluctuationParcels using python."""
+def test_AmplitudeLowFrequencyFluctuationSpheres_python() -> None:
+    """Test AmplitudeLowFrequencyFluctuationSpheres using python."""
     # Get the SPM auditory data:
 
     with PartlyCloudyTestingDataGrabber() as dg:
@@ -27,8 +28,9 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python() -> None:
 
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
-    marker = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7",
+    marker = AmplitudeLowFrequencyFluctuationSpheres(
+        coords="DMNBuckner",
+        radius=5,
         method="mean",
         use_afni=False,
         fractional=False,
@@ -37,22 +39,23 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python() -> None:
 
     assert marker.use_afni is False
     assert python_values.ndim == 2
-    assert python_values.shape == (1, 100)
+    assert python_values.shape == (1, 6)
 
 
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_AmplitudeLowFrequencyFluctuationParcels_afni() -> None:
-    """Test AmplitudeLowFrequencyFluctuationParcels using afni."""
+def test_AmplitudeLowFrequencyFluctuationSpheres_afni() -> None:
+    """Test AmplitudeLowFrequencyFluctuationSpheres using afni."""
     # Get the SPM auditory data:
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
-    marker = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7",
+    marker = AmplitudeLowFrequencyFluctuationSpheres(
+        coords="DMNBuckner",
+        radius=5,
         method="mean",
         use_afni=True,
         fractional=False,
@@ -61,11 +64,14 @@ def test_AmplitudeLowFrequencyFluctuationParcels_afni() -> None:
     afni_values = marker.fit_transform(input)["BOLD"]["data"]
 
     assert afni_values.ndim == 2
-    assert afni_values.shape == (1, 100)
+    assert afni_values.shape == (1, 6)
 
     # Again, should be blazing fast
-    marker = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7", method="mean", fractional=False
+    marker = AmplitudeLowFrequencyFluctuationSpheres(
+        coords="DMNBuckner",
+        radius=5,
+        method="mean",
+        fractional=False,
     )
     assert marker.use_afni is None
     afni_values2 = marker.fit_transform(input)["BOLD"]["data"]
@@ -79,24 +85,24 @@ def test_AmplitudeLowFrequencyFluctuationParcels_afni() -> None:
 @pytest.mark.parametrize(
     "fractional", [True, False], ids=["fractional", "non-fractional"]
 )
-def test_AmplitudeLowFrequencyFluctuationParcels_python_vs_afni(
+def test_AmplitudeLowFrequencyFluctuationSpheres_python_vs_afni(
     fractional: bool,
 ) -> None:
-    """Test AmplitudeLowFrequencyFluctuationParcels using python.
+    """Test AmplitudeLowFrequencyFluctuationSpheres using python.
 
     Parameters
     ----------
-    factional : bool
+    fractional : bool
         Whether to compute fractional ALFF or not.
     """
-
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
-    marker_python = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7",
+    marker_python = AmplitudeLowFrequencyFluctuationSpheres(
+        coords="DMNBuckner",
+        radius=5,
         method="mean",
         use_afni=False,
         fractional=fractional,
@@ -105,10 +111,11 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python_vs_afni(
 
     assert marker_python.use_afni is False
     assert python_values.ndim == 2
-    assert python_values.shape == (1, 100)
+    assert python_values.shape == (1, 6)
 
-    marker_afni = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7",
+    marker_afni = AmplitudeLowFrequencyFluctuationSpheres(
+        coords="DMNBuckner",
+        radius=5,
         method="mean",
         use_afni=True,
         fractional=fractional,
@@ -117,17 +124,17 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python_vs_afni(
 
     assert marker_afni.use_afni is True
     assert afni_values.ndim == 2
-    assert afni_values.shape == (1, 100)
+    assert afni_values.shape == (1, 6)
 
     r, p = pearsonr(python_values[0], afni_values[0])
     logger.info(f"Correlation between python and afni: {r} (p={p})")
     assert r > 0.99
 
 
-def test_AmplitudeLowFrequencyFluctuationParcels_storage(
+def test_AmplitudeLowFrequencyFluctuationSpheres_storage(
     tmp_path: Path,
 ) -> None:
-    """Test AmplitudeLowFrequencyFluctuationParcels storage.
+    """Test AmplitudeLowFrequencyFluctuationSpheres storage.
 
     Parameters
     ----------
@@ -139,8 +146,9 @@ def test_AmplitudeLowFrequencyFluctuationParcels_storage(
         input = dg["sub-01"]
         input = DefaultDataReader().fit_transform(input)
         # Create ParcelAggregation object
-        marker = AmplitudeLowFrequencyFluctuationParcels(
-            parcellation="Schaefer100x7",
+        marker = AmplitudeLowFrequencyFluctuationSpheres(
+            coords="DMNBuckner",
+            radius=5,
             method="mean",
             use_afni=False,
             fractional=True,

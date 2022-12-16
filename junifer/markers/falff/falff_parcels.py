@@ -30,8 +30,6 @@ class AmplitudeLowFrequencyFluctuationParcels(
         The highpass cutoff frequency for the bandpass filter (default 0.01).
     lowpass : float
         The lowpass cutoff frequency for the bandpass filter (default 0.1).
-    order : int
-        The order of the bandpass filter (default 4).
     tr : float, optional
         The Repetition Time of the BOLD data. If None, will extract
         the TR from NIFTI header (default None).
@@ -73,7 +71,6 @@ class AmplitudeLowFrequencyFluctuationParcels(
         fractional: bool,
         highpass: float = 0.01,
         lowpass: float = 0.1,
-        order: int = 4,
         tr: Optional[float] = None,
         use_afni: Optional[bool] = None,
         mask: Optional[str] = None,
@@ -89,7 +86,6 @@ class AmplitudeLowFrequencyFluctuationParcels(
             fractional=fractional,
             highpass=highpass,
             lowpass=lowpass,
-            order=order,
             tr=tr,
             name=name,
             use_afni=use_afni,

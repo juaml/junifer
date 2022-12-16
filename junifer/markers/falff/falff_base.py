@@ -9,7 +9,7 @@ from typing import Dict, List, Optional
 
 from ..base import BaseMarker
 from .falff_estimator import AmplitudeLowFrequencyFluctuationEstimator
-from ...utils.logging import raise_error, warn_with_log
+from ...utils.logging import raise_error
 
 
 class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
@@ -23,8 +23,6 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         Highpass cutoff frequency.
     lowpass : float
         Lowpass cutoff frequency.
-    order : int
-        Order of the filter.
     tr : float, optional
         The Repetition Time of the BOLD data. If None, will extract
         the TR from NIFTI header (default None).
@@ -57,7 +55,6 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         fractional: bool,
         highpass: float,
         lowpass: float,
-        order: int,
         tr: Optional[float] = None,
         use_afni: Optional[bool] = None,
         name: Optional[str] = None,
@@ -70,9 +67,6 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
             raise_error("Highpass must be lower than lowpass")
         self.highpass = highpass
         self.lowpass = lowpass
-        if order <= 0 and use_afni is False:
-            raise_error("Order must be positive")
-        self.order = order
         self.tr = tr
         self.use_afni = use_afni
         self.fractional = fractional
@@ -82,41 +76,6 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
             suffix = "_fractional" if fractional else ""
             name = f"{self.__class__.__name__}{suffix}"
         super().__init__(on="BOLD", name=name)
-
-    def validate(self, input: List[str]) -> List[str]:
-        """Validate the the pipeline step.
-
-        Parameters
-        ----------
-        input : list of str
-            The input to the pipeline step.
-
-        Returns
-        -------
-        list of str
-            The output of the pipeline step.
-
-        Raises
-        ------
-        ValueError
-            If the pipeline step object is missing dependencies required for
-            its working, if the input does not have the required data, or
-            if AFNI was not used and the order is not positive.
-
-        Warns
-        -----
-        UserWarning
-            If AFNI is used and the order is not 0.
-        """
-        out = super().validate(input)
-        if self.use_afni is True and self.order > 0:
-            warn_with_log(
-                "AFNI will not consider the order of the filter. Set this "
-                "parameter to 0 to avoid this warning.")
-        elif self.use_afni is False and self.order <= 0:
-            raise_error(
-                "Order must be positive if AFNI is not used.")
-        return out
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -130,21 +89,21 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         valid = ["BOLD"]
         return valid
 
-    def get_output_type(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The type of data to work on.
+        input_type : str
+            The data type input to the marker.
 
         Returns
         -------
-        list of str
-            The list of storage types.
+        str
+            The storage type output by the marker.
 
         """
-        return ["table"]
+        return "table"
 
     def compute(
         self,
@@ -183,15 +142,14 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
                 "behaviour). This is intended to be for auto-detection. In "
                 "order for that to happen, please call the `validate` method "
                 "before calling the `compute` method.")
-        estimator = AmplitudeLowFrequencyFluctuationEstimator(
-            use_afni=self.use_afni
-        )
+
+        estimator = AmplitudeLowFrequencyFluctuationEstimator()
 
         alff, falff = estimator.fit_transform(
+            use_afni=self.use_afni,
             input_data=input,
             highpass=self.highpass,
             lowpass=self.lowpass,
-            order=self.order,
             tr=self.tr,
         )
         post_data = falff if self.fractional else alff
