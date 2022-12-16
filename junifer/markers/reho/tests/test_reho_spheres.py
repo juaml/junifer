@@ -33,9 +33,17 @@ def test_reho_spheres_computation() -> None:
         )
         # Get BOLD output
         reho_spheres_output_bold = reho_spheres_output["BOLD"]
-        # Assert BOLD output
+        # Assert BOLD output keys
         assert "data" in reho_spheres_output_bold
         assert "columns" in reho_spheres_output_bold
+
+        reho_spheres_output_bold_data = reho_spheres_output_bold["data"]
+        # Assert BOLD output data dimension
+        assert reho_spheres_output_bold_data.ndim == 2
+        # Assert BOLD output data is normalized
+        assert (reho_spheres_output_bold_data > 0).all() and (
+            reho_spheres_output_bold_data < 1
+        ).all()
 
 
 @pytest.mark.skipif(
