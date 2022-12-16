@@ -28,6 +28,46 @@ class ReHoParcels(ReHoBase):
         if available (default None).
     reho_params : dict, optional
         Extra parameters for computing ReHo map as a dictionary (default None).
+        If ``use_afni = True``, then the valid keys are:
+
+        * ``nneigh`` : {7, 19, 27}, optional (default 27)
+            Number of voxels in the neighbourhood, inclusive. Can be:
+
+            - 7 : for facewise neighbours only
+            - 19 : for face- and edge-wise nieghbours
+            - 27 : for face-, edge-, and node-wise neighbors
+
+        * ``neigh_rad`` : positive float, optional
+            The radius of a desired neighbourhood (default None).
+        * ``neigh_x`` : positive float, optional
+            The semi-radius for x-axis of ellipsoidal volumes (default None).
+        * ``neigh_y`` : positive float, optional
+            The semi-radius for y-axis of ellipsoidal volumes (default None).
+        * ``neigh_z`` : positive float, optional
+            The semi-radius for z-axis of ellipsoidal volumes (default None).
+        * ``box_rad`` : positive int, optional
+            The number of voxels outward in a given cardinal direction for a
+            cubic box centered on a given voxel (default None).
+        * ``box_x`` : positive int, optional
+            The number of voxels for +/- x-axis of cuboidal volumes
+            (default None).
+        * ``box_y`` : positive int, optional
+            The number of voxels for +/- y-axis of cuboidal volumes
+            (default None).
+        * ``box_z`` : positive int, optional
+            The number of voxels for +/- z-axis of cuboidal volumes
+            (default None).
+
+        else if ``use_afni = False``, then the valid keys are:
+
+        * ``nneigh`` : {7, 19, 27, 125}, optional (default 27)
+            Number of voxels in the neighbourhood, inclusive. Can be:
+
+            * 7 : for facewise neighbours only
+            * 19 : for face- and edge-wise nieghbours
+            * 27 : for face-, edge-, and node-wise neighbors
+            * 125 : for 5x5 cuboidal volume
+
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
