@@ -60,7 +60,7 @@ jobs:
         sudo ln -s /usr/lib/x86_64-linux-gnu/libgsl.so.23 /usr/lib/x86_64-linux-gnu/libgsl.so.19
 
         curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
-        tcsh @update.afni.binaries -package linux_ubuntu_16_64 -bindir /afni
+        sudo tcsh @update.afni.binaries -package linux_ubuntu_16_64 -bindir /afni
         echo "/afni" >> $GITHUB_PATH
       if: matrix.python-version == 3.10
     - name: Check AFNI
