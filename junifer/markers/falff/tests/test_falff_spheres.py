@@ -1,4 +1,4 @@
-"""Provide test for parcel-aggregated (f)ALFF."""
+"""Provide test for sphere-aggregated (f)ALFF."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -19,6 +19,9 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.utils import logger
 
 
+_COORDINATES = "DMNBuckner"
+
+
 def test_AmplitudeLowFrequencyFluctuationSpheres_python() -> None:
     """Test AmplitudeLowFrequencyFluctuationSpheres using python."""
     # Get the SPM auditory data:
@@ -29,7 +32,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_python() -> None:
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
     marker = AmplitudeLowFrequencyFluctuationSpheres(
-        coords="DMNBuckner",
+        coords=_COORDINATES,
         radius=5,
         method="mean",
         use_afni=False,
@@ -54,7 +57,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_afni() -> None:
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
     marker = AmplitudeLowFrequencyFluctuationSpheres(
-        coords="DMNBuckner",
+        coords=_COORDINATES,
         radius=5,
         method="mean",
         use_afni=True,
@@ -68,7 +71,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_afni() -> None:
 
     # Again, should be blazing fast
     marker = AmplitudeLowFrequencyFluctuationSpheres(
-        coords="DMNBuckner",
+        coords=_COORDINATES,
         radius=5,
         method="mean",
         fractional=False,
@@ -101,7 +104,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_python_vs_afni(
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
     marker_python = AmplitudeLowFrequencyFluctuationSpheres(
-        coords="DMNBuckner",
+        coords=_COORDINATES,
         radius=5,
         method="mean",
         use_afni=False,
@@ -114,7 +117,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_python_vs_afni(
     assert python_values.shape == (1, 6)
 
     marker_afni = AmplitudeLowFrequencyFluctuationSpheres(
-        coords="DMNBuckner",
+        coords=_COORDINATES,
         radius=5,
         method="mean",
         use_afni=True,
@@ -147,7 +150,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_storage(
         input = DefaultDataReader().fit_transform(input)
         # Create ParcelAggregation object
         marker = AmplitudeLowFrequencyFluctuationSpheres(
-            coords="DMNBuckner",
+            coords=_COORDINATES,
             radius=5,
             method="mean",
             use_afni=False,

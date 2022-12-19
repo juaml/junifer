@@ -30,11 +30,11 @@ class AmplitudeLowFrequencyFluctuationSpheres(
         for more information (default None).
     fractional : bool
         Whether to compute fractional ALFF.
-    highpass : float, optional
+    highpass : positive float, optional
         The highpass cutoff frequency for the bandpass filter (default 0.01).
-    lowpass : float
+    lowpass : positive float, optional
         The lowpass cutoff frequency for the bandpass filter (default 0.1).
-    tr : float, optional
+    tr : positive float, optional
         The Repetition Time of the BOLD data. If None, will extract
         the TR from NIFTI header (default None).
     use_afni : bool, optional
@@ -56,7 +56,7 @@ class AmplitudeLowFrequencyFluctuationSpheres(
 
     Notes
     -----
-    The `tr` parameter is crucial for the correctness of fALFF/ALFF
+    The ``tr`` parameter is crucial for the correctness of fALFF/ALFF
     computation. If a dataset is correctly preprocessed, the TR should be
     extracted from the NIFTI without any issue. However, it has been
     reported that some preprocessed data might not have the correct TR in
@@ -65,8 +65,6 @@ class AmplitudeLowFrequencyFluctuationSpheres(
     ALFF/fALFF are computed using a bandpass butterworth filter. See
     :func:`scipy.signal.butter` and :func:`scipy.signal.filtfilt` for more
     details.
-
-
     """
 
     def __init__(
@@ -119,6 +117,7 @@ class AmplitudeLowFrequencyFluctuationSpheres(
 
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``columns`` : the column labels for the computed values as a list
+
         """
         pa = SphereAggregation(
             coords=self.coords,

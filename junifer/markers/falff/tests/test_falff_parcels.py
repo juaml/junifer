@@ -18,6 +18,9 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.utils import logger
 
 
+_PARCELLATION = "Schaefer100x7"
+
+
 def test_AmplitudeLowFrequencyFluctuationParcels_python() -> None:
     """Test AmplitudeLowFrequencyFluctuationParcels using python."""
     # Get the SPM auditory data:
@@ -28,7 +31,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python() -> None:
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
     marker = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7",
+        parcellation=_PARCELLATION,
         method="mean",
         use_afni=False,
         fractional=False,
@@ -52,7 +55,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_afni() -> None:
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
     marker = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7",
+        parcellation=_PARCELLATION,
         method="mean",
         use_afni=True,
         fractional=False,
@@ -65,7 +68,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_afni() -> None:
 
     # Again, should be blazing fast
     marker = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7", method="mean", fractional=False
+        parcellation=_PARCELLATION, method="mean", fractional=False
     )
     assert marker.use_afni is None
     afni_values2 = marker.fit_transform(input)["BOLD"]["data"]
@@ -96,7 +99,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python_vs_afni(
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
     marker_python = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7",
+        parcellation=_PARCELLATION,
         method="mean",
         use_afni=False,
         fractional=fractional,
@@ -108,7 +111,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python_vs_afni(
     assert python_values.shape == (1, 100)
 
     marker_afni = AmplitudeLowFrequencyFluctuationParcels(
-        parcellation="Schaefer100x7",
+        parcellation=_PARCELLATION,
         method="mean",
         use_afni=True,
         fractional=fractional,
@@ -140,7 +143,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_storage(
         input = DefaultDataReader().fit_transform(input)
         # Create ParcelAggregation object
         marker = AmplitudeLowFrequencyFluctuationParcels(
-            parcellation="Schaefer100x7",
+            parcellation=_PARCELLATION,
             method="mean",
             use_afni=False,
             fractional=True,

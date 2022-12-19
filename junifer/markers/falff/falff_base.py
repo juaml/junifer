@@ -1,4 +1,5 @@
 """Provide abstract class for computing fALFF."""
+
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
@@ -6,6 +7,7 @@
 
 from typing import Dict, List, Optional
 
+from abc import abstractmethod
 
 from ..base import BaseMarker
 from .falff_estimator import AmplitudeLowFrequencyFluctuationEstimator
@@ -19,11 +21,11 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
     ----------
     fractional : bool
         Whether to compute fractional ALFF.
-    highpass : float
+    highpass : positive float
         Highpass cutoff frequency.
-    lowpass : float
+    lowpass : positive float
         Lowpass cutoff frequency.
-    tr : float, optional
+    tr : positive float, optional
         The Repetition Time of the BOLD data. If None, will extract
         the TR from NIFTI header (default None).
     use_afni : bool, optional
@@ -32,6 +34,7 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
+
     Notes
     -----
         The `tr` parameter is crucial for the correctness of fALFF/ALFF
@@ -86,8 +89,7 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
             The list of data types that can be used as input for this marker.
 
         """
-        valid = ["BOLD"]
-        return valid
+        return ["BOLD"]
 
     def get_output_type(self, input_type: str) -> str:
         """Get output type.
@@ -141,7 +143,8 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
                 "to compute this marker. It is currently set to None (default "
                 "behaviour). This is intended to be for auto-detection. In "
                 "order for that to happen, please call the `validate` method "
-                "before calling the `compute` method.")
+                "before calling the `compute` method."
+            )
 
         estimator = AmplitudeLowFrequencyFluctuationEstimator()
 
@@ -155,14 +158,15 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         post_data = falff if self.fractional else alff
 
         post_input = {
-            'data': post_data,
-            'path': None,
+            "data": post_data,
+            "path": None,
         }
 
         out = self._postprocess(post_input)
 
         return out
 
+    @abstractmethod
     def _postprocess(self, input: Dict) -> Dict:
         """Postprocess the output of the estimator.
 
@@ -171,4 +175,6 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         input : dict
             The output of the estimator. It must have the following
         """
-        raise NotImplementedError("_postprocess must be implemented")
+        raise_error(
+            "_postprocess must be implemented", klass=NotImplementedError
+        )

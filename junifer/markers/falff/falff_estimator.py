@@ -1,4 +1,4 @@
-"""Provide estimator class for regional homogeneity (ReHo)."""
+"""Provide estimator class for (f)ALFF."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
@@ -107,11 +107,11 @@ class AmplitudeLowFrequencyFluctuationEstimator:
         ----------
         data : 4D Niimg-like object
             Images to process.
-        highpass : float
+        highpass : positive float
             Highpass cutoff frequency.
-        lowpass : float
+        lowpass : positive float
             Lowpass cutoff frequency.
-        tr : float, optional
+        tr : positive float, optional
             The Repetition Time of the BOLD data.
 
         Returns
@@ -188,11 +188,11 @@ class AmplitudeLowFrequencyFluctuationEstimator:
         ----------
         data : 4D Niimg-like object
             Images to process.
-        highpass : float
+        highpass : positive float
             Highpass cutoff frequency.
-        lowpass : float
+        lowpass : positive float
             Lowpass cutoff frequency.
-        tr : float, optional
+        tr : positive float, optional
             The Repetition Time of the BOLD data.
 
         Returns
@@ -257,11 +257,11 @@ class AmplitudeLowFrequencyFluctuationEstimator:
             Whether to use AFNI for computing.
         data : 4D Niimg-like object
             Images to process.
-        highpass : float
+        highpass : positive float
             Highpass cutoff frequency.
-        lowpass : float
+        lowpass : positive float
             Lowpass cutoff frequency.
-        tr : float, optional
+        tr : positive float, optional
             The Repetition Time of the BOLD data.
 
         Returns
@@ -300,11 +300,11 @@ class AmplitudeLowFrequencyFluctuationEstimator:
             Whether to use AFNI for computing.
         input_data : dict
             The BOLD data as dictionary.
-        highpass : float
+        highpass : positive float
             Highpass cutoff frequency.
-        lowpass : float
+        lowpass : positive float
             Lowpass cutoff frequency.
-        tr : float, optional
+        tr : positive float, optional
             The Repetition Time of the BOLD data.
 
         Returns
