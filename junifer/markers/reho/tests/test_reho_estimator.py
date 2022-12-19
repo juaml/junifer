@@ -154,7 +154,7 @@ def test_reho_estimator_cache_afni() -> None:
     reho_map_with_cache = reho_estimator.fit_transform(
         use_afni=True,
         input_data=subject_data["BOLD"],
-        nneigh=27,
+        nneigh=19,
     )
     second_toc = time.time()
     logger.info(
