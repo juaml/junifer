@@ -174,7 +174,14 @@ Available
      - Calculate regional homogeneity over spheres placed on coordinates
      - Done
      - 0.0.1
-
+   * - :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels`
+     - Calculate (f)ALFF and aggregate using parcellations
+     - Done
+     - 0.0.1
+   * - :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres`
+     - Calculate (f)ALFF and aggregate using spheres placed on coordinates
+     - Done
+     - 0.0.1
 
 Planned
 ~~~~~~~
@@ -189,9 +196,6 @@ Planned
    * - Connectedness
      - Compute connectedness
      - :gh:`34`
-   * - ALFF and (f)ALFF
-     - Detect amplitude of low-frequency fluctuation (ALFF) for resting-state fMRI
-     - :gh:`35`
    * - Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent
      - Calculate Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent
      - :gh:`61`

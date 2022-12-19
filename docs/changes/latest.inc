@@ -98,6 +98,8 @@ Enhancements
 
 - Implement :class:`junifer.markers.ReHoParcels` and :class:`junifer.markers.ReHoSpheres` markers (:gh:`36` by `Synchon Mandal`_).
 
+- Implement :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels` and :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres` markers (:gh:`35` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
