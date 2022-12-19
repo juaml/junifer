@@ -39,15 +39,30 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Install AFNI
       run: |
-        sudo add-apt-repository -y universe
-        sudo apt-get -qq update
-        sudo apt-get -qq install libxm4 libxpm4 gsl-bin
+        lsb_release -a
         cd
-        curl -O https://afni.nimh.nih.gov/pub/dist/tgz/linux_ubuntu_16_64.tgz
-        tar -xvzf linux_ubuntu_16_64.tgz
-        chmod -R +x linux_ubuntu_16_64
-        echo "$(pwd)/linux_ubuntu_16_64/" >> $GITHUB_PATH
-        cd -
+        mkdir afni
+        cd afni
+        echo "++ Add universe repo"
+        sudo add-apt-repository -y universe
+
+        echo "++ Add PPAs for R programs"
+        sudo add-apt-repository -y "ppa:marutter/rrutter4.0"
+        sudo add-apt-repository -y "ppa:c2d4u.team/c2d4u4.0+"
+
+        echo "++ Update package manager info"
+        sudo apt-get -qq update
+
+        echo "++ Get main dependencies"
+        sudo apt-get -qq install -y tcsh libssl-dev gsl-bin libjpeg62 vim curl \
+        build-essential libcurl4-openssl-dev libxml2-dev libgfortran-8-dev \
+        libgomp1 r-base cmake rsync libxm4
+
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libgsl.so.23 /usr/lib/x86_64-linux-gnu/libgsl.so.19
+
+        curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
+        tcsh @update.afni.binaries -package linux_ubuntu_16_64 -bindir /afni
+        echo "/afni" >> $GITHUB_PATH
       if: matrix.python-version == 3.10
     - name: Check AFNI
       run: |
