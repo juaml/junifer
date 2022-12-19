@@ -54,10 +54,10 @@ jobs:
 
         echo "++ Get main dependencies"
         sudo apt-get -qq install -y tcsh libssl-dev gsl-bin libjpeg62 vim curl \
-        build-essential libcurl4-openssl-dev libxml2-dev libgfortran-10-dev \
+        build-essential libcurl4-openssl-dev libxml2-dev libgfortran-11-dev \
         libgomp1 r-base cmake rsync libxm4
 
-        sudo ln -s /usr/lib/x86_64-linux-gnu/libgsl.so.23 /usr/lib/x86_64-linux-gnu/libgsl.so.19
+        sudo ln -s /usr/lib/x86_64-linux-gnu/libgsl.so.27 /usr/lib/x86_64-linux-gnu/libgsl.so.19
 
         curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
         sudo tcsh @update.afni.binaries -package linux_ubuntu_16_64 -bindir /afni
