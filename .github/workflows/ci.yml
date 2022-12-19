@@ -38,10 +38,11 @@ jobs:
     - name: Install AFNI
       run: |
         docker pull afni/afni_make_build
-        echo "export PATH=$PATH:$(pwd)/junifer/api/res/afni" >> ~/.bashrc
-        source ~/.bashrc
-        echo "Using AFNI : $(afni --version)"
+        echo "$(pwd)/junifer/api/res/afni" >> $GITHUB_PATH
       if: matrix.python-version == 3.10
+    - nane: Check AFNI
+      run: |
+        echo "Using AFNI : $(afni --version)"
     - name: Test with tox
       run: |
         tox
