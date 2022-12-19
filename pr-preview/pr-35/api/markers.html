@@ -493,7 +493,7 @@ available Junifer Data dictionary keys.</p>
 <dt><strong>aggregation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method (default “mean”).</p>
 </dd>
 <dt><strong>correlation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Any method that can be passed to
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.0.0.dev0+957.g3c55eee968)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.0.0.dev0+963.gac762aff08)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
 </dd>
 <dt><strong>mask</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the mask to apply to regions before extracting signals.
 Check valid options by calling <a class="reference internal" href="data.html#junifer.data.masks.list_masks" title="junifer.data.masks.list_masks"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.masks.list_masks()</span></code></a>
@@ -1046,6 +1046,275 @@ doi: 10.1073/pnas.2005531117</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="junifer.markers.ReHoParcels">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">ReHoParcels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_afni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reho_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ReHoParcels" title="Permalink to this definition">#</a></dt>
+<dd><p>Class for regional homogeneity on parcels.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the parcellation. Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
+</dd>
+<dt><strong>use_afni</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to use AFNI for computing. If None, will use AFNI only
+if available (default None).</p>
+</dd>
+<dt><strong>reho_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Extra parameters for computing ReHo map as a dictionary (default None).
+If <code class="docutils literal notranslate"><span class="pre">use_afni</span> <span class="pre">=</span> <span class="pre">True</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">nneigh</span></code><span class="classifier">{7, 19, 27}, optional (default 27)</span></dt><dd><p>Number of voxels in the neighbourhood, inclusive. Can be:</p>
+<ul>
+<li><p>7 : for facewise neighbours only</p></li>
+<li><p>19 : for face- and edge-wise nieghbours</p></li>
+<li><p>27 : for face-, edge-, and node-wise neighbors</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_rad</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The radius of a desired neighbourhood (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_x</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for x-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_y</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for y-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_z</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for z-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_rad</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels outward in a given cardinal direction for a
+cubic box centered on a given voxel (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_x</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- x-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_y</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- y-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_z</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- z-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>else if <code class="docutils literal notranslate"><span class="pre">use_afni</span> <span class="pre">=</span> <span class="pre">False</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">nneigh</span></code><span class="classifier">{7, 19, 27, 125}, optional (default 27)</span></dt><dd><p>Number of voxels in the neighbourhood, inclusive. Can be:</p>
+<ul>
+<li><p>7 : for facewise neighbours only</p></li>
+<li><p>19 : for face- and edge-wise nieghbours</p></li>
+<li><p>27 : for face-, edge-, and node-wise neighbors</p></li>
+<li><p>125 : for 5x5 cuboidal volume</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
+</dd>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default None).</p>
+</dd>
+<dt><strong>mask</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the mask to apply to regions before extracting signals.
+Check valid options by calling <a class="reference internal" href="data.html#junifer.data.masks.list_masks" title="junifer.data.masks.list_masks"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.masks.list_masks()</span></code></a>
+(default None).</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, it will use the class name
+(default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.markers.ReHoParcels.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ReHoParcels.compute" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The BOLD data as dictionary.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the pipeline data object (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. The dictionary has the following
+keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a 1D numpy.ndarray</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">columns</span></code> : the column labels for the parcels as a list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">row_names</span></code> : <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.markers.ReHoSpheres">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">ReHoSpheres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_afni</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reho_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ReHoSpheres" title="Permalink to this definition">#</a></dt>
+<dd><p>Class for regional homogeneity on spheres.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>coords</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the coordinates list to use. See
+<a class="reference internal" href="data.html#junifer.data.coordinates.list_coordinates" title="junifer.data.coordinates.list_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.coordinates.list_coordinates()</span></code></a> for options.</p>
+</dd>
+<dt><strong>radius</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The radius of the sphere in millimeters. If None, the signal will be
+extracted from a single voxel. See
+<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.maskers.NiftiSpheresMasker.html#nilearn.maskers.NiftiSpheresMasker" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiSpheresMasker</span></code></a> for more information
+(default None).</p>
+</dd>
+<dt><strong>use_afni</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to use AFNI for computing. If None, will use AFNI only
+if available (default None).</p>
+</dd>
+<dt><strong>reho_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Extra parameters for computing ReHo map as a dictionary (default None).
+If <code class="docutils literal notranslate"><span class="pre">use_afni</span> <span class="pre">=</span> <span class="pre">True</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">nneigh</span></code><span class="classifier">{7, 19, 27}, optional (default 27)</span></dt><dd><p>Number of voxels in the neighbourhood, inclusive. Can be:</p>
+<ul>
+<li><p>7 : for facewise neighbours only</p></li>
+<li><p>19 : for face- and edge-wise nieghbours</p></li>
+<li><p>27 : for face-, edge-, and node-wise neighbors</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_rad</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The radius of a desired neighbourhood (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_x</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for x-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_y</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for y-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">neigh_z</span></code><span class="classifier">positive float, optional</span></dt><dd><p>The semi-radius for z-axis of ellipsoidal volumes (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_rad</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels outward in a given cardinal direction for a
+cubic box centered on a given voxel (default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_x</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- x-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_y</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- y-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">box_z</span></code><span class="classifier">positive int, optional</span></dt><dd><p>The number of voxels for +/- z-axis of cuboidal volumes
+(default None).</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>else if <code class="docutils literal notranslate"><span class="pre">use_afni</span> <span class="pre">=</span> <span class="pre">False</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">nneigh</span></code><span class="classifier">{7, 19, 27, 125}, optional (default 27)</span></dt><dd><p>Number of voxels in the neighbourhood, inclusive. Can be:</p>
+<ul>
+<li><p>7 : for facewise neighbours only</p></li>
+<li><p>19 : for face- and edge-wise nieghbours</p></li>
+<li><p>27 : for face-, edge-, and node-wise neighbors</p></li>
+<li><p>125 : for 5x5 cuboidal volume</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method to use.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> for more information
+(default None).</p>
+</dd>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The parameters to pass to the aggregation method (default None).</p>
+</dd>
+<dt><strong>mask</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the mask to apply to regions before extracting signals.
+Check valid options by calling <a class="reference internal" href="data.html#junifer.data.masks.list_masks" title="junifer.data.masks.list_masks"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.masks.list_masks()</span></code></a>
+(default None).</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, it will use the class name
+(default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.markers.ReHoSpheres.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ReHoSpheres.compute" title="Permalink to this definition">#</a></dt>
+<dd><p>Compute.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The BOLD data as dictionary.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the pipeline data object (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. The dictionary has the following
+keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a 1D numpy.ndarray</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">columns</span></code> : the column labels for the spheres as a list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rows_col_name</span></code> : <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.SphereAggregation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">SphereAggregation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.SphereAggregation" title="Permalink to this definition">#</a></dt>
 <dd><p>Class for sphere aggregation.</p>
@@ -1249,6 +1518,14 @@ with this as a parameter. The dictionary has the following keys:</p>
 <li><a class="reference internal" href="#junifer.markers.RSSETSMarker.compute"><code class="docutils literal notranslate"><span class="pre">RSSETSMarker.compute()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.markers.RSSETSMarker.get_output_type"><code class="docutils literal notranslate"><span class="pre">RSSETSMarker.get_output_type()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.markers.RSSETSMarker.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">RSSETSMarker.get_valid_inputs()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.markers.ReHoParcels"><code class="docutils literal notranslate"><span class="pre">ReHoParcels</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.ReHoParcels.compute"><code class="docutils literal notranslate"><span class="pre">ReHoParcels.compute()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.markers.ReHoSpheres"><code class="docutils literal notranslate"><span class="pre">ReHoSpheres</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.ReHoSpheres.compute"><code class="docutils literal notranslate"><span class="pre">ReHoSpheres.compute()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.markers.SphereAggregation"><code class="docutils literal notranslate"><span class="pre">SphereAggregation</span></code></a><ul>
