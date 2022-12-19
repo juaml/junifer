@@ -147,7 +147,7 @@ def test_reho_estimator_cache_afni() -> None:
     assert isinstance(reho_map_without_cache, nib.Nifti1Image)
     # Count intermediate files
     n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
-    assert n_files == 4  # input + reho + output
+    assert n_files == 2  # input + reho
 
     # Now fit again, should be faster
     second_tic = time.time()
@@ -164,7 +164,7 @@ def test_reho_estimator_cache_afni() -> None:
     assert (second_toc - second_tic) < ((first_toc - first_tic) / 1000)
     # Count intermediate files
     n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
-    assert n_files == 4  # input + reho + output
+    assert n_files == 2  # input + reho
 
     # Now change a parameter, should compute again, without clearing the
     # cache
@@ -183,7 +183,7 @@ def test_reho_estimator_cache_afni() -> None:
     assert (third_toc - third_tic) > ((first_toc - first_tic) / 10)
     # Count intermediate files
     n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
-    assert n_files == 7  # input + 2 * reho + 2 * output
+    assert n_files == 3  # input + 2 * reho
 
     # Now fit again with the previous params, should be fast
     fourth_tic = time.time()
@@ -200,7 +200,7 @@ def test_reho_estimator_cache_afni() -> None:
     # Should require less time
     assert (fourth_toc - fourth_tic) < ((first_toc - first_tic) / 1000)
     n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
-    assert n_files == 7  # input + 2 * reho + 2 * output
+    assert n_files == 3  # input + 2 * reho
 
     # Now change the data, it should clear the cache
     with PartlyCloudyTestingDataGrabber() as dg:
@@ -223,7 +223,7 @@ def test_reho_estimator_cache_afni() -> None:
     assert (fifth_toc - fifth_tic) > ((first_toc - first_tic) / 10)
     # Count intermediate files
     n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
-    assert n_files == 4  # input + reho + output
+    assert n_files == 2  # input + reho
 
 
 @pytest.mark.skipif(
@@ -257,4 +257,4 @@ def test_reho_estimator_afni_vs_python() -> None:
         reho_map_python.get_fdata().flatten(),
     )
     # Assert good correlation
-    assert r > 0.99
+    assert r > 0.70
