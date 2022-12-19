@@ -35,6 +35,13 @@ jobs:
       run: |
         python -m pip install --upgrade pip setuptools wheel
         python -m pip install tox tox-gh-actions
+    - name: Install AFNI
+      run: |
+        docker pull afni/afni_make_build
+        echo "export PATH=$PATH:$(pwd)/junifer/api/res/afni" >> ~/.bashrc
+        source ~/.bashrc
+        echo "Using AFNI : $(afni --version)"
+      if: matrix.python-version == 3.10
     - name: Test with tox
       run: |
         tox
