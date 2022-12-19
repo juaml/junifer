@@ -155,6 +155,8 @@ numpydoc_xref_ignore = {
     "class",
     "objects",
     "Engine",
+    "positive",
+    "negative",
 }
 # numpydoc_validation_checks = {
 #     "all",
