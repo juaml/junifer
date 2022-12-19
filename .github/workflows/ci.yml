@@ -39,10 +39,9 @@ jobs:
         python -m pip install tox tox-gh-actions
     - name: Install AFNI
       run: |
+        echo "++ Distro information"
         lsb_release -a
-        cd
-        mkdir afni
-        cd afni
+
         echo "++ Add universe repo"
         sudo add-apt-repository -y universe
 
