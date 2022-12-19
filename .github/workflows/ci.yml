@@ -43,6 +43,7 @@ jobs:
     - nane: Check AFNI
       run: |
         echo "Using AFNI : $(afni --version)"
+      if: matrix.python-version == 3.10
     - name: Test with tox
       run: |
         tox
