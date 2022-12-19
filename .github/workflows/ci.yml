@@ -22,8 +22,8 @@ jobs:
     - name: Set up system
       run: |
         bash -c "$(curl -fsSL http://neuro.debian.net/_files/neurodebian-travis.sh)"
-        sudo apt-get update -qq
-        sudo apt-get install git-annex-standalone
+        sudo apt-get -qq update
+        sudo apt-get -qq install git-annex-standalone
     - name: Configure git for datalad
       run: |
         git config --global user.email "runner@github.com"
