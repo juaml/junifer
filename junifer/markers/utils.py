@@ -29,7 +29,7 @@ def singleton(cls: Type) -> Type:
     class
         The only instance of the class.
 
-    """ ""
+    """
     instances: Dict = {}
 
     def get_instance(*args: Any, **kwargs: Any) -> Type:
@@ -47,7 +47,7 @@ def singleton(cls: Type) -> Type:
         class
             The only instance of the class.
 
-        """ ""
+        """
         if cls not in instances:
             instances[cls] = cls(*args, **kwargs)
         return instances[cls]

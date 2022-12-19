@@ -308,6 +308,7 @@ def setup() -> None:  # pragma: no cover
 def afni_docker() -> None:  # pragma: no cover
     """Configure AFNI-Docker wrappers."""
     import junifer
+
     pkg_path = Path(junifer.__path__[0])  # type: ignore
     afni_wrappers_path = pkg_path / "api" / "res" / "afni"
     msg = f"""

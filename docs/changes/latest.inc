@@ -96,6 +96,8 @@ Enhancements
 - Refactor :class:`junifer.pipeline.PipelineStepMixin` to improve its implementation and validation for pipeline steps
   (:gh:`152` by `Synchon Mandal`_).
 
+- Implement :class:`junifer.markers.ReHoParcels` and :class:`junifer.markers.ReHoSpheres` markers (:gh:`36` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
