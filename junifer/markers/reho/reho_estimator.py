@@ -112,7 +112,7 @@ class ReHoEstimator:
         Raises
         ------
         RuntimeError
-            If the 3dReHo command fails due to some issue
+            If the 3dReHo command fails due to some issue.
 
         Notes
         -----
@@ -120,8 +120,9 @@ class ReHoEstimator:
         3dReHo help check:
         https://afni.nimh.nih.gov/pub/dist/doc/program_help/3dReHo.html
 
-        Please note that that you cannot mix `box_*` and `neigh_*` arguments.
-        The arguments are prioritized by their order in the function signature.
+        Please note that that you cannot mix ``box_*`` and ``neigh_*``
+        arguments. The arguments are prioritized by their order in the function
+        signature.
 
         As the process also depends on the conversion of AFNI files to NIFTI
         via afni's 3dAFNItoNIFTI, the help for that can be found at:
@@ -256,7 +257,7 @@ class ReHoEstimator:
         Raises
         ------
         ValueError
-            If `nneigh` is invalid.
+            If ``nneigh`` is invalid.
 
         """
         valid_nneigh = (7, 19, 27, 125)
