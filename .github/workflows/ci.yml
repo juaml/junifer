@@ -36,7 +36,7 @@ jobs:
         curl -O https://afni.nimh.nih.gov/pub/dist/tgz/linux_ubuntu_16_64.tgz
         tar -xvzf linux_ubuntu_16_64.tgz
         chmod -R +x linux_ubuntu_16_64
-        echo "export PATH=$PATH:linux_ubuntu_16_64/" >> $GITHUB_PATH
+        echo "$(pwd)/linux_ubuntu_16_64/" >> $GITHUB_PATH
       if: matrix.python-version == 3.10
     - name: Check AFNI
       run: |
