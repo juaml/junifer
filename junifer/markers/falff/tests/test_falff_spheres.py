@@ -91,7 +91,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_afni() -> None:
 def test_AmplitudeLowFrequencyFluctuationSpheres_python_vs_afni(
     fractional: bool,
 ) -> None:
-    """Test AmplitudeLowFrequencyFluctuationSpheres using python.
+    """Test AmplitudeLowFrequencyFluctuationSpheres python vs afni results.
 
     Parameters
     ----------
