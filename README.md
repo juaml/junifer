@@ -46,6 +46,12 @@ pip install junifer
 
 If you use junifer in a scientific publication, we would appreciate if you cite our work. Currently, we do not have a publication, so feel free to use the project [URL](https://juaml.github.io/junifer).
 
+## Funding
+
+We thank the [Helmholtz Imaging Platform](https://helmholtz-imaging.de/) and
+[SMHB](https://www.fz-juelich.de/en/smhb) for supporting development of Junifer.
+(The funding sources had no role in the design, implementation and evaluation of the pipeline.)
+
 ## Contribution
 
 Contributions are welcome and greatly appreciated. Please read the [guidelines](https://juaml.github.io/junifer/main/contributing.html) to get started.
