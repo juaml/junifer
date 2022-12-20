@@ -1,4 +1,4 @@
-![Junifer logo](docs/images/junifer_logo.png)
+![Junifer logo](docs/images/junifer_logo.png "junifer logo")
 
 # junifer - JUelich NeuroImaging FEature extractoR
 
