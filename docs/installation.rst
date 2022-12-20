@@ -65,16 +65,16 @@ find a list of all external dependencies that are required for specific markers.
 AFNI
 ----
 
-To install AFNI, you can always follow the `AFNI official instructions 
+To install AFNI, you can always follow the `AFNI official instructions
 <https://afni.nimh.nih.gov/pub/dist/doc/htmldoc/background_install/main_toc.html>`_. Additionally, you can also follow
 the following steps to install and configure the AFNI Docker container in your local system.
 
-.. important:: 
+.. important::
 
-  The AFNI Docker container wrappers add the commands required by Junifer. Using this commands have
-  some limitations, mostly related to handling files and paths. Junifer knows about this and uses this
-  commands in the proper way. Keep this in mind if you try to use the AFNI Docker wrappers outside of junifer. This
-  caveats and limitations are not documented.
+  The AFNI Docker container wrappers add the commands required by junifer. Using these commands have
+  some limitations, mostly related to handling files and paths. Junifer knows about this and uses these
+  commands in the proper way. Keep this in mind if you try to use the AFNI Docker wrappers outside of junifer.
+  These caveats and limitations are not documented.
 
 1. Install Docker. You can follow the `Docker official instructions <https://docs.docker.com/get-docker/>`_.
 2. Pull the AFNI Docker image from `Docker Hub <https://hub.docker.com/r/afni/afni>`_:
@@ -89,7 +89,7 @@ the following steps to install and configure the AFNI Docker container in your l
 
   junifer setup afni-docker
 
-Take the last line and copy it to your ``.bashrc`` or ``.zshrc`` file. 
+Take the last line and copy it to your ``.bashrc`` or ``.zshrc`` file.
 
 Or, alternatively, you can exceute this command which will update the ``~/.bashrc`` for you:
 
