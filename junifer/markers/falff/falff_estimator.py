@@ -4,20 +4,18 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-import typing
-from typing import TYPE_CHECKING, Any, Dict, Tuple, Union, Optional
-
 import shutil
 import subprocess
 import tempfile
+import typing
 from functools import lru_cache
 from pathlib import Path
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
 
 import nibabel as nib
 import numpy as np
-from scipy.fft import fft, fftfreq
-
 from nilearn import image as nimg
+from scipy.fft import fft, fftfreq
 
 from ...utils import logger, raise_error
 from ..utils import singleton

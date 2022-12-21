@@ -5,13 +5,12 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
+from abc import abstractmethod
 from typing import Dict, List, Optional
 
-from abc import abstractmethod
-
+from ...utils.logging import raise_error
 from ..base import BaseMarker
 from .falff_estimator import AmplitudeLowFrequencyFluctuationEstimator
-from ...utils.logging import raise_error
 
 
 class AmplitudeLowFrequencyFluctuationBase(BaseMarker):

@@ -7,10 +7,9 @@
 
 from typing import Dict, Optional
 
-
 from ...api.decorators import register_marker
-from .falff_base import AmplitudeLowFrequencyFluctuationBase
 from .. import SphereAggregation
+from .falff_base import AmplitudeLowFrequencyFluctuationBase
 
 
 @register_marker

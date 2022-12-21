@@ -3,19 +3,18 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-import pytest
 import time
-from scipy.stats import pearsonr
+
+import pytest
 from nibabel import Nifti1Image
+from scipy.stats import pearsonr
 
 from junifer.datareader import DefaultDataReader
 from junifer.markers.falff.falff_estimator import (
     AmplitudeLowFrequencyFluctuationEstimator,
 )
-from junifer.testing.datagrabbers import (
-    PartlyCloudyTestingDataGrabber,
-)
 from junifer.pipeline.utils import _check_afni
+from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.utils import logger
 
 
