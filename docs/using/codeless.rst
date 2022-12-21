@@ -16,7 +16,7 @@ As a reminder, this is how the pipeline looks like:
 Thus, the configuration file must configure each of the sections of the pipeline, as well as some general parameters.
 
 As an example, we will generate the configuration file for a pipeline that will extract the mean ``VBM_GM`` values
-using two different parcellations and one set of coordinates, from the *Oasis VBM Testing dataset* included in 
+using two different parcellations and one set of coordinates, from the *Oasis VBM Testing dataset* included in
 junifer.
 
 
@@ -55,8 +55,8 @@ In order to configure the pipeline, we need to configure each step:
 Data Grabber
 ^^^^^^^^^^^^
 
-The ``datagrabber`` section must be configured using the ``kind`` key to specify the datagrabber to use. Additional 
-keys correspond to the parameters of the datagrabber. 
+The ``datagrabber`` section must be configured using the ``kind`` key to specify the datagrabber to use. Additional
+keys correspond to the parameters of the datagrabber.
 
 For example, to use the :class:`junifer.datagrabber.DataladAOMICPIOP1` datagrabber, we just need to
 specify its name as the ``kind`` key.
@@ -104,7 +104,7 @@ Preprocessing
 ^^^^^^^^^^^^^
 
 Preprocessing is also an optional step, as it might be the case that no pre-processing is needed. In the case that
-preprocessing is needed, the section must be configured using the ``kind`` key to specify the preprocessor to use, 
+preprocessing is needed, the section must be configured using the ``kind`` key to specify the preprocessor to use,
 and additional keys to pass parameters to the preprocessor.
 
 For example, to use the :class:`junifer.preprocess.fMRIPrepConfoundRemover` preprocessor, we just need to specify its
@@ -113,7 +113,7 @@ name as the ``kind`` key, as well as its parameters.
 
 .. code-block:: yaml
 
-  preproces:
+  preprocess:
     kind: fMRIPrepConfoundRemover
     strategy:
       motion: full
@@ -133,7 +133,7 @@ Markers
 The ``markers`` section diverges from the previous ones, as we need to specify a list of markers. Each marker has a
 name that we can use to refer to it later, and a set of parameters that will be passed to the marker.
 
-For the *Oasis VBM Testing dataset* example, we want to compute the mean ``VBM_GM`` value for each parcel using the 
+For the *Oasis VBM Testing dataset* example, we want to compute the mean ``VBM_GM`` value for each parcel using the
 Schaefer parcellation (100 parcels, 7 networks), Schaefer parcellation (200 parcels, 7 networks), and the *DMNBuckner*
 network, using 5mm spheres. Thus, we will configure the ``markers`` section as follows:
 
@@ -199,6 +199,6 @@ This is how the full *Oasis VBM Testing dataset* example configuration file look
       radius: 5
       method: mean
 
-  storage: 
+  storage:
     kind: SQLiteFeatureStorage
     uri: /data/junifer/example/oasis_vbm_testing.sqlite
