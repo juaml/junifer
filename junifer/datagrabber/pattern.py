@@ -17,6 +17,10 @@ from .base import BaseDataGrabber
 from .utils import validate_patterns, validate_replacements
 
 
+# Accepted formats for confounds specification
+_CONFOUNDS_FORMATS = ("fmriprep", "adhoc")
+
+
 @register_datagrabber
 class PatternDataGrabber(BaseDataGrabber):
     """Concrete implementation for data grabbing using patterns.
@@ -56,13 +60,20 @@ class PatternDataGrabber(BaseDataGrabber):
         # Validate replacements
         validate_replacements(replacements=replacements, patterns=patterns)
 
+        # Validate confounds format
+        if confounds_format and confounds_format not in _CONFOUNDS_FORMATS:
+            raise_error(
+                "Invalid value for `confounds_format`, should be one of "
+                f"{_CONFOUNDS_FORMATS}."
+            )
+        self.confounds_format = confounds_format
+
         super().__init__(types=types, datadir=datadir)
         logger.debug("Initializing PatternDataGrabber")
         logger.debug(f"\tpatterns = {patterns}")
         logger.debug(f"\treplacements = {replacements}")
         self.patterns = patterns
         self.replacements = replacements
-        self.confounds_format = confounds_format
 
     @property
     def skip_file_check(self) -> bool:
@@ -191,8 +202,17 @@ class PatternDataGrabber(BaseDataGrabber):
                         )
             # Update path for the element
             out[t_type] = {"path": t_out}
-            # Update confounds format (if provided)
-            if self.confounds_format is not None:
+            # Update confounds format for BOLD_confounds
+            # (if found in the datagrabber)
+            if t_type == "BOLD_confounds":
+                if not self.confounds_format:
+                    raise_error(
+                        "`confounds_format` needs to be one of "
+                        f"{_CONFOUNDS_FORMATS}, None provided. "
+                        "As the datagrabber used specifies "
+                        "'BOLD_confounds', None is invalid."
+                    )
+                # Set the format
                 out[t_type].update({"format": self.confounds_format})
 
         return out
