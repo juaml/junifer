@@ -116,6 +116,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
             uri=uri,
             patterns=patterns,
             replacements=replacements,
+            confounds_format="fmriprep",
         )
 
     def get_item(self, subject: str, task: str) -> Dict:
