@@ -259,3 +259,48 @@ def test_PatternDataGrabber(tmp_path: Path) -> None:
     assert out1["func"]["path"] == out2["func"]["path"]
     assert out1["anat"]["path"] == out2["anat"]["path"]
     assert out1["vbm"]["path"] != out2["vbm"]["path"]
+
+
+def test_pattern_data_grabber_confounds_format_error_on_init() -> None:
+    """Test PatterDataGrabber confounds format error on initialisation."""
+    with pytest.raises(
+        ValueError, match="Invalid value for `confounds_format`"
+    ):
+        PatternDataGrabber(
+            types=["func"],
+            patterns={"func": "func/{subject}.nii"},
+            replacements=["subject"],
+            datadir="/tmp",
+            confounds_format="foobar",
+        )
+
+
+def test_pattern_data_grabber_confounds_format_error_on_fetch(
+    tmp_path: Path,
+) -> None:
+    """Test PatterDataGrabber confounds format error on fetching.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Create test directory path
+    tmpdir = tmp_path / "pattern_dg_test"
+    # Create final test directory
+    (tmpdir / "func" / "confounds").mkdir(exist_ok=True, parents=True)
+    # Create test confound file
+    (tmpdir / "func" / "confounds" / "sub-001.nii").touch()
+    # Initialise datagrabber
+    datagrabber = PatternDataGrabber(
+        types=["BOLD_confounds"],
+        patterns={"BOLD_confounds": "func/confounds/{subject}.nii"},
+        replacements=["subject"],
+        datadir=tmpdir,
+    )
+    # Check error on fetch
+    with pytest.raises(
+        ValueError, match="As the datagrabber used specifies 'BOLD_confounds'"
+    ):
+        datagrabber.get_item(subject="sub-001")
