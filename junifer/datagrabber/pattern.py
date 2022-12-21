@@ -7,7 +7,7 @@
 
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -35,6 +35,9 @@ class PatternDataGrabber(BaseDataGrabber):
         Replacements in the patterns for each item in the "element" tuple.
     datadir : str or pathlib.Path
         The directory where the data is / will be stored.
+    confounds_format : {"fmriprep", "adhoc"}, optional
+        The format of the confounds for the dataset (default None).
+
     """
 
     def __init__(
@@ -43,6 +46,7 @@ class PatternDataGrabber(BaseDataGrabber):
         patterns: Dict[str, str],
         replacements: Union[List[str], str],
         datadir: Union[str, Path],
+        confounds_format: Optional[str] = None,
     ) -> None:
         # Validate patterns
         validate_patterns(types=types, patterns=patterns)
@@ -58,6 +62,7 @@ class PatternDataGrabber(BaseDataGrabber):
         logger.debug(f"\treplacements = {replacements}")
         self.patterns = patterns
         self.replacements = replacements
+        self.confounds_format = confounds_format
 
     @property
     def skip_file_check(self) -> bool:
@@ -184,7 +189,12 @@ class PatternDataGrabber(BaseDataGrabber):
                             f"Cannot access {t_type} for {element}: "
                             f"File {t_out} does not exist"
                         )
+            # Update path for the element
             out[t_type] = {"path": t_out}
+            # Update confounds format (if provided)
+            if self.confounds_format is not None:
+                out[t_type].update({"format": self.confounds_format})
+
         return out
 
     def get_elements(self) -> List:
