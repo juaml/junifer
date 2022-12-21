@@ -76,6 +76,50 @@ def test_run_single_element(tmp_path: Path) -> None:
     assert len(files) == 1
 
 
+def test_run_single_element_with_preprocessing(tmp_path: Path) -> None:
+    """Test run function with single element and pre-processing.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Create working directory
+    workdir = tmp_path / "workdir_single_with_preprocess"
+    workdir.mkdir()
+    # Create output directory
+    outdir = tmp_path / "out"
+    outdir.mkdir()
+    # Create storage
+    uri = outdir / "test.sqlite"
+    storage["uri"] = uri  # type: ignore
+    # Run operations
+    run(
+        workdir=workdir,
+        datagrabber={
+            "kind": "PartlyCloudyTestingDataGrabber",
+            "reduce_confounds": False,
+        },
+        markers=[
+            {
+                "name": "Schaefer100x17_mean_FC",
+                "kind": "FunctionalConnectivityParcels",
+                "parcellation": "Schaefer100x17",
+                "agg_method": "mean",
+            }
+        ],
+        storage=storage,
+        preprocessor={
+            "kind": "fMRIPrepConfoundRemover",
+        },
+        elements=["sub-001"],
+    )
+    # Check files
+    files = list(outdir.glob("*.sqlite"))
+    assert len(files) == 1
+
+
 def test_run_multi_element(tmp_path: Path) -> None:
     """Test run function with multi element.
 
