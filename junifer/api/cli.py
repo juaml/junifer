@@ -113,7 +113,7 @@ def run(filepath: click.Path, element: str, verbose: click.Choice) -> None:
     datagrabber = config["datagrabber"]
     markers = config["markers"]
     storage = config["storage"]
-    preprocessor = config.get("preprocessor")
+    preprocessor = config.get("preprocess")
     elements = _parse_elements(element, config)
     # Perform operation
     api_run(
