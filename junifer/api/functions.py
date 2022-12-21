@@ -18,6 +18,7 @@ from ..datagrabber.base import BaseDataGrabber
 from ..markers.base import BaseMarker
 from ..markers.collection import MarkerCollection
 from ..pipeline.registry import build
+from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger, raise_error
 from ..utils.fs import make_executable
@@ -49,11 +50,38 @@ def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
     return datagrabber
 
 
+def _get_preprocessor(preprocessing_config: Dict) -> BasePreprocessor:
+    """Get preprocessor.
+
+    Parameters
+    ----------
+    preprocessing_config : dict
+        The config to get the preprocessor using.
+
+    Returns
+    -------
+    dict
+        The preprocessor.
+
+    """
+    preprocessor_params = preprocessing_config.copy()
+    preprocessor_kind = preprocessor_params.pop("kind")
+    preprocessor = build(
+        step="preprocessing",
+        name=preprocessor_kind,
+        baseclass=BasePreprocessor,
+        init_params=preprocessor_params,
+    )
+    preprocessor = typing.cast(BasePreprocessor, preprocessor)
+    return preprocessor
+
+
 def run(
     workdir: Union[str, Path],
     datagrabber: Dict,
     markers: List[Dict],
     storage: Dict,
+    preprocessor: Optional[Dict] = None,
     elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
 ) -> None:
     """Run the pipeline on the selected element.
@@ -76,6 +104,10 @@ def run(
         Storage to use. Must have a key ``kind`` with the kind of
         storage to use. All other keys are passed to the storage
         init function.
+    preprocessor : dict, optional
+        Preprocessor to use. Must have a key ``kind`` with the kind of
+        preprocessor to use. All other keys are passed to the preprocessor
+        init function (default None).
     elements : str or tuple or list of str or tuple, optional
         Element(s) to process. Will be used to index the datagrabber
         (default None).
@@ -84,10 +116,13 @@ def run(
     # Convert str to Path
     if isinstance(workdir, str):
         workdir = Path(workdir)
+
     if not isinstance(elements, list) and elements is not None:
         elements = [elements]
+
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber)
+
     # Copy to avoid changing the original dict
     _markers = [x.copy() for x in markers]
     built_markers = []
@@ -100,6 +135,7 @@ def run(
             init_params=t_marker,
         )
         built_markers.append(t_m)
+
     # Get storage engine to use
     storage_params = storage.copy()
     storage_kind = storage_params.pop("kind")
@@ -112,8 +148,19 @@ def run(
         init_params=storage_params,
     )
     storage_object = typing.cast(BaseFeatureStorage, storage_object)
+
+    # Get preprocessor to use (if provided)
+    if preprocessor is not None:
+        preprocessor_object = _get_preprocessor(preprocessor)
+    else:
+        preprocessor_object = None
+
     # Create new marker collection
-    mc = MarkerCollection(markers=built_markers, storage=storage_object)
+    mc = MarkerCollection(
+        markers=built_markers,
+        preprocessing=preprocessor_object,
+        storage=storage_object,
+    )
     # Fit elements
     with datagrabber_object:
         if elements is not None:
