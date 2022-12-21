@@ -26,5 +26,7 @@ Enhancements
 Bugs
 ~~~~
 
+- Fix ``junifer run`` to respect preprocess step specified in the pipeline (:gh:`159` by `Synchon Mandal`_).
+
 API changes
 ~~~~~~~~~~~
