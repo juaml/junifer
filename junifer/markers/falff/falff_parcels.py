@@ -7,10 +7,9 @@
 
 from typing import Dict, List, Optional, Union
 
-
 from ...api.decorators import register_marker
-from .falff_base import AmplitudeLowFrequencyFluctuationBase
 from .. import ParcelAggregation
+from .falff_base import AmplitudeLowFrequencyFluctuationBase
 
 
 @register_marker

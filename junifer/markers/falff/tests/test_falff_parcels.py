@@ -4,17 +4,17 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import pytest
-
 from pathlib import Path
+
+import pytest
 from numpy.testing import assert_array_equal
 from scipy.stats import pearsonr
 
 from junifer.datareader import DefaultDataReader
 from junifer.markers.falff import AmplitudeLowFrequencyFluctuationParcels
-from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
+from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.utils import logger
 
 
