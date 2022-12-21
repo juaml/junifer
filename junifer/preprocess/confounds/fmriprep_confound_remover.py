@@ -270,9 +270,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         ----------
         input : dict
             Dictionary containing the following keys:
-            - data: the confounds file loaded in memory (dataframe)
-            - format: format of the confounds file (must be "adhoc")
-            - mappings: dictionary containing the mappings from the adhoc
+
+            * ``data`` : the confounds file loaded in memory (dataframe)
+            * ``format`` : format of the confounds file (must be "adhoc")
+            * ``mappings`` : dictionary containing the mappings from the adhoc
             format to the fmriprep format as a dictionary with key "fmriprep"
 
         """
@@ -296,9 +297,9 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         input : dict
             Dictionary containing the following keys:
 
-            * path: path to the confounds file
-            * data: the confounds file loaded in memory (dataframe)
-            * format: format of the confounds file (must be "fmriprep")
+            * ``path`` : path to the confounds file
+            * ``data`` : the confounds file loaded in memory (dataframe)
+            * ``format`` : format of the confounds file (must be "fmriprep")
 
         Returns
         -------
@@ -374,7 +375,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         Parameters
         ----------
         input : dict
-            Dictionary containing the "BOLD_confounds" value from the
+            Dictionary containing the ``BOLD_confounds`` value from the
             Junifer Data object.
 
         Returns
@@ -436,11 +437,11 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         Parameters
         ----------
         input : dict
-            Dictionary containing the "BOLD" value from the
+            Dictionary containing the ``BOLD`` value from the
             Junifer Data object.
         extra_input : dict, optional
             Dictionary containing the rest of the Junifer Data object. Must
-            include the "BOLD_confounds" key.
+            include the ``BOLD_confounds`` key.
 
         """
 
