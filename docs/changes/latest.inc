@@ -20,6 +20,9 @@ Current (0.0.2.dev)
 Enhancements
 ~~~~~~~~~~~~
 
+- Allow :class:`junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber` to be accessible
+  via ``import junifer.testing.registry`` (:gh:`160` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 

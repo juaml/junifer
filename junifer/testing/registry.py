@@ -7,6 +7,7 @@
 from ..pipeline.registry import register
 from .datagrabbers import (
     OasisVBMTestingDatagrabber,
+    PartlyCloudyTestingDataGrabber,
     SPMAuditoryTestingDatagrabber,
 )
 
@@ -22,4 +23,10 @@ register(
     step="datagrabber",
     name="SPMAuditoryTestingDatagrabber",
     klass=SPMAuditoryTestingDatagrabber,
+)
+
+register(
+    step="datagrabber",
+    name="PartlyCloudyTestingDataGrabber",
+    klass=PartlyCloudyTestingDataGrabber,
 )
