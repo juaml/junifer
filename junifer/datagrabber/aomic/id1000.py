@@ -86,4 +86,5 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
             uri=uri,
             patterns=patterns,
             replacements=replacements,
+            confounds_format="fmriprep",
         )
