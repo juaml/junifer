@@ -107,6 +107,7 @@ class JuselessUCLA(PatternDataGrabber):
             datadir=datadir,
             patterns=patterns,
             replacements=replacements,
+            confounds_format="fmriprep",
         )
 
     def get_elements(self) -> List:
