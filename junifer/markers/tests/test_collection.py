@@ -10,10 +10,18 @@ import pytest
 from numpy.testing import assert_array_equal
 
 from junifer.datareader.default import DefaultDataReader
-from junifer.markers import MarkerCollection, ParcelAggregation
+from junifer.markers import (
+    FunctionalConnectivityParcels,
+    MarkerCollection,
+    ParcelAggregation,
+)
 from junifer.pipeline import PipelineStepMixin
+from junifer.preprocess import fMRIPrepConfoundRemover
 from junifer.storage import SQLiteFeatureStorage
-from junifer.testing.datagrabbers import OasisVBMTestingDatagrabber
+from junifer.testing.datagrabbers import (
+    OasisVBMTestingDatagrabber,
+    PartlyCloudyTestingDataGrabber,
+)
 
 
 def test_marker_collection_incorrect_markers() -> None:
@@ -34,7 +42,7 @@ def test_marker_collection_incorrect_markers() -> None:
         MarkerCollection(wrong_markers)
 
 
-def test_marker_collection():
+def test_marker_collection() -> None:
     """Test MarkerCollection."""
     markers = [
         ParcelAggregation(
@@ -102,6 +110,34 @@ def test_marker_collection():
             assert_array_equal(
                 out[t_name]["VBM_GM"]["data"], out2[t_name]["VBM_GM"]["data"]
             )
+
+
+def test_marker_collection_with_preprocessing() -> None:
+    """Test MarkerCollection with preprocessing."""
+    markers = [
+        FunctionalConnectivityParcels(
+            parcellation="Schaefer100x17",
+            agg_method="mean",
+            name="Schaefer100x17_mean_FC",
+        ),
+        FunctionalConnectivityParcels(
+            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
+            agg_method="mean",
+            name="TianxS2x3TxMNInonlinear2009cAsym_mean_FC",
+        ),
+    ]
+    mc = MarkerCollection(
+        markers=markers,
+        preprocessing=fMRIPrepConfoundRemover(),
+    )
+    assert mc._markers == markers
+    assert mc._preprocessing is not None
+    assert mc._storage is None
+    assert isinstance(mc._datareader, DefaultDataReader)
+
+    # Create testing datagrabber
+    dg = PartlyCloudyTestingDataGrabber(reduce_confounds=False)
+    mc.validate(dg)
 
 
 def test_marker_collection_storage(tmp_path: Path) -> None:

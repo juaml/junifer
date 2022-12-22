@@ -116,6 +116,11 @@ class MarkerCollection:
         t_data = self._datareader.validate(t_data)
         logger.info(f"Data Reader output type: {t_data}")
 
+        if self._preprocessing is not None:
+            logger.info("Validating Preprocessor:")
+            t_data = self._preprocessing.validate(t_data)
+            logger.info(f"Preprocess output type: {t_data}")
+
         for marker in self._markers:
             logger.info(f"Validating Marker: {marker.name}")
             # Validate marker
