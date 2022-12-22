@@ -34,7 +34,7 @@ def test_marker_collection_incorrect_markers() -> None:
         MarkerCollection(wrong_markers)
 
 
-def test_marker_collection():
+def test_marker_collection() -> None:
     """Test MarkerCollection."""
     markers = [
         ParcelAggregation(
