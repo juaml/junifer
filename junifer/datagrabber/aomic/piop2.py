@@ -113,6 +113,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             uri=uri,
             patterns=patterns,
             replacements=replacements,
+            confounds_format="fmriprep",
         )
 
     def get_elements(self) -> List:

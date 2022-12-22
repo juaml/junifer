@@ -30,3 +30,6 @@ Bugs
 
 API changes
 ~~~~~~~~~~~
+
+- Add ``confounds_format`` parameter to :class:`junifer.datagrabber.PatternDataGrabber` constructor for
+  improved handling of confounds specified via ``BOLD_confounds`` data type (:gh:`158` by `Synchon Mandal`_).

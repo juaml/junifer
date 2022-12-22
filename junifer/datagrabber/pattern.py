@@ -7,7 +7,7 @@
 
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -15,6 +15,10 @@ from ..api.decorators import register_datagrabber
 from ..utils import logger, raise_error
 from .base import BaseDataGrabber
 from .utils import validate_patterns, validate_replacements
+
+
+# Accepted formats for confounds specification
+_CONFOUNDS_FORMATS = ("fmriprep", "adhoc")
 
 
 @register_datagrabber
@@ -35,6 +39,9 @@ class PatternDataGrabber(BaseDataGrabber):
         Replacements in the patterns for each item in the "element" tuple.
     datadir : str or pathlib.Path
         The directory where the data is / will be stored.
+    confounds_format : {"fmriprep", "adhoc"}, optional
+        The format of the confounds for the dataset (default None).
+
     """
 
     def __init__(
@@ -43,6 +50,7 @@ class PatternDataGrabber(BaseDataGrabber):
         patterns: Dict[str, str],
         replacements: Union[List[str], str],
         datadir: Union[str, Path],
+        confounds_format: Optional[str] = None,
     ) -> None:
         # Validate patterns
         validate_patterns(types=types, patterns=patterns)
@@ -51,6 +59,14 @@ class PatternDataGrabber(BaseDataGrabber):
             replacements = [replacements]
         # Validate replacements
         validate_replacements(replacements=replacements, patterns=patterns)
+
+        # Validate confounds format
+        if confounds_format and confounds_format not in _CONFOUNDS_FORMATS:
+            raise_error(
+                "Invalid value for `confounds_format`, should be one of "
+                f"{_CONFOUNDS_FORMATS}."
+            )
+        self.confounds_format = confounds_format
 
         super().__init__(types=types, datadir=datadir)
         logger.debug("Initializing PatternDataGrabber")
@@ -184,7 +200,21 @@ class PatternDataGrabber(BaseDataGrabber):
                             f"Cannot access {t_type} for {element}: "
                             f"File {t_out} does not exist"
                         )
+            # Update path for the element
             out[t_type] = {"path": t_out}
+            # Update confounds format for BOLD_confounds
+            # (if found in the datagrabber)
+            if t_type == "BOLD_confounds":
+                if not self.confounds_format:
+                    raise_error(
+                        "`confounds_format` needs to be one of "
+                        f"{_CONFOUNDS_FORMATS}, None provided. "
+                        "As the datagrabber used specifies "
+                        "'BOLD_confounds', None is invalid."
+                    )
+                # Set the format
+                out[t_type].update({"format": self.confounds_format})
+
         return out
 
     def get_elements(self) -> List:
