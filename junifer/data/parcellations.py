@@ -365,7 +365,7 @@ def _retrieve_schaefer(
         If invalid value is provided for `n_rois` or `yeo_networks` or if
         there is a problem fetching the parcellation.
     """
-    logger.info("Parcellatikon parameters:")
+    logger.info("Parcellation parameters:")
     logger.info(f"\tn_rois: {n_rois}")
     logger.info(f"\tyeo_networks: {yeo_networks}")
     logger.info(f"\tresolution: {resolution}")
