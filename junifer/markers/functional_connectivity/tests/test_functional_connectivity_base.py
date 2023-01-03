@@ -5,12 +5,11 @@
 
 import pytest
 
-from junifer.markers.functional_connectivity.functional_connectivity_base import (
-    FunctionalConnectivityBase,
-)
+# done to keep line length 79
+import junifer.markers.functional_connectivity as fc
 
 
 def test_base_functional_connectivity_marker_abstractness() -> None:
     """Test FunctionalConnectivityBase is an abstract base class."""
     with pytest.raises(TypeError, match="abstract"):
-        FunctionalConnectivityBase()
+        fc.functional_connectivity_base.FunctionalConnectivityBase()
