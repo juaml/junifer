@@ -13,7 +13,7 @@ from nilearn.connectome import ConnectivityMeasure
 from numpy.testing import assert_array_almost_equal
 from sklearn.covariance import EmpiricalCovariance
 
-from junifer.markers.functional_connectivity_spheres import (
+from junifer.markers.functional_connectivity import (
     FunctionalConnectivitySpheres,
 )
 from junifer.markers.sphere_aggregation import SphereAggregation
