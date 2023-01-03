@@ -23,6 +23,8 @@ Enhancements
 - Allow :class:`junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber` to be accessible
   via ``import junifer.testing.registry`` (:gh:`160` by `Synchon Mandal`_).
 
+- Update docstrings and fix typo in log message (:gh:`165` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
