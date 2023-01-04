@@ -7,7 +7,7 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Callable, Dict, Type, Union
+from typing import Any, Callable, Dict, Type, Union, List
 
 import numpy as np
 import pandas as pd
@@ -55,7 +55,9 @@ def singleton(cls: Type) -> Type:
     return get_instance
 
 
-def _ets(bold_ts: np.ndarray) -> np.ndarray:
+def _ets(
+    bold_ts: np.ndarray, roi_names: Union[None, List[str]] = None
+) -> np.ndarray:
     """Compute the edge-wise time series based on BOLD time series.
 
     Take a timeseries of brain areas, and calculate timeseries for each
@@ -66,12 +68,21 @@ def _ets(bold_ts: np.ndarray) -> np.ndarray:
     ----------
     bold_ts : np.ndarray
         BOLD time series (time x ROIs)
-
+    roi_names : List[str] or None
+        List containing the names of the ROIs.
+        Order of the ROI names should correspond to order of the columns
+        in bold_ts. If None (default), only the edge-wise time series are
+        returned, without corresponding edge labels.
+    
     Returns
     -------
-    np.ndarray
+    ets : np.ndarray
         edge-wise time series, i.e. estimate of functional connectivity at each
         time point.
+    edge_names : List[str]
+        List of edge names corresponding to columns in the 
+        edge-wise time series. This is only returned if the roi_names
+        are specified.
 
     References
     ----------
@@ -88,7 +99,21 @@ def _ets(bold_ts: np.ndarray) -> np.ndarray:
     # indices of unique edges (lower triangle)
     u, v = np.tril_indices(n_roi, k=-1)
     # Compute the ETS
-    return timeseries[:, u] * timeseries[:, v]
+    ets = timeseries[:, u] * timeseries[:, v]
+    # Obtain the corresponding edge labels if specified else return
+    if roi_names is None:
+        return ets
+    else:
+        if len(roi_names) != n_roi:
+            raise_error(
+                "List of roi names does not correspond "
+                "to the number of ROIs in the timeseries!"
+            )
+        roi_names = np.array(roi_names)
+        edge_names = [
+            "~".join([x, y]) for x, y in zip(roi_names[u], roi_names[v])
+        ]
+        return ets, list(edge_names)
 
 
 def _correlate_dataframes(
