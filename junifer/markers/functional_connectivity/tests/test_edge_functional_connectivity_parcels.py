@@ -27,7 +27,11 @@ def test_EdgeCentricFCParcels(tmp_path: Path) -> None:
     ni_data = datasets.fetch_spm_auditory(subject_id="sub001")
     fmri_img = image.concat_imgs(ni_data.func)  # type: ignore
 
-    efc = EdgeCentricFCParcels(parcellation="TianxS1x3TxMNInonlinear2009cAsym")
+    # Check empirical correlation method parameters
+    efc = EdgeCentricFCParcels(
+        parcellation="TianxS1x3TxMNInonlinear2009cAsym",
+        cor_method_params={"empirical": True}
+    )
     all_out = efc.fit_transform({"BOLD": {"data": fmri_img, "meta": {}}})
 
     out = all_out["BOLD"]
@@ -44,18 +48,6 @@ def test_EdgeCentricFCParcels(tmp_path: Path) -> None:
 
     # check correct output
     assert efc.get_output_type("BOLD") == "matrix"
-
-    # Check empirical correlation method parameters
-    efc = EdgeCentricFCParcels(
-        parcellation="TianxS1x3TxMNInonlinear2009cAsym",
-        cor_method_params={"empirical": True}
-    )
-
-    meta = {
-        "element": {"subject": "sub001"},
-        "dependencies": {"nilearn"},
-    }
-    all_out = efc.fit_transform({"BOLD": {"data": fmri_img, "meta": meta}})
 
     uri = tmp_path / "test_fc_parcellation.sqlite"
     # Single storage, must be the uri
