@@ -73,14 +73,14 @@ def _ets(
         Order of the ROI names should correspond to order of the columns
         in bold_ts. If None (default), only the edge-wise time series are
         returned, without corresponding edge labels.
-    
+
     Returns
     -------
     ets : np.ndarray
         edge-wise time series, i.e. estimate of functional connectivity at each
         time point.
     edge_names : List[str]
-        List of edge names corresponding to columns in the 
+        List of edge names corresponding to columns in the
         edge-wise time series. This is only returned if the roi_names
         are specified.
 
