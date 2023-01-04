@@ -4,10 +4,11 @@
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
 #          Xuan Li <xu.li@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 from pathlib import Path
-from typing import Dict, Union
+from typing import Dict, List, Union
 
 from ...api.decorators import register_datagrabber
 from ..pattern_datalad import PatternDataladDataGrabber
@@ -23,25 +24,18 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
+    types: {"BOLD", "BOLD_confounds", "T1w", "probseg_CSF", "probseg_GM", \
+           "probseg_WM", "DWI"} or a list of the options, optional
+        AOMIC data types. If None, all available data types are selected.
+        (default None).
 
     """
 
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
+        types: Union[str, List[str], None] = None,
     ) -> None:
-        # The types of data
-        types = [
-            "BOLD",
-            "BOLD_confounds",
-            "BOLD_mask",
-            "T1w",
-            "T1w_mask",
-            "probseg_CSF",
-            "probseg_GM",
-            "probseg_WM",
-            "DWI",
-        ]
         # The patterns
         patterns = {
             "BOLD": (
@@ -90,6 +84,13 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                 "sub-{subject}_desc-preproc_dwi.nii.gz"
             ),
         }
+        # Set default types
+        if types is None:
+            types = list(patterns.keys())
+        # Convert single type into list
+        else:
+            if not isinstance(types, list):
+                types = [types]
         # The replacements
         replacements = ["subject"]
         uri = "https://github.com/OpenNeuroDatasets/ds003097.git"
