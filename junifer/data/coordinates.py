@@ -47,6 +47,7 @@ _available_coordinates: Dict[
     "VigAtt": _vois_meta_path / "VigAtt_VOIs.txt",
     "WM": _vois_meta_path / "WM_VOIs.txt",
     "Power": _vois_meta_path / "Power2011_MNI_VOIs.txt",
+    "Dosenbach": _vois_meta_path / "Dosenbach2010_MNI_VOIs.txt",
 }
 
 
