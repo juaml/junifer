@@ -460,6 +460,12 @@ Available
        | Functional network organization of the human brain.
        | Neuron, Volume 72(4), Pages 665–678 (2011).
        | https://doi.org/10.1016/j.neuron.2011.09.006
+   * - Brain maturity functional connections from Dosenbach et al. (2010)
+     - 0.0.2
+     - | Dosenbach, N.U.F., Nardos, B., Cohen, A.L. et al.
+       | Prediction of Individual Brain Maturity Using fMRI
+       | Science, Volume 329(5997), Pages 1358-1361 (2010).
+       | https://doi.org/10.1126/science.1194144
 
 
 Planned
