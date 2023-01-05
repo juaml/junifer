@@ -8,8 +8,8 @@ from abc import abstractmethod
 from typing import Any, Dict, List, Optional
 
 from ...utils import raise_error
-from ..utils import _voxelwise_tsnr
 from ..base import BaseMarker
+from ..utils import _voxelwise_tsnr
 
 
 class TemporalSNRBase(BaseMarker):
@@ -106,7 +106,6 @@ class TemporalSNRBase(BaseMarker):
 
             * ``data`` : functional connectivity matrix as a ``numpy.ndarray``.
             * ``columns`` : the column labels for the computed values as a list
-            * ``row_names`` : (if more than one row is present in data): "scan"
 
         """
         # calculate voxelwise temporal snr in an image

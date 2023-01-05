@@ -11,8 +11,8 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
 import pandas as pd
-from scipy.stats import zscore
 from nilearn import image
+from scipy.stats import zscore
 
 from ..utils import raise_error
 
