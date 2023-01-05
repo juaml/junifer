@@ -27,6 +27,8 @@ Enhancements
 
 - Add support for ``Power`` coordinates (:gh:`167` by `Synchon Mandal`_).
 
+- Add support for ``Dosenbach`` coordinates (:gh:`168` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
