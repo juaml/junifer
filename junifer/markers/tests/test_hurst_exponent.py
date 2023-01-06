@@ -23,7 +23,7 @@ PARCELLATION = "Schaefer100x17"
 
 
 def test_compute() -> None:
-    """Test COMPLEXITY compute()."""
+    """Test HurstExponent compute()."""
     with SPMAuditoryTestingDatagrabber() as dg:
         # Fetch element
         out = dg["sub001"]
@@ -32,10 +32,9 @@ def test_compute() -> None:
         # Create input data
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
-        # Compute the Complexity markers
-        measure_type = measure_type = {"_hurst_exponent": {"method": "dfa"}}
+        # Compute the HurstExponent marker
         hurst = HurstExponent(
-            parcellation=PARCELLATION, measure_type=measure_type
+            parcellation=PARCELLATION
         )
         new_out = hurst.compute(input_dict)
 
@@ -52,7 +51,7 @@ def test_compute() -> None:
 
 
 def test_get_output_type() -> None:
-    """Test COMPLEXITY get_output_type()."""
+    """Test HurstExponent get_output_type()."""
     hurst = HurstExponent(parcellation=PARCELLATION)
     input_list = ["BOLD"]
     input_list = hurst.get_output_type(input_list)
@@ -61,7 +60,7 @@ def test_get_output_type() -> None:
 
 
 def test_store(tmp_path: Path) -> None:
-    """Test COMPLEXITY store().
+    """Test HurstExponent store().
 
     Parameters
     ----------
@@ -75,7 +74,7 @@ def test_store(tmp_path: Path) -> None:
         # Load BOLD image
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
-        # Compute the complexity measures
+        # Compute the HurstExponent measure
         hurst = HurstExponent(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(

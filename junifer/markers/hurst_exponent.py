@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 
 @register_marker
 class HurstExponent(BaseMarker):
-    """Class for the extraction of complexity features from a timeseries.
+    """Class for the extraction of Hurst exponent from a timeseries.
 
     Parameters
     ----------
@@ -31,12 +31,6 @@ class HurstExponent(BaseMarker):
     aggregation_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
-    measure_type: dict
-        A dictionary including the name of the desired complexity measure
-        to be extracted and its associated parameters. The measures and
-        their default values include:
-
-        {"_hurst_exponent": {"reserved": None}}
 
     name : str, optional
         The name of the marker. If None, will use the class name (default
@@ -47,7 +41,6 @@ class HurstExponent(BaseMarker):
     def __init__(
         self,
         parcellation: str,
-        measure_type: dict = None,
         aggregation_method: str = "mean",
         name: Optional[str] = None,
     ) -> None:
@@ -55,10 +48,6 @@ class HurstExponent(BaseMarker):
         self.aggregation_method = aggregation_method
         # measure_type should be a dctionary with keys as the function names,
         # and values as another dictionary with function parameters.
-        if measure_type is None:
-            self.measure_type = {"_hurst_exponent": {"method": "dfa"}}
-        else:
-            self.measure_type = measure_type
 
         super().__init__(name=name)
 
@@ -158,12 +147,12 @@ class HurstExponent(BaseMarker):
 
         # Calculate complexity and et correct column/row labels
         bold_ts = pa_dict["data"]
-        measure_type = self.measure_type
-        params = list(measure_type.values())[0]
+        params = {"method": "dfa"}
         tmp = _hurst_exponent(bold_ts, params)  # n_roi x 1
+        method = params["method"]
         out = {}
         out["data"] = tmp
-        out["col_names"] = self.measure_type.keys()
+        out["col_names"] = f"HE_{method}"
         out["row_names"] = pa_dict["columns"]
 
         return out
