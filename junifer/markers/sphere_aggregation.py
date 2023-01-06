@@ -127,7 +127,6 @@ class SphereAggregation(BaseMarker):
 
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``columns`` : the column labels for the computed values as a list
-            * ``row_names`` (if more than one row is present in data): "scan"
 
         """
         t_input = input["data"]

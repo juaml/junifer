@@ -30,7 +30,7 @@ class PatternDataGrabber(BaseDataGrabber):
     Parameters
     ----------
     types : list of str
-        The types of data to be grabbed (default None).
+        The types of data to be grabbed.
     patterns : dict
         Patterns for each type of data as a dictionary. The keys are the types
         and the values are the patterns. Each occurrence of the string
