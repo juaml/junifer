@@ -25,6 +25,8 @@ Enhancements
 
 - Update docstrings and fix typo in log message (:gh:`165` by `Synchon Mandal`_).
 
+- Add support for ``Power`` coordinates (:gh:`167` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
