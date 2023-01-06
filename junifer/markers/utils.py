@@ -13,7 +13,7 @@ from typing import Callable, List, Optional, Tuple, Union
 import neurokit2 as nk
 import numpy as np
 import pandas as pd
-from ptpython.repl import embed
+# from ptpython.repl import embed
 from scipy.stats import zscore
 
 from ..utils import raise_error, warn_with_log
@@ -263,8 +263,8 @@ def _range_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
            Range Entropy: A Bridge between Signal Complexity and
            Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
     """
-    print("Stop: _range_entropy_auc")
-    embed(globals(), locals())
+    # print("Stop: _range_entropy_auc")
+    # embed(globals(), locals())
 
     emb_dim = params["m"]
     delay = params["delay"]
