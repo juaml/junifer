@@ -13,7 +13,7 @@ from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import load_parcellation
-from junifer.markers.hurst_exponent import HurstExponent
+from junifer.markers.complexity.hurst_exponent import HurstExponent
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 

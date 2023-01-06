@@ -24,3 +24,4 @@ from .temporal_snr import (
     TemporalSNRSpheres,
 )
 from .hurst_exponent import HurstExponent
+from .complexity.hurst_exponent import HurstExponent

@@ -96,15 +96,16 @@ class HurstExponent(ComplexityBase):
         """
         # Extract aggregated BOLD timeseries
         bold_timeseries = self._extract_bold_timeseries(input=input)
+        method = self.hurst_exponent_params["method"]
 
         # Calculate Hurst exponent
-        logger.info("Calculating Hurst exponent.")
+        logger.info(f"Calculating Hurst exponent ({method}).")
         roi_wise_hurst_exponent_map = _hurst_exponent(
             bold_timeseries["data"], self.hurst_exponent_params
         )  # n_roi X 1
         # Initialize output
         output = {}
         output["data"] = roi_wise_hurst_exponent_map
-        output["col_names"] = "hurst_exponent"
+        output["col_names"] = f"hurst_exponent_{method}"
         output["row_names"] = bold_timeseries["columns"]
         return output
