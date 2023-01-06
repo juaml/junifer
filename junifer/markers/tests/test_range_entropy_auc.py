@@ -13,7 +13,7 @@ from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import load_parcellation
-from junifer.markers.complexity.hurst_exponent import HurstExponent
+from junifer.markers.complexity.range_entropy_auc import RangeEntropyAUC
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
@@ -23,7 +23,7 @@ PARCELLATION = "Schaefer100x17"
 
 
 def test_compute() -> None:
-    """Test HurstExponent compute()."""
+    """Test RangeEntropyAUC compute()."""
     with SPMAuditoryTestingDatagrabber() as dg:
         # Fetch element
         out = dg["sub001"]
@@ -32,9 +32,9 @@ def test_compute() -> None:
         # Create input data
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
-        # Compute the HurstExponent marker
-        hurst = HurstExponent(parcellation=PARCELLATION)
-        new_out = hurst.compute(input_dict)
+        # Compute the RangeEntropyAUC marker
+        rangeen_b_auc = RangeEntropyAUC(parcellation=PARCELLATION)
+        new_out = rangeen_b_auc.compute(input_dict)
 
         # Load parcellation
         test_parcellation, _, _ = load_parcellation(PARCELLATION)
@@ -49,8 +49,8 @@ def test_compute() -> None:
 
 
 def test_get_output_type() -> None:
-    """Test HurstExponent get_output_type()."""
-    hurst = HurstExponent(parcellation=PARCELLATION)
+    """Test RangeEntropyAUC get_output_type()."""
+    hurst = RangeEntropyAUC(parcellation=PARCELLATION)
     input_list = ["BOLD"]
     input_list = hurst.get_output_type(input_list)
     assert len(input_list) == 1
@@ -58,7 +58,7 @@ def test_get_output_type() -> None:
 
 
 def test_store(tmp_path: Path) -> None:
-    """Test HurstExponent store().
+    """Test RangeEntropyAUC store().
 
     Parameters
     ----------
@@ -72,12 +72,12 @@ def test_store(tmp_path: Path) -> None:
         # Load BOLD image
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
-        # Compute the HurstExponent measure
-        hurst = HurstExponent(parcellation=PARCELLATION)
+        # Compute the RangeEntropyAUC measure
+        rangeen_b_auc = RangeEntropyAUC(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(
             uri=str((tmp_path / "test.db").absolute()),
             single_output=True,
         )
         # Store
-        hurst.fit_transform(input=input_dict, storage=storage)
+        rangeen_b_auc.fit_transform(input=input_dict, storage=storage)

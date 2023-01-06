@@ -10,12 +10,11 @@
 
 from typing import Callable, List, Optional, Tuple, Union
 
+import neurokit2 as nk
 import numpy as np
 import pandas as pd
-
 from ptpython.repl import embed
 from scipy.stats import zscore
-import neurokit2 as nk
 
 from ..utils import raise_error, warn_with_log
 
@@ -122,10 +121,8 @@ def _correlate_dataframes(
         .loc["df2", "df1"]
     )
 
-def _hurst_exponent(
-    bold_ts: np.ndarray,
-    params: dict
-) -> np.ndarray:
+
+def _hurst_exponent(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise Hurst exponent of bold_ts.
 
     - Hurst exponent: Take a timeseries of brain areas, and
@@ -190,10 +187,8 @@ def _hurst_exponent(
 
     return hurst_roi
 
-def _range_entropy(
-    bold_ts: np.ndarray,
-    params: dict
-    ) -> np.ndarray:
+
+def _range_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise range entropy from 2d BOLD time series.
     - Range entropy: Take a timeseries of brain areas, and calculate
       range entropy according to the method outlined in [1].
@@ -202,7 +197,7 @@ def _range_entropy(
     bold_ts : np.ndarray
         BOLD time series (time x ROIs)
     params : dict
-        a dctionary with keys as the function names, and values as another 
+        a dctionary with keys as the function names, and values as another
         dictionary with function parameters.
     Returns
     -------
@@ -223,8 +218,9 @@ def _range_entropy(
 
     assert isinstance(emb_dim, int), "Embedding dimension must be integer."
     assert isinstance(delay, int), "Delay must be integer."
-    assert isinstance(tolerance, float), \
-        "Tolerance must be a float number between 0 and 1."
+    assert isinstance(
+        tolerance, float
+    ), "Tolerance must be a float number between 0 and 1."
 
     _, n_roi = bold_ts.shape
     range_en_roi = np.zeros((n_roi, 1))
@@ -234,13 +230,75 @@ def _range_entropy(
         sig = bold_ts[:, idx_roi]
         tmp = nk.entropy_range(
             sig,
-            dimension = emb_dim,
-            delay = delay,
-            tolerance = tolerance,
-            method = "mSampEn"  # RangeEn B
+            dimension=emb_dim,
+            delay=delay,
+            tolerance=tolerance,
+            method="mSampEn",  # RangeEn B
         )
 
         range_en_roi[idx_roi] = tmp[0]
-        
+
     return range_en_roi
 
+
+def _range_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
+    """Compute the region-wise AUC of range entropy from 2d BOLD time series.
+    - AUC of range entropy: Take a timeseries of brain areas, calculate
+      range entropy according to the method outlined in [1] across the range
+      of tolerance value r from 0 to 1, and compute its area under the curve.
+    Parameters
+    ----------
+    bold_ts : np.ndarray
+        BOLD time series (time x ROIs)
+    params : dict
+        a dctionary with keys as the function names, and values as another
+        dictionary with function parameters.
+    Returns
+    -------
+    range_en_auc_roi: np.ndarray
+        ROI-wise brain map of the AUC of range entropy.
+    References
+    ----------
+    .. [1] A. Omidvarnia et al. (2018)
+           Range Entropy: A Bridge between Signal Complexity and
+           Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
+    """
+    print("Stop: _range_entropy_auc")
+    embed(globals(), locals())
+
+    emb_dim = params["m"]
+    delay = params["delay"]
+    n_r = params["n_r"]
+
+    assert isinstance(emb_dim, int), "Embedding dimension must be integer."
+    assert isinstance(delay, int), "Delay must be integer."
+    assert isinstance(n_r, int), "n_r must be an integer."
+
+    r_span = np.arange(0, 1, 1 / n_r)  # Tolerance r span
+    _, n_roi = bold_ts.shape
+    range_en_auc_roi = np.zeros((n_roi, 1))
+
+    for idx_roi in range(n_roi):
+
+        sig = bold_ts[:, idx_roi]
+
+        range_ent_vec = np.zeros((n_r))
+        idx_r = 0
+        for tolerance in r_span:
+
+            range_en_auc_roi_tmp = nk.entropy_range(
+                sig,
+                dimension=emb_dim,
+                delay=delay,
+                tolerance=tolerance,
+                method="mSampEn",  # RangeEn B
+            )
+
+            range_ent_vec[idx_r] = range_en_auc_roi_tmp[0]
+            idx_r = idx_r + 1
+
+        range_en_auc_roi[idx_roi] = np.trapz(range_ent_vec)
+
+    range_en_auc_roi = range_en_auc_roi / n_r
+
+    return range_en_auc_roi

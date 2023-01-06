@@ -33,9 +33,7 @@ def test_compute() -> None:
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
         # Compute the RangeEntropy marker
-        rangeen_b = RangeEntropy(
-            parcellation=PARCELLATION
-        )
+        rangeen_b = RangeEntropy(parcellation=PARCELLATION)
         new_out = rangeen_b.compute(input_dict)
 
         # Load parcellation
