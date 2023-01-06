@@ -13,7 +13,7 @@ from typing import Callable, List, Optional, Tuple, Union
 import numpy as np
 import pandas as pd
 
-# from ptpython.repl import embed
+from ptpython.repl import embed
 from scipy.stats import zscore
 import neurokit2 as nk
 
@@ -189,4 +189,58 @@ def _hurst_exponent(
         warn_with_log("There is NaN in the Hurst exponent values!")
 
     return hurst_roi
+
+def _range_entropy(
+    bold_ts: np.ndarray,
+    params: dict
+    ) -> np.ndarray:
+    """Compute the region-wise range entropy from 2d BOLD time series.
+    - Range entropy: Take a timeseries of brain areas, and calculate
+      range entropy according to the method outlined in [1].
+    Parameters
+    ----------
+    bold_ts : np.ndarray
+        BOLD time series (time x ROIs)
+    params : dict
+        a dctionary with keys as the function names, and values as another 
+        dictionary with function parameters.
+    Returns
+    -------
+    range_en_roi: np.ndarray
+        ROI-wise brain map of range entropy.
+    References
+    ----------
+    .. [1] A. Omidvarnia et al. (2018)
+           Range Entropy: A Bridge between Signal Complexity and
+           Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
+    """
+    # print('Stop: _range_entropy')
+    # embed(globals(), locals())
+
+    emb_dim = params["m"]
+    delay = params["delay"]
+    tolerance = params["tol"]
+
+    assert isinstance(emb_dim, int), "Embedding dimension must be integer."
+    assert isinstance(delay, int), "Delay must be integer."
+    assert isinstance(tolerance, float), \
+        "Tolerance must be a float number between 0 and 1."
+
+    _, n_roi = bold_ts.shape
+    range_en_roi = np.zeros((n_roi, 1))
+
+    for idx_roi in range(n_roi):
+
+        sig = bold_ts[:, idx_roi]
+        tmp = nk.entropy_range(
+            sig,
+            dimension = emb_dim,
+            delay = delay,
+            tolerance = tolerance,
+            method = "mSampEn"  # RangeEn B
+        )
+
+        range_en_roi[idx_roi] = tmp[0]
+        
+    return range_en_roi
 
