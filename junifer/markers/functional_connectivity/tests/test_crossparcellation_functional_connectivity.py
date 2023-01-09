@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 from nilearn import image
 
-from junifer.markers.crossparcellation_functional_connectivity import (
+from junifer.markers.functional_connectivity import (
     CrossParcellationFC,
 )
 from junifer.storage import SQLiteFeatureStorage
