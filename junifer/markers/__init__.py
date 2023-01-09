@@ -7,7 +7,6 @@
 
 from .base import BaseMarker
 from .collection import MarkerCollection
-from .crossparcellation_functional_connectivity import CrossParcellationFC
 from .ets_rss import RSSETSMarker
 from .parcel_aggregation import ParcelAggregation
 from .sphere_aggregation import SphereAggregation
