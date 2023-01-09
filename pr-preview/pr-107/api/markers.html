@@ -303,7 +303,7 @@ extracted from the NIFTI without any issue. However, it has been
 reported that some preprocessed data might not have the correct TR in
 the NIFTI header.</p>
 <p>ALFF/fALFF are computed using a bandpass butterworth filter. See
-<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.9.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.9.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.10.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.10.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
 details.</p>
 </dd></dl>
 
@@ -356,7 +356,7 @@ extracted from the NIFTI without any issue. However, it has been
 reported that some preprocessed data might not have the correct TR in
 the NIFTI header.</p>
 <p>ALFF/fALFF are computed using a bandpass butterworth filter. See
-<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.9.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.9.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.10.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.10.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
 details.</p>
 </dd></dl>
 
@@ -493,7 +493,7 @@ available Junifer Data dictionary keys.</p>
 <dt><strong>aggregation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method (default “mean”).</p>
 </dd>
 <dt><strong>correlation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Any method that can be passed to
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.0.0.dev0+1044.gf82bc3edcb)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.0.0.dev0+1112.gf47a8b83ec)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
 </dd>
 <dt><strong>mask</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the mask to apply to regions before extracting signals.
 Check valid options by calling <a class="reference internal" href="data.html#junifer.data.masks.list_masks" title="junifer.data.masks.list_masks"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.masks.list_masks()</span></code></a>
@@ -528,10 +528,10 @@ of ROIs in (parcellation_two, parcellation_one).</p>
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
 <ul class="simple">
-<li><p>data : the correlation values between the two parcellations as
-a numpy.ndarray</p></li>
-<li><p>col_names : the ROIs for first parcellation as a list</p></li>
-<li><p>row_names : the ROIs for second parcellation as a list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the correlation values between the two parcellations
+as a numpy.ndarray</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the ROIs for first parcellation as a list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">row_names</span></code> : the ROIs for second parcellation as a list</p></li>
 </ul>
 </dd>
 </dl>
@@ -780,7 +780,6 @@ with this as a parameter. The dictionary has the following keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">columns</span></code> : the column labels for the computed values as a list</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">row_names</span></code> (if more than one row is present in data): “scan”</p></li>
 </ul>
 </dd>
 </dl>
@@ -1255,7 +1254,6 @@ with this as a parameter. The dictionary has the following keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">columns</span></code> : the column labels for the computed values as a list</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">row_names</span></code> (if more than one row is present in data): “scan”</p></li>
 </ul>
 </dd>
 </dl>
