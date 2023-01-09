@@ -14,6 +14,7 @@ from .sphere_aggregation import SphereAggregation
 from .functional_connectivity import (
     FunctionalConnectivityParcels,
     FunctionalConnectivitySpheres,
+    CrossParcellationFC,
 )
 from .reho import ReHoParcels, ReHoSpheres
 from .falff import (
