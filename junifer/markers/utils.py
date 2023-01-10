@@ -7,7 +7,7 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Callable, Dict, Type, Union, List
+from typing import Any, Callable, Dict, List, Type, Union
 
 import numpy as np
 import pandas as pd

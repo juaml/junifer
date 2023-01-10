@@ -8,9 +8,7 @@ from pathlib import Path
 
 from nilearn import datasets, image
 
-from junifer.markers.functional_connectivity import (
-    EdgeCentricFCParcels,
-)
+from junifer.markers.functional_connectivity import EdgeCentricFCParcels
 from junifer.storage import SQLiteFeatureStorage
 
 

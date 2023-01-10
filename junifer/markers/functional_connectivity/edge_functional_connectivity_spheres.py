@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional
 
 from ...api.decorators import register_marker
 from ..sphere_aggregation import SphereAggregation
-from ..utils import raise_error, _ets
+from ..utils import _ets, raise_error
 from .functional_connectivity_base import FunctionalConnectivityBase
 
 
