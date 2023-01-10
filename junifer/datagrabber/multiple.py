@@ -7,9 +7,11 @@
 
 from typing import Dict, List, Tuple, Union
 
+from ..api.decorators import register_datagrabber
 from .base import BaseDataGrabber
 
 
+@register_datagrabber
 class MultipleDataGrabber(BaseDataGrabber):
     """Data Grabber class for data fetching from multiple sources.
 
