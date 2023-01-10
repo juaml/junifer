@@ -28,7 +28,7 @@ def test_EdgeCentricFCParcels(tmp_path: Path) -> None:
     # Check empirical correlation method parameters
     efc = EdgeCentricFCParcels(
         parcellation="TianxS1x3TxMNInonlinear2009cAsym",
-        cor_method_params={"empirical": True}
+        cor_method_params={"empirical": True},
     )
     all_out = efc.fit_transform({"BOLD": {"data": fmri_img, "meta": {}}})
 
