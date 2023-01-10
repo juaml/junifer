@@ -7,6 +7,7 @@
 
 from typing import Dict, List, Tuple, Union
 
+from ..api.decorators import register_datagrabber
 from ..utils import raise_error
 from .base import BaseDataGrabber
 
@@ -14,6 +15,7 @@ from .base import BaseDataGrabber
 __all__ = ["MultipleDataGrabber"]
 
 
+@register_datagrabber
 class MultipleDataGrabber(BaseDataGrabber):
     """Concrete implementation for multi sourced data fetching.
 
