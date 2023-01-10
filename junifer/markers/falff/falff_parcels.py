@@ -110,6 +110,7 @@ class AmplitudeLowFrequencyFluctuationParcels(
 
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``columns`` : the column labels for the computed values as a list
+
         """
         pa = ParcelAggregation(
             parcellation=self.parcellation,

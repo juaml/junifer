@@ -29,6 +29,9 @@ Enhancements
 
 - Add support for ``Dosenbach`` coordinates (:gh:`168` by `Synchon Mandal`_).
 
+- Organize functional connectivity markers in ``junifer.markers.functional_connectivity``
+  (:gh:`107` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 

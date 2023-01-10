@@ -1,28 +1,24 @@
-"""Provide class for functional connectivity."""
+"""Provide abstract base class for functional connectivity (FC)."""
 
-# Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
-#          Kaustubh R. Patil <k.patil@fz-juelich.de>
+# Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict, List, Optional, Union
+
+from abc import abstractmethod
+from typing import Any, Dict, List, Optional
 
 from nilearn.connectome import ConnectivityMeasure
 from sklearn.covariance import EmpiricalCovariance
 
-from ..api.decorators import register_marker
-from .base import BaseMarker
-from .parcel_aggregation import ParcelAggregation
+from ...utils import raise_error
+from ..base import BaseMarker
 
 
-@register_marker
-class FunctionalConnectivityParcels(BaseMarker):
-    """Class for functional connectivity.
+class FunctionalConnectivityBase(BaseMarker):
+    """Abstract base class for functional connectivity markers.
 
     Parameters
     ----------
-    parcellation : str or list of str
-        The name(s) of the parcellation(s). Check valid options by calling
-        :func:`junifer.data.parcellations.list_parcellations`.
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
@@ -43,13 +39,13 @@ class FunctionalConnectivityParcels(BaseMarker):
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
+
     """
 
     _DEPENDENCIES = {"nilearn", "scikit-learn"}
 
     def __init__(
         self,
-        parcellation: Union[str, List[str]],
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
@@ -57,7 +53,6 @@ class FunctionalConnectivityParcels(BaseMarker):
         mask: Optional[str] = None,
         name: Optional[str] = None,
     ) -> None:
-        self.parcellation = parcellation
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
         self.cor_method = cor_method
@@ -68,8 +63,15 @@ class FunctionalConnectivityParcels(BaseMarker):
             "empirical", False
         )
         self.mask = mask
+        super().__init__(on="BOLD", name=name)
 
-        super().__init__(name=name)
+    @abstractmethod
+    def aggregate(self, input: Dict[str, Any]) -> Dict[str, Any]:
+        """Perform aggregation."""
+        raise_error(
+            msg="Concrete classes need to implement aggregate().",
+            klass=NotImplementedError,
+        )
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -118,36 +120,30 @@ class FunctionalConnectivityParcels(BaseMarker):
         Returns
         -------
         dict
-            The computed result as dictionary. The following data will be
+            The computed result as dictionary. The following keys will be
             included in the dictionary:
 
-            * ``data`` : functional connectivity matrix as a numpy.ndarray.
+            * ``data`` : functional connectivity matrix as a ``numpy.ndarray``.
             * ``row_names`` : row names as a list
             * ``col_names`` : column names as a list
             * ``matrix_kind`` : the kind of matrix (tril, triu or full)
 
         """
-        pa = ParcelAggregation(
-            parcellation=self.parcellation,
-            method=self.agg_method,
-            method_params=self.agg_method_params,
-            mask=self.mask,
-            on="BOLD",
-        )
-        # get the 2D timeseries after parcel aggregation
-        ts = pa.compute(input)
-
+        # Perform necessary aggregation
+        aggregation = self.aggregate(input)
+        # Compute correlation
         if self.cor_method_params["empirical"]:
-            cm = ConnectivityMeasure(
-                cov_estimator=EmpiricalCovariance(),  # type: ignore
+            connectivity = ConnectivityMeasure(
+                cov_estimator=EmpiricalCovariance(),
                 kind=self.cor_method,
             )
         else:
-            cm = ConnectivityMeasure(kind=self.cor_method)
+            connectivity = ConnectivityMeasure(kind=self.cor_method)
+        # Create dictionary for output
         out = {}
-        out["data"] = cm.fit_transform([ts["data"]])[0]
-        # create column names
-        out["row_names"] = ts["columns"]
-        out["col_names"] = ts["columns"]
+        out["data"] = connectivity.fit_transform([aggregation["data"]])[0]
+        # Create column names
+        out["row_names"] = aggregation["columns"]
+        out["col_names"] = aggregation["columns"]
         out["matrix_kind"] = "tril"
         return out

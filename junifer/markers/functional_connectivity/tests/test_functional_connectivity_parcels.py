@@ -11,7 +11,7 @@ from nilearn.connectome import ConnectivityMeasure
 from nilearn.maskers import NiftiLabelsMasker
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
-from junifer.markers.functional_connectivity_parcels import (
+from junifer.markers.functional_connectivity import (
     FunctionalConnectivityParcels,
 )
 from junifer.markers.parcel_aggregation import ParcelAggregation

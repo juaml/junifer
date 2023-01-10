@@ -8,12 +8,11 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-from ..api.decorators import register_marker
-from ..utils import logger
-from ..utils.logging import raise_error
-from .base import BaseMarker
-from .parcel_aggregation import ParcelAggregation
-from .utils import _correlate_dataframes
+from ...api.decorators import register_marker
+from ...utils import logger, raise_error
+from ..base import BaseMarker
+from ..parcel_aggregation import ParcelAggregation
+from ..utils import _correlate_dataframes
 
 
 @register_marker
@@ -115,10 +114,10 @@ class CrossParcellationFC(BaseMarker):
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
 
-            * data : the correlation values between the two parcellations as
-              a numpy.ndarray
-            * col_names : the ROIs for first parcellation as a list
-            * row_names : the ROIs for second parcellation as a list
+            * ``data`` : the correlation values between the two parcellations
+              as a numpy.ndarray
+            * ``col_names`` : the ROIs for first parcellation as a list
+            * ``row_names`` : the ROIs for second parcellation as a list
 
         """
         logger.debug(
