@@ -183,11 +183,13 @@ Available
      - Done
      - 0.0.1
    * - :class:`junifer.markers.EdgeCentricFCParcels`
-     - Calculate edge-centric functional connectivity over parcellation
+     - Calculate edge-centric functional connectivity over parcellation, as found in
+       `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.2
    * - :class:`junifer.markers.EdgeCentricFCSpheres`
-     - Calculate edge-centric functional connectivity over spheres placed on coordinates
+     - Calculate edge-centric functional connectivity over spheres placed on coordinates,
+       as found in `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.2
 
