@@ -31,7 +31,7 @@ class HurstExponent(ComplexityBase):
         The name of the mask to apply to regions before extracting signals.
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
-    hurst_exponent_params : dict, optional
+    params : dict, optional
         Parameters to pass to the Hurst exponent calculation function. For more
         information, check out :func:`junfier.markers.utils._hurst_exponent`.
         If None, value is set to {"method": "dfa"} (default None).
@@ -47,7 +47,7 @@ class HurstExponent(ComplexityBase):
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         mask: Optional[str] = None,
-        hurst_exponent_params: Optional[Dict] = None,
+        params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
         super().__init__(
@@ -57,10 +57,10 @@ class HurstExponent(ComplexityBase):
             mask=mask,
             name=name,
         )
-        if hurst_exponent_params is None:
-            self.hurst_exponent_params = {"method": "dfa"}
+        if params is None:
+            self.params = {"method": "dfa"}
         else:
-            self.hurst_exponent_params = hurst_exponent_params
+            self.params = params
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
@@ -96,16 +96,16 @@ class HurstExponent(ComplexityBase):
         """
         # Extract aggregated BOLD timeseries
         bold_timeseries = self._extract_bold_timeseries(input=input)
-        method = self.hurst_exponent_params["method"]
+        method = self.params["method"]
 
         # Calculate Hurst exponent
         logger.info(f"Calculating Hurst exponent ({method}).")
-        roi_wise_hurst_exponent_map = _hurst_exponent(
-            bold_timeseries["data"], self.hurst_exponent_params
+        feature_map = _hurst_exponent(
+            bold_timeseries["data"], self.params
         )  # n_roi X 1
         # Initialize output
         output = {}
-        output["data"] = roi_wise_hurst_exponent_map
+        output["data"] = feature_map
         output["col_names"] = f"hurst_exponent_{method}"
         output["row_names"] = bold_timeseries["columns"]
         return output

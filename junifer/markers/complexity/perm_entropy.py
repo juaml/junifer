@@ -31,7 +31,7 @@ class PermEntropy(ComplexityBase):
         The name of the mask to apply to regions before extracting signals.
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
-    perm_entropy_params : dict, optional
+    params : dict, optional
         Parameters to pass to the permutation entropy calculation function. 
         For more information, check out :
         func:`junfier.markers.utils._perm_entropy`.
@@ -49,7 +49,7 @@ class PermEntropy(ComplexityBase):
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         mask: Optional[str] = None,
-        perm_entropy_params: Optional[Dict] = None,
+        params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
         super().__init__(
@@ -59,10 +59,10 @@ class PermEntropy(ComplexityBase):
             mask=mask,
             name=name,
         )
-        if perm_entropy_params is None:
-            self.perm_entropy_params = {"m": 4, "delay": 1}
+        if params is None:
+            self.params = {"m": 4, "delay": 1}
         else:
-            self.perm_entropy_params = perm_entropy_params
+            self.params = params
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
@@ -103,12 +103,12 @@ class PermEntropy(ComplexityBase):
 
         # Calculate permutation entropy
         logger.info("Calculating permutation entropy.")
-        roi_wise_perm_entropy_map = _perm_entropy(
-            bold_timeseries["data"], self.perm_entropy_params
+        feature_map = _perm_entropy(
+            bold_timeseries["data"], self.params
         )  # n_roi X 1
         # Initialize output
         output = {}
-        output["data"] = roi_wise_perm_entropy_map
+        output["data"] = feature_map
         output["col_names"] = "perm_entropy"
         output["row_names"] = bold_timeseries["columns"]
         return output

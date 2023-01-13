@@ -33,8 +33,8 @@ def test_compute() -> None:
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
         # Compute the HurstExponent marker
-        hurst = HurstExponent(parcellation=PARCELLATION)
-        new_out = hurst.compute(input_dict)
+        feature_map = HurstExponent(parcellation=PARCELLATION)
+        new_out = feature_map.compute(input_dict)
 
         # Load parcellation
         test_parcellation, _, _ = load_parcellation(PARCELLATION)
@@ -50,9 +50,9 @@ def test_compute() -> None:
 
 def test_get_output_type() -> None:
     """Test HurstExponent get_output_type()."""
-    hurst = HurstExponent(parcellation=PARCELLATION)
+    feature_map = HurstExponent(parcellation=PARCELLATION)
     input_list = ["BOLD"]
-    input_list = hurst.get_output_type(input_list)
+    input_list = feature_map.get_output_type(input_list)
     assert len(input_list) == 1
     assert input_list[0] in ["matrix"]
 
@@ -73,11 +73,11 @@ def test_store(tmp_path: Path) -> None:
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Compute the HurstExponent measure
-        hurst = HurstExponent(parcellation=PARCELLATION)
+        feature_map = HurstExponent(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(
             uri=str((tmp_path / "test.db").absolute()),
             single_output=True,
         )
         # Store
-        hurst.fit_transform(input=input_dict, storage=storage)
+        feature_map.fit_transform(input=input_dict, storage=storage)

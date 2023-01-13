@@ -33,8 +33,8 @@ def test_compute() -> None:
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
         # Compute the RangeEntropyAUC marker
-        rangeen_b_auc = RangeEntropyAUC(parcellation=PARCELLATION)
-        new_out = rangeen_b_auc.compute(input_dict)
+        feature_map = RangeEntropyAUC(parcellation=PARCELLATION)
+        new_out = feature_map.compute(input_dict)
 
         # Load parcellation
         test_parcellation, _, _ = load_parcellation(PARCELLATION)
@@ -73,11 +73,11 @@ def test_store(tmp_path: Path) -> None:
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Compute the RangeEntropyAUC measure
-        rangeen_b_auc = RangeEntropyAUC(parcellation=PARCELLATION)
+        feature_map = RangeEntropyAUC(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(
             uri=str((tmp_path / "test.db").absolute()),
             single_output=True,
         )
         # Store
-        rangeen_b_auc.fit_transform(input=input_dict, storage=storage)
+        feature_map.fit_transform(input=input_dict, storage=storage)

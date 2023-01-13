@@ -31,7 +31,7 @@ class RangeEntropy(ComplexityBase):
         The name of the mask to apply to regions before extracting signals.
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
-    range_entropy_params : dict, optional
+    params : dict, optional
         Parameters to pass to the range entropy calculation function. For more
         information, check out :func:`junfier.markers.utils._range_entropy`.
         If None, value is set to
@@ -48,7 +48,7 @@ class RangeEntropy(ComplexityBase):
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         mask: Optional[str] = None,
-        range_entropy_params: Optional[Dict] = None,
+        params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
         super().__init__(
@@ -58,10 +58,10 @@ class RangeEntropy(ComplexityBase):
             mask=mask,
             name=name,
         )
-        if range_entropy_params is None:
-            self.range_entropy_params = {"m": 2, "tol": 0.5, "delay": 1}
+        if params is None:
+            self.params = {"m": 2, "tol": 0.5, "delay": 1}
         else:
-            self.range_entropy_params = range_entropy_params
+            self.params = params
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
@@ -98,12 +98,12 @@ class RangeEntropy(ComplexityBase):
 
         # Calculate range entropy
         logger.info("Calculating range entropy.")
-        roi_wise_range_entropy_map = _range_entropy(
-            bold_timeseries["data"], self.range_entropy_params
+        feature_map = _range_entropy(
+            bold_timeseries["data"], self.params
         )  # n_roi X 1
         # Initialize output
         output = {}
-        output["data"] = roi_wise_range_entropy_map
+        output["data"] = feature_map
         output["col_names"] = "range_entropy"
         output["row_names"] = bold_timeseries["columns"]
         return output

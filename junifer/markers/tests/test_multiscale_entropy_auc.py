@@ -1,4 +1,4 @@
-"""Provide test for range entropy."""
+"""Provide test for the AUC of multiscale entropy."""
 
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
 #          Nicolás Nieto <n.nieto@fz-juelich.de>
@@ -13,7 +13,8 @@ from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import load_parcellation
-from junifer.markers.complexity.range_entropy import RangeEntropy
+from junifer.markers.complexity.multiscale_entropy_auc import \
+    MultiscaleEntropyAUC
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
@@ -23,7 +24,7 @@ PARCELLATION = "Schaefer100x17"
 
 
 def test_compute() -> None:
-    """Test RangeEntropy compute()."""
+    """Test MultiscaleEntropyAUC compute()."""
     with SPMAuditoryTestingDatagrabber() as dg:
         # Fetch element
         out = dg["sub001"]
@@ -32,8 +33,10 @@ def test_compute() -> None:
         # Create input data
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
-        # Compute the RangeEntropy marker
-        feature_map = RangeEntropy(parcellation=PARCELLATION)
+        # Compute the MultiscaleEntropyAUC marker
+        feature_map = MultiscaleEntropyAUC(
+            parcellation=PARCELLATION
+        )
         new_out = feature_map.compute(input_dict)
 
         # Load parcellation
@@ -49,8 +52,8 @@ def test_compute() -> None:
 
 
 def test_get_output_type() -> None:
-    """Test RangeEntropy get_output_type()."""
-    tmp = RangeEntropy(parcellation=PARCELLATION)
+    """Test MultiscaleEntropyAUC get_output_type()."""
+    tmp = MultiscaleEntropyAUC(parcellation=PARCELLATION)
     input_list = ["BOLD"]
     input_list = tmp.get_output_type(input_list)
     assert len(input_list) == 1
@@ -58,7 +61,7 @@ def test_get_output_type() -> None:
 
 
 def test_store(tmp_path: Path) -> None:
-    """Test RangeEntropy store().
+    """Test MultiscaleEntropyAUC store().
 
     Parameters
     ----------
@@ -72,12 +75,17 @@ def test_store(tmp_path: Path) -> None:
         # Load BOLD image
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
-        # Compute the RangeEntropy measure
-        feature_map = RangeEntropy(parcellation=PARCELLATION)
+        # Compute the MultiscaleEntropyAUC measure
+        feature_map = MultiscaleEntropyAUC(
+            parcellation=PARCELLATION
+        )
         # Create storage
         storage = SQLiteFeatureStorage(
             uri=str((tmp_path / "test.db").absolute()),
             single_output=True,
         )
         # Store
-        feature_map.fit_transform(input=input_dict, storage=storage)
+        feature_map.fit_transform(
+            input=input_dict, 
+            storage=storage
+        )

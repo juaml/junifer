@@ -13,7 +13,7 @@ from typing import Callable, List, Optional, Tuple, Union
 import neurokit2 as nk
 import numpy as np
 import pandas as pd
-# from ptpython.repl import embed
+from ptpython.repl import embed
 from scipy.stats import zscore
 
 from ..utils import raise_error, warn_with_log, logger

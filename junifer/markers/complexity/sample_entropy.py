@@ -31,7 +31,7 @@ class SampleEntropy(ComplexityBase):
         The name of the mask to apply to regions before extracting signals.
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
-    sample_entropy_params : dict, optional
+    params : dict, optional
         Parameters to pass to the sample entropy calculation function. 
         For more information, check out :
         func:`junfier.markers.utils._sample_entropy`.
@@ -49,7 +49,7 @@ class SampleEntropy(ComplexityBase):
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         mask: Optional[str] = None,
-        sample_entropy_params: Optional[Dict] = None,
+        params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
         super().__init__(
@@ -59,10 +59,10 @@ class SampleEntropy(ComplexityBase):
             mask=mask,
             name=name,
         )
-        if sample_entropy_params is None:
-            self.sample_entropy_params = {"m": 4, "delay": 1, "tol": 0.5}
+        if params is None:
+            self.params = {"m": 4, "delay": 1, "tol": 0.5}
         else:
-            self.sample_entropy_params = sample_entropy_params
+            self.params = params
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
@@ -104,12 +104,12 @@ class SampleEntropy(ComplexityBase):
 
         # Calculate sample entropy
         logger.info("Calculating sample entropy.")
-        roi_wise_sample_entropy_map = _sample_entropy(
-            bold_timeseries["data"], self.sample_entropy_params
+        feature_map = _sample_entropy(
+            bold_timeseries["data"], self.params
         )  # n_roi X 1
         # Initialize output
         output = {}
-        output["data"] = roi_wise_sample_entropy_map
+        output["data"] = feature_map
         output["col_names"] = "sample_entropy"
         output["row_names"] = bold_timeseries["columns"]
         return output

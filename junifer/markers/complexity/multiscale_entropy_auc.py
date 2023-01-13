@@ -1,4 +1,4 @@
-"""Provide class for weighted permutation entropy of a time series."""
+"""Provide class for the AUC of multiscale entropy of a time series."""
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -8,13 +8,13 @@ from typing import Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
 from ...utils import logger
-from ..utils import _weighted_perm_entropy
+from ..utils import _multiscale_entropy_auc
 from .complexity_base import ComplexityBase
 
 
 @register_marker
-class WeightedPermEntropy(ComplexityBase):
-    """Class for weighted permutation entropy of a time series.
+class MultiscaleEntropyAUC(ComplexityBase):
+    """Class for AUC of multiscale entropy of a time series.
 
     Parameters
     ----------
@@ -32,11 +32,11 @@ class WeightedPermEntropy(ComplexityBase):
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
     params : dict, optional
-        Parameters to pass to the weighted permutation entropy calculation function. 
-        For more information, check out :
-        func:`junfier.markers.utils._weighted_perm_entropy`.
+        Parameters to pass to the AUC of multiscale entropy calculation  
+        function. For more information, check out :
+        func:`junfier.markers.utils._multiscale_entropy_auc`.
         If None, value is set to
-        {"m": 2, "delay": 1} (default None).
+        {"m": 2, "tol": 0.5, "scale": 10} (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
@@ -52,6 +52,9 @@ class WeightedPermEntropy(ComplexityBase):
         params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
+        # from ptpython.repl import embed
+        # print('Stop: __init__')
+        # embed(globals(), locals())
         super().__init__(
             parcellation=parcellation,
             agg_method=agg_method,
@@ -60,15 +63,17 @@ class WeightedPermEntropy(ComplexityBase):
             name=name,
         )
         if params is None:
-            self.params = {"m": 4, "delay": 1}
+            self.params = {
+                "m": 2, "tol": 0.5, "scale": 10
+            }
         else:
             self.params = params
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
-        Take a timeseries of brain areas, and calculate the weighted
-        permutation entropy [1].
+        Take a timeseries of brain areas, and calculate the AUC of 
+        multiscale entropy [1].
 
         Parameters
         ----------
@@ -90,10 +95,9 @@ class WeightedPermEntropy(ComplexityBase):
 
         References
         ----------
-        .. [1] Fadlallah, B., Chen, B., Keil, A., & Principe, J. (2013)
-                Weighted-permutation entropy: A complexity measure for 
-                time series incorporating amplitude information.
-                Physical Review E, 87(2), 022911.
+        .. [1] Costa, M., Goldberger, A. L., & Peng, C. K.
+            Multiscale entropy analysis of complex physiologic time series.
+            Physical review letters, 89(6), 068102, 2002.
         See also
         ---------
         https://neuropsychology.github.io/NeuroKit/functions/complexity.html
@@ -102,14 +106,14 @@ class WeightedPermEntropy(ComplexityBase):
         # Extract aggregated BOLD timeseries
         bold_timeseries = self._extract_bold_timeseries(input=input)
 
-        # Calculate weighted permutation entropy
-        logger.info("Calculating weighted permutation entropy.")
-        feature_map = _weighted_perm_entropy(
+        # Calculate AUC of multiscale entropy
+        logger.info("Calculating AUC of multiscale entropy.")
+        feature_map = _multiscale_entropy_auc(
             bold_timeseries["data"], self.params
         )  # n_roi X 1
         # Initialize output
         output = {}
         output["data"] = feature_map
-        output["col_names"] = "w_perm_entropy"
+        output["col_names"] = "multiscale_entropy_auc"
         output["row_names"] = bold_timeseries["columns"]
         return output

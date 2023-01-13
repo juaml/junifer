@@ -33,10 +33,10 @@ def test_compute() -> None:
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
         # Compute the SampleEntropy marker
-        roi_wise_sample_entropy_map = SampleEntropy(
+        feature_map = SampleEntropy(
             parcellation=PARCELLATION
         )
-        new_out = roi_wise_sample_entropy_map.compute(input_dict)
+        new_out = feature_map.compute(input_dict)
 
         # Load parcellation
         test_parcellation, _, _ = load_parcellation(PARCELLATION)
@@ -75,7 +75,7 @@ def test_store(tmp_path: Path) -> None:
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Compute the SampleEntropy measure
-        roi_wise_sample_entropy_map = SampleEntropy(
+        feature_map = SampleEntropy(
             parcellation=PARCELLATION
         )
         # Create storage
@@ -84,7 +84,7 @@ def test_store(tmp_path: Path) -> None:
             single_output=True,
         )
         # Store
-        roi_wise_sample_entropy_map.fit_transform(
+        feature_map.fit_transform(
             input=input_dict, 
             storage=storage
         )
