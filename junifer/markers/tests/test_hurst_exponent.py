@@ -1,4 +1,4 @@
-"""Provide test for root sum of squares of edgewise timeseries."""
+"""Provide test for Hurst exponent."""
 
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
 #          Nicolás Nieto <n.nieto@fz-juelich.de>

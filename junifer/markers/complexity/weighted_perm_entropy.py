@@ -1,4 +1,4 @@
-"""Provide class for permutation entropy of a time series."""
+"""Provide class for weighted permutation entropy of a time series."""
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -8,13 +8,13 @@ from typing import Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
 from ...utils import logger
-from ..utils import _perm_entropy
+from ..utils import _weighted_perm_entropy
 from .complexity_base import ComplexityBase
 
 
 @register_marker
-class PermEntropy(ComplexityBase):
-    """Class for permutation entropy of a time series.
+class WeightedPermEntropy(ComplexityBase):
+    """Class for weighted permutation entropy of a time series.
 
     Parameters
     ----------
@@ -31,10 +31,10 @@ class PermEntropy(ComplexityBase):
         The name of the mask to apply to regions before extracting signals.
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
-    perm_entropy_params : dict, optional
-        Parameters to pass to the permutation entropy calculation function. 
+    w_perm_entropy_params : dict, optional
+        Parameters to pass to the weighted permutation entropy calculation function. 
         For more information, check out :
-        func:`junfier.markers.utils._perm_entropy`.
+        func:`junfier.markers.utils._weighted_perm_entropy`.
         If None, value is set to
         {"m": 2, "delay": 1} (default None).
     name : str, optional
@@ -49,7 +49,7 @@ class PermEntropy(ComplexityBase):
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         mask: Optional[str] = None,
-        perm_entropy_params: Optional[Dict] = None,
+        w_perm_entropy_params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
         super().__init__(
@@ -59,16 +59,16 @@ class PermEntropy(ComplexityBase):
             mask=mask,
             name=name,
         )
-        if perm_entropy_params is None:
-            self.perm_entropy_params = {"m": 4, "delay": 1}
+        if w_perm_entropy_params is None:
+            self.w_perm_entropy_params = {"m": 4, "delay": 1}
         else:
-            self.perm_entropy_params = perm_entropy_params
+            self.w_perm_entropy_params = w_perm_entropy_params
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
-        Take a timeseries of brain areas, and calculate the permutation 
-        entropy [1].
+        Take a timeseries of brain areas, and calculate the weighted
+        permutation entropy [1].
 
         Parameters
         ----------
@@ -90,9 +90,10 @@ class PermEntropy(ComplexityBase):
 
         References
         ----------
-        .. [1] Bandt, C., & Pompe, B. (2002)
-            Permutation entropy: a natural complexity measure for time
-            series. Physical review letters, 88(17), 174102.
+        .. [1] Fadlallah, B., Chen, B., Keil, A., & Principe, J. (2013)
+                Weighted-permutation entropy: A complexity measure for 
+                time series incorporating amplitude information.
+                Physical Review E, 87(2), 022911.
         See also
         ---------
         https://neuropsychology.github.io/NeuroKit/functions/complexity.html
@@ -101,14 +102,14 @@ class PermEntropy(ComplexityBase):
         # Extract aggregated BOLD timeseries
         bold_timeseries = self._extract_bold_timeseries(input=input)
 
-        # Calculate permutation entropy
-        logger.info("Calculating permutation entropy.")
-        roi_wise_perm_entropy_map = _perm_entropy(
-            bold_timeseries["data"], self.perm_entropy_params
+        # Calculate weighted permutation entropy
+        logger.info("Calculating weighted permutation entropy.")
+        roi_wise_weighted_perm_entropy_map = _weighted_perm_entropy(
+            bold_timeseries["data"], self.w_perm_entropy_params
         )  # n_roi X 1
         # Initialize output
         output = {}
-        output["data"] = roi_wise_perm_entropy_map
-        output["col_names"] = "perm_entropy"
+        output["data"] = roi_wise_weighted_perm_entropy_map
+        output["col_names"] = "w_perm_entropy"
         output["row_names"] = bold_timeseries["columns"]
         return output

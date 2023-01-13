@@ -395,7 +395,7 @@ def _weighted_perm_entropy(
     # embed(globals(), locals())
 
     emb_dim = params["m"]
-    delay = params["tau"]
+    delay = params["delay"]
 
     assert isinstance(emb_dim, int), "Embedding dimension must be integer."
     assert isinstance(delay, int), "Delay must be integer."

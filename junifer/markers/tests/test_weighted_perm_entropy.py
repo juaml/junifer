@@ -1,4 +1,4 @@
-"""Provide test for range entropy."""
+"""Provide test for weighted permutation entropy."""
 
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
 #          Nicolás Nieto <n.nieto@fz-juelich.de>
@@ -13,7 +13,8 @@ from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import load_parcellation
-from junifer.markers.complexity.range_entropy import RangeEntropy
+from junifer.markers.complexity.weighted_perm_entropy import \
+    WeightedPermEntropy
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
@@ -23,7 +24,7 @@ PARCELLATION = "Schaefer100x17"
 
 
 def test_compute() -> None:
-    """Test RangeEntropy compute()."""
+    """Test WeightedPermEntropy compute()."""
     with SPMAuditoryTestingDatagrabber() as dg:
         # Fetch element
         out = dg["sub001"]
@@ -32,9 +33,11 @@ def test_compute() -> None:
         # Create input data
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
-        # Compute the RangeEntropy marker
-        rangeen_b = RangeEntropy(parcellation=PARCELLATION)
-        new_out = rangeen_b.compute(input_dict)
+        # Compute the PermEntropy marker
+        roi_wise_w_perm_entropy_map = WeightedPermEntropy(
+            parcellation=PARCELLATION
+        )
+        new_out = roi_wise_w_perm_entropy_map.compute(input_dict)
 
         # Load parcellation
         test_parcellation, _, _ = load_parcellation(PARCELLATION)
@@ -49,8 +52,8 @@ def test_compute() -> None:
 
 
 def test_get_output_type() -> None:
-    """Test RangeEntropy get_output_type()."""
-    tmp = RangeEntropy(parcellation=PARCELLATION)
+    """Test WeightedPermEntropy get_output_type()."""
+    tmp = WeightedPermEntropy(parcellation=PARCELLATION)
     input_list = ["BOLD"]
     input_list = tmp.get_output_type(input_list)
     assert len(input_list) == 1
@@ -58,7 +61,7 @@ def test_get_output_type() -> None:
 
 
 def test_store(tmp_path: Path) -> None:
-    """Test RangeEntropy store().
+    """Test WeightedPermEntropy store().
 
     Parameters
     ----------
@@ -72,12 +75,17 @@ def test_store(tmp_path: Path) -> None:
         # Load BOLD image
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
-        # Compute the RangeEntropy measure
-        rangeen_b = RangeEntropy(parcellation=PARCELLATION)
+        # Compute the PermEntropy measure
+        roi_wise_w_perm_entropy_map = WeightedPermEntropy(
+            parcellation=PARCELLATION
+        )
         # Create storage
         storage = SQLiteFeatureStorage(
             uri=str((tmp_path / "test.db").absolute()),
             single_output=True,
         )
         # Store
-        rangeen_b.fit_transform(input=input_dict, storage=storage)
+        roi_wise_w_perm_entropy_map.fit_transform(
+            input=input_dict, 
+            storage=storage
+        )

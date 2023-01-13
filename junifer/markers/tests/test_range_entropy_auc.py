@@ -1,4 +1,4 @@
-"""Provide test for root sum of squares of edgewise timeseries."""
+"""Provide test for the AUC of range entropy."""
 
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
 #          Nicolás Nieto <n.nieto@fz-juelich.de>
@@ -50,9 +50,9 @@ def test_compute() -> None:
 
 def test_get_output_type() -> None:
     """Test RangeEntropyAUC get_output_type()."""
-    hurst = RangeEntropyAUC(parcellation=PARCELLATION)
+    tmp = RangeEntropyAUC(parcellation=PARCELLATION)
     input_list = ["BOLD"]
-    input_list = hurst.get_output_type(input_list)
+    input_list = tmp.get_output_type(input_list)
     assert len(input_list) == 1
     assert input_list[0] in ["matrix"]
 
