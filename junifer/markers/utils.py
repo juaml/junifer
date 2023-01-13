@@ -450,7 +450,7 @@ def _sample_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     # embed(globals(), locals())
 
     emb_dim = params["m"]
-    delay = params["tau"]
+    delay = params["delay"]
     tol = params["tol"]
 
     assert isinstance(emb_dim, int), "Embedding dimension must be integer."
