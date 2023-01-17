@@ -19,6 +19,7 @@ from .masks import (
     list_masks,
     load_mask,
     register_mask,
+    get_mask,
 )
 
 from . import utils

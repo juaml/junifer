@@ -4,9 +4,26 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Dict,
+    List,
+    Optional,
+    Tuple,
+    Union,
+    Callable,
+)
+
+import numpy as np
 
 import nibabel as nib
+from nilearn.masking import (
+    compute_brain_mask,
+    compute_background_mask,
+    compute_epi_mask,
+)
+from nilearn.image import resample_to_img
 
 from ..utils.logging import logger, raise_error
 from .utils import closest_resolution
@@ -28,6 +45,12 @@ data/masks directory. The user can also register their own masks.
 _available_masks: Dict[str, Dict[str, Any]] = {
     "GM_prob0.2": {"family": "Vickery-Patil"},
     "GM_prob0.2_cortex": {"family": "Vickery-Patil"},
+    "compute_brain": {"family": "Callable", "func": compute_brain_mask},
+    "compute_background": {
+        "family": "Callable",
+        "func": compute_background_mask,
+    },
+    "compute_epi": {"family": "Callable", "func": compute_epi_mask},
 }
 
 
@@ -88,11 +111,45 @@ def list_masks() -> List[str]:
     return sorted(_available_masks.keys())
 
 
+def get_mask(
+    name: str,
+    target_img: "Nifti1Image",
+) -> "Nifti1Image":
+    """Get mask, tailored for the target image.
+
+    Parameters
+    ----------
+    name : str
+        The name of the mask.
+    target_img : Nifti1Image
+        The image to which the mask will be applied.
+
+    Returns
+    -------
+    Nifti1Image
+        The mask image.
+    """
+    # Get the min of the voxels sizes and use it as the resolution
+    resolution = np.min(target_img.header.get_zooms()[:3])
+    mask_img, _ = load_mask(name, path_only=False, resolution=resolution)
+    if callable(mask_img):
+        mask_img = mask_img(target_img)
+    else:
+        mask_img = resample_to_img(
+            mask_img,
+            target_img,
+            interpolation="nearest",
+            copy=True,
+        )
+
+    return mask_img
+
+
 def load_mask(
     name: str,
     resolution: Optional[float] = None,
     path_only: bool = False,
-) -> Tuple[Optional["Nifti1Image"], Path]:
+) -> Tuple[Optional[Union["Nifti1Image", Callable]], Optional[Path]]:
     """Load mask.
 
     Parameters
@@ -109,11 +166,12 @@ def load_mask(
 
     Returns
     -------
-    Nifti1Image or None
+    Nifti1Image, Callable or None
         Loaded mask image.
-    pathlib.Path
+    pathlib.Path or None
         File path to the mask image.
     """
+    mask_img = None
     if name not in _available_masks:
         raise_error(
             f"Mask {name} not found. " f"Valid options are: {list_masks()}"
@@ -126,14 +184,16 @@ def load_mask(
         mask_fname = Path(mask_definition["path"])
     elif t_family == "Vickery-Patil":
         mask_fname = _load_vickery_patil_mask(name, resolution)
+    elif t_family == "Callable":
+        mask_img = mask_definition["func"]
+        mask_fname = None
     else:
         raise_error(f"I don't know about the {t_family} mask family.")
 
-    logger.info(f"Loading mask {mask_fname.absolute()}")
-
-    mask_img = None
-    if path_only is False:
-        mask_img = nib.load(mask_fname)
+    if mask_fname is not None:
+        logger.info(f"Loading mask {mask_fname.absolute()}")
+        if path_only is False:
+            mask_img = nib.load(mask_fname)
 
     return mask_img, mask_fname
 
