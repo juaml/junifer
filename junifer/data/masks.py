@@ -114,6 +114,7 @@ def list_masks() -> List[str]:
 def get_mask(
     name: str,
     target_img: "Nifti1Image",
+    callable_params: Optional[Dict[str, Any]] = None,
 ) -> "Nifti1Image":
     """Get mask, tailored for the target image.
 
@@ -123,7 +124,8 @@ def get_mask(
         The name of the mask.
     target_img : Nifti1Image
         The image to which the mask will be applied.
-
+    callable_params : dict, optional
+        Parameters to pass to the callable mask function (default None).
     Returns
     -------
     Nifti1Image
@@ -133,8 +135,14 @@ def get_mask(
     resolution = np.min(target_img.header.get_zooms()[:3])
     mask_img, _ = load_mask(name, path_only=False, resolution=resolution)
     if callable(mask_img):
-        mask_img = mask_img(target_img)
+        if callable_params is None:
+            callable_params = {}
+        mask_img = mask_img(target_img, **callable_params)
     else:
+        if callable_params is not None:
+            raise_error(
+                "Cannot pass callable_params to a non-callable mask."
+            )
         mask_img = resample_to_img(
             mask_img,
             target_img,
