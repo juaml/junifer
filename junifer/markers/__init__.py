@@ -23,9 +23,12 @@ from .temporal_snr import (
     TemporalSNRParcels,
     TemporalSNRSpheres,
 )
-from .hurst_exponent import HurstExponent
-from .complexity.hurst_exponent import HurstExponent
-from .complexity.hurst_exponent import HurstExponent
-from .complexity.range_entropy import RangeEntropy
-from .complexity.range_entropy import RangeEntropy
-from .complexity.range_entropy_auc import RangeEntropyAUC
+from .complexity import (
+    HurstExponent,
+    RangeEntropy,
+    RangeEntropyAUC,
+    PermEntropy,
+    WeightedPermEntropy,
+    SampleEntropy,
+    MultiscaleEntropyAUC,
+)
