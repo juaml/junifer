@@ -33,9 +33,7 @@ def test_compute() -> None:
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
         # Compute the SampleEntropy marker
-        feature_map = SampleEntropy(
-            parcellation=PARCELLATION
-        )
+        feature_map = SampleEntropy(parcellation=PARCELLATION)
         new_out = feature_map.compute(input_dict)
 
         # Load parcellation
@@ -75,16 +73,11 @@ def test_store(tmp_path: Path) -> None:
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Compute the SampleEntropy measure
-        feature_map = SampleEntropy(
-            parcellation=PARCELLATION
-        )
+        feature_map = SampleEntropy(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(
             uri=str((tmp_path / "test.db").absolute()),
             single_output=True,
         )
         # Store
-        feature_map.fit_transform(
-            input=input_dict, 
-            storage=storage
-        )
+        feature_map.fit_transform(input=input_dict, storage=storage)

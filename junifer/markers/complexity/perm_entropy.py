@@ -32,7 +32,7 @@ class PermEntropy(ComplexityBase):
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
     params : dict, optional
-        Parameters to pass to the permutation entropy calculation function. 
+        Parameters to pass to the permutation entropy calculation function.
         For more information, check out :
         func:`junfier.markers.utils._perm_entropy`.
         If None, value is set to
@@ -67,7 +67,7 @@ class PermEntropy(ComplexityBase):
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
-        Take a timeseries of brain areas, and calculate the permutation 
+        Take a timeseries of brain areas, and calculate the permutation
         entropy [1].
 
         Parameters

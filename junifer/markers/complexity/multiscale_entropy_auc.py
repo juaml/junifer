@@ -32,7 +32,7 @@ class MultiscaleEntropyAUC(ComplexityBase):
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
     params : dict, optional
-        Parameters to pass to the AUC of multiscale entropy calculation  
+        Parameters to pass to the AUC of multiscale entropy calculation
         function. For more information, check out :
         func:`junfier.markers.utils._multiscale_entropy_auc`.
         If None, value is set to
@@ -63,16 +63,14 @@ class MultiscaleEntropyAUC(ComplexityBase):
             name=name,
         )
         if params is None:
-            self.params = {
-                "m": 2, "tol": 0.5, "scale": 10
-            }
+            self.params = {"m": 2, "tol": 0.5, "scale": 10}
         else:
             self.params = params
 
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
-        Take a timeseries of brain areas, and calculate the AUC of 
+        Take a timeseries of brain areas, and calculate the AUC of
         multiscale entropy [1].
 
         Parameters

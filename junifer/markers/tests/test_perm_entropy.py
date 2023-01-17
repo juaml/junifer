@@ -80,7 +80,4 @@ def test_store(tmp_path: Path) -> None:
             single_output=True,
         )
         # Store
-        feature_map.fit_transform(
-            input=input_dict, 
-            storage=storage
-        )
+        feature_map.fit_transform(input=input_dict, storage=storage)

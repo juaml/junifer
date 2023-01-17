@@ -13,8 +13,9 @@ from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import load_parcellation
-from junifer.markers.complexity.weighted_perm_entropy import \
-    WeightedPermEntropy
+from junifer.markers.complexity.weighted_perm_entropy import (
+    WeightedPermEntropy,
+)
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
@@ -34,9 +35,7 @@ def test_compute() -> None:
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
 
         # Compute the PermEntropy marker
-        feature_map = WeightedPermEntropy(
-            parcellation=PARCELLATION
-        )
+        feature_map = WeightedPermEntropy(parcellation=PARCELLATION)
         new_out = feature_map.compute(input_dict)
 
         # Load parcellation
@@ -76,16 +75,11 @@ def test_store(tmp_path: Path) -> None:
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
         # Compute the PermEntropy measure
-        feature_map = WeightedPermEntropy(
-            parcellation=PARCELLATION
-        )
+        feature_map = WeightedPermEntropy(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(
             uri=str((tmp_path / "test.db").absolute()),
             single_output=True,
         )
         # Store
-        feature_map.fit_transform(
-            input=input_dict, 
-            storage=storage
-        )
+        feature_map.fit_transform(input=input_dict, storage=storage)

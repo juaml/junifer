@@ -32,7 +32,7 @@ class SampleEntropy(ComplexityBase):
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
     params : dict, optional
-        Parameters to pass to the sample entropy calculation function. 
+        Parameters to pass to the sample entropy calculation function.
         For more information, check out :
         func:`junfier.markers.utils._sample_entropy`.
         If None, value is set to

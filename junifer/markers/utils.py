@@ -16,7 +16,7 @@ import pandas as pd
 from ptpython.repl import embed
 from scipy.stats import zscore
 
-from ..utils import raise_error, warn_with_log, logger
+from ..utils import logger, raise_error, warn_with_log
 
 
 def _ets(
@@ -305,9 +305,10 @@ def _range_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     range_en_auc_roi = range_en_auc_roi / n_r
 
     if np.isnan(np.sum(range_en_auc_roi)):
-        warn_with_log("There is NaN in the auc of range entropy values!")   
+        warn_with_log("There is NaN in the auc of range entropy values!")
 
     return range_en_auc_roi
+
 
 def _perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise permutation entropy from 2d BOLD time series.
@@ -363,9 +364,7 @@ def _perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     return perm_en_roi
 
 
-def _weighted_perm_entropy(
-    bold_ts: np.ndarray, params: dict
-) -> np.ndarray:
+def _weighted_perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise weighted permutation entropy from bold_ts.
     - Weighted permutation entropy: Take a timeseries of brain areas, and
       calculate weighted permutation entropy according to the method
@@ -475,9 +474,7 @@ def _sample_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     return samp_en_roi
 
 
-def _multiscale_entropy_auc(
-    bold_ts: np.ndarray, params: dict
-) -> np.ndarray:
+def _multiscale_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     """Compute the region-wise AUC of multiscale entropy of bold_ts.
     - Multiscale entropy: Take a timeseries of brain areas,
       calculate multiscale entropy for each region and calculate the AUC
@@ -540,4 +537,3 @@ def _multiscale_entropy_auc(
         )
 
     return MSEn_auc_roi
-
