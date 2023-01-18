@@ -122,30 +122,30 @@ def _correlate_dataframes(
 
 
 def _hurst_exponent(bold_ts: np.ndarray, params: dict) -> np.ndarray:
-    """Compute the region-wise Hurst exponent of bold_ts.
+    """Compute the region-wise Hurst exponent of BOLD timeseries.
 
-    - Hurst exponent: Take a timeseries of brain areas, and
-    calculate Hurst exponent using the detrended fluctuation analysis
-    method assuming the data is monofractal (q = 2 in nk.fractal_dfa) [1].
+    Take a timeseries of brain areas, and calculate Hurst exponent using
+    the detrended fluctuation analysis method assuming the data is monofractal
+    (``q = 2`` in :func:`neurokit2.nk.fractal_dfa`) [1].
 
     Parameters
     ----------
     bold_ts : np.ndarray
-        BOLD time series (time x ROIs)
+        BOLD timeseries (time x ROIs).
     params : dict
         The dictionary of input parameters.
 
     Returns
     -------
-    hurst_roi: np.ndarray
+    np.ndarray
         ROI-wise brain map of Hurst exponent.
 
     References
     ----------
     .. [1] Peng, C.; Havlin, S.; Stanley, H.E.; Goldberger, A.L.
-        Quantification of scaling exponents and crossover phenomena in
-        nonstationary heartbeat time series.
-        Chaos Interdiscip. J. Nonlinear Sci., 5, 82–87, 1995
+           Quantification of scaling exponents and crossover phenomena in
+           nonstationary heartbeat time series.
+           Chaos Interdiscip. J. Nonlinear Sci., 5, 82–87, 1995
 
     See also
     ---------
@@ -184,27 +184,30 @@ def _hurst_exponent(bold_ts: np.ndarray, params: dict) -> np.ndarray:
 
 
 def _range_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
-    """Compute the region-wise range entropy from 2d BOLD time series.
-    - Range entropy: Take a timeseries of brain areas, and calculate
-      range entropy according to the method outlined in [1].
+    """Compute the region-wise range entropy of BOLD timeseries.
+
+    Take a timeseries of brain areas, and calculate
+    range entropy according to the method outlined in [1].
+
     Parameters
     ----------
     bold_ts : np.ndarray
-        BOLD time series (time x ROIs)
+        BOLD timeseries (time x ROIs).
     params : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+        The dictionary of input parameters.
+
     Returns
     -------
-    range_en_roi: np.ndarray
+    np.ndarray
         ROI-wise brain map of range entropy.
+
     References
     ----------
     .. [1] A. Omidvarnia et al. (2018)
            Range Entropy: A Bridge between Signal Complexity and
            Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
-    """
 
+    """
     emb_dim = params["m"]
     delay = params["delay"]
     tolerance = params["tol"]
@@ -238,28 +241,31 @@ def _range_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
 
 
 def _range_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
-    """Compute the region-wise AUC of range entropy from 2d BOLD time series.
-    - AUC of range entropy: Take a timeseries of brain areas, calculate
-      range entropy according to the method outlined in [1] across the range
-      of tolerance value r from 0 to 1, and compute its area under the curve.
+    """Compute the region-wise AUC of range entropy of BOLD timeseries.
+
+    Take a timeseries of brain areas, calculate range entropy according to
+    the method outlined in [1] across the range of tolerance value r from 0
+    to 1, and compute its area under the curve.
+
     Parameters
     ----------
     bold_ts : np.ndarray
-        BOLD time series (time x ROIs)
+        BOLD timeseries (time x ROIs).
     params : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+        The dictionary of input parameters.
+
     Returns
     -------
-    range_en_auc_roi: np.ndarray
+    np.ndarray
         ROI-wise brain map of the AUC of range entropy.
+
     References
     ----------
     .. [1] A. Omidvarnia et al. (2018)
            Range Entropy: A Bridge between Signal Complexity and
            Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
-    """
 
+    """
     emb_dim = params["m"]
     delay = params["delay"]
     n_r = params["n_r"]
@@ -302,30 +308,34 @@ def _range_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
 
 
 def _perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
-    """Compute the region-wise permutation entropy from 2d BOLD time series.
-    - Permutation entropy: Take a timeseries of brain areas, and calculate
-      permutation entropy according to the method outlined in [1].
+    """Compute the region-wise permutation entropy of BOLD timeseries.
+
+    Take a timeseries of brain areas, and calculate permutation entropy
+    according to the method outlined in [1].
+
     Parameters
     ----------
     bold_ts : np.ndarray
-        BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+        BOLD time series (time x ROIs).
+    params : dict
+        The dictionary of input parameters.
+
     Returns
     -------
-    perm_en_roi: np.ndarray
+    np.ndarray
         ROI-wise brain map of permutation entropy.
+
     References
     ----------
     .. [1] Bandt, C., & Pompe, B. (2002)
            Permutation entropy: a natural complexity measure for time
            series. Physical review letters, 88(17), 174102.
+
     See also
     ---------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
-    """
 
+    """
     emb_dim = params["m"]
     delay = params["delay"]
 
@@ -354,32 +364,35 @@ def _perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
 
 
 def _weighted_perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
-    """Compute the region-wise weighted permutation entropy from bold_ts.
-    - Weighted permutation entropy: Take a timeseries of brain areas, and
-      calculate weighted permutation entropy according to the method
-      outlined in [1].
+    """Compute the region-wise weighted permutation entropy of BOLD timeseries.
+
+    Take a timeseries of brain areas, and calculate weighted permutation
+    entropy according to the method outlined in [1].
+
     Parameters
     ----------
     bold_ts : np.ndarray
-        BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+        BOLD time series (time x ROIs).
+    params : dict
+        The dictionary of input parameters.
+
     Returns
     -------
-    w_perm_en_roi: np.ndarray
+    np.ndarray
         ROI-wise brain map of weighted permutation entropy.
+
     References
     ----------
     .. [1] Fadlallah, B., Chen, B., Keil, A., & Principe, J. (2013)
            Weighted-permutation entropy: A complexity measure for time series
            incorporating amplitude information.
            Physical Review E, 87(2), 022911.
+
     See also
     ---------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
-    """
 
+    """
     emb_dim = params["m"]
     delay = params["delay"]
 
@@ -408,31 +421,34 @@ def _weighted_perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
 
 
 def _sample_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
-    """Compute the region-wise weighted permutation entropy from bold_ts.
-    - Sample entropy: Take a timeseries of brain areas, and
-      calculate sample entropy [1].
+    """Compute the region-wise weighted permutation entropy of BOLD timeseries.
+
+    Take a timeseries of brain areas, and calculate sample entropy [1].
+
     Parameters
     ----------
     bold_ts : np.ndarray
-        BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+        BOLD time series (time x ROIs).
+    params : dict
+        The dictionary of input parameters.
+
     Returns
     -------
-    samp_en_roi: np.ndarray
+    np.ndarray
         ROI-wise brain map of sample entropy.
+
     References
     ----------
     .. [1] Richman, J., Moorman, J.
            Physiological time-series analysis using approximate entropy and
            sample entropy, Am. J. Physiol. Heart Circ. Physiol.,
            278 (6) (2000), pp. H2039-2049
+
     See also
     ---------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
-    """
 
+    """
     emb_dim = params["m"]
     delay = params["delay"]
     tol = params["tol"]
@@ -460,31 +476,35 @@ def _sample_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
 
 
 def _multiscale_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
-    """Compute the region-wise AUC of multiscale entropy of bold_ts.
-    - Multiscale entropy: Take a timeseries of brain areas,
-      calculate multiscale entropy for each region and calculate the AUC
-      of the entropy curves leading to a region-wise map of the brain [1].
+    """Compute the region-wise AUC of multiscale entropy of BOLD timeseries.
+
+    Take a timeseries of brain areas, calculate multiscale entropy for each
+    region and calculate the AUC of the entropy curves leading to a
+    region-wise map of the brain [1].
+
     Parameters
     ----------
     bold_ts : np.ndarray
-        BOLD time series (time x ROIs)
-    measure_types : dict
-        a dctionary with keys as the function names, and values as another
-        dictionary with function parameters.
+        BOLD time series (time x ROIs).
+    params : dict
+        The dictionary of input parameters.
+
     Returns
     -------
-    hurst_roi: np.ndarray
+    np.ndarray
         ROI-wise brain map of the AUC of multiscale entropy.
+
     References
     ----------
     .. [1] Costa, M., Goldberger, A. L., & Peng, C. K.
            Multiscale entropy analysis of complex physiologic time series.
            Physical review letters, 89(6), 068102, 2002.
+
     See also
     ---------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
-    """
 
+    """
     emb_dim = params["m"]
     tol = params["tol"]
     scale = params["scale"]
