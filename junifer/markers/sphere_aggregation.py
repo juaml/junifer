@@ -139,7 +139,7 @@ class SphereAggregation(BaseMarker):
         mask_img = None
         if self.mask is not None:
             logger.debug(f"Masking with {self.mask}")
-            mask_img = get_mask(name=self.mask, target_data=input)
+            mask_img = get_mask(mask=self.mask, target_data=input)
         # Get seeds and labels
         coords, out_labels = load_coordinates(name=self.coords)
         masker = JuniferNiftiSpheresMasker(
