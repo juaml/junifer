@@ -34,7 +34,7 @@ class PermEntropy(ComplexityBase):
     params : dict, optional
         Parameters to pass to the permutation entropy calculation function.
         For more information, check out
-        :func:`junfier.markers.utils._perm_entropy`. If None, value is set to
+        ``junifer.markers.utils._perm_entropy``. If None, value is set to
         {"m": 2, "delay": 1} (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
