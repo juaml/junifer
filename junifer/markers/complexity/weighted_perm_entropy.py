@@ -35,7 +35,7 @@ class WeightedPermEntropy(ComplexityBase):
         Parameters to pass to the weighted permutation entropy calculation
         function.
         For more information, check out
-        :func:`junfier.markers.utils._weighted_perm_entropy`. If None, value
+        ``junifer.markers.utils._weighted_perm_entropy``. If None, value
         is set to {"m": 2, "delay": 1} (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
