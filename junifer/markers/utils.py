@@ -13,10 +13,9 @@ from typing import Callable, List, Optional, Tuple, Union
 import neurokit2 as nk
 import numpy as np
 import pandas as pd
-from ptpython.repl import embed
 from scipy.stats import zscore
 
-from ..utils import logger, raise_error, warn_with_log
+from ..utils import raise_error, warn_with_log
 
 
 def _ets(
@@ -153,9 +152,6 @@ def _hurst_exponent(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
 
     """
-    # print('Stop: _hurst_exponent')
-    # embed(globals(), locals())
-
     _, n_roi = bold_ts.shape
     hurst_roi = np.zeros((n_roi, 1))
 
@@ -177,7 +173,6 @@ def _hurst_exponent(bold_ts: np.ndarray, params: dict) -> np.ndarray:
             hurst_roi[idx_roi] = tmp[0]
 
     else:
-
         hurst_roi = np.empty((n_roi, 1))
         hurst_roi[:] = np.nan
         warn_with_log("The DFA method is available only!")
@@ -209,8 +204,6 @@ def _range_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
            Range Entropy: A Bridge between Signal Complexity and
            Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
     """
-    # print('Stop: _range_entropy')
-    # embed(globals(), locals())
 
     emb_dim = params["m"]
     delay = params["delay"]
@@ -266,8 +259,6 @@ def _range_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
            Range Entropy: A Bridge between Signal Complexity and
            Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
     """
-    # print("Stop: _range_entropy_auc")
-    # embed(globals(), locals())
 
     emb_dim = params["m"]
     delay = params["delay"]
@@ -334,8 +325,6 @@ def _perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     ---------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
     """
-    # print('Stop: _perm_entropy')
-    # embed(globals(), locals())
 
     emb_dim = params["m"]
     delay = params["delay"]
@@ -390,8 +379,6 @@ def _weighted_perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     ---------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
     """
-    # print('Stop: _weighted_perm_entropy')
-    # embed(globals(), locals())
 
     emb_dim = params["m"]
     delay = params["delay"]
@@ -445,8 +432,6 @@ def _sample_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     ---------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
     """
-    # print('Stop: _sample_entropy')
-    # embed(globals(), locals())
 
     emb_dim = params["m"]
     delay = params["delay"]
@@ -499,8 +484,6 @@ def _multiscale_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     ---------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
     """
-    # print('Stop: _multiscale_entropy_auc')
-    # embed(globals(), locals())
 
     emb_dim = params["m"]
     tol = params["tol"]
