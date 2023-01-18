@@ -332,7 +332,7 @@ def _perm_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
            series. Physical review letters, 88(17), 174102.
 
     See also
-    ---------
+    --------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
 
     """
@@ -389,7 +389,7 @@ def _weighted_perm_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
            Physical Review E, 87(2), 022911.
 
     See also
-    ---------
+    --------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
 
     """
@@ -445,7 +445,7 @@ def _sample_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
            278 (6) (2000), pp. H2039-2049
 
     See also
-    ---------
+    --------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
 
     """
@@ -501,7 +501,7 @@ def _multiscale_entropy_auc(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
            Physical review letters, 89(6), 068102, 2002.
 
     See also
-    ---------
+    --------
     https://neuropsychology.github.io/NeuroKit/functions/complexity.html
 
     """
