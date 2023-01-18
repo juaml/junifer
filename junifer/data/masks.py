@@ -23,6 +23,7 @@ from nilearn.masking import (
     compute_background_mask,
     compute_epi_mask,
 )
+from nilearn.datasets import fetch_icbm152_brain_gm_mask
 from nilearn.image import resample_to_img
 
 from ..utils.logging import logger, raise_error
@@ -35,6 +36,30 @@ if TYPE_CHECKING:
 # Path to the VOIs
 _masks_path = Path(__file__).parent / "masks"
 
+
+def _fetch_icbm152_brain_gm_mask(target_img, **kwargs):
+    """Fetch ICBM152 brain mask and resample.
+
+    Parameters
+    ----------
+    target_img : nibabel.Nifti1Image
+        The image to which the mask will be resampled.
+    kwargs : dict
+        Keyword arguments to be passed to
+        :func:`nilearn.datasets.fetch_icbm152_brain_gm_mask`.
+
+    Returns
+    -------
+    nibabel.Nifti1Image
+        The resampled mask.
+    """
+    mask = fetch_icbm152_brain_gm_mask(**kwargs)
+    mask = resample_to_img(
+        mask, target_img, interpolation="nearest", copy=True
+    )
+    return mask
+
+
 """
 A dictionary containing all supported masks and their respective file or
 data.
@@ -45,12 +70,22 @@ data/masks directory. The user can also register their own masks.
 _available_masks: Dict[str, Dict[str, Any]] = {
     "GM_prob0.2": {"family": "Vickery-Patil"},
     "GM_prob0.2_cortex": {"family": "Vickery-Patil"},
-    "compute_brain_mask": {"family": "Callable", "func": compute_brain_mask},
-    "compute_backgroun_mask": {
+    "compute_brain_mask": {
+        "family": "Callable",
+        "func": compute_brain_mask,
+    },
+    "compute_background_mask": {
         "family": "Callable",
         "func": compute_background_mask,
     },
-    "compute_epi_mask": {"family": "Callable", "func": compute_epi_mask},
+    "compute_epi_mask": {
+        "family": "Callable",
+        "func": compute_epi_mask,
+    },
+    "fetch_icbm152_brain_gm_mask": {
+        "family": "Callable",
+        "func": _fetch_icbm152_brain_gm_mask,
+    },
 }
 
 
@@ -112,21 +147,19 @@ def list_masks() -> List[str]:
 
 
 def get_mask(
-    name: str,
+    mask: Union[str, Dict],
     target_data: Dict[str, Any],
-    callable_params: Optional[Dict[str, Any]] = None,
 ) -> "Nifti1Image":
     """Get mask, tailored for the target image.
 
     Parameters
     ----------
-    name : str
-        The name of the mask.
+    masks : str or dict
+        The name of the mask, or the name of a callable mask and the parameters
+        of the mask.
     target_data : Dict[str, Any]
         The corresponding item of the data object to which the mask will be
         applied.
-    callable_params : dict, optional
-        Parameters to pass to the callable mask function (default None).
     Returns
     -------
     Nifti1Image
@@ -135,18 +168,31 @@ def get_mask(
     # Get the min of the voxels sizes and use it as the resolution
     target_img = target_data["data"]
     resolution = np.min(target_img.header.get_zooms()[:3])
-    mask_img, _ = load_mask(name, path_only=False, resolution=resolution)
-    if callable(mask_img):
-        if callable_params is None:
-            callable_params = {}
-        mask_img = mask_img(target_img, **callable_params)
-    else:
-        if callable_params is not None:
+
+    if isinstance(mask, dict):
+        if len(mask) != 1:
             raise_error(
-                "Cannot pass callable_params to a non-callable mask."
+                "The mask dictionary must have only one key, "
+                "the name of the mask."
             )
+        mask_name = list(mask.keys())[0]
+        mask_params = mask[mask_name]
+    else:
+        mask_name = mask
+        mask_params = None
+
+    mask_object, _ = load_mask(
+        mask_name, path_only=False, resolution=resolution
+    )
+    if callable(mask_object):
+        if mask_params is None:
+            mask_params = {}
+        mask_img = mask_object(target_img, **mask_params)
+    else:  # Mask is a Nifti1Image
+        if mask_params is not None:
+            raise_error("Cannot pass callable_params to a non-callable mask.")
         mask_img = resample_to_img(
-            mask_img,
+            mask_object,
             target_img,
             interpolation="nearest",
             copy=True,

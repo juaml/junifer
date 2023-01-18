@@ -20,6 +20,7 @@ from nilearn.masking import (
     compute_background_mask,
     compute_epi_mask,
 )
+from nilearn.datasets import fetch_icbm152_brain_gm_mask
 
 from junifer.data.masks import (
     _load_vickery_patil_mask,
@@ -180,7 +181,7 @@ def test_get_mask() -> None:
         input = reader.fit_transform(input)
         vbm_gm = input["VBM_GM"]
         vbm_gm_img = vbm_gm["data"]
-        mask = get_mask(name="GM_prob0.2", target_data=vbm_gm)
+        mask = get_mask(mask="GM_prob0.2", target_data=vbm_gm)
 
         assert mask.shape == vbm_gm_img.shape
         assert_array_equal(mask.affine, vbm_gm_img.affine)
@@ -208,7 +209,7 @@ def test_mask_callable() -> None:
         input = reader.fit_transform(input)
         vbm_gm = input["VBM_GM"]
         vbm_gm_img = vbm_gm["data"]
-        mask = get_mask(name="identity", target_data=vbm_gm)
+        mask = get_mask(mask="identity", target_data=vbm_gm)
 
         assert_array_equal(mask.get_fdata(), vbm_gm_img.get_fdata())
 
@@ -224,18 +225,30 @@ def test_nilearn_compute_masks() -> None:
         bold = input["BOLD"]
         bold_img = bold["data"]
 
-        mask_1 = get_mask(name="compute_brain", target_data=bold)
-        mask_2 = get_mask(name="compute_epi", target_data=bold)
-        mask_3 = get_mask(name="compute_background", target_data=bold)
+        mask_1 = get_mask(mask="compute_brain_mask", target_data=bold)
+        mask_2 = get_mask(mask="compute_epi_mask", target_data=bold)
+        mask_3 = get_mask(mask="compute_background_mask", target_data=bold)
+        mask_4 = get_mask(mask="fetch_icbm152_brain_gm_mask", target_data=bold)
 
         assert_array_equal(mask_1.affine, bold_img.affine)
         assert_array_equal(mask_2.affine, bold_img.affine)
         assert_array_equal(mask_3.affine, bold_img.affine)
+        assert_array_equal(mask_4.affine, bold_img.affine)
 
         ni_mask_1 = compute_brain_mask(bold_img)
         ni_mask_2 = compute_epi_mask(bold_img)
         ni_mask_3 = compute_background_mask(bold_img)
+        ni_mask_4 = fetch_icbm152_brain_gm_mask()
 
         assert_array_equal(mask_1.get_fdata(), ni_mask_1.get_fdata())
         assert_array_equal(mask_2.get_fdata(), ni_mask_2.get_fdata())
         assert_array_equal(mask_3.get_fdata(), ni_mask_3.get_fdata())
+
+        # Mask 4 needs resample
+        ni_mask_4_res = resample_to_img(
+            ni_mask_4,
+            bold_img,
+            interpolation="nearest",
+            copy=True,
+        )
+        assert_array_equal(mask_4.get_fdata(), ni_mask_4_res.get_fdata())
