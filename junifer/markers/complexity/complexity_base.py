@@ -33,6 +33,8 @@ class ComplexityBase(BaseMarker):
 
     """
 
+    _DEPENDENCIES = {"nilearn", "neurokit2"}
+
     def __init__(
         self,
         parcellation: Union[str, List[str]],
