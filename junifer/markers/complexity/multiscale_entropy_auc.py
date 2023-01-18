@@ -51,9 +51,6 @@ class MultiscaleEntropyAUC(ComplexityBase):
         params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
-        # from ptpython.repl import embed
-        # print('Stop: __init__')
-        # embed(globals(), locals())
         super().__init__(
             parcellation=parcellation,
             agg_method=agg_method,
