@@ -1,10 +1,6 @@
 """Provide test for weighted permutation entropy."""
 
-# Authors: Leonard Sasse <l.sasse@fz-juelich.de>
-#          Nicolás Nieto <n.nieto@fz-juelich.de>
-#          Sami Hamdan <s.hamdan@fz-juelich.de>
-#          Synchon Mandal <s.mandal@fz-juelich.de>
-#          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
+# Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
 from pathlib import Path
