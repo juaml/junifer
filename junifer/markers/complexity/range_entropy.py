@@ -33,7 +33,7 @@ class RangeEntropy(ComplexityBase):
         (default None).
     params : dict, optional
         Parameters to pass to the range entropy calculation function. For more
-        information, check out :func:`junfier.markers.utils._range_entropy`.
+        information, check out ``junifer.markers.utils._range_entropy``.
         If None, value is set to {"m": 2, "tol": 0.5, "delay": 1}
         (default None).
     name : str, optional
