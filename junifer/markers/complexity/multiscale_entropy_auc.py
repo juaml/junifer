@@ -33,10 +33,9 @@ class MultiscaleEntropyAUC(ComplexityBase):
         (default None).
     params : dict, optional
         Parameters to pass to the AUC of multiscale entropy calculation
-        function. For more information, check out :
-        func:`junfier.markers.utils._multiscale_entropy_auc`.
-        If None, value is set to
-        {"m": 2, "tol": 0.5, "scale": 10} (default None).
+        function. For more information, check out
+        :func:`junfier.markers.utils._multiscale_entropy_auc`. If None, value
+        is set to {"m": 2, "tol": 0.5, "scale": 10} (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
@@ -94,8 +93,9 @@ class MultiscaleEntropyAUC(ComplexityBase):
         References
         ----------
         .. [1] Costa, M., Goldberger, A. L., & Peng, C. K.
-            Multiscale entropy analysis of complex physiologic time series.
-            Physical review letters, 89(6), 068102, 2002.
+               Multiscale entropy analysis of complex physiologic time series.
+               Physical review letters, 89(6), 068102, 2002.
+
         See also
         ---------
         https://neuropsychology.github.io/NeuroKit/functions/complexity.html
