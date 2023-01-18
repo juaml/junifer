@@ -33,7 +33,7 @@ class HurstExponent(ComplexityBase):
         (default None).
     params : dict, optional
         Parameters to pass to the Hurst exponent calculation function. For more
-        information, check out :func:`junfier.markers.utils._hurst_exponent`.
+        information, check out ``junifer.markers.utils._hurst_exponent``.
         If None, value is set to {"method": "dfa"} (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
