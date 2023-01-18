@@ -90,9 +90,10 @@ class SampleEntropy(ComplexityBase):
         References
         ----------
         .. [1] Richman, J., Moorman, J.
-            Physiological time-series analysis using approximate entropy and
-            sample entropy, Am. J. Physiol. Heart Circ. Physiol.,
-            278 (6) (2000), pp. H2039-2049
+               Physiological time-series analysis using approximate entropy and
+               sample entropy.
+               Am. J. Physiol. Heart Circ. Physiol., 278 (6) (2000),
+               pp. H2039-2049
 
         See also
         ---------
