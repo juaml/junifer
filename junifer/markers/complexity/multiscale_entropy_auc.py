@@ -93,10 +93,6 @@ class MultiscaleEntropyAUC(ComplexityBase):
                Multiscale entropy analysis of complex physiologic time series.
                Physical review letters, 89(6), 068102, 2002.
 
-        See also
-        ---------
-        https://neuropsychology.github.io/NeuroKit/functions/complexity.html
-
         """
         # Extract aggregated BOLD timeseries
         bold_timeseries = self._extract_bold_timeseries(input=input)

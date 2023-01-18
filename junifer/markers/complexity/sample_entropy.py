@@ -95,10 +95,6 @@ class SampleEntropy(ComplexityBase):
                Am. J. Physiol. Heart Circ. Physiol., 278 (6) (2000),
                pp. H2039-2049
 
-        See also
-        ---------
-        https://neuropsychology.github.io/NeuroKit/functions/complexity.html
-
         """
         # Extract aggregated BOLD timeseries
         bold_timeseries = self._extract_bold_timeseries(input=input)

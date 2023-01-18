@@ -95,10 +95,6 @@ class WeightedPermEntropy(ComplexityBase):
                time series incorporating amplitude information.
                Physical Review E, 87(2), 022911.
 
-        See also
-        ---------
-        https://neuropsychology.github.io/NeuroKit/functions/complexity.html
-
         """
         # Extract aggregated BOLD timeseries
         bold_timeseries = self._extract_bold_timeseries(input=input)

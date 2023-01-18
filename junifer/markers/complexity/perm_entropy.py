@@ -94,10 +94,6 @@ class PermEntropy(ComplexityBase):
                series.
                Physical review letters, 88(17), 174102.
 
-        See also
-        ---------
-        https://neuropsychology.github.io/NeuroKit/functions/complexity.html
-
         """
         # Extract aggregated BOLD timeseries
         bold_timeseries = self._extract_bold_timeseries(input=input)
