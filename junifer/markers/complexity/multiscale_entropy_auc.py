@@ -34,7 +34,7 @@ class MultiscaleEntropyAUC(ComplexityBase):
     params : dict, optional
         Parameters to pass to the AUC of multiscale entropy calculation
         function. For more information, check out
-        :func:`junfier.markers.utils._multiscale_entropy_auc`. If None, value
+        ``junifer.markers.utils._multiscale_entropy_auc``. If None, value
         is set to {"m": 2, "tol": 0.5, "scale": 10} (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
