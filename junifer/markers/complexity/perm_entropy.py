@@ -33,9 +33,8 @@ class PermEntropy(ComplexityBase):
         (default None).
     params : dict, optional
         Parameters to pass to the permutation entropy calculation function.
-        For more information, check out :
-        func:`junfier.markers.utils._perm_entropy`.
-        If None, value is set to
+        For more information, check out
+        :func:`junfier.markers.utils._perm_entropy`. If None, value is set to
         {"m": 2, "delay": 1} (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
@@ -91,8 +90,10 @@ class PermEntropy(ComplexityBase):
         References
         ----------
         .. [1] Bandt, C., & Pompe, B. (2002)
-            Permutation entropy: a natural complexity measure for time
-            series. Physical review letters, 88(17), 174102.
+               Permutation entropy: a natural complexity measure for time
+               series.
+               Physical review letters, 88(17), 174102.
+
         See also
         ---------
         https://neuropsychology.github.io/NeuroKit/functions/complexity.html
