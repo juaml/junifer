@@ -178,16 +178,17 @@ def test_get_mask() -> None:
     with OasisVBMTestingDatagrabber() as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
-        vbm_gm = input["VBM_GM"]["data"]
-        mask = get_mask(name="GM_prob0.2", target_img=vbm_gm)
+        vbm_gm = input["VBM_GM"]
+        vbm_gm_img = vbm_gm["data"]
+        mask = get_mask(name="GM_prob0.2", target_data=vbm_gm)
 
-        assert mask.shape == vbm_gm.shape
-        assert_array_equal(mask.affine, vbm_gm.affine)
+        assert mask.shape == vbm_gm_img.shape
+        assert_array_equal(mask.affine, vbm_gm_img.affine)
 
         raw_mask_img, _ = load_mask("GM_prob0.2", resolution=1.5)
         res_mask_img = resample_to_img(
             raw_mask_img,
-            vbm_gm,
+            vbm_gm_img,
             interpolation="nearest",
             copy=True,
         )
@@ -205,10 +206,11 @@ def test_mask_callable() -> None:
     with OasisVBMTestingDatagrabber() as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
-        vbm_gm = input["VBM_GM"]["data"]
-        mask = get_mask(name="identity", target_img=vbm_gm)
+        vbm_gm = input["VBM_GM"]
+        vbm_gm_img = vbm_gm["data"]
+        mask = get_mask(name="identity", target_data=vbm_gm)
 
-        assert_array_equal(mask.get_fdata(), vbm_gm.get_fdata())
+        assert_array_equal(mask.get_fdata(), vbm_gm_img.get_fdata())
 
     del _available_masks["identity"]
 
@@ -219,11 +221,12 @@ def test_nilearn_compute_masks() -> None:
     with SPMAuditoryTestingDatagrabber() as dg:
         input = dg["sub001"]
         input = reader.fit_transform(input)
-        bold_img = input["BOLD"]["data"]
+        bold = input["BOLD"]
+        bold_img = bold["data"]
 
-        mask_1 = get_mask(name="compute_brain", target_img=bold_img)
-        mask_2 = get_mask(name="compute_epi", target_img=bold_img)
-        mask_3 = get_mask(name="compute_background", target_img=bold_img)
+        mask_1 = get_mask(name="compute_brain", target_data=bold)
+        mask_2 = get_mask(name="compute_epi", target_data=bold)
+        mask_3 = get_mask(name="compute_background", target_data=bold)
 
         assert_array_equal(mask_1.affine, bold_img.affine)
         assert_array_equal(mask_2.affine, bold_img.affine)
