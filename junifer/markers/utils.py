@@ -121,7 +121,7 @@ def _correlate_dataframes(
     )
 
 
-def _hurst_exponent(bold_ts: np.ndarray, params: dict) -> np.ndarray:
+def _hurst_exponent(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     """Compute the region-wise Hurst exponent of BOLD timeseries.
 
     Take a timeseries of brain areas, and calculate Hurst exponent using
@@ -183,7 +183,7 @@ def _hurst_exponent(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     return hurst_roi
 
 
-def _range_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
+def _range_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     """Compute the region-wise range entropy of BOLD timeseries.
 
     Take a timeseries of brain areas, and calculate
@@ -240,7 +240,7 @@ def _range_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     return range_en_roi
 
 
-def _range_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
+def _range_entropy_auc(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     """Compute the region-wise AUC of range entropy of BOLD timeseries.
 
     Take a timeseries of brain areas, calculate range entropy according to
@@ -307,7 +307,7 @@ def _range_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     return range_en_auc_roi
 
 
-def _perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
+def _perm_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     """Compute the region-wise permutation entropy of BOLD timeseries.
 
     Take a timeseries of brain areas, and calculate permutation entropy
@@ -363,7 +363,7 @@ def _perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     return perm_en_roi
 
 
-def _weighted_perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
+def _weighted_perm_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     """Compute the region-wise weighted permutation entropy of BOLD timeseries.
 
     Take a timeseries of brain areas, and calculate weighted permutation
@@ -420,7 +420,7 @@ def _weighted_perm_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     return wperm_en_roi
 
 
-def _sample_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
+def _sample_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     """Compute the region-wise weighted permutation entropy of BOLD timeseries.
 
     Take a timeseries of brain areas, and calculate sample entropy [1].
@@ -475,7 +475,7 @@ def _sample_entropy(bold_ts: np.ndarray, params: dict) -> np.ndarray:
     return samp_en_roi
 
 
-def _multiscale_entropy_auc(bold_ts: np.ndarray, params: dict) -> np.ndarray:
+def _multiscale_entropy_auc(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     """Compute the region-wise AUC of multiscale entropy of BOLD timeseries.
 
     Take a timeseries of brain areas, calculate multiscale entropy for each
