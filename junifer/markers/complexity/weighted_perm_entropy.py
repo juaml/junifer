@@ -32,11 +32,11 @@ class WeightedPermEntropy(ComplexityBase):
         Check valid options by calling :func:`junifer.data.masks.list_masks`
         (default None).
     params : dict, optional
-        Parameters to pass to the weighted permutation entropy calculation function.
-        For more information, check out :
-        func:`junfier.markers.utils._weighted_perm_entropy`.
-        If None, value is set to
-        {"m": 2, "delay": 1} (default None).
+        Parameters to pass to the weighted permutation entropy calculation
+        function.
+        For more information, check out
+        :func:`junfier.markers.utils._weighted_perm_entropy`. If None, value
+        is set to {"m": 2, "delay": 1} (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
@@ -91,9 +91,10 @@ class WeightedPermEntropy(ComplexityBase):
         References
         ----------
         .. [1] Fadlallah, B., Chen, B., Keil, A., & Principe, J. (2013)
-                Weighted-permutation entropy: A complexity measure for
-                time series incorporating amplitude information.
-                Physical Review E, 87(2), 022911.
+               Weighted-permutation entropy: A complexity measure for
+               time series incorporating amplitude information.
+               Physical Review E, 87(2), 022911.
+
         See also
         ---------
         https://neuropsychology.github.io/NeuroKit/functions/complexity.html
