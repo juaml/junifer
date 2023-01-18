@@ -33,8 +33,8 @@ class SampleEntropy(ComplexityBase):
         (default None).
     params : dict, optional
         Parameters to pass to the sample entropy calculation function.
-        For more information, check out :
-        func:`junfier.markers.utils._sample_entropy`.
+        For more information, check out
+        ``junifer.markers.utils._sample_entropy``.
         If None, value is set to
         {"m": 2, "delay": 1, "tol": 0.5} (default None).
     name : str, optional
