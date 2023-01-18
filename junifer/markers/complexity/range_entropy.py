@@ -34,8 +34,8 @@ class RangeEntropy(ComplexityBase):
     params : dict, optional
         Parameters to pass to the range entropy calculation function. For more
         information, check out :func:`junfier.markers.utils._range_entropy`.
-        If None, value is set to
-        {"m": 2, "tol": 0.5, "delay": 1} (default None).
+        If None, value is set to {"m": 2, "tol": 0.5, "delay": 1}
+        (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
@@ -89,8 +89,9 @@ class RangeEntropy(ComplexityBase):
         References
         ----------
         .. [1] A. Omidvarnia et al. (2018)
-           Range Entropy: A Bridge between Signal Complexity and
-           Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
+               Range Entropy: A Bridge between Signal Complexity and
+               Self-Similarity.
+               Entropy, vol. 20, no. 12, p. 962, 2018.
 
         """
         # Extract aggregated BOLD timeseries
