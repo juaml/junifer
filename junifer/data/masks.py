@@ -45,12 +45,12 @@ data/masks directory. The user can also register their own masks.
 _available_masks: Dict[str, Dict[str, Any]] = {
     "GM_prob0.2": {"family": "Vickery-Patil"},
     "GM_prob0.2_cortex": {"family": "Vickery-Patil"},
-    "compute_brain": {"family": "Callable", "func": compute_brain_mask},
-    "compute_background": {
+    "compute_brain_mask": {"family": "Callable", "func": compute_brain_mask},
+    "compute_backgroun_mask": {
         "family": "Callable",
         "func": compute_background_mask,
     },
-    "compute_epi": {"family": "Callable", "func": compute_epi_mask},
+    "compute_epi_mask": {"family": "Callable", "func": compute_epi_mask},
 }
 
 
@@ -113,7 +113,7 @@ def list_masks() -> List[str]:
 
 def get_mask(
     name: str,
-    target_img: "Nifti1Image",
+    target_data: Dict[str, Any],
     callable_params: Optional[Dict[str, Any]] = None,
 ) -> "Nifti1Image":
     """Get mask, tailored for the target image.
@@ -122,8 +122,9 @@ def get_mask(
     ----------
     name : str
         The name of the mask.
-    target_img : Nifti1Image
-        The image to which the mask will be applied.
+    target_data : Dict[str, Any]
+        The corresponding item of the data object to which the mask will be
+        applied.
     callable_params : dict, optional
         Parameters to pass to the callable mask function (default None).
     Returns
@@ -132,6 +133,7 @@ def get_mask(
         The mask image.
     """
     # Get the min of the voxels sizes and use it as the resolution
+    target_img = target_data["data"]
     resolution = np.min(target_img.header.get_zooms()[:3])
     mask_img, _ = load_mask(name, path_only=False, resolution=resolution)
     if callable(mask_img):
