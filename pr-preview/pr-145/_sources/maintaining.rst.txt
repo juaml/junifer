@@ -18,7 +18,7 @@ pre-release.
 
 The CI scripts will publish every tag with the format *v.X.Y.Z* to Pypi as
 version "X.Y.Z". Additionally, for every push to main, it will be published
-as pre-release to TestPypi.
+as pre-release to PyPI.
 
 Releasing a new version
 -----------------------
@@ -64,4 +64,3 @@ release.
 
     git tag -a vD.E.0.dev -m "Set next release to D.E.0"
     git push origin --follow-tags
-
