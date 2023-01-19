@@ -14,6 +14,8 @@ from .functional_connectivity import (
     FunctionalConnectivityParcels,
     FunctionalConnectivitySpheres,
     CrossParcellationFC,
+    EdgeCentricFCParcels,
+    EdgeCentricFCSpheres,
 )
 from .reho import ReHoParcels, ReHoSpheres
 from .falff import (

@@ -32,6 +32,9 @@ Enhancements
 - Organize functional connectivity markers in ``junifer.markers.functional_connectivity``
   (:gh:`107` by `Synchon Mandal`_).
 
+- Add :class:`junifer.markers.EdgeCentricFCParcels` and :class:`junifer.markers.EdgeCentricFCSpheres`
+  (:gh:`64` by `Leonard Sasse`_).
+
 Bugs
 ~~~~
 
