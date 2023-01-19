@@ -5,6 +5,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from typing import Callable, Dict, Union
+
 from pathlib import Path
 
 import pytest
@@ -229,8 +231,32 @@ def test_get_mask_errors() -> None:
             get_mask(mask={"GM_prob0.2": {"param": 1}}, target_data=vbm_gm)
 
 
-def test_nilearn_compute_masks() -> None:
-    """Test using nilearn compute mask functions."""
+@pytest.mark.parametrize(
+    "mask_name,function,params,resample",
+    [
+        ("compute_brain_mask", compute_brain_mask, {"threshold": 0.2}, False),
+        ("compute_background_mask", compute_background_mask, None, False),
+        ("compute_epi_mask", compute_epi_mask, None, False),
+        ("fetch_icbm152_brain_gm_mask", fetch_icbm152_brain_gm_mask, None, True),
+    ],
+)
+def test_nilearn_compute_masks(
+    mask_name: str, function: Callable, params: Union[Dict, None],
+    resample: bool
+) -> None:
+    """Test using nilearn compute mask functions.
+
+    Parameters
+    ----------
+    mask_name : str
+        Name of the mask.
+    function : callable
+        Function to call.
+    params : dict, optional
+        Parameters to pass to the function.
+    resample : bool
+        Whether to resample the mask to the target data.
+    """
     reader = DefaultDataReader()
     with SPMAuditoryTestingDatagrabber() as dg:
         input = dg["sub001"]
@@ -238,32 +264,27 @@ def test_nilearn_compute_masks() -> None:
         bold = input["BOLD"]
         bold_img = bold["data"]
 
-        mask_1 = get_mask(
-            mask={"compute_brain_mask": {"threshold": 0.2}}, target_data=bold
+        if params is None:
+            params = {}
+            mask_spec = mask_name
+        else:
+            mask_spec = {mask_name: params}
+
+        mask = get_mask(
+            mask=mask_spec, target_data=bold
         )
-        mask_2 = get_mask(mask="compute_epi_mask", target_data=bold)
-        mask_3 = get_mask(mask="compute_background_mask", target_data=bold)
-        mask_4 = get_mask(mask="fetch_icbm152_brain_gm_mask", target_data=bold)
 
-        assert_array_equal(mask_1.affine, bold_img.affine)
-        assert_array_equal(mask_2.affine, bold_img.affine)
-        assert_array_equal(mask_3.affine, bold_img.affine)
-        assert_array_equal(mask_4.affine, bold_img.affine)
+        assert_array_equal(mask.affine, bold_img.affine)
 
-        ni_mask_1 = compute_brain_mask(bold_img, threshold=0.2)
-        ni_mask_2 = compute_epi_mask(bold_img)
-        ni_mask_3 = compute_background_mask(bold_img)
-        ni_mask_4 = fetch_icbm152_brain_gm_mask()
-
-        assert_array_equal(mask_1.get_fdata(), ni_mask_1.get_fdata())
-        assert_array_equal(mask_2.get_fdata(), ni_mask_2.get_fdata())
-        assert_array_equal(mask_3.get_fdata(), ni_mask_3.get_fdata())
-
-        # Mask 4 needs resample
-        ni_mask_4_res = resample_to_img(
-            ni_mask_4,
-            bold_img,
-            interpolation="nearest",
-            copy=True,
-        )
-        assert_array_equal(mask_4.get_fdata(), ni_mask_4_res.get_fdata())
+        if resample is False:
+            ni_mask = function(bold_img, **params)
+        else:
+            ni_mask = function(**params)
+            # Mask needs resample
+            ni_mask = resample_to_img(
+                ni_mask,
+                bold_img,
+                interpolation="nearest",
+                copy=True,
+            )
+        assert_array_equal(mask.get_fdata(), ni_mask.get_fdata())
