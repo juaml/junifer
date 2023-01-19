@@ -182,6 +182,16 @@ Available
      - Calculate (f)ALFF and aggregate using spheres placed on coordinates
      - Done
      - 0.0.1
+   * - :class:`junifer.markers.EdgeCentricFCParcels`
+     - Calculate edge-centric functional connectivity over parcellation, as found in
+       `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
+     - Done
+     - 0.0.2
+   * - :class:`junifer.markers.EdgeCentricFCSpheres`
+     - Calculate edge-centric functional connectivity over spheres placed on coordinates,
+       as found in `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
+     - Done
+     - 0.0.2
 
 Planned
 ~~~~~~~
@@ -199,10 +209,6 @@ Planned
    * - Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent
      - Calculate Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent
      - :gh:`61`
-   * - EdgeCentricFC
-     - Calculate edge-centric functional connectivity
-     - :gh:`64`
-
 
 Parcellations
 -------------
