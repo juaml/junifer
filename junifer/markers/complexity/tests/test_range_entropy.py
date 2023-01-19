@@ -5,11 +5,11 @@
 
 from pathlib import Path
 
-from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import load_parcellation
-from junifer.markers.complexity.range_entropy import RangeEntropy
+from junifer.datareader import DefaultDataReader
+from junifer.markers import RangeEntropy
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
 
@@ -22,35 +22,29 @@ def test_compute() -> None:
     """Test RangeEntropy compute()."""
     with SPMAuditoryTestingDatagrabber() as dg:
         # Fetch element
-        out = dg["sub001"]
-        # Load BOLD image
-        niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
-        # Create input data
-        input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
+        element = dg["sub001"]
+        # Fetch element data
+        element_data = DefaultDataReader().fit_transform(element)
+        # Initialize the marker
+        marker = RangeEntropy(parcellation=PARCELLATION)
+        # Compute the marker
+        feature_map = marker.fit_transform(element_data)
 
-        # Compute the RangeEntropy marker
-        feature_map = RangeEntropy(parcellation=PARCELLATION)
-        new_out = feature_map.compute(input_dict)
+    # Load parcellation
+    test_parcellation, _, _ = load_parcellation(PARCELLATION)
+    # Compute the NiftiLabelsMasker
+    test_masker = NiftiLabelsMasker(test_parcellation)
+    test_ts = test_masker.fit_transform(element_data["BOLD"]["data"])
+    _, n_roi = test_ts.shape
 
-        # Load parcellation
-        test_parcellation, _, _ = load_parcellation(PARCELLATION)
-
-        # Compute the NiftiLabelsMasker
-        test_masker = NiftiLabelsMasker(test_parcellation)
-        test_ts = test_masker.fit_transform(niimg)
-
-        # Assert the dimension of timeseries
-        _, n_roi = test_ts.shape
-        assert n_roi == len(new_out["data"])
+    # Assert the dimension of timeseries
+    assert n_roi == len(feature_map["BOLD"]["data"])
 
 
 def test_get_output_type() -> None:
     """Test RangeEntropy get_output_type()."""
-    tmp = RangeEntropy(parcellation=PARCELLATION)
-    input_list = ["BOLD"]
-    input_list = tmp.get_output_type(input_list)
-    assert len(input_list) == 1
-    assert input_list[0] in ["matrix"]
+    marker = RangeEntropy(parcellation=PARCELLATION)
+    assert marker.get_output_type("BOLD") == "matrix"
 
 
 def test_store(tmp_path: Path) -> None:
@@ -64,16 +58,14 @@ def test_store(tmp_path: Path) -> None:
     """
     with SPMAuditoryTestingDatagrabber() as dg:
         # Fetch element
-        out = dg["sub001"]
-        # Load BOLD image
-        niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
-        input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
-        # Compute the RangeEntropy measure
-        feature_map = RangeEntropy(parcellation=PARCELLATION)
+        element = dg["sub001"]
+        # Fetch element data
+        element_data = DefaultDataReader().fit_transform(element)
+        # Initialize the marker
+        marker = RangeEntropy(parcellation=PARCELLATION)
         # Create storage
-        storage = SQLiteFeatureStorage(
-            uri=str((tmp_path / "test.db").absolute()),
-            single_output=True,
-        )
-        # Store
-        feature_map.fit_transform(input=input_dict, storage=storage)
+        # Create storage
+        storage_uri = tmp_path / "test_range_entropy.sqlite"
+        storage = SQLiteFeatureStorage(uri=storage_uri)
+        # Compute the marker and store
+        marker.fit_transform(input=element_data, storage=storage)
