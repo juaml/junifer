@@ -6,7 +6,6 @@
 # License: AGPL
 
 from pathlib import Path
-import operator
 
 import pytest
 from numpy.testing import (

@@ -242,11 +242,10 @@ def test_ParcelAggregation_3D_mask() -> None:
 
 
 def test_ParcelAggregation_3D_mask_computed() -> None:
-    """Test ParcelAggregation object on 3D images with nilearn computed mask."""
+    """Test ParcelAggregation object on 3D images with computed masks."""
 
     # Get the testing parcellation (for nilearn)
     parcellation = datasets.fetch_atlas_schaefer_2018(n_rois=100)
-
 
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
@@ -288,7 +287,6 @@ def test_ParcelAggregation_3D_mask_computed() -> None:
 
     with pytest.raises(AssertionError):
         assert_array_almost_equal(jun_values3d_mean, auto_bad)
-
 
 
 def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
