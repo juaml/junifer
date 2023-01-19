@@ -237,12 +237,19 @@ def test_get_mask_errors() -> None:
         ("compute_brain_mask", compute_brain_mask, {"threshold": 0.2}, False),
         ("compute_background_mask", compute_background_mask, None, False),
         ("compute_epi_mask", compute_epi_mask, None, False),
-        ("fetch_icbm152_brain_gm_mask", fetch_icbm152_brain_gm_mask, None, True),
+        (
+            "fetch_icbm152_brain_gm_mask",
+            fetch_icbm152_brain_gm_mask,
+            None,
+            True,
+        ),
     ],
 )
 def test_nilearn_compute_masks(
-    mask_name: str, function: Callable, params: Union[Dict, None],
-    resample: bool
+    mask_name: str,
+    function: Callable,
+    params: Union[Dict, None],
+    resample: bool,
 ) -> None:
     """Test using nilearn compute mask functions.
 
@@ -270,9 +277,7 @@ def test_nilearn_compute_masks(
         else:
             mask_spec = {mask_name: params}
 
-        mask = get_mask(
-            mask=mask_spec, target_data=bold
-        )
+        mask = get_mask(mask=mask_spec, target_data=bold)
 
         assert_array_equal(mask.affine, bold_img.affine)
 
