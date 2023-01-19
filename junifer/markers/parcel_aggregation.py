@@ -52,7 +52,7 @@ class ParcelAggregation(BaseMarker):
         parcellation: Union[str, List[str]],
         method: str,
         method_params: Optional[Dict[str, Any]] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:

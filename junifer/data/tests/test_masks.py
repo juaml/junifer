@@ -216,6 +216,20 @@ def test_mask_callable() -> None:
     del _available_masks["identity"]
 
 
+def test_get_mask_errors() -> None:
+    """Test passing wrong parameters to get_mask."""
+    reader = DefaultDataReader()
+    with OasisVBMTestingDatagrabber() as dg:
+        input = dg["sub-01"]
+        input = reader.fit_transform(input)
+        vbm_gm = input["VBM_GM"]
+        with pytest.raises(ValueError, match=r"only one key"):
+            get_mask(mask={"GM_prob0.2": {}, "Other": {}}, target_data=vbm_gm)
+
+        with pytest.raises(ValueError, match=r"callable params"):
+            get_mask(mask={"GM_prob0.2": {"param": 1}}, target_data=vbm_gm)
+
+
 def test_nilearn_compute_masks() -> None:
     """Test using nilearn compute mask functions."""
     reader = DefaultDataReader()
@@ -225,7 +239,9 @@ def test_nilearn_compute_masks() -> None:
         bold = input["BOLD"]
         bold_img = bold["data"]
 
-        mask_1 = get_mask(mask="compute_brain_mask", target_data=bold)
+        mask_1 = get_mask(
+            mask={"compute_brain_mask": {"threshold": 0.2}}, target_data=bold
+        )
         mask_2 = get_mask(mask="compute_epi_mask", target_data=bold)
         mask_3 = get_mask(mask="compute_background_mask", target_data=bold)
         mask_4 = get_mask(mask="fetch_icbm152_brain_gm_mask", target_data=bold)
@@ -235,7 +251,7 @@ def test_nilearn_compute_masks() -> None:
         assert_array_equal(mask_3.affine, bold_img.affine)
         assert_array_equal(mask_4.affine, bold_img.affine)
 
-        ni_mask_1 = compute_brain_mask(bold_img)
+        ni_mask_1 = compute_brain_mask(bold_img, threshold=0.2)
         ni_mask_2 = compute_epi_mask(bold_img)
         ni_mask_3 = compute_background_mask(bold_img)
         ni_mask_4 = fetch_icbm152_brain_gm_mask()

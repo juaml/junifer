@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import pandas as pd
 
@@ -47,7 +47,7 @@ class CrossParcellationFC(BaseMarker):
         parcellation_two: str,
         aggregation_method: str = "mean",
         correlation_method: str = "pearson",
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         name: Optional[str] = None,
     ) -> None:
         if parcellation_one == parcellation_two:

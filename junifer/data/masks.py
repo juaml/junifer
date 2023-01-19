@@ -37,14 +37,14 @@ if TYPE_CHECKING:
 _masks_path = Path(__file__).parent / "masks"
 
 
-def _fetch_icbm152_brain_gm_mask(target_img, **kwargs):
+def _fetch_icbm152_brain_gm_mask(target_img: "Nifti1Image", **kwargs):
     """Fetch ICBM152 brain mask and resample.
 
     Parameters
     ----------
     target_img : nibabel.Nifti1Image
         The image to which the mask will be resampled.
-    kwargs : dict
+    **kwargs : dict
         Keyword arguments to be passed to
         :func:`nilearn.datasets.fetch_icbm152_brain_gm_mask`.
 
@@ -157,9 +157,10 @@ def get_mask(
     masks : str or dict
         The name of the mask, or the name of a callable mask and the parameters
         of the mask.
-    target_data : Dict[str, Any]
+    target_data : dict
         The corresponding item of the data object to which the mask will be
         applied.
+
     Returns
     -------
     Nifti1Image
@@ -190,7 +191,7 @@ def get_mask(
         mask_img = mask_object(target_img, **mask_params)
     else:  # Mask is a Nifti1Image
         if mask_params is not None:
-            raise_error("Cannot pass callable_params to a non-callable mask.")
+            raise_error("Cannot pass callable params to a non-callable mask.")
         mask_img = resample_to_img(
             mask_object,
             target_img,

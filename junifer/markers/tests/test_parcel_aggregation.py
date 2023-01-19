@@ -12,6 +12,7 @@ import pytest
 from nilearn import datasets
 from nilearn.image import concat_imgs, math_img, new_img_like, resample_to_img
 from nilearn.maskers import NiftiLabelsMasker, NiftiMasker
+from nilearn.masking import compute_brain_mask
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 from scipy.stats import trim_mean
 
@@ -238,6 +239,56 @@ def test_ParcelAggregation_3D_mask() -> None:
     assert jun_values3d_mean.ndim == 2
     assert jun_values3d_mean.shape[0] == 1
     assert_array_almost_equal(auto, jun_values3d_mean)
+
+
+def test_ParcelAggregation_3D_mask_computed() -> None:
+    """Test ParcelAggregation object on 3D images with nilearn computed mask."""
+
+    # Get the testing parcellation (for nilearn)
+    parcellation = datasets.fetch_atlas_schaefer_2018(n_rois=100)
+
+
+    # Get the oasis VBM data
+    oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
+    vbm = oasis_dataset.gray_matter_maps[0]
+    img = nib.load(vbm)
+
+    # Get one mask
+    mask_img = compute_brain_mask(img, threshold=0.2)
+
+    # Create NiftiLabelsMasker
+    nifti_masker = NiftiLabelsMasker(
+        labels_img=parcellation.maps, mask_img=mask_img
+    )
+    auto = nifti_masker.fit_transform(img)
+
+    # Get one mask
+    mask_img = compute_brain_mask(img, threshold=0.5)
+
+    # Create NiftiLabelsMasker
+    nifti_masker = NiftiLabelsMasker(
+        labels_img=parcellation.maps, mask_img=mask_img
+    )
+    auto_bad = nifti_masker.fit_transform(img)
+
+    # Use the ParcelAggregation object
+    marker = ParcelAggregation(
+        parcellation="Schaefer100x7",
+        method="mean",
+        mask={"compute_brain_mask": {"threshold": 0.2}},
+        name="gmd_schaefer100x7_mean",
+        on="VBM_GM",
+    )  # Test passing "on" as a keyword argument
+    input = {"VBM_GM": {"data": img, "meta": {}}}
+    jun_values3d_mean = marker.fit_transform(input)["VBM_GM"]["data"]
+
+    assert jun_values3d_mean.ndim == 2
+    assert jun_values3d_mean.shape[0] == 1
+    assert_array_almost_equal(auto, jun_values3d_mean)
+
+    with pytest.raises(AssertionError):
+        assert_array_almost_equal(jun_values3d_mean, auto_bad)
+
 
 
 def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:

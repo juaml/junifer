@@ -4,7 +4,7 @@
 # License: AGPL
 
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import numpy as np
 
@@ -91,7 +91,7 @@ class ReHoParcels(ReHoBase):
         reho_params: Optional[Dict] = None,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
