@@ -88,7 +88,7 @@ def test_hcp1200_datagrabber(
     # Get test element
     test_element = all_elements[0]
     # Get test element data
-    out = hcpdg[test_element]
+    out = dg[test_element]
     # Asserts data type
     assert "BOLD" in out
     # Assert data file name
