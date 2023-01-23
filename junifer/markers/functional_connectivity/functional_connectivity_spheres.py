@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 from ...api.decorators import register_marker
 from ..sphere_aggregation import SphereAggregation
@@ -57,7 +57,7 @@ class FunctionalConnectivitySpheres(FunctionalConnectivityBase):
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
         cor_method_params: Optional[Dict] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.coords = coords

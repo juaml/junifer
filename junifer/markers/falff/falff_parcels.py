@@ -70,7 +70,7 @@ class AmplitudeLowFrequencyFluctuationParcels(
         lowpass: float = 0.1,
         tr: Optional[float] = None,
         use_afni: Optional[bool] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         method: str = "mean",
         method_params: Optional[Dict] = None,
         name: Optional[str] = None,

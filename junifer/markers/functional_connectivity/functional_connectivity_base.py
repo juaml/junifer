@@ -5,7 +5,7 @@
 
 
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from nilearn.connectome import ConnectivityMeasure
 from sklearn.covariance import EmpiricalCovariance
@@ -50,7 +50,7 @@ class FunctionalConnectivityBase(BaseMarker):
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
         cor_method_params: Optional[Dict] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.agg_method = agg_method

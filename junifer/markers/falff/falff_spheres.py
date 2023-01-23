@@ -5,7 +5,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 from ...api.decorators import register_marker
 from .. import SphereAggregation
@@ -75,7 +75,7 @@ class AmplitudeLowFrequencyFluctuationSpheres(
         lowpass: float = 0.1,
         tr: Optional[float] = None,
         use_afni: Optional[bool] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         method: str = "mean",
         method_params: Optional[Dict] = None,
         name: Optional[str] = None,

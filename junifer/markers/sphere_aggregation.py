@@ -7,7 +7,7 @@
 from typing import Any, Dict, List, Optional, Union
 
 from ..api.decorators import register_marker
-from ..data import load_coordinates, load_mask
+from ..data import load_coordinates, get_mask
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
 from ..utils import logger
@@ -56,7 +56,7 @@ class SphereAggregation(BaseMarker):
         radius: Optional[float] = None,
         method: str = "mean",
         method_params: Optional[Dict[str, Any]] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
@@ -129,7 +129,7 @@ class SphereAggregation(BaseMarker):
             * ``columns`` : the column labels for the computed values as a list
 
         """
-        t_input = input["data"]
+        t_input_img = input["data"]
         logger.debug(f"Sphere aggregation using {self.method}")
         # Get aggregation function
         agg_func = get_aggfunc_by_name(
@@ -139,7 +139,7 @@ class SphereAggregation(BaseMarker):
         mask_img = None
         if self.mask is not None:
             logger.debug(f"Masking with {self.mask}")
-            mask_img, _ = load_mask(self.mask)
+            mask_img = get_mask(mask=self.mask, target_data=input)
         # Get seeds and labels
         coords, out_labels = load_coordinates(name=self.coords)
         masker = JuniferNiftiSpheresMasker(
@@ -149,7 +149,7 @@ class SphereAggregation(BaseMarker):
             agg_func=agg_func,
         )
         # Fit and transform the marker on the data
-        out_values = masker.fit_transform(t_input)
+        out_values = masker.fit_transform(t_input_img)
         # Format the output
         out = {"data": out_values, "columns": out_labels}
         return out

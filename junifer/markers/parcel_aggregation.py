@@ -11,7 +11,7 @@ from nilearn.image import math_img, new_img_like, resample_to_img
 from nilearn.maskers import NiftiMasker
 
 from ..api.decorators import register_marker
-from ..data import load_mask, load_parcellation
+from ..data import get_mask, load_parcellation
 from ..stats import get_aggfunc_by_name
 from ..utils import logger
 from .base import BaseMarker
@@ -52,7 +52,7 @@ class ParcelAggregation(BaseMarker):
         parcellation: Union[str, List[str]],
         method: str,
         method_params: Optional[Dict[str, Any]] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
@@ -126,14 +126,14 @@ class ParcelAggregation(BaseMarker):
             * ``columns`` : the column labels for the computed values as a list
 
         """
-        t_input = input["data"]
+        t_input_img = input["data"]
         logger.debug(f"Parcel aggregation using {self.method}")
         agg_func = get_aggfunc_by_name(
             name=self.method,
             func_params=self.method_params,
         )
         # Get the min of the voxels sizes and use it as the resolution
-        resolution = np.min(t_input.header.get_zooms()[:3])
+        resolution = np.min(t_input_img.header.get_zooms()[:3])
 
         # Load the parcellations
         all_parcelations = []
@@ -146,7 +146,7 @@ class ParcelAggregation(BaseMarker):
             # Resample all of them to the image
             t_parcellation_img_res = resample_to_img(
                 t_parcellation,
-                t_input,
+                t_input_img,
                 interpolation="nearest",
                 copy=True,
             )
@@ -186,13 +186,8 @@ class ParcelAggregation(BaseMarker):
 
         if self.mask is not None:
             logger.debug(f"Masking with {self.mask}")
-            mask_img, _ = load_mask(name=self.mask, resolution=resolution)
-            mask_img = resample_to_img(
-                mask_img,
-                t_input,
-                interpolation="nearest",
-                copy=True,
-            )
+            mask_img = get_mask(mask=self.mask, target_data=input)
+
             parcellation_bin = math_img(
                 "np.logical_and(img, mask)",
                 img=parcellation_bin,
@@ -201,11 +196,11 @@ class ParcelAggregation(BaseMarker):
 
         logger.debug("Masking")
         masker = NiftiMasker(
-            parcellation_bin, target_affine=t_input.affine
+            parcellation_bin, target_affine=t_input_img.affine
         )  # type: ignore
 
         # Mask the input data and the parcellation
-        data = masker.fit_transform(t_input)
+        data = masker.fit_transform(t_input_img)
         parcellation_values = masker.transform(parcellation_img_res)
         parcellation_values = np.squeeze(parcellation_values).astype(int)
 

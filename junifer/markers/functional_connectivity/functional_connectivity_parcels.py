@@ -51,7 +51,7 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
         cor_method_params: Optional[Dict] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
