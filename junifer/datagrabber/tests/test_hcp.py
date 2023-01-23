@@ -3,15 +3,33 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional
+from typing import Optional, Iterable
 
 import pytest
 
-from junifer.datagrabber.hcp import DataladHCP1200
+from junifer.datagrabber.hcp import DataladHCP1200, HCP1200
 from junifer.utils import configure_logging
 
 
 URI = "https://gin.g-node.org/juaml/datalad-example-hcp1200"
+
+
+@pytest.fixture(scope="module")
+def hcpdg() -> Iterable[DataladHCP1200]:
+    """Return a HCP1200 datagrabber."""
+    dg = DataladHCP1200()
+    # Set URI to Gin
+    dg.uri = URI
+    # Set correct root directory
+    dg._rootdir = "."
+    with dg:
+        t_sub = "sub-01"
+        for t_elem in dg.get_elements():
+            if t_elem[0] == t_sub:
+                dg[t_elem]
+            else:
+                break
+        yield dg
 
 
 @pytest.mark.parametrize(
@@ -38,15 +56,19 @@ URI = "https://gin.g-node.org/juaml/datalad-example-hcp1200"
         ("MOTOR", "RL", "tfMRI_MOTOR_RL_hp2000_clean.nii.gz"),
     ],
 )
-def test_dataladhcp1200_datagrabber(
+def test_hcp1200_datagrabber(
+    hcpdg: DataladHCP1200,
     tasks: Optional[str],
     phase_encodings: Optional[str],
     expected_path_name: str,
 ) -> None:
-    """Test datalad HCP1200 datagrabber.
+    """Test HCP1200 datagrabber.
 
     Parameters
     ----------
+    hcpdg : DataladHCP1200
+        The Datalad version of the datagrabber with the first subject
+        already cloned.
     tasks : str
         The parametrized tasks.
     phase_encodings : str
@@ -56,35 +78,31 @@ def test_dataladhcp1200_datagrabber(
 
     """
     configure_logging(level="DEBUG")
-    dg = DataladHCP1200(
+    dg = HCP1200(
+        datadir=hcpdg.datadir,
         tasks=tasks,
         phase_encodings=phase_encodings,
     )
-    # Set URI to Gin
-    dg.uri = URI
-    # Set correct root directory
-    dg._rootdir = "."
-    with dg:
-        # Get all elements
-        all_elements = dg.get_elements()
-        # Get test element
-        test_element = all_elements[0]
-        # Get test element data
-        out = dg[test_element]
-        # Asserts data type
-        assert "BOLD" in out
-        # Assert data file name
-        assert out["BOLD"]["path"].name == expected_path_name
-        # Assert data file path exists
-        assert out["BOLD"]["path"].exists()
-        # Assert data file path is a file
-        assert out["BOLD"]["path"].is_file()
-        # Assert metadata
-        assert "meta" in out["BOLD"]
-        meta = out["BOLD"]["meta"]
-        assert "element" in meta
-        assert "subject" in meta["element"]
-        assert test_element[0] == meta["element"]["subject"]
+    # Get all elements
+    all_elements = dg.get_elements()
+    # Get test element
+    test_element = all_elements[0]
+    # Get test element data
+    out = hcpdg[test_element]
+    # Asserts data type
+    assert "BOLD" in out
+    # Assert data file name
+    assert out["BOLD"]["path"].name == expected_path_name
+    # Assert data file path exists
+    assert out["BOLD"]["path"].exists()
+    # Assert data file path is a file
+    assert out["BOLD"]["path"].is_file()
+    # Assert metadata
+    assert "meta" in out["BOLD"]
+    meta = out["BOLD"]["meta"]
+    assert "element" in meta
+    assert "subject" in meta["element"]
+    assert test_element[0] == meta["element"]["subject"]
 
 
 @pytest.mark.parametrize(
@@ -110,14 +128,18 @@ def test_dataladhcp1200_datagrabber(
         ("MOTOR", "RL"),
     ],
 )
-def test_dataladhcp1200_datagrabber_single_access(
+def test_hcp1200_datagrabber_single_access(
+    hcpdg: DataladHCP1200,
     tasks: Optional[str],
     phase_encodings: Optional[str],
 ) -> None:
-    """Test datalad HCP1200 datagrabber single access.
+    """Test HCP1200 datagrabber single access.
 
     Parameters
     ----------
+    hcpdg : DataladHCP1200
+        The Datalad version of the datagrabber with the first subject
+        already cloned.
     tasks : str
         The parametrized tasks.
     phase_encodings : str
@@ -125,14 +147,11 @@ def test_dataladhcp1200_datagrabber_single_access(
 
     """
     configure_logging(level="DEBUG")
-    dg = DataladHCP1200(
+    dg = HCP1200(
+        datadir=hcpdg.datadir,
         tasks=tasks,
         phase_encodings=phase_encodings,
     )
-    # Set URI to Gin
-    dg.uri = URI
-    # Set correct root directory
-    dg._rootdir = "."
     with dg:
         # Get all elements
         all_elements = dg.get_elements()
@@ -149,14 +168,18 @@ def test_dataladhcp1200_datagrabber_single_access(
         (["REST1", "REST2"], None),
     ],
 )
-def test_dataladhcp1200_datagrabber_multi_access(
+def test_hcp1200_datagrabber_multi_access(
+    hcpdg: DataladHCP1200,
     tasks: Optional[str],
     phase_encodings: Optional[str],
 ) -> None:
-    """Test datalad HCP1200 datagrabber multiple access.
+    """Test HCP1200 datagrabber multiple access.
 
     Parameters
     ----------
+    hcpdg : DataladHCP1200
+        The Datalad version of the datagrabber with the first subject
+        already cloned.
     tasks : str
         The parametrized tasks.
     phase_encodings : str
@@ -164,14 +187,11 @@ def test_dataladhcp1200_datagrabber_multi_access(
 
     """
     configure_logging(level="DEBUG")
-    dg = DataladHCP1200(
-        tasks=["REST1", "REST2"],
-        phase_encodings=["LR", "RL"],
+    dg = HCP1200(
+        datadir=hcpdg.datadir,
+        tasks=tasks,
+        phase_encodings=phase_encodings,
     )
-    # Set URI to Gin
-    dg.uri = URI
-    # Set correct root directory
-    dg._rootdir = "."
     with dg:
         # Get all elements
         all_elements = dg.get_elements()
@@ -181,17 +201,23 @@ def test_dataladhcp1200_datagrabber_multi_access(
             assert element[2] in ["LR", "RL"]
 
 
-def test_dataladhcp1200_datagrabber_multi_access_task_simple() -> None:
-    """Test datalad HCP1200 datagrabber simple multiple access for task."""
+def test_hcp1200_datagrabber_multi_access_task_simple(
+    hcpdg: DataladHCP1200,
+) -> None:
+    """Test HCP1200 datagrabber simple multiple access for task.
+
+    Parameters
+    ----------
+    hcpdg : DataladHCP1200
+        The Datalad version of the datagrabber with the first subject
+        already cloned.
+    """
     configure_logging(level="DEBUG")
-    dg = DataladHCP1200(
+    dg = HCP1200(
+        datadir=hcpdg.datadir,
         tasks="REST1",
         phase_encodings=["LR", "RL"],
     )
-    # Set URI to Gin
-    dg.uri = URI
-    # Set correct root directory
-    dg._rootdir = "."
     with dg:
         # Get all elements
         all_elements = dg.get_elements()
@@ -201,17 +227,16 @@ def test_dataladhcp1200_datagrabber_multi_access_task_simple() -> None:
             assert element[2] in ["LR", "RL"]
 
 
-def test_dataladhcp1200_datagrabber_multi_access_phase_simple() -> None:
-    """Test datalad HCP1200 datagrabber simple multiple access for phase."""
+def test_hcp1200_datagrabber_multi_access_phase_simple(
+    hcpdg: DataladHCP1200,
+) -> None:
+    """Test HCP1200 datagrabber simple multiple access for phase."""
     configure_logging(level="DEBUG")
-    dg = DataladHCP1200(
+    dg = HCP1200(
+        datadir=hcpdg.datadir,
         tasks=["REST1", "REST2"],
         phase_encodings="LR",
     )
-    # Set URI to Gin
-    dg.uri = URI
-    # Set correct root directory
-    dg._rootdir = "."
     with dg:
         # Get all elements
         all_elements = dg.get_elements()
@@ -230,11 +255,11 @@ def test_dataladhcp1200_datagrabber_multi_access_phase_simple() -> None:
         (["FOO", "BAR"], "LR"),
     ],
 )
-def test_dataladhcp1200_datagrabber_incorrect_access_task(
+def test_hcp1200_datagrabber_incorrect_access_task(
     tasks: Optional[str],
     phase_encodings: Optional[str],
 ) -> None:
-    """Test datalad HCP1200 datagrabber incorrect access for task.
+    """Test HCP1200 datagrabber incorrect access for task.
 
     Parameters
     ----------
@@ -246,7 +271,8 @@ def test_dataladhcp1200_datagrabber_incorrect_access_task(
     """
     configure_logging(level="DEBUG")
     with pytest.raises(ValueError, match="not a valid HCP-YA fMRI task input"):
-        _ = DataladHCP1200(
+        _ = HCP1200(
+            datadir=".",
             tasks=tasks,
             phase_encodings=phase_encodings,
         )
@@ -261,11 +287,11 @@ def test_dataladhcp1200_datagrabber_incorrect_access_task(
         (["REST1", "REST2"], "BAR"),
     ],
 )
-def test_dataladhcp1200_datagrabber_incorrect_access_phase(
+def test_hcp1200_datagrabber_incorrect_access_phase(
     tasks: Optional[str],
     phase_encodings: Optional[str],
 ) -> None:
-    """Test datalad HCP1200 datagrabber incorrect access for phase.
+    """Test HCP1200 datagrabber incorrect access for phase.
 
     Parameters
     ----------
@@ -277,7 +303,8 @@ def test_dataladhcp1200_datagrabber_incorrect_access_phase(
     """
     configure_logging(level="DEBUG")
     with pytest.raises(ValueError, match="not a valid HCP-YA phase encoding"):
-        _ = DataladHCP1200(
+        _ = HCP1200(
+            datadir=".",
             tasks=tasks,
             phase_encodings=phase_encodings,
         )

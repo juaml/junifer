@@ -35,6 +35,8 @@ Enhancements
 - Add :class:`junifer.markers.EdgeCentricFCParcels` and :class:`junifer.markers.EdgeCentricFCSpheres`
   (:gh:`64` by `Leonard Sasse`_).
 
+- Change HCP datagrabber tests to decrease CI running time (:gh:`155` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
