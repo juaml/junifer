@@ -230,7 +230,14 @@ def test_hcp1200_datagrabber_multi_access_task_simple(
 def test_hcp1200_datagrabber_multi_access_phase_simple(
     hcpdg: DataladHCP1200,
 ) -> None:
-    """Test HCP1200 datagrabber simple multiple access for phase."""
+    """Test HCP1200 datagrabber simple multiple access for phase.
+
+    Parameters
+    ----------
+    hcpdg : DataladHCP1200
+        The Datalad version of the datagrabber with the first subject
+        already cloned.
+    """
     configure_logging(level="DEBUG")
     dg = HCP1200(
         datadir=hcpdg.datadir,
@@ -308,3 +315,36 @@ def test_hcp1200_datagrabber_incorrect_access_phase(
             tasks=tasks,
             phase_encodings=phase_encodings,
         )
+
+
+def test_hcp1200_datagrabber_elements(
+    hcpdg: DataladHCP1200,
+) -> None:
+    """Test HCP1200 datagrabber elements.
+
+    Parameters
+    ----------
+    hcpdg : DataladHCP1200
+        The Datalad version of the datagrabber with the first subject
+        already cloned.
+    """
+    configure_logging(level="DEBUG")
+    dg = HCP1200(
+        datadir=hcpdg.datadir,
+        tasks="REST1",
+        phase_encodings="LR",
+    )
+    with dg:
+        # Get all elements
+        expected_subjects = [
+            f"sub-{x:02d}" for x in range(1, 10)
+        ]
+        found_subjects = []
+        all_elements = dg.get_elements()
+        # Check only specified task and phase encoding are found
+        for element in all_elements:
+            found_subjects.append(element[0])
+            assert element[1] == "REST1"
+            assert element[2] in ["LR", "RL"]
+
+        assert set(found_subjects) == set(expected_subjects)
