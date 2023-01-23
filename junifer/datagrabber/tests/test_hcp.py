@@ -23,12 +23,8 @@ def hcpdg() -> Iterable[DataladHCP1200]:
     # Set correct root directory
     dg._rootdir = "."
     with dg:
-        t_sub = "sub-01"
         for t_elem in dg.get_elements():
-            if t_elem[0] == t_sub:
-                dg[t_elem]
-            else:
-                break
+            dg[t_elem]
         yield dg
 
 
