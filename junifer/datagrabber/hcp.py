@@ -142,7 +142,11 @@ class HCP1200(PatternDataGrabber):
             The list of elements in the dataset.
 
         """
-        subjects = [x.name for x in self.datadir.iterdir() if x.is_dir()]
+        subjects = [
+            x.name
+            for x in self.datadir.iterdir()
+            if x.is_dir() and not x.name.startswith(".")
+        ]
         elems = []
         for subject, task, phase_encoding in product(
             subjects, self.tasks, self.phase_encodings
