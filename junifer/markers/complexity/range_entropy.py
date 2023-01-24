@@ -47,7 +47,7 @@ class RangeEntropy(ComplexityBase):
         parcellation: Union[str, List[str]],
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:

@@ -46,7 +46,7 @@ class HurstExponent(ComplexityBase):
         parcellation: Union[str, List[str]],
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
-        mask: Optional[str] = None,
+        mask: Union[str, Dict, None] = None,
         params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
@@ -106,6 +106,6 @@ class HurstExponent(ComplexityBase):
         # Initialize output
         output = {}
         output["data"] = feature_map
-        output["col_names"] = f"hurst_exponent_{method}"
-        output["row_names"] = bold_timeseries["columns"]
+        output["row_names"] = f"hurst_exponent_{method}"
+        output["col_names"] = bold_timeseries["columns"]
         return output
