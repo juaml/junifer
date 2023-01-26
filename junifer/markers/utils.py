@@ -180,6 +180,8 @@ def _hurst_exponent(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     if np.isnan(np.sum(hurst_roi)):
         warn_with_log("There is NaN in the Hurst exponent values!")
 
+    hurst_roi = hurst_roi.T  # 1 X n_roi
+
     return hurst_roi
 
 
@@ -236,6 +238,8 @@ def _range_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
 
     if np.isnan(np.sum(range_en_roi)):
         warn_with_log("There is NaN in the range entropy values!")
+
+    range_en_roi = range_en_roi.T  # 1 X n_roi
 
     return range_en_roi
 
@@ -304,6 +308,8 @@ def _range_entropy_auc(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     if np.isnan(np.sum(range_en_auc_roi)):
         warn_with_log("There is NaN in the auc of range entropy values!")
 
+    range_en_auc_roi = range_en_auc_roi.T  # 1 X n_roi
+
     return range_en_auc_roi
 
 
@@ -359,6 +365,8 @@ def _perm_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
 
     if np.isnan(np.sum(perm_en_roi)):
         warn_with_log("There is NaN in the permutation entropy values!")
+
+    perm_en_roi = perm_en_roi.T  # 1 X n_roi
 
     return perm_en_roi
 
@@ -417,6 +425,8 @@ def _weighted_perm_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     if np.isnan(np.sum(wperm_en_roi)):
         warn_with_log("There is NaN in the entropy values!")
 
+    wperm_en_roi = wperm_en_roi.T  # 1 X n_roi
+
     return wperm_en_roi
 
 
@@ -472,6 +482,8 @@ def _sample_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     if np.isnan(np.sum(samp_en_roi)):
         warn_with_log("There is NaN in the entropy values!")
 
+    samp_en_roi = samp_en_roi.T  # 1 X n_roi
+
     return samp_en_roi
 
 
@@ -523,9 +535,7 @@ def _multiscale_entropy_auc(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
             scale=scale,
             dimension=emb_dim,
             tolerance=tol_corrected,
-            fuzzy=False,  # Not Fuzzy entropy
-            refined=False,  # Not refined version
-            show=False,
+            method="MSEn",
         )
 
         MSEn_auc_roi[idx_roi] = tmp[0]
@@ -538,5 +548,7 @@ def _multiscale_entropy_auc(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
                 "may be to choose a smaller value for 'scale'."
             )
         )
+
+    MSEn_auc_roi = MSEn_auc_roi.T  # 1 X n_roi
 
     return MSEn_auc_roi

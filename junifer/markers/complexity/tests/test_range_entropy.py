@@ -3,6 +3,7 @@
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
+import os
 from pathlib import Path
 
 from nilearn.maskers import NiftiLabelsMasker
@@ -38,7 +39,8 @@ def test_compute() -> None:
     _, n_roi = test_ts.shape
 
     # Assert the dimension of timeseries
-    assert n_roi == len(feature_map["BOLD"]["data"])
+    _, n_roi2 = feature_map["BOLD"]["data"].shape
+    assert n_roi == n_roi2
 
 
 def test_get_output_type() -> None:
@@ -64,8 +66,7 @@ def test_store(tmp_path: Path) -> None:
         # Initialize the marker
         marker = RangeEntropy(parcellation=PARCELLATION)
         # Create storage
-        # Create storage
-        storage_uri = tmp_path / "test_range_entropy.sqlite"
+        storage_uri = os.path.join(tmp_path, "test_range_entropy.sqlite")
         storage = SQLiteFeatureStorage(uri=storage_uri)
         # Compute the marker and store
         marker.fit_transform(input=element_data, storage=storage)

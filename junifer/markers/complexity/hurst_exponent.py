@@ -8,6 +8,7 @@ from typing import Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
 from ...utils import logger
+from ..parcel_aggregation import ParcelAggregation
 from ..utils import _hurst_exponent
 from .complexity_base import ComplexityBase
 
@@ -62,6 +63,33 @@ class HurstExponent(ComplexityBase):
         else:
             self.params = params
 
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker.
+
+        """
+        return ["BOLD"]
+
+    def get_output_type(self, input_type: str) -> str:
+        """Get output type.
+
+        Parameters
+        ----------
+        input_type : str
+            The data type input to the marker.
+
+        Returns
+        -------
+        str
+            The storage type output by the marker.
+
+        """
+        return "matrix"
+
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
@@ -82,9 +110,7 @@ class HurstExponent(ComplexityBase):
             keys:
 
             * ``data`` : computed data as a numpy.ndarray.
-            * ``row_names`` : row names as a list
             * ``col_names`` : column names as a list
-            * ``matrix_kind`` : the kind of matrix (tril, triu or full)
 
         References
         ----------
@@ -95,17 +121,27 @@ class HurstExponent(ComplexityBase):
 
         """
         # Extract aggregated BOLD timeseries
-        bold_timeseries = self._extract_bold_timeseries(input=input)
+        # bold_timeseries = self._extract_bold_timeseries(input=input)
         method = self.params["method"]
-
-        # Calculate Hurst exponent
         logger.info(f"Calculating Hurst exponent ({method}).")
-        feature_map = _hurst_exponent(
-            bold_timeseries["data"], self.params
-        )  # n_roi X 1
+
+        # Initialize a ParcelAggregation
+        parcel_aggregation = ParcelAggregation(
+            parcellation=self.parcellation,
+            method=self.agg_method,
+            method_params=self.agg_method_params,
+            mask=self.mask,
+        )
+        # Compute the parcel aggregation
+        output = parcel_aggregation.compute(
+            input=input, extra_input=extra_input
+        )
+        feature_map = _hurst_exponent(output["data"], self.params)  # 1 X n_roi
+
         # Initialize output
-        output = {}
-        output["data"] = feature_map
-        output["row_names"] = f"hurst_exponent_{method}"
-        output["col_names"] = bold_timeseries["columns"]
-        return output
+        out = output.copy()
+        out["data"] = feature_map
+        out["col_names"] = output["columns"]
+        del out["columns"]
+
+        return out
