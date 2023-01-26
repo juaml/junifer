@@ -11,10 +11,11 @@ import numpy as np
 import pandas as pd
 from nilearn._utils.niimg_conversions import check_niimg_4d
 from nilearn.image import clean_img
-from nilearn.masking import compute_brain_mask
+
 
 from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
+from ...data import get_mask
 from ..base import BasePreprocessor
 
 
@@ -134,11 +135,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     t_r : float, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
-    mask_img: Niimg-like object, optional
-        If provided, signal is only cleaned from voxels inside the mask.
-        If mask is provided, it should have same shape and affine as imgs.
-        If not provided, a mask is computed using
-        :func:`nilearn.masking.compute_brain_mask` (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
 
     """
 
@@ -153,7 +153,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         low_pass: Optional[float] = None,
         high_pass: Optional[float] = None,
         t_r: Optional[float] = None,
-        mask_img: Optional["Nifti1Image"] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
     ) -> None:
         """Initialise the class."""
         if strategy is None:
@@ -169,7 +169,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         self.low_pass = low_pass
         self.high_pass = high_pass
         self.t_r = t_r
-        self.mask_img = mask_img
+        self.masks = masks
 
         self._valid_components = ["motion", "wm_csf", "global_signal"]
         self._valid_confounds = ["basic", "power2", "derivatives", "full"]
@@ -521,19 +521,20 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             raise ValueError(f"Invalid confounds format {t_format}")
 
     def _remove_confounds(
-        self, bold_img: "Nifti1Image", confounds_df: pd.DataFrame
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict[str, Any]] = None,
     ) -> Union["Nifti1Image", "Nifti2Image", "MGHImage", List]:
         """Remove confounds from the BOLD image.
 
         Parameters
         ----------
-        bold_img : Niimg-like object
-            4D image. The signals in the last dimension are filtered
-            (see http://nilearn.github.io/manipulating_images/input_output.html
-            for a detailed description of the valid input types).
-        confounds_df : pd.DataFrame
-            Dataframe containing confounds to remove. Number of rows should
-            correspond to number of volumes in the BOLD image.
+        input : dict
+            Dictionary containing the ``BOLD`` value from the
+            Junifer Data object.
+        extra_input : dict, optional
+            Dictionary containing the rest of the Junifer Data object. Must
+            include the ``BOLD_confounds`` key.
 
         Returns
         --------
@@ -541,8 +542,11 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             Input image with confounds removed.
 
         """
+        assert extra_input is not None  # Not the case, data is validated
+        confounds_df = self._pick_confounds(extra_input["BOLD_confounds"])
         confounds_array = confounds_df.values
 
+        bold_img = input["data"]
         t_r = self.t_r
         if t_r is None:
             logger.info("No `t_r` specified, using t_r from nifti header")
@@ -552,10 +556,17 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 f"Read t_r from nifti header: {t_r}",
             )
 
-        mask_img = self.mask_img
-        if mask_img is None:
-            logger.info("Computing brain mask from image")
-            mask_img = compute_brain_mask(bold_img)
+        mask_img = None
+        if self.masks is not None:
+            logger.debug(f"Masking with {self.masks}")
+            mask_img = get_mask(
+                masks=self.masks, target_data=input, extra_data=extra_input
+            )
+            # Save the mask in the extra input and link it to the bold data
+            # this allows to use "inherit" down the pipeline
+            if extra_input is not None:
+                extra_input["BOLD_mask"] = {"data": mask_img}
+                input["mask_item"] = "BOLD_mask"
 
         logger.info("Cleaning image")
         logger.debug(f"\tdetrend: {self.detrend}")
@@ -600,8 +611,5 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         """
         self._validate_data(input, extra_input)
-        assert extra_input is not None
-        bold_img = input["data"]
-        confounds_df = self._pick_confounds(extra_input["BOLD_confounds"])
-        input["data"] = self._remove_confounds(bold_img, confounds_df)
+        input["data"] = self._remove_confounds(input, extra_input=extra_input)
         return "BOLD", input

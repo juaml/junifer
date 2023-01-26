@@ -30,10 +30,10 @@ class CrossParcellationFC(BaseMarker):
     correlation_method : str, optional
         Any method that can be passed to
         :any:`pandas.DataFrame.corr` (default "pearson").
-    mask : str, optional
-        The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`
-        (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
     name : str, optional
         The name of the marker. If None, will use the class name
         (default None).
@@ -47,7 +47,7 @@ class CrossParcellationFC(BaseMarker):
         parcellation_two: str,
         aggregation_method: str = "mean",
         correlation_method: str = "pearson",
-        mask: Union[str, Dict, None] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         if parcellation_one == parcellation_two:
@@ -58,7 +58,7 @@ class CrossParcellationFC(BaseMarker):
         self.parcellation_two = parcellation_two
         self.aggregation_method = aggregation_method
         self.correlation_method = correlation_method
-        self.mask = mask
+        self.masks = masks
         super().__init__(on=["BOLD"], name=name)
 
     def get_valid_inputs(self) -> List[str]:
@@ -129,12 +129,12 @@ class CrossParcellationFC(BaseMarker):
         parcellation_one_dict = ParcelAggregation(
             parcellation=self.parcellation_one,
             method=self.aggregation_method,
-            mask=self.mask,
+            masks=self.masks,
         ).compute(input)
         parcellation_two_dict = ParcelAggregation(
             parcellation=self.parcellation_two,
             method=self.aggregation_method,
-            mask=self.mask,
+            masks=self.masks,
         ).compute(input)
 
         parcellated_ts_one = parcellation_one_dict["data"]

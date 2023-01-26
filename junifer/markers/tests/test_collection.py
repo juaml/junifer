@@ -39,7 +39,7 @@ def test_marker_collection_incorrect_markers() -> None:
         ),
     ]
     with pytest.raises(ValueError, match=r"must have different names"):
-        MarkerCollection(wrong_markers)
+        MarkerCollection(wrong_markers)  # type: ignore
 
 
 def test_marker_collection() -> None:
@@ -62,7 +62,7 @@ def test_marker_collection() -> None:
             name="gmd_schaefer100x7_trim_mean90",
         ),
     ]
-    mc = MarkerCollection(markers=markers)
+    mc = MarkerCollection(markers=markers)  # type: ignore
     assert mc._markers == markers
     assert mc._preprocessing is None
     assert mc._storage is None
@@ -96,7 +96,7 @@ def test_marker_collection() -> None:
             return input
 
     mc2 = MarkerCollection(
-        markers=markers,
+        markers=markers,  # type: ignore
         preprocessing=BypassPreprocessing(),
         datareader=DefaultDataReader(),
     )
@@ -127,7 +127,7 @@ def test_marker_collection_with_preprocessing() -> None:
         ),
     ]
     mc = MarkerCollection(
-        markers=markers,
+        markers=markers,  # type: ignore
         preprocessing=fMRIPrepConfoundRemover(),
     )
     assert mc._markers == markers
@@ -173,7 +173,7 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     uri = tmp_path / "test_marker_collection_storage.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     mc = MarkerCollection(
-        markers=markers,
+        markers=markers,  # type: ignore
         storage=storage,
         datareader=DefaultDataReader(),
     )
@@ -185,7 +185,9 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
         out = mc.fit(input)
         assert out is None
 
-    mc2 = MarkerCollection(markers=markers, datareader=DefaultDataReader())
+    mc2 = MarkerCollection(
+        markers=markers,  # type: ignore
+        datareader=DefaultDataReader())
     mc2.validate(dg)
     assert mc2._storage is None
 

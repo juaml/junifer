@@ -159,7 +159,7 @@ def test_SphereAggregation_3D_mask() -> None:
         method="mean",
         radius=RADIUS,
         on="VBM_GM",
-        mask="GM_prob0.2",
+        masks="GM_prob0.2",
     )
     input = {"VBM_GM": {"data": img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]

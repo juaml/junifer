@@ -452,10 +452,10 @@ def test_fMRIPrepConfoundRemover__remove_confounds() -> None:
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
-        confounds = confound_remover._pick_confounds(input["BOLD_confounds"])
         raw_bold = input["BOLD"]["data"]
+        extra_input = {k: v for k, v in input.items() if k != "BOLD"}
         clean_bold = confound_remover._remove_confounds(
-            bold_img=raw_bold, confounds_df=confounds
+            input=input["BOLD"], extra_input=extra_input
         )
         clean_bold = typing.cast(nib.Nifti1Image, clean_bold)
         # TODO: Find a better way to test functionality here
@@ -533,7 +533,63 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
         assert t_meta["low_pass"] is None
         assert t_meta["high_pass"] is None
         assert t_meta["t_r"] is None
-        assert t_meta["mask_img"] is None
+        assert t_meta["masks"] is None
+
+        assert "dependencies" in output["BOLD"]["meta"]
+        dependencies = output["BOLD"]["meta"]["dependencies"]
+        assert dependencies == {"numpy", "nilearn"}
+
+
+def test_fMRIPrepConfoundRemover_fit_transform_masks() -> None:
+    """Test fMRIPrepConfoundRemover with all confounds present."""
+
+    # need reader for the data
+    reader = DefaultDataReader()
+    # All strategies full, no spike
+    confound_remover = fMRIPrepConfoundRemover(
+        masks={"compute_brain_mask": {"threshold": 0.2}}
+    )
+
+    with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
+        input = dg["sub-01"]
+        input = reader.fit_transform(input)
+        orig_bold = input["BOLD"]["data"].get_fdata().copy()
+        output = confound_remover.fit_transform(input)
+        trans_bold = output["BOLD"]["data"].get_fdata()
+        # Transformation is in place
+        assert_array_equal(trans_bold, input["BOLD"]["data"].get_fdata())
+
+        # Data should have the same shape
+        assert orig_bold.shape == trans_bold.shape
+
+        # but be different
+        assert_raises(
+            AssertionError, assert_array_equal, orig_bold, trans_bold
+        )
+
+        assert "meta" in output["BOLD"]
+        assert "preprocess" in output["BOLD"]["meta"]
+        t_meta = output["BOLD"]["meta"]["preprocess"]
+        assert t_meta["class"] == "fMRIPrepConfoundRemover"
+        # It should have all the default parameters
+        assert t_meta["strategy"] == confound_remover.strategy
+        assert t_meta["spike"] is None
+        assert t_meta["detrend"] is True
+        assert t_meta["standardize"] is True
+        assert t_meta["low_pass"] is None
+        assert t_meta["high_pass"] is None
+        assert t_meta["t_r"] is None
+        assert isinstance(t_meta["masks"], dict)
+        assert t_meta["masks"] is not None
+        assert len(t_meta["masks"]) == 1
+        assert "compute_brain_mask" in t_meta["masks"]
+        assert len(t_meta["masks"]["compute_brain_mask"]) == 1
+        assert "threshold" in t_meta["masks"]["compute_brain_mask"]
+        assert t_meta["masks"]["compute_brain_mask"]["threshold"] == 0.2
+
+        assert "BOLD_mask" in output
+        assert "mask_item" in output["BOLD"]
+        assert output["BOLD"]["mask_item"] == "BOLD_mask"
 
         assert "dependencies" in output["BOLD"]["meta"]
         dependencies = output["BOLD"]["meta"]["dependencies"]

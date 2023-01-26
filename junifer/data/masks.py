@@ -167,9 +167,9 @@ def get_mask(
 
     Parameters
     ----------
-    masks : str or list of dict or str
+    masks : str, dict or list of dict or str
         The name of the mask, or the name of a callable mask and the parameters
-        of the mask.
+        of the mask as a dictionary. Several masks can be passed as a list.
     target_data : dict
         The corresponding item of the data object to which the mask will be
         applied.
