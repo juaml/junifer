@@ -818,10 +818,17 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             logger.info(
                 f"Updating HDF5 metadata with metadata from: {file.resolve()}"
             )
+            # Load metadata; empty list if first entry
+            try:
+                out_metadata = out_storage._read_metadata()
+            except IOError:
+                out_metadata = []
+            # Update metadata
+            out_metadata.append(in_metadata)
             # Save metadata
             out_storage._write_processed_data(
                 fname=self.uri.resolve(),
-                processed_data=in_metadata,
+                processed_data=out_metadata,
                 title="meta",
             )
 
