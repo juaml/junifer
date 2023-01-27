@@ -79,6 +79,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         self.overwrite = overwrite
         self.compression = compression
+        # Tracks whether to bypass element checks after collection
+        self._collected = False
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid storage types for input.
@@ -108,7 +110,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         """
         prefix = ""
         if not self.single_output:
-            if not element:
+            if not element and not self._collected:
                 raise_error(
                     msg=(
                         "`element` must be provided when `single_output` "
@@ -116,7 +118,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     ),
                     klass=RuntimeError,
                 )
-            prefix = element_to_prefix(element=element)
+            elif element and not self._collected:
+                prefix = element_to_prefix(element=element)
         # Format URI
         return f"{self.uri.parent}/{prefix}{self.uri.name}"  # type: ignore
 
@@ -836,3 +839,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     processed_data=in_data,
                     title=meta["meta_md5"],
                 )
+
+        # Toggle check to bypass element checks
+        self._collected = True
