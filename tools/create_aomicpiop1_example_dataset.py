@@ -39,6 +39,10 @@ with TemporaryDirectory() as tmpdir_name:
                         "_T1w.nii.gz"
                     ),
                     (
+                        f"anat/{t_sub}_space-MNI152NLin2009cAsym_"
+                        "desc-brain_mask.nii.gz"  
+                    ),
+                    (
                         f"anat/{t_sub}_space-MNI152NLin2009cAsym_label-"
                         "CSF_probseg.nii.gz"
                     ),
@@ -62,28 +66,24 @@ with TemporaryDirectory() as tmpdir_name:
                 ]
                 for t in tasks:
                     fnames.append(
-                        (
-                            f"func/{t_sub}_task-{t}_space-"
-                            "MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
-                        )
+                        f"func/{t_sub}_task-{t}_space-"
+                        "MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
                     )
                     fnames.append(
-                        (
-                            f"func/{t_sub}_task-{t}_space-"
-                            "MNI152NLin2009cAsym_desc-preproc_bold.json"
-                        )
+                        f"func/{t_sub}_task-{t}_space-"
+                        "MNI152NLin2009cAsym_desc-preproc_bold.json"
                     )
                     fnames.append(
-                        (
-                            f"func/{t_sub}_task-{t}_desc-confounds"
-                            "_regressors.tsv"
-                        )
+                        f"func/{t_sub}_task-{t}_space-"
+                        "MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
                     )
                     fnames.append(
-                        (
-                            f"func/{t_sub}_task-{t}_desc-confounds"
-                            "_regressors.json"
-                        )
+                        f"func/{t_sub}_task-{t}_desc-confounds"
+                        "_regressors.tsv"
+                    )
+                    fnames.append(
+                        f"func/{t_sub}_task-{t}_desc-confounds"
+                        "_regressors.json"
                     )
 
             elif dtype == "dwipreproc":

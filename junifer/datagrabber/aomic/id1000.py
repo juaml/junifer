@@ -7,7 +7,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union
+from typing import Union, Dict
 
 from junifer.datagrabber import PatternDataladDataGrabber
 
@@ -66,9 +66,9 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                 "desc-preproc_T1w.nii.gz"
             ),
             "T1w_mask": (
-              "derivatives/fmriprep/sub-{subject}/anat/"
-              "sub-{subject}_space-MNI152NLin2009cAsym_"
-              "desc-brain_mask.nii.gz"  
+                "derivatives/fmriprep/sub-{subject}/anat/"
+                "sub-{subject}_space-MNI152NLin2009cAsym_"
+                "desc-brain_mask.nii.gz"
             ),
             "probseg_CSF": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
@@ -101,3 +101,22 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
             replacements=replacements,
             confounds_format="fmriprep",
         )
+
+    def get_item(self, subject: str) -> Dict:
+        """Index one element in the dataset.
+
+        Parameters
+        ----------
+        subject : str
+            The subject ID.
+
+        Returns
+        -------
+        out : dict
+            Dictionary of paths for each type of data required for the
+            specified element.
+        """
+        out = super().get_item(subject=subject)
+        out["BOLD"]["mask_item"] = "BOLD_mask"
+        out["T1w"]["mask_item"] = "T1w_mask"
+        return out

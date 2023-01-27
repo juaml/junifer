@@ -7,7 +7,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import List, Union
+from typing import List, Union, Dict
 
 from junifer.datagrabber import PatternDataladDataGrabber
 
@@ -40,7 +40,9 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         types = [
             "BOLD",
             "BOLD_confounds",
+            "BOLD_mask",
             "T1w",
+            "T1w_mask",
             "probseg_CSF",
             "probseg_GM",
             "probseg_WM",
@@ -80,10 +82,20 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
                 "sub-{subject}_task-{task}_acq-seq_"
                 "desc-confounds_regressors.tsv"
             ),
+            "BOLD_mask": (
+                "derivatives/fmriprep/sub-{subject}/func/"
+                "sub-{subject}_task-{task}_acq-seq_space"
+                "-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+            ),
             "T1w": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
                 "sub-{subject}_space-MNI152NLin2009cAsym_"
                 "desc-preproc_T1w.nii.gz"
+            ),
+            "T1w_mask": (
+                "derivatives/fmriprep/sub-{subject}/anat/"
+                "sub-{subject}_space-MNI152NLin2009cAsym_"
+                "desc-brain_mask.nii.gz"
             ),
             "probseg_CSF": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
@@ -127,3 +139,25 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         """
         all_elements = super().get_elements()
         return [x for x in all_elements if x[1] in self.tasks]
+
+    def get_item(self, subject: str, task: str) -> Dict:
+        """Index one element in the dataset.
+
+        Parameters
+        ----------
+        subject : str
+            The subject ID.
+        task : str
+            The task to get. Possible values are:
+            {"restingstate", "stopsignal", "emomatching", "workingmemory"}
+
+        Returns
+        -------
+        out : dict
+            Dictionary of paths for each type of data required for the
+            specified element.
+        """
+        out = super().get_item(subject=subject, task=task)
+        out["BOLD"]["mask_item"] = "BOLD_mask"
+        out["T1w"]["mask_item"] = "T1w_mask"
+        return out

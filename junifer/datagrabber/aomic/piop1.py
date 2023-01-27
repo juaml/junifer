@@ -41,7 +41,9 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         types = [
             "BOLD",
             "BOLD_confounds",
+            "BOLD_mask",
             "T1w",
+            "T1w_mask",
             "probseg_CSF",
             "probseg_GM",
             "probseg_WM",
@@ -83,10 +85,20 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
                 "sub-{subject}_task-{task}_"
                 "desc-confounds_regressors.tsv"
             ),
+            "BOLD_mask": (
+                "derivatives/fmriprep/sub-{subject}/func/"
+                "sub-{subject}_task-{task}_"
+                "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+            ),
             "T1w": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
                 "sub-{subject}_space-MNI152NLin2009cAsym_"
                 "desc-preproc_T1w.nii.gz"
+            ),
+            "T1w_mask": (
+                "derivatives/fmriprep/sub-{subject}/anat/"
+                "sub-{subject}_space-MNI152NLin2009cAsym_"
+                "desc-brain_mask.nii.gz"
             ),
             "probseg_CSF": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
@@ -149,6 +161,8 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         new_task = f"{task}_acq-{acq}"
 
         out = super().get_item(subject=subject, task=new_task)
+        out["BOLD"]["mask_item"] = "BOLD_mask"
+        out["T1w"]["mask_item"] = "T1w_mask"
         return out
 
     def get_elements(self) -> List:
