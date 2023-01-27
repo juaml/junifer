@@ -52,6 +52,10 @@ with TemporaryDirectory() as tmpdir_name:
                      '_regressors.tsv'),
                     (f'func/{t_sub}_task-moviewatching_desc-confounds'
                      '_regressors.json'),
+                    (f"func/sub-{t_sub}_task-moviewatching_"
+                     "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"),
+                    (f"anat/sub-{t_sub}_space-MNI152NLin2009cAsym_"
+                     "desc-brain_mask.nii.gz")  
                 ]
 
             elif dtype == 'dwipreproc':

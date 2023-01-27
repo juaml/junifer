@@ -34,7 +34,9 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         types = [
             "BOLD",
             "BOLD_confounds",
+            "BOLD_mask",
             "T1w",
+            "T1w_mask",
             "probseg_CSF",
             "probseg_GM",
             "probseg_WM",
@@ -52,10 +54,21 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                 "sub-{subject}_task-moviewatching_"
                 "desc-confounds_regressors.tsv"
             ),
+            "BOLD_mask": (
+                "derivatives/fmriprep/sub-{subject}/func/"
+                "sub-{subject}_task-moviewatching_"
+                "space-MNI152NLin2009cAsym_"
+                "desc-brain_mask.nii.gz"
+            ),
             "T1w": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
                 "sub-{subject}_space-MNI152NLin2009cAsym_"
                 "desc-preproc_T1w.nii.gz"
+            ),
+            "T1w_mask": (
+              "derivatives/fmriprep/sub-{subject}/anat/"
+              "sub-{subject}_space-MNI152NLin2009cAsym_"
+              "desc-brain_mask.nii.gz"  
             ),
             "probseg_CSF": (
                 "derivatives/fmriprep/sub-{subject}/anat/"
