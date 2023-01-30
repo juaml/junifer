@@ -515,7 +515,7 @@ Available
    * - Name
      - Keys
      - Version added
-     - Publication
+     - Description - Publication
    * - Vickery-Patil (Gray Matter)
      - | ``GM_prob0.2``
      - 0.0.1
@@ -528,6 +528,29 @@ Available
      - | Vickery, Sam, & Patil, Kaustubh. (2022).
        | Chimpanzee and Human Gray Matter Masks [Data set]. Zenodo.
        | https://doi.org/10.5281/zenodo.6463123
+   * - Nilearn's MNI152 1mm-resolution mask
+     - | ``compute_brain_mask``
+     - 0.0.2
+     - | Compute the whole-brain mask. This mask is calculated using MNI152 1mm-resolution template mask onto the 
+       | target image. See :func:`nilearn.masking.compute_brain_mask`
+   * - Nilearn's mask computed from FMRI data
+     - | ``compute_epi_mask``
+     - 0.0.2
+     - | Compute a brain mask from fMRI data. This is based on an heuristic proposed by T.Nichols: find the least 
+       | dense point of the histogram, between fractions ``lower_cutoff`` and ``upper_cutoff`` of the total image 
+       | histogram. See :func:`nilearn.masking.compute_epi_mask`
+   * - Nilearn's background mask
+     - | ``compute_background_mask``
+     - 0.0.2
+     - | Compute a brain mask for the images by guessing the value of the background from the border of the image.
+       | See :func:`nilearn.masking.compute_background_mask`
+
+   * - Nilearn's ICBM152 template gray-matter mask
+     - | ``fetch_icbm152_brain_gm_mask``
+     - 0.0.2
+     - | Compute a gray-matter mask from the asymmetrical ICBM152 2009 template, release a.
+       | See :func:`nilearn.datasets.fetch_icbm152_brain_gm_mask`
+
 
 Planned
 ~~~~~~~
