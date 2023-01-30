@@ -406,8 +406,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     ) -> None:
         """Write processed data to HDF5 (should not be called directly).
 
-        This is used primarily in :func:`_store_metadata` and
-        :func:`_store_data`.
+        This is used primarily in ``_store_metadata`` and ``_store_data``.
 
         Parameters
         ----------
@@ -436,9 +435,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         """Store metadata.
 
         This method first loads existing metadata (if any) using
-        :func:`_read_metadata` and appends to it the new metadata
-        and then saves the updated metadata using
-        :func:`_write_processed_data`.
+        ``_read_metadata`` and appends to it the new metadata and then saves
+        the updated metadata using ``_write_processed_data``.
 
         Parameters
         ----------
@@ -494,7 +492,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     ]:
         """Convert the element meta to index (should not be called directly).
 
-        This method is only used in :func:`_store_data`.
+        This method is only used in ``_store_data``.
 
         Parameters
         ----------
@@ -621,7 +619,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         """Store matrix.
 
         This method performs parameter checks and then calls
-        :func:`_store_data` for storing the data.
+        ``_store_data`` for storing the data.
 
         Parameters
         ----------
