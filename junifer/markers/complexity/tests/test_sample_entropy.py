@@ -3,8 +3,8 @@
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 from nilearn.maskers import NiftiLabelsMasker
 
@@ -66,10 +66,7 @@ def test_store(tmp_path: Path) -> None:
         # Initialize the marker
         marker = SampleEntropy(parcellation=PARCELLATION)
         # Create storage
-        storage_uri = os.path.join(
-            tmp_path, 
-            "test_sample_entropy.sqlite"
-        )
+        storage_uri = os.path.join(tmp_path, "test_sample_entropy.sqlite")
         storage_uri = tmp_path / "test_sample_entropy.sqlite"
         storage = SQLiteFeatureStorage(uri=storage_uri)
         # Compute the marker and store
