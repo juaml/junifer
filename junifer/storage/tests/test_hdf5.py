@@ -104,6 +104,85 @@ def test_store_metadata_and_list_features(tmp_path: Path) -> None:
     assert meta_md5 == feature_md5
 
 
+def test_read_df_params_error() -> None:
+    """Test parameter validation errors for read_df."""
+    storage = HDF5FeatureStorage(uri="/tmp")
+
+    with pytest.raises(ValueError, match="Only one of"):
+        storage.read_df(feature_name="name", feature_md5="md5")
+
+    with pytest.raises(ValueError, match="At least one of"):
+        storage.read_df()
+
+
+def test_read_df(tmp_path: Path) -> None:
+    """Test read_df.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_read_df.hdf5"
+    storage = HDF5FeatureStorage(uri=uri)
+    # Metadata to store
+    meta = {
+        "element": {"subject": "test"},
+        "dependencies": ["numpy"],
+        "marker": {"name": "test"},
+        "type": "BOLD",
+    }
+    # Process the metadata
+    meta_md5, meta_to_store, element_to_store = process_meta(meta)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
+    # Data to store
+    data = np.array(
+        [
+            [1, 10],
+            [2, 20],
+        ]
+    )
+    row_header = "scan"
+    col_headers = ["f1", "f2"]
+    # Store table
+    storage.store_table(
+        meta_md5=meta_md5,
+        element=element_to_store,
+        data=data,
+        columns=col_headers,
+        rows_col_name=row_header,
+    )
+    # Read into dataframe and check
+    df_md5 = storage.read_df(feature_md5=meta_md5)
+    df_name = storage.read_df(feature_name="BOLD_test")
+    assert_frame_equal(df_md5, df_name)
+
+    # Check for errors about no / duplicate feature name
+    with pytest.raises(ValueError, match="not found"):
+        storage.read_df(feature_name="BOLD")
+
+    # TODO: fix this check
+    # # Store duplicate entry and check error
+    # storage.store_metadata(
+    #     meta_md5=meta_md5,
+    #     element={"subject": "test-clone"},
+    #     meta=meta_to_store,
+    # )
+    # storage.store_table(
+    #     meta_md5=meta_md5,
+    #     element={"subject": "test-clone"},
+    #     data=data,
+    #     columns=col_headers,
+    #     rows_col_name=row_header,
+    # )
+    # with pytest.raises(ValueError, match="More than one feature with name"):
+    #     storage.read_df(feature_name="BOLD_test")
+
+
 def test_store_matrix(tmp_path: Path) -> None:
     """Test matrix store.
 
@@ -164,27 +243,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     # Check column headers
     assert list(read_df.columns) == stored_col_headers
 
-    # Check for errors
-    with pytest.raises(ValueError, match="Invalid kind"):
-        storage.store_matrix(
-            meta_md5=meta_md5,
-            element=element_to_store,
-            data=data,
-            row_names=row_headers,
-            col_names=col_headers,
-            matrix_kind="wrong",
-        )
-
-    with pytest.raises(ValueError, match="non-square"):
-        storage.store_matrix(
-            meta_md5=meta_md5,
-            element=element_to_store,
-            data=data,
-            row_names=row_headers,
-            col_names=col_headers,
-            matrix_kind="triu",
-        )
-
+    # Diagonal validation error
     with pytest.raises(ValueError, match="cannot be False"):
         storage.store_matrix(
             meta_md5=meta_md5,
@@ -194,6 +253,46 @@ def test_store_matrix(tmp_path: Path) -> None:
             col_names=col_headers,
             matrix_kind="full",
             diagonal=False,
+        )
+    # Matrix kind and shape validation
+    with pytest.raises(ValueError, match="non-square"):
+        storage.store_matrix(
+            meta_md5=meta_md5,
+            element=element_to_store,
+            data=data,
+            row_names=row_headers,
+            col_names=col_headers,
+            matrix_kind="triu",
+        )
+    # Matrix kind validation
+    with pytest.raises(ValueError, match="Invalid kind"):
+        storage.store_matrix(
+            meta_md5=meta_md5,
+            element=element_to_store,
+            data=data,
+            row_names=row_headers,
+            col_names=col_headers,
+            matrix_kind="wrong",
+        )
+    # Row data and label validation
+    with pytest.raises(ValueError, match="of row names"):
+        storage.store_matrix(
+            meta_md5=meta_md5,
+            element=element_to_store,
+            data=data,
+            row_names=["row1", "row2", "row3"],
+            col_names=col_headers,
+            matrix_kind="full",
+        )
+    # Column data and label validation
+    with pytest.raises(ValueError, match="of column names"):
+        storage.store_matrix(
+            meta_md5=meta_md5,
+            element=element_to_store,
+            data=data,
+            row_names=row_headers,
+            col_names=["col1", "col2", "col3", "col4"],
+            matrix_kind="full",
         )
 
 
@@ -763,3 +862,13 @@ def test_multi_output_store_and_collect(tmp_path: Path):
 
     # Check if aggregated metadata are equal
     assert read_unified_meta == [read_meta_1, read_meta_2, read_meta_3]
+
+
+def test_collect_error_single_output() -> None:
+    """Test error for collect in single output storage."""
+    with pytest.raises(
+        NotImplementedError,
+        match="is not implemented for single output.",
+    ):
+        storage = HDF5FeatureStorage(uri="/tmp", single_output=True)
+        storage.collect()
