@@ -98,7 +98,7 @@ def process_meta(meta: Dict) -> Tuple[str, Dict, Dict]:
     # Copy the metadata
     t_meta = meta.copy()
     # Remove key "element"
-    element = t_meta.pop("element", None)
+    element: Dict = t_meta.pop("element", None)
     if element is None:
         raise_error(msg="`meta` must contain the key 'element'")
     if "marker" not in t_meta:
