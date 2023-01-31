@@ -57,8 +57,9 @@ class BaseFeatureStorage(ABC):
         Returns
         -------
         list of str
-            The list of storage types that can be used as input for this "
-            "storage.
+            The list of storage types that can be used as input for this
+            storage interface.
+
         """
         raise_error(
             msg="Concrete classes need to implement get_valid_inputs().",
@@ -93,9 +94,9 @@ class BaseFeatureStorage(ABC):
         Returns
         -------
         dict
-            List of features in the storage. The keys are the feature names to
-            be used in read_features() and the values are the metadata of each
-            feature.
+            List of features in the storage. The keys are the feature MD5 to
+            be used in :meth:`junifer.storage.BaseFeatureStorage.read_df`
+            and the values are the metadata of each feature.
 
         """
         raise_error(
@@ -207,7 +208,7 @@ class BaseFeatureStorage(ABC):
         row_names : str, optional
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+            "idx" (default None).
         matrix_kind : str, optional
             The kind of matrix:
 
@@ -248,7 +249,7 @@ class BaseFeatureStorage(ABC):
         rows_col_name : str, optional
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+            "idx" (default None).
         """
         raise_error(
             msg="Concrete classes need to implement store_vector().",
@@ -262,7 +263,7 @@ class BaseFeatureStorage(ABC):
         data: np.ndarray,
         columns: Optional[Iterable[str]] = None,
     ) -> None:
-        """Implement timeseries storing.
+        """Store timeseries.
 
         Parameters
         ----------
