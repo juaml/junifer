@@ -46,8 +46,9 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         Returns
         -------
         list of str
-            The list of storage types that can be used as input for this "
-            "storage.
+            The list of storage types that can be used as input for this
+            storage interface.
+
         """
         return ["matrix", "table", "timeseries"]
 
@@ -86,8 +87,8 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         n_rows : int, optional
             Number of rows to create (default 1).
         rows_col_name: str, optional
-            The column name to use in case `n_rows` > 1. If None and
-            n_rows > 1, the name will be "idx" (default None).
+            The column name to use in case ``n_rows`` > 1. If None and
+            ``n_rows`` > 1, the name will be "idx" (default None).
 
         Returns
         -------
@@ -157,7 +158,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         rows_col_name : str, optional
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+            "idx" (default None).
 
         """
         n_rows = len(data)
