@@ -21,8 +21,8 @@ def test_BaseFeatureStorage() -> None:
     class MyFeatureStorage(BaseFeatureStorage):
         """Implement concrete class."""
 
-        def __init__(self, uri, single_output=False):
-            storage_types = ["matrix", "table", "timeseries"]
+        def __init__(self, uri, single_output=True):
+            storage_types = ["matrix", "vector", "timeseries"]
             super().__init__(
                 uri=uri,
                 storage_types=storage_types,
@@ -30,7 +30,7 @@ def test_BaseFeatureStorage() -> None:
             )
 
         def get_valid_inputs(self):
-            return ["matrix", "table", "timeseries"]
+            return ["matrix", "vector", "timeseries"]
 
         def list_features(self):
             super().list_features()
@@ -88,7 +88,7 @@ def test_BaseFeatureStorage() -> None:
         st.store(kind="timeseries", meta=meta)
 
     with pytest.raises(NotImplementedError):
-        st.store(kind="table", meta=meta)
+        st.store(kind="vector", meta=meta)
 
     with pytest.raises(ValueError):
         st.store(kind="lego", meta=meta)
