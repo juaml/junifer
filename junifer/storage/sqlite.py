@@ -510,7 +510,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         """
         if self.single_output is True:
-            raise_error(msg="collect() is not implemented for single output.")
+            raise_error(
+                msg="collect() is not implemented for single output.",
+                klass=IOError,
+            )
         logger.info(
             "Collecting data from "
             f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
