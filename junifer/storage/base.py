@@ -6,7 +6,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -88,7 +88,7 @@ class BaseFeatureStorage(ABC):
             )
 
     @abstractmethod
-    def list_features(self) -> Dict:
+    def list_features(self) -> Dict[str, Dict[str, Any]]:
         """List the features in the storage.
 
         Returns
@@ -108,7 +108,7 @@ class BaseFeatureStorage(ABC):
     def read_df(
         self,
         feature_name: Optional[str] = None,
-        feature_md5: Optional[bool] = None,
+        feature_md5: Optional[str] = None,
     ) -> pd.DataFrame:
         """Read feature into a pandas DataFrame.
 
