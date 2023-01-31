@@ -1,4 +1,4 @@
-"""Provide tests for sqlite."""
+"""Provide tests for SQLite storage interface."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -453,7 +453,7 @@ def test_store_matrix(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_store_table.sqlite"
+    uri = tmp_path / "test_store_matrix.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
     element = {"subject": "test"}
@@ -478,7 +478,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     row_names = ["row1", "row2", "row3", "row4"]
     col_names = ["col1", "col2", "col3"]
 
-    # Store table
+    # Store matrix
     storage.store_matrix(
         meta_md5=meta_md5,
         element=element_to_store,
@@ -497,13 +497,13 @@ def test_store_matrix(tmp_path: Path) -> None:
     assert_array_equal(read_df.values[0], data.flatten())
     assert list(read_df.columns) == stored_names
     # Store without row and column names
-    uri = tmp_path / "test_store_table_nonames.sqlite"
+    uri = tmp_path / "test_store_matrix_nonames.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Store metadata
     storage.store_metadata(
         meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
     )
-    # Store table
+    # Store matrix
     storage.store_matrix(
         meta_md5=meta_md5, element=element_to_store, data=data
     )
@@ -553,7 +553,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     data = np.array([[1, 2, 3], [11, 22, 33], [111, 222, 333]])
     row_names = ["row1", "row2", "row3"]
     col_names = ["col1", "col2", "col3"]
-    uri = tmp_path / "test_store_table_triu.sqlite"
+    uri = tmp_path / "test_store_matrix_triu.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Store metadata
     storage.store_metadata(
@@ -587,7 +587,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     )
 
     # Store upper triangular matrix without diagonal
-    uri = tmp_path / "test_store_table_triu_nodiagonal.sqlite"
+    uri = tmp_path / "test_store_matrix_triu_nodiagonal.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Store metadata
     storage.store_metadata(
@@ -622,7 +622,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     data = np.array([[1, 2, 3], [11, 22, 33], [111, 222, 333]])
     row_names = ["row1", "row2", "row3"]
     col_names = ["col1", "col2", "col3"]
-    uri = tmp_path / "test_store_table_tril.sqlite"
+    uri = tmp_path / "test_store_matrix_tril.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Store metadata
     storage.store_metadata(
@@ -656,7 +656,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     )
 
     # Store lower triangular matrix without diagonal
-    uri = tmp_path / "test_store_table_tril_nodiagonal.sqlite"
+    uri = tmp_path / "test_store_matrix_tril_nodiagonal.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Store metadata
     storage.store_metadata(
