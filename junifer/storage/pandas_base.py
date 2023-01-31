@@ -75,9 +75,11 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         df.index.name = "meta_md5"
         return df
 
-    @staticmethod
     def element_to_index(
-        element: Dict, n_rows: int = 1, rows_col_name: Optional[str] = None
+        self,
+        element: Dict,
+        n_rows: int = 1,
+        rows_col_name: Optional[str] = None,
     ) -> pd.MultiIndex:
         """Convert the element metadata to index.
 
