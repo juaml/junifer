@@ -84,13 +84,13 @@ def process_meta(meta: Dict) -> Tuple[str, Dict, Dict]:
         The MD5 hash of the metadata.
     dict
         The processed metadata for storage.
-    tuple
+    dict
         The element.
 
     Raises
     ------
     ValueError
-        If `meta` is None or if it does not contain the key "element".
+        If ``meta`` is None or if it does not contain the key "element".
 
     """
     if meta is None:
