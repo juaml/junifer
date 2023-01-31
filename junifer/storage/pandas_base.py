@@ -171,7 +171,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             element=element, n_rows=n_rows, rows_col_name=rows_col_name
         )
         # Prepare new dataframe
-        data_df = pd.DataFrame(  # type: ignore
+        data_df = pd.DataFrame(
             data, columns=columns, index=idx  # type: ignore
         )
         # Store dataframe
