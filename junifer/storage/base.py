@@ -152,7 +152,7 @@ class BaseFeatureStorage(ABC):
 
         Parameters
         ----------
-        kind : {"matrix", "timeseries", "table"}
+        kind : {"matrix", "timeseries", "vector"}
             The storage kind.
         **kwargs
             The keyword arguments.
@@ -179,8 +179,8 @@ class BaseFeatureStorage(ABC):
             self.store_timeseries(
                 meta_md5=meta_md5, element=t_element, **kwargs
             )
-        elif kind == "table":
-            self.store_table(meta_md5=meta_md5, element=t_element, **kwargs)
+        elif kind == "vector":
+            self.store_vector(meta_md5=meta_md5, element=t_element, **kwargs)
 
     def store_matrix(
         self,
@@ -225,7 +225,7 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    def store_table(
+    def store_vector(
         self,
         meta_md5: str,
         element: Dict,
@@ -233,7 +233,7 @@ class BaseFeatureStorage(ABC):
         columns: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
     ) -> None:
-        """Store table.
+        """Store vector.
 
         Parameters
         ----------
@@ -242,7 +242,7 @@ class BaseFeatureStorage(ABC):
         element : dict
             The element as a dictionary.
         data : numpy.ndarray or list
-            The table data to store.
+            The vector data to store.
         columns : list or tuple of str, optional
             The columns (default None).
         rows_col_name : str, optional
@@ -251,7 +251,7 @@ class BaseFeatureStorage(ABC):
             "index" (default None).
         """
         raise_error(
-            msg="Concrete classes need to implement store_table().",
+            msg="Concrete classes need to implement store_vector().",
             klass=NotImplementedError,
         )
 
