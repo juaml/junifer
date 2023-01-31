@@ -12,7 +12,9 @@ from junifer.storage.base import BaseFeatureStorage
 def test_BaseFeatureStorage_abstractness() -> None:
     """Test BaseFeatureStorage is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
-        BaseFeatureStorage(uri="/tm", storage_types=["matrix"])  # type: ignore
+        BaseFeatureStorage(
+            uri="/tmp", storage_types=["matrix"]  # type: ignore
+        )
 
 
 def test_BaseFeatureStorage() -> None:
@@ -48,7 +50,7 @@ def test_BaseFeatureStorage() -> None:
             return super().collect()
 
     # Check single_output is False
-    st = MyFeatureStorage(uri="/tmp")
+    st = MyFeatureStorage(uri="/tmp", single_output=False)
     assert st.single_output is False
     # Check single_output is True
     st = MyFeatureStorage(uri="/tmp", single_output=True)
@@ -66,11 +68,9 @@ def test_BaseFeatureStorage() -> None:
     with pytest.raises(NotImplementedError):
         st.read_df(None)
 
-    element = {"subject": "test"}
-    dependencies = ["numpy"]
     meta = {
-        "element": element,
-        "dependencies": dependencies,
+        "element": {"subject": "test"},
+        "dependencies": ["numpy"],
         "marker": {"name": "fc"},
         "type": "BOLD",
     }
