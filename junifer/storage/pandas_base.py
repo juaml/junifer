@@ -11,6 +11,7 @@ from typing import Any, Dict, Iterable, List, Optional, Union
 import numpy as np
 import pandas as pd
 
+from ..utils import raise_error
 from .base import BaseFeatureStorage
 
 
@@ -133,7 +134,10 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             generated from the metadata.
 
         """
-        raise NotImplementedError("Implement in subclass.")
+        raise_error(
+            msg="Concrete classes need to implement store_df().",
+            klass=NotImplementedError,
+        )
 
     def _store_2d(
         self,
