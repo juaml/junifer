@@ -204,11 +204,9 @@ class BaseFeatureStorage(ABC):
         data : numpy.ndarray
             The matrix data to store.
         col_names : list or tuple of str, optional
-            The column names (default None).
+            The column labels (default None).
         row_names : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "idx" (default None).
+            The row labels (default None).
         matrix_kind : str, optional
             The kind of matrix:
 
@@ -218,11 +216,12 @@ class BaseFeatureStorage(ABC):
 
             (default "full").
         diagonal : bool, optional
-            Whether to store the diagonal. If `matrix_kind` is "full", setting
+            Whether to store the diagonal. If ``matrix_kind = full``, setting
             this to False will raise an error (default True).
+
         """
         raise_error(
-            msg="Concrete classes need to implement store_matrix2d().",
+            msg="Concrete classes need to implement store_matrix().",
             klass=NotImplementedError,
         )
 
