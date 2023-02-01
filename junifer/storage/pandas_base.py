@@ -183,8 +183,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: Dict,
         data: Union[np.ndarray, List],
-        columns: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
+        col_names: Optional[Iterable[str]] = None,
     ) -> None:
         """Store vector.
 
@@ -194,14 +193,11 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The metadata MD5 hash.
         element : dict
             The element as a dictionary.
-        columns : list or tuple of str, optional
-            The columns (default None).
-        rows_col_name : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
         data : numpy.ndarray or list
             The vector data to store.
+        col_names : list or tuple of str, optional
+            The column labels (default None).
+
         """
         self._store_2d(
             meta_md5=meta_md5,
