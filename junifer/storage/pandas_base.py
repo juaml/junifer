@@ -166,17 +166,16 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             "idx" (default None).
 
         """
-        n_rows = len(data)
         # Convert element metadata to index
         idx = self.element_to_index(
-            element=element, n_rows=n_rows, rows_col_name=rows_col_name
+            element=element, n_rows=len(data), rows_col_name=rows_col_name
         )
         # Prepare new dataframe
-        data_df = pd.DataFrame(
+        df = pd.DataFrame(
             data=data, columns=col_names, index=idx  # type: ignore
         )
         # Store dataframe
-        self.store_df(meta_md5=meta_md5, element=element, df=data_df)
+        self.store_df(meta_md5=meta_md5, element=element, df=df)
 
     def store_vector(
         self,
