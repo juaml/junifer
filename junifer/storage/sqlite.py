@@ -6,7 +6,7 @@
 
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -205,7 +205,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                         msg=f"Invalid option {if_exists} for if_exists."
                     )
 
-    def list_features(self) -> Dict:
+    def list_features(self) -> Dict[str, Dict[str, Any]]:
         """List the features in the storage.
 
         Returns
