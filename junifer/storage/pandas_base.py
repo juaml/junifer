@@ -148,7 +148,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         col_names: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
     ) -> None:
-        """Store 2D dataframe.
+        """Store 2D data.
 
         Parameters
         ----------
@@ -156,7 +156,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The metadata MD5 hash.
         element : dict
             The element as a dictionary.
-        data : numpy.ndarray or List
+        data : numpy.ndarray or list
             The data to store.
         col_names : list or tuple of str, optional
             The column labels (default None).
