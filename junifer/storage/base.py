@@ -231,8 +231,7 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: Dict,
         data: Union[np.ndarray, List],
-        columns: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
+        col_names: Optional[Iterable[str]] = None,
     ) -> None:
         """Store vector.
 
@@ -244,12 +243,9 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray or list
             The vector data to store.
-        columns : list or tuple of str, optional
-            The columns (default None).
-        rows_col_name : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "idx" (default None).
+        col_names : list or tuple of str, optional
+            The column labels (default None).
+
         """
         raise_error(
             msg="Concrete classes need to implement store_vector().",
