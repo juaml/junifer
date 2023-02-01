@@ -214,7 +214,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         data: np.ndarray,
         col_names: Optional[Iterable[str]] = None,
     ) -> None:
-        """Implement timeseries storing.
+        """Store timeseries.
 
         Parameters
         ----------
