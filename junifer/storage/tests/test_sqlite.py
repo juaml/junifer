@@ -361,8 +361,8 @@ def test_store_metadata(tmp_path: Path) -> None:
     assert meta_md5 == feature_md5
 
 
-def test_store_table(tmp_path: Path) -> None:
-    """Test table store.
+def test_store_vector(tmp_path: Path) -> None:
+    """Test vector store.
 
     Parameters
     ----------
@@ -370,7 +370,7 @@ def test_store_table(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_store_table.sqlite"
+    uri = tmp_path / "test_store_vector.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)
     # Metadata to store
     element = {"subject": "test"}
@@ -402,7 +402,7 @@ def test_store_table(tmp_path: Path) -> None:
     df = pd.DataFrame(data, columns=["f1", "f2"], index=idx)
 
     # Store table
-    storage.store_table(
+    storage.store_vector(
         meta_md5=meta_md5,
         element=element_to_store,
         data=data,
@@ -427,7 +427,7 @@ def test_store_table(tmp_path: Path) -> None:
     # Check warning
     with pytest.warns(RuntimeWarning, match=r"Some rows"):
         # Store table
-        storage.store_table(
+        storage.store_vector(
             meta_md5=meta_md5,
             element=element_to_store,
             data=data_new,
@@ -767,21 +767,21 @@ def test_store_multiple_output(tmp_path: Path):
     storage.store_metadata(
         meta_md5=hash3, element=element_to_store3, meta=meta_to_store3
     )
-    storage.store_table(
+    storage.store_vector(
         meta_md5=hash1,
         element=element_to_store1,
         data=data1,
         columns=["f1", "f2"],
         rows_col_name="scan",
     )
-    storage.store_table(
+    storage.store_vector(
         meta_md5=hash2,
         element=element_to_store2,
         data=data2,
         columns=["f1", "f2"],
         rows_col_name="scan",
     )
-    storage.store_table(
+    storage.store_vector(
         meta_md5=hash3,
         element=element_to_store3,
         data=data3,
@@ -871,21 +871,21 @@ def test_collect(tmp_path: Path) -> None:
     storage.store_metadata(
         meta_md5=hash3, element=element_to_store3, meta=meta_to_store3
     )
-    storage.store_table(
+    storage.store_vector(
         meta_md5=hash1,
         element=element_to_store1,
         data=data1,
         columns=["f1", "f2"],
         rows_col_name="scan",
     )
-    storage.store_table(
+    storage.store_vector(
         meta_md5=hash2,
         element=element_to_store2,
         data=data2,
         columns=["f1", "f2"],
         rows_col_name="scan",
     )
-    storage.store_table(
+    storage.store_vector(
         meta_md5=hash3,
         element=element_to_store3,
         data=data3,
