@@ -96,19 +96,20 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         pandas.MultiIndex
             The index of the dataframe to store.
 
-        Raises
-        ------
-        ValueError
-            If `meta` does not contain the key "element".
-
         """
-        # Check rows_col_name
-        if rows_col_name is None:
-            rows_col_name = "idx"
-        elem_idx: Dict[Any, Any] = {
+        # Make mapping between element access keys and values
+        elem_idx: Dict[str, Iterable[str]] = {
             k: [v] * n_rows for k, v in element.items()
         }
-        elem_idx[rows_col_name] = np.arange(n_rows)
+
+        # Set rows_col_name if n_rows > 1
+        if n_rows > 1:
+            # Set rows_col_name if None
+            if rows_col_name is None:
+                rows_col_name = "idx"
+            # Set extra column for variable number of rows per element
+            elem_idx[rows_col_name] = np.arange(n_rows)
+
         # Create index
         index = pd.MultiIndex.from_frame(
             pd.DataFrame(elem_idx, index=range(n_rows))
