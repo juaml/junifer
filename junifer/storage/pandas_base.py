@@ -145,7 +145,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: Dict,
         data: Union[np.ndarray, List],
-        columns: Optional[Iterable[str]] = None,
+        col_names: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
     ) -> None:
         """Store 2D dataframe.
@@ -158,8 +158,8 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The element as a dictionary.
         data : numpy.ndarray or List
             The data to store.
-        columns : list or tuple of str, optional
-            The columns (default None).
+        col_names : list or tuple of str, optional
+            The column labels (default None).
         rows_col_name : str, optional
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
@@ -173,7 +173,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         )
         # Prepare new dataframe
         data_df = pd.DataFrame(
-            data, columns=columns, index=idx  # type: ignore
+            data=data, columns=col_names, index=idx  # type: ignore
         )
         # Store dataframe
         self.store_df(meta_md5=meta_md5, element=element, df=data_df)
@@ -203,8 +203,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             meta_md5=meta_md5,
             element=element,
             data=data,
-            columns=columns,
-            rows_col_name=rows_col_name,
+            col_names=col_names,
         )
 
     def store_timeseries(
@@ -232,6 +231,6 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             meta_md5=meta_md5,
             element=element,
             data=data,
-            columns=columns,
+            col_names=col_names,
             rows_col_name="timepoint",
         )
