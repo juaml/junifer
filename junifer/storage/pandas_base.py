@@ -178,7 +178,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         # Store dataframe
         self.store_df(meta_md5=meta_md5, element=element, df=data_df)
 
-    def store_table(
+    def store_vector(
         self,
         meta_md5: str,
         element: Dict,
@@ -186,7 +186,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         columns: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
     ) -> None:
-        """Implement table storing.
+        """Store vector.
 
         Parameters
         ----------
@@ -194,14 +194,14 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The metadata MD5 hash.
         element : dict
             The element as a dictionary.
-        data : numpy.ndarray or List
-            The table data to store.
         columns : list or tuple of str, optional
             The columns (default None).
         rows_col_name : str, optional
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
             "index" (default None).
+        data : numpy.ndarray or list
+            The vector data to store.
         """
         self._store_2d(
             meta_md5=meta_md5,
