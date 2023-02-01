@@ -212,7 +212,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: Dict,
         data: np.ndarray,
-        columns: Optional[Iterable[str]] = None,
+        col_names: Optional[Iterable[str]] = None,
     ) -> None:
         """Implement timeseries storing.
 
@@ -224,8 +224,9 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        columns : list or tuple of str, optional
+        col_names : list or tuple of str, optional
             The column labels (default None).
+
         """
         self._store_2d(
             meta_md5=meta_md5,
