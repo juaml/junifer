@@ -216,13 +216,17 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             and the values are the metadata of each feature.
 
         """
+        # Retrieve meta table from storage
         meta_df = pd.read_sql(
             sql="meta",
             con=self.get_engine(),
             index_col="meta_md5",
         )
+        # Format index names for retrieved data
         meta_df.index = meta_df.index.str.replace(r"meta_", "")
-        out = meta_df.to_dict(orient="index")  # type: ignore
+        # Convert dataframe to dictionary
+        out: Dict[str, Dict[str, str]] = meta_df.to_dict(orient="index")  # type: ignore
+        # Format output
         for md5, t_meta in out.items():
             for k, v in t_meta.items():
                 out[md5][k] = json.loads(v)
@@ -468,7 +472,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 klass=ValueError,
             )
 
+        # Subset data
         flat_data = data[data_idx]
+        # Generate flat 1D row X column names
         columns = [
             f"{row_names[i]}~{col_names[j]}"
             for i, j in zip(data_idx[0], data_idx[1])
@@ -482,6 +488,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Prepare new dataframe
         data_df = pd.DataFrame(flat_data[None, :], columns=columns, index=idx)
 
+        # SQLite's SQLITE_MAX_COLUMN is 2000, so if more than that,
+        # convert it to long format
         if len(columns) > 2000:
             warn_with_log(
                 msg="The number of columns is greater than 2000. "
