@@ -396,7 +396,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         matrix_kind: Optional[str] = "full",
         diagonal: bool = True,
     ) -> None:
-        """Implement matrix storing.
+        """Store matrix.
 
         Parameters
         ----------
@@ -409,11 +409,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         meta : dict
             The metadata as a dictionary.
         col_names : list or tuple of str, optional
-            The column names (default None).
+            The column labels (default None).
         row_names : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+            The row labels (optional None).
         matrix_kind : str, optional
             The kind of matrix:
 
@@ -423,7 +421,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
             (default "full").
         diagonal : bool, optional
-            Whether to store the diagonal. If `matrix_kind` is "full", setting
+            Whether to store the diagonal. If ``matrix_kind = full``, setting
             this to False will raise an error (default True).
 
         """
