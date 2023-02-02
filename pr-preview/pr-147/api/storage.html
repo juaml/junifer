@@ -618,8 +618,8 @@ specified.</p>
 </ul>
 <p>(default “full”).</p>
 </dd>
-<dt><strong>diagonal</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to store the diagonal. If <cite>matrix_kind</cite> is “full”, setting
-this to False will raise an error (default True).</p>
+<dt><strong>diagonal</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to store the diagonal. If <code class="docutils literal notranslate"><span class="pre">matrix_kind</span></code> is “full”,
+setting this to False will raise an error (default True).</p>
 </dd>
 </dl>
 </dd>
@@ -648,32 +648,8 @@ the updated metadata using <code class="docutils literal notranslate"><span clas
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.storage.HDF5FeatureStorage.store_table">
-<span class="sig-name descname"><span class="pre">store_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_md5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows_col_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.store_table" title="Permalink to this definition">#</a></dt>
-<dd><p>Store table.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>meta_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The metadata MD5 hash.</p>
-</dd>
-<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as dictionary.</p>
-</dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></span></dt><dd><p>The table data to store.</p>
-</dd>
-<dt><strong>columns</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The columns (default None).</p>
-</dd>
-<dt><strong>rows_col_name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column name to use in case number of rows greater than 1.
-If None and number of rows greater than 1, then the name will be
-“index” (default None).</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="junifer.storage.HDF5FeatureStorage.store_timeseries">
-<span class="sig-name descname"><span class="pre">store_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_md5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.store_timeseries" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">store_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_md5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.store_timeseries" title="Permalink to this definition">#</a></dt>
 <dd><p>Implement timeseries storing.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -685,6 +661,26 @@ If None and number of rows greater than 1, then the name will be
 <dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The timeseries data to store.</p>
 </dd>
 <dt><strong>columns</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.storage.HDF5FeatureStorage.store_vector">
+<span class="sig-name descname"><span class="pre">store_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_md5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.store_vector" title="Permalink to this definition">#</a></dt>
+<dd><p>Store vector.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>meta_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The metadata MD5 hash.</p>
+</dd>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as dictionary.</p>
+</dd>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></span></dt><dd><p>The vector data to store.</p>
+</dd>
+<dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
 </dd>
 </dl>
 </dd>
@@ -861,6 +857,8 @@ If “update”, the existing elements are updated (default “update”).</p>
 <p class="admonition-title">See also</p>
 <dl class="simple">
 <dt><a class="reference internal" href="#junifer.storage.PandasBaseFeatureStorage" title="junifer.storage.PandasBaseFeatureStorage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PandasBaseFeatureStorage</span></code></a></dt><dd><p>The base class for Pandas-based feature storage.</p>
+</dd>
+<dt><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage" title="junifer.storage.HDF5FeatureStorage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HDF5FeatureStorage</span></code></a></dt><dd><p>The concrete class for HDF5-based feature storage.</p>
 </dd>
 </dl>
 </div>
@@ -1103,8 +1101,8 @@ this to False will raise an error (default True).</p>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.read_df"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.read_df()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_matrix"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_matrix()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_metadata"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_metadata()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_table"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_table()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_timeseries"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_timeseries()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_vector"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_vector()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.storage.PandasBaseFeatureStorage"><code class="docutils literal notranslate"><span class="pre">PandasBaseFeatureStorage</span></code></a><ul>
