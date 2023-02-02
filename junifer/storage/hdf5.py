@@ -637,8 +637,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
             (default "full").
         diagonal : bool, optional
-            Whether to store the diagonal. If `matrix_kind` is "full", setting
-            this to False will raise an error (default True).
+            Whether to store the diagonal. If ``matrix_kind`` is "full",
+            setting this to False will raise an error (default True).
 
         """
         # diagonal validation
