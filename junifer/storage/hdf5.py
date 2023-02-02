@@ -179,17 +179,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         """
         # Read metadata
         metadata = self._read_metadata()
-
-        # Initialize dictionary to populate
-        meta_listing = {}
-        for meta in metadata:
-            # Make a copy so as not to affect original metadata
-            meta_copy = meta.copy()
-            # Format metadata as key-value pair
-            meta_key = meta_copy.pop("meta_md5")
-            meta_listing[meta_key] = meta_copy
-
-        return meta_listing
+        return metadata
 
     def _read_data(
         self, md5: str, element: Optional[Dict[str, str]] = None
