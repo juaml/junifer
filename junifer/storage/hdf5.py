@@ -277,7 +277,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         self,
         feature_name: Optional[str] = None,
         feature_md5: Optional[bool] = None,
-        element: Optional[Dict[str, str]] = None,
     ) -> pd.DataFrame:
         """Read feature into a pandas DataFrame.
 
@@ -290,8 +289,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             Name of the feature to read (default None).
         feature_md5 : str, optional
             MD5 hash of the feature to read (default None).
-        element : dict, optional
-            The element as dictionary (default None).
 
         Returns
         -------
@@ -323,10 +320,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         # Parameter check pass
         else:
             # Read metadata
-            metadata = self._read_metadata(element=element)
-            # Get correct URI for element;
-            # is different from uri if single_output is False
-            uri = self._fetch_correct_uri_for_io(element=element)
+            metadata = self._read_metadata()
             # Initialize MD5 variable
             md5: str = ""
 
@@ -334,7 +328,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             if feature_md5 and not feature_name:
                 logger.debug(
                     f"Validating feature MD5 '{feature_md5}' in metadata "
-                    f"for: {uri} ..."
+                    f"for: {self.uri.resolve()} ..."  # type: ignore
                 )
                 # Validate MD5
                 for meta in metadata:
@@ -347,7 +341,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             elif not feature_md5 and feature_name:
                 logger.debug(
                     f"Validating feature name '{feature_name}' in metadata "
-                    f"for: {uri} ..."
+                    f"for: {self.uri.resolve()} ..."  # type: ignore
                 )
                 # Retrieve MD5 for feature_name
                 # Implicit counter for duplicate feature_name
@@ -371,7 +365,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 md5 = feature_name_query[0]["meta_md5"]
 
             # Read data from HDF5
-            hdf_data = self._read_data(md5=md5, element=element)
+            hdf_data = self._read_data(md5=md5)
 
             # Generate index for the data
             hdf_data_index = self._index_dict_to_multiindex(
