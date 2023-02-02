@@ -49,6 +49,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     See Also
     --------
     PandasBaseFeatureStorage : The base class for Pandas-based feature storage.
+    HDF5FeatureStorage : The concrete class for HDF5-based feature storage.
 
     """
 
