@@ -703,7 +703,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             row_headers=None,
         )
 
-    def store_table(
+    def store_vector(
         self,
         meta_md5: str,
         element: Dict[str, str],
@@ -711,7 +711,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         columns: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
     ) -> None:
-        """Store table.
+        """Store vector.
 
         Parameters
         ----------
@@ -720,13 +720,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         element : dict
             The element as dictionary.
         data : numpy.ndarray or list
-            The table data to store.
         columns : list or tuple of str, optional
             The columns (default None).
         rows_col_name : str, optional
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
             "index" (default None).
+            The vector data to store.
 
         """
         self._store_data(
