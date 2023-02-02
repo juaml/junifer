@@ -167,15 +167,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 metadata = [metadata]
             return metadata
 
-    def list_features(
-        self, element: Optional[Dict[str, str]] = None
-    ) -> Dict[str, Dict[str, Any]]:
+    def list_features(self) -> Dict[str, Dict[str, Any]]:
         """List the features in the storage.
-
-        Parameters
-        ----------
-        element : dict, optional
-            The element as dictionary (default None).
 
         Returns
         -------
@@ -186,7 +179,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         """
         # Read metadata
-        metadata = self._read_metadata(element=element)
+        metadata = self._read_metadata()
 
         # Initialize dictionary to populate
         meta_listing = {}
