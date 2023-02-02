@@ -708,8 +708,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: Dict[str, str],
         data: Union[np.ndarray, List],
-        columns: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
+        col_names: Optional[Iterable[str]] = None,
     ) -> None:
         """Store vector.
 
@@ -720,21 +719,16 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         element : dict
             The element as dictionary.
         data : numpy.ndarray or list
-        columns : list or tuple of str, optional
-            The columns (default None).
-        rows_col_name : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
             The vector data to store.
+        col_names : list or tuple of str, optional
+            The column labels (default None).
 
         """
         self._store_data(
             meta_md5=meta_md5,
             element=element,
             data=data,
-            column_headers=columns,
-            row_headers=rows_col_name,
+            column_headers=col_names,
         )
 
     def store_timeseries(
