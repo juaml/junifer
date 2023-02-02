@@ -437,9 +437,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The metadata as a dictionary.
 
         """
-        # Update meta dictionary with MD5
-        meta.update({"meta_md5": meta_md5})
-
         # Read metadata; if no file found, create an empty list
         try:
             metadata = self._read_metadata(element=element)
