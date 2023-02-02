@@ -173,9 +173,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         Returns
         -------
         dict
-            List of features in the storage. The keys are the feature names to
-            be used in :func:`read_df` and the values are the metadata of each
-            feature.
+            List of features in the storage. The keys are the feature MD5 to
+            be used in :meth:`junifer.storage.HDF5FeatureStorage.read_df`
+            and the values are the metadata of each feature.
 
         """
         # Read metadata
