@@ -407,7 +407,12 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         )
         logger.debug(f"Wrote processed HDF5 data to: {fname} ...")
 
-    def store_metadata(self, meta_md5: str, element: Dict, meta: Dict) -> None:
+    def store_metadata(
+        self,
+        meta_md5: str,
+        element: Dict[str, str],
+        meta: Dict[str, Any],
+    ) -> None:
         """Store metadata.
 
         This method first loads existing metadata (if any) using
