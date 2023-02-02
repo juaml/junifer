@@ -738,7 +738,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The element as dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        columns : list or tuple of str, optional
+        col_names : list or tuple of str, optional
             The column labels (default None).
 
         """
