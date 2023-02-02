@@ -330,7 +330,7 @@ feature.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1387.g10c51ba020)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1388.gf3015e3943)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -561,7 +561,7 @@ and the values are the metadata of each feature.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.storage.HDF5FeatureStorage.read_df">
-<span class="sig-name descname"><span class="pre">read_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.read_df" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">read_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.read_df" title="Permalink to this definition">#</a></dt>
 <dd><p>Read feature into a pandas DataFrame.</p>
 <p>Either one of <code class="docutils literal notranslate"><span class="pre">feature_name</span></code> or <code class="docutils literal notranslate"><span class="pre">feature_md5</span></code> needs to be
 specified.</p>
@@ -572,13 +572,11 @@ specified.</p>
 </dd>
 <dt><strong>feature_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>MD5 hash of the feature to read (default None).</p>
 </dd>
-<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The element as dictionary (default None).</p>
-</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1387.g10c51ba020)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1388.gf3015e3943)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -632,7 +630,8 @@ setting this to False will raise an error (default True).</p>
 <dd><p>Store metadata.</p>
 <p>This method first loads existing metadata (if any) using
 <code class="docutils literal notranslate"><span class="pre">_read_metadata</span></code> and appends to it the new metadata and then saves
-the updated metadata using <code class="docutils literal notranslate"><span class="pre">_write_processed_data</span></code>.</p>
+the updated metadata using <code class="docutils literal notranslate"><span class="pre">_write_processed_data</span></code>. It will only
+store metadata if <code class="docutils literal notranslate"><span class="pre">meta_md5</span></code> is not found already.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -732,7 +731,7 @@ n_rows &gt; 1, the name will be “idx” (default None).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.MultiIndex.html#pandas.MultiIndex" title="(in pandas v2.0.0.dev0+1387.g10c51ba020)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.MultiIndex</span></code></a></dt><dd><p>The index of the dataframe to store.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.MultiIndex.html#pandas.MultiIndex" title="(in pandas v2.0.0.dev0+1388.gf3015e3943)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.MultiIndex</span></code></a></dt><dd><p>The index of the dataframe to store.</p>
 </dd>
 </dl>
 </dd>
@@ -767,7 +766,7 @@ n_rows &gt; 1, the name will be “idx” (default None).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1387.g10c51ba020)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.0.0.dev0+1387.g10c51ba020)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1388.gf3015e3943)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.0.0.dev0+1388.gf3015e3943)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
 </dd>
 <dt><strong>meta</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The metadata as a dictionary.</p>
 </dd>
@@ -929,7 +928,7 @@ specified.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1387.g10c51ba020)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1388.gf3015e3943)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -950,7 +949,7 @@ multiple features are found.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1387.g10c51ba020)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.0.0.dev0+1387.g10c51ba020)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.0.0.dev0+1388.gf3015e3943)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.0.0.dev0+1388.gf3015e3943)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
 </dd>
 <dt><strong>meta</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The metadata as a dictionary.</p>
 </dd>
