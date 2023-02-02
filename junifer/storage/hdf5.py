@@ -412,7 +412,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         This method first loads existing metadata (if any) using
         ``_read_metadata`` and appends to it the new metadata and then saves
-        the updated metadata using ``_write_processed_data``.
+        the updated metadata using ``_write_processed_data``. It will only
+        store metadata if ``meta_md5`` is not found already.
 
         Parameters
         ----------
@@ -424,35 +425,41 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The metadata as a dictionary.
 
         """
-        # Read metadata; if no file found, create an empty list
+        # Read metadata; if no file found, create an empty dictionary
         try:
             metadata = self._read_metadata(element=element)
         except IOError:
-            logger.debug(f"Creating new metadata list for {meta_md5} ...")
-            metadata = []
+            logger.debug(f"Creating new metadata map for {meta_md5} ...")
+            metadata = {}
 
-        logger.debug(f"HDF5 metadata for {meta_md5} updated ...")
-        # Update metadata
-        metadata.append(meta)
+        # Only add entry if MD5 is not present
+        if meta_md5 not in metadata:
+            logger.debug(f"HDF5 metadata for {meta_md5} not found, adding ...")
+            # Update metadata
+            metadata[meta_md5] = meta
 
-        # Get correct URI for element;
-        # is different from uri if single_output is False
-        uri = self._fetch_correct_uri_for_io(element=element)
+            # Get correct URI for element;
+            # is different from uri if single_output is False
+            uri = self._fetch_correct_uri_for_io(element=element)
 
-        logger.info(f"Writing HDF5 metadata for {meta_md5} to: {uri}")
-        logger.debug(f"HDF5 overwrite is set to: {self.overwrite} ...")
-        logger.debug(
-            f"HDF5 gzip compression level is set to: {self.compression} ..."
-        )
+            logger.info(f"Writing HDF5 metadata for {meta_md5} to: {uri}")
+            logger.debug(f"HDF5 overwrite is set to: {self.overwrite} ...")
+            logger.debug(
+                f"HDF5 gzip compression level is set to: {self.compression} ..."
+            )
 
-        # Write metadata
-        self._write_processed_data(
-            fname=uri,
-            processed_data=meta,
-            title="meta",
-        )
+            # Write metadata
+            self._write_processed_data(
+                fname=uri,
+                processed_data=metadata,
+                title="meta",
+            )
 
-        logger.info(f"Wrote HDF5 metadata for {meta_md5} to: {uri}")
+            logger.info(f"Wrote HDF5 metadata for {meta_md5} to: {uri}")
+        else:
+            logger.debug(
+                f"HDF5 metadata for {meta_md5} found, skipping store ..."
+            )
 
     def _element_metadata_to_index_dict(
         self,
