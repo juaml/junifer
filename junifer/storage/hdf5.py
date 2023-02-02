@@ -127,7 +127,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     def _read_metadata(
         self, element: Optional[Dict[str, str]] = None
-    ) -> List[Dict[str, Any]]:
+    ) -> Dict[str, Dict[str, Any]]:
         """Read metadata (should not be called directly).
 
         Parameters
@@ -137,7 +137,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Returns
         -------
-        list of dict
+        dict of dict
             The stored metadata for the element.
 
         Raises
@@ -164,9 +164,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
         else:
             logger.info(f"Loaded HDF5 metadata from: {uri}")
-            # Convert to list if single entry found
-            if not isinstance(metadata, list):
-                metadata = [metadata]
             return metadata
 
     def list_features(self) -> Dict[str, Dict[str, Any]]:
