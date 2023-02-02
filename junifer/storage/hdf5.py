@@ -318,10 +318,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     f"for: {self.uri.resolve()} ..."  # type: ignore
                 )
                 # Validate MD5
-                for meta in metadata:
-                    if meta["meta_md5"] == feature_md5:
-                        md5 = feature_md5  # type: ignore
-                if not md5:
+                if feature_md5 in metadata:
+                    md5 = feature_md5
+                else:
                     raise_error(msg=f"Feature MD5 {feature_md5} not found")
 
             # Consider feature_name
@@ -331,16 +330,17 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     f"for: {self.uri.resolve()} ..."  # type: ignore
                 )
                 # Retrieve MD5 for feature_name
-                # Implicit counter for duplicate feature_name
-                feature_name_query = []
-                for meta in metadata:
+                # Implicit counter for duplicate feature_name with different
+                # MD5; happens when something is wrong with marker computation
+                feature_name_duplicates_with_different_md5 = []
+                for md5, meta in metadata.items():
                     if meta["name"] == feature_name:
-                        feature_name_query.append(meta)
+                        feature_name_duplicates_with_different_md5.append(md5)
 
                 # Check for no / duplicate feature_name
-                if len(feature_name_query) == 0:
+                if len(feature_name_duplicates_with_different_md5) == 0:
                     raise_error(msg=f"Feature {feature_name} not found")
-                elif len(feature_name_query) > 1:
+                elif len(feature_name_duplicates_with_different_md5) > 1:
                     raise_error(
                         msg=(
                             f"More than one feature with name {feature_name} "
@@ -349,7 +349,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                         )
                     )
 
-                md5 = feature_name_query[0]["meta_md5"]
+                md5 = feature_name_duplicates_with_different_md5[0]
 
             # Read data from HDF5
             hdf_data = self._read_data(md5=md5)
