@@ -736,7 +736,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: Dict[str, str],
         data: np.ndarray,
-        columns: Optional[Iterable[str]] = None,
+        col_names: Optional[Iterable[str]] = None,
     ) -> None:
         """Implement timeseries storing.
 
@@ -756,7 +756,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             meta_md5=meta_md5,
             element=element,
             data=data,
-            column_headers=columns,
+            column_headers=col_names,
             row_headers="timepoint",
         )
 
