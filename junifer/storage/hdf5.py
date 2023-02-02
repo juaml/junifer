@@ -79,8 +79,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         self.overwrite = overwrite
         self.compression = compression
-        # Tracks whether to bypass element checks after collection
-        self._collected = False
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid storage types for input.
@@ -97,6 +95,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     def _fetch_correct_uri_for_io(self, element: Optional[Dict]) -> str:
         """Return proper URI for I/O based on `element`.
 
+        If `element` is None, will return `self.uri`.
+
         Parameters
         ----------
         element : dict, optional
@@ -108,19 +108,21 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             Formatted URI for accessing metadata and data.
 
         """
-        prefix = ""
-        if not self.single_output:
-            if not element and not self._collected:
-                raise_error(
-                    msg=(
-                        "`element` must be provided when `single_output` "
-                        "is False"
-                    ),
-                    klass=RuntimeError,
-                )
-            elif element and not self._collected:
-                prefix = element_to_prefix(element=element)
-        # Format URI
+        if not self.single_output and not element:
+            raise_error(
+                msg=(
+                    "`element` must be provided when `single_output` "
+                    "is False"
+                ),
+                klass=RuntimeError,
+            )
+        elif not self.single_output and element:
+            # element access for multi output only
+            prefix = element_to_prefix(element=element)
+        else:
+            # parent access for single output, ignore element
+            prefix = ""
+        # Format URI based on prefix
         return f"{self.uri.parent}/{prefix}{self.uri.name}"  # type: ignore
 
     def _read_metadata(
@@ -837,6 +839,3 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     processed_data=in_data,
                     title=meta["meta_md5"],
                 )
-
-        # Toggle check to bypass element checks
-        self._collected = True
