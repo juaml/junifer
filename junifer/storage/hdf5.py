@@ -659,34 +659,19 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             setting this to False will raise an error (default True).
 
         """
-        # diagonal validation
+        # Diagonal validation
         if diagonal is False and matrix_kind not in ["triu", "tril"]:
             raise_error(
                 msg="Diagonal cannot be False if kind is not full",
                 klass=ValueError,
             )
-        # matrix_kind and shape validation
+        # Matrix kind and shape validation
         if matrix_kind in ["triu", "tril"]:
             if data.shape[0] != data.shape[1]:
                 raise_error(
                     "Cannot store a non-square matrix as a triangular matrix",
                     klass=ValueError,
                 )
-        # matrix_kind validation and computation
-        if matrix_kind == "triu":
-            k = 0 if diagonal is True else 1
-            data_idx = np.triu_indices(data.shape[0], k=k)
-        elif matrix_kind == "tril":
-            k = 0 if diagonal is True else -1
-            data_idx = np.tril_indices(data.shape[0], k=k)
-        elif matrix_kind == "full":
-            data_idx = (
-                np.repeat(np.arange(data.shape[0]), data.shape[1]),
-                np.tile(np.arange(data.shape[1]), data.shape[0]),
-            )
-        else:
-            raise_error(msg=f"Invalid kind {matrix_kind}", klass=ValueError)
-
         # Row data and label validation
         if row_names is None:
             row_names = [f"r{i}" for i in range(data.shape[0])]
@@ -695,7 +680,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 msg="Number of row names does not match number of rows",
                 klass=ValueError,
             )
-
         # Column data and label validation
         if col_names is None:
             col_names = [f"c{i}" for i in range(data.shape[1])]
@@ -704,21 +688,16 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 msg="Number of column names does not match number of columns",
                 klass=ValueError,
             )
-
-        # Subset data
-        flat_data = data[data_idx]
-        # Format column names
-        columns = [
-            f"{row_names[i]}~{col_names[j]}"  # type: ignore
-            for i, j in zip(data_idx[0], data_idx[1])
-        ]
         # Store
         self._store_data(
+            kind="matrix",
             meta_md5=meta_md5,
             element=element,
-            data=flat_data[None, :],
-            column_headers=columns,
-            row_headers=None,
+            data=data[np.newaxis, :, :],  # convert to 3D
+            column_headers=col_names,
+            row_headers=row_names,
+            matrix_kind=matrix_kind,
+            diagonal=diagonal,
         )
 
     def store_vector(
