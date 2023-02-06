@@ -206,7 +206,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         Raises
         ------
         IOError
-            If HDF5 file does not exist.
+            If HDF5 file or data does not exist.
 
         """
         # Get correct URI for element;
@@ -223,6 +223,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         except IOError:
             raise_error(
                 msg=f"HDF5 file not found at: {uri}",
+                klass=IOError,
+            )
+        except ValueError:
+            raise_error(
+                msg=f"`{md5}` not found in: {uri}",
                 klass=IOError,
             )
         else:
