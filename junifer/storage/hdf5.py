@@ -768,9 +768,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         """
         self._store_data(
+            kind="timeseries",
             meta_md5=meta_md5,
             element=element,
-            data=data,
+            data=data[np.newaxis, :, :],  # convert to 3D
             column_headers=col_names,
             row_headers="timepoint",
         )
