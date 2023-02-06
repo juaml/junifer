@@ -188,7 +188,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     def _read_data(
         self, md5: str, element: Optional[Dict[str, str]] = None
-    ) -> Dict:
+    ) -> Dict[str, Any]:
         """Read data (should not be called directly).
 
         Parameters
