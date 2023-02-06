@@ -721,10 +721,28 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The column labels (default None).
 
         """
+        if isinstance(data, list):
+            logger.debug(
+                f"Flattening and converting vector data list for {meta_md5}, "
+                "to numpy.ndarray ..."
+            )
+            # Flatten out list and convert to np.ndarray
+            processed_data = np.array(np.ravel(data))
+        elif isinstance(data, np.ndarray):
+            logger.debug(
+                f"Flattening vector data numpy.ndarray for {meta_md5} ..."
+            )
+            # Flatten out array
+            processed_data = data.ravel()
+
+        # Make it 2D
+        processed_data = processed_data[np.newaxis, :]
+
         self._store_data(
+            kind="vector",
             meta_md5=meta_md5,
             element=element,
-            data=data,
+            data=processed_data,
             column_headers=col_names,
         )
 
