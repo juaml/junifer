@@ -537,56 +537,74 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     def _store_data(
         self,
+        kind: str,
         meta_md5: str,
         element: Dict[str, str],
-        data: Union[np.ndarray, List],
-        column_headers: Union[str, Iterable[str], None] = None,
-        row_headers: Union[str, Iterable[str], None] = None,
+        data: np.ndarray,
+        **kwargs:  Any,
     ) -> None:
         """Store data.
 
-        This method first prepares the index for the element's metadata
-        using :func:`_element_metadata_to_index_dict` and updates
-        the `data` with the index and then saves the data using
-        :func:`_write_processed_data`.
+        This method first loads existing data (if any) using
+        ``_read_data`` and appends to it the `element` and `data`
+        values, and writes them and other information passed via
+        `**kwargs` using ``_write_processed_data``.
 
         Parameters
         ----------
+        kind : {"matrix", "vector", "timeseries"}
+            The storage kind.
         meta_md5 : str
             The metadata MD5 hash.
         element : dict
             The element as dictionary.
-        data : numpy.ndarray or list
+        data : numpy.ndarray
             The data to store.
-        column_headers : str, list or tuple of str, optional
-            The column labels (default None).
-        row_headers : str, list or tuple of str, optional
-            The column label to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "idx". For matrix storage, they are the row labels. (default None).
+        **kwargs : dict
+            Keyword arguments passed from the calling method.
 
         """
+        # Read existing data; if no file found, create an empty dictionary
+        try:
+            stored_data = self._read_data(md5=meta_md5, element=element)
+        except IOError:
+            logger.debug(f"Creating new data map for {meta_md5} ...")
+            stored_data = {}
+
+        # TODO: Validate stored and to be stored kwargs
+
+        # Initialize dictionary to aggregate data to write
+        data_to_write = kwargs
+
+        # Handle cases for existing and new entry
+        if not stored_data:
+            logger.debug(f"Writing new data for {meta_md5} ...")
+            # New entry; add as is
+            data_to_write.update({
+                # change to list for easy subsequent storing
+                "element": [element],
+                "data": data,
+                # for serialization / deserialization of storage type
+                "kind": kind,
+            })
+        elif stored_data:
+            logger.debug(f"Existing data found for {meta_md5}, appending to it ...")
+            # Existing entry; append to existing
+            # "element" and "data"
+            data_to_write.update({
+                "element": [*stored_data["element"], element],
+                "data": np.concatenate(
+                    (stored_data["data"], data), axis=0
+                ),
+                # for serialization / deserialization of storage type
+                "kind": kind,
+            })
+
         # Get correct URI for element;
         # is different from uri if single_output is False
         uri = self._fetch_correct_uri_for_io(element=element)
 
-        # Initialize dictionary to aggregate data to write
-        data_to_write = {
-            "md5": meta_md5,
-            "element": element,
-            "data": data,
-            "column_headers": column_headers,
-            "row_headers": row_headers,
-        }
-        # Add index data to store
-        index_data = self._element_metadata_to_index_dict(
-            element=element,
-            n_rows=len(data),
-            row_headers=row_headers,
-        )
-        data_to_write.update(index_data)  # type: ignore
-
-        logger.info(f"Writing HDF5 data to: {uri}")
+        logger.info(f"Writing HDF5 data for {meta_md5} to: {uri}")
         logger.debug(f"HDF5 overwrite is set to: {self.overwrite} ...")
         logger.debug(
             f"HDF5 gzip compression level is set to: {self.compression} ..."
@@ -599,7 +617,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             title=meta_md5,
         )
 
-        logger.info(f"Wrote HDF5 data to: {uri}")
+        logger.info(f"Wrote HDF5 data for {meta_md5} to: {uri}")
 
     def store_matrix(
         self,
