@@ -571,8 +571,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             logger.debug(f"Creating new data map for {meta_md5} ...")
             stored_data = {}
 
-        # TODO: Validate stored and to be stored kwargs
-
         # Initialize dictionary to aggregate data to write
         data_to_write = kwargs
 
@@ -588,6 +586,24 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 "kind": kind,
             })
         elif stored_data:
+            # Set up stored kwargs
+            stored_kwargs = [key for key in stored_data.keys() if key not in ("element", "data")]
+            # Set up to be stored kwargs
+            to_be_stored_kwargs = kwargs
+            # Update with kind
+            to_be_stored_kwargs["kind"] = kind
+            # Validate the kwargs
+            if set(stored_kwargs) != set(to_be_stored_kwargs):
+                raise_error(
+                    msg=(
+                        f"The additional data for {meta_md5} do not match "
+                        "the ones already stored. This can be due "
+                        "to some changes in marker computation, please "
+                        "verify and try again."
+                    ),
+                    klass=RuntimeError,
+                )
+
             logger.debug(f"Existing data found for {meta_md5}, appending to it ...")
             # Existing entry; append to existing
             # "element" and "data"
