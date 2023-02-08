@@ -794,7 +794,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             element=element,
             data=data[np.newaxis, :, :],  # convert to 3D
             column_headers=col_names,
-            row_headers="timepoint",
+            row_header_column_name="timepoint",
         )
 
     def collect(self) -> None:
