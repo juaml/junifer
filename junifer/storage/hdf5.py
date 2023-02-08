@@ -331,7 +331,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 if feature_md5 in metadata:
                     md5 = feature_md5
                 else:
-                    raise_error(msg=f"Feature MD5 {feature_md5} not found")
+                    raise_error(msg=f"Feature MD5 '{feature_md5}' not found")
 
             # Consider feature_name
             elif not feature_md5 and feature_name:
@@ -349,13 +349,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
                 # Check for no / duplicate feature_name
                 if len(feature_name_duplicates_with_different_md5) == 0:
-                    raise_error(msg=f"Feature {feature_name} not found")
+                    raise_error(msg=f"Feature '{feature_name}' not found")
                 elif len(feature_name_duplicates_with_different_md5) > 1:
                     raise_error(
                         msg=(
-                            f"More than one feature with name {feature_name} "
-                            "found. You can bypass this issue by specifying "
-                            "a `feature_md5`."
+                            "More than one feature with name "
+                            f"'{feature_name}' found. You can bypass this "
+                            "issue by specifying a `feature_md5`."
                         )
                     )
 
