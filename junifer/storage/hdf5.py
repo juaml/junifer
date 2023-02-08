@@ -234,42 +234,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             logger.info(f"Loaded HDF5 data for {md5} from: {uri}")
             return data
 
-    def _index_dict_to_multiindex(
-        self,
-        index_dict: Dict[Union[str, Iterable[str]], Union[str, Iterable[str]]],
-        index_columns_order: List[str],
-        n_rows: int,
-    ) -> pd.MultiIndex:
-        """Convert index to pandas.MultiIndex (should not be called directly).
-
-        Parameters
-        ----------
-        index_dict : dict
-            The index data as returned by
-            :func:`_element_metadata_to_index_dict`.
-        index_columns_order: list of str
-            The ordering for index columns.
-        n_rows : int
-            Number of rows for the index.
-
-        Returns
-        -------
-        pandas.MultiIndex
-            The multi-index for use in :func:`read_df`.
-
-        """
-        logger.debug("Converting index dictionary to pandas MultiIndex ...")
-        # Create multi-index; dict comprehension required to undo keys sorting
-        # during serialization / deserialization
-        index = pd.MultiIndex.from_frame(
-            pd.DataFrame(
-                data={key: index_dict[key] for key in index_columns_order},
-                index=range(n_rows),
-            )
-        )
-        logger.debug("Converted index dictionary to pandas MultiIndex ...")
-        return index
-
     def read_df(
         self,
         feature_name: Optional[str] = None,
