@@ -462,7 +462,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             logger.info(f"Writing HDF5 metadata for {meta_md5} to: {uri}")
             logger.debug(f"HDF5 overwrite is set to: {self.overwrite} ...")
             logger.debug(
-                f"HDF5 gzip compression level is set to: {self.compression} ..."
+                "HDF5 gzip compression level is set to: "
+                f"{self.compression} ..."
             )
 
             # Write metadata
@@ -606,7 +607,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     klass=RuntimeError,
                 )
 
-            logger.debug(f"Existing data found for {meta_md5}, appending to it ...")
+            logger.debug(
+                f"Existing data found for {meta_md5}, appending to it ..."
+            )
             # Existing entry; append to existing
             # "element" and "data"
             data_to_write.update({
