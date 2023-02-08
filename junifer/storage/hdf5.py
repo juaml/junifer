@@ -649,6 +649,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         row_names: Optional[Iterable[str]] = None,
         matrix_kind: Optional[str] = "full",
         diagonal: bool = True,
+        row_header_col_name: str = "ROI",
     ) -> None:
         """Store matrix.
 
@@ -678,6 +679,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         diagonal : bool, optional
             Whether to store the diagonal. If ``matrix_kind`` is "full",
             setting this to False will raise an error (default True).
+        row_header_col_name : str, optional
+            The column name for the row header column (default "ROI").
 
         """
         # Diagonal validation
@@ -719,6 +722,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             row_headers=row_names,
             matrix_kind=matrix_kind,
             diagonal=diagonal,
+            row_header_column_name=row_header_col_name,
         )
 
     def store_vector(
