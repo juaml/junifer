@@ -5,6 +5,7 @@
 # License: AGPL
 
 
+from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
@@ -327,21 +328,55 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
             # Read data from HDF5
             hdf_data = self._read_data(md5=md5)
+            reshaped_data = hdf_data["data"]
 
             # Generate index for the data
-            hdf_data_index = self._index_dict_to_multiindex(
-                index_dict=hdf_data["idx_data"],
-                index_columns_order=hdf_data["idx_columns_order"],
-                n_rows=hdf_data["n_rows"],
-            )
+            logger.debug(f"Generating pandas.MultiIndex for {md5} ...")
+            # Create dictionary for aggregating index data
+            element_idx_dict = defaultdict(list)
 
+            if hdf_data["kind"] == "matrix":
+                # Get row count
+                n_rows, _ = hdf_data["data"][0, :, :].shape
+                for element in hdf_data["element"]:
+                    for key, val in element.items():
+                        element_idx_dict[key].extend([val] * n_rows)
+                    # Add extra column for row headers
+                    element_idx_dict[
+                        hdf_data["row_header_column_name"]
+                    ].extend(hdf_data["row_headers"])
+                # Convert data from 3D to 2D
+                reshaped_data = hdf_data["data"].reshape(-1, n_rows)
+            elif hdf_data["kind"] == "vector":
+                for element in hdf_data["element"]:
+                    for key, val in element.items():
+                        element_idx_dict[key].append(val)
+            elif hdf_data["kind"] == "timeseries":
+                for idx, element in enumerate(hdf_data["element"]):
+                    # Get row count for the element
+                    n_rows, _ = hdf_data["data"][idx, :, :].shape
+                    for key, val in element.items():
+                        element_idx_dict[key].extend([val] * n_rows)
+                    # Add extra column for timepoints
+                    element_idx_dict[
+                        hdf_data["row_header_column_name"]
+                    ].extend(np.arange(n_rows))
+                # Convert data from 3D to 2D
+                reshaped_data = hdf_data["data"].reshape(-1, 1)
+
+            # Create dataframe for index
+            idx_df = pd.DataFrame(data=element_idx_dict)
+            # Create multiindex from dataframe
+            hdf_data_idx = pd.MultiIndex.from_frame(df=idx_df)
+            logger.debug(f"Generated pandas.MultiIndex for {md5} ...")
+
+            # Convert to DataFrame
             logger.debug(
                 f"Converting HDF5 data for {md5} to pandas.DataFrame ..."
             )
-            # Convert to DataFrame
             df = pd.DataFrame(
-                data=hdf_data["data"],
-                index=hdf_data_index,
+                data=reshaped_data,
+                index=hdf_data_idx,
                 columns=hdf_data["column_headers"],
                 dtype=hdf_data["data"].dtype,
             )
