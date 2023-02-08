@@ -544,7 +544,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: Dict[str, str],
         data: np.ndarray,
-        **kwargs:  Any,
+        **kwargs: Any,
     ) -> None:
         """Store data.
 
@@ -581,16 +581,22 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         if not stored_data:
             logger.debug(f"Writing new data for {meta_md5} ...")
             # New entry; add as is
-            data_to_write.update({
-                # change to list for easy subsequent storing
-                "element": [element],
-                "data": data,
-                # for serialization / deserialization of storage type
-                "kind": kind,
-            })
+            data_to_write.update(
+                {
+                    # change to list for easy subsequent storing
+                    "element": [element],
+                    "data": data,
+                    # for serialization / deserialization of storage type
+                    "kind": kind,
+                }
+            )
         elif stored_data:
             # Set up stored kwargs
-            stored_kwargs = [key for key in stored_data.keys() if key not in ("element", "data")]
+            stored_kwargs = [
+                key
+                for key in stored_data.keys()
+                if key not in ("element", "data")
+            ]
             # Set up to be stored kwargs
             to_be_stored_kwargs = kwargs
             # Update with kind
@@ -612,14 +618,16 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
             # Existing entry; append to existing
             # "element" and "data"
-            data_to_write.update({
-                "element": [*stored_data["element"], element],
-                "data": np.concatenate(
-                    (stored_data["data"], data), axis=0
-                ),
-                # for serialization / deserialization of storage type
-                "kind": kind,
-            })
+            data_to_write.update(
+                {
+                    "element": [*stored_data["element"], element],
+                    "data": np.concatenate(
+                        (stored_data["data"], data), axis=0
+                    ),
+                    # for serialization / deserialization of storage type
+                    "kind": kind,
+                }
+            )
 
         # Get correct URI for element;
         # is different from uri if single_output is False
