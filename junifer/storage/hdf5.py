@@ -479,65 +479,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 f"HDF5 metadata for {meta_md5} found, skipping store ..."
             )
 
-    def _element_metadata_to_index_dict(
-        self,
-        element: Dict,
-        n_rows: int = 1,
-        row_headers: Union[str, Iterable[str], None] = None,
-    ) -> Dict[
-        str,
-        Union[Dict[Union[str, Iterable[str]], Union[str, Iterable[str]]], int],
-    ]:
-        """Convert the element meta to index (should not be called directly).
-
-        This method is only used in ``_store_data``.
-
-        Parameters
-        ----------
-        element : dict
-            The element as dictionary.
-        n_rows : int, optional
-            Number of rows to create (default 1).
-        row_headers: str, list or tuple of str, optional
-            The column name to use in case ``n_rows`` > 1. If None and
-            ``n_rows`` > 1, the name will be "idx" (default None).
-
-        Returns
-        -------
-        dict
-            The index to store. Is used for creating index for
-            pandas.DataFrame returned by :func:`read_df`.
-
-        """
-        logger.debug(
-            "Converting element metadata to index dictionary for "
-            "HDF5 storage ..."
-        )
-
-        # Check row_headers
-        if not row_headers:
-            row_headers = "idx"
-
-        # Create dictionary with element access options as keys
-        # and corresponding access values as values for n_rows
-        element_index: Dict[
-            Union[str, Iterable[str]], Union[str, Iterable[str]]
-        ] = {key: [val] * n_rows for key, val in element.items()}
-        # Set index value for row_headers
-        element_index[row_headers] = np.arange(n_rows)
-
-        logger.debug(
-            "Converted element metadata to index dictionary for "
-            "HDF5 storage ..."
-        )
-
-        return {
-            "idx_data": element_index,
-            # required as deserialization sorts keys of the index dict
-            "idx_columns_order": list(element_index.keys()),  # type: ignore
-            "n_rows": n_rows,
-        }
-
     def _store_data(
         self,
         kind: str,
