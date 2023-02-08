@@ -275,7 +275,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         feature_name: Optional[str] = None,
         feature_md5: Optional[bool] = None,
     ) -> pd.DataFrame:
-        """Read feature into a pandas DataFrame.
+        """Read feature into a pandas.DataFrame.
 
         Either one of ``feature_name`` or ``feature_md5`` needs to be
         specified.
@@ -392,7 +392,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     ) -> None:
         """Write processed data to HDF5 (should not be called directly).
 
-        This is used primarily in ``_store_metadata`` and ``_store_data``.
+        This is used primarily in
+        :func:`junifer.storage.HDF5FeatureStorage.store_metadata` and
+        ``_store_data``.
 
         Parameters
         ----------
@@ -769,7 +771,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         data: np.ndarray,
         col_names: Optional[Iterable[str]] = None,
     ) -> None:
-        """Implement timeseries storing.
+        """Store timeseries.
 
         Parameters
         ----------
