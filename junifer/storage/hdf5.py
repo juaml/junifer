@@ -63,8 +63,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         # Create parent directories if not present
         if not uri.parent.exists():
             logger.info(
-                f"Output directory ({str(uri.parent.absolute())}) "
-                "does not exist, creating now."
+                f"Output directory: '{uri.parent.resolve()}' "
+                "does not exist, creating now"
             )
             uri.parent.mkdir(parents=True, exist_ok=True)
 
@@ -806,16 +806,14 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Run loop to aggregate
         for file in tqdm(globbed_files, desc="file"):
-            logger.debug(f"Reading HDF5 file: {file.resolve()} ...")
+            logger.debug(f"Reading HDF5 file: {file} ...")
             # Create new storage instance to load data
             in_storage = HDF5FeatureStorage(uri=file)
 
             # Load metadata from new instance
             in_metadata = in_storage._read_metadata()
 
-            logger.info(
-                f"Updating HDF5 metadata with metadata from: {file.resolve()}"
-            )
+            logger.info(f"Updating HDF5 metadata with metadata from: {file}")
             # Load metadata; empty dictionary if first entry;
             # can be replaced with store_metadata() if run on a loop
             # for the metadata entries from in_storage
