@@ -552,6 +552,17 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     klass=RuntimeError,
                 )
 
+            # Check for duplicate elements; if found, return immediately
+            logger.debug(f"Checking duplicate elements for {meta_md5} ...")
+            for stored_element in stored_data["element"]:
+                if stored_element == element[0]:
+                    logger.info(
+                        f"Duplicate element: {element[0]} found for "
+                        f"{meta_md5}, skipping store ... "
+                    )
+                    return None
+            logger.debug(f"No duplicate elements found for {meta_md5} ...")
+
             logger.debug(
                 f"Existing data found for {meta_md5}, appending to it ..."
             )
