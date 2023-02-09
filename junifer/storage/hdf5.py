@@ -482,7 +482,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         self,
         kind: str,
         meta_md5: str,
-        element: Dict[str, str],
+        element: List[Dict[str, str]],
         data: np.ndarray,
         **kwargs: Any,
     ) -> None:
@@ -499,8 +499,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The storage kind.
         meta_md5 : str
             The metadata MD5 hash.
-        element : dict
-            The element as dictionary.
+        element : list of dict
+            The element as list of dictionary.
         data : numpy.ndarray
             The data to store.
         **kwargs : dict
@@ -509,7 +509,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         """
         # Read existing data; if no file found, create an empty dictionary
         try:
-            stored_data = self._read_data(md5=meta_md5, element=element)
+            stored_data = self._read_data(md5=meta_md5, element=element[0])
         except IOError:
             logger.debug(f"Creating new data map for {meta_md5} ...")
             stored_data = {}
@@ -523,8 +523,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             # New entry; add as is
             data_to_write.update(
                 {
-                    # change to list for easy subsequent storing
-                    "element": [element],
+                    "element": element,
                     "data": data,
                     # for serialization / deserialization of storage type
                     "kind": kind,
@@ -560,7 +559,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             # "element" and "data"
             data_to_write.update(
                 {
-                    "element": [*stored_data["element"], element],
+                    "element": stored_data["element"] + element,
                     "data": np.concatenate(
                         (stored_data["data"], data), axis=0
                     ),
@@ -571,7 +570,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Get correct URI for element;
         # is different from uri if single_output is False
-        uri = self._fetch_correct_uri_for_io(element=element)
+        uri = self._fetch_correct_uri_for_io(element=element[0])
 
         logger.info(f"Writing HDF5 data for {meta_md5} to: {uri}")
         logger.debug(f"HDF5 overwrite is set to: {self.overwrite} ...")
@@ -664,7 +663,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         self._store_data(
             kind="matrix",
             meta_md5=meta_md5,
-            element=element,
+            element=[element],  # convert to list
             data=data[np.newaxis, :, :],  # convert to 3D
             column_headers=col_names,
             row_headers=row_names,
@@ -714,7 +713,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         self._store_data(
             kind="vector",
             meta_md5=meta_md5,
-            element=element,
+            element=[element],  # convert to list
             data=processed_data,
             column_headers=col_names,
         )
@@ -743,7 +742,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         self._store_data(
             kind="timeseries",
             meta_md5=meta_md5,
-            element=element,
+            element=[element],  # convert to list
             data=data[np.newaxis, :, :],  # convert to 3D
             column_headers=col_names,
             row_header_column_name="timepoint",
