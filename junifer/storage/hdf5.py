@@ -286,7 +286,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         # Parameter check pass
         else:
             # Read metadata
-            metadata = self._read_metadata()
+            metadata = read_hdf5(
+                fname=self.uri,
+                title="meta",
+                slash="ignore",
+            )
             # Initialize MD5 variable
             md5: str = ""
 
