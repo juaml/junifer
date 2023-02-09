@@ -335,7 +335,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 md5 = feature_name_duplicates_with_different_md5[0]
 
             # Read data from HDF5
-            hdf_data = self._read_data(md5=md5)
+            hdf_data = read_hdf5(
+                fname=self.uri,
+                title=md5,
+                slash="ignore",
+            )
             reshaped_data = hdf_data["data"]
 
             # Generate index for the data
