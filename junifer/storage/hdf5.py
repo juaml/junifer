@@ -302,7 +302,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 )
                 # Validate MD5
                 if feature_md5 in metadata:
-                    md5 = feature_md5
+                    md5 = feature_md5  # type: ignore
                 else:
                     raise_error(msg=f"Feature MD5 '{feature_md5}' not found")
 
@@ -800,9 +800,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         out_storage = HDF5FeatureStorage(uri=self.uri, overwrite="update")
 
         # Glob files
-        globbed_files = self.uri.parent.glob(
-            f"*{self.uri.name}"
-        )  # type: ignore
+        globbed_files = self.uri.parent.glob(  # type: ignore
+            f"*{self.uri.name}"  # type: ignore
+        )
 
         # Run loop to aggregate
         for file in tqdm(globbed_files, desc="file"):
@@ -827,7 +827,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             out_metadata.update(in_metadata)
             # Save metadata
             out_storage._write_processed_data(
-                fname=self.uri.resolve(),
+                fname=self.uri.resolve(),  # type: ignore
                 processed_data=out_metadata,
                 title="meta",
             )
