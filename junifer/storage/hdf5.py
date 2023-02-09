@@ -804,13 +804,15 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             logger.info(
                 f"Updating HDF5 metadata with metadata from: {file.resolve()}"
             )
-            # Load metadata; empty list if first entry
+            # Load metadata; empty dictionary if first entry;
+            # can be replaced with store_metadata() if run on a loop
+            # for the metadata entries from in_storage
             try:
                 out_metadata = out_storage._read_metadata()
             except IOError:
-                out_metadata = []
+                out_metadata = {}
             # Update metadata
-            out_metadata.append(in_metadata)
+            out_metadata.update(in_metadata)
             # Save metadata
             out_storage._write_processed_data(
                 fname=self.uri.resolve(),
@@ -818,17 +820,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 title="meta",
             )
 
-            for meta in tqdm(in_metadata, desc="feature"):
-                logger.debug(f"Collecting feature MD5: {meta['meta_md5']} ...")
+            for meta_md5 in tqdm(in_metadata.keys(), desc="feature"):
                 # Load data from new instance
-                in_data = in_storage._read_data(md5=meta["meta_md5"])
-
-                logger.info(
-                    f"Updating HDF5 data with data from: {meta['meta_md5']}"
-                )
+                logger.debug(f"Collecting feature MD5: {meta_md5} ...")
+                in_data = in_storage._read_data(md5=meta_md5)
+                logger.info(f"Updating HDF5 data with data from: {meta_md5}")
                 # Save data
-                out_storage._write_processed_data(
-                    fname=self.uri.resolve(),
-                    processed_data=in_data,
-                    title=meta["meta_md5"],
-                )
+                out_storage._store_data(meta_md5=meta_md5, **in_data)
