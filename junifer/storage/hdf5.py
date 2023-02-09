@@ -184,7 +184,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         """
         # Read metadata
-        metadata = self._read_metadata()
+        metadata = read_hdf5(
+            fname=self.uri,
+            title="meta",
+            slash="ignore",
+        )
         return metadata
 
     def _read_data(
