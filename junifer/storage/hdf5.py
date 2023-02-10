@@ -653,6 +653,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The column name for the row header column (default "ROI").
 
         """
+        # Matrix kind validation
+        if matrix_kind not in ("triu", "tril", "full"):
+            raise_error(msg=f"Invalid kind {matrix_kind}", klass=ValueError)
         # Diagonal validation
         if diagonal is False and matrix_kind not in ["triu", "tril"]:
             raise_error(
