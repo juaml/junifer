@@ -104,7 +104,7 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
             The storage type output by the marker.
 
         """
-        return "table"
+        return "vector"
 
     def compute(
         self,

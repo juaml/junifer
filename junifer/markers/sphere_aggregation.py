@@ -94,7 +94,7 @@ class SphereAggregation(BaseMarker):
         """
 
         if input_type in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
-            return "table"
+            return "vector"
         elif input_type == "BOLD":
             return "timeseries"
         else:
