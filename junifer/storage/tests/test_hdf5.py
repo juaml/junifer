@@ -22,7 +22,7 @@ def test_get_valid_inputs() -> None:
 
 
 def test_single_output(tmp_path: Path) -> None:
-    """Test engine retrieval with single output.
+    """Test single output setup.
 
     Parameters
     ----------
@@ -34,6 +34,45 @@ def test_single_output(tmp_path: Path) -> None:
     # Single storage, must be the uri
     storage = HDF5FeatureStorage(uri=uri, single_output=True)
     assert storage.single_output is True
+
+
+def test_single_output_meta_not_found_error(tmp_path: Path) -> None:
+    """Test single output metadata not found error.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_single_output_no_meta.hdf5"
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Store data to create the file
+    storage._store_data(
+        kind="vector",
+        meta_md5="md5",
+        element=[{"sub": "001"}],
+        data=np.empty((1, 1)),
+    )
+    # Check metadata error
+    with pytest.raises(IOError, match="`meta` not found in:"):
+        storage._read_metadata()
+
+
+def test_single_output_file_not_found_error(tmp_path: Path) -> None:
+    """Test single output file not found error.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_single_output_no_file.hdf5"
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Check file error
+    with pytest.raises(IOError, match="HDF5 file not found at:"):
+        storage._read_data(md5="md5")
 
 
 def test_multi_output_error(tmp_path: Path) -> None:
@@ -103,15 +142,77 @@ def test_store_metadata_and_list_features(tmp_path: Path) -> None:
     assert meta_md5 == feature_md5
 
 
-def test_read_df_params_error() -> None:
-    """Test parameter validation errors for read_df."""
-    storage = HDF5FeatureStorage(uri="/tmp")
+def test_store_metadata_ignore_duplicate(tmp_path: Path) -> None:
+    """Test duplicate ignore for metadata store.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_duplicate_metadata_store.hdf5"
+    # Single storage, must be the uri
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Store metadata first time
+    storage.store_metadata(
+        meta_md5="md5",
+        element={"sub": "001"},
+        meta={
+            "element": {"subject": "test"},
+            "dependencies": ["numpy"],
+            "marker": {"name": "test"},
+            "type": "BOLD",
+        },
+    )
+    # Store metadata second time, should be ignored
+    storage.store_metadata(
+        meta_md5="md5",
+        element={"sub": "001"},
+        meta={
+            "element": {"subject": "test"},
+            "dependencies": ["numpy"],
+            "marker": {"name": "test"},
+            "type": "BOLD",
+        },
+    )
+    # List the stored features
+    features = storage.list_features()
+    # Should only have one element
+    assert len(features) == 1
+
+
+def test_read_df_params_error(tmp_path: Path) -> None:
+    """Test parameter validation errors for read_df.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_read_df_params_error.hdf5"
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Store metadata to create the file
+    storage.store_metadata(
+        meta_md5="meta_md5",
+        element={"sub": "001"},
+        meta={
+            "element": {"subject": "test"},
+            "dependencies": ["numpy"],
+            "marker": {"name": "test"},
+            "name": "BOLD",
+        },
+    )
 
     with pytest.raises(ValueError, match="Only one of"):
         storage.read_df(feature_name="name", feature_md5="md5")
 
     with pytest.raises(ValueError, match="At least one of"):
         storage.read_df()
+
+    with pytest.raises(ValueError, match="Feature MD5"):
+        storage.read_df(feature_md5="md5")
 
 
 def test_read_df(tmp_path: Path) -> None:
@@ -157,22 +258,76 @@ def test_read_df(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="not found"):
         storage.read_df(feature_name="BOLD")
 
-    # TODO: fix this check
-    # # Store duplicate entry and check error
-    # storage.store_metadata(
-    #     meta_md5=meta_md5,
-    #     element={"subject": "test-clone"},
-    #     meta=meta_to_store,
-    # )
-    # storage.store_table(
-    #     meta_md5=meta_md5,
-    #     element={"subject": "test-clone"},
-    #     data=data,
-    #     columns=col_headers,
-    #     rows_col_name=row_header,
-    # )
-    # with pytest.raises(ValueError, match="More than one feature with name"):
-    #     storage.read_df(feature_name="BOLD_test")
+    # Store duplicate entry and check error
+    storage.store_metadata(
+        meta_md5=meta_md5,
+        element={"subject": "test-clone"},
+        meta=meta_to_store,
+    )
+    storage.store_vector(
+        meta_md5=meta_md5,
+        element={"subject": "test-clone"},
+        data=data,
+        col_names=col_headers,
+    )
+
+
+def test_store_data_ignore_duplicate(tmp_path: Path) -> None:
+    """Test duplicate ignore for data store.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_duplicate_data_store.hdf5"
+    # Single storage, must be the uri
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Store data first time
+    storage._store_data(
+        kind="vector",
+        meta_md5="md5",
+        element=[{"sub": "001"}],
+        data=np.empty((1, 1)),
+    )
+    # Store data second time, should be ignored
+    storage._store_data(
+        kind="vector",
+        meta_md5="md5",
+        element=[{"sub": "001"}],
+        data=np.empty((1, 1)),
+    )
+
+
+def test_store_data_incorrect_kwargs(tmp_path: Path) -> None:
+    """Test incorrect kwargs for data store.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_incorrect_kwargs_data_store.hdf5"
+    # Single storage, must be the uri
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Store data first time
+    storage._store_data(
+        kind="vector",
+        meta_md5="md5",
+        element=[{"sub": "001"}],
+        data=np.empty((1, 1)),
+    )
+    # Store data second time, should be ignored
+    with pytest.raises(RuntimeError, match="The additional data for"):
+        storage._store_data(
+            kind="vector",
+            meta_md5="md5",
+            element=[{"sub": "001"}],
+            data=np.empty((1, 1)),
+            col_names="col",
+        )
 
 
 def test_store_matrix(tmp_path: Path) -> None:
