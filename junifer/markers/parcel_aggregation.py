@@ -218,5 +218,5 @@ class ParcelAggregation(BaseMarker):
             out_labels.append(labels[t_v - 1])
 
         out_values = np.array(out_values).T
-        out = {"data": out_values, "columns": out_labels}
+        out = {"data": out_values, "col_names": out_labels}
         return out

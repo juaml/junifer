@@ -151,5 +151,5 @@ class SphereAggregation(BaseMarker):
         # Fit and transform the marker on the data
         out_values = masker.fit_transform(t_input_img)
         # Format the output
-        out = {"data": out_values, "columns": out_labels}
+        out = {"data": out_values, "col_names": out_labels}
         return out
