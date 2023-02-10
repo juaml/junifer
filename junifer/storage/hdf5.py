@@ -652,6 +652,15 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         row_header_col_name : str, optional
             The column name for the row header column (default "ROI").
 
+        Raises
+        ------
+        ValueError
+            If invalid ``matrix_kind`` is provided, ``diagonal = False``
+            for ``matrix_kind = "full"``, non-square data is provided
+            for ``matrix_kind = {"triu", "tril"}``, length of ``row_names``
+            do not match data row count, or length of ``col_names`` do not
+            match data column count.
+
         """
         # Matrix kind validation
         if matrix_kind not in ("triu", "tril", "full"):
