@@ -7,7 +7,6 @@
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 import pytest
 from numpy.testing import assert_array_equal
 from pandas.testing import assert_frame_equal
@@ -19,7 +18,7 @@ from junifer.storage.utils import element_to_prefix, process_meta
 def test_get_valid_inputs() -> None:
     """Test valid inputs."""
     storage = HDF5FeatureStorage(uri="/tmp")
-    assert storage.get_valid_inputs() == ["matrix", "table", "timeseries"]
+    assert storage.get_valid_inputs() == ["matrix", "vector", "timeseries"]
 
 
 def test_single_output(tmp_path: Path) -> None:
@@ -140,21 +139,14 @@ def test_read_df(tmp_path: Path) -> None:
         meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
     )
     # Data to store
-    data = np.array(
-        [
-            [1, 10],
-            [2, 20],
-        ]
-    )
-    row_header = "scan"
+    data = np.array([[1, 10]])
     col_headers = ["f1", "f2"]
     # Store table
-    storage.store_table(
+    storage.store_vector(
         meta_md5=meta_md5,
         element=element_to_store,
         data=data,
-        columns=col_headers,
-        rows_col_name=row_header,
+        col_names=col_headers,
     )
     # Read into dataframe and check
     df_md5 = storage.read_df(feature_md5=meta_md5)
@@ -226,22 +218,17 @@ def test_store_matrix(tmp_path: Path) -> None:
 
     # List the stored features
     features = storage.list_features()
-    # Get the first MD5
-    feature_md5 = list(features.keys())[0]
     # Check the MD5
-    assert "BOLD_fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[meta_md5]["name"]
 
     # Read into dataframe
-    read_df = storage.read_df(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=meta_md5)
     # Check shape of dataframe
-    assert read_df.shape == (1, 12)
+    assert read_df.shape == (4, 3)
     # Check data of dataframe
-    assert_array_equal(read_df.values[0], data.flatten())
-
-    # Format column headers
-    stored_col_headers = [f"{i}~{j}" for i in row_headers for j in col_headers]
+    assert_array_equal(read_df.values, data)
     # Check column headers
-    assert list(read_df.columns) == stored_col_headers
+    assert read_df.columns.to_list() == col_headers
 
     # Diagonal validation error
     with pytest.raises(ValueError, match="cannot be False"):
@@ -333,26 +320,17 @@ def test_store_matrix_without_headers(tmp_path: Path) -> None:
 
     # List the stored features
     features = storage.list_features()
-    # Get the first MD5
-    feature_md5 = list(features.keys())[0]
     # Check the MD5
-    assert "BOLD_fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[meta_md5]["name"]
 
     # Read the dataframe
-    read_df = storage.read_df(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=meta_md5)
     # Check shape of dataframe
-    assert read_df.shape == (1, 12)
+    assert read_df.shape == (4, 3)
     # Check data of dataframe
-    assert_array_equal(read_df.values[0], data.flatten())
-
-    # Format column headers
-    stored_col_headers = [
-        f"r{i}~c{j}"
-        for i in range(data.shape[0])
-        for j in range(data.shape[1])
-    ]
+    assert_array_equal(read_df.values, data)
     # Check column headers
-    assert list(read_df.columns) == stored_col_headers
+    assert read_df.columns.to_list() == ["c0", "c1", "c2"]
 
 
 def test_store_upper_triangular_matrix(tmp_path: Path) -> None:
@@ -397,29 +375,15 @@ def test_store_upper_triangular_matrix(tmp_path: Path) -> None:
 
     # List the stored features
     features = storage.list_features()
-    # Get the first MD5
-    feature_md5 = list(features.keys())[0]
     # Check the MD5
-    assert "BOLD_fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[meta_md5]["name"]
 
     # Read into dataframe
-    read_df = storage.read_df(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=meta_md5)
     # Check data of dataframe
-    assert_array_equal(
-        read_df.values, data[np.triu_indices(n=data.shape[0])][None, :]
-    )
-
-    # Format column headers
-    stored_col_headers = [
-        "row1~col1",
-        "row1~col2",
-        "row1~col3",
-        "row2~col2",
-        "row2~col3",
-        "row3~col3",
-    ]
+    assert_array_equal(read_df.values, data)
     # Check column headers
-    assert list(read_df.columns) == stored_col_headers
+    assert read_df.columns.to_list() == col_headers
 
 
 def test_store_upper_triangular_matrix_without_diagonal(
@@ -467,26 +431,15 @@ def test_store_upper_triangular_matrix_without_diagonal(
 
     # List the stored features
     features = storage.list_features()
-    # Get the first MD5
-    feature_md5 = list(features.keys())[0]
     # Check the MD5
-    assert "BOLD_fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[meta_md5]["name"]
 
     # Read into dataframe
-    read_df = storage.read_df(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=meta_md5)
     # Check data of dataframe
-    assert_array_equal(
-        read_df.values, data[np.triu_indices(n=data.shape[0], k=1)][None, :]
-    )
-
-    # Format column headers
-    stored_col_headers = [
-        "row1~col2",
-        "row1~col3",
-        "row2~col3",
-    ]
+    assert_array_equal(read_df.values, data)
     # Check column headers
-    assert list(read_df.columns) == stored_col_headers
+    assert read_df.columns.to_list() == col_headers
 
 
 def test_store_lower_triangular_matrix(tmp_path: Path) -> None:
@@ -531,29 +484,15 @@ def test_store_lower_triangular_matrix(tmp_path: Path) -> None:
 
     # List the stored features
     features = storage.list_features()
-    # Get the first MD5
-    feature_md5 = list(features.keys())[0]
     # Check the MD5
-    assert "BOLD_fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[meta_md5]["name"]
 
     # Read into dataframe
-    read_df = storage.read_df(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=meta_md5)
     # Check data of dataframe
-    assert_array_equal(
-        read_df.values, data[np.tril_indices(n=data.shape[0])][None, :]
-    )
-
-    # Format column headers
-    stored_col_headers = [
-        "row1~col1",
-        "row2~col1",
-        "row2~col2",
-        "row3~col1",
-        "row3~col2",
-        "row3~col3",
-    ]
+    assert_array_equal(read_df.values, data)
     # Check column headers
-    assert list(read_df.columns) == stored_col_headers
+    assert read_df.columns.to_list() == col_headers
 
 
 def test_store_lower_triangular_matrix_without_diagonal(
@@ -601,30 +540,19 @@ def test_store_lower_triangular_matrix_without_diagonal(
 
     # List the stored features
     features = storage.list_features()
-    # Get the first MD5
-    feature_md5 = list(features.keys())[0]
     # Check the MD5
-    assert "BOLD_fc" == features[feature_md5]["name"]
+    assert "BOLD_fc" == features[meta_md5]["name"]
 
     # Read into dataframe
-    read_df = storage.read_df(feature_md5=feature_md5)
+    read_df = storage.read_df(feature_md5=meta_md5)
     # Check data of dataframe
-    assert_array_equal(
-        read_df.values, data[np.tril_indices(n=data.shape[0], k=-1)][None, :]
-    )
-
-    # Format column headers
-    stored_col_headers = [
-        "row2~col1",
-        "row3~col1",
-        "row3~col2",
-    ]
+    assert_array_equal(read_df.values, data)
     # Check column headers
-    assert list(read_df.columns) == stored_col_headers
+    assert read_df.columns.to_list() == col_headers
 
 
-def test_store_table(tmp_path: Path) -> None:
-    """Test table store.
+def test_store_vector(tmp_path: Path) -> None:
+    """Test vector store.
 
     Parameters
     ----------
@@ -632,7 +560,7 @@ def test_store_table(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    uri = tmp_path / "test_store_table.hdf5"
+    uri = tmp_path / "test_store_vector.hdf5"
     storage = HDF5FeatureStorage(uri=uri)
     # Metadata to store
     element = {"subject": "test"}
@@ -650,79 +578,65 @@ def test_store_table(tmp_path: Path) -> None:
     )
 
     # Data to store
-    data = np.array(
-        [
-            [1, 10],
-            [2, 20],
-            [3, 30],
-            [4, 40],
-            [5, 50],
-        ]
-    )
-    row_header = "scan"
-    col_headers = ["f1", "f2"]
+    data = [10, 20, 30, 40, 50]
+    col_names = ["f1", "f2", "f3", "f4", "f5"]
 
-    # Store table
-    storage.store_table(
+    # Store vector
+    storage.store_vector(
         meta_md5=meta_md5,
         element=element_to_store,
         data=data,
-        columns=col_headers,
-        rows_col_name=row_header,
+        col_names=col_names,
     )
-
-    # Convert element to index dict
-    idx_dict = storage._element_metadata_to_index_dict(
-        element=element,
-        n_rows=5,
-        row_headers="scan",
-    )
-    # Convert index dict to index
-    idx = storage._index_dict_to_multiindex(
-        index_dict=idx_dict["idx_data"],  # type: ignore
-        index_columns_order=idx_dict["idx_columns_order"],  # type: ignore
-        n_rows=idx_dict["n_rows"],  # type: ignore
-    )
-    # Create dataframe
-    df = pd.DataFrame(data, columns=["f1", "f2"], index=idx)
 
     # Read into dataframe
     read_df = storage.read_df(feature_md5=meta_md5)
-    # Check if dataframes are equal
-    assert_frame_equal(df, read_df)
+    # Check if data are equal
+    assert read_df.values.flatten().tolist() == data
 
-    # New data to store
-    data_new = np.array(
-        [[1, 10], [2, 20], [3, 300], [4, 40], [5, 50], [6, 600]]
-    )
-    # Convert element to index dict
-    idx_dict_new = storage._element_metadata_to_index_dict(
-        element=element,
-        n_rows=6,
-        row_headers="scan",
-    )
-    # Convert index dict to index
-    idx_new = storage._index_dict_to_multiindex(
-        index_dict=idx_dict_new["idx_data"],  # type: ignore
-        index_columns_order=idx_dict_new["idx_columns_order"],  # type: ignore
-        n_rows=idx_dict_new["n_rows"],  # type: ignore
-    )
-    # Create new dataframe
-    df_new = pd.DataFrame(data_new, columns=["f1", "f2"], index=idx_new)
 
-    # Store table
-    storage.store_table(
+def test_store_timeseries(tmp_path: Path) -> None:
+    """Test timeseries store.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_store_timeseries.hdf5"
+    storage = HDF5FeatureStorage(uri=uri)
+    # Metadata to store
+    element = {"subject": "test"}
+    meta = {
+        "element": element,
+        "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "BOLD",
+    }
+    # Process the metadata
+    meta_md5, meta_to_store, element_to_store = process_meta(meta)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
+
+    # Data to store
+    data = np.array([[10], [20], [30], [40], [50]])
+    col_names = ["signal"]
+
+    # Store vector
+    storage.store_timeseries(
         meta_md5=meta_md5,
         element=element_to_store,
-        data=data_new,
-        columns=["f1", "f2"],
-        rows_col_name="scan",
+        data=data,
+        col_names=col_names,
     )
 
     # Read into dataframe
-    read_df_new = storage.read_df(feature_md5=meta_md5)
-    # Check if dataframes are equal
-    assert_frame_equal(df_new, read_df_new)
+    read_df = storage.read_df(feature_md5=meta_md5)
+    # Check if data are equal
+    assert_array_equal(read_df.values, data)
 
 
 def test_multi_output_store_and_collect(tmp_path: Path):
@@ -758,19 +672,10 @@ def test_multi_output_store_and_collect(tmp_path: Path):
     }
 
     # Data to store
-    data_1 = np.array(
-        [
-            [1, 10],
-            [2, 20],
-            [3, 30],
-            [4, 40],
-            [5, 50],
-        ]
-    )
+    data_1 = np.array([10, 20, 30, 40, 50])
     data_2 = data_1 * 10
     data_3 = data_1 * 20
-    row_header = "scan"
-    col_headers = ["f1", "f2"]
+    col_headers = ["f1", "f2", "f3", "f4", "f5"]
 
     # Process metadata for storage
     hash_1, meta_to_store_1, element_to_store_1 = process_meta(meta_1)
@@ -803,26 +708,23 @@ def test_multi_output_store_and_collect(tmp_path: Path):
     )
 
     # Store tables
-    storage.store_table(
+    storage.store_vector(
         meta_md5=hash_1,
         element=element_to_store_1,
         data=data_1,
-        columns=col_headers,
-        rows_col_name=row_header,
+        col_names=col_headers,
     )
-    storage.store_table(
+    storage.store_vector(
         meta_md5=hash_2,
         element=element_to_store_2,
         data=data_2,
-        columns=col_headers,
-        rows_col_name=row_header,
+        col_names=col_headers,
     )
-    storage.store_table(
+    storage.store_vector(
         meta_md5=hash_3,
         element=element_to_store_3,
         data=data_3,
-        columns=col_headers,
-        rows_col_name=row_header,
+        col_names=col_headers,
     )
 
     # Check that base URI does not exist yet
@@ -858,10 +760,10 @@ def test_multi_output_store_and_collect(tmp_path: Path):
     assert uri.exists()
 
     # Read unified metadata
-    read_unified_meta = storage._read_metadata()
+    read_unified_meta = storage.list_features()
 
     # Check if aggregated metadata are equal
-    assert read_unified_meta == [read_meta_1, read_meta_2, read_meta_3]
+    assert read_unified_meta == {**read_meta_1, **read_meta_2, **read_meta_3}
 
 
 def test_collect_error_single_output() -> None:
