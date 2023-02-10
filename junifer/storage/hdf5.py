@@ -349,7 +349,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
             if hdf_data["kind"] == "matrix":
                 # Get row count
-                n_rows, _ = hdf_data["data"][0, :, :].shape
+                n_rows, n_cols = hdf_data["data"][0, :, :].shape
                 for element in hdf_data["element"]:
                     for key, val in element.items():
                         element_idx_dict[key].extend([val] * n_rows)
@@ -358,7 +358,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                         hdf_data["row_header_column_name"]
                     ].extend(hdf_data["row_headers"])
                 # Convert data from 3D to 2D
-                reshaped_data = hdf_data["data"].reshape(-1, n_rows)
+                reshaped_data = hdf_data["data"].reshape(-1, n_cols)
             elif hdf_data["kind"] == "vector":
                 for element in hdf_data["element"]:
                     for key, val in element.items():
