@@ -6,7 +6,7 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -78,7 +78,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     @staticmethod
     def element_to_index(
         element: Dict, n_rows: int = 1, rows_col_name: Optional[str] = None
-    ) -> pd.MultiIndex:
+    ) -> Union[pd.Index, pd.MultiIndex]:
         """Convert the element metadata to index.
 
         Parameters
@@ -93,7 +93,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
         Returns
         -------
-        pandas.MultiIndex
+        pandas.Index or pandas.MultiIndex
             The index of the dataframe to store.
 
         """
@@ -102,7 +102,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             k: [v] * n_rows for k, v in element.items()
         }
 
-        # Set rows_col_name if n_rows > 1
+        # Set rows_col_name if n_rows > 1 (timeseries)
         if n_rows > 1:
             # Set rows_col_name if None
             if rows_col_name is None:
@@ -110,10 +110,18 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             # Set extra column for variable number of rows per element
             elem_idx[rows_col_name] = np.arange(n_rows)
 
-        # Create index
-        index = pd.MultiIndex.from_frame(
-            pd.DataFrame(elem_idx, index=range(n_rows))
-        )
+        # Create correct index for elements with single access variable
+        if len(elem_idx) == 1:
+            # Create normal index for vector
+            index = pd.Index(
+                data=list(elem_idx.values())[0], name=list(elem_idx.keys())[0]
+            )
+        else:
+            # Create multiindex for timeseries
+            index = pd.MultiIndex.from_frame(
+                pd.DataFrame(elem_idx, index=range(n_rows))
+            )
+
         return index
 
     def store_df(
