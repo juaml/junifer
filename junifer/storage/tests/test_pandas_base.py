@@ -14,15 +14,12 @@ def test_element_to_index() -> None:
 
     # First test; no extra column
     index = PandasBaseFeatureStorage.element_to_index(element=element)
-    # Check index names
-    assert index.names == ["foo"]
-    # Check first index level name
-    assert index.levels[0].name == "foo"  # type: ignore
-    # Check first index level values
-    assert index.levels[0].values[0] == "bar"  # type: ignore
-    assert all(x == "bar" for x in index.levels[0].values)  # type: ignore
-    # Check first index level values shape
-    assert index.levels[0].values.shape == (1,)  # type: ignore
+    # Check index name
+    assert index.name == "foo"
+    # # Check index values
+    assert all(x == "bar" for x in index.values)  # type: ignore
+    # Check index values shape
+    assert index.shape == (1,)  # type: ignore
 
     # Second test; add extra column
     index = PandasBaseFeatureStorage.element_to_index(
@@ -49,15 +46,12 @@ def test_element_to_index() -> None:
     index = PandasBaseFeatureStorage.element_to_index(
         element=element, n_rows=1, rows_col_name="scan"
     )
-    # Check index names
-    assert index.names == ["foo"]
-    # Check first index level name
-    assert index.levels[0].name == "foo"  # type: ignore
-    # Check first index level values
-    assert index.levels[0].values[0] == "bar"  # type: ignore
-    assert all(x == "bar" for x in index.levels[0].values)  # type: ignore
-    # Check first index level values shape
-    assert index.levels[0].values.shape == (1,)  # type: ignore
+    # Check index name
+    assert index.name == "foo"
+    # Check index values
+    assert all(x == "bar" for x in index.values)  # type: ignore
+    # Check index values shape
+    assert index.shape == (1,)  # type: ignore
 
     # Fourth test; custom extra column name has effect
     index = PandasBaseFeatureStorage.element_to_index(
