@@ -7,7 +7,7 @@
 from typing import Any, Dict, List, Optional, Union
 
 from ..api.decorators import register_marker
-from ..data import load_coordinates, get_mask
+from ..data import get_mask, load_coordinates
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
 from ..utils import logger
