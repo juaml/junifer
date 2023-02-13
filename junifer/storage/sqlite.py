@@ -225,7 +225,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Format index names for retrieved data
         meta_df.index = meta_df.index.str.replace(r"meta_", "")
         # Convert dataframe to dictionary
-        out: Dict[str, Dict[str, str]] = meta_df.to_dict(orient="index")  # type: ignore
+        out: Dict[str, Dict[str, str]] = meta_df.to_dict(
+            orient="index"
+        )  # type: ignore
         # Format output
         for md5, t_meta in out.items():
             for k, v in t_meta.items():
