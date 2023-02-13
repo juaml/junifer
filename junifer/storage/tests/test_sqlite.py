@@ -742,41 +742,28 @@ def test_store_multiple_output(tmp_path: Path):
         "type": "BOLD",
     }
     # Data to store
-    data1 = np.array(
-        [
-            [1, 10],
-            [2, 20],
-            [3, 30],
-            [4, 40],
-            [5, 50],
-        ]
-    )
+    data1 = np.array([[10, 20, 30, 40, 50]])
     data2 = data1 * 10
     data3 = data1 * 20
+    col_names = ["f1", "f2", "f3", "f4", "f5"]
     # Process metadata for storage
     hash1, meta_to_store1, element_to_store1 = process_meta(meta1)
     # Convert element to index
-    idx1 = storage.element_to_index(
-        element_to_store1, n_rows=5, rows_col_name="scan"
-    )
+    idx1 = storage.element_to_index(element=element_to_store1)
     # Create dataframe
-    df1 = pd.DataFrame(data1, columns=["f1", "f2"], index=idx1)
+    df1 = pd.DataFrame(data1, columns=col_names, index=idx1)
     # Process metadata for storage
     hash2, meta_to_store2, element_to_store2 = process_meta(meta2)
     # Convert element to index
-    idx2 = storage.element_to_index(
-        element_to_store2, n_rows=5, rows_col_name="scan"
-    )
+    idx2 = storage.element_to_index(element=element_to_store2)
     # Create dataframe
-    df2 = pd.DataFrame(data2, columns=["f1", "f2"], index=idx2)
+    df2 = pd.DataFrame(data2, columns=col_names, index=idx2)
     # Process metadata for storage
     hash3, meta_to_store3, element_to_store3 = process_meta(meta3)
     # Convert element to index
-    idx3 = storage.element_to_index(
-        element_to_store3, n_rows=5, rows_col_name="scan"
-    )
+    idx3 = storage.element_to_index(element=element_to_store3)
     # Create dataframe
-    df3 = pd.DataFrame(data3, columns=["f1", "f2"], index=idx3)
+    df3 = pd.DataFrame(data3, columns=col_names, index=idx3)
     # Check hash equality
     assert hash1 == hash2
     assert hash2 == hash3
@@ -794,22 +781,19 @@ def test_store_multiple_output(tmp_path: Path):
         meta_md5=hash1,
         element=element_to_store1,
         data=data1,
-        columns=["f1", "f2"],
-        rows_col_name="scan",
+        col_names=col_names,
     )
     storage.store_vector(
         meta_md5=hash2,
         element=element_to_store2,
         data=data2,
-        columns=["f1", "f2"],
-        rows_col_name="scan",
+        col_names=col_names,
     )
     storage.store_vector(
         meta_md5=hash3,
         element=element_to_store3,
         data=data3,
-        columns=["f1", "f2"],
-        rows_col_name="scan",
+        col_names=col_names,
     )
     # Check that URI does not exist yet
     assert not uri.exists()
@@ -826,12 +810,12 @@ def test_store_multiple_output(tmp_path: Path):
     assert uri2.exists()
     assert uri3.exists()
     # Set index columns
-    cols = ["subject", "session", "scan"]
+    idx_cols = ["subject", "session"]
     table_name = f"meta_{hash1}"
     # Read stored tables
-    cdf1 = _read_sql(table_name, uri1.as_posix(), index_col=cols)
-    cdf2 = _read_sql(table_name, uri2.as_posix(), index_col=cols)
-    cdf3 = _read_sql(table_name, uri3.as_posix(), index_col=cols)
+    cdf1 = _read_sql(table_name, uri1.as_posix(), index_col=idx_cols)
+    cdf2 = _read_sql(table_name, uri2.as_posix(), index_col=idx_cols)
+    cdf3 = _read_sql(table_name, uri3.as_posix(), index_col=idx_cols)
     # Check if dataframes are equal
     assert_frame_equal(df1, cdf1)
     assert_frame_equal(df2, cdf2)
@@ -898,22 +882,19 @@ def test_collect(tmp_path: Path) -> None:
         meta_md5=hash1,
         element=element_to_store1,
         data=data1,
-        columns=["f1", "f2"],
-        rows_col_name="scan",
+        col_names=["f1", "f2"],
     )
     storage.store_vector(
         meta_md5=hash2,
         element=element_to_store2,
         data=data2,
-        columns=["f1", "f2"],
-        rows_col_name="scan",
+        col_names=["f1", "f2"],
     )
     storage.store_vector(
         meta_md5=hash3,
         element=element_to_store3,
         data=data3,
-        columns=["f1", "f2"],
-        rows_col_name="scan",
+        col_names=["f1", "f2"],
     )
     # Convert element to prefix
     prefix1 = element_to_prefix(meta1["element"])
@@ -934,7 +915,7 @@ def test_collect(tmp_path: Path) -> None:
     # Check that URI exists now
     assert uri.exists()
     # Set index columns
-    cols = ["subject", "session", "scan"]
+    cols = ["subject", "session"]
     # Store metadata
     table_name = f"meta_{hash1}"
     # Read stored tables
