@@ -78,7 +78,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             )
             uri.parent.mkdir(parents=True, exist_ok=True)
         # Available storage kinds
-        storage_types = ["table", "timeseries", "matrix"]
+        storage_types = ["vector", "timeseries", "matrix"]
         super().__init__(
             uri=uri,
             storage_types=storage_types,
