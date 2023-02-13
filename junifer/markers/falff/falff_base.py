@@ -132,7 +132,7 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
             with this as a parameter. The dictionary has the following keys:
 
             * ``data`` : the actual computed values as a numpy.ndarray
-            * ``col_names`` : the column labels for the computed values as a list
+            * ``col_names`` : the column labels for the computed values as list
 
         """
         if self.use_afni is None:

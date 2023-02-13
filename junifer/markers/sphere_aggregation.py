@@ -126,7 +126,7 @@ class SphereAggregation(BaseMarker):
             with this as a parameter. The dictionary has the following keys:
 
             * ``data`` : the actual computed values as a numpy.ndarray
-            * ``col_names`` : the column labels for the computed values as a list
+            * ``col_names`` : the column labels for the computed values as list
 
         """
         t_input_img = input["data"]
