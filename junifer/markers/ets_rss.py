@@ -134,5 +134,5 @@ class RSSETSMarker(BaseMarker):
         # Compute the RSS
         out["data"] = np.sum(edge_ts**2, 1) ** 0.5
         # Set correct column label
-        out["columns"] = ["root_sum_of_squares_ets"]
+        out["col_names"] = ["root_sum_of_squares_ets"]
         return out
