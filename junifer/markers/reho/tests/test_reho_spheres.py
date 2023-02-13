@@ -35,7 +35,7 @@ def test_reho_spheres_computation() -> None:
         reho_spheres_output_bold = reho_spheres_output["BOLD"]
         # Assert BOLD output keys
         assert "data" in reho_spheres_output_bold
-        assert "columns" in reho_spheres_output_bold
+        assert "col_names" in reho_spheres_output_bold
 
         reho_spheres_output_bold_data = reho_spheres_output_bold["data"]
         # Assert BOLD output data dimension

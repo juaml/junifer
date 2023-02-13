@@ -35,7 +35,7 @@ def test_reho_parcels_computation() -> None:
         reho_parcels_output_bold = reho_parcels_output["BOLD"]
         # Assert BOLD output keys
         assert "data" in reho_parcels_output_bold
-        assert "columns" in reho_parcels_output_bold
+        assert "col_names" in reho_parcels_output_bold
 
         reho_parcels_output_bold_data = reho_parcels_output_bold["data"]
         # Assert BOLD output data dimension

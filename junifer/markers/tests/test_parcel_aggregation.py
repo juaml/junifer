@@ -364,7 +364,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
 
     # Data and labels should be the same
     assert_array_equal(orig_mean_data, split_mean_data)
-    assert orig_mean["columns"] == split_mean["columns"]
+    assert orig_mean["col_names"] == split_mean["col_names"]
 
 
 def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
@@ -446,5 +446,5 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
     assert_array_equal(orig_mean_data, split_mean_data)
 
     # Labels should be "low" for the first 50 and "high" for the second 50
-    assert all(x.startswith("low") for x in split_mean["columns"][:50])
-    assert all(x.startswith("high") for x in split_mean["columns"][50:])
+    assert all(x.startswith("low") for x in split_mean["col_names"][:50])
+    assert all(x.startswith("high") for x in split_mean["col_names"][50:])
