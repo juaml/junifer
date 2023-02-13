@@ -656,6 +656,60 @@ def test_store_matrix(tmp_path: Path) -> None:
     )
 
 
+def test_store_timeseries(tmp_path: Path) -> None:
+    """Test timeseries store.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_store_timeseries.sqlite"
+    storage = SQLiteFeatureStorage(uri=uri)
+    # Metadata to store
+    element = {"subject": "test"}
+    dependencies = ["numpy"]
+    meta = {
+        "element": element,
+        "dependencies": dependencies,
+        "marker": {"name": "fc"},
+        "type": "BOLD",
+    }
+
+    meta_md5, meta_to_store, element_to_store = process_meta(meta)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
+
+    # Data to store
+    data = np.array([[10], [20], [30], [40], [50]])
+    col_names = ["signal"]
+    # Convert element to index
+    idx = storage.element_to_index(
+        element=element, n_rows=5, rows_col_name="timepoint"
+    )
+    # Create dataframe
+    df = pd.DataFrame(data=data, columns=col_names, index=idx)
+
+    # Store table
+    storage.store_timeseries(
+        meta_md5=meta_md5,
+        element=element_to_store,
+        data=data,
+        col_names=col_names,
+    )
+    # Read stored table
+    c_df = _read_sql(
+        table_name=f"meta_{meta_md5}",
+        uri=uri.as_posix(),
+        index_col=["subject", "timepoint"],
+    )
+    # Check if dataframes are equal
+    assert_frame_equal(df, c_df)
+
+
 # TODO: can the test be parametrized?
 def test_store_multiple_output(tmp_path: Path):
     """Test storing using single_output=False.
