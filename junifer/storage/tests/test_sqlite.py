@@ -389,59 +389,28 @@ def test_store_vector(tmp_path: Path) -> None:
     )
 
     # Data to store
-    data = [
-        [1, 10],
-        [2, 20],
-        [3, 30],
-        [4, 40],
-        [5, 50],
-    ]
+    data = [[10, 20, 30, 40, 50]]
+    col_names = ["f1", "f2", "f3", "f4", "f5"]
     # Convert element to index
-    idx = storage.element_to_index(element, n_rows=5, rows_col_name="scan")
+    idx = storage.element_to_index(element=element)
     # Create dataframe
-    df = pd.DataFrame(data, columns=["f1", "f2"], index=idx)
+    df = pd.DataFrame(data=data, columns=col_names, index=idx)
 
     # Store table
     storage.store_vector(
         meta_md5=meta_md5,
         element=element_to_store,
         data=data,
-        columns=["f1", "f2"],
-        rows_col_name="scan",
+        col_names=col_names,
     )
     # Read stored table
     c_df = _read_sql(
         table_name=f"meta_{meta_md5}",
         uri=uri.as_posix(),
-        index_col=["subject", "scan"],
+        index_col=["subject"],
     )
     # Check if dataframes are equal
     assert_frame_equal(df, c_df)
-
-    # New data to store
-    data_new = [[1, 10], [2, 20], [3, 300], [4, 40], [5, 50], [6, 600]]
-    # Convert element to index
-    idx_new = storage.element_to_index(element, n_rows=6, rows_col_name="scan")
-    # Create dataframe
-    df_new = pd.DataFrame(data_new, columns=["f1", "f2"], index=idx_new)
-    # Check warning
-    with pytest.warns(RuntimeWarning, match=r"Some rows"):
-        # Store table
-        storage.store_vector(
-            meta_md5=meta_md5,
-            element=element_to_store,
-            data=data_new,
-            columns=["f1", "f2"],
-            rows_col_name="scan",
-        )
-    # Read stored table
-    c_df_new = _read_sql(
-        table_name=f"meta_{meta_md5}",
-        uri=uri.as_posix(),
-        index_col=["subject", "scan"],
-    )
-    # Check if dataframes are equal
-    assert_frame_equal(df_new, c_df_new)
 
 
 def test_store_matrix(tmp_path: Path) -> None:
