@@ -51,7 +51,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             storage interface.
 
         """
-        return ["matrix", "table", "timeseries"]
+        return ["matrix", "vector", "timeseries"]
 
     def _meta_row(self, meta: Dict, meta_md5: str) -> pd.DataFrame:
         """Convert the metadata to a pandas DataFrame.
