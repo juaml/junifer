@@ -198,6 +198,16 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The column labels (default None).
 
         """
+        if isinstance(data, list):
+            # Flatten out list and convert to np.ndarray
+            processed_data = np.array(np.ravel(data))
+        elif isinstance(data, np.ndarray):
+            # Flatten out array
+            processed_data = data.ravel()
+
+        # Make it 2D
+        processed_data = processed_data[np.newaxis, :]
+
         self._store_2d(
             meta_md5=meta_md5,
             element=element,
