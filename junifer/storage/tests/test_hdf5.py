@@ -330,6 +330,55 @@ def test_store_data_incorrect_kwargs(tmp_path: Path) -> None:
         )
 
 
+@pytest.mark.parametrize(
+    "force, dtype",
+    [
+        (True, "float32"),
+        (False, "float64"),
+    ],
+)
+def test_f64_to_f632_conversion(
+    tmp_path: Path, force: bool, dtype: str
+) -> None:
+    """Test actual data is casted from float64 to float32.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    force : bool
+        The parametrized conversion option.
+    dtype : str
+        The parametrized expected data type.
+
+    """
+    uri = tmp_path / "test_data_conversion.hdf5"
+    storage = HDF5FeatureStorage(uri=uri, force_float32=force)
+    # Metadata to store
+    meta = {
+        "element": {"subject": "test"},
+        "dependencies": ["numpy"],
+        "marker": {"name": "mark"},
+        "type": "BOLD",
+    }
+    # Process the metadata
+    meta_md5, meta_to_store, element_to_store = process_meta(meta)
+    # Store matrix
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
+    # Store data
+    storage.store_matrix(
+        meta_md5=meta_md5,
+        element=element_to_store,
+        data=np.arange(4, dtype="float64").reshape((2, 2)),
+    )
+    # Read into dataframe
+    read_df = storage.read_df(feature_md5=meta_md5)
+    # Check data type
+    assert read_df.values.dtype == np.dtype(dtype)
+
+
 def test_store_matrix(tmp_path: Path) -> None:
     """Test matrix store.
 
