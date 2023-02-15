@@ -39,6 +39,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         if "update", will update existing entry or append (default "update").
     compression : {0-9}, optional
         Level of gzip compression: 0 (lowest) to 9 (highest) (default 7).
+    force_float32 : bool, optional
+        Whether to force casting of numpy.ndarray values to float32 if float64
+        values are found (default True).
     **kwargs : dict
         The keyword arguments passed to the superclass.
 
@@ -54,6 +57,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         single_output: bool = True,
         overwrite: Union[bool, str] = "update",
         compression: int = 7,
+        force_float32: bool = True,
         **kwargs: str,
     ) -> None:
         # Convert str to Path
@@ -80,6 +84,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         self.overwrite = overwrite
         self.compression = compression
+        self.force_float32 = force_float32
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid storage types for input.
@@ -528,6 +533,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Initialize dictionary to aggregate data to write
         data_to_write = kwargs
+
+        # Optional casting of float64 values to float32 for numpy.ndarray
+        if data.dtype == np.dtype("float64") and self.force_float32:
+            data = data.astype(dtype=np.dtype("float32"), casting="same_kind")
 
         # Handle cases for existing and new entry
         if not stored_data:
