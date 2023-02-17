@@ -7,7 +7,7 @@
 from typing import Any, Dict, List, Optional, Union
 
 from ..api.decorators import register_marker
-from ..data import load_coordinates, get_mask
+from ..data import get_mask, load_coordinates
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
 from ..utils import logger
@@ -94,7 +94,7 @@ class SphereAggregation(BaseMarker):
         """
 
         if input_type in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
-            return "table"
+            return "vector"
         elif input_type == "BOLD":
             return "timeseries"
         else:
@@ -126,7 +126,7 @@ class SphereAggregation(BaseMarker):
             with this as a parameter. The dictionary has the following keys:
 
             * ``data`` : the actual computed values as a numpy.ndarray
-            * ``columns`` : the column labels for the computed values as a list
+            * ``col_names`` : the column labels for the computed values as list
 
         """
         t_input_img = input["data"]
@@ -151,5 +151,5 @@ class SphereAggregation(BaseMarker):
         # Fit and transform the marker on the data
         out_values = masker.fit_transform(t_input_img)
         # Format the output
-        out = {"data": out_values, "columns": out_labels}
+        out = {"data": out_values, "col_names": out_labels}
         return out

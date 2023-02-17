@@ -110,8 +110,7 @@ class RSSETSMarker(BaseMarker):
             keys:
 
             * ``data`` : the actual computed values as a numpy.ndarray
-            * ``columns`` : the column labels for the computed values as a list
-            * ``row_names`` (if more than one row is present in data): "scan"
+            * ``col_names`` : the column labels for the computed values as list
 
         References
         ----------
@@ -135,5 +134,5 @@ class RSSETSMarker(BaseMarker):
         # Compute the RSS
         out["data"] = np.sum(edge_ts**2, 1) ** 0.5
         # Set correct column label
-        out["columns"] = ["root_sum_of_squares_ets"]
+        out["col_names"] = ["root_sum_of_squares_ets"]
         return out

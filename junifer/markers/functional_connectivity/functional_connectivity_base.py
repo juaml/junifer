@@ -143,7 +143,7 @@ class FunctionalConnectivityBase(BaseMarker):
         out = {}
         out["data"] = connectivity.fit_transform([aggregation["data"]])[0]
         # Create column names
-        out["row_names"] = aggregation["columns"]
-        out["col_names"] = aggregation["columns"]
+        out["row_names"] = aggregation["col_names"]
+        out["col_names"] = aggregation["col_names"]
         out["matrix_kind"] = "tril"
         return out

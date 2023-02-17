@@ -87,7 +87,7 @@ def test_marker_collection() -> None:
             assert "VBM_GM" in out[t_name]
             t_vbm = out[t_name]["VBM_GM"]
             assert "data" in t_vbm
-            assert "columns" in t_vbm
+            assert "col_names" in t_vbm
             assert "meta" in t_vbm
 
     # Test preprocessing
@@ -199,19 +199,19 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     t_feature = storage.read_df(feature_md5=feature_md5)
     fname = "gmd_schaefer100x7_mean"
     t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
-    cols = out[fname]["VBM_GM"]["columns"]  # type: ignore
+    cols = out[fname]["VBM_GM"]["col_names"]  # type: ignore
     assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
 
     feature_md5 = list(features.keys())[1]
     t_feature = storage.read_df(feature_md5=feature_md5)
     fname = "gmd_schaefer100x7_std"
     t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
-    cols = out[fname]["VBM_GM"]["columns"]  # type: ignore
+    cols = out[fname]["VBM_GM"]["col_names"]  # type: ignore
     assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
 
     feature_md5 = list(features.keys())[2]
     t_feature = storage.read_df(feature_md5=feature_md5)
     fname = "gmd_schaefer100x7_trim_mean90"
     t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
-    cols = out[fname]["VBM_GM"]["columns"]  # type: ignore
+    cols = out[fname]["VBM_GM"]["col_names"]  # type: ignore
     assert_array_equal(t_feature[cols].values, t_data)  # type: ignore

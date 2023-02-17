@@ -6,7 +6,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -57,8 +57,9 @@ class BaseFeatureStorage(ABC):
         Returns
         -------
         list of str
-            The list of storage types that can be used as input for this "
-            "storage.
+            The list of storage types that can be used as input for this
+            storage interface.
+
         """
         raise_error(
             msg="Concrete classes need to implement get_valid_inputs().",
@@ -87,15 +88,15 @@ class BaseFeatureStorage(ABC):
             )
 
     @abstractmethod
-    def list_features(self) -> Dict:
+    def list_features(self) -> Dict[str, Dict[str, Any]]:
         """List the features in the storage.
 
         Returns
         -------
         dict
-            List of features in the storage. The keys are the feature names to
-            be used in read_features() and the values are the metadata of each
-            feature.
+            List of features in the storage. The keys are the feature MD5 to
+            be used in :meth:`junifer.storage.BaseFeatureStorage.read_df`
+            and the values are the metadata of each feature.
 
         """
         raise_error(
@@ -107,7 +108,7 @@ class BaseFeatureStorage(ABC):
     def read_df(
         self,
         feature_name: Optional[str] = None,
-        feature_md5: Optional[bool] = None,
+        feature_md5: Optional[str] = None,
     ) -> pd.DataFrame:
         """Read feature into a pandas DataFrame.
 
@@ -152,7 +153,7 @@ class BaseFeatureStorage(ABC):
 
         Parameters
         ----------
-        kind : {"matrix", "timeseries", "table"}
+        kind : {"matrix", "timeseries", "vector"}
             The storage kind.
         **kwargs
             The keyword arguments.
@@ -179,8 +180,8 @@ class BaseFeatureStorage(ABC):
             self.store_timeseries(
                 meta_md5=meta_md5, element=t_element, **kwargs
             )
-        elif kind == "table":
-            self.store_table(meta_md5=meta_md5, element=t_element, **kwargs)
+        elif kind == "vector":
+            self.store_vector(meta_md5=meta_md5, element=t_element, **kwargs)
 
     def store_matrix(
         self,
@@ -203,11 +204,9 @@ class BaseFeatureStorage(ABC):
         data : numpy.ndarray
             The matrix data to store.
         col_names : list or tuple of str, optional
-            The column names (default None).
+            The column labels (default None).
         row_names : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+            The row labels (default None).
         matrix_kind : str, optional
             The kind of matrix:
 
@@ -217,23 +216,23 @@ class BaseFeatureStorage(ABC):
 
             (default "full").
         diagonal : bool, optional
-            Whether to store the diagonal. If `matrix_kind` is "full", setting
+            Whether to store the diagonal. If ``matrix_kind = full``, setting
             this to False will raise an error (default True).
+
         """
         raise_error(
-            msg="Concrete classes need to implement store_matrix2d().",
+            msg="Concrete classes need to implement store_matrix().",
             klass=NotImplementedError,
         )
 
-    def store_table(
+    def store_vector(
         self,
         meta_md5: str,
         element: Dict,
         data: Union[np.ndarray, List],
-        columns: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
+        col_names: Optional[Iterable[str]] = None,
     ) -> None:
-        """Store table.
+        """Store vector.
 
         Parameters
         ----------
@@ -242,16 +241,13 @@ class BaseFeatureStorage(ABC):
         element : dict
             The element as a dictionary.
         data : numpy.ndarray or list
-            The table data to store.
-        columns : list or tuple of str, optional
-            The columns (default None).
-        rows_col_name : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+            The vector data to store.
+        col_names : list or tuple of str, optional
+            The column labels (default None).
+
         """
         raise_error(
-            msg="Concrete classes need to implement store_table().",
+            msg="Concrete classes need to implement store_vector().",
             klass=NotImplementedError,
         )
 
@@ -260,9 +256,9 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: Dict,
         data: np.ndarray,
-        columns: Optional[Iterable[str]] = None,
+        col_names: Optional[Iterable[str]] = None,
     ) -> None:
-        """Implement timeseries storing.
+        """Store timeseries.
 
         Parameters
         ----------
@@ -272,8 +268,9 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        columns : list or tuple of str, optional
+        col_names : list or tuple of str, optional
             The column labels (default None).
+
         """
         raise_error(
             msg="Concrete classes need to implement store_timeseries().",

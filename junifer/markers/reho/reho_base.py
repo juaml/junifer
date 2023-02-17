@@ -70,7 +70,7 @@ class ReHoBase(BaseMarker):
             The storage type output by the marker.
 
         """
-        return "table"
+        return "vector"
 
     def compute_reho_map(
         self,

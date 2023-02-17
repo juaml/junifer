@@ -91,7 +91,7 @@ class ParcelAggregation(BaseMarker):
         """
 
         if input_type in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
-            return "table"
+            return "vector"
         elif input_type == "BOLD":
             return "timeseries"
         else:
@@ -123,7 +123,7 @@ class ParcelAggregation(BaseMarker):
             with this as a parameter. The dictionary has the following keys:
 
             * ``data`` : the actual computed values as a numpy.ndarray
-            * ``columns`` : the column labels for the computed values as a list
+            * ``col_names`` : the column labels for the computed values as list
 
         """
         t_input_img = input["data"]
@@ -218,5 +218,5 @@ class ParcelAggregation(BaseMarker):
             out_labels.append(labels[t_v - 1])
 
         out_values = np.array(out_values).T
-        out = {"data": out_values, "columns": out_labels}
+        out = {"data": out_values, "col_names": out_labels}
         return out

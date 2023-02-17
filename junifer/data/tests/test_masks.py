@@ -5,33 +5,27 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
 from typing import Callable, Dict, Union
 
-from pathlib import Path
-
 import pytest
-from numpy.testing import (
-    assert_array_almost_equal,
-    assert_array_equal,
-)
-
+from nilearn.datasets import fetch_icbm152_brain_gm_mask
 from nilearn.image import resample_to_img
 from nilearn.masking import (
-    compute_brain_mask,
     compute_background_mask,
+    compute_brain_mask,
     compute_epi_mask,
 )
-from nilearn.datasets import fetch_icbm152_brain_gm_mask
+from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 from junifer.data.masks import (
+    _available_masks,
     _load_vickery_patil_mask,
+    get_mask,
     list_masks,
     load_mask,
     register_mask,
-    get_mask,
-    _available_masks,
 )
-
 from junifer.datareader import DefaultDataReader
 from junifer.testing.datagrabbers import (
     OasisVBMTestingDatagrabber,

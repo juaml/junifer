@@ -150,6 +150,6 @@ class CrossParcellationFC(BaseMarker):
 
         return {
             "data": result,
-            "col_names": parcellation_one_dict["columns"],
-            "row_names": parcellation_two_dict["columns"],
+            "col_names": parcellation_one_dict["col_names"],
+            "row_names": parcellation_two_dict["col_names"],
         }

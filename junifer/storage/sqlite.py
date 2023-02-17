@@ -6,7 +6,7 @@
 
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -34,12 +34,12 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     uri : str or pathlib.Path
         The path to the file to be used.
     single_output : bool, optional
-        If False, will create one file per element. The name
+        If False, will create one SQLite file per element. The name
         of the file will be prefixed with the respective element.
-        If True, will create only one file as specified in the `uri` and
-        store all the elements in the same file. This behaviour is only
-        suitable for non-parallel executions. SQLite does not support
-        concurrency (default True).
+        If True, will create only one SQLite file as specified in the
+        ``uri`` and store all the elements in the same file. This behaviour
+        is only suitable for non-parallel executions. SQLite does not
+        support concurrency (default True).
     upsert : {"ignore", "update"}, optional
         Upsert mode. If "ignore" is used, the existing elements are ignored.
         If "update", the existing elements are updated (default "update").
@@ -78,7 +78,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             )
             uri.parent.mkdir(parents=True, exist_ok=True)
         # Available storage kinds
-        storage_types = ["table", "timeseries", "matrix"]
+        storage_types = ["vector", "timeseries", "matrix"]
         super().__init__(
             uri=uri,
             storage_types=storage_types,
@@ -93,8 +93,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
-        meta : dict, optional
-            The metadata as dictionary (default None).
+        element : dict, optional
+            The element as dictionary (default None).
 
         Returns
         -------
@@ -205,24 +205,30 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                         msg=f"Invalid option {if_exists} for if_exists."
                     )
 
-    def list_features(self) -> Dict:
+    def list_features(self) -> Dict[str, Dict[str, Any]]:
         """List the features in the storage.
 
         Returns
         -------
         dict
-            List of features in the storage. The keys are the feature names to
-            be used in read_features() and the values are the metadata of each
-            feature.
+            List of features in the storage. The keys are the feature MD5 to
+            be used in :meth:`junifer.storage.SQLiteFeatureStorage.read_df`
+            and the values are the metadata of each feature.
 
         """
+        # Retrieve meta table from storage
         meta_df = pd.read_sql(
             sql="meta",
             con=self.get_engine(),
             index_col="meta_md5",
         )
+        # Format index names for retrieved data
         meta_df.index = meta_df.index.str.replace(r"meta_", "")
-        out = meta_df.to_dict(orient="index")  # type: ignore
+        # Convert dataframe to dictionary
+        out: Dict[str, Dict[str, str]] = meta_df.to_dict(
+            orient="index"
+        )  # type: ignore
+        # Format output
         for md5, t_meta in out.items():
             for k, v in t_meta.items():
                 out[md5][k] = json.loads(v)
@@ -396,7 +402,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         matrix_kind: Optional[str] = "full",
         diagonal: bool = True,
     ) -> None:
-        """Implement matrix storing.
+        """Store matrix.
 
         Parameters
         ----------
@@ -409,11 +415,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         meta : dict
             The metadata as a dictionary.
         col_names : list or tuple of str, optional
-            The column names (default None).
+            The column labels (default None).
         row_names : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+            The row labels (optional None).
         matrix_kind : str, optional
             The kind of matrix:
 
@@ -423,7 +427,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
             (default "full").
         diagonal : bool, optional
-            Whether to store the diagonal. If `matrix_kind` is "full", setting
+            Whether to store the diagonal. If ``matrix_kind = full``, setting
             this to False will raise an error (default True).
 
         """
@@ -470,7 +474,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 klass=ValueError,
             )
 
+        # Subset data
         flat_data = data[data_idx]
+        # Generate flat 1D row X column names
         columns = [
             f"{row_names[i]}~{col_names[j]}"
             for i, j in zip(data_idx[0], data_idx[1])
@@ -484,6 +490,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Prepare new dataframe
         data_df = pd.DataFrame(flat_data[None, :], columns=columns, index=idx)
 
+        # SQLite's SQLITE_MAX_COLUMN is 2000, so if more than that,
+        # convert it to long format
         if len(columns) > 2000:
             warn_with_log(
                 msg="The number of columns is greater than 2000. "
@@ -510,7 +518,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         """
         if self.single_output is True:
-            raise_error(msg="collect() is not implemented for single output.")
+            raise_error(
+                msg="collect() is not implemented for single output.",
+                klass=IOError,
+            )
         logger.info(
             "Collecting data from "
             f"{self.uri.parent}/*{self.uri.name}"  # type: ignore

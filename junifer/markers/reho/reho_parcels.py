@@ -122,8 +122,7 @@ class ReHoParcels(ReHoBase):
             keys:
 
             * ``data`` : the actual computed values as a 1D numpy.ndarray
-            * ``columns`` : the column labels for the parcels as a list
-            * ``row_names`` : ``None``
+            * ``col_names`` : the column labels for the parcels as a list
 
         """
         logger.info("Calculating ReHo for parcels.")
