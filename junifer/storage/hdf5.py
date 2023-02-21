@@ -353,8 +353,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             element_idx_dict = defaultdict(list)
 
             if hdf_data["kind"] == "matrix":
-                # Get row count
-                n_rows, n_cols = hdf_data["data"][0, :, :].shape
+                # Get row and column count
+                n_rows, n_cols = hdf_data["data"][:, :, 0].shape
                 for element in hdf_data["element"]:
                     for key, val in element.items():
                         element_idx_dict[key].extend([val] * n_rows)
@@ -710,7 +710,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             kind="matrix",
             meta_md5=meta_md5,
             element=[element],  # convert to list
-            data=data[np.newaxis, :, :],  # convert to 3D
+            data=data[:, :, np.newaxis],  # convert to 3D
             column_headers=col_names,
             row_headers=row_names,
             matrix_kind=matrix_kind,
