@@ -371,7 +371,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             elif hdf_data["kind"] == "timeseries":
                 for idx, element in enumerate(hdf_data["element"]):
                     # Get row count for the element
-                    n_rows, _ = hdf_data["data"][idx, :, :].shape
+                    n_rows, _ = hdf_data["data"][:, :, idx].shape
                     for key, val in element.items():
                         element_idx_dict[key].extend([val] * n_rows)
                     # Add extra column for timepoints
@@ -787,7 +787,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             kind="timeseries",
             meta_md5=meta_md5,
             element=[element],  # convert to list
-            data=data[np.newaxis, :, :],  # convert to 3D
+            data=data[:, :, np.newaxis],  # convert to 3D
             column_headers=col_names,
             row_header_column_name="timepoint",
         )
