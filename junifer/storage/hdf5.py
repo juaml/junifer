@@ -595,7 +595,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 {
                     "element": stored_data["element"] + element,
                     "data": np.concatenate(
-                        (stored_data["data"], data), axis=0
+                        (stored_data["data"], data), axis=-1
                     ),
                     # for serialization / deserialization of storage type
                     "kind": kind,
