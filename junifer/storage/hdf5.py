@@ -368,6 +368,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 for element in hdf_data["element"]:
                     for key, val in element.items():
                         element_idx_dict[key].append(val)
+                # Convert data to proper 2D
+                reshaped_data = hdf_data["data"].T
             elif hdf_data["kind"] == "timeseries":
                 for idx, element in enumerate(hdf_data["element"]):
                     # Get row count for the element
@@ -751,14 +753,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             # Flatten out array
             processed_data = data.ravel()
 
-        # Make it 2D
-        processed_data = processed_data[np.newaxis, :]
-
         self._store_data(
             kind="vector",
             meta_md5=meta_md5,
             element=[element],  # convert to list
-            data=processed_data,
+            data=processed_data[:, np.newaxis],  # convert to 2D
             column_headers=col_names,
         )
 
