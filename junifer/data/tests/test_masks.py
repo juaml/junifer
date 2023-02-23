@@ -389,7 +389,7 @@ def test_get_mask_inherit() -> None:
 def test_get_mask_multiple(
     masks: Union[str, Dict, List[Union[Dict, str]]], params: Dict
 ) -> None:
-    """Test geting multiple masks."""
+    """Test getting multiple masks."""
     reader = DefaultDataReader()
     with SPMAuditoryTestingDatagrabber() as dg:
         input = dg["sub001"]
