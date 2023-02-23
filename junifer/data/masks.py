@@ -18,18 +18,14 @@ from typing import (
 import numpy as np
 
 import nibabel as nib
+
+from nilearn.datasets import fetch_icbm152_brain_gm_mask
+from nilearn.image import resample_to_img
 from nilearn.masking import (
     compute_brain_mask,
     compute_background_mask,
     compute_epi_mask,
     intersect_masks,
-)
-from nilearn.datasets import fetch_icbm152_brain_gm_mask
-from nilearn.image import resample_to_img
-from nilearn.masking import (
-    compute_background_mask,
-    compute_brain_mask,
-    compute_epi_mask,
 )
 
 from ..utils.logging import logger, raise_error
