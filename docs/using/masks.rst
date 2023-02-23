@@ -5,16 +5,17 @@
 Masks
 =====
 
-Masks are essentially boolean arrays that are used to constraint the extraction of features to voxels that are
-meaningful. For example, in an fMRI imaging study, the mask can be used to constrain the extraction of features to
-voxels that contain a certain ratio of gray matter, ensuring that the features are not extracted from voxels that
-contain mostly white matter or cerebrospinal fluid, which could add noise to the BOLD signal.
+Masks are essentially boolean arrays that are used to constrain the extraction of features to voxels that are
+meaningful. For example, in an fMRI imaging study, a mask can be used to constrain the extraction of features to
+voxels that contain a certain ratio of gray matter to white matter / cerebrospinal fluid, ensuring that the features
+are not extracted from voxels that contain mostly white matter or cerebrospinal fluid, which could add noise to the
+BOLD signal.
 
 Junifer provides a number of built-in masks, which can be listed using the :func:`junifer.data.masks.list_masks`. Some
 masks are images, while other masks can be computed using :ref:`nilearn` functions. 
 
-For markers and steps that accept `masks` as an argument, the mask can be specified as a string, which will be the
-name of a built-in mask, or as a dictionary in which the _only_ key is the built-in mask name and the value is a 
+For markers and steps that accept ``masks`` as an argument, the mask can be specified as a string, which will be the
+name of a built-in mask, or as a dictionary in which the **only** key is the built-in mask name and the value is a 
 dictionary of keyword arguments to pass to the mask function. 
 
 For example, the following is a valid mask specification that specified the `GM_prob0.2` mask.
@@ -23,7 +24,7 @@ For example, the following is a valid mask specification that specified the `GM_
 
     masks: GM_prob0.2
 
-The following is a valid mask specification that specifies the `compute_brain_mask`  mask (function from nilearn),
+The following is a valid mask specification that specifies the ``compute_brain_mask``  mask (function from nilearn),
 with a threshold of 0.5.
 
 .. code-block:: yaml
@@ -32,9 +33,9 @@ with a threshold of 0.5.
         compute_brain_mask:
             threshold: 0.5
 
-Furthermore, junifer allows to combine several masks using :func:`nilearn.masking.intersect_masks`. This is done by
+Furthermore, junifer allows you to combine several masks using :func:`nilearn.masking.intersect_masks`. This is done by
 specifying a list of masks, where each mask is a string or dictionary as described above. For example, the following
-is a valid mask specification that specifies the intersection of the `GM_prob0.2` and `compute_brain_mask` masks.
+is a valid mask specification that specifies the intersection of the ``GM_prob0.2`` and ``compute_brain_mask`` masks.
 
 .. code-block:: yaml
 

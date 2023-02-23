@@ -40,7 +40,6 @@ _masks_path = Path(__file__).parent / "masks"
 
 def _fetch_icbm152_brain_gm_mask(
     target_img: "Nifti1Image",
-    extra_data: Optional[Dict[str, Any]] = None,
     **kwargs,
 ):
     """Fetch ICBM152 brain mask and resample.
@@ -49,10 +48,6 @@ def _fetch_icbm152_brain_gm_mask(
     ----------
     target_img : nibabel.Nifti1Image
         The image to which the mask will be resampled.
-    extra_data : dict, optional
-        The other fields in the data object. Useful for accessing other data
-        kinds that needs to be used in the computation of masks. Default is
-        None. This parameter is not used in this function.
     **kwargs : dict
         Keyword arguments to be passed to
         :func:`nilearn.datasets.fetch_icbm152_brain_gm_mask`.
@@ -161,7 +156,7 @@ def list_masks() -> List[str]:
 def get_mask(
     masks: Union[str, Dict, List[Union[Dict, str]]],
     target_data: Dict[str, Any],
-    extra_data: Optional[Dict[str, Any]] = None,
+    extra_input: Optional[Dict[str, Any]] = None,
 ) -> "Nifti1Image":
     """Get mask, tailored for the target image.
 
@@ -173,10 +168,9 @@ def get_mask(
     target_data : dict
         The corresponding item of the data object to which the mask will be
         applied.
-    extra_data : dict, optional
+    extra_input : dict, optional
         The other fields in the data object. Useful for accessing other data
-        kinds that needs to be used in the computation of masks. Default is
-        None.
+        kinds that needs to be used in the computation of masks (default None).
 
     Returns
     -------
@@ -231,7 +225,7 @@ def get_mask(
             mask_params = None
 
         if mask_name == "inherit":
-            if extra_data is None:
+            if extra_input is None:
                 raise_error(
                     "Cannot inherit mask from another data item "
                     "because no extra data was passed."
@@ -242,12 +236,12 @@ def get_mask(
                     "because no mask item was specified "
                     "(missing `mask_item` key in the data object)."
                 )
-            if inherited_mask_item not in extra_data:
+            if inherited_mask_item not in extra_input:
                 raise_error(
                     "Cannot inherit mask from another data item "
                     f"because the item ({inherited_mask_item}) does not exist."
                 )
-            mask_img = extra_data[inherited_mask_item]["data"]
+            mask_img = extra_input[inherited_mask_item]["data"]
         else:
             mask_object, _ = load_mask(
                 mask_name, path_only=False, resolution=resolution

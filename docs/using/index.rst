@@ -21,7 +21,7 @@ the results. Finally, we will show how to use the ``queue`` command to interact 
 .. _using_components:
 
 Using junifer common components
-===============================
+-------------------------------
 
 The following sections explains common components of junifer that can be used across many steps of the pipeline.
 

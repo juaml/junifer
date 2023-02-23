@@ -560,7 +560,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
             mask_img = get_mask(
-                masks=self.masks, target_data=input, extra_data=extra_input
+                masks=self.masks, target_data=input, extra_input=extra_input
             )
             # Save the mask in the extra input and link it to the bold data
             # this allows to use "inherit" down the pipeline

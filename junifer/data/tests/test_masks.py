@@ -5,11 +5,14 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Callable, Dict, Union
+from typing import Callable, Dict, Union, List
 
 from pathlib import Path
 
 import pytest
+
+import numpy as np
+
 from numpy.testing import (
     assert_array_almost_equal,
     assert_array_equal,
@@ -20,6 +23,7 @@ from nilearn.masking import (
     compute_brain_mask,
     compute_background_mask,
     compute_epi_mask,
+    intersect_masks,
 )
 from nilearn.datasets import fetch_icbm152_brain_gm_mask
 
@@ -352,7 +356,8 @@ def test_get_mask_inherit() -> None:
         # Get mask using the compute_brain_mask function
         mask1 = get_mask(
             masks={"compute_brain_mask": {"threshold": 0.2}},
-            target_data=input["BOLD"])
+            target_data=input["BOLD"],
+        )
 
         # Now get the mask using the inherit functionality, passing the
         # computed mask as extra data
@@ -364,3 +369,79 @@ def test_get_mask_inherit() -> None:
 
         # Both masks should be equal
         assert_array_equal(mask1.get_fdata(), mask2.get_fdata())
+
+
+@pytest.mark.parametrize(
+    "masks,params",
+    [
+        (["GM_prob0.2", "compute_brain_mask"], {}),
+        (
+            ["GM_prob0.2", "compute_brain_mask"],
+            {"threshold": 0.2},
+        ),
+        (
+            [
+                "GM_prob0.2",
+                "compute_brain_mask",
+                "fetch_icbm152_brain_gm_mask",
+            ],
+            {"threshold": 1, "connected": True},
+        ),
+    ],
+)
+def test_get_mask_multiple(
+    masks: Union[str, Dict, List[Union[Dict, str]]], params: Dict
+) -> None:
+    """Test geting multiple masks."""
+    reader = DefaultDataReader()
+    with SPMAuditoryTestingDatagrabber() as dg:
+        input = dg["sub001"]
+        input = reader.fit_transform(input)
+        if not isinstance(masks, list):
+            junifer_masks = [masks]
+        else:
+            junifer_masks = masks.copy()
+        if len(params) > 0:
+            # Convert params to junifer style (one dict per param)
+            junifer_params = [{k: params[k]} for k in params.keys()]
+            junifer_masks.extend(junifer_params)
+        target_img = input["BOLD"]["data"]
+        resolution = np.min(target_img.header.get_zooms()[:3])
+
+        computed = get_mask(masks=junifer_masks, target_data=input["BOLD"])
+
+        masks_names = [
+            list(x.keys())[0] if isinstance(x, dict) else x for x in masks
+        ]
+
+        mask_funcs = [
+            x
+            for x in masks_names
+            if _available_masks[x]["family"] == "Callable"
+        ]
+        mask_files = [
+            x
+            for x in masks_names
+            if _available_masks[x]["family"] != "Callable"
+        ]
+
+        mask_imgs = [
+            load_mask(t_mask, path_only=False, resolution=resolution)[0]
+            for t_mask in mask_files
+        ]
+
+        for t_func in mask_funcs:
+            mask_imgs.append(_available_masks[t_func]["func"](target_img))
+
+        mask_imgs = [
+            resample_to_img(
+                t_mask,
+                target_img,
+                interpolation="nearest",
+                copy=True,
+            )
+            for t_mask in mask_imgs
+        ]
+
+        expected = intersect_masks(mask_imgs, **params)
+        assert_array_equal(computed.get_fdata(), expected.get_fdata())
