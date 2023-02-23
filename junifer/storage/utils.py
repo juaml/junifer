@@ -84,13 +84,13 @@ def process_meta(meta: Dict) -> Tuple[str, Dict, Dict]:
         The MD5 hash of the metadata.
     dict
         The processed metadata for storage.
-    tuple
+    dict
         The element.
 
     Raises
     ------
     ValueError
-        If `meta` is None or if it does not contain the key "element".
+        If ``meta`` is None or if it does not contain the key "element".
 
     """
     if meta is None:
@@ -98,7 +98,7 @@ def process_meta(meta: Dict) -> Tuple[str, Dict, Dict]:
     # Copy the metadata
     t_meta = meta.copy()
     # Remove key "element"
-    element = t_meta.pop("element", None)
+    element: Dict = t_meta.pop("element", None)
     if element is None:
         raise_error(msg="`meta` must contain the key 'element'")
     if "marker" not in t_meta:

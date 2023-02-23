@@ -129,8 +129,7 @@ class ReHoSpheres(ReHoBase):
             keys:
 
             * ``data`` : the actual computed values as a 1D numpy.ndarray
-            * ``columns`` : the column labels for the spheres as a list
-            * ``rows_col_name`` : ``None``
+            * ``col_names`` : the column labels for the spheres as a list
 
         """
         logger.info("Calculating ReHo for spheres.")

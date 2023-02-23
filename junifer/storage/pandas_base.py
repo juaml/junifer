@@ -6,11 +6,12 @@
 
 import json
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
 
+from ..utils import raise_error
 from .base import BaseFeatureStorage
 
 
@@ -46,10 +47,11 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         Returns
         -------
         list of str
-            The list of storage types that can be used as input for this "
-            "storage.
+            The list of storage types that can be used as input for this
+            storage interface.
+
         """
-        return ["matrix", "table", "timeseries"]
+        return ["matrix", "vector", "timeseries"]
 
     def _meta_row(self, meta: Dict, meta_md5: str) -> pd.DataFrame:
         """Convert the metadata to a pandas DataFrame.
@@ -76,7 +78,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     @staticmethod
     def element_to_index(
         element: Dict, n_rows: int = 1, rows_col_name: Optional[str] = None
-    ) -> pd.MultiIndex:
+    ) -> Union[pd.Index, pd.MultiIndex]:
         """Convert the element metadata to index.
 
         Parameters
@@ -86,31 +88,40 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         n_rows : int, optional
             Number of rows to create (default 1).
         rows_col_name: str, optional
-            The column name to use in case `n_rows` > 1. If None and
-            n_rows > 1, the name will be "idx" (default None).
+            The column name to use in case ``n_rows`` > 1. If None and
+            ``n_rows`` > 1, the name will be "idx" (default None).
 
         Returns
         -------
-        pandas.MultiIndex
+        pandas.Index or pandas.MultiIndex
             The index of the dataframe to store.
 
-        Raises
-        ------
-        ValueError
-            If `meta` does not contain the key "element".
-
         """
-        # Check rows_col_name
-        if rows_col_name is None:
-            rows_col_name = "idx"
-        elem_idx: Dict[Any, Any] = {
+        # Make mapping between element access keys and values
+        elem_idx: Dict[str, Iterable[str]] = {
             k: [v] * n_rows for k, v in element.items()
         }
-        elem_idx[rows_col_name] = np.arange(n_rows)
-        # Create index
-        index = pd.MultiIndex.from_frame(
-            pd.DataFrame(elem_idx, index=range(n_rows))
-        )
+
+        # Set rows_col_name if n_rows > 1 (timeseries)
+        if n_rows > 1:
+            # Set rows_col_name if None
+            if rows_col_name is None:
+                rows_col_name = "idx"
+            # Set extra column for variable number of rows per element
+            elem_idx[rows_col_name] = np.arange(n_rows)
+
+        # Create correct index for elements with single access variable
+        if len(elem_idx) == 1:
+            # Create normal index for vector
+            index = pd.Index(
+                data=list(elem_idx.values())[0], name=list(elem_idx.keys())[0]
+            )
+        else:
+            # Create multiindex for timeseries
+            index = pd.MultiIndex.from_frame(
+                pd.DataFrame(elem_idx, index=range(n_rows))
+            )
+
         return index
 
     def store_df(
@@ -132,17 +143,20 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             generated from the metadata.
 
         """
-        raise NotImplementedError("Implement in subclass.")
+        raise_error(
+            msg="Concrete classes need to implement store_df().",
+            klass=NotImplementedError,
+        )
 
     def _store_2d(
         self,
         meta_md5: str,
         element: Dict,
         data: Union[np.ndarray, List],
-        columns: Optional[Iterable[str]] = None,
+        col_names: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
     ) -> None:
-        """Store 2D dataframe.
+        """Store 2D data.
 
         Parameters
         ----------
@@ -150,37 +164,35 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The metadata MD5 hash.
         element : dict
             The element as a dictionary.
-        data : numpy.ndarray or List
+        data : numpy.ndarray or list
             The data to store.
-        columns : list or tuple of str, optional
-            The columns (default None).
+        col_names : list or tuple of str, optional
+            The column labels (default None).
         rows_col_name : str, optional
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+            "idx" (default None).
 
         """
-        n_rows = len(data)
         # Convert element metadata to index
         idx = self.element_to_index(
-            element=element, n_rows=n_rows, rows_col_name=rows_col_name
+            element=element, n_rows=len(data), rows_col_name=rows_col_name
         )
         # Prepare new dataframe
-        data_df = pd.DataFrame(  # type: ignore
-            data, columns=columns, index=idx  # type: ignore
+        df = pd.DataFrame(
+            data=data, columns=col_names, index=idx  # type: ignore
         )
         # Store dataframe
-        self.store_df(meta_md5=meta_md5, element=element, df=data_df)
+        self.store_df(meta_md5=meta_md5, element=element, df=df)
 
-    def store_table(
+    def store_vector(
         self,
         meta_md5: str,
         element: Dict,
         data: Union[np.ndarray, List],
-        columns: Optional[Iterable[str]] = None,
-        rows_col_name: Optional[str] = None,
+        col_names: Optional[Iterable[str]] = None,
     ) -> None:
-        """Implement table storing.
+        """Store vector.
 
         Parameters
         ----------
@@ -188,21 +200,27 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The metadata MD5 hash.
         element : dict
             The element as a dictionary.
-        data : numpy.ndarray or List
-            The table data to store.
-        columns : list or tuple of str, optional
-            The columns (default None).
-        rows_col_name : str, optional
-            The column name to use in case number of rows greater than 1.
-            If None and number of rows greater than 1, then the name will be
-            "index" (default None).
+        data : numpy.ndarray or list
+            The vector data to store.
+        col_names : list or tuple of str, optional
+            The column labels (default None).
+
         """
+        if isinstance(data, list):
+            # Flatten out list and convert to np.ndarray
+            processed_data = np.array(np.ravel(data))
+        elif isinstance(data, np.ndarray):
+            # Flatten out array
+            processed_data = data.ravel()
+
+        # Make it 2D
+        processed_data = processed_data[np.newaxis, :]
+
         self._store_2d(
             meta_md5=meta_md5,
             element=element,
             data=data,
-            columns=columns,
-            rows_col_name=rows_col_name,
+            col_names=col_names,
         )
 
     def store_timeseries(
@@ -210,9 +228,9 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: Dict,
         data: np.ndarray,
-        columns: Optional[Iterable[str]] = None,
+        col_names: Optional[Iterable[str]] = None,
     ) -> None:
-        """Implement timeseries storing.
+        """Store timeseries.
 
         Parameters
         ----------
@@ -222,13 +240,14 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        columns : list or tuple of str, optional
+        col_names : list or tuple of str, optional
             The column labels (default None).
+
         """
         self._store_2d(
             meta_md5=meta_md5,
             element=element,
             data=data,
-            columns=columns,
+            col_names=col_names,
             rows_col_name="timepoint",
         )

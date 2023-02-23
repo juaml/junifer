@@ -50,3 +50,7 @@ API changes
 
 - Add ``confounds_format`` parameter to :class:`junifer.datagrabber.PatternDataGrabber` constructor for
   improved handling of confounds specified via ``BOLD_confounds`` data type (:gh:`158` by `Synchon Mandal`_).
+
+- Rename ``store_table()`` to ``store_vector()`` for storage-like objects and adapt marker-like objects to
+  use ``"vector"`` in place of ``"table"`` for storage. Also, improve the logic of storing vectors
+  (:gh:`181` by `Synchon Mandal`_).

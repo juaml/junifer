@@ -7,12 +7,12 @@ from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
+    Callable,
     Dict,
     List,
     Optional,
     Tuple,
     Union,
-    Callable,
 )
 
 import numpy as np
@@ -26,6 +26,11 @@ from nilearn.masking import (
 )
 from nilearn.datasets import fetch_icbm152_brain_gm_mask
 from nilearn.image import resample_to_img
+from nilearn.masking import (
+    compute_background_mask,
+    compute_brain_mask,
+    compute_epi_mask,
+)
 
 from ..utils.logging import logger, raise_error
 from .utils import closest_resolution

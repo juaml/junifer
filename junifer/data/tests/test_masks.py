@@ -5,37 +5,34 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Callable, Dict, Union, List
-
 from pathlib import Path
+from typing import Callable, Dict, Union, List
 
 import pytest
 
 import numpy as np
-
 from numpy.testing import (
     assert_array_almost_equal,
     assert_array_equal,
 )
 
+from nilearn.datasets import fetch_icbm152_brain_gm_mask
 from nilearn.image import resample_to_img
 from nilearn.masking import (
-    compute_brain_mask,
     compute_background_mask,
+    compute_brain_mask,
     compute_epi_mask,
     intersect_masks,
 )
-from nilearn.datasets import fetch_icbm152_brain_gm_mask
 
 from junifer.data.masks import (
+    _available_masks,
     _load_vickery_patil_mask,
+    get_mask,
     list_masks,
     load_mask,
     register_mask,
-    get_mask,
-    _available_masks,
 )
-
 from junifer.datareader import DefaultDataReader
 from junifer.testing.datagrabbers import (
     OasisVBMTestingDatagrabber,
@@ -264,19 +261,19 @@ def test_get_mask_errors() -> None:
         with pytest.raises(ValueError, match=r"no extra data was passed"):
             get_mask(masks="inherit", target_data=vbm_gm)
 
-        extra_data = {"VBM_MASK": {}}
+        extra_input = {"VBM_MASK": {}}
 
         # 2) No mask_item key in target_data
         with pytest.raises(ValueError, match=r"no mask item was specified"):
             get_mask(
-                masks="inherit", target_data=vbm_gm, extra_data=extra_data
+                masks="inherit", target_data=vbm_gm, extra_input=extra_input
             )
 
         # 3) mask_item not in extra data
         with pytest.raises(ValueError, match=r"does not exist"):
             vbm_gm["mask_item"] = "wrong"
             get_mask(
-                masks="inherit", target_data=vbm_gm, extra_data=extra_data
+                masks="inherit", target_data=vbm_gm, extra_input=extra_input
             )
 
 
@@ -361,10 +358,10 @@ def test_get_mask_inherit() -> None:
 
         # Now get the mask using the inherit functionality, passing the
         # computed mask as extra data
-        extra_data = {"BOLD_MASK": {"data": gm_mask}}
+        extra_input = {"BOLD_MASK": {"data": gm_mask}}
         input["BOLD"]["mask_item"] = "BOLD_MASK"
         mask2 = get_mask(
-            masks="inherit", target_data=input["BOLD"], extra_data=extra_data
+            masks="inherit", target_data=input["BOLD"], extra_input=extra_input
         )
 
         # Both masks should be equal

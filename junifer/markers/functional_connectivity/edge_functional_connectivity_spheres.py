@@ -91,7 +91,7 @@ class EdgeCentricFCSpheres(FunctionalConnectivityBase):
         )
         bold_aggregated = sphere_aggregation.compute(input)
         ets, edge_names = _ets(
-            bold_aggregated["data"], bold_aggregated["columns"]
+            bold_aggregated["data"], bold_aggregated["col_names"]
         )
 
-        return dict(data=ets, columns=edge_names)
+        return {"data": ets, "col_names": edge_names}

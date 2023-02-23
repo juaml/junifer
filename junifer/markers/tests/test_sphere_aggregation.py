@@ -27,7 +27,7 @@ RADIUS = 8
 def test_SphereAggregation_input_output() -> None:
     """Test SphereAggregation input and output types."""
     marker = SphereAggregation(coords="DMNBuckner", method="mean", on="VBM_GM")
-    for in_, out_ in [("VBM_GM", "table"), ("BOLD", "timeseries")]:
+    for in_, out_ in [("VBM_GM", "vector"), ("BOLD", "timeseries")]:
         assert marker.get_output_type(in_) == out_
 
     with pytest.raises(ValueError, match="Unknown input"):

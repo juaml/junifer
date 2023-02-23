@@ -12,7 +12,9 @@ from junifer.storage.base import BaseFeatureStorage
 def test_BaseFeatureStorage_abstractness() -> None:
     """Test BaseFeatureStorage is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
-        BaseFeatureStorage(uri="/tm", storage_types=["matrix"])  # type: ignore
+        BaseFeatureStorage(
+            uri="/tmp", storage_types=["matrix"]  # type: ignore
+        )
 
 
 def test_BaseFeatureStorage() -> None:
@@ -21,8 +23,8 @@ def test_BaseFeatureStorage() -> None:
     class MyFeatureStorage(BaseFeatureStorage):
         """Implement concrete class."""
 
-        def __init__(self, uri, single_output=False):
-            storage_types = ["matrix", "table", "timeseries"]
+        def __init__(self, uri, single_output=True):
+            storage_types = ["matrix", "vector", "timeseries"]
             super().__init__(
                 uri=uri,
                 storage_types=storage_types,
@@ -30,7 +32,7 @@ def test_BaseFeatureStorage() -> None:
             )
 
         def get_valid_inputs(self):
-            return ["matrix", "table", "timeseries"]
+            return ["matrix", "vector", "timeseries"]
 
         def list_features(self):
             super().list_features()
@@ -48,7 +50,7 @@ def test_BaseFeatureStorage() -> None:
             return super().collect()
 
     # Check single_output is False
-    st = MyFeatureStorage(uri="/tmp")
+    st = MyFeatureStorage(uri="/tmp", single_output=False)
     assert st.single_output is False
     # Check single_output is True
     st = MyFeatureStorage(uri="/tmp", single_output=True)
@@ -66,11 +68,9 @@ def test_BaseFeatureStorage() -> None:
     with pytest.raises(NotImplementedError):
         st.read_df(None)
 
-    element = {"subject": "test"}
-    dependencies = ["numpy"]
     meta = {
-        "element": element,
-        "dependencies": dependencies,
+        "element": {"subject": "test"},
+        "dependencies": ["numpy"],
         "marker": {"name": "fc"},
         "type": "BOLD",
     }
@@ -88,7 +88,7 @@ def test_BaseFeatureStorage() -> None:
         st.store(kind="timeseries", meta=meta)
 
     with pytest.raises(NotImplementedError):
-        st.store(kind="table", meta=meta)
+        st.store(kind="vector", meta=meta)
 
     with pytest.raises(ValueError):
         st.store(kind="lego", meta=meta)

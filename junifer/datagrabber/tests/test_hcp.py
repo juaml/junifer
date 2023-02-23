@@ -3,11 +3,11 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional, Iterable
+from typing import Iterable, Optional
 
 import pytest
 
-from junifer.datagrabber.hcp import DataladHCP1200, HCP1200
+from junifer.datagrabber.hcp import HCP1200, DataladHCP1200
 from junifer.utils import configure_logging
 
 
@@ -332,9 +332,7 @@ def test_hcp1200_datagrabber_elements(
     )
     with dg:
         # Get all elements
-        expected_subjects = [
-            f"sub-{x:02d}" for x in range(1, 10)
-        ]
+        expected_subjects = [f"sub-{x:02d}" for x in range(1, 10)]
         found_subjects = []
         all_elements = dg.get_elements()
         # Check only specified task and phase encoding are found
