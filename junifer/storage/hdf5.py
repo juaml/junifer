@@ -811,29 +811,29 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 klass=NotImplementedError,
             )
 
-        logger.info(
-            "Collecting data from "
-            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
-        )
-
-        # Create new storage instance
-        out_storage = HDF5FeatureStorage(uri=self.uri, overwrite="update")
-
         # Glob files
         globbed_files = self.uri.parent.glob(  # type: ignore
             f"*{self.uri.name}"  # type: ignore
         )
 
-        # Run loop to aggregate
-        for file in tqdm(globbed_files, desc="file"):
-            logger.debug(f"Reading HDF5 file: {file} ...")
-            # Create new storage instance to load data
-            in_storage = HDF5FeatureStorage(uri=file)
+        # Create new storage instance
+        out_storage = HDF5FeatureStorage(uri=self.uri, overwrite="update")
 
+        # Run loop to collect metdata
+        logger.info(
+            "Collecting metadata from "
+            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
+        )
+        # Collect element files per feature MD5
+        elements_per_feature_md5 = defaultdict(list)
+        for file_ in tqdm(globbed_files, desc="file-metadata"):
+            logger.debug(f"Reading HDF5 file: {file_} ...")
+            # Create new storage instance to load metadata
+            in_storage = HDF5FeatureStorage(uri=file_)
             # Load metadata from new instance
             in_metadata = in_storage._read_metadata()
 
-            logger.info(f"Updating HDF5 metadata with metadata from: {file}")
+            logger.info(f"Updating HDF5 metadata with metadata from: {file_}")
             # Load metadata; empty dictionary if first entry;
             # can be replaced with store_metadata() if run on a loop
             # for the metadata entries from in_storage
@@ -849,11 +849,65 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 processed_data=out_metadata,
                 title="meta",
             )
+            # Update element files for found MD5s
+            for feature_md5 in in_metadata.keys():
+                elements_per_feature_md5[feature_md5].append(file_)
 
-            for meta_md5 in tqdm(in_metadata.keys(), desc="feature"):
-                # Load data from new instance
-                logger.debug(f"Collecting feature MD5: {meta_md5} ...")
-                in_data = in_storage._read_data(md5=meta_md5)
-                logger.info(f"Updating HDF5 data with data from: {meta_md5}")
-                # Save data
-                out_storage._store_data(meta_md5=meta_md5, **in_data)
+        # Run loop to collect data per feature per file
+        logger.info(
+            "Collecting data from "
+            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
+        )
+        for feature_md5, element_files in tqdm(elements_per_feature_md5.items(), desc="feature"):
+            element_count = len(element_files)
+            # Chunk size for collecting
+            chunk_size = min(100, element_count)
+            # Operate on chunks
+            for chunk_idx, chunk_start in tqdm(enumerate(range(0, element_count, chunk_size)), desc="chunk"):
+                # Store the chunk files' data
+                stored_data_for_chunk: List[Dict[str, Any]] = []
+                # Read the files of a chunk
+                for i in tqdm(range(chunk_start, chunk_start + chunk_size), desc="file-data"):
+                    file_ = element_files[i]
+                    logger.debug(
+                        f"Reading feature MD5: '{feature_md5}' "
+                        f"from HDF5 file: {file_} ..."
+                    )
+                    # Read from HDF5 and collect data
+                    stored_data_for_chunk.append(
+                        read_hdf5(
+                            fname=str(file_),
+                            title=feature_md5,
+                            slash="ignore",
+                        )
+                    )
+
+                # Concatenate the features data for a chunk
+                features_data = np.concatenate(
+                    [x["data"] for x in stored_data_for_chunk], axis=-1
+                )
+                # Make dictionary to write the collected data;
+                # first the static data then the dynamic data
+                data_to_write = {
+                    key: val for key, val in stored_data_for_chunk[0].items()
+                    if key not in ("data", "element")
+                }
+                # Join the features element for a chunk
+                data_to_write["element"] = [x["element"] for x in stored_data_for_chunk]
+                # Write data in chunks to avoid memory usage spikes
+                data_to_write["data"] = ChunkedArray(
+                    data=features_data,
+                    shape=(features_data.shape[0], features_data.shape[1], element_count),
+                    chunk_size=(features_data.shape[0], features_data.shape[1], chunk_size),
+                    n_chunk=chunk_idx,
+                )
+                # Write to HDF5
+                write_hdf5(
+                    fname=str(self.uri.resolve()),  # type: ignore
+                    data=data_to_write,
+                    overwrite=self.overwrite,  # type: ignore
+                    compression=0,
+                    title=feature_md5,
+                    slash="error",
+                    use_json=False,
+                )
