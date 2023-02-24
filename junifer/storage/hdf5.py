@@ -11,10 +11,10 @@ from typing import Any, Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
-from ..external.h5io.h5io import ChunkedArray, read_hdf5, write_hdf5
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
+from ..external.h5io.h5io import ChunkedArray, read_hdf5, write_hdf5
 from ..utils import logger, raise_error
 from .base import BaseFeatureStorage
 from .utils import element_to_prefix
@@ -819,7 +819,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         # Create new storage instance
         out_storage = HDF5FeatureStorage(uri=self.uri, overwrite="update")
 
-        # Run loop to collect metdata
+        # Run loop to collect metadata
         logger.info(
             "Collecting metadata from "
             f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
@@ -858,16 +858,23 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             "Collecting data from "
             f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
         )
-        for feature_md5, element_files in tqdm(elements_per_feature_md5.items(), desc="feature"):
+        for feature_md5, element_files in tqdm(
+            elements_per_feature_md5.items(), desc="feature"
+        ):
             element_count = len(element_files)
             # Chunk size for collecting
             chunk_size = min(100, element_count)
             # Operate on chunks
-            for chunk_idx, chunk_start in tqdm(enumerate(range(0, element_count, chunk_size)), desc="chunk"):
+            for chunk_idx, chunk_start in tqdm(
+                enumerate(range(0, element_count, chunk_size)), desc="chunk"
+            ):
                 # Store the chunk files' data
                 stored_data_for_chunk: List[Dict[str, Any]] = []
                 # Read the files of a chunk
-                for i in tqdm(range(chunk_start, chunk_start + chunk_size), desc="file-data"):
+                for i in tqdm(
+                    range(chunk_start, chunk_start + chunk_size),
+                    desc="file-data",
+                ):
                     file_ = element_files[i]
                     logger.debug(
                         f"Reading feature MD5: '{feature_md5}' "
@@ -889,16 +896,27 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 # Make dictionary to write the collected data;
                 # first the static data then the dynamic data
                 data_to_write = {
-                    key: val for key, val in stored_data_for_chunk[0].items()
+                    key: val
+                    for key, val in stored_data_for_chunk[0].items()
                     if key not in ("data", "element")
                 }
                 # Join the features element for a chunk
-                data_to_write["element"] = [x["element"] for x in stored_data_for_chunk]
+                data_to_write["element"] = [
+                    x["element"] for x in stored_data_for_chunk
+                ]
                 # Write data in chunks to avoid memory usage spikes
                 data_to_write["data"] = ChunkedArray(
                     data=features_data,
-                    shape=(features_data.shape[0], features_data.shape[1], element_count),
-                    chunk_size=(features_data.shape[0], features_data.shape[1], chunk_size),
+                    shape=(
+                        features_data.shape[0],
+                        features_data.shape[1],
+                        element_count,
+                    ),
+                    chunk_size=(
+                        features_data.shape[0],
+                        features_data.shape[1],
+                        chunk_size,
+                    ),
                     n_chunk=chunk_idx,
                 )
                 # Write to HDF5
