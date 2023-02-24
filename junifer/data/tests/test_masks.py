@@ -389,7 +389,15 @@ def test_get_mask_inherit() -> None:
 def test_get_mask_multiple(
     masks: Union[str, Dict, List[Union[Dict, str]]], params: Dict
 ) -> None:
-    """Test getting multiple masks."""
+    """Test getting multiple masks.
+
+    Parameters
+    ----------
+    masks : str, dict, list of str or dict
+        Masks to get, junifer style.
+    params : dict
+        Parameters to pass to the intersect_masks function.
+    """
     reader = DefaultDataReader()
     with SPMAuditoryTestingDatagrabber() as dg:
         input = dg["sub001"]
