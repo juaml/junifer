@@ -190,7 +190,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         """
         # Read metadata
         metadata = read_hdf5(
-            fname=self.uri,
+            fname=str(self.uri.resolve()),  # type: ignore
             title="meta",
             slash="ignore",
         )
@@ -292,7 +292,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         else:
             # Read metadata
             metadata = read_hdf5(
-                fname=self.uri,
+                fname=str(self.uri.resolve()),  # type: ignore
                 title="meta",
                 slash="ignore",
             )
@@ -341,7 +341,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
             # Read data from HDF5
             hdf_data = read_hdf5(
-                fname=self.uri,
+                fname=str(self.uri.resolve()),  # type: ignore
                 title=md5,
                 slash="ignore",
             )
@@ -845,7 +845,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             out_metadata.update(in_metadata)
             # Save metadata
             out_storage._write_processed_data(
-                fname=self.uri.resolve(),  # type: ignore
+                fname=str(self.uri.resolve()),  # type: ignore
                 processed_data=out_metadata,
                 title="meta",
             )
