@@ -11,7 +11,7 @@ from typing import Any, Dict, Iterable, List, Optional, Union
 
 import numpy as np
 import pandas as pd
-from h5io import read_hdf5, write_hdf5
+from ..external.h5io.h5io import ChunkedArray, read_hdf5, write_hdf5
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
