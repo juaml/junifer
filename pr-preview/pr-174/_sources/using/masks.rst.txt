@@ -18,7 +18,7 @@ For markers and steps that accept ``masks`` as an argument, the mask can be spec
 name of a built-in mask, or as a dictionary in which the **only** key is the built-in mask name and the value is a 
 dictionary of keyword arguments to pass to the mask function. 
 
-For example, the following is a valid mask specification that specified the ``GM_prob0.2`` mask.
+For example, the following is a valid mask specification that specified the `GM_prob0.2` mask.
 
 .. code-block:: yaml
 
