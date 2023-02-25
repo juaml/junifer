@@ -12,10 +12,9 @@ import pandas as pd
 from nilearn._utils.niimg_conversions import check_niimg_4d
 from nilearn.image import clean_img
 
-
 from ...api.decorators import register_preprocessor
-from ...utils import logger, raise_error
 from ...data import get_mask
+from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 
 

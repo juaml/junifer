@@ -186,8 +186,8 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
         assert out is None
 
     mc2 = MarkerCollection(
-        markers=markers,  # type: ignore
-        datareader=DefaultDataReader())
+        markers=markers, datareader=DefaultDataReader()  # type: ignore
+    )
     mc2.validate(dg)
     assert mc2._storage is None
 

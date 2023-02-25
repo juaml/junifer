@@ -15,15 +15,13 @@ from typing import (
     Union,
 )
 
-import numpy as np
-
 import nibabel as nib
-
+import numpy as np
 from nilearn.datasets import fetch_icbm152_brain_gm_mask
 from nilearn.image import resample_to_img
 from nilearn.masking import (
-    compute_brain_mask,
     compute_background_mask,
+    compute_brain_mask,
     compute_epi_mask,
     intersect_masks,
 )
@@ -212,9 +210,7 @@ def get_mask(
         true_masks.append(t_mask)
 
     if len(true_masks) == 0:
-        raise_error(
-            "No mask was passed. At least one mask is required."
-        )
+        raise_error("No mask was passed. At least one mask is required.")
     # Get all the masks
     all_masks = []
     for t_mask in true_masks:

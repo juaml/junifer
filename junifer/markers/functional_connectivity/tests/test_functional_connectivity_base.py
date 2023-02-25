@@ -7,7 +7,7 @@ import pytest
 
 # done to keep line length 79
 from junifer.markers.functional_connectivity import (
-    functional_connectivity_base as fcb
+    functional_connectivity_base as fcb,
 )
 
 

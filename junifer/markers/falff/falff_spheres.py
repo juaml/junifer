@@ -5,7 +5,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, Optional, Union, List
+from typing import Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
 from .. import SphereAggregation

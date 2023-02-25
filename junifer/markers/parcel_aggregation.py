@@ -187,7 +187,8 @@ class ParcelAggregation(BaseMarker):
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
             mask_img = get_mask(
-                masks=self.masks, target_data=input, extra_input=extra_input)
+                masks=self.masks, target_data=input, extra_input=extra_input
+            )
 
             parcellation_bin = math_img(
                 "np.logical_and(img, mask)",
