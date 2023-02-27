@@ -27,13 +27,14 @@ def test_ets() -> None:
     n_edges = int(n_rois * (n_rois - 1) / 2)
 
     # test without labels
-    edge_ts = _ets(bold_ts)
+    edge_ts, _ = _ets(bold_ts)
     assert edge_ts.shape == (n_time, n_edges)
 
     # test with labels
     roi_labels = [f"Label_{x}" for x in range(n_rois)]
     edge_ts, edge_labels = _ets(bold_ts, roi_labels)
     assert edge_ts.shape == (n_time, n_edges)
+    assert edge_labels is not None
     assert len(edge_labels) == n_edges
 
 

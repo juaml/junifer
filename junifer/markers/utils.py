@@ -7,7 +7,7 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Callable, Dict, List, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
 import pandas as pd
@@ -56,8 +56,9 @@ def singleton(cls: Type) -> Type:
 
 
 def _ets(
-    bold_ts: np.ndarray, roi_names: Union[None, List[str]] = None
-) -> np.ndarray:
+    bold_ts: np.ndarray,
+    roi_names: Union[None, List[str]] = None,
+) -> Tuple[np.ndarray, Optional[List[str]]]:
     """Compute the edge-wise time series based on BOLD time series.
 
     Take a timeseries of brain areas, and calculate timeseries for each
@@ -80,9 +81,8 @@ def _ets(
         edge-wise time series, i.e. estimate of functional connectivity at each
         time point.
     edge_names : List[str]
-        List of edge names corresponding to columns in the
-        edge-wise time series. This is only returned if the roi_names
-        are specified.
+        List of edge names corresponding to columns in the edge-wise time
+        series. If roi_names are not specified, this is None.
 
     References
     ----------
@@ -102,18 +102,18 @@ def _ets(
     ets = timeseries[:, u] * timeseries[:, v]
     # Obtain the corresponding edge labels if specified else return
     if roi_names is None:
-        return ets
+        return ets, None
     else:
         if len(roi_names) != n_roi:
             raise_error(
                 "List of roi names does not correspond "
                 "to the number of ROIs in the timeseries!"
             )
-        roi_names = np.array(roi_names)
+        _roi_names = np.array(roi_names)
         edge_names = [
-            "~".join([x, y]) for x, y in zip(roi_names[u], roi_names[v])
+            "~".join([x, y]) for x, y in zip(_roi_names[u], _roi_names[v])
         ]
-        return ets, list(edge_names)
+        return ets, edge_names
 
 
 def _correlate_dataframes(

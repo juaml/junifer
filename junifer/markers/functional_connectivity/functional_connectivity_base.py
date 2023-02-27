@@ -32,10 +32,10 @@ class FunctionalConnectivityBase(BaseMarker):
     cor_method_params : dict, optional
         Parameters to pass to the correlation function. Check valid options in
         :class:`nilearn.connectome.ConnectivityMeasure` (default None).
-    mask : str, optional
-        The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`
-        (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
@@ -50,7 +50,7 @@ class FunctionalConnectivityBase(BaseMarker):
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
         cor_method_params: Optional[Dict] = None,
-        mask: Union[str, Dict, None] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.agg_method = agg_method
@@ -62,7 +62,7 @@ class FunctionalConnectivityBase(BaseMarker):
         self.cor_method_params["empirical"] = self.cor_method_params.get(
             "empirical", False
         )
-        self.mask = mask
+        self.masks = masks
         super().__init__(on="BOLD", name=name)
 
     @abstractmethod
@@ -134,7 +134,7 @@ class FunctionalConnectivityBase(BaseMarker):
         # Compute correlation
         if self.cor_method_params["empirical"]:
             connectivity = ConnectivityMeasure(
-                cov_estimator=EmpiricalCovariance(),
+                cov_estimator=EmpiricalCovariance(),  # type: ignore
                 kind=self.cor_method,
             )
         else:

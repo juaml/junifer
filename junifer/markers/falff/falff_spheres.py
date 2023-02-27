@@ -5,7 +5,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
 from .. import SphereAggregation
@@ -39,10 +39,10 @@ class AmplitudeLowFrequencyFluctuationSpheres(
     use_afni : bool, optional
         Whether to use AFNI for computing. If None, will use AFNI only
         if available (default None).
-    mask : str, optional
-        The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`
-        (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
     method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
@@ -75,14 +75,14 @@ class AmplitudeLowFrequencyFluctuationSpheres(
         lowpass: float = 0.1,
         tr: Optional[float] = None,
         use_afni: Optional[bool] = None,
-        mask: Union[str, Dict, None] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         method: str = "mean",
         method_params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
         self.coords = coords
         self.radius = radius
-        self.mask = mask
+        self.masks = masks
         self.method = method
         self.method_params = method_params
         super().__init__(
@@ -123,7 +123,7 @@ class AmplitudeLowFrequencyFluctuationSpheres(
             radius=self.radius,
             method=self.method,
             method_params=self.method_params,
-            mask=self.mask,
+            masks=self.masks,
             on="fALFF",
         )
 

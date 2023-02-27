@@ -34,10 +34,10 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
     cor_method_params : dict, optional
         Parameters to pass to the correlation function. Check valid options in
         :class:`nilearn.connectome.ConnectivityMeasure` (default None).
-    mask : str, optional
-        The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`
-        (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
@@ -51,7 +51,7 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
         cor_method_params: Optional[Dict] = None,
-        mask: Union[str, Dict, None] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
@@ -60,7 +60,7 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
             agg_method_params=agg_method_params,
             cor_method=cor_method,
             cor_method_params=cor_method_params,
-            mask=mask,
+            masks=masks,
             name=name,
         )
 
@@ -70,7 +70,7 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
             parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
-            mask=self.mask,
+            masks=self.masks,
             on="BOLD",
         )
         # Return the 2D timeseries after parcel aggregation

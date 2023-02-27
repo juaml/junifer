@@ -34,10 +34,10 @@ class SphereAggregation(BaseMarker):
         (default "mean").
     method_params : dict, optional
         The parameters to pass to the aggregation method (default None).
-    mask : str, optional
-        The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`
-        (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
     on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or \
          list of the options, optional
         The data types to apply the marker to. If None, will work on all
@@ -56,7 +56,7 @@ class SphereAggregation(BaseMarker):
         radius: Optional[float] = None,
         method: str = "mean",
         method_params: Optional[Dict[str, Any]] = None,
-        mask: Union[str, Dict, None] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
@@ -64,7 +64,7 @@ class SphereAggregation(BaseMarker):
         self.radius = radius
         self.method = method
         self.method_params = method_params or {}
-        self.mask = mask
+        self.masks = masks
         super().__init__(on=on, name=name)
 
     def get_valid_inputs(self) -> List[str]:
@@ -137,9 +137,11 @@ class SphereAggregation(BaseMarker):
         )
         # Load mask
         mask_img = None
-        if self.mask is not None:
-            logger.debug(f"Masking with {self.mask}")
-            mask_img = get_mask(mask=self.mask, target_data=input)
+        if self.masks is not None:
+            logger.debug(f"Masking with {self.masks}")
+            mask_img = get_mask(
+                masks=self.masks, target_data=input, extra_input=extra_input
+            )
         # Get seeds and labels
         coords, out_labels = load_coordinates(name=self.coords)
         masker = JuniferNiftiSpheresMasker(

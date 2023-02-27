@@ -23,6 +23,7 @@ from nilearn.masking import (
     compute_background_mask,
     compute_brain_mask,
     compute_epi_mask,
+    intersect_masks,
 )
 
 from ..utils.logging import logger, raise_error
@@ -36,7 +37,10 @@ if TYPE_CHECKING:
 _masks_path = Path(__file__).parent / "masks"
 
 
-def _fetch_icbm152_brain_gm_mask(target_img: "Nifti1Image", **kwargs):
+def _fetch_icbm152_brain_gm_mask(
+    target_img: "Nifti1Image",
+    **kwargs,
+):
     """Fetch ICBM152 brain mask and resample.
 
     Parameters
@@ -65,6 +69,9 @@ data.
 
 The built-in masks are files that are shipped with the package in the
 data/masks directory. The user can also register their own masks.
+
+Callable masks should be functions that take at least one parameter:
+* `target_img`: the image to which the mask will be applied.
 """
 _available_masks: Dict[str, Dict[str, Any]] = {
     "GM_prob0.2": {"family": "Vickery-Patil"},
@@ -146,19 +153,23 @@ def list_masks() -> List[str]:
 
 
 def get_mask(
-    mask: Union[str, Dict],
+    masks: Union[str, Dict, List[Union[Dict, str]]],
     target_data: Dict[str, Any],
+    extra_input: Optional[Dict[str, Any]] = None,
 ) -> "Nifti1Image":
     """Get mask, tailored for the target image.
 
     Parameters
     ----------
-    masks : str or dict
+    masks : str, dict or list of dict or str
         The name of the mask, or the name of a callable mask and the parameters
-        of the mask.
+        of the mask as a dictionary. Several masks can be passed as a list.
     target_data : dict
         The corresponding item of the data object to which the mask will be
         applied.
+    extra_input : dict, optional
+        The other fields in the data object. Useful for accessing other data
+        kinds that needs to be used in the computation of masks (default None).
 
     Returns
     -------
@@ -167,36 +178,97 @@ def get_mask(
     """
     # Get the min of the voxels sizes and use it as the resolution
     target_img = target_data["data"]
+    inherited_mask_item = target_data.get("mask_item", None)
     resolution = np.min(target_img.header.get_zooms()[:3])
 
-    if isinstance(mask, dict):
-        if len(mask) != 1:
-            raise_error(
-                "The mask dictionary must have only one key, "
-                "the name of the mask."
-            )
-        mask_name = list(mask.keys())[0]
-        mask_params = mask[mask_name]
-    else:
-        mask_name = mask
-        mask_params = None
+    if not isinstance(masks, list):
+        masks = [masks]
 
-    mask_object, _ = load_mask(
-        mask_name, path_only=False, resolution=resolution
-    )
-    if callable(mask_object):
-        if mask_params is None:
-            mask_params = {}
-        mask_img = mask_object(target_img, **mask_params)
-    else:  # Mask is a Nifti1Image
-        if mask_params is not None:
-            raise_error("Cannot pass callable params to a non-callable mask.")
-        mask_img = resample_to_img(
-            mask_object,
-            target_img,
-            interpolation="nearest",
-            copy=True,
+    # Check that dicts have only one key
+    invalid_elements = [
+        x for x in masks if isinstance(x, dict) and len(x) != 1
+    ]
+    if len(invalid_elements) > 0:
+        raise_error(
+            "Each of the masks dictionary must have only one key, "
+            "the name of the mask. The following dictionaries are invalid: "
+            f"{invalid_elements}"
         )
+
+    # Check params for the intersection function
+    intersect_params = {}
+    true_masks = []
+    for t_mask in masks:
+        if isinstance(t_mask, dict):
+            if "threshold" in t_mask:
+                intersect_params["threshold"] = t_mask["threshold"]
+                continue
+            elif "connected" in t_mask:
+                intersect_params["connected"] = t_mask["connected"]
+                continue
+        # All the other elements are masks
+        true_masks.append(t_mask)
+
+    if len(true_masks) == 0:
+        raise_error("No mask was passed. At least one mask is required.")
+    # Get all the masks
+    all_masks = []
+    for t_mask in true_masks:
+        if isinstance(t_mask, dict):
+            mask_name = list(t_mask.keys())[0]
+            mask_params = t_mask[mask_name]
+        else:
+            mask_name = t_mask
+            mask_params = None
+
+        if mask_name == "inherit":
+            if extra_input is None:
+                raise_error(
+                    "Cannot inherit mask from another data item "
+                    "because no extra data was passed."
+                )
+            if inherited_mask_item is None:
+                raise_error(
+                    "Cannot inherit mask from another data item "
+                    "because no mask item was specified "
+                    "(missing `mask_item` key in the data object)."
+                )
+            if inherited_mask_item not in extra_input:
+                raise_error(
+                    "Cannot inherit mask from another data item "
+                    f"because the item ({inherited_mask_item}) does not exist."
+                )
+            mask_img = extra_input[inherited_mask_item]["data"]
+        else:
+            mask_object, _ = load_mask(
+                mask_name, path_only=False, resolution=resolution
+            )
+            if callable(mask_object):
+                if mask_params is None:
+                    mask_params = {}
+                mask_img = mask_object(target_img, **mask_params)
+            else:  # Mask is a Nifti1Image
+                if mask_params is not None:
+                    raise_error(
+                        "Cannot pass callable params to a non-callable mask."
+                    )
+                mask_img = resample_to_img(
+                    mask_object,
+                    target_img,
+                    interpolation="nearest",
+                    copy=True,
+                )
+        all_masks.append(mask_img)
+    if len(all_masks) > 1:
+        mask_img = intersect_masks(all_masks, **intersect_params)
+    else:
+        if len(intersect_params) > 0:
+            # Yes, I'm this strict!
+            raise_error(
+                "Cannot pass parameters to the intersection function "
+                "when there is only one mask."
+            )
+        mask_img = all_masks[0]
 
     return mask_img
 

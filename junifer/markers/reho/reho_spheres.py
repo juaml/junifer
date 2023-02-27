@@ -4,7 +4,7 @@
 # License: AGPL
 
 
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
@@ -79,10 +79,10 @@ class ReHoSpheres(ReHoBase):
         (default None).
     agg_method_params : dict, optional
         The parameters to pass to the aggregation method (default None).
-    mask : str, optional
-        The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`
-        (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
@@ -97,7 +97,7 @@ class ReHoSpheres(ReHoBase):
         reho_params: Optional[Dict] = None,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
-        mask: Union[str, Dict, None] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.coords = coords
@@ -105,7 +105,7 @@ class ReHoSpheres(ReHoBase):
         self.reho_params = reho_params
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
-        self.mask = mask
+        self.masks = masks
         super().__init__(use_afni=use_afni, name=name)
 
     def compute(
@@ -144,7 +144,7 @@ class ReHoSpheres(ReHoBase):
             radius=self.radius,
             method=self.agg_method,
             method_params=self.agg_method_params,
-            mask=self.mask,
+            masks=self.masks,
             on="BOLD",
         )
         # Perform aggregation on reho map

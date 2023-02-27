@@ -115,12 +115,22 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             if type_ in input.keys():
                 logger.info(f"Computing {type_}")
                 t_input = input[type_]
-                extra_input = input.copy()
+
+                # Pass the other data types as extra input, removing
+                # the current type
+                extra_input = input
                 extra_input.pop(type_)
                 key, t_out = self.preprocess(
                     input=t_input, extra_input=extra_input
                 )
+
+                # Add the output to the Junifer Data object
                 out[key] = t_out
+
+                # In case we are creating a new type, re-add the original input
+                if key != type_:
+                    out[type_] = t_input
+
                 self.update_meta(out[key], "preprocess")
         return out
 

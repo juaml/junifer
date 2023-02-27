@@ -229,7 +229,7 @@ def test_ParcelAggregation_3D_mask() -> None:
     marker = ParcelAggregation(
         parcellation="Schaefer100x7",
         method="mean",
-        mask="GM_prob0.2",
+        masks="GM_prob0.2",
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
@@ -274,7 +274,7 @@ def test_ParcelAggregation_3D_mask_computed() -> None:
     marker = ParcelAggregation(
         parcellation="Schaefer100x7",
         method="mean",
-        mask={"compute_brain_mask": {"threshold": 0.2}},
+        masks={"compute_brain_mask": {"threshold": 0.2}},
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
