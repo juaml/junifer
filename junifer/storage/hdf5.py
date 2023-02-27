@@ -356,6 +356,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 # Get row and column count
                 n_rows, n_cols = hdf_data["data"][:, :, 0].shape
                 for element in hdf_data["element"]:
+                    # Bypass for when h5io stores without JSON encode / decode
+                    if isinstance(element, list):
+                        element = element[0]
                     for key, val in element.items():
                         element_idx_dict[key].extend([val] * n_rows)
                     # Add extra column for row headers
@@ -366,12 +369,18 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 reshaped_data = hdf_data["data"].reshape(-1, n_cols)
             elif hdf_data["kind"] == "vector":
                 for element in hdf_data["element"]:
+                    # Bypass for when h5io stores without JSON encode / decode
+                    if isinstance(element, list):
+                        element = element[0]
                     for key, val in element.items():
                         element_idx_dict[key].append(val)
                 # Convert data to proper 2D
                 reshaped_data = hdf_data["data"].T
             elif hdf_data["kind"] == "timeseries":
                 for idx, element in enumerate(hdf_data["element"]):
+                    # Bypass for when h5io stores without JSON encode / decode
+                    if isinstance(element, list):
+                        element = element[0]
                     # Get row count for the element
                     n_rows, _ = hdf_data["data"][:, :, idx].shape
                     for key, val in element.items():
