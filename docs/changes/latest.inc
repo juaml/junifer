@@ -40,6 +40,9 @@ Enhancements
 - Add support for nilearn computed masks (``compute_epi_mask``, ``compute_brain_mask``, ``compute_background_mask``,
   ``fetch_icbm152_brain_gm_mask``) (:gh:`175` by `Fede Raimondo`_).
 
+- Add fMRIPrep brain masks to the datagrabber patterns for all datagrabbers in the aomic sub-package
+  (:gh:`177` by `Leonard Sasse`_).
+
 Bugs
 ~~~~
 

@@ -35,7 +35,6 @@ def test_aomic_piop2_datagrabber() -> None:
 
             test_element = all_elements[0]
             sub, task = test_element
-
             out = dg[test_element]
 
             # asserts type "BOLD"
@@ -62,6 +61,9 @@ def test_aomic_piop2_datagrabber() -> None:
             assert out["BOLD_confounds"]["path"].exists()
             assert out["BOLD_confounds"]["path"].is_file()
 
+            # assert BOLD_mask
+            assert out["BOLD_mask"]["path"].exists()
+
             # asserts type "T1w"
             assert "T1w" in out
 
@@ -73,6 +75,9 @@ def test_aomic_piop2_datagrabber() -> None:
 
             assert out["T1w"]["path"].exists()
             assert out["T1w"]["path"].is_file()
+
+            # asserts T1w_mask
+            assert out["T1w_mask"]["path"].exists()
 
             # asserts type "probseg_CSF"
             assert "probseg_CSF" in out
