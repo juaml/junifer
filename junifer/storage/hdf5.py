@@ -902,25 +902,40 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     if key not in ("data", "element")
                 }
                 # Join the features element for a chunk
-                # Write data in chunks to avoid memory usage spikes
-                data_to_write["data"] = ChunkedArray(
-                    data=features_data,
-                    shape=(
-                        features_data.shape[0],
-                        features_data.shape[1],
-                        element_count,
-                    ),
-                    chunk_size=(
-                        features_data.shape[0],
-                        features_data.shape[1],
-                        chunk_size,
-                    ),
-                    n_chunk=chunk_idx,
                 data_to_write["element"] = reduce(
                     lambda acc, elem: acc + elem,
                     [x["element"] for x in stored_data_for_chunk],
                     [],
                 )
+                # Write data in chunks to avoid memory usage spikes
+                if features_data.ndim == 2:
+                    data_to_write["data"] = ChunkedArray(
+                        data=features_data,
+                        shape=(
+                            features_data.shape[0],
+                            element_count,
+                        ),
+                        chunk_size=(
+                            features_data.shape[0],
+                            chunk_size,
+                        ),
+                        n_chunk=chunk_idx,
+                    )
+                elif features_data.ndim == 3:
+                    data_to_write["data"] = ChunkedArray(
+                        data=features_data,
+                        shape=(
+                            features_data.shape[0],
+                            features_data.shape[1],
+                            element_count,
+                        ),
+                        chunk_size=(
+                            features_data.shape[0],
+                            features_data.shape[1],
+                            chunk_size,
+                        ),
+                        n_chunk=chunk_idx,
+                    )
                 # Write to HDF5
                 write_hdf5(
                     fname=str(self.uri.resolve()),  # type: ignore
