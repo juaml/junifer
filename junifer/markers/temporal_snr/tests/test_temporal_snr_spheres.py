@@ -33,13 +33,13 @@ def test_TemporalSNRSpheres(tmp_path: Path) -> None:
     out = all_out["BOLD"]
 
     assert "data" in out
-    assert "columns" in out
+    assert "col_names" in out
     assert out["data"].shape[0] == 1
     assert out["data"].shape[1] == 6
-    assert len(set(out["columns"])) == 6
+    assert len(set(out["col_names"])) == 6
 
     # check correct output
-    assert tsnr_spheres.get_output_type("BOLD") == "table"
+    assert tsnr_spheres.get_output_type("BOLD") == "vector"
 
     uri = tmp_path / "test_tsnr_coords.sqlite"
     # Single storage, must be the uri
@@ -53,8 +53,7 @@ def test_TemporalSNRSpheres(tmp_path: Path) -> None:
 
     features = storage.list_features()
     assert any(
-        x["name"] == "BOLD_TemporalSNRSpheres"
-        for x in features.values()
+        x["name"] == "BOLD_TemporalSNRSpheres" for x in features.values()
     )
 
 

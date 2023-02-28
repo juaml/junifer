@@ -32,14 +32,14 @@ def test_TemporalSNRParcels(tmp_path: Path) -> None:
     out = all_out["BOLD"]
 
     assert "data" in out
-    assert "columns" in out
+    assert "col_names" in out
 
     assert out["data"].shape[0] == 1
     assert out["data"].shape[1] == 100
-    assert len(set(out["columns"])) == 100
+    assert len(set(out["col_names"])) == 100
 
     # check correct output
-    assert tsnr_parcels.get_output_type("BOLD") == "table"
+    assert tsnr_parcels.get_output_type("BOLD") == "vector"
 
     uri = tmp_path / "test_tsnr_parcellation.sqlite"
     # Single storage, must be the uri
