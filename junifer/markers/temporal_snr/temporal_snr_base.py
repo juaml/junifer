@@ -104,7 +104,7 @@ class TemporalSNRBase(BaseMarker):
             included in the dictionary:
 
             * ``data`` : functional connectivity matrix as a ``numpy.ndarray``.
-            * ``columns`` : the column labels for the computed values as a list
+            * ``col_names`` : the column labels for the computed values as list
 
         """
         # calculate voxelwise temporal snr in an image
