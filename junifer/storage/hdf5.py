@@ -6,6 +6,7 @@
 
 
 from collections import defaultdict
+from functools import reduce
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
@@ -901,9 +902,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     if key not in ("data", "element")
                 }
                 # Join the features element for a chunk
-                data_to_write["element"] = [
-                    x["element"] for x in stored_data_for_chunk
-                ]
                 # Write data in chunks to avoid memory usage spikes
                 data_to_write["data"] = ChunkedArray(
                     data=features_data,
@@ -918,6 +916,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                         chunk_size,
                     ),
                     n_chunk=chunk_idx,
+                data_to_write["element"] = reduce(
+                    lambda acc, elem: acc + elem,
+                    [x["element"] for x in stored_data_for_chunk],
+                    [],
                 )
                 # Write to HDF5
                 write_hdf5(
