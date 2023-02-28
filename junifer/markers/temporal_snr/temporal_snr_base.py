@@ -5,7 +5,7 @@
 
 
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from ...utils import raise_error
 from ..base import BaseMarker
@@ -23,10 +23,10 @@ class TemporalSNRBase(BaseMarker):
     agg_method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default None).
-    mask : str, optional
-        The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`
-        (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
@@ -39,13 +39,12 @@ class TemporalSNRBase(BaseMarker):
         self,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
-        mask: Optional[str] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
-
-        self.mask = mask
+        self.masks = masks
         super().__init__(on="BOLD", name=name)
 
     @abstractmethod
