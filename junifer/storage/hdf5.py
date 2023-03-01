@@ -43,6 +43,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     force_float32 : bool, optional
         Whether to force casting of numpy.ndarray values to float32 if float64
         values are found (default True).
+    chunk_size : int, optional
+        The chunk size to use when collecting data from element files in
+        :meth:`junifer.storage.HDF5FeatureStorage.collect`. If the file count
+        is smaller than the value, the minimum is used (default 100).
     **kwargs : dict
         The keyword arguments passed to the superclass.
 
@@ -59,6 +63,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         overwrite: Union[bool, str] = "update",
         compression: int = 7,
         force_float32: bool = True,
+        chunk_size: int = 100,
         **kwargs: str,
     ) -> None:
         # Convert str to Path
@@ -86,6 +91,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         self.overwrite = overwrite
         self.compression = compression
         self.force_float32 = force_float32
+        self.chunk_size = chunk_size
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid storage types for input.
@@ -864,7 +870,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         ):
             element_count = len(element_files)
             # Chunk size for collecting
-            chunk_size = min(100, element_count)
+            chunk_size = min(self.chunk_size, element_count)
             # Operate on chunks
             for chunk_idx, chunk_start in tqdm(
                 enumerate(range(0, element_count, chunk_size)), desc="chunk"
