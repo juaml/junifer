@@ -67,4 +67,8 @@ Currently supported storage interfaces
    * - :class:`junifer.storage.SQLiteFeatureStorage`
      - ``.sqlite``
      - SQLite
-     - ``matrix``, ``table``, ``timeseries``
+     - ``matrix``, ``vector``, ``timeseries``
+   * - :class:`junifer.storage.HDF5FeatureStorage`
+     - ``.hdf5``
+     - HDF5
+     - ``matrix``, ``vector``, ``timeseries``
