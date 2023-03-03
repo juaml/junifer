@@ -295,122 +295,116 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     "must be specified."
                 )
             )
-        # Parameter check pass
-        else:
-            # Read metadata
-            metadata = read_hdf5(
-                fname=str(self.uri.resolve()),  # type: ignore
-                title="meta",
-                slash="ignore",
+        # Parameter check pass; read metadata
+        metadata = read_hdf5(
+            fname=str(self.uri.resolve()),  # type: ignore
+            title="meta",
+            slash="ignore",
+        )
+        # Initialize MD5 variable
+        md5: str = ""
+
+        # Consider feature_md5
+        if feature_md5 and not feature_name:
+            logger.debug(
+                f"Validating feature MD5 '{feature_md5}' in metadata "
+                f"for: {self.uri.resolve()} ..."  # type: ignore
             )
-            # Initialize MD5 variable
-            md5: str = ""
+            # Validate MD5
+            if feature_md5 in metadata:
+                md5 = feature_md5  # type: ignore
+            else:
+                raise_error(msg=f"Feature MD5 '{feature_md5}' not found")
 
-            # Consider feature_md5
-            if feature_md5 and not feature_name:
-                logger.debug(
-                    f"Validating feature MD5 '{feature_md5}' in metadata "
-                    f"for: {self.uri.resolve()} ..."  # type: ignore
-                )
-                # Validate MD5
-                if feature_md5 in metadata:
-                    md5 = feature_md5  # type: ignore
-                else:
-                    raise_error(msg=f"Feature MD5 '{feature_md5}' not found")
+        # Consider feature_name
+        elif not feature_md5 and feature_name:
+            logger.debug(
+                f"Validating feature name '{feature_name}' in metadata "
+                f"for: {self.uri.resolve()} ..."  # type: ignore
+            )
+            # Retrieve MD5 for feature_name
+            # Implicit counter for duplicate feature_name with different
+            # MD5; happens when something is wrong with marker computation
+            feature_name_duplicates_with_different_md5 = []
+            for md5, meta in metadata.items():
+                if meta["name"] == feature_name:
+                    feature_name_duplicates_with_different_md5.append(md5)
 
-            # Consider feature_name
-            elif not feature_md5 and feature_name:
-                logger.debug(
-                    f"Validating feature name '{feature_name}' in metadata "
-                    f"for: {self.uri.resolve()} ..."  # type: ignore
-                )
-                # Retrieve MD5 for feature_name
-                # Implicit counter for duplicate feature_name with different
-                # MD5; happens when something is wrong with marker computation
-                feature_name_duplicates_with_different_md5 = []
-                for md5, meta in metadata.items():
-                    if meta["name"] == feature_name:
-                        feature_name_duplicates_with_different_md5.append(md5)
-
-                # Check for no / duplicate feature_name
-                if len(feature_name_duplicates_with_different_md5) == 0:
-                    raise_error(msg=f"Feature '{feature_name}' not found")
-                elif len(feature_name_duplicates_with_different_md5) > 1:
-                    raise_error(
-                        msg=(
-                            "More than one feature with name "
-                            f"'{feature_name}' found. You can bypass this "
-                            "issue by specifying a `feature_md5`."
-                        )
+            # Check for no / duplicate feature_name
+            if len(feature_name_duplicates_with_different_md5) == 0:
+                raise_error(msg=f"Feature '{feature_name}' not found")
+            elif len(feature_name_duplicates_with_different_md5) > 1:
+                raise_error(
+                    msg=(
+                        "More than one feature with name "
+                        f"'{feature_name}' found. You can bypass this "
+                        "issue by specifying a `feature_md5`."
                     )
+                )
 
-                md5 = feature_name_duplicates_with_different_md5[0]
+            md5 = feature_name_duplicates_with_different_md5[0]
 
-            # Read data from HDF5
-            hdf_data = read_hdf5(
-                fname=str(self.uri.resolve()),  # type: ignore
-                title=md5,
-                slash="ignore",
-            )
-            reshaped_data = hdf_data["data"]
+        # Read data from HDF5
+        hdf_data = read_hdf5(
+            fname=str(self.uri.resolve()),  # type: ignore
+            title=md5,
+            slash="ignore",
+        )
+        reshaped_data = hdf_data["data"]
 
-            # Generate index for the data
-            logger.debug(f"Generating pandas.MultiIndex for {md5} ...")
-            # Create dictionary for aggregating index data
-            element_idx_dict = defaultdict(list)
+        # Generate index for the data
+        logger.debug(f"Generating pandas.MultiIndex for {md5} ...")
+        # Create dictionary for aggregating index data
+        element_idx_dict = defaultdict(list)
 
-            if hdf_data["kind"] == "matrix":
-                # Get row and column count
-                n_rows, n_cols = hdf_data["data"][:, :, 0].shape
-                for element in hdf_data["element"]:
-                    for key, val in element.items():
-                        element_idx_dict[key].extend([val] * n_rows)
-                    # Add extra column for row headers
-                    element_idx_dict[
-                        hdf_data["row_header_column_name"]
-                    ].extend(hdf_data["row_headers"])
-                # Convert data from 3D to 2D
-                reshaped_data = hdf_data["data"].reshape(-1, n_cols)
-            elif hdf_data["kind"] == "vector":
-                for element in hdf_data["element"]:
-                    for key, val in element.items():
-                        element_idx_dict[key].append(val)
-                # Convert data to proper 2D
-                reshaped_data = hdf_data["data"].T
-            elif hdf_data["kind"] == "timeseries":
-                for idx, element in enumerate(hdf_data["element"]):
-                    # Get row count for the element
-                    n_rows, _ = hdf_data["data"][:, :, idx].shape
-                    for key, val in element.items():
-                        element_idx_dict[key].extend([val] * n_rows)
-                    # Add extra column for timepoints
-                    element_idx_dict[
-                        hdf_data["row_header_column_name"]
-                    ].extend(np.arange(n_rows))
-                # Convert data from 3D to 2D
-                reshaped_data = hdf_data["data"].reshape(-1, 1)
+        if hdf_data["kind"] == "matrix":
+            # Get row and column count
+            n_rows, n_cols = hdf_data["data"][:, :, 0].shape
+            for element in hdf_data["element"]:
+                for key, val in element.items():
+                    element_idx_dict[key].extend([val] * n_rows)
+                # Add extra column for row headers
+                element_idx_dict[hdf_data["row_header_column_name"]].extend(
+                    hdf_data["row_headers"]
+                )
+            # Convert data from 3D to 2D
+            reshaped_data = hdf_data["data"].reshape(-1, n_cols)
+        elif hdf_data["kind"] == "vector":
+            for element in hdf_data["element"]:
+                for key, val in element.items():
+                    element_idx_dict[key].append(val)
+            # Convert data to proper 2D
+            reshaped_data = hdf_data["data"].T
+        elif hdf_data["kind"] == "timeseries":
+            for idx, element in enumerate(hdf_data["element"]):
+                # Get row count for the element
+                n_rows, _ = hdf_data["data"][:, :, idx].shape
+                for key, val in element.items():
+                    element_idx_dict[key].extend([val] * n_rows)
+                # Add extra column for timepoints
+                element_idx_dict[hdf_data["row_header_column_name"]].extend(
+                    np.arange(n_rows)
+                )
+            # Convert data from 3D to 2D
+            reshaped_data = hdf_data["data"].reshape(-1, 1)
 
-            # Create dataframe for index
-            idx_df = pd.DataFrame(data=element_idx_dict)
-            # Create multiindex from dataframe
-            hdf_data_idx = pd.MultiIndex.from_frame(df=idx_df)
-            logger.debug(f"Generated pandas.MultiIndex for {md5} ...")
+        # Create dataframe for index
+        idx_df = pd.DataFrame(data=element_idx_dict)
+        # Create multiindex from dataframe
+        hdf_data_idx = pd.MultiIndex.from_frame(df=idx_df)
+        logger.debug(f"Generated pandas.MultiIndex for {md5} ...")
 
-            # Convert to DataFrame
-            logger.debug(
-                f"Converting HDF5 data for {md5} to pandas.DataFrame ..."
-            )
-            df = pd.DataFrame(
-                data=reshaped_data,
-                index=hdf_data_idx,
-                columns=hdf_data["column_headers"],
-                dtype=hdf_data["data"].dtype,
-            )
-            logger.debug(
-                f"Converted HDF5 data for {md5} to pandas.DataFrame ..."
-            )
+        # Convert to DataFrame
+        logger.debug(f"Converting HDF5 data for {md5} to pandas.DataFrame ...")
+        df = pd.DataFrame(
+            data=reshaped_data,
+            index=hdf_data_idx,
+            columns=hdf_data["column_headers"],
+            dtype=hdf_data["data"].dtype,
+        )
+        logger.debug(f"Converted HDF5 data for {md5} to pandas.DataFrame ...")
 
-            return df
+        return df
 
     def _write_processed_data(
         self, fname: str, processed_data: Dict[str, Any], title: str
