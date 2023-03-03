@@ -40,7 +40,7 @@ class TemporalSNRParcels(TemporalSNRBase):
         parcellation: Union[str, List[str]],
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
-        masks: Optional[str] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
