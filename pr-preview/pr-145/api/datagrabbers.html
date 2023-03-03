@@ -181,6 +181,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../using/running.html">4.2. Running jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">4.3. Collecting results</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">4.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/masks.html">4.5.1. Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">5. Built-in Pipeline steps and data</a></li>
@@ -377,6 +378,27 @@ the datalad dataset will be cloned into a temporary directory
 </dl>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICID1000.get_item">
+<span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICID1000.get_item" title="Permalink to this definition">#</a></dt>
+<dd><p>Index one element in the dataset.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>subject</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The subject ID.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>out</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Dictionary of paths for each type of data required for the
+specified element.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -461,6 +483,30 @@ selected (default None).</p>
 <dd class="field-odd"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></dt><dd><p>The list of elements that can be grabbed in the dataset after
 imposing constraints based on specified tasks.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICPIOP2.get_item">
+<span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICPIOP2.get_item" title="Permalink to this definition">#</a></dt>
+<dd><p>Index one element in the dataset.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>subject</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The subject ID.</p>
+</dd>
+<dt><strong>task</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The task to get. Possible values are:
+{“restingstate”, “stopsignal”, “emomatching”, “workingmemory”}</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>out</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Dictionary of paths for each type of data required for the
+specified element.</p>
 </dd>
 </dl>
 </dd>
@@ -909,7 +955,10 @@ and the values are the patterns. Each occurrence of the string
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_types"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_types()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICID1000"><code class="docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICID1000"><code class="docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICID1000.get_item"><code class="docutils literal notranslate"><span class="pre">DataladAOMICID1000.get_item()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1.get_elements"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1.get_elements()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1.get_item"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1.get_item()</span></code></a></li>
@@ -917,6 +966,7 @@ and the values are the patterns. Each occurrence of the string
 </li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP2"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP2.get_elements"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP2.get_elements()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP2.get_item"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP2.get_item()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladDataGrabber"><code class="docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a><ul>

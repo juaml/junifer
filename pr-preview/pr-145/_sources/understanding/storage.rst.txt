@@ -15,10 +15,10 @@ that object else they are kept in memory.
 Storage is meant to be used inside the datagrabber context but you can operate on them outside the context as long
 as the processed data is in the memory and the Python runtime has not garbage-collected it.
 
-The :ref:`Markers <marker>` are responsible for defining what *storage kind* (``matrix``, ``table``, ``timeseries``)
+The :ref:`Markers <marker>` are responsible for defining what *storage kind* (``matrix``, ``vector``, ``timeseries``)
 they support for which :ref:`data type <data_types>` by overriding its ``store`` method. The storage object in turn
 declares and provides implementation for specific *storage kind*. For example, :class:`junifer.storage.SQLiteFeatureStorage`
-supports saving ``matrix``, ``table`` and ``timeseries`` via ``store_matrix``, ``store_table`` and ``store_timeseries``
+supports saving ``matrix``, ``vector`` and ``timeseries`` via ``store_matrix``, ``store_vector`` and ``store_timeseries``
 methods respectively.
 
 For storage interfaces not supported by junifer yet, you can either make your own ``Storage`` by providing a concrete
@@ -42,15 +42,15 @@ Currently supported storage types
      - A 2D matrix with row and column names
      -  ``col_names``, ``row_names``, ``matrix_kind``, ``diagonal``
      -  :meth:`junifer.storage.BaseFeatureStorage.store_matrix`
-   * - ``table``
+   * - ``vector``
      - A vector of values with column names
      - ``columns``, ``row_names``
-     -  :meth:`junifer.storage.BaseFeatureStorage.store_table`
+     -  :meth:`junifer.storage.BaseFeatureStorage.store_vector`
    * - ``timeseries``
      - A 2D matrix of values with column names
      - ``columns``, ``row_names``
      -  :meth:`junifer.storage.BaseFeatureStorage.store_timeseries`
-  
+
 .. _storage_interfaces:
 
 Currently supported storage interfaces
