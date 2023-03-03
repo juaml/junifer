@@ -11,7 +11,6 @@ from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
 
 import numpy as np
 import pandas as pd
-from nilearn import image
 from scipy.stats import zscore
 
 from ..utils import raise_error
@@ -157,34 +156,3 @@ def _correlate_dataframes(
         .corr(method=method)  # type: ignore
         .loc["df2", "df1"]
     )
-
-
-def _voxelwise_tsnr(input: Dict) -> Dict:
-    """Compute temporal signal-to-noise ratio per voxel.
-
-    Parameters
-    ----------
-    input : dict
-        A single input from the pipeline data object for which to compute
-        voxelwise tSNR.
-
-    Returns
-    -------
-    dict
-        A pipeline data object containing a 3D image with the voxelwise
-        tSNR map.
-
-    """
-    img = input["data"]
-    mean_img = image.math_img("img.mean(axis=-1).squeeze()", img=img)
-    stdv_img = image.math_img("img.std(axis=-1).squeeze()", img=img)
-    mask_img = image.math_img("(stdv_img != 0)", stdv_img=stdv_img)
-
-    # this returns the tsnr voxelwise image
-    input["data"] = image.math_img(
-        "np.divide(mean_img, stdv_img, where=mask_img.astype(bool))",
-        mean_img=mean_img,
-        stdv_img=stdv_img,
-        mask_img=mask_img,
-    )
-    return input

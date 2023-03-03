@@ -7,9 +7,10 @@
 from abc import abstractmethod
 from typing import Any, Dict, List, Optional, Union
 
+from nilearn import image as nimg
+
 from ...utils import raise_error
 from ..base import BaseMarker
-from ..utils import _voxelwise_tsnr
 
 
 class TemporalSNRBase(BaseMarker):
@@ -107,8 +108,19 @@ class TemporalSNRBase(BaseMarker):
             * ``col_names`` : the column labels for the computed values as list
 
         """
-        # calculate voxelwise temporal snr in an image
-        input = _voxelwise_tsnr(input)
-
+        # Calculate voxelwise temporal signal-to-noise ratio in an image
+        mean_img = nimg.math_img(
+            "img.mean(axis=-1).squeeze()", img=input["data"]
+        )
+        stdv_img = nimg.math_img(
+            "img.std(axis=-1).squeeze()", img=input["data"]
+        )
+        mask_img = nimg.math_img("(stdv_img != 0)", stdv_img=stdv_img)
+        input["data"] = nimg.math_img(
+            "np.divide(mean_img, stdv_img, where=mask_img.astype(bool))",
+            mean_img=mean_img,
+            stdv_img=stdv_img,
+            mask_img=mask_img,
+        )
         # Perform necessary aggregation and return
         return self.aggregate(input)
