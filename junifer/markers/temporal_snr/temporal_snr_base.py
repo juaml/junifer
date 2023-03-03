@@ -49,7 +49,9 @@ class TemporalSNRBase(BaseMarker):
         super().__init__(on="BOLD", name=name)
 
     @abstractmethod
-    def aggregate(self, input: Dict[str, Any]) -> Dict[str, Any]:
+    def aggregate(
+        self, input: Dict[str, Any], extra_input: Optional[Dict] = None
+    ) -> Dict[str, Any]:
         """Perform aggregation."""
         raise_error(
             msg="Concrete classes need to implement aggregate().",
@@ -123,4 +125,4 @@ class TemporalSNRBase(BaseMarker):
             mask_img=mask_img,
         )
         # Perform necessary aggregation and return
-        return self.aggregate(input)
+        return self.aggregate(input=input, extra_input=extra_input)
