@@ -106,7 +106,7 @@ class TemporalSNRBase(BaseMarker):
             The computed result as dictionary. The following keys will be
             included in the dictionary:
 
-            * ``data`` : functional connectivity matrix as a ``numpy.ndarray``.
+            * ``data`` : the computed values as a ``numpy.ndarray``
             * ``col_names`` : the column labels for the computed values as list
 
         """
