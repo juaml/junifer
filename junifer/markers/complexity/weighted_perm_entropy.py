@@ -28,10 +28,10 @@ class WeightedPermEntropy(ComplexityBase):
     agg_method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
         :func:`junifer.stats.get_aggfunc_by_name` (default None).
-    mask : str, optional
-        The name of the mask to apply to regions before extracting signals.
-        Check valid options by calling :func:`junifer.data.masks.list_masks`
-        (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
     params : dict, optional
         Parameters to pass to the weighted permutation entropy calculation
         function.
@@ -49,7 +49,7 @@ class WeightedPermEntropy(ComplexityBase):
         parcellation: Union[str, List[str]],
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
-        mask: Union[str, Dict, None] = None,
+        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
@@ -57,7 +57,7 @@ class WeightedPermEntropy(ComplexityBase):
             parcellation=parcellation,
             agg_method=agg_method,
             agg_method_params=agg_method_params,
-            mask=mask,
+            masks=masks,
             name=name,
         )
         if params is None:
