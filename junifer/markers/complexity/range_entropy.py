@@ -64,33 +64,6 @@ class RangeEntropy(ComplexityBase):
         else:
             self.params = params
 
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker.
-
-        """
-        return ["BOLD"]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        """
-        return "matrix"
-
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
         """Compute.
 
