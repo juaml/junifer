@@ -93,18 +93,29 @@ class ComplexityBase(BaseMarker):
         """
         return "vector"
 
-    def _extract_bold_timeseries(self, input: Dict[str, Any]) -> Dict:
-        """Extract BOLD time series.
+    def compute(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Compute.
 
         Parameters
-        ----------
-        input : dict
-            The BOLD data as dictionary.
+         ----------
+         input : dict
+             A single input from the pipeline data object in which to compute
+             the marker.
+         extra_input : dict, optional
+             The other fields in the pipeline data object. Useful for accessing
+             other data kind that needs to be used in the computation.
+         Returns
+         -------
+         dict
+             The computed result as dictionary. The following keys will be
+             included in the dictionary:
 
-        Returns
-        -------
-        numpy.ndarray
-            The extracted BOLD time series.
+            * ``data`` : ROI-wise complexity measures as ``numpy.ndarray``
+            * ``col_names`` : ROI labels for the complexity measures as list
 
         """
         # Initialize a ParcelAggregation
@@ -116,5 +127,13 @@ class ComplexityBase(BaseMarker):
             on="BOLD",
         )
         # Extract the 2D time series using parcel aggregation
-        parcel_aggregation_output = parcel_aggregation.compute(input=input)
-        return parcel_aggregation_output
+        parcel_aggregation_map = parcel_aggregation.compute(
+            input=input, extra_input=extra_input
+        )
+
+        # Compute complexity measure
+        parcel_aggregation_map["data"] = self.compute_complexity(
+            parcel_aggregation_map["data"]
+        )
+
+        return parcel_aggregation_map
