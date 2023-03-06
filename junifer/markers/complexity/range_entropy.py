@@ -4,13 +4,16 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
 from ...utils import logger
-from ..parcel_aggregation import ParcelAggregation
 from ..utils import _range_entropy
 from .complexity_base import ComplexityBase
+
+
+if TYPE_CHECKING:
+    import numpy as np
 
 
 @register_marker
@@ -64,26 +67,23 @@ class RangeEntropy(ComplexityBase):
         else:
             self.params = params
 
-    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
-        """Compute.
+    def compute_complexity(
+        self,
+        extracted_bold_values: "np.ndarray",
+    ) -> "np.ndarray":
+        """Compute complexity measure.
 
         Take a timeseries of brain areas, and calculate the range entropy[1].
 
         Parameters
         ----------
-        input : dict
-            The BOLD data as dictionary.
-        extra_input : dict, optional
-            The other fields in the pipeline data object (default None).
+        extracted_bold_values : numpy.ndarray
+            The BOLD values extracted via parcel aggregation.
 
         Returns
         -------
-        dict
-            The computed result as dictionary. The dictionary has the following
-            keys:
-
-            * ``data`` : computed data as a numpy.ndarray.
-            * ``col_names`` : column names as a list
+        numpy.ndarray
+            The values after computing complexity measure.
 
         References
         ----------
@@ -93,26 +93,7 @@ class RangeEntropy(ComplexityBase):
                Entropy, vol. 20, no. 12, p. 962, 2018.
 
         """
-        # Extract aggregated BOLD timeseries
         logger.info("Calculating range entropy.")
-
-        # Calculate range entropy
-        parcel_aggregation = ParcelAggregation(
-            parcellation=self.parcellation,
-            method=self.agg_method,
-            method_params=self.agg_method_params,
-            mask=self.mask,
-        )
-        # Compute the parcel aggregation
-        output = parcel_aggregation.compute(
-            input=input, extra_input=extra_input
-        )
-        feature_map = _range_entropy(output["data"], self.params)  # 1 X n_roi
-
-        # Initialize output
-        out = output.copy()
-        out["data"] = feature_map
-        out["col_names"] = output["columns"]
-        del out["columns"]
-
-        return out
+        return _range_entropy(
+            bold_ts=extracted_bold_values, params=self.params
+        )  # 1 X n_roi
