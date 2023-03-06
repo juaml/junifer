@@ -74,7 +74,7 @@ class ComplexityBase(BaseMarker):
             The storage type output by the marker.
 
         """
-        return "matrix"
+        return "vector"
 
     def _extract_bold_timeseries(self, input: Dict[str, Any]) -> Dict:
         """Extract BOLD time series.

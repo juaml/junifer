@@ -46,7 +46,7 @@ def test_compute() -> None:
 def test_get_output_type() -> None:
     """Test WeightedPermEntropy get_output_type()."""
     marker = WeightedPermEntropy(parcellation=PARCELLATION)
-    assert marker.get_output_type("BOLD") == "matrix"
+    assert marker.get_output_type("BOLD") == "vector"
 
 
 def test_store(tmp_path: Path) -> None:
