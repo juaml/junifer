@@ -3,10 +3,16 @@
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict, List, Optional, Union
+from abc import abstractmethod
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
+from ...utils import raise_error
 from ..base import BaseMarker
 from ..parcel_aggregation import ParcelAggregation
+
+
+if TYPE_CHECKING:
+    import numpy as np
 
 
 class ComplexityBase(BaseMarker):
@@ -48,6 +54,17 @@ class ComplexityBase(BaseMarker):
         self.agg_method_params = agg_method_params
         self.masks = masks
         super().__init__(on="BOLD", name=name)
+
+    @abstractmethod
+    def compute_complexity(
+        self,
+        extracted_bold_values: "np.ndarray",
+    ) -> "np.ndarray":
+        """Compute complexity measure."""
+        raise_error(
+            msg="Concrete classes need to implement compute_complexity().",
+            klass=NotImplementedError,
+        )
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
