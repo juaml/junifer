@@ -249,64 +249,6 @@ def _range_entropy_auc(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     return range_en_auc_roi
 
 
-def _perm_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
-    """Compute the region-wise permutation entropy of BOLD timeseries.
-
-    Take a timeseries of brain areas, and calculate permutation entropy
-    according to the method outlined in [1].
-
-    Parameters
-    ----------
-    bold_ts : np.ndarray
-        BOLD time series (time x ROIs).
-    params : dict
-        The dictionary of input parameters.
-
-    Returns
-    -------
-    np.ndarray
-        ROI-wise brain map of permutation entropy.
-
-    References
-    ----------
-    .. [1] Bandt, C., & Pompe, B. (2002)
-           Permutation entropy: a natural complexity measure for time
-           series. Physical review letters, 88(17), 174102.
-
-    See also
-    --------
-    https://neuropsychology.github.io/NeuroKit/functions/complexity.html
-
-    """
-    emb_dim = params["m"]
-    delay = params["delay"]
-
-    assert isinstance(emb_dim, int), "Embedding dimension must be integer."
-    assert isinstance(delay, int), "Delay must be integer."
-
-    _, n_roi = bold_ts.shape
-    perm_en_roi = np.zeros((n_roi, 1))
-
-    for idx_roi in range(n_roi):
-        sig = bold_ts[:, idx_roi]
-        tmp = nk.entropy_permutation(
-            sig,
-            dimension=emb_dim,
-            delay=delay,
-            weighted=False,  # PE, not wPE
-            corrected=True,  # Normalized PE
-        )
-
-        perm_en_roi[idx_roi] = tmp[0]
-
-    if np.isnan(np.sum(perm_en_roi)):
-        warn_with_log("There is NaN in the permutation entropy values!")
-
-    perm_en_roi = perm_en_roi.T  # 1 X n_roi
-
-    return perm_en_roi
-
-
 def _weighted_perm_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     """Compute the region-wise weighted permutation entropy of BOLD timeseries.
 

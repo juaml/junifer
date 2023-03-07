@@ -4,16 +4,14 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
+
+import neurokit2 as nk
+import numpy as np
 
 from ...api.decorators import register_marker
-from ...utils import logger
-from ..utils import _perm_entropy
+from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
-
-
-if TYPE_CHECKING:
-    import numpy as np
 
 
 @register_marker
@@ -69,12 +67,12 @@ class PermEntropy(ComplexityBase):
 
     def compute_complexity(
         self,
-        extracted_bold_values: "np.ndarray",
-    ) -> "np.ndarray":
+        extracted_bold_values: np.ndarray,
+    ) -> np.ndarray:
         """Compute complexity measure.
 
-        Take a timeseries of brain areas, and calculate the permutation
-        entropy [1].
+        Take a timeseries of brain areas, and calculate permutation entropy
+        according to the method outlined in [1].
 
         Parameters
         ----------
@@ -93,8 +91,35 @@ class PermEntropy(ComplexityBase):
                series.
                Physical review letters, 88(17), 174102.
 
+        See also
+        --------
+        neurokit2.entropy_permutation
+
         """
         logger.info("Calculating permutation entropy.")
-        return _perm_entropy(
-            bold_ts=extracted_bold_values, params=self.params
-        )  # 1 X n_roi
+
+        emb_dim = self.params["m"]
+        delay = self.params["delay"]
+
+        assert isinstance(emb_dim, int), "Embedding dimension must be integer."
+        assert isinstance(delay, int), "Delay must be integer."
+
+        _, n_roi = extracted_bold_values.shape
+        perm_en_roi = np.zeros((n_roi, 1))
+
+        for idx_roi in range(n_roi):
+            sig = extracted_bold_values[:, idx_roi]
+            tmp = nk.entropy_permutation(
+                sig,
+                dimension=emb_dim,
+                delay=delay,
+                weighted=False,  # PE, not wPE
+                corrected=True,  # Normalized PE
+            )
+
+            perm_en_roi[idx_roi] = tmp[0]
+
+        if np.isnan(np.sum(perm_en_roi)):
+            warn_with_log("There is NaN in the permutation entropy values!")
+
+        return perm_en_roi.T  # 1 X n_roi
