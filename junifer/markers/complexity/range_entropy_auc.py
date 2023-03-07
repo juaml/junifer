@@ -4,16 +4,14 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
+
+import neurokit2 as nk
+import numpy as np
 
 from ...api.decorators import register_marker
-from ...utils import logger
-from ..utils import _range_entropy_auc
+from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
-
-
-if TYPE_CHECKING:
-    import numpy as np
 
 
 @register_marker
@@ -69,12 +67,13 @@ class RangeEntropyAUC(ComplexityBase):
 
     def compute_complexity(
         self,
-        extracted_bold_values: "np.ndarray",
-    ) -> "np.ndarray":
+        extracted_bold_values: np.ndarray,
+    ) -> np.ndarray:
         """Compute complexity measure.
 
-        Take a timeseries of brain areas, and calculate the area under the
-        curve of range entropy over the tolerance parameter from 0 to 1 [1].
+        Take a timeseries of brain areas, calculate range entropy according to
+        the method outlined in [1] across the range of tolerance value r from 0
+        to 1, and compute its area under the curve.
 
         Parameters
         ----------
@@ -93,8 +92,49 @@ class RangeEntropyAUC(ComplexityBase):
                Self-Similarity.
                Entropy, vol. 20, no. 12, p. 962, 2018.
 
+        See also
+        --------
+        neurokit2.entropy_range
+
         """
         logger.info("Calculating AUC of range entropy.")
-        return _range_entropy_auc(
-            bold_ts=extracted_bold_values, params=self.params
-        )  # 1 X n_roi
+
+        emb_dim = self.params["m"]
+        delay = self.params["delay"]
+        n_r = self.params["n_r"]
+
+        assert isinstance(emb_dim, int), "Embedding dimension must be integer."
+        assert isinstance(delay, int), "Delay must be integer."
+        assert isinstance(n_r, int), "n_r must be an integer."
+
+        r_span = np.arange(0, 1, 1 / n_r)  # Tolerance r span
+        _, n_roi = extracted_bold_values.shape
+        range_en_auc_roi = np.zeros((n_roi, 1))
+
+        for idx_roi in range(n_roi):
+
+            sig = extracted_bold_values[:, idx_roi]
+
+            range_ent_vec = np.zeros((n_r))
+            idx_r = 0
+            for tolerance in r_span:
+
+                range_en_auc_roi_tmp = nk.entropy_range(
+                    sig,
+                    dimension=emb_dim,
+                    delay=delay,
+                    tolerance=tolerance,
+                    method="mSampEn",  # RangeEn B
+                )
+
+                range_ent_vec[idx_r] = range_en_auc_roi_tmp[0]
+                idx_r = idx_r + 1
+
+            range_en_auc_roi[idx_roi] = np.trapz(range_ent_vec)
+
+        range_en_auc_roi = range_en_auc_roi / n_r
+
+        if np.isnan(np.sum(range_en_auc_roi)):
+            warn_with_log("There is NaN in the auc of range entropy values!")
+
+        return range_en_auc_roi.T  # 1 X n_roi
