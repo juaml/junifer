@@ -121,65 +121,6 @@ def _correlate_dataframes(
     )
 
 
-def _range_entropy(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
-    """Compute the region-wise range entropy of BOLD timeseries.
-
-    Take a timeseries of brain areas, and calculate
-    range entropy according to the method outlined in [1].
-
-    Parameters
-    ----------
-    bold_ts : np.ndarray
-        BOLD timeseries (time x ROIs).
-    params : dict
-        The dictionary of input parameters.
-
-    Returns
-    -------
-    np.ndarray
-        ROI-wise brain map of range entropy.
-
-    References
-    ----------
-    .. [1] A. Omidvarnia et al. (2018)
-           Range Entropy: A Bridge between Signal Complexity and
-           Self-Similarity, Entropy, vol. 20, no. 12, p. 962, 2018.
-
-    """
-    emb_dim = params["m"]
-    delay = params["delay"]
-    tolerance = params["tol"]
-
-    assert isinstance(emb_dim, int), "Embedding dimension must be integer."
-    assert isinstance(delay, int), "Delay must be integer."
-    assert isinstance(
-        tolerance, float
-    ), "Tolerance must be a float number between 0 and 1."
-
-    _, n_roi = bold_ts.shape
-    range_en_roi = np.zeros((n_roi, 1))
-
-    for idx_roi in range(n_roi):
-
-        sig = bold_ts[:, idx_roi]
-        tmp = nk.entropy_range(
-            sig,
-            dimension=emb_dim,
-            delay=delay,
-            tolerance=tolerance,
-            method="mSampEn",  # RangeEn B
-        )
-
-        range_en_roi[idx_roi] = tmp[0]
-
-    if np.isnan(np.sum(range_en_roi)):
-        warn_with_log("There is NaN in the range entropy values!")
-
-    range_en_roi = range_en_roi.T  # 1 X n_roi
-
-    return range_en_roi
-
-
 def _range_entropy_auc(bold_ts: np.ndarray, params: Dict) -> np.ndarray:
     """Compute the region-wise AUC of range entropy of BOLD timeseries.
 
