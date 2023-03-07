@@ -4,16 +4,14 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
+
+import neurokit2 as nk
+import numpy as np
 
 from ...api.decorators import register_marker
-from ...utils import logger
-from ..utils import _multiscale_entropy_auc
+from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
-
-
-if TYPE_CHECKING:
-    import numpy as np
 
 
 @register_marker
@@ -69,12 +67,13 @@ class MultiscaleEntropyAUC(ComplexityBase):
 
     def compute_complexity(
         self,
-        extracted_bold_values: "np.ndarray",
-    ) -> "np.ndarray":
+        extracted_bold_values: np.ndarray,
+    ) -> np.ndarray:
         """Compute complexity measure.
 
-        Take a timeseries of brain areas, and calculate the AUC of
-        multiscale entropy [1].
+        Take a timeseries of brain areas, calculate multiscale entropy for each
+        region and calculate the AUC of the entropy curves leading to a
+        region-wise map of the brain [1].
 
         Parameters
         ----------
@@ -92,8 +91,45 @@ class MultiscaleEntropyAUC(ComplexityBase):
                Multiscale entropy analysis of complex physiologic time series.
                Physical review letters, 89(6), 068102, 2002.
 
+        See also
+        --------
+        neurokit2.entropy_multiscale
+
         """
         logger.info("Calculating AUC of multiscale entropy.")
-        return _multiscale_entropy_auc(
-            bold_ts=extracted_bold_values, params=self.params
-        )  # 1 X n_roi
+
+        emb_dim = self.params["m"]
+        tol = self.params["tol"]
+        scale = self.params["scale"]
+
+        assert isinstance(emb_dim, int), "Embedding dimension must be integer."
+        assert isinstance(scale, int), "Scale must be integer."
+        assert isinstance(
+            tol, float
+        ), "Tolerance must be a positive float number."
+
+        _, n_roi = extracted_bold_values.shape
+        MSEn_auc_roi = np.zeros((n_roi, 1))
+        for idx_roi in range(n_roi):
+            sig = extracted_bold_values[:, idx_roi]
+            tol_corrected = tol * np.std(sig)
+            tmp = nk.entropy_multiscale(
+                sig,
+                scale=scale,
+                dimension=emb_dim,
+                tolerance=tol_corrected,
+                method="MSEn",
+            )
+
+            MSEn_auc_roi[idx_roi] = tmp[0]
+
+        if np.isnan(np.sum(MSEn_auc_roi)):
+            warn_with_log(
+                (
+                    "There is NaN in the entropy values, likely due "
+                    "to too short data length. A possible solution "
+                    "may be to choose a smaller value for 'scale'."
+                )
+            )
+
+        return MSEn_auc_roi.T  # 1 X n_roi
