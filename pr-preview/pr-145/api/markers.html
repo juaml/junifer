@@ -494,7 +494,7 @@ available Junifer Data dictionary keys.</p>
 <dt><strong>aggregation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method (default “mean”).</p>
 </dd>
 <dt><strong>correlation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Any method that can be passed to
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.1.0.dev0+131.g75c1b9630a)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.1.0.dev0+136.g178e504c90)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
 </dd>
 <dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
 signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
@@ -811,8 +811,9 @@ If None, value is set to {“method”: “dfa”} (default None).</p>
 <dt class="sig sig-object py" id="junifer.markers.HurstExponent.compute_complexity">
 <span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.HurstExponent.compute_complexity" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute complexity measure.</p>
-<p>Take a timeseries of brain areas, and calculate the Hurst exponent
-based on the detrended fluctuation analysis method [1].</p>
+<p>Take a timeseries of brain areas, and calculate Hurst exponent using
+the detrended fluctuation analysis method assuming the data is
+monofractal [1].</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -827,6 +828,12 @@ based on the detrended fluctuation analysis method [1].</p>
 </dl>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.fractal_dfa</span></code></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="re1b778968cf3-1" role="doc-biblioentry">
@@ -937,8 +944,9 @@ is set to {“m”: 2, “tol”: 0.5, “scale”: 10} (default None).</p>
 <dt class="sig sig-object py" id="junifer.markers.MultiscaleEntropyAUC.compute_complexity">
 <span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.MultiscaleEntropyAUC.compute_complexity" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute complexity measure.</p>
-<p>Take a timeseries of brain areas, and calculate the AUC of
-multiscale entropy [1].</p>
+<p>Take a timeseries of brain areas, calculate multiscale entropy for each
+region and calculate the AUC of the entropy curves leading to a
+region-wise map of the brain [1].</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -953,6 +961,12 @@ multiscale entropy [1].</p>
 </dl>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_multiscale</span></code></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="rf51d041057d2-1" role="doc-biblioentry">
@@ -1098,8 +1112,8 @@ For more information, check out
 <dt class="sig sig-object py" id="junifer.markers.PermEntropy.compute_complexity">
 <span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.PermEntropy.compute_complexity" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute complexity measure.</p>
-<p>Take a timeseries of brain areas, and calculate the permutation
-entropy [1].</p>
+<p>Take a timeseries of brain areas, and calculate permutation entropy
+according to the method outlined in [1].</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -1114,6 +1128,12 @@ entropy [1].</p>
 </dl>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_permutation</span></code></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="rcff56f87d223-1" role="doc-biblioentry">
@@ -1265,7 +1285,8 @@ If None, value is set to {“m”: 2, “tol”: 0.5, “delay”: 1}
 <dt class="sig sig-object py" id="junifer.markers.RangeEntropy.compute_complexity">
 <span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.RangeEntropy.compute_complexity" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute complexity measure.</p>
-<p>Take a timeseries of brain areas, and calculate the range entropy[1].</p>
+<p>Take a timeseries of brain areas, and calculate
+range entropy according to the method outlined in [1].</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -1280,6 +1301,12 @@ If None, value is set to {“m”: 2, “tol”: 0.5, “delay”: 1}
 </dl>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_range</span></code></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="rb057c5b9352e-1" role="doc-biblioentry">
@@ -1329,8 +1356,9 @@ If None, value is set to {“m”: 2, “delay”: 1, “n_r”: 10}
 <dt class="sig sig-object py" id="junifer.markers.RangeEntropyAUC.compute_complexity">
 <span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.RangeEntropyAUC.compute_complexity" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute complexity measure.</p>
-<p>Take a timeseries of brain areas, and calculate the area under the
-curve of range entropy over the tolerance parameter from 0 to 1 [1].</p>
+<p>Take a timeseries of brain areas, calculate range entropy according to
+the method outlined in [1] across the range of tolerance value r from 0
+to 1, and compute its area under the curve.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -1345,6 +1373,12 @@ curve of range entropy over the tolerance parameter from 0 to 1 [1].</p>
 </dl>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_range</span></code></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="rf6ece9d668a9-1" role="doc-biblioentry">
@@ -1662,7 +1696,7 @@ If None, value is set to
 <dt class="sig sig-object py" id="junifer.markers.SampleEntropy.compute_complexity">
 <span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.SampleEntropy.compute_complexity" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute complexity measure.</p>
-<p>Take a timeseries of brain areas, and calculate the sample entropy [1].</p>
+<p>Take a timeseries of brain areas, and calculate sample entropy [1].</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -1677,6 +1711,12 @@ If None, value is set to
 </dl>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_sample</span></code></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="r95b3cdd36637-1" role="doc-biblioentry">
@@ -1830,8 +1870,8 @@ is set to {“m”: 2, “delay”: 1} (default None).</p>
 <dt class="sig sig-object py" id="junifer.markers.WeightedPermEntropy.compute_complexity">
 <span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.WeightedPermEntropy.compute_complexity" title="Permalink to this definition">#</a></dt>
 <dd><p>Compute complexity measure.</p>
-<p>Take a timeseries of brain areas, and calculate the weighted
-permutation entropy [1].</p>
+<p>Take a timeseries of brain areas, and calculate weighted permutation
+entropy according to the method outlined in [1].</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -1846,6 +1886,12 @@ permutation entropy [1].</p>
 </dl>
 </dd>
 </dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_permutation</span></code></dt><dd></dd>
+</dl>
+</div>
 <p class="rubric">References</p>
 <div role="list" class="citation-list">
 <div class="citation" id="r9ad108748006-1" role="doc-biblioentry">
