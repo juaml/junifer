@@ -4,16 +4,14 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
+
+import neurokit2 as nk
+import numpy as np
 
 from ...api.decorators import register_marker
-from ...utils import logger
-from ..utils import _hurst_exponent
+from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
-
-
-if TYPE_CHECKING:
-    import numpy as np
 
 
 @register_marker
@@ -68,12 +66,13 @@ class HurstExponent(ComplexityBase):
 
     def compute_complexity(
         self,
-        extracted_bold_values: "np.ndarray",
-    ) -> "np.ndarray":
+        extracted_bold_values: np.ndarray,
+    ) -> np.ndarray:
         """Compute complexity measure.
 
-        Take a timeseries of brain areas, and calculate the Hurst exponent
-        based on the detrended fluctuation analysis method [1].
+        Take a timeseries of brain areas, and calculate Hurst exponent using
+        the detrended fluctuation analysis method assuming the data is
+        monofractal [1].
 
         Parameters
         ----------
@@ -92,8 +91,39 @@ class HurstExponent(ComplexityBase):
                nonstationary heartbeat time series.
                Chaos Interdiscip. J. Nonlinear Sci., 5, 82–87, 1995.
 
+        See also
+        --------
+        neurokit2.fractal_dfa
+
         """
         logger.info(f"Calculating Hurst exponent ({self.params['method']}).")
-        return _hurst_exponent(
-            bold_ts=extracted_bold_values, params=self.params
-        )  # 1 X n_roi
+
+        _, n_roi = extracted_bold_values.shape
+        hurst_roi = np.zeros((n_roi, 1))
+
+        if self.params["method"] == "dfa":
+            for idx_roi in range(n_roi):
+                sig = extracted_bold_values[:, idx_roi]
+                tmp = nk.fractal_dfa(
+                    sig,
+                    scale="default",
+                    overlap=True,
+                    integrate=True,
+                    order=1,
+                    multifractal=False,
+                    q="default",  # q = 2 for monofractal Hurst exponent
+                    maxdfa=False,
+                    show=False,
+                )
+
+                hurst_roi[idx_roi] = tmp[0]
+
+        else:
+            hurst_roi = np.empty((n_roi, 1))
+            hurst_roi[:] = np.nan
+            warn_with_log("The DFA method is available only!")
+
+        if np.isnan(np.sum(hurst_roi)):
+            warn_with_log("There is NaN in the Hurst exponent values!")
+
+        return hurst_roi.T  # 1 X n_roi
