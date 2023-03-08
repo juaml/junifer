@@ -535,7 +535,9 @@ def test_store_matrix_without_headers(tmp_path: Path) -> None:
     # Check data of dataframe
     assert_array_equal(read_df.values, data.reshape(1, -1))
     # Check column headers
-    assert read_df.columns.to_list() == list(product(["r0", "r1", "r2", "r3"], ["c0", "c1", "c2"]))
+    assert read_df.columns.to_list() == list(
+        product(["r0", "r1", "r2", "r3"], ["c0", "c1", "c2"])
+    )
 
 
 def test_store_upper_triangular_matrix(tmp_path: Path) -> None:
