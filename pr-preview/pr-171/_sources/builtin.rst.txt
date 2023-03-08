@@ -192,6 +192,14 @@ Available
        as found in `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.2
+   * - :class:`junifer.markers.TemporalSNRParcels`
+     - Calculate temporal signal-to-noise ratio using parcellations
+     - Done
+     - 0.0.2
+   * - :class:`junifer.markers.TemporalSNRSpheres`
+     - Calculate temporal signal-to-noise ratio using spheres placed on coordinates
+     - Done
+     - 0.0.2
 
 Planned
 ~~~~~~~
