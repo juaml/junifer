@@ -43,6 +43,9 @@ Enhancements
 - Add fMRIPrep brain masks to the datagrabber patterns for all datagrabbers in the aomic sub-package
   (:gh:`177` by `Leonard Sasse`_).
 
+- Add :class:`junifer.markers.TemporalSNRParcels` and :class:`junifer.markers.TemporalSNRSpheres`
+  (:gh:`163` by `Leonard Sasse`_).
+
 Bugs
 ~~~~
 
