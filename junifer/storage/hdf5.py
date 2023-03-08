@@ -305,7 +305,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         md5: str = ""
 
         # Consider feature_md5
-        if feature_md5 and not feature_name:
+        if feature_md5:
             logger.debug(
                 f"Validating feature MD5 '{feature_md5}' in metadata "
                 f"for: {self.uri.resolve()} ..."  # type: ignore
@@ -317,7 +317,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 raise_error(msg=f"Feature MD5 '{feature_md5}' not found")
 
         # Consider feature_name
-        elif not feature_md5 and feature_name:
+        elif feature_name:
             logger.debug(
                 f"Validating feature name '{feature_name}' in metadata "
                 f"for: {self.uri.resolve()} ..."  # type: ignore
