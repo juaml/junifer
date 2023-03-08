@@ -7,6 +7,7 @@
 
 from collections import defaultdict
 from functools import reduce
+from itertools import product
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
@@ -360,31 +361,41 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         if hdf_data["kind"] == "matrix":
             # Get row and column count
             n_rows, n_cols = hdf_data["data"][:, :, 0].shape
+            # Set rows for the index
             for element in hdf_data["element"]:
                 for key, val in element.items():
-                    element_idx_dict[key].extend([val] * n_rows)
-                # Add extra column for row headers
-                element_idx_dict[hdf_data["row_header_column_name"]].extend(
-                    hdf_data["row_headers"]
-                )
+                    # Only one row per element
+                    element_idx_dict[key].append(val)
+            # Set column headers for dataframe
+            columns = list(
+                product(hdf_data["row_headers"], hdf_data["column_headers"])
+            )
             # Convert data from 3D to 2D
-            reshaped_data = hdf_data["data"].reshape(-1, n_cols)
+            reshaped_data = hdf_data["data"].reshape(
+                len(hdf_data["element"]), n_rows * n_cols
+            )
         elif hdf_data["kind"] == "vector":
+            # Set rows for the index
             for element in hdf_data["element"]:
                 for key, val in element.items():
                     element_idx_dict[key].append(val)
+            # Set column headers for dataframe
+            columns = hdf_data["column_headers"]
             # Convert data to proper 2D
             reshaped_data = hdf_data["data"].T
         elif hdf_data["kind"] == "timeseries":
             for idx, element in enumerate(hdf_data["element"]):
                 # Get row count for the element
                 n_rows, _ = hdf_data["data"][:, :, idx].shape
+                # Set rows for the index
                 for key, val in element.items():
                     element_idx_dict[key].extend([val] * n_rows)
                 # Add extra column for timepoints
                 element_idx_dict[hdf_data["row_header_column_name"]].extend(
                     np.arange(n_rows)
                 )
+            # Set column headers for dataframe
+            columns = hdf_data["column_headers"]
             # Convert data from 3D to 2D
             reshaped_data = hdf_data["data"].reshape(-1, 1)
 
@@ -399,7 +410,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         df = pd.DataFrame(
             data=reshaped_data,
             index=hdf_data_idx,
-            columns=hdf_data["column_headers"],
+            columns=columns,  # type: ignore
             dtype=hdf_data["data"].dtype,
         )
         logger.debug(f"Converted HDF5 data for {md5} to pandas.DataFrame ...")
