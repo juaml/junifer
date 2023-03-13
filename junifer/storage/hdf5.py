@@ -48,8 +48,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         The chunk size to use when collecting data from element files in
         :meth:`junifer.storage.HDF5FeatureStorage.collect`. If the file count
         is smaller than the value, the minimum is used (default 100).
-    **kwargs : dict
-        The keyword arguments passed to the superclass.
 
     See Also
     --------
@@ -65,7 +63,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         compression: int = 7,
         force_float32: bool = True,
         chunk_size: int = 100,
-        **kwargs: str,
     ) -> None:
         # Convert str to Path
         if not isinstance(uri, Path):
@@ -86,7 +83,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             uri=uri,
             storage_types=storage_types,
             single_output=single_output,
-            **kwargs,
         )
 
         self.overwrite = overwrite
