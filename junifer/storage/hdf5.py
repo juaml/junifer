@@ -915,34 +915,24 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     [],
                 )
                 # Write data in chunks to avoid memory usage spikes
-                if features_data.ndim == 2:
-                    data_to_write["data"] = ChunkedArray(
-                        data=features_data,
-                        shape=(
-                            features_data.shape[0],
-                            element_count,
-                        ),
-                        chunk_size=(
-                            features_data.shape[0],
-                            chunk_size,
-                        ),
-                        n_chunk=chunk_idx,
-                    )
-                elif features_data.ndim == 3:
-                    data_to_write["data"] = ChunkedArray(
-                        data=features_data,
-                        shape=(
-                            features_data.shape[0],
-                            features_data.shape[1],
-                            element_count,
-                        ),
-                        chunk_size=(
-                            features_data.shape[0],
-                            features_data.shape[1],
-                            chunk_size,
-                        ),
-                        n_chunk=chunk_idx,
-                    )
+                # Start with the case for 2D
+                array_shape = [features_data.shape[0]]
+                array_chunk_size = [features_data.shape[0]]
+                # Append second dimension for 3D
+                if features_data.ndim == 3:
+                    array_shape.append(features_data.shape[1])
+                    array_chunk_size.append(features_data.shape[1])
+                # Append final dimension of element count
+                array_shape.append(element_count)
+                # Append final dimension of chunk size
+                array_chunk_size.append(chunk_size)
+                # Write chunked array
+                data_to_write["data"] = ChunkedArray(
+                    data=features_data,
+                    shape=tuple(array_shape),
+                    chunk_size=tuple(array_chunk_size),
+                    n_chunk=chunk_idx,
+                )
                 # Write to HDF5
                 write_hdf5(
                     fname=str(self.uri.resolve()),  # type: ignore
