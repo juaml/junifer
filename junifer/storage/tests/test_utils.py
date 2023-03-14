@@ -4,13 +4,16 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Tuple, Union
+from typing import Dict, Iterable, List, Tuple, Union
 
+import numpy as np
 import pytest
+from numpy.testing import assert_array_equal
 
 from junifer.storage.utils import (
     element_to_prefix,
     get_dependency_version,
+    matrix_to_vector,
     process_meta,
     store_matrix_checks,
 )
@@ -328,3 +331,89 @@ def test_store_matrix_checks(
     """
     with pytest.raises(ValueError, match=f"{err_msg}"):
         store_matrix_checks(**params)  # type: ignore
+
+
+@pytest.mark.parametrize(
+    "params, expected_data, expected_columns",
+    [
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ["c0", "c1", "c2"],
+                "row_names": ("r0", "r1", "r2"),
+                "matrix_kind": "triu",
+                "diagonal": True,
+            },
+            np.array([[0, 1, 2, 4, 5, 8]]),
+            ["r0~c0", "r0~c1", "r0~c2", "r1~c1", "r1~c2", "r2~c2"],
+        ),
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ("c0", "c1", "c2"),
+                "row_names": ["r0", "r1", "r2"],
+                "matrix_kind": "triu",
+                "diagonal": False,
+            },
+            np.array([[1, 2, 5]]),
+            ["r0~c1", "r0~c2", "r1~c2"],
+        ),
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ("c0", "c1", "c2"),
+                "row_names": ["r0", "r1", "r2"],
+                "matrix_kind": "tril",
+                "diagonal": True,
+            },
+            np.array([[0, 3, 4, 6, 7, 8]]),
+            ["r0~c0", "r1~c0", "r1~c1", "r2~c0", "r2~c1", "r2~c2"],
+        ),
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ("c0", "c1", "c2"),
+                "row_names": ["r0", "r1", "r2"],
+                "matrix_kind": "tril",
+                "diagonal": False,
+            },
+            np.array([[3, 6, 7]]),
+            ["r1~c0", "r2~c0", "r2~c1"],
+        ),
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ("c0", "c1", "c2"),
+                "row_names": ["r0", "r1", "r2"],
+                "matrix_kind": "full",
+                "diagonal": False,
+            },
+            np.arange(9).reshape(1, -1),
+            [
+                f"{r}~{c}"
+                for r in ["r0", "r1", "r2"]
+                for c in ["c0", "c1", "c2"]
+            ],
+        ),
+    ],
+)
+def test_matrix_to_vector(
+    params: Dict[str, Union[np.ndarray, Iterable[str], str, bool]],
+    expected_data: np.ndarray,
+    expected_columns: List[str],
+) -> None:
+    """Test matrix to vector.
+
+    Parameters
+    ----------
+    params : dict
+        The parametrized parameters for the function.
+    expected_data : np.ndarray
+        The parametrized vector data to expect.
+    expected_columns : np.ndarray
+        The parametrized columns labels to expect.
+
+    """
+    data, columns = matrix_to_vector(**params)  # type: ignore
+    assert_array_equal(data, expected_data)
+    assert columns == expected_columns
