@@ -27,7 +27,7 @@ def test_get_aggfunc_by_name(name: str, params: Optional[Dict]) -> None:
     Parameters
     ----------
     name : str
-        The paramterized name of the method name.
+        The parametrized name of the method name.
     params : dict
         The parametrized parameters passed to the method.
 

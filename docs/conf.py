@@ -26,7 +26,7 @@ sys.path.append((curdir / "sphinxext").as_posix())
 # -- Project information -----------------------------------------------------
 
 project = "junifer"
-copyright = "2022, Authors of junifer"
+copyright = "2023, Authors of junifer"
 author = "Fede Raimondo"
 
 # -- General configuration ---------------------------------------------------

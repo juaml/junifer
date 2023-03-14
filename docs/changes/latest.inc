@@ -46,6 +46,9 @@ Enhancements
 - Add :class:`junifer.markers.TemporalSNRParcels` and :class:`junifer.markers.TemporalSNRSpheres`
   (:gh:`163` by `Leonard Sasse`_).
 
+- Add support for HDF5 feature storage via :class:`junifer.storage.HDF5FeatureStorage`
+  (:gh:`147` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 

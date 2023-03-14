@@ -18,7 +18,7 @@ from tqdm import tqdm
 from ..api.decorators import register_storage
 from ..utils import logger, raise_error, warn_with_log
 from .pandas_base import PandasBaseFeatureStorage
-from .utils import element_to_prefix
+from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
 
 
 if TYPE_CHECKING:
@@ -49,6 +49,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     See Also
     --------
     PandasBaseFeatureStorage : The base class for Pandas-based feature storage.
+    HDF5FeatureStorage : The concrete class for HDF5-based feature storage.
 
     """
 
@@ -399,7 +400,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         data: np.ndarray,
         col_names: Optional[List[str]] = None,
         row_names: Optional[List[str]] = None,
-        matrix_kind: Optional[str] = "full",
+        matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:
         """Store matrix.
@@ -431,56 +432,28 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             this to False will raise an error (default True).
 
         """
-        if diagonal is False and matrix_kind not in ["triu", "tril"]:
-            raise_error(
-                msg="Diagonal cannot be False if kind is not full",
-                klass=ValueError,
-            )
-
-        if matrix_kind in ["triu", "tril"]:
-            if data.shape[0] != data.shape[1]:
-                raise_error(
-                    "Cannot store a non-square matrix as a triangular matrix",
-                    klass=ValueError,
-                )
-
-        if matrix_kind == "triu":
-            k = 0 if diagonal is True else 1
-            data_idx = np.triu_indices(data.shape[0], k=k)
-        elif matrix_kind == "tril":
-            k = 0 if diagonal is True else -1
-            data_idx = np.tril_indices(data.shape[0], k=k)
-        elif matrix_kind == "full":
-            data_idx = (
-                np.repeat(np.arange(data.shape[0]), data.shape[1]),
-                np.tile(np.arange(data.shape[1]), data.shape[0]),
-            )
-        else:
-            raise_error(msg=f"Invalid kind {matrix_kind}", klass=ValueError)
-
+        # Row data validation
         if row_names is None:
             row_names = [f"r{i}" for i in range(data.shape[0])]
-        elif len(row_names) != data.shape[0]:
-            raise_error(
-                msg="Number of row names does not match number of rows",
-                klass=ValueError,
-            )
-
+        # Column data validation
         if col_names is None:
             col_names = [f"c{i}" for i in range(data.shape[1])]
-        elif len(col_names) != data.shape[1]:
-            raise_error(
-                msg="Number of column names does not match number of columns",
-                klass=ValueError,
-            )
-
-        # Subset data
-        flat_data = data[data_idx]
-        # Generate flat 1D row X column names
-        columns = [
-            f"{row_names[i]}~{col_names[j]}"
-            for i, j in zip(data_idx[0], data_idx[1])
-        ]
+        # Parameter checks
+        store_matrix_checks(
+            matrix_kind=matrix_kind,
+            diagonal=diagonal,
+            data_shape=data.shape,
+            row_names_len=len(row_names),  # type: ignore
+            col_names_len=len(col_names),  # type: ignore
+        )
+        # Matrix to vector conversion
+        flat_data, columns = matrix_to_vector(
+            data=data,
+            col_names=col_names,
+            row_names=row_names,
+            matrix_kind=matrix_kind,
+            diagonal=diagonal,
+        )
 
         # Convert element metadata to index
         n_rows = 1
@@ -488,7 +461,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             element=element, n_rows=n_rows, rows_col_name=None
         )
         # Prepare new dataframe
-        data_df = pd.DataFrame(flat_data[None, :], columns=columns, index=idx)
+        data_df = pd.DataFrame(
+            flat_data[np.newaxis, :], columns=columns, index=idx
+        )
 
         # SQLite's SQLITE_MAX_COLUMN is 2000, so if more than that,
         # convert it to long format

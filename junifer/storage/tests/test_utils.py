@@ -4,14 +4,18 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List
+from typing import Dict, Iterable, List, Tuple, Union
 
+import numpy as np
 import pytest
+from numpy.testing import assert_array_equal
 
 from junifer.storage.utils import (
     element_to_prefix,
     get_dependency_version,
+    matrix_to_vector,
     process_meta,
+    store_matrix_checks,
 )
 
 
@@ -20,10 +24,10 @@ from junifer.storage.utils import (
     [
         ("click", "8.2"),
         ("numpy", "1.24"),
-        ("datalad", "0.18"),
+        ("datalad", "0.19"),
         ("pandas", "1.6"),
         ("nibabel", "4.1"),
-        ("nilearn", "1.0"),
+        ("nilearn", "0.10.0"),
         ("sqlalchemy", "1.5.0"),
         ("pyyaml", "7.0"),
     ],
@@ -40,7 +44,10 @@ def test_get_dependency_version(dependency: str, max_version: str) -> None:
 
     """
     version = get_dependency_version(dependency)
-    assert version < max_version
+    if len(version.split(".")) == 3:  # semver
+        assert int(version.split(".")[1]) <= int(max_version.split(".")[1])
+    else:
+        assert version < max_version
 
 
 def test_get_dependency_version_invalid() -> None:
@@ -245,3 +252,171 @@ def test_element_to_prefix_invalid_type() -> None:
     element = 2.3
     with pytest.raises(ValueError, match=r"must be a dict"):
         element_to_prefix(element)  # type: ignore
+
+
+@pytest.mark.parametrize(
+    "params, err_msg",
+    [
+        (
+            {
+                "matrix_kind": "half",
+                "diagonal": True,
+                "data_shape": (1, 1),
+                "row_names_len": 1,
+                "col_names_len": 1,
+            },
+            "Invalid kind",
+        ),
+        (
+            {
+                "matrix_kind": "full",
+                "diagonal": False,
+                "data_shape": (1, 1),
+                "row_names_len": 1,
+                "col_names_len": 1,
+            },
+            "Diagonal cannot",
+        ),
+        (
+            {
+                "matrix_kind": "triu",
+                "diagonal": False,
+                "data_shape": (2, 1),
+                "row_names_len": 2,
+                "col_names_len": 1,
+            },
+            "Cannot store a non-square",
+        ),
+        (
+            {
+                "matrix_kind": "tril",
+                "diagonal": False,
+                "data_shape": (1, 2),
+                "row_names_len": 1,
+                "col_names_len": 2,
+            },
+            "Cannot store a non-square",
+        ),
+        (
+            {
+                "matrix_kind": "full",
+                "diagonal": True,
+                "data_shape": (2, 2),
+                "row_names_len": 1,
+                "col_names_len": 2,
+            },
+            "Number of row names",
+        ),
+        (
+            {
+                "matrix_kind": "full",
+                "diagonal": True,
+                "data_shape": (2, 2),
+                "row_names_len": 2,
+                "col_names_len": 1,
+            },
+            "Number of column names",
+        ),
+    ],
+)
+def test_store_matrix_checks(
+    params: Dict[str, Union[str, bool, Tuple[int, int], int]], err_msg: str
+) -> None:
+    """Test matrix storing parameter checks.
+
+    Parameters
+    ----------
+    params : dict
+        The parametrized parameters for the function.
+    err_msg : str
+        The parametrized substring of expected error message.
+
+    """
+    with pytest.raises(ValueError, match=f"{err_msg}"):
+        store_matrix_checks(**params)  # type: ignore
+
+
+@pytest.mark.parametrize(
+    "params, expected_data, expected_columns",
+    [
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ["c0", "c1", "c2"],
+                "row_names": ("r0", "r1", "r2"),
+                "matrix_kind": "triu",
+                "diagonal": True,
+            },
+            np.array([0, 1, 2, 4, 5, 8]),
+            ["r0~c0", "r0~c1", "r0~c2", "r1~c1", "r1~c2", "r2~c2"],
+        ),
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ("c0", "c1", "c2"),
+                "row_names": ["r0", "r1", "r2"],
+                "matrix_kind": "triu",
+                "diagonal": False,
+            },
+            np.array([1, 2, 5]),
+            ["r0~c1", "r0~c2", "r1~c2"],
+        ),
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ("c0", "c1", "c2"),
+                "row_names": ["r0", "r1", "r2"],
+                "matrix_kind": "tril",
+                "diagonal": True,
+            },
+            np.array([0, 3, 4, 6, 7, 8]),
+            ["r0~c0", "r1~c0", "r1~c1", "r2~c0", "r2~c1", "r2~c2"],
+        ),
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ("c0", "c1", "c2"),
+                "row_names": ["r0", "r1", "r2"],
+                "matrix_kind": "tril",
+                "diagonal": False,
+            },
+            np.array([3, 6, 7]),
+            ["r1~c0", "r2~c0", "r2~c1"],
+        ),
+        (
+            {
+                "data": np.arange(9).reshape(3, 3),
+                "col_names": ("c0", "c1", "c2"),
+                "row_names": ["r0", "r1", "r2"],
+                "matrix_kind": "full",
+                "diagonal": False,
+            },
+            np.arange(9),
+            [
+                f"{r}~{c}"
+                for r in ["r0", "r1", "r2"]
+                for c in ["c0", "c1", "c2"]
+            ],
+        ),
+    ],
+)
+def test_matrix_to_vector(
+    params: Dict[str, Union[np.ndarray, Iterable[str], str, bool]],
+    expected_data: np.ndarray,
+    expected_columns: List[str],
+) -> None:
+    """Test matrix to vector.
+
+    Parameters
+    ----------
+    params : dict
+        The parametrized parameters for the function.
+    expected_data : np.ndarray
+        The parametrized vector data to expect.
+    expected_columns : np.ndarray
+        The parametrized columns labels to expect.
+
+    """
+    data, columns = matrix_to_vector(**params)  # type: ignore
+    assert_array_equal(data, expected_data)
+    assert columns == expected_columns
