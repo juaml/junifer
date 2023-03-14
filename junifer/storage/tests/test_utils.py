@@ -344,7 +344,7 @@ def test_store_matrix_checks(
                 "matrix_kind": "triu",
                 "diagonal": True,
             },
-            np.array([[0, 1, 2, 4, 5, 8]]),
+            np.array([0, 1, 2, 4, 5, 8]),
             ["r0~c0", "r0~c1", "r0~c2", "r1~c1", "r1~c2", "r2~c2"],
         ),
         (
@@ -355,7 +355,7 @@ def test_store_matrix_checks(
                 "matrix_kind": "triu",
                 "diagonal": False,
             },
-            np.array([[1, 2, 5]]),
+            np.array([1, 2, 5]),
             ["r0~c1", "r0~c2", "r1~c2"],
         ),
         (
@@ -366,7 +366,7 @@ def test_store_matrix_checks(
                 "matrix_kind": "tril",
                 "diagonal": True,
             },
-            np.array([[0, 3, 4, 6, 7, 8]]),
+            np.array([0, 3, 4, 6, 7, 8]),
             ["r0~c0", "r1~c0", "r1~c1", "r2~c0", "r2~c1", "r2~c2"],
         ),
         (
@@ -377,7 +377,7 @@ def test_store_matrix_checks(
                 "matrix_kind": "tril",
                 "diagonal": False,
             },
-            np.array([[3, 6, 7]]),
+            np.array([3, 6, 7]),
             ["r1~c0", "r2~c0", "r2~c1"],
         ),
         (
@@ -388,7 +388,7 @@ def test_store_matrix_checks(
                 "matrix_kind": "full",
                 "diagonal": False,
             },
-            np.arange(9).reshape(1, -1),
+            np.arange(9),
             [
                 f"{r}~{c}"
                 for r in ["r0", "r1", "r2"]
