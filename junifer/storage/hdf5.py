@@ -19,7 +19,7 @@ from ..api.decorators import register_storage
 from ..external.h5io.h5io import ChunkedArray, read_hdf5, write_hdf5
 from ..utils import logger, raise_error
 from .base import BaseFeatureStorage
-from .utils import element_to_prefix
+from .utils import element_to_prefix, store_matrix_checks
 
 
 @register_storage
@@ -681,38 +681,20 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             match data column count.
 
         """
-        # Matrix kind validation
-        if matrix_kind not in ("triu", "tril", "full"):
-            raise_error(msg=f"Invalid kind {matrix_kind}", klass=ValueError)
-        # Diagonal validation
-        if diagonal is False and matrix_kind not in ["triu", "tril"]:
-            raise_error(
-                msg="Diagonal cannot be False if kind is not full",
-                klass=ValueError,
-            )
-        # Matrix kind and shape validation
-        if matrix_kind in ["triu", "tril"]:
-            if data.shape[0] != data.shape[1]:
-                raise_error(
-                    "Cannot store a non-square matrix as a triangular matrix",
-                    klass=ValueError,
-                )
-        # Row data and label validation
+        # Row data validation
         if row_names is None:
             row_names = [f"r{i}" for i in range(data.shape[0])]
-        elif len(row_names) != data.shape[0]:  # type: ignore
-            raise_error(
-                msg="Number of row names does not match number of rows",
-                klass=ValueError,
-            )
-        # Column data and label validation
+        # Column data validation
         if col_names is None:
             col_names = [f"c{i}" for i in range(data.shape[1])]
-        elif len(col_names) != data.shape[1]:  # type: ignore
-            raise_error(
-                msg="Number of column names does not match number of columns",
-                klass=ValueError,
-            )
+        # Parameter checks
+        store_matrix_checks(
+            matrix_kind=matrix_kind,
+            diagonal=diagonal,
+            data_shape=data.shape,
+            row_names_len=len(row_names),  # type: ignore
+            col_names_len=len(col_names),  # type: ignore
+        )
         # Store
         self._store_data(
             kind="matrix",
