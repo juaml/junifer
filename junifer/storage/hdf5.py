@@ -7,7 +7,6 @@
 
 from collections import defaultdict
 from functools import reduce
-from itertools import product
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
@@ -19,7 +18,7 @@ from ..api.decorators import register_storage
 from ..external.h5io.h5io import ChunkedArray, read_hdf5, write_hdf5
 from ..utils import logger, raise_error
 from .base import BaseFeatureStorage
-from .utils import element_to_prefix, store_matrix_checks
+from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
 
 
 @register_storage
@@ -355,21 +354,35 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         element_idx_dict = defaultdict(list)
 
         if hdf_data["kind"] == "matrix":
-            # Get row and column count
-            n_rows, n_cols = hdf_data["data"][:, :, 0].shape
+            # Initialize list to store element-wise flatttened data
+            flattened_data_list = []
             # Set rows for the index
-            for element in hdf_data["element"]:
+            for idx, element in enumerate(hdf_data["element"]):
                 for key, val in element.items():
                     # Only one row per element
                     element_idx_dict[key].append(val)
-            # Set column headers for dataframe
-            columns = list(
-                product(hdf_data["row_headers"], hdf_data["column_headers"])
-            )
-            # Convert data from 3D to 2D
-            reshaped_data = hdf_data["data"].reshape(
-                len(hdf_data["element"]), n_rows * n_cols
-            )
+                # Flatten data for element
+                # Get columns for first iteration only
+                if idx == 0:
+                    flat_data, columns = matrix_to_vector(
+                        data=hdf_data["data"][:, :, idx],
+                        col_names=hdf_data["column_headers"],
+                        row_names=hdf_data["row_headers"],
+                        matrix_kind=hdf_data["matrix_kind"],
+                        diagonal=bool(hdf_data["diagonal"]),
+                    )
+                else:
+                    flat_data, _ = matrix_to_vector(
+                        data=hdf_data["data"][:, :, idx],
+                        col_names=hdf_data["column_headers"],
+                        row_names=hdf_data["row_headers"],
+                        matrix_kind=hdf_data["matrix_kind"],
+                        diagonal=bool(hdf_data["diagonal"]),
+                    )
+                flattened_data_list.append(flat_data)
+
+            # Vertically stack data
+            reshaped_data = np.vstack(flattened_data_list)
         elif hdf_data["kind"] == "vector":
             # Set rows for the index
             for element in hdf_data["element"]:
