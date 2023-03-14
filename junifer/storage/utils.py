@@ -7,7 +7,9 @@
 import hashlib
 import json
 from importlib.metadata import PackageNotFoundError, version
-from typing import Dict, Tuple
+from typing import Dict, Iterable, List, Tuple
+
+import numpy as np
 
 from ..utils.logging import logger, raise_error
 
@@ -198,3 +200,61 @@ def store_matrix_checks(
             msg="Number of column names does not match number of columns",
             klass=ValueError,
         )
+
+
+def matrix_to_vector(
+    data: np.ndarray,
+    col_names: Iterable[str],
+    row_names: Iterable[str],
+    matrix_kind: str,
+    diagonal: bool,
+) -> Tuple[np.ndarray, List[str]]:
+    """Convert matrix to vector based on parameters.
+
+    Parameters
+    ----------
+    data : 2D numpy.ndarray
+        The matrix data to store.
+    col_names : list or tuple of str
+        The column labels.
+    row_names : list or tuple of str
+        The row labels.
+    matrix_kind : str
+        The kind of matrix:
+
+        * ``triu`` : store upper triangular only
+        * ``tril`` : store lower triangular
+        * ``full`` : full matrix
+
+    diagonal : bool
+        Whether to store the diagonal.
+
+    Returns
+    -------
+    1D numpy.ndarray
+        The vector data.
+    list of str
+        The column labels.
+
+    """
+    # Prepare data indexing based on matrix kind
+    if matrix_kind == "triu":
+        k = 0 if diagonal is True else 1
+        data_idx = np.triu_indices(data.shape[0], k=k)
+    elif matrix_kind == "tril":
+        k = 0 if diagonal is True else -1
+        data_idx = np.tril_indices(data.shape[0], k=k)
+    else:  # full
+        data_idx = (
+            np.repeat(np.arange(data.shape[0]), data.shape[1]),
+            np.tile(np.arange(data.shape[1]), data.shape[0]),
+        )
+    # Subset data as 1D
+    flat_data = data[data_idx]
+    # Generate flat 1D row X column names
+    columns = [
+        f"{row_names[i]}~{col_names[j]}"  # type: ignore
+        for i, j in zip(data_idx[0], data_idx[1])
+    ]
+
+    return flat_data[np.newaxis, :], columns
