@@ -155,10 +155,9 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         )
         post_data = falff if self.fractional else alff
 
-        post_input = {
-            "data": post_data,
-            "path": None,
-        }
+        post_input = {k: v for k, v in input.items()}
+        post_input["data"] = post_data
+        post_input["path"] = None
 
         out = self._postprocess(post_input, extra_input=extra_input)
 

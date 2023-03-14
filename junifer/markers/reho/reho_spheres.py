@@ -148,7 +148,9 @@ class ReHoSpheres(ReHoBase):
             on="BOLD",
         )
         # Perform aggregation on reho map
-        sphere_aggregation_input = {"data": reho_map}
+        sphere_aggregation_input = {k: v for k, v in input.items()}
+        sphere_aggregation_input["data"] = reho_map
+        sphere_aggregation_input["path"] = None
         output = sphere_aggregation.compute(
             input=sphere_aggregation_input, extra_input=extra_input
         )
