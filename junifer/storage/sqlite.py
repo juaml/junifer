@@ -461,7 +461,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             element=element, n_rows=n_rows, rows_col_name=None
         )
         # Prepare new dataframe
-        data_df = pd.DataFrame(flat_data, columns=columns, index=idx)
+        data_df = pd.DataFrame(flat_data[np.newaxis, :], columns=columns, index=idx)
 
         # SQLite's SQLITE_MAX_COLUMN is 2000, so if more than that,
         # convert it to long format
