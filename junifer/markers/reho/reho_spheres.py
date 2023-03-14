@@ -149,7 +149,9 @@ class ReHoSpheres(ReHoBase):
         )
         # Perform aggregation on reho map
         sphere_aggregation_input = {"data": reho_map}
-        output = sphere_aggregation.compute(input=sphere_aggregation_input)
+        output = sphere_aggregation.compute(
+            input=sphere_aggregation_input, extra_input=extra_input
+        )
         # Only use the first row and expand row dimension
         output["data"] = output["data"][0][np.newaxis, :]
         return output

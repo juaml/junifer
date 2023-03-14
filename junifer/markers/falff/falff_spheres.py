@@ -30,7 +30,8 @@ class AmplitudeLowFrequencyFluctuationSpheres(
     fractional : bool
         Whether to compute fractional ALFF.
     highpass : positive float, optional
-        The highpass cutoff frequency for the bandpass filter (default 0.01).
+        The highpass cutoff frequency for the bandpass filter. If 0,
+        it will not apply a highpass filter (default 0.01).
     lowpass : positive float, optional
         The lowpass cutoff frequency for the bandpass filter (default 0.1).
     tr : positive float, optional
@@ -94,7 +95,9 @@ class AmplitudeLowFrequencyFluctuationSpheres(
             use_afni=use_afni,
         )
 
-    def _postprocess(self, input: Dict) -> Dict:
+    def _postprocess(
+        self, input: Dict, extra_input: Optional[Dict] = None
+    ) -> Dict:
         """Compute ALFF and fALFF.
 
         Parameters
@@ -127,7 +130,7 @@ class AmplitudeLowFrequencyFluctuationSpheres(
             on="fALFF",
         )
 
-        # get the 2D timeseries after parcel aggregation
-        out = pa.compute(input)
+        # get the 2D timeseries after sphere aggregation
+        out = pa.compute(input, extra_input=extra_input)
 
         return out
