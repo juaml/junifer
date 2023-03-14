@@ -354,35 +354,21 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         element_idx_dict = defaultdict(list)
 
         if hdf_data["kind"] == "matrix":
-            # Initialize list to store element-wise flatttened data
-            flattened_data_list = []
             # Set rows for the index
             for idx, element in enumerate(hdf_data["element"]):
                 for key, val in element.items():
                     # Only one row per element
                     element_idx_dict[key].append(val)
-                # Flatten data for element
-                # Get columns for first iteration only
-                if idx == 0:
-                    flat_data, columns = matrix_to_vector(
-                        data=hdf_data["data"][:, :, idx],
-                        col_names=hdf_data["column_headers"],
-                        row_names=hdf_data["row_headers"],
-                        matrix_kind=hdf_data["matrix_kind"],
-                        diagonal=bool(hdf_data["diagonal"]),
-                    )
-                else:
-                    flat_data, _ = matrix_to_vector(
-                        data=hdf_data["data"][:, :, idx],
-                        col_names=hdf_data["column_headers"],
-                        row_names=hdf_data["row_headers"],
-                        matrix_kind=hdf_data["matrix_kind"],
-                        diagonal=bool(hdf_data["diagonal"]),
-                    )
-                flattened_data_list.append(flat_data)
-
-            # Vertically stack data
-            reshaped_data = np.vstack(flattened_data_list)
+            # Flatten data and get column headers for dataframe
+            flat_data, columns = matrix_to_vector(
+                data=hdf_data["data"],
+                col_names=hdf_data["column_headers"],
+                row_names=hdf_data["row_headers"],
+                matrix_kind=hdf_data["matrix_kind"],
+                diagonal=bool(hdf_data["diagonal"]),
+            )
+            # Convert data to proper 2D
+            reshaped_data = flat_data.T
         elif hdf_data["kind"] == "vector":
             # Set rows for the index
             for element in hdf_data["element"]:
