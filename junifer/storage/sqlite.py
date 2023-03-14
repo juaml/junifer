@@ -400,7 +400,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         data: np.ndarray,
         col_names: Optional[List[str]] = None,
         row_names: Optional[List[str]] = None,
-        matrix_kind: Optional[str] = "full",
+        matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:
         """Store matrix.

@@ -190,7 +190,7 @@ class BaseFeatureStorage(ABC):
         data: np.ndarray,
         col_names: Optional[Iterable[str]] = None,
         row_names: Optional[Iterable[str]] = None,
-        matrix_kind: Optional[str] = "full",
+        matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:
         """Store matrix.

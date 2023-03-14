@@ -636,7 +636,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         data: np.ndarray,
         col_names: Optional[Iterable[str]] = None,
         row_names: Optional[Iterable[str]] = None,
-        matrix_kind: Optional[str] = "full",
+        matrix_kind: str = "full",
         diagonal: bool = True,
         row_header_col_name: str = "ROI",
     ) -> None:
