@@ -355,7 +355,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         if hdf_data["kind"] == "matrix":
             # Set rows for the index
-            for idx, element in enumerate(hdf_data["element"]):
+            for element in hdf_data["element"]:
                 for key, val in element.items():
                     # Only one row per element
                     element_idx_dict[key].append(val)
