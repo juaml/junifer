@@ -141,7 +141,10 @@ class ReHoParcels(ReHoBase):
         )
         # Perform aggregation on reho map
         parcel_aggregation_input = {"data": reho_map}
-        output = parcel_aggregation.compute(input=parcel_aggregation_input)
+        output = parcel_aggregation.compute(
+            input=parcel_aggregation_input,
+            extra_input=extra_input,
+        )
         # Only use the first row and expand row dimension
         output["data"] = output["data"][0][np.newaxis, :]
         return output

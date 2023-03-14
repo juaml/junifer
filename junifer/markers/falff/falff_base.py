@@ -61,8 +61,8 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
         use_afni: Optional[bool] = None,
         name: Optional[str] = None,
     ) -> None:
-        if highpass <= 0:
-            raise_error("Highpass must be positive")
+        if highpass < 0:
+            raise_error("Highpass must be positive or 0")
         if lowpass <= 0:
             raise_error("Lowpass must be positive")
         if highpass >= lowpass:
@@ -160,18 +160,25 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
             "path": None,
         }
 
-        out = self._postprocess(post_input)
+        out = self._postprocess(post_input, extra_input=extra_input)
 
         return out
 
     @abstractmethod
-    def _postprocess(self, input: Dict) -> Dict:
+    def _postprocess(
+        self, input: Dict, extra_input: Optional[Dict] = None
+    ) -> Dict:
         """Postprocess the output of the estimator.
 
         Parameters
         ----------
         input : dict
             The output of the estimator. It must have the following
+        extra_input : dict, optional
+            The other fields in the pipeline data object. Useful for accessing
+            other data kind that needs to be used in the computation. For
+            example, the functional connectivity markers can make use of the
+            confounds if available (default None).
         """
         raise_error(
             "_postprocess must be implemented", klass=NotImplementedError
