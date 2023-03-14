@@ -7,7 +7,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union, Dict
+from typing import Dict, Union
 
 from junifer.datagrabber import PatternDataladDataGrabber
 
