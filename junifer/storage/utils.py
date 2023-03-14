@@ -213,8 +213,8 @@ def matrix_to_vector(
 
     Parameters
     ----------
-    data : 2D numpy.ndarray
-        The matrix data to store.
+    data : 2D / 3D numpy.ndarray
+        The matrix / tensor data to store / read.
     col_names : list or tuple of str
         The column labels.
     row_names : list or tuple of str
@@ -231,8 +231,8 @@ def matrix_to_vector(
 
     Returns
     -------
-    1D numpy.ndarray
-        The vector data.
+    1D / 2D numpy.ndarray
+        The vector / matrix data.
     list of str
         The column labels.
 
@@ -257,4 +257,4 @@ def matrix_to_vector(
         for i, j in zip(data_idx[0], data_idx[1])
     ]
 
-    return flat_data[np.newaxis, :], columns
+    return flat_data, columns
