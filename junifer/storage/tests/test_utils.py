@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List
+from typing import Dict, List, Tuple, Union
 
 import pytest
 
@@ -12,6 +12,7 @@ from junifer.storage.utils import (
     element_to_prefix,
     get_dependency_version,
     process_meta,
+    store_matrix_checks,
 )
 
 
@@ -245,3 +246,85 @@ def test_element_to_prefix_invalid_type() -> None:
     element = 2.3
     with pytest.raises(ValueError, match=r"must be a dict"):
         element_to_prefix(element)  # type: ignore
+
+
+@pytest.mark.parametrize(
+    "params, err_msg",
+    [
+        (
+            {
+                "matrix_kind": "half",
+                "diagonal": True,
+                "data_shape": (1, 1),
+                "row_names_len": 1,
+                "col_names_len": 1,
+            },
+            "Invalid kind",
+        ),
+        (
+            {
+                "matrix_kind": "full",
+                "diagonal": False,
+                "data_shape": (1, 1),
+                "row_names_len": 1,
+                "col_names_len": 1,
+            },
+            "Diagonal cannot",
+        ),
+        (
+            {
+                "matrix_kind": "triu",
+                "diagonal": False,
+                "data_shape": (2, 1),
+                "row_names_len": 2,
+                "col_names_len": 1,
+            },
+            "Cannot store a non-square",
+        ),
+        (
+            {
+                "matrix_kind": "tril",
+                "diagonal": False,
+                "data_shape": (1, 2),
+                "row_names_len": 1,
+                "col_names_len": 2,
+            },
+            "Cannot store a non-square",
+        ),
+        (
+            {
+                "matrix_kind": "full",
+                "diagonal": True,
+                "data_shape": (2, 2),
+                "row_names_len": 1,
+                "col_names_len": 2,
+            },
+            "Number of row names",
+        ),
+        (
+            {
+                "matrix_kind": "full",
+                "diagonal": True,
+                "data_shape": (2, 2),
+                "row_names_len": 2,
+                "col_names_len": 1,
+            },
+            "Number of column names",
+        ),
+    ],
+)
+def test_store_matrix_checks(
+    params: Dict[str, Union[str, bool, Tuple[int, int], int]], err_msg: str
+) -> None:
+    """Test matrix storing parameter checks.
+
+    Parameters
+    ----------
+    params : dict
+        The parametrized parameters for the function.
+    err_msg : str
+        The parametrized substring of expected error message.
+
+    """
+    with pytest.raises(ValueError, match=f"{err_msg}"):
+        store_matrix_checks(**params)  # type: ignore
