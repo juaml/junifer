@@ -604,6 +604,7 @@ def test_queue_condor_conda_pre_run_python(
                 == 33261
             )
 
+
 def test_queue_condor_venv_python(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
