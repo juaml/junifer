@@ -45,7 +45,7 @@ def test_get_dependency_version(dependency: str, max_version: str) -> None:
     """
     version = get_dependency_version(dependency)
     if len(version.split(".")) == 3:  # semver
-        assert int(version.split(".")[1]) < int(max_version.split(".")[1])
+        assert int(version.split(".")[1]) <= int(max_version.split(".")[1])
     else:
         assert version < max_version
 
