@@ -13,5 +13,11 @@ env_name=$1
 echo "Activating ${env_name}"
 conda activate "$1"
 shift 1
+
+if [ -f "pre_run.sh" ]; then
+    echo "Sourcing pre_run.sh"
+    . ./pre_run.sh
+fi
+
 echo "Running ${*} in virtual environment"
 "$@"
