@@ -18,7 +18,7 @@ from tqdm import tqdm
 from ..api.decorators import register_storage
 from ..utils import logger, raise_error, warn_with_log
 from .pandas_base import PandasBaseFeatureStorage
-from .utils import element_to_prefix, store_matrix_checks
+from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
 
 
 if TYPE_CHECKING:
@@ -446,26 +446,14 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             row_names_len=len(row_names),  # type: ignore
             col_names_len=len(col_names),  # type: ignore
         )
-        # Data storage manipulations
-        if matrix_kind == "triu":
-            k = 0 if diagonal is True else 1
-            data_idx = np.triu_indices(data.shape[0], k=k)
-        elif matrix_kind == "tril":
-            k = 0 if diagonal is True else -1
-            data_idx = np.tril_indices(data.shape[0], k=k)
-        else:  # full
-            data_idx = (
-                np.repeat(np.arange(data.shape[0]), data.shape[1]),
-                np.tile(np.arange(data.shape[1]), data.shape[0]),
-            )
-
-        # Subset data
-        flat_data = data[data_idx]
-        # Generate flat 1D row X column names
-        columns = [
-            f"{row_names[i]}~{col_names[j]}"
-            for i, j in zip(data_idx[0], data_idx[1])
-        ]
+        # Matrix to vector conversion
+        flat_data, columns = matrix_to_vector(
+            data=data,
+            col_names=col_names,
+            row_names=row_names,
+            matrix_kind=matrix_kind,
+            diagonal=diagonal,
+        )
 
         # Convert element metadata to index
         n_rows = 1
@@ -473,7 +461,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             element=element, n_rows=n_rows, rows_col_name=None
         )
         # Prepare new dataframe
-        data_df = pd.DataFrame(flat_data[None, :], columns=columns, index=idx)
+        data_df = pd.DataFrame(flat_data, columns=columns, index=idx)
 
         # SQLite's SQLITE_MAX_COLUMN is 2000, so if more than that,
         # convert it to long format
