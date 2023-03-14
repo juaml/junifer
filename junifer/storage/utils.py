@@ -139,3 +139,62 @@ def element_to_prefix(element: Dict) -> str:
 
     logger.debug(f"Converted prefix: {prefix}")
     return f"{prefix}_"
+
+
+def store_matrix_checks(
+    matrix_kind: str,
+    diagonal: bool,
+    data_shape: Tuple[int, int],
+    row_names_len: int,
+    col_names_len: int,
+) -> None:
+    """Run parameter checks for store_matrix() methods.
+
+    Parameters
+    ----------
+    matrix_kind : {"triu", "tril", "full"}
+        The kind of matrix:
+
+        * ``triu`` : store upper triangular only
+        * ``tril`` : store lower triangular
+        * ``full`` : full matrix
+
+    diagonal : bool
+        Whether to store the diagonal. If ``matrix_kind`` is "full",
+        setting this to False will raise an error.
+    data_shape : tuple of int and int
+        The shape of the matrix data to store.
+    row_names_len : int
+        The length of row labels.
+    col_names_len : int
+        The length of column labels.
+
+    """
+    # Matrix kind validation
+    if matrix_kind not in ("triu", "tril", "full"):
+        raise_error(msg=f"Invalid kind {matrix_kind}", klass=ValueError)
+    # Diagonal validation
+    if diagonal is False and matrix_kind not in ["triu", "tril"]:
+        raise_error(
+            msg="Diagonal cannot be False if kind is not full",
+            klass=ValueError,
+        )
+    # Matrix kind and shape validation
+    if matrix_kind in ["triu", "tril"]:
+        if data_shape[0] != data_shape[1]:
+            raise_error(
+                "Cannot store a non-square matrix as a triangular matrix",
+                klass=ValueError,
+            )
+    # Row label validation
+    if row_names_len != data_shape[0]:  # type: ignore
+        raise_error(
+            msg="Number of row names does not match number of rows",
+            klass=ValueError,
+        )
+    # Column label validation
+    if col_names_len != data_shape[1]:  # type: ignore
+        raise_error(
+            msg="Number of column names does not match number of columns",
+            klass=ValueError,
+        )
