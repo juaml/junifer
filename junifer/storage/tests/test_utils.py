@@ -24,10 +24,10 @@ from junifer.storage.utils import (
     [
         ("click", "8.2"),
         ("numpy", "1.24"),
-        ("datalad", "0.18"),
+        ("datalad", "0.19"),
         ("pandas", "1.6"),
         ("nibabel", "4.1"),
-        ("nilearn", "1.0"),
+        ("nilearn", "0.10.0"),
         ("sqlalchemy", "1.5.0"),
         ("pyyaml", "7.0"),
     ],
@@ -44,7 +44,10 @@ def test_get_dependency_version(dependency: str, max_version: str) -> None:
 
     """
     version = get_dependency_version(dependency)
-    assert version < max_version
+    if len(version.split(".")) == 3:  # semver
+        assert int(version.split(".")[1]) < int(max_version.split(".")[1])
+    else:
+        assert version < max_version
 
 
 def test_get_dependency_version_invalid() -> None:
