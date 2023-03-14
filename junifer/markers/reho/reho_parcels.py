@@ -143,7 +143,7 @@ class ReHoParcels(ReHoBase):
         parcel_aggregation_input = {k: v for k, v in input.items()}
         parcel_aggregation_input["data"] = reho_map
         parcel_aggregation_input["path"] = None
-    
+
         output = parcel_aggregation.compute(
             input=parcel_aggregation_input,
             extra_input=extra_input,
