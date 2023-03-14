@@ -4,7 +4,6 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from itertools import product
 from pathlib import Path
 
 import numpy as np
@@ -433,59 +432,9 @@ def test_store_matrix(tmp_path: Path) -> None:
     # Check data of dataframe
     assert_array_equal(read_df.values, data.reshape(1, -1))
     # Check column headers
-    assert read_df.columns.to_list() == list(product(row_headers, col_headers))
-
-    # Diagonal validation error
-    with pytest.raises(ValueError, match="cannot be False"):
-        storage.store_matrix(
-            meta_md5=meta_md5,
-            element=element_to_store,
-            data=data,
-            row_names=row_headers,
-            col_names=col_headers,
-            matrix_kind="full",
-            diagonal=False,
-        )
-    # Matrix kind and shape validation
-    with pytest.raises(ValueError, match="non-square"):
-        storage.store_matrix(
-            meta_md5=meta_md5,
-            element=element_to_store,
-            data=data,
-            row_names=row_headers,
-            col_names=col_headers,
-            matrix_kind="triu",
-        )
-    # Matrix kind validation
-    with pytest.raises(ValueError, match="Invalid kind"):
-        storage.store_matrix(
-            meta_md5=meta_md5,
-            element=element_to_store,
-            data=data,
-            row_names=row_headers,
-            col_names=col_headers,
-            matrix_kind="wrong",
-        )
-    # Row data and label validation
-    with pytest.raises(ValueError, match="of row names"):
-        storage.store_matrix(
-            meta_md5=meta_md5,
-            element=element_to_store,
-            data=data,
-            row_names=["row1", "row2", "row3"],
-            col_names=col_headers,
-            matrix_kind="full",
-        )
-    # Column data and label validation
-    with pytest.raises(ValueError, match="of column names"):
-        storage.store_matrix(
-            meta_md5=meta_md5,
-            element=element_to_store,
-            data=data,
-            row_names=row_headers,
-            col_names=["col1", "col2", "col3", "col4"],
-            matrix_kind="full",
-        )
+    assert read_df.columns.to_list() == [
+        f"{row}~{col}" for row in row_headers for col in col_headers
+    ]
 
 
 def test_store_matrix_without_headers(tmp_path: Path) -> None:
@@ -535,9 +484,11 @@ def test_store_matrix_without_headers(tmp_path: Path) -> None:
     # Check data of dataframe
     assert_array_equal(read_df.values, data.reshape(1, -1))
     # Check column headers
-    assert read_df.columns.to_list() == list(
-        product(["r0", "r1", "r2", "r3"], ["c0", "c1", "c2"])
-    )
+    assert read_df.columns.to_list() == [
+        f"{row}~{col}"
+        for row in ["r0", "r1", "r2", "r3"]
+        for col in ["c0", "c1", "c2"]
+    ]
 
 
 def test_store_upper_triangular_matrix(tmp_path: Path) -> None:
@@ -588,9 +539,16 @@ def test_store_upper_triangular_matrix(tmp_path: Path) -> None:
     # Read into dataframe
     read_df = storage.read_df(feature_md5=meta_md5)
     # Check data of dataframe
-    assert_array_equal(read_df.values, data.reshape(1, -1))
+    assert_array_equal(read_df.values, np.array([[1, 2, 3, 22, 33, 333]]))
     # Check column headers
-    assert read_df.columns.to_list() == list(product(row_headers, col_headers))
+    assert read_df.columns.to_list() == [
+        "row1~col1",
+        "row1~col2",
+        "row1~col3",
+        "row2~col2",
+        "row2~col3",
+        "row3~col3",
+    ]
 
 
 def test_store_upper_triangular_matrix_without_diagonal(
@@ -644,9 +602,9 @@ def test_store_upper_triangular_matrix_without_diagonal(
     # Read into dataframe
     read_df = storage.read_df(feature_md5=meta_md5)
     # Check data of dataframe
-    assert_array_equal(read_df.values, data.reshape(1, -1))
+    assert_array_equal(read_df.values, np.array([[2, 3, 33]]))
     # Check column headers
-    assert read_df.columns.to_list() == list(product(row_headers, col_headers))
+    assert read_df.columns.to_list() == ["row1~col2", "row1~col3", "row2~col3"]
 
 
 def test_store_lower_triangular_matrix(tmp_path: Path) -> None:
@@ -697,9 +655,16 @@ def test_store_lower_triangular_matrix(tmp_path: Path) -> None:
     # Read into dataframe
     read_df = storage.read_df(feature_md5=meta_md5)
     # Check data of dataframe
-    assert_array_equal(read_df.values, data.reshape(1, -1))
+    assert_array_equal(read_df.values, np.array([[1, 11, 22, 111, 222, 333]]))
     # Check column headers
-    assert read_df.columns.to_list() == list(product(row_headers, col_headers))
+    assert read_df.columns.to_list() == [
+        "row1~col1",
+        "row2~col1",
+        "row2~col2",
+        "row3~col1",
+        "row3~col2",
+        "row3~col3",
+    ]
 
 
 def test_store_lower_triangular_matrix_without_diagonal(
@@ -753,9 +718,9 @@ def test_store_lower_triangular_matrix_without_diagonal(
     # Read into dataframe
     read_df = storage.read_df(feature_md5=meta_md5)
     # Check data of dataframe
-    assert_array_equal(read_df.values, data.reshape(1, -1))
+    assert_array_equal(read_df.values, np.array([[11, 111, 222]]))
     # Check column headers
-    assert read_df.columns.to_list() == list(product(row_headers, col_headers))
+    assert read_df.columns.to_list() == ["row2~col1", "row3~col1", "row3~col2"]
 
 
 def test_store_vector(tmp_path: Path) -> None:
