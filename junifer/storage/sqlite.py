@@ -18,7 +18,7 @@ from tqdm import tqdm
 from ..api.decorators import register_storage
 from ..utils import logger, raise_error, warn_with_log
 from .pandas_base import PandasBaseFeatureStorage
-from .utils import element_to_prefix
+from .utils import element_to_prefix, store_matrix_checks
 
 
 if TYPE_CHECKING:
@@ -432,47 +432,31 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             this to False will raise an error (default True).
 
         """
-        if diagonal is False and matrix_kind not in ["triu", "tril"]:
-            raise_error(
-                msg="Diagonal cannot be False if kind is not full",
-                klass=ValueError,
-            )
-
-        if matrix_kind in ["triu", "tril"]:
-            if data.shape[0] != data.shape[1]:
-                raise_error(
-                    "Cannot store a non-square matrix as a triangular matrix",
-                    klass=ValueError,
-                )
-
+        # Row data validation
+        if row_names is None:
+            row_names = [f"r{i}" for i in range(data.shape[0])]
+        # Column data validation
+        if col_names is None:
+            col_names = [f"c{i}" for i in range(data.shape[1])]
+        # Parameter checks
+        store_matrix_checks(
+            matrix_kind=matrix_kind,
+            diagonal=diagonal,
+            data_shape=data.shape,
+            row_names_len=len(row_names),  # type: ignore
+            col_names_len=len(col_names),  # type: ignore
+        )
+        # Data storage manipulations
         if matrix_kind == "triu":
             k = 0 if diagonal is True else 1
             data_idx = np.triu_indices(data.shape[0], k=k)
         elif matrix_kind == "tril":
             k = 0 if diagonal is True else -1
             data_idx = np.tril_indices(data.shape[0], k=k)
-        elif matrix_kind == "full":
+        else:  # full
             data_idx = (
                 np.repeat(np.arange(data.shape[0]), data.shape[1]),
                 np.tile(np.arange(data.shape[1]), data.shape[0]),
-            )
-        else:
-            raise_error(msg=f"Invalid kind {matrix_kind}", klass=ValueError)
-
-        if row_names is None:
-            row_names = [f"r{i}" for i in range(data.shape[0])]
-        elif len(row_names) != data.shape[0]:
-            raise_error(
-                msg="Number of row names does not match number of rows",
-                klass=ValueError,
-            )
-
-        if col_names is None:
-            col_names = [f"c{i}" for i in range(data.shape[1])]
-        elif len(col_names) != data.shape[1]:
-            raise_error(
-                msg="Number of column names does not match number of columns",
-                klass=ValueError,
             )
 
         # Subset data
