@@ -303,9 +303,16 @@ class _JuniferExtractionFunctor:
 class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
     """Class for custom NiftiSpheresMasker.
 
+    Differs from :class:`nilearn.maskers.NiftiSpheresMasker` in the following
+    ways:
+
+    * it allows to pass any callable as the ``agg_func`` parameter.
+    * empty spheres do not create an error. Insted, ``agg_func`` is applied to
+      an empty array and the result is passed.
+
     Parameters
     ----------
-    seeds : list of triplet of coordinates in native space
+    seeds : list of float
         Seed definitions. List of coordinates of the seeds in the same space
         as the images (typically MNI or TAL).
     radius : float, optional
@@ -317,13 +324,13 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
         The function to aggregate signals using (default numpy.mean).
     allow_overlap : bool, optional
         If False, an error is raised if the maps overlap (default None).
-    dtype : any type that can be coerced into a numpy dtype or "auto", optional
+    dtype : numpy.dtype or "auto", optional
         The dtype for the extraction. If "auto", the data will be converted to
         int32 if dtype is discrete and float32 if it is continuous
         (default None).
     **kwargs
         Keyword arguments are passed to the
-        :func:`nilearn.maskers.NiftiSpheresMasker`.
+        :class:`nilearn.maskers.NiftiSpheresMasker`.
 
     """
 
@@ -362,11 +369,11 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
             Images to process.
             If a 3D niimg is provided, a singleton dimension will be added to
             the output to represent the single scan in the niimg.
-        confounds : CSV file or array-like or pandas.DataFrame, optional
+        confounds : pandas.DataFrame, optional
             This parameter is passed to :func:`nilearn.signal.clean`.
             Please see the related documentation for details.
             shape: (number of scans, number of confounds)
-        sample_mask : Any type compatible with numpy-array indexing, optional
+        sample_mask : np.ndarray, list or tuple, optional
             Masks the niimgs along time/fourth dimension to perform scrubbing
             (remove volumes with high motion) and/or non-steady-state volumes.
             This parameter is passed to :func:`nilearn.signal.clean`.

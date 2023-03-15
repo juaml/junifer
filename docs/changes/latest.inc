@@ -53,9 +53,9 @@ Enhancements
 
 - Allow for empty spheres in :class:`junifer.external.nilearn.JuniferNiftiSpheresMasker`, that will result in NaNs (:gh:`190` by `Fede Raimondo`_).
 
-- Expose `allow_overlap` parameter in  :class:`junifer.markers.SphereAgregation` and related markers (:gh:`190` by `Fede Raimondo`_).
+- Expose ``allow_overlap`` parameter in  :class:`junifer.markers.SphereAggregation` and related markers (:gh:`190` by `Fede Raimondo`_).
 
-- Add aggregation function :func:`junifer.stats.count` that returns the number of elements in a given axis. This allows to count the number of voxels per sphere/parcel when used as `agg_func` in markers (:gh:`190` by `Fede Raimondo`_).
+- Add aggregation function :func:`junifer.stats.count` that returns the number of elements in a given axis. This allows to count the number of voxels per sphere/parcel when used as ``method`` in markers (:gh:`190` by `Fede Raimondo`_).
 
 Bugs
 ~~~~
