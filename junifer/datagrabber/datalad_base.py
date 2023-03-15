@@ -5,10 +5,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import atexit
+import shutil
 import tempfile
 from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
 
+import datalad
 import datalad.api as dl
 from datalad.support.gitrepo import GitRepo
 
@@ -69,8 +72,39 @@ class DataladDataGrabber(BaseDataGrabber):
         if datadir is None:
             logger.warning("`datadir` is None, creating a temporary directory")
             # Create temporary directory
-            datadir = tempfile.mkdtemp()
+            tmpdir = Path(tempfile.mkdtemp())
+            datadir = tmpdir / "datadir"
+            datadir.mkdir(parents=True, exist_ok=False)
             logger.info(f"`datadir` set to {datadir}")
+            cache_dir = tmpdir / ".datalad_cache"
+            sockets_dir = cache_dir / "sockets"
+            locks_dir = cache_dir / "locks"
+            sockets_dir.mkdir(parents=True, exist_ok=False)
+            locks_dir.mkdir(parents=True, exist_ok=False)
+            logger.debug(f"Setting datalad cache to {cache_dir}")
+            datalad.cfg.set(
+                "datalad.locations.cache",
+                cache_dir.as_posix(),
+                scope="override")
+            datalad.cfg.set(
+                "datalad.locations.sockets",
+                sockets_dir.as_posix(),
+                scope="override")
+            datalad.cfg.set(
+                "datalad.locations.locks",
+                locks_dir.as_posix(),
+                scope="override")
+            logger.debug(
+                "Datalad cache set to "
+                f"{datalad.cfg.get('datalad.locations.cache')}")
+            logger.debug(
+                "Datalad sockets set to "
+                f"{datalad.cfg.get('datalad.locations.sockets')}")
+            logger.debug(
+                "Datalad locks set to "
+                f"{datalad.cfg.get('datalad.locations.locks')}")
+            self._tmpdir = tmpdir
+            atexit.register(self._rmtmpdir)
         # TODO: uri can be converted to a positional argument
         if uri is None:
             raise_error("`uri` must be provided")
@@ -84,6 +118,15 @@ class DataladDataGrabber(BaseDataGrabber):
         # Flag to indicate if the dataset was cloned before and it might be
         # dirty
         self.datalad_dirty = False
+
+    def __del__(self):
+        if hasattr(self, "_tmpdir"):
+            self._rmtmpdir()
+
+    def _rmtmpdir(self):
+        if self._tmpdir.exists():
+            logger.debug("Removing temporary directory")
+            shutil.rmtree(self._tmpdir)
 
     @property
     def datadir(self) -> Path:
