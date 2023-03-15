@@ -325,6 +325,7 @@ def _queue_condor(
     cpus: int = 1,
     disk: str = "1G",
     extra_preamble: str = "",
+    pre_run: Optional[str] = None,
     verbose: str = "info",
     collect: bool = True,
     submit: bool = False,
@@ -353,6 +354,8 @@ def _queue_condor(
         The size of disk (HDD or SSD) to use (default "1G").
     extra_preamble : str, optional
         Extra commands to pass to HTCondor (default "").
+    pre_run : str, optional
+        Extra bash commands to source before the job (default None).
     verbose : str, optional
         The level of verbosity (default "info").
     collect : bool, optional
@@ -398,6 +401,14 @@ def _queue_condor(
         arguments = ""
     else:
         raise ValueError(f'Unknown env kind: {env["kind"]}')
+
+    if pre_run is not None:
+        logger.info("Writing pre_run.sh to jobdir")
+        pre_run_fname = jobdir / "pre_run.sh"
+        with open(pre_run_fname, "w") as f:
+            f.write("#!/bin/bash\n\n")
+            f.write(pre_run)
+        make_executable(pre_run_fname)
 
     # Create log directory
     log_dir = jobdir / "logs"

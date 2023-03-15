@@ -564,6 +564,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             # Save the mask in the extra input and link it to the bold data
             # this allows to use "inherit" down the pipeline
             if extra_input is not None:
+                logger.debug("Setting mask_item")
                 extra_input["BOLD_mask"] = {"data": mask_img}
                 input["mask_item"] = "BOLD_mask"
 

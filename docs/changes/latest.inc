@@ -49,6 +49,8 @@ Enhancements
 - Add support for HDF5 feature storage via :class:`junifer.storage.HDF5FeatureStorage`
   (:gh:`147` by `Synchon Mandal`_).
 
+- Add ``pre_run`` parameter to ``_queue_condor`` (:gh:`188` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
