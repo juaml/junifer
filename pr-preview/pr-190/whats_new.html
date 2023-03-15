@@ -217,6 +217,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/utils.html">8.2.8. Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/testing.html">8.2.9. Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/configs.html">8.3.1. Configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/nilearn.html">8.4.1. Nilearn</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contribution.html">9. Contributing to junifer</a></li>
@@ -282,6 +283,9 @@ via <code class="docutils literal notranslate"><span class="pre">import</span> <
 <li><p>Add support for HDF5 feature storage via <a class="reference internal" href="api/storage.html#junifer.storage.HDF5FeatureStorage" title="junifer.storage.HDF5FeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.storage.HDF5FeatureStorage</span></code></a>
 (<a class="reference external" href="https://github.com/juaml/junifer/issues/147">#147</a> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>).</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">pre_run</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">_queue_condor</span></code> (<a class="reference external" href="https://github.com/juaml/junifer/issues/188">#188</a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>).</p></li>
+<li><p>Allow for empty spheres in <a class="reference internal" href="api/nilearn.html#junifer.external.nilearn.JuniferNiftiSpheresMasker" title="junifer.external.nilearn.JuniferNiftiSpheresMasker"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.external.nilearn.JuniferNiftiSpheresMasker</span></code></a>, that will result in NaNs (<a class="reference external" href="https://github.com/juaml/junifer/issues/190">#190</a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>).</p></li>
+<li><p>Expose <code class="docutils literal notranslate"><span class="pre">allow_overlap</span></code> parameter in  <a class="reference internal" href="api/markers.html#junifer.markers.SphereAggregation" title="junifer.markers.SphereAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.SphereAggregation</span></code></a> and related markers (<a class="reference external" href="https://github.com/juaml/junifer/issues/190">#190</a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>).</p></li>
+<li><p>Add aggregation function <a class="reference internal" href="api/stats.html#junifer.stats.count" title="junifer.stats.count"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.count()</span></code></a> that returns the number of elements in a given axis. This allows to count the number of voxels per sphere/parcel when used as <code class="docutils literal notranslate"><span class="pre">method</span></code> in markers (<a class="reference external" href="https://github.com/juaml/junifer/issues/190">#190</a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>).</p></li>
 </ul>
 </section>
 <section id="bugs">
