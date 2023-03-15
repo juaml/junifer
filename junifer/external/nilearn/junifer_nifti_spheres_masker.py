@@ -64,10 +64,11 @@ DAMAGE.
 """
 
 
-def _apply_mask_and_get_affinity(seeds, niimg, radius, allow_overlap,
-                                 mask_img=None):
+def _apply_mask_and_get_affinity(
+    seeds, niimg, radius, allow_overlap, mask_img=None
+):
     """Apply mask and get affinity matrix for given seeds.
-    
+
     Utility function to get only the rows which are occupied by sphere at
     given seed locations and the provided radius. Rows are in target_affine and
     target_shape space.
@@ -115,7 +116,7 @@ def _apply_mask_and_get_affinity(seeds, niimg, radius, allow_overlap,
             mask_img,
             target_affine=affine,
             target_shape=niimg.shape[:3],
-            interpolation='nearest',
+            interpolation="nearest",
         )
         mask, _ = masking._load_mask_img(mask_img)
         mask_coords = list(zip(*np.where(mask != 0)))
@@ -126,8 +127,8 @@ def _apply_mask_and_get_affinity(seeds, niimg, radius, allow_overlap,
         affine = niimg.affine
         if np.isnan(np.sum(_safe_get_data(niimg))):
             warn_with_log(
-                'The imgs you have fed into fit_transform() contains NaN '
-                'values which will be converted to zeroes.'
+                "The imgs you have fed into fit_transform() contains NaN "
+                "values which will be converted to zeroes."
             )
             X = _safe_get_data(niimg, True).reshape([-1, niimg.shape[3]]).T
         else:
@@ -141,9 +142,9 @@ def _apply_mask_and_get_affinity(seeds, niimg, radius, allow_overlap,
     # For each seed, get coordinates of nearest voxel
     nearests = []
     for sx, sy, sz in seeds:
-        nearest = np.round(image.resampling.coord_transform(
-            sx, sy, sz, np.linalg.inv(affine)
-        ))
+        nearest = np.round(
+            image.resampling.coord_transform(sx, sy, sz, np.linalg.inv(affine))
+        )
         nearest = nearest.astype(int)
         nearest = (nearest[0], nearest[1], nearest[2])
         try:
@@ -176,13 +177,14 @@ def _apply_mask_and_get_affinity(seeds, niimg, radius, allow_overlap,
             pass
 
     if (not allow_overlap) and np.any(A.sum(axis=0) >= 2):
-        raise_error('Overlap detected between spheres')
+        raise_error("Overlap detected between spheres")
 
     return X, A
 
 
-def _iter_signals_from_spheres(seeds, niimg, radius, allow_overlap,
-                               mask_img=None):
+def _iter_signals_from_spheres(
+    seeds, niimg, radius, allow_overlap, mask_img=None
+):
     """Iterate over spheres.
 
     Parameters
@@ -204,9 +206,9 @@ def _iter_signals_from_spheres(seeds, niimg, radius, allow_overlap,
         See :ref:`extracting_data`.
         Mask to apply to regions before extracting signals.
     """
-    X, A = _apply_mask_and_get_affinity(seeds, niimg, radius,
-                                        allow_overlap,
-                                        mask_img=mask_img)
+    X, A = _apply_mask_and_get_affinity(
+        seeds, niimg, radius, allow_overlap, mask_img=mask_img
+    )
     for _, row in enumerate(A.rows):
         yield X[:, row]
 
