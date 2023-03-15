@@ -59,6 +59,8 @@ Bugs
 - Fix :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels`, :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres`
   :class:`junifer.markers.ReHoSpheres` and :class:`junifer.markers.ReHoParcels` pass the ``extra_input`` parameter (:gh:`187` by `Fede Raimondo`_).
 
+- Fix several markers that did not properly handle the ``extra_input`` parameter (:gh:`189` by `Fede Raimondo`_).
+
 API changes
 ~~~~~~~~~~~
 
