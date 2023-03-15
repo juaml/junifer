@@ -307,7 +307,7 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
     ways:
 
     * it allows to pass any callable as the ``agg_func`` parameter.
-    * empty spheres do not create an error. Insted, ``agg_func`` is applied to
+    * empty spheres do not create an error. Instead, ``agg_func`` is applied to
       an empty array and the result is passed.
 
     Parameters
