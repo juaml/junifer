@@ -1,0 +1,672 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="7.4. UKB VBM GMD Extraction" href="run_run_gmd_mean.html" /><link rel="prev" title="7.2. UKB VBM GMD Extraction" href="norun_ukbvm_gmd.html" />
+
+    <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
+        <title>7.3. Computer Parcel Aggregation. - junifer documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=30d1aed668e5c3a91c3e3bf6a60b675221979f0e" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">junifer  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand centered" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/junifer_logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">junifer  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">3. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">3.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">3.2. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">3.3. Data Grabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">3.4. Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">3.5. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">3.6. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">3.7. Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">4. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">4.1. Code-less configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html">4.2. Running jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">4.3. Collecting results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">4.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/masks.html">4.5.1. Masks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">5. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">6. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">6.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">6.2. Creating Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">6.3. Creating Markers</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">7. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">7.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="norun_ukbvm_gmd.html">7.2. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">7.3. Computer Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_run_gmd_mean.html">7.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_ets_rss_marker.html">7.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="norun_hcpfc_pearson.html">7.6. HCP FC Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_junifer_julearn.html">7.7. Run junifer and julearn.</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">8. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">8.1.1. Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">8.1.2. DataReaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">8.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">8.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">8.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">8.2.1. Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">8.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.masks">8.2.3. Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">8.2.4. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">8.2.5. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">8.2.6. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">8.2.7. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">8.2.8. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">8.2.9. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">8.3.1. Configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/nilearn.html">8.4.1. Nilearn</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">9. Contributing to junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">10. Maintaining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">11. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">12. What’s new</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-auto-examples-run-compute-parcel-mean-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="computer-parcel-aggregation">
+<span id="sphx-glr-auto-examples-run-compute-parcel-mean-py"></span><h1><span class="section-number">7.3. </span>Computer Parcel Aggregation.<a class="headerlink" href="#computer-parcel-aggregation" title="Permalink to this heading">#</a></h1>
+<p>This example uses a ParcelAggregation marker to compute the mean of each parcel
+using the Schaefer parcellations (100 rois, 7 Yeo networks) for both a 3D and
+4D nifti</p>
+<p>Authors: Federico Raimondo</p>
+<p>License: BSD 3 clause</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">nilearn</span>
+
+<span class="kn">from</span> <span class="nn">junifer.markers.parcel_aggregation</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">ParcelAggregation</span></a>
+<span class="kn">from</span> <span class="nn">junifer.utils</span> <span class="kn">import</span> <span class="n">configure_logging</span>
+</pre></div>
+</div>
+<p>Set the logging level to info to see extra information</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-03-15 20:30:14,370 - JUNIFER - INFO - ===== Lib Versions =====
+2023-03-15 20:30:14,370 - JUNIFER - INFO - numpy: 1.23.5
+2023-03-15 20:30:14,370 - JUNIFER - INFO - scipy: 1.10.1
+2023-03-15 20:30:14,370 - JUNIFER - INFO - pandas: 1.5.3
+2023-03-15 20:30:14,370 - JUNIFER - INFO - nilearn: 0.10.0
+2023-03-15 20:30:14,370 - JUNIFER - INFO - nibabel: 4.0.2
+2023-03-15 20:30:14,370 - JUNIFER - INFO - junifer: 0.1.dev1
+2023-03-15 20:30:14,371 - JUNIFER - INFO - ========================
+</pre></div>
+</div>
+<p>Load the VBM GM data (3d):
+- Fetch the Oasis dataset</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_oasis_vbm.html#nilearn.datasets.fetch_oasis_vbm" title="nilearn.datasets.fetch_oasis_vbm" class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_oasis_vbm</span></a><span class="p">(</span><span class="n">n_subjects</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_fname</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">gray_matter_maps</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<a href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="nibabel.nifti1.Nifti1Image" class="sphx-glr-backref-module-nibabel-nifti1 sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_img</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.image.load_img.html#nilearn.image.load_img" title="nilearn.image.load_img" class="sphx-glr-backref-module-nilearn-image sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load_img</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_fname</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset created in /home/runner/nilearn_data/oasis1
+
+Downloading data from https://www.nitrc.org/frs/download.php/6364/archive_dartel.tgz ...
+
+Downloaded 16949248 of 905208634 bytes (1.9%,   52.9s remaining)
+Downloaded 35250176 of 905208634 bytes (3.9%,   49.8s remaining)
+Downloaded 51748864 of 905208634 bytes (5.7%,   50.0s remaining)
+Downloaded 63266816 of 905208634 bytes (7.0%,   53.8s remaining)
+Downloaded 67862528 of 905208634 bytes (7.5%,  1.0min remaining)
+Downloaded 72097792 of 905208634 bytes (8.0%,  1.2min remaining)
+Downloaded 75980800 of 905208634 bytes (8.4%,  1.3min remaining)
+Downloaded 80084992 of 905208634 bytes (8.8%,  1.4min remaining)
+Downloaded 84312064 of 905208634 bytes (9.3%,  1.5min remaining)
+Downloaded 88481792 of 905208634 bytes (9.8%,  1.6min remaining)
+Downloaded 92225536 of 905208634 bytes (10.2%,  1.6min remaining)
+Downloaded 96280576 of 905208634 bytes (10.6%,  1.7min remaining)
+Downloaded 100630528 of 905208634 bytes (11.1%,  1.7min remaining)
+Downloaded 104431616 of 905208634 bytes (11.5%,  1.8min remaining)
+Downloaded 107995136 of 905208634 bytes (11.9%,  1.9min remaining)
+Downloaded 111190016 of 905208634 bytes (12.3%,  1.9min remaining)
+Downloaded 114147328 of 905208634 bytes (12.6%,  2.0min remaining)
+Downloaded 117260288 of 905208634 bytes (13.0%,  2.0min remaining)
+Downloaded 120561664 of 905208634 bytes (13.3%,  2.1min remaining)
+Downloaded 123478016 of 905208634 bytes (13.6%,  2.1min remaining)
+Downloaded 126476288 of 905208634 bytes (14.0%,  2.2min remaining)
+Downloaded 129654784 of 905208634 bytes (14.3%,  2.2min remaining)
+Downloaded 132259840 of 905208634 bytes (14.6%,  2.3min remaining)
+Downloaded 135028736 of 905208634 bytes (14.9%,  2.3min remaining)
+Downloaded 137461760 of 905208634 bytes (15.2%,  2.3min remaining)
+Downloaded 139804672 of 905208634 bytes (15.4%,  2.4min remaining)
+Downloaded 141844480 of 905208634 bytes (15.7%,  2.4min remaining)
+Downloaded 143785984 of 905208634 bytes (15.9%,  2.5min remaining)
+Downloaded 145727488 of 905208634 bytes (16.1%,  2.5min remaining)
+Downloaded 147890176 of 905208634 bytes (16.3%,  2.6min remaining)
+Downloaded 150151168 of 905208634 bytes (16.6%,  2.6min remaining)
+Downloaded 152625152 of 905208634 bytes (16.9%,  2.6min remaining)
+Downloaded 155336704 of 905208634 bytes (17.2%,  2.7min remaining)
+Downloaded 158310400 of 905208634 bytes (17.5%,  2.7min remaining)
+Downloaded 161521664 of 905208634 bytes (17.8%,  2.7min remaining)
+Downloaded 164986880 of 905208634 bytes (18.2%,  2.7min remaining)
+Downloaded 168681472 of 905208634 bytes (18.6%,  2.7min remaining)
+Downloaded 173080576 of 905208634 bytes (19.1%,  2.7min remaining)
+Downloaded 178782208 of 905208634 bytes (19.8%,  2.7min remaining)
+Downloaded 186204160 of 905208634 bytes (20.6%,  2.6min remaining)
+Downloaded 195813376 of 905208634 bytes (21.6%,  2.5min remaining)
+Downloaded 204439552 of 905208634 bytes (22.6%,  2.4min remaining)
+Downloaded 210771968 of 905208634 bytes (23.3%,  2.4min remaining)
+Downloaded 215154688 of 905208634 bytes (23.8%,  2.4min remaining)
+Downloaded 219136000 of 905208634 bytes (24.2%,  2.4min remaining)
+Downloaded 222961664 of 905208634 bytes (24.6%,  2.4min remaining)
+Downloaded 226238464 of 905208634 bytes (25.0%,  2.4min remaining)
+Downloaded 229744640 of 905208634 bytes (25.4%,  2.4min remaining)
+Downloaded 232579072 of 905208634 bytes (25.7%,  2.4min remaining)
+Downloaded 235479040 of 905208634 bytes (26.0%,  2.4min remaining)
+Downloaded 238149632 of 905208634 bytes (26.3%,  2.4min remaining)
+Downloaded 240713728 of 905208634 bytes (26.6%,  2.4min remaining)
+Downloaded 243589120 of 905208634 bytes (26.9%,  2.4min remaining)
+Downloaded 246611968 of 905208634 bytes (27.2%,  2.4min remaining)
+Downloaded 249462784 of 905208634 bytes (27.6%,  2.4min remaining)
+Downloaded 251994112 of 905208634 bytes (27.8%,  2.4min remaining)
+Downloaded 254894080 of 905208634 bytes (28.2%,  2.4min remaining)
+Downloaded 257785856 of 905208634 bytes (28.5%,  2.4min remaining)
+Downloaded 260145152 of 905208634 bytes (28.7%,  2.5min remaining)
+Downloaded 262684672 of 905208634 bytes (29.0%,  2.5min remaining)
+Downloaded 265461760 of 905208634 bytes (29.3%,  2.5min remaining)
+Downloaded 268476416 of 905208634 bytes (29.7%,  2.5min remaining)
+Downloaded 271728640 of 905208634 bytes (30.0%,  2.5min remaining)
+Downloaded 275218432 of 905208634 bytes (30.4%,  2.5min remaining)
+Downloaded 278953984 of 905208634 bytes (30.8%,  2.5min remaining)
+Downloaded 282935296 of 905208634 bytes (31.3%,  2.4min remaining)
+Downloaded 287162368 of 905208634 bytes (31.7%,  2.4min remaining)
+Downloaded 291807232 of 905208634 bytes (32.2%,  2.4min remaining)
+Downloaded 296058880 of 905208634 bytes (32.7%,  2.4min remaining)
+Downloaded 300892160 of 905208634 bytes (33.2%,  2.4min remaining)
+Downloaded 306061312 of 905208634 bytes (33.8%,  2.3min remaining)
+Downloaded 310034432 of 905208634 bytes (34.3%,  2.3min remaining)
+Downloaded 314269696 of 905208634 bytes (34.7%,  2.3min remaining)
+Downloaded 318693376 of 905208634 bytes (35.2%,  2.3min remaining)
+Downloaded 323166208 of 905208634 bytes (35.7%,  2.3min remaining)
+Downloaded 326729728 of 905208634 bytes (36.1%,  2.3min remaining)
+Downloaded 330833920 of 905208634 bytes (36.5%,  2.2min remaining)
+Downloaded 335233024 of 905208634 bytes (37.0%,  2.2min remaining)
+Downloaded 339795968 of 905208634 bytes (37.5%,  2.2min remaining)
+Downloaded 344399872 of 905208634 bytes (38.0%,  2.2min remaining)
+Downloaded 349011968 of 905208634 bytes (38.6%,  2.2min remaining)
+Downloaded 353787904 of 905208634 bytes (39.1%,  2.1min remaining)
+Downloaded 358227968 of 905208634 bytes (39.6%,  2.1min remaining)
+Downloaded 361938944 of 905208634 bytes (40.0%,  2.1min remaining)
+Downloaded 365240320 of 905208634 bytes (40.3%,  2.1min remaining)
+Downloaded 368746496 of 905208634 bytes (40.7%,  2.1min remaining)
+Downloaded 372391936 of 905208634 bytes (41.1%,  2.1min remaining)
+Downloaded 376250368 of 905208634 bytes (41.6%,  2.1min remaining)
+Downloaded 380354560 of 905208634 bytes (42.0%,  2.1min remaining)
+Downloaded 384704512 of 905208634 bytes (42.5%,  2.0min remaining)
+Downloaded 388489216 of 905208634 bytes (42.9%,  2.0min remaining)
+Downloaded 392413184 of 905208634 bytes (43.4%,  2.0min remaining)
+Downloaded 396722176 of 905208634 bytes (43.8%,  2.0min remaining)
+Downloaded 401219584 of 905208634 bytes (44.3%,  2.0min remaining)
+Downloaded 405741568 of 905208634 bytes (44.8%,  2.0min remaining)
+Downloaded 410288128 of 905208634 bytes (45.3%,  1.9min remaining)
+Downloaded 414932992 of 905208634 bytes (45.8%,  1.9min remaining)
+Downloaded 419823616 of 905208634 bytes (46.4%,  1.9min remaining)
+Downloaded 424935424 of 905208634 bytes (46.9%,  1.9min remaining)
+Downloaded 430333952 of 905208634 bytes (47.5%,  1.9min remaining)
+Downloaded 436232192 of 905208634 bytes (48.2%,  1.8min remaining)
+Downloaded 441278464 of 905208634 bytes (48.7%,  1.8min remaining)
+Downloaded 446439424 of 905208634 bytes (49.3%,  1.8min remaining)
+Downloaded 450789376 of 905208634 bytes (49.8%,  1.8min remaining)
+Downloaded 455483392 of 905208634 bytes (50.3%,  1.7min remaining)
+Downloaded 460316672 of 905208634 bytes (50.9%,  1.7min remaining)
+Downloaded 465059840 of 905208634 bytes (51.4%,  1.7min remaining)
+Downloaded 468967424 of 905208634 bytes (51.8%,  1.7min remaining)
+Downloaded 473423872 of 905208634 bytes (52.3%,  1.7min remaining)
+Downloaded 478216192 of 905208634 bytes (52.8%,  1.7min remaining)
+Downloaded 483147776 of 905208634 bytes (53.4%,  1.6min remaining)
+Downloaded 488112128 of 905208634 bytes (53.9%,  1.6min remaining)
+Downloaded 493076480 of 905208634 bytes (54.5%,  1.6min remaining)
+Downloaded 498122752 of 905208634 bytes (55.0%,  1.6min remaining)
+Downloaded 503431168 of 905208634 bytes (55.6%,  1.5min remaining)
+Downloaded 508960768 of 905208634 bytes (56.2%,  1.5min remaining)
+Downloaded 513867776 of 905208634 bytes (56.8%,  1.5min remaining)
+Downloaded 517808128 of 905208634 bytes (57.2%,  1.5min remaining)
+Downloaded 521584640 of 905208634 bytes (57.6%,  1.5min remaining)
+Downloaded 525549568 of 905208634 bytes (58.1%,  1.5min remaining)
+Downloaded 529653760 of 905208634 bytes (58.5%,  1.4min remaining)
+Downloaded 533970944 of 905208634 bytes (59.0%,  1.4min remaining)
+Downloaded 538542080 of 905208634 bytes (59.5%,  1.4min remaining)
+Downloaded 543309824 of 905208634 bytes (60.0%,  1.4min remaining)
+Downloaded 548331520 of 905208634 bytes (60.6%,  1.4min remaining)
+Downloaded 553607168 of 905208634 bytes (61.2%,  1.3min remaining)
+Downloaded 559120384 of 905208634 bytes (61.8%,  1.3min remaining)
+Downloaded 565436416 of 905208634 bytes (62.5%,  1.3min remaining)
+Downloaded 573095936 of 905208634 bytes (63.3%,  1.3min remaining)
+Downloaded 582533120 of 905208634 bytes (64.4%,  1.2min remaining)
+Downloaded 594280448 of 905208634 bytes (65.7%,  1.2min remaining)
+Downloaded 604069888 of 905208634 bytes (66.7%,  1.1min remaining)
+Downloaded 608534528 of 905208634 bytes (67.2%,  1.1min remaining)
+Downloaded 612810752 of 905208634 bytes (67.7%,  1.1min remaining)
+Downloaded 617316352 of 905208634 bytes (68.2%,  1.1min remaining)
+Downloaded 621928448 of 905208634 bytes (68.7%,  1.0min remaining)
+Downloaded 626163712 of 905208634 bytes (69.2%,  1.0min remaining)
+Downloaded 630095872 of 905208634 bytes (69.6%,  1.0min remaining)
+Downloaded 634494976 of 905208634 bytes (70.1%,   59.8s remaining)
+Downloaded 639016960 of 905208634 bytes (70.6%,   58.8s remaining)
+Downloaded 642605056 of 905208634 bytes (71.0%,   58.1s remaining)
+Downloaded 646463488 of 905208634 bytes (71.4%,   57.3s remaining)
+Downloaded 650461184 of 905208634 bytes (71.9%,   56.5s remaining)
+Downloaded 654622720 of 905208634 bytes (72.3%,   55.6s remaining)
+Downloaded 659038208 of 905208634 bytes (72.8%,   54.6s remaining)
+Downloaded 663691264 of 905208634 bytes (73.3%,   53.6s remaining)
+Downloaded 667590656 of 905208634 bytes (73.7%,   52.8s remaining)
+Downloaded 670818304 of 905208634 bytes (74.1%,   52.2s remaining)
+Downloaded 674103296 of 905208634 bytes (74.5%,   51.5s remaining)
+Downloaded 677527552 of 905208634 bytes (74.8%,   50.9s remaining)
+Downloaded 681140224 of 905208634 bytes (75.2%,   50.1s remaining)
+Downloaded 684335104 of 905208634 bytes (75.6%,   49.5s remaining)
+Downloaded 687652864 of 905208634 bytes (76.0%,   48.8s remaining)
+Downloaded 691290112 of 905208634 bytes (76.4%,   48.1s remaining)
+Downloaded 695091200 of 905208634 bytes (76.8%,   47.3s remaining)
+Downloaded 698925056 of 905208634 bytes (77.2%,   46.4s remaining)
+Downloaded 702832640 of 905208634 bytes (77.6%,   45.6s remaining)
+Downloaded 706060288 of 905208634 bytes (78.0%,   45.0s remaining)
+Downloaded 709648384 of 905208634 bytes (78.4%,   44.2s remaining)
+Downloaded 713531392 of 905208634 bytes (78.8%,   43.4s remaining)
+Downloaded 717561856 of 905208634 bytes (79.3%,   42.5s remaining)
+Downloaded 721616896 of 905208634 bytes (79.7%,   41.6s remaining)
+Downloaded 725737472 of 905208634 bytes (80.2%,   40.7s remaining)
+Downloaded 730087424 of 905208634 bytes (80.7%,   39.7s remaining)
+Downloaded 734593024 of 905208634 bytes (81.2%,   38.7s remaining)
+Downloaded 738246656 of 905208634 bytes (81.6%,   37.9s remaining)
+Downloaded 742432768 of 905208634 bytes (82.0%,   36.9s remaining)
+Downloaded 746954752 of 905208634 bytes (82.5%,   35.9s remaining)
+Downloaded 751599616 of 905208634 bytes (83.0%,   34.8s remaining)
+Downloaded 755376128 of 905208634 bytes (83.4%,   34.0s remaining)
+Downloaded 758767616 of 905208634 bytes (83.8%,   33.3s remaining)
+Downloaded 761036800 of 905208634 bytes (84.1%,   32.9s remaining)
+Downloaded 763469824 of 905208634 bytes (84.3%,   32.4s remaining)
+Downloaded 766148608 of 905208634 bytes (84.6%,   31.9s remaining)
+Downloaded 769073152 of 905208634 bytes (85.0%,   31.3s remaining)
+Downloaded 772259840 of 905208634 bytes (85.3%,   30.6s remaining)
+Downloaded 775659520 of 905208634 bytes (85.7%,   29.8s remaining)
+Downloaded 779313152 of 905208634 bytes (86.1%,   29.0s remaining)
+Downloaded 783204352 of 905208634 bytes (86.5%,   28.1s remaining)
+Downloaded 786104320 of 905208634 bytes (86.8%,   27.5s remaining)
+Downloaded 788455424 of 905208634 bytes (87.1%,   27.0s remaining)
+Downloaded 790970368 of 905208634 bytes (87.4%,   26.5s remaining)
+Downloaded 793739264 of 905208634 bytes (87.7%,   25.9s remaining)
+Downloaded 796737536 of 905208634 bytes (88.0%,   25.3s remaining)
+Downloaded 799981568 of 905208634 bytes (88.4%,   24.5s remaining)
+Downloaded 803471360 of 905208634 bytes (88.8%,   23.8s remaining)
+Downloaded 807190528 of 905208634 bytes (89.2%,   22.9s remaining)
+Downloaded 811147264 of 905208634 bytes (89.6%,   22.0s remaining)
+Downloaded 815448064 of 905208634 bytes (90.1%,   21.0s remaining)
+Downloaded 820625408 of 905208634 bytes (90.7%,   19.8s remaining)
+Downloaded 825180160 of 905208634 bytes (91.2%,   18.7s remaining)
+Downloaded 830365696 of 905208634 bytes (91.7%,   17.5s remaining)
+Downloaded 834641920 of 905208634 bytes (92.2%,   16.5s remaining)
+Downloaded 837853184 of 905208634 bytes (92.6%,   15.7s remaining)
+Downloaded 840359936 of 905208634 bytes (92.8%,   15.2s remaining)
+Downloaded 843046912 of 905208634 bytes (93.1%,   14.6s remaining)
+Downloaded 845946880 of 905208634 bytes (93.5%,   13.9s remaining)
+Downloaded 849108992 of 905208634 bytes (93.8%,   13.2s remaining)
+Downloaded 851820544 of 905208634 bytes (94.1%,   12.6s remaining)
+Downloaded 853901312 of 905208634 bytes (94.3%,   12.1s remaining)
+Downloaded 856457216 of 905208634 bytes (94.6%,   11.5s remaining)
+Downloaded 859209728 of 905208634 bytes (94.9%,   10.9s remaining)
+Downloaded 861544448 of 905208634 bytes (95.2%,   10.4s remaining)
+Downloaded 864272384 of 905208634 bytes (95.5%,    9.8s remaining)
+Downloaded 867172352 of 905208634 bytes (95.8%,    9.1s remaining)
+Downloaded 870227968 of 905208634 bytes (96.1%,    8.4s remaining)
+Downloaded 873611264 of 905208634 bytes (96.5%,    7.6s remaining)
+Downloaded 877207552 of 905208634 bytes (96.9%,    6.7s remaining)
+Downloaded 880205824 of 905208634 bytes (97.2%,    6.0s remaining)
+Downloaded 883695616 of 905208634 bytes (97.6%,    5.2s remaining)
+Downloaded 887406592 of 905208634 bytes (98.0%,    4.3s remaining)
+Downloaded 890322944 of 905208634 bytes (98.4%,    3.6s remaining)
+Downloaded 893403136 of 905208634 bytes (98.7%,    2.8s remaining)
+Downloaded 896303104 of 905208634 bytes (99.0%,    2.1s remaining)
+Downloaded 899145728 of 905208634 bytes (99.3%,    1.5s remaining)
+Downloaded 902324224 of 905208634 bytes (99.7%,    0.7s remaining) ...done. (220 seconds, 3 min)
+Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8baa05152/archive_dartel.tgz..... done.
+/opt/hostedtoolcache/Python/3.10.10/x64/lib/python3.10/site-packages/nilearn/datasets/struct.py:733: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
+  warnings.warn(_LEGACY_FORMAT_MSG)
+</pre></div>
+</div>
+<p>Load the functional data (4d):
+- Fetch the SPM auditory dataset
+- Concatenate the functional data into one 4D image</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s_func_data</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_spm_auditory.html#nilearn.datasets.fetch_spm_auditory" title="nilearn.datasets.fetch_spm_auditory" class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_spm_auditory</span></a><span class="p">()</span>
+<a href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="nibabel.nifti1.Nifti1Image" class="sphx-glr-backref-module-nibabel-nifti1 sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fmri_img</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.image.concat_imgs.html#nilearn.image.concat_imgs" title="nilearn.image.concat_imgs" class="sphx-glr-backref-module-nilearn-image sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">concat_imgs</span></a><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s_func_data</span><span class="o">.</span><span class="n">func</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Dataset created in /home/runner/nilearn_data/spm_auditory
+
+Data absent, downloading...
+Downloading data from http://www.fil.ion.ucl.ac.uk/spm/download/data/MoAEpilot/MoAEpilot.zip ...
+
+Downloaded 1703936 of 34212021 bytes (5.0%,   19.4s remaining)
+Downloaded 8396800 of 34212021 bytes (24.5%,    6.3s remaining)
+Downloaded 13467648 of 34212021 bytes (39.4%,    4.7s remaining)
+Downloaded 18825216 of 34212021 bytes (55.0%,    3.3s remaining)
+Downloaded 23945216 of 34212021 bytes (70.0%,    2.2s remaining)
+Downloaded 27377664 of 34212021 bytes (80.0%,    1.5s remaining)
+Downloaded 30449664 of 34212021 bytes (89.0%,    0.9s remaining)
+Downloaded 33685504 of 34212021 bytes (98.5%,    0.1s remaining) ...done. (10 seconds, 0 min)
+Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip..... done.
+</pre></div>
+</div>
+<p>Define the marker</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">marker</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">ParcelAggregation</span></a><span class="p">(</span><span class="n">parcellation</span><span class="o">=</span><span class="s2">&quot;Schaefer100x7&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Prepare the input</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">input</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <a href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="nibabel.nifti1.Nifti1Image" class="sphx-glr-backref-module-nibabel-nifti1 sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fmri_img</span></a><span class="p">,</span> <span class="s2">&quot;meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="s2">&quot;subject1&quot;</span><span class="p">}},</span>
+    <span class="s2">&quot;VBM_GM&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <a href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="nibabel.nifti1.Nifti1Image" class="sphx-glr-backref-module-nibabel-nifti1 sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">vbm_img</span></a><span class="p">,</span> <span class="s2">&quot;meta&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;element&quot;</span><span class="p">:</span> <span class="s2">&quot;subject1&quot;</span><span class="p">}},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Fit transform the data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">out</span></a> <span class="o">=</span> <span class="n">marker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-03-15 20:34:14,306 - JUNIFER - INFO - Computing BOLD
+2023-03-15 20:34:14,307 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2023-03-15 20:34:14,307 - JUNIFER - INFO - Parcellation parameters:
+2023-03-15 20:34:14,307 - JUNIFER - INFO -      n_rois: 100
+2023-03-15 20:34:14,307 - JUNIFER - INFO -      yeo_networks: 7
+2023-03-15 20:34:14,307 - JUNIFER - INFO -      resolution: 3.0
+2023-03-15 20:34:14,307 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+
+Dataset created in /home/runner/junifer/data/parcellations/schaefer_2018
+
+Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order.txt ...
+ ...done. (0 seconds, 0 min)
+Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
+ ...done. (0 seconds, 0 min)
+2023-03-15 20:34:14,466 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2023-03-15 20:34:15,828 - JUNIFER - INFO - No storage specified, returning dictionary
+2023-03-15 20:34:15,828 - JUNIFER - INFO - Computing VBM_GM
+2023-03-15 20:34:15,828 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2023-03-15 20:34:15,828 - JUNIFER - INFO - Parcellation parameters:
+2023-03-15 20:34:15,828 - JUNIFER - INFO -      n_rois: 100
+2023-03-15 20:34:15,828 - JUNIFER - INFO -      yeo_networks: 7
+2023-03-15 20:34:15,828 - JUNIFER - INFO -      resolution: 2.0
+2023-03-15 20:34:15,830 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2023-03-15 20:34:16,421 - JUNIFER - INFO - No storage specified, returning dictionary
+</pre></div>
+</div>
+<p>Check the results</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">out</span></a><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">out</span></a><span class="p">[</span><span class="s2">&quot;VBM_GM&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (1 x parcels)</span>
+
+<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">out</span></a><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">out</span></a><span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (timepoints x parcels)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>dict_keys([&#39;BOLD&#39;, &#39;VBM_GM&#39;])
+(1, 100)
+dict_keys([&#39;BOLD&#39;, &#39;VBM_GM&#39;])
+(96, 100)
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 4 minutes  2.055 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-compute-parcel-mean-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/c1da12f6e22b8ea8de3cd5add55a3fa8/run_compute_parcel_mean.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_compute_parcel_mean.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/ef059f4719b06b8d88553c134bac43b4/run_compute_parcel_mean.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_compute_parcel_mean.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="run_run_gmd_mean.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">7.4. </span>UKB VBM GMD Extraction</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="norun_ukbvm_gmd.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">7.2. </span>UKB VBM GMD Extraction</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Authors of junifer
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/js/custom.js"></script>
+    </body>
+</html>
