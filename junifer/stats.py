@@ -103,8 +103,8 @@ def count(data: np.ndarray, axis: int = 0) -> int:
 
     Returns
     -------
-    numpy.ndarray
-        Number of lements along the given axis.
+    int
+        Number of elements along the given axis.
     """
     return data.shape[axis]
 
