@@ -10,9 +10,9 @@ from nilearn import image, masking
 from nilearn._utils.class_inspect import get_params
 from nilearn._utils.niimg import img_data_dtype
 from nilearn._utils.niimg_conversions import (
-    check_niimg_4d,
-    check_niimg_3d,
     _safe_get_data,
+    check_niimg_3d,
+    check_niimg_4d,
 )
 from nilearn.maskers import NiftiSpheresMasker
 from nilearn.maskers.base_masker import _filter_and_extract
