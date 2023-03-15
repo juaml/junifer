@@ -28,6 +28,7 @@ def get_aggfunc_by_name(
         * ``mean`` -> :func:`numpy.mean`
         * ``std`` -> :func:`numpy.std`
         * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
+        * ``count`` -> :func:`junifer.stats.count`
 
     func_params : dict, optional
         Parameters to pass to the function.
@@ -42,7 +43,13 @@ def get_aggfunc_by_name(
     from functools import partial  # local import to avoid sphinx error
 
     # check validity of names
-    _valid_func_names = {"winsorized_mean", "mean", "std", "trim_mean"}
+    _valid_func_names = {
+        "winsorized_mean",
+        "mean",
+        "std",
+        "trim_mean",
+        "count",
+    }
     if func_params is None:
         func_params = {}
     # apply functions
@@ -74,12 +81,32 @@ def get_aggfunc_by_name(
         func = np.std
     elif name == "trim_mean":
         func = partial(trim_mean, **func_params)
+    elif name == "count":
+        func = count
     else:
         raise_error(
             f"Function {name} unknown. Please provide any of "
             f"{_valid_func_names}"
         )
     return func
+
+
+def count(data: np.ndarray, axis: int = 0) -> int:
+    """Count the number elements along the given axis.
+
+    Parameters
+    ----------
+    data : numpy.ndarray
+        Data to count elements on.
+    axis : int, optional
+        The axis to count elements on (default 0).
+
+    Returns
+    -------
+    int
+        Number of elements along the given axis.
+    """
+    return data.shape[axis]
 
 
 def winsorized_mean(

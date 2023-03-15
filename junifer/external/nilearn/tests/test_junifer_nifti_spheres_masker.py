@@ -216,8 +216,9 @@ def test_small_radius() -> None:
         radius=0.1,
         mask_img=nibabel.Nifti1Image(mask, affine),
     )
-    with pytest.raises(ValueError, match="These spheres are empty"):
-        masker.fit_transform(nibabel.Nifti1Image(data, affine))
+
+    out = masker.fit_transform(nibabel.Nifti1Image(data, affine))
+    assert np.isnan(out).all()
 
     masker = JuniferNiftiSpheresMasker(
         seeds=[seed],

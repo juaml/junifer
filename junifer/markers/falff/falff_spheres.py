@@ -27,6 +27,9 @@ class AmplitudeLowFrequencyFluctuationSpheres(
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
         for more information (default None).
+    allow_overlap : bool, optional
+        Whether to allow overlapping spheres. If False, an error is raised if
+        the spheres overlap (default is False).
     fractional : bool
         Whether to compute fractional ALFF.
     highpass : positive float, optional
@@ -72,6 +75,7 @@ class AmplitudeLowFrequencyFluctuationSpheres(
         coords: str,
         fractional: bool,
         radius: Optional[float] = None,
+        allow_overlap: bool = False,
         highpass: float = 0.01,
         lowpass: float = 0.1,
         tr: Optional[float] = None,
@@ -83,6 +87,7 @@ class AmplitudeLowFrequencyFluctuationSpheres(
     ) -> None:
         self.coords = coords
         self.radius = radius
+        self.allow_overlap = allow_overlap
         self.masks = masks
         self.method = method
         self.method_params = method_params
@@ -124,6 +129,7 @@ class AmplitudeLowFrequencyFluctuationSpheres(
         pa = SphereAggregation(
             coords=self.coords,
             radius=self.radius,
+            allow_overlap=self.allow_overlap,
             method=self.method,
             method_params=self.method_params,
             masks=self.masks,

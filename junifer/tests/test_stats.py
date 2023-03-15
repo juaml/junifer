@@ -8,7 +8,7 @@ from typing import Dict, Optional
 import numpy as np
 import pytest
 
-from junifer.stats import get_aggfunc_by_name, winsorized_mean
+from junifer.stats import count, get_aggfunc_by_name, winsorized_mean
 
 
 @pytest.mark.parametrize(
@@ -17,6 +17,7 @@ from junifer.stats import get_aggfunc_by_name, winsorized_mean
         ("winsorized_mean", {"limits": [0.2, 0.7]}),
         ("mean", None),
         ("std", None),
+        ("count", None),
         ("trim_mean", None),
         ("trim_mean", {"proportiontocut": 0.1}),
     ],
@@ -74,3 +75,16 @@ def test_winsorized_mean() -> None:
     input = np.array([22, 4, 9, 8, 5, 3, 7, 2, 1, 6])
     output = winsorized_mean(input, limits=[0.1, 0.1])
     assert output == 5.5
+
+
+def test_count() -> None:
+    """Test count."""
+    input = np.zeros((10, 3))
+    assert count(input, axis=-1) == 3
+    assert count(input, axis=1) == 3
+    assert count(input, axis=0) == 10
+
+    input = np.zeros((10, 0))
+    assert count(input, axis=-1) == 0
+    assert count(input, axis=1) == 0
+    assert count(input, axis=0) == 10
