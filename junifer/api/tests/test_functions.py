@@ -6,8 +6,8 @@
 # License: AGPL
 
 import logging
-from pathlib import Path
 import stat
+from pathlib import Path
 from typing import List, Tuple, Union
 
 import pytest
@@ -540,8 +540,9 @@ def test_queue_condor_conda_python(
                 env={"kind": "conda", "name": "conda-env"},
             )
             assert "Copying" in caplog.text
-            fname = tmp_path \
-                / "junifer_jobs" / "conda_env_check" / "run_conda.sh"
+            fname = (
+                tmp_path / "junifer_jobs" / "conda_env_check" / "run_conda.sh"
+            )
             assert fname.is_file()
             assert stat.S_IMODE(fname.stat().st_mode) & stat.S_IEXEC != 0
 
@@ -575,13 +576,15 @@ def test_queue_condor_conda_pre_run_python(
             )
             assert "Copying" in caplog.text
 
-            fname = tmp_path \
-                / "junifer_jobs" / "conda_env_check" / "run_conda.sh"
+            fname = (
+                tmp_path / "junifer_jobs" / "conda_env_check" / "run_conda.sh"
+            )
             assert fname.is_file()
             assert stat.S_IMODE(fname.stat().st_mode) & stat.S_IEXEC != 0
 
-            fname = tmp_path \
-                / "junifer_jobs" / "conda_env_check" / "pre_run.sh"
+            fname = (
+                tmp_path / "junifer_jobs" / "conda_env_check" / "pre_run.sh"
+            )
             assert fname.is_file()
             assert stat.S_IMODE(fname.stat().st_mode) & stat.S_IEXEC != 0
 
