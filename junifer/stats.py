@@ -91,7 +91,7 @@ def get_aggfunc_by_name(
     return func
 
 
-def count(data: np.ndarray, axis: int = 0) -> np.ndarray:
+def count(data: np.ndarray, axis: int = 0) -> int:
     """Count the number elements along the given axis.
 
     Parameters
