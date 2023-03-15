@@ -28,6 +28,9 @@ class SphereAggregation(BaseMarker):
         extracted from a single voxel. See
         :class:`nilearn.maskers.NiftiSpheresMasker` for more information
         (default None).
+    allow_overlap : bool, optional
+        Whether to allow overlapping spheres. If False, an error is raised if
+        the spheres overlap (default is False).
     method : str, optional
         The aggregation method to use.
         See :func:`junifer.stats.get_aggfunc_by_name` for more information
@@ -54,6 +57,7 @@ class SphereAggregation(BaseMarker):
         self,
         coords: str,
         radius: Optional[float] = None,
+        allow_overlap: bool = False,
         method: str = "mean",
         method_params: Optional[Dict[str, Any]] = None,
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
@@ -62,6 +66,7 @@ class SphereAggregation(BaseMarker):
     ) -> None:
         self.coords = coords
         self.radius = radius
+        self.allow_overlap = allow_overlap
         self.method = method
         self.method_params = method_params or {}
         self.masks = masks
@@ -147,6 +152,7 @@ class SphereAggregation(BaseMarker):
         masker = JuniferNiftiSpheresMasker(
             seeds=coords,
             radius=self.radius,
+            allow_overlap=self.allow_overlap,
             mask_img=mask_img,
             agg_func=agg_func,
         )

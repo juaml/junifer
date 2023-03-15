@@ -28,6 +28,9 @@ class ReHoSpheres(ReHoBase):
         extracted from a single voxel. See
         :class:`nilearn.maskers.NiftiSpheresMasker` for more information
         (default None).
+    allow_overlap : bool, optional
+        Whether to allow overlapping spheres. If False, an error is raised if
+        the spheres overlap (default is False).
     use_afni : bool, optional
         Whether to use AFNI for computing. If None, will use AFNI only
         if available (default None).
@@ -93,6 +96,7 @@ class ReHoSpheres(ReHoBase):
         self,
         coords: str,
         radius: Optional[float] = None,
+        allow_overlap: bool = False,
         use_afni: Optional[bool] = None,
         reho_params: Optional[Dict] = None,
         agg_method: str = "mean",
@@ -102,6 +106,7 @@ class ReHoSpheres(ReHoBase):
     ) -> None:
         self.coords = coords
         self.radius = radius
+        self.allow_overlap = allow_overlap
         self.reho_params = reho_params
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
@@ -142,6 +147,7 @@ class ReHoSpheres(ReHoBase):
         sphere_aggregation = SphereAggregation(
             coords=self.coords,
             radius=self.radius,
+            allow_overlap=self.allow_overlap,
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,

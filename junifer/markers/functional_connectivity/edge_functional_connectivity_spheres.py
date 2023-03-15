@@ -25,6 +25,9 @@ class EdgeCentricFCSpheres(FunctionalConnectivityBase):
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
         for more information (default None).
+    allow_overlap : bool, optional
+        Whether to allow overlapping spheres. If False, an error is raised if
+        the spheres overlap (default is False).
     agg_method : str, optional
         The aggregation method to use.
         See :func:`junifer.stats.get_aggfunc_by_name` for more information
@@ -59,6 +62,7 @@ class EdgeCentricFCSpheres(FunctionalConnectivityBase):
         self,
         coords: str,
         radius: Optional[float] = None,
+        allow_overlap: bool = False,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         cor_method: str = "covariance",
@@ -68,6 +72,7 @@ class EdgeCentricFCSpheres(FunctionalConnectivityBase):
     ) -> None:
         self.coords = coords
         self.radius = radius
+        self.allow_overlap = allow_overlap
         if radius is None or radius <= 0:
             raise_error(f"radius should be > 0: provided {radius}")
         super().__init__(
@@ -84,6 +89,7 @@ class EdgeCentricFCSpheres(FunctionalConnectivityBase):
         sphere_aggregation = SphereAggregation(
             coords=self.coords,
             radius=self.radius,
+            allow_overlap=self.allow_overlap,
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
