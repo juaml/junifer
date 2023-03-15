@@ -72,8 +72,32 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
             name=name,
         )
 
-    def aggregate(self, input: Dict[str, Any]) -> Dict:
-        """Perform parcel aggregation."""
+    def aggregate(
+        self, input: Dict[str, Any], extra_input: Optional[Dict] = None
+    ) -> Dict:
+        """Perform parcel aggregation and ETS computation.
+
+        Parameters
+        ----------
+        input : dict
+            A single input from the pipeline data object in which to compute
+            the marker.
+        extra_input : dict, optional
+            The other fields in the pipeline data object. Useful for accessing
+            other data kind that needs to be used in the computation. For
+            example, the functional connectivity markers can make use of the
+            confounds if available (default None).
+
+        Returns
+        -------
+        dict
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
+
+            * ``data`` : the actual computed values as a numpy.ndarray
+            * ``col_names`` : the column labels for the computed values as list
+        """
         parcel_aggregation = ParcelAggregation(
             parcellation=self.parcellation,
             method=self.agg_method,
@@ -82,7 +106,9 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
             on="BOLD",
         )
 
-        bold_aggregated = parcel_aggregation.compute(input)
+        bold_aggregated = parcel_aggregation.compute(
+            input, extra_input=extra_input
+        )
         ets, edge_names = _ets(
             bold_aggregated["data"], bold_aggregated["col_names"]
         )

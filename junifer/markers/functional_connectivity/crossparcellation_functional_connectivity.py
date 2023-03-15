@@ -130,12 +130,12 @@ class CrossParcellationFC(BaseMarker):
             parcellation=self.parcellation_one,
             method=self.aggregation_method,
             masks=self.masks,
-        ).compute(input)
+        ).compute(input, extra_input=extra_input)
         parcellation_two_dict = ParcelAggregation(
             parcellation=self.parcellation_two,
             method=self.aggregation_method,
             masks=self.masks,
-        ).compute(input)
+        ).compute(input, extra_input=extra_input)
 
         parcellated_ts_one = parcellation_one_dict["data"]
         parcellated_ts_two = parcellation_two_dict["data"]
