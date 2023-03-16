@@ -85,24 +85,30 @@ class DataladDataGrabber(BaseDataGrabber):
             datalad.cfg.set(
                 "datalad.locations.cache",
                 cache_dir.as_posix(),
-                scope="override")
+                scope="override",
+            )
             datalad.cfg.set(
                 "datalad.locations.sockets",
                 sockets_dir.as_posix(),
-                scope="override")
+                scope="override",
+            )
             datalad.cfg.set(
                 "datalad.locations.locks",
                 locks_dir.as_posix(),
-                scope="override")
+                scope="override",
+            )
             logger.debug(
                 "Datalad cache set to "
-                f"{datalad.cfg.get('datalad.locations.cache')}")
+                f"{datalad.cfg.get('datalad.locations.cache')}"
+            )
             logger.debug(
                 "Datalad sockets set to "
-                f"{datalad.cfg.get('datalad.locations.sockets')}")
+                f"{datalad.cfg.get('datalad.locations.sockets')}"
+            )
             logger.debug(
                 "Datalad locks set to "
-                f"{datalad.cfg.get('datalad.locations.locks')}")
+                f"{datalad.cfg.get('datalad.locations.locks')}"
+            )
             self._tmpdir = tmpdir
             atexit.register(self._rmtmpdir)
         # TODO: uri can be converted to a positional argument
