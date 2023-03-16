@@ -119,12 +119,12 @@ class DataladDataGrabber(BaseDataGrabber):
         # dirty
         self.datalad_dirty = False
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Destructor."""
         if hasattr(self, "_tmpdir"):
             self._rmtmpdir()
 
-    def _rmtmpdir(self):
+    def _rmtmpdir(self) -> None:
         """Remove temporary directory if it exists."""
         if self._tmpdir.exists():
             logger.debug("Removing temporary directory")
