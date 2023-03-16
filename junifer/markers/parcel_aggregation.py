@@ -208,17 +208,14 @@ class ParcelAggregation(BaseMarker):
 
         # Get the values for each parcel and apply agg function
         logger.debug("Computing ROI means")
-        parcellation_roi_vals = sorted(np.unique(parcellation_values))
-        out_labels = []
         out_values = []
         # Iterate over the parcels (existing)
-        for t_v in parcellation_roi_vals:
+        for t_v in range(1, len(labels)+1):
             t_values = agg_func(data[:, parcellation_values == t_v], axis=-1)
             out_values.append(t_values)
             # Update the labels just in case a parcel has no voxels
             # in it
-            out_labels.append(labels[t_v - 1])
 
         out_values = np.array(out_values).T
-        out = {"data": out_values, "col_names": out_labels}
+        out = {"data": out_values, "col_names": labels}
         return out
