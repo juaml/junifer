@@ -67,6 +67,8 @@ Bugs
 
 - Fix several markers that did not properly handle the ``extra_input`` parameter (:gh:`189` by `Fede Raimondo`_).
 
+- Fix an issue with datalad cache and locks in which the user-specific configuration might create a conflict in high throughput systems (:gh:`192` by `Fede Raimondo`_).
+
 API changes
 ~~~~~~~~~~~
 
