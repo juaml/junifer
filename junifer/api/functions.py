@@ -327,7 +327,7 @@ def _queue_condor(
     extra_preamble: str = "",
     pre_run: Optional[str] = None,
     verbose: str = "info",
-    collect: Union[str, bool] = True,
+    collect: str = "yes",
     submit: bool = False,
 ) -> None:
     """Submit job to HTCondor.
@@ -358,17 +358,15 @@ def _queue_condor(
         Extra bash commands to source before the job (default None).
     verbose : str, optional
         The level of verbosity (default "info").
-    collect : bool or str, optional
+    collect : str, optional
         Whether to submit "collect" task for junifer (default True).
         Valid options are:
 
-            * True: Submit "collect" task and run even if some of the jobs
+            * "yes": Submit "collect" task and run even if some of the jobs
                 fail.
             * "on_success_only": Submit "collect" task and run only if all jobs
                 succeed.
-            * False: Do not submit "collect" task.
-            * "yes": Alias for True.
-             "no": Alias for False.
+            * "no": Do not submit "collect" task.
 
     submit : bool, optional
         Whether to submit the jobs. In any case, .dag files will be created
@@ -389,16 +387,12 @@ def _queue_condor(
         f"collect {str(yaml_config.absolute())} --verbose {verbose} "
     )
 
-    if isinstance(collect, str):
-        collect = collect.lower()
-        if collect in ["yes", "true"]:
-            collect = True
-        elif collect in ["no", "false"]:
-            collect = False
-        elif collect == "on_success_only":
-            collect = "on_success_only"
-        else:
-            raise ValueError(f"Invalid value for collect: {collect}")
+    if not isinstance(collect, str):
+        raise_error("collect must be a string")
+
+    collect = collect.lower()
+    if collect not in ["yes", "no", "on_success_only"]:
+        raise ValueError(f"Invalid value for collect: {collect}")
 
     # Set up the env_name, executable and arguments according to the
     # environment type
@@ -514,7 +508,7 @@ def _queue_condor(
                 f'VARS run{i_job} element="{str_elem}" '
                 f'log_element="{log_elem}"\n\n'
             )
-        if collect is True:
+        if collect == "yes":
             dag_file.write(f"FINAL collect {submit_collect_fname}\n")
             dag_file.write("SCRIPT PRE collect collect_pre.pl $DAG_STATUS\n")
             collect_pre_fname = jobdir / "collect_pre.pl"

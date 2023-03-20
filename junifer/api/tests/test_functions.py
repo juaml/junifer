@@ -626,14 +626,6 @@ def test_queue_condor_venv_python(
             "4G",
             4,
             "4G",
-            True,
-        ),
-        (
-            ["sub-001"],
-            {"kind": "conda", "name": "conda-env"},
-            "4G",
-            4,
-            "4G",
             "yes",
         ),
         (
@@ -650,17 +642,9 @@ def test_queue_condor_venv_python(
             "8G",
             8,
             "8G",
-            False,
-        ),
-        (
-            ["sub-001"],
-            {"kind": "venv", "name": "venv-env"},
-            "8G",
-            8,
-            "8G",
             "no",
         ),
-        (["sub-001"], {"kind": "local"}, "12G", 12, "12G", True),
+        (["sub-001"], {"kind": "local"}, "12G", 12, "12G", "yes"),
     ],
 )
 def test_queue_condor_assets_generation(
@@ -672,7 +656,7 @@ def test_queue_condor_assets_generation(
     mem: str,
     cpus: int,
     disk: str,
-    collect: Union[str, bool],
+    collect: str,
 ) -> None:
     """Test HTCondor generated assets.
 
@@ -694,7 +678,7 @@ def test_queue_condor_assets_generation(
         The parametrized CPUs.
     disk : str
         The parametrized disk size.
-    collect : bool or str
+    collect : str
         The parametrized collect option.
 
     """

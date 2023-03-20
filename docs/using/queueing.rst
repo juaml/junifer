@@ -55,11 +55,11 @@ The following parameters are avilable for HTCondor:
   element jobs are finished. This is useful if you want to run a ``junifer collect`` job only once all of the
   individual element jobs are finished. Valid options are:
 
-  * ``true`` or ``yes``: Include a collect job to the DAG that will be executed even if some of the individual element
+  * ``yes``: Include a collect job to the DAG that will be executed even if some of the individual element
     jobs fail.
   * ``on_success_only``: Include a collect job to the DAG, but will only run if all of the individual element jobs are
     successful.
-  * ``false`` or ``no``: Do not include a collect job to the DAG.
+  * ``no``: Do not include a collect job to the DAG.
 
 
 
