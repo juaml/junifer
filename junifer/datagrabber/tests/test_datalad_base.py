@@ -172,7 +172,7 @@ def test_datalad_clone_create_cleanup(concrete_datagrabber: Type) -> None:
     # Clone whole dataset
     uri = _testing_dataset["example_bids"]["uri"]
     with concrete_datagrabber(datadir=None, uri=uri) as dg:
-        datadir = dg._tmpdir
+        datadir = dg._tmpdir / "datadir"
         elem1_bold = (
             datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
         )
