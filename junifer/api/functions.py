@@ -327,7 +327,7 @@ def _queue_condor(
     extra_preamble: str = "",
     pre_run: Optional[str] = None,
     verbose: str = "info",
-    collect: bool = True,
+    collect: Union[str, bool] = True,
     submit: bool = False,
 ) -> None:
     """Submit job to HTCondor.
@@ -358,8 +358,18 @@ def _queue_condor(
         Extra bash commands to source before the job (default None).
     verbose : str, optional
         The level of verbosity (default "info").
-    collect : bool, optional
+    collect : bool or str, optional
         Whether to submit "collect" task for junifer (default True).
+        Valid options are:
+
+            * True: Submit "collect" task and run even if some of the jobs
+                fail.
+            * "on_success_only": Submit "collect" task and run only if all jobs
+                succeed.
+            * False: Do not submit "collect" task.
+            * "yes": Alias for True.
+             "no": Alias for False.
+
     submit : bool, optional
         Whether to submit the jobs. In any case, .dag files will be created
         for submission (default False).
@@ -378,6 +388,17 @@ def _queue_condor(
     collect_junifer_args = (
         f"collect {str(yaml_config.absolute())} --verbose {verbose} "
     )
+
+    if isinstance(collect, str):
+        collect = collect.lower()
+        if collect in ["yes", "true"]:
+            collect = True
+        elif collect in ["no", "false"]:
+            collect = False
+        elif collect == "on_success_only":
+            collect = "on_success_only"
+        else:
+            raise ValueError(f"Invalid value for collect: {collect}")
 
     # Set up the env_name, executable and arguments according to the
     # environment type
@@ -494,6 +515,15 @@ def _queue_condor(
                 f'log_element="{log_elem}"\n\n'
             )
         if collect is True:
+            dag_file.write(f"FINAL collect {submit_collect_fname}\n")
+            dag_file.write("SCRIPT PRE collect collect_pre.pl $DAG_STATUS\n")
+            collect_pre_fname = jobdir / "collect_pre.pl"
+            with open(collect_pre_fname, "w") as pre_file:
+                pre_file.write("#!/usr/bin/env perl\n\n")
+                pre_file.write("if ($ARGV[0] eq 4) {\n")
+                pre_file.write("    exit(1);\n")
+                pre_file.write("}\n")
+        elif collect == "on_success_only":
             dag_file.write(f"JOB collect {submit_collect_fname}\n")
             dag_file.write("PARENT ")
             for i_job, _t_elem in enumerate(elements):
