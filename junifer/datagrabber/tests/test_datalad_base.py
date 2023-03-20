@@ -160,6 +160,49 @@ def test_datalad_clone_cleanup(
     assert len(list(datadir.glob("*"))) == 0
 
 
+def test_datalad_clone_create_cleanup(concrete_datagrabber: Type) -> None:
+    """Test datalad base tempdir clone and remove.
+
+    Parameters
+    ----------
+    concrete_datagrabber : DataladDataGrabber
+        A concrete datagrabber class to use.
+    """
+
+    # Clone whole dataset
+    uri = _testing_dataset["example_bids"]["uri"]
+    with concrete_datagrabber(datadir=None, uri=uri) as dg:
+        datadir = dg._tmpdir / "datadir"
+        elem1_bold = (
+            datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
+        )
+        elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
+
+        assert elem1_bold.is_file() is False
+        assert elem1_t1w.is_file() is False
+        assert datadir.exists() is True
+        assert dg._was_cloned is True
+        assert elem1_bold.is_file() is False
+        assert elem1_bold.is_symlink() is True
+        assert elem1_t1w.is_file() is False
+        assert elem1_t1w.is_symlink() is True
+        elem1 = dg["sub-01"]
+        assert "meta" in elem1["BOLD"]
+        meta = elem1["BOLD"]["meta"]
+        assert "datagrabber" in meta
+        assert "datalad_dirty" in meta["datagrabber"]
+        assert meta["datagrabber"]["datalad_dirty"] is False
+        assert hasattr(dg, "_got_files") is False
+        assert datadir.exists() is True
+        assert elem1_bold.is_file() is True
+        assert elem1_bold.is_symlink() is True
+        assert elem1_t1w.is_file() is True
+        assert elem1_t1w.is_symlink() is True
+
+    assert datadir.exists() is False
+    assert len(list(datadir.glob("*"))) == 0
+
+
 def test_datalad_previously_cloned(
     tmp_path: Path, concrete_datagrabber: Type
 ) -> None:

@@ -74,6 +74,45 @@ def _parse_elements(element: str, config: Dict) -> Union[List, None]:
     return elements
 
 
+def _validate_verbose(
+    ctx: click.Context, param: str, value: str
+) -> Union[str, int]:
+    """Validate verbose option.
+
+    Parameters
+    ----------
+    ctx : click.Context
+        The context of the command.
+    param : str
+        The parameter to validate.
+    value : str
+        The value to validate.
+
+    Returns
+    -------
+    str or int
+        The validated value.
+    """
+    if isinstance(value, int):
+        return value
+
+    valid_strings = ["error", "warning", "info", "debug"]
+    if isinstance(value, str) and value.lower() in valid_strings:
+        return value.upper()
+
+    try:
+        value = int(value)  # type: ignore
+        return value
+    except ValueError:
+        # If we get here, the value is not a valid integer.
+        pass
+
+    # If we get here, the value is not valid.
+    raise click.BadParameter(
+        f"verbose must be one of {valid_strings} or an integer"
+    )
+
+
 @click.group()
 def cli() -> None:  # pragma: no cover
     """CLI for JUelich NeuroImaging FEature extractoR."""
@@ -90,10 +129,11 @@ def cli() -> None:  # pragma: no cover
 @click.option(
     "-v",
     "--verbose",
-    type=click.Choice(["warning", "info", "debug"], case_sensitive=False),
+    type=click.UNPROCESSED,
+    callback=_validate_verbose,
     default="info",
 )
-def run(filepath: click.Path, element: str, verbose: click.Choice) -> None:
+def run(filepath: click.Path, element: str, verbose: Union[str, int]) -> None:
     """Run command for CLI.
     \f
     Parameters
@@ -106,7 +146,7 @@ def run(filepath: click.Path, element: str, verbose: click.Choice) -> None:
         The verbosity level: warning, info or debug (default "info").
 
     """
-    configure_logging(level=str(verbose).upper())
+    configure_logging(level=verbose)
     # TODO: add validation
     config = parse_yaml(filepath)  # type: ignore
     workdir = config["workdir"]
@@ -136,10 +176,11 @@ def run(filepath: click.Path, element: str, verbose: click.Choice) -> None:
 @click.option(
     "-v",
     "--verbose",
-    type=click.Choice(["warning", "info", "debug"], case_sensitive=False),
+    type=click.UNPROCESSED,
+    callback=_validate_verbose,
     default="info",
 )
-def collect(filepath: click.Path, verbose: click.Choice) -> None:
+def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
     """Collect command for CLI.
     \f
     Parameters
@@ -150,7 +191,7 @@ def collect(filepath: click.Path, verbose: click.Choice) -> None:
         The verbosity level: warning, info or debug (default "info").
 
     """
-    configure_logging(level=str(verbose).upper())
+    configure_logging(level=verbose)
     # TODO: add validation
     config = parse_yaml(filepath)  # type: ignore
     storage = config["storage"]
@@ -171,7 +212,8 @@ def collect(filepath: click.Path, verbose: click.Choice) -> None:
 @click.option(
     "-v",
     "--verbose",
-    type=click.Choice(["warning", "info", "debug"], case_sensitive=False),
+    type=click.UNPROCESSED,
+    callback=_validate_verbose,
     default="info",
 )
 def queue(
@@ -179,7 +221,7 @@ def queue(
     element: str,
     overwrite: bool,
     submit: bool,
-    verbose: click.Choice,
+    verbose: Union[str, int],
 ) -> None:
     """Queue command for CLI.
     \f
@@ -197,7 +239,7 @@ def queue(
         The verbosity level: warning, info or debug (default "info").
 
     """
-    configure_logging(level=str(verbose).upper())
+    configure_logging(level=verbose)
     # TODO: add validation
     config = parse_yaml(filepath)  # type: ignore
     elements = _parse_elements(element, config)
