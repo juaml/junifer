@@ -15,7 +15,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
-from ..external.h5io.h5io import ChunkedArray, read_hdf5, write_hdf5
+from ..external.h5io.h5io import ChunkedArray, has_hdf5, read_hdf5, write_hdf5
 from ..utils import logger, raise_error
 from .base import BaseFeatureStorage
 from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
@@ -224,34 +224,40 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Raises
         ------
-        IOError
-            If HDF5 file or data does not exist.
+        FileNotFoundError
+            If HDF5 file does not exist.
+        RuntimeError
+            If the specified ``md5`` does not exist in the file.
 
         """
         # Get correct URI for element;
         # is different from uri if single_output is False
         uri = self._fetch_correct_uri_for_io(element=element)
 
-        try:
-            logger.info(f"Loading HDF5 data for {md5} from: {uri}")
-            data = read_hdf5(
-                fname=uri,
-                title=md5,
-                slash="ignore",
-            )
-        except IOError:
+        # Check if file exists
+        if not Path(uri).exists():
             raise_error(
-                msg=f"HDF5 file not found at: {uri}",
-                klass=IOError,
+                f"HDF5 file not found at: {uri}",
+                klass=FileNotFoundError,
             )
-        except ValueError:
+
+        # Check if group is found in the storage
+        if not has_hdf5(fname=uri, title=md5):
             raise_error(
-                msg=f"`{md5}` not found in: {uri}",
-                klass=IOError,
+                f"{md5} not found in HDF5 file at: {uri}",
+                klass=RuntimeError,
             )
-        else:
-            logger.info(f"Loaded HDF5 data for {md5} from: {uri}")
-            return data
+
+        # Read data
+        logger.info(f"Loading HDF5 data for {md5} from: {uri}")
+        data = read_hdf5(
+            fname=uri,
+            title=md5,
+            slash="ignore",
+        )
+        logger.info(f"Loaded HDF5 data for {md5} from: {uri}")
+
+        return data
 
     def read_df(
         self,
