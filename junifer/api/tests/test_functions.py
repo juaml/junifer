@@ -741,7 +741,7 @@ def test_queue_condor_assets_generation(
                     if "FINAL" in line:
                         has_final_collect_job = True
 
-            if collect in ["yes", True]:
+            if collect == "yes":
                 assert len(elements) == element_count
                 assert has_collect_job is True
                 assert has_final_collect_job is True

@@ -359,7 +359,7 @@ def _queue_condor(
     verbose : str, optional
         The level of verbosity (default "info").
     collect : str, optional
-        Whether to submit "collect" task for junifer (default True).
+        Whether to submit "collect" task for junifer (default "yes").
         Valid options are:
 
             * "yes": Submit "collect" task and run even if some of the jobs
@@ -392,7 +392,7 @@ def _queue_condor(
 
     collect = collect.lower()
     if collect not in ["yes", "no", "on_success_only"]:
-        raise ValueError(f"Invalid value for collect: {collect}")
+        raise_error(f"Invalid value for collect: {collect}")
 
     # Set up the env_name, executable and arguments according to the
     # environment type

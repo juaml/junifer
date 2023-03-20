@@ -57,7 +57,7 @@ Enhancements
 
 - Add aggregation function :func:`junifer.stats.count` that returns the number of elements in a given axis. This allows to count the number of voxels per sphere/parcel when used as ``method`` in markers (:gh:`190` by `Fede Raimondo`_).
 
-- Modify the behaviour of the ``collect`` parameter in HTCondor `queue` function to run a collect job even if some of the previous jobs fail. This is useful to collect the results of a pipeline even if some of the jobs fail (:gh:`190` by `Fede Raimondo`_).
+- Modify the behaviour of the ``collect`` parameter in HTCondor ``queue`` function to run a collect job even if some of the previous jobs fail. This is useful to collect the results of a pipeline even if some of the jobs fail (:gh:`190` by `Fede Raimondo`_).
 
 
 Bugs
