@@ -4,6 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import warnings
 from pathlib import Path
 
 import nibabel as nib
@@ -355,7 +356,11 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
     input = {"VBM_GM": {"data": img, "meta": {}}}
-    split_mean = marker_split.fit_transform(input)["VBM_GM"]
+
+    # No warnings should be raised
+    with warnings.catch_warnings():
+        warnings.simplefilter("error", category=UserWarning)
+        split_mean = marker_split.fit_transform(input)["VBM_GM"]
     split_mean_data = split_mean["data"]
 
     assert split_mean_data.ndim == 2
@@ -435,7 +440,97 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
     input = {"VBM_GM": {"data": img, "meta": {}}}
-    split_mean = marker_split.fit_transform(input)["VBM_GM"]
+    with pytest.warns(RuntimeWarning, match="overlapping voxels"):
+        split_mean = marker_split.fit_transform(input)["VBM_GM"]
+    split_mean_data = split_mean["data"]
+
+    assert split_mean_data.ndim == 2
+    assert split_mean_data.shape[0] == 1
+    assert split_mean_data.shape[1] == 105
+
+    # Overlapping voxels should be NaN
+    assert np.isnan(split_mean_data[:, 50:55]).all()
+
+    non_nan = split_mean_data[~np.isnan(split_mean_data)]
+    # Data should be the same
+    assert_array_equal(orig_mean_data, non_nan[None, :])
+
+    # Labels should be "low" for the first 50 and "high" for the second 50
+    assert all(x.startswith("low") for x in split_mean["col_names"][:50])
+    assert all(x.startswith("high") for x in split_mean["col_names"][50:])
+
+
+def test_ParcelAggregation_3D_multiple_duplicated_labels(
+    tmp_path: Path,
+) -> None:
+    """Test ParcelAggregation with two parcellations with duplicated labels.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+
+    # Get the testing parcellation
+    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+
+    assert parcellation is not None
+
+    # Get the oasis VBM data
+    oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
+    vbm = oasis_dataset.gray_matter_maps[0]
+    img = nib.load(vbm)
+
+    # Create two parcellations from it
+    parcellation_data = parcellation.get_fdata()
+    parcellation1_data = parcellation_data.copy()
+    parcellation1_data[parcellation1_data > 50] = 0
+    parcellation2_data = parcellation_data.copy()
+    parcellation2_data[parcellation2_data <= 50] = 0
+    parcellation2_data[parcellation2_data > 0] -= 50
+    labels1 = labels[:50]
+    labels2 = labels[49:-1]  # One label is duplicated
+
+    parcellation1_img = new_img_like(parcellation, parcellation1_data)
+    parcellation2_img = new_img_like(parcellation, parcellation2_data)
+
+    parcellation1_path = tmp_path / "parcellation1.nii.gz"
+    parcellation2_path = tmp_path / "parcellation2.nii.gz"
+
+    nib.save(parcellation1_img, parcellation1_path)
+    nib.save(parcellation2_img, parcellation2_path)
+
+    register_parcellation("Schaefer100x7_low", parcellation1_path, labels1)
+    register_parcellation("Schaefer100x7_high", parcellation2_path, labels2)
+
+    # Use the ParcelAggregation object on the original parcellation
+    marker_original = ParcelAggregation(
+        parcellation="Schaefer100x7",
+        method="mean",
+        name="gmd_schaefer100x7_mean",
+        on="VBM_GM",
+    )  # Test passing "on" as a keyword argument
+    input = {"VBM_GM": {"data": img, "meta": {}}}
+    orig_mean = marker_original.fit_transform(input)["VBM_GM"]
+
+    orig_mean_data = orig_mean["data"]
+    assert orig_mean_data.ndim == 2
+    assert orig_mean_data.shape[0] == 1
+    assert orig_mean_data.shape[1] == 100
+    # assert_array_almost_equal(auto, jun_values3d_mean)
+
+    # Use the ParcelAggregation object on the two parcellations
+    marker_split = ParcelAggregation(
+        parcellation=["Schaefer100x7_low", "Schaefer100x7_high"],
+        method="mean",
+        name="gmd_schaefer100x7_mean",
+        on="VBM_GM",
+    )  # Test passing "on" as a keyword argument
+    input = {"VBM_GM": {"data": img, "meta": {}}}
+
+    with pytest.warns(RuntimeWarning, match="duplicated labels."):
+        split_mean = marker_split.fit_transform(input)["VBM_GM"]
     split_mean_data = split_mean["data"]
 
     assert split_mean_data.ndim == 2
@@ -445,6 +540,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
     # Data should be the same
     assert_array_equal(orig_mean_data, split_mean_data)
 
-    # Labels should be "low" for the first 50 and "high" for the second 50
-    assert all(x.startswith("low") for x in split_mean["col_names"][:50])
-    assert all(x.startswith("high") for x in split_mean["col_names"][50:])
+    # Labels should be prefixed with the parcellation name
+    col_names = [f"Schaefer100x7_low_{x}" for x in labels1]
+    col_names += [f"Schaefer100x7_high_{x}" for x in labels2]
+    assert col_names == split_mean["col_names"]
