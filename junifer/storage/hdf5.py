@@ -176,13 +176,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
         # Read metadata
-        logger.info(f"Loading HDF5 metadata from: {uri}")
+        logger.debug(f"Loading HDF5 metadata from: {uri}")
         metadata = read_hdf5(
             fname=uri,
             title="meta",
             slash="ignore",
         )
-        logger.info(f"Loaded HDF5 metadata from: {uri}")
+        logger.debug(f"Loaded HDF5 metadata from: {uri}")
 
         return metadata
 
@@ -249,13 +249,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
         # Read data
-        logger.info(f"Loading HDF5 data for {md5} from: {uri}")
+        logger.debug(f"Loading HDF5 data for {md5} from: {uri}")
         data = read_hdf5(
             fname=uri,
             title=md5,
             slash="ignore",
         )
-        logger.info(f"Loaded HDF5 data for {md5} from: {uri}")
+        logger.debug(f"Loaded HDF5 data for {md5} from: {uri}")
 
         return data
 
@@ -809,8 +809,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
         # Glob files
-        globbed_files = self.uri.parent.glob(  # type: ignore
-            f"*{self.uri.name}"  # type: ignore
+        globbed_files = list(
+            self.uri.parent.glob(f"*{self.uri.name}")  # type: ignore
         )
 
         # Create new storage instance
@@ -830,7 +830,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             # Load metadata from new instance
             in_metadata = in_storage._read_metadata()
 
-            logger.info(f"Updating HDF5 metadata with metadata from: {file_}")
+            logger.debug(f"Updating HDF5 metadata with metadata from: {file_}")
             # Load metadata; empty dictionary if first entry;
             # can be replaced with store_metadata() if run on a loop
             # for the metadata entries from in_storage
@@ -882,7 +882,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 if i_file == 0:
                     # Store the "static" data
                     static_data = {
-                        k: v for k, v in t_data.items()
+                        k: v
+                        for k, v in t_data.items()
                         if k not in ["data", "element"]
                     }
 
@@ -891,7 +892,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 elements.append(t_data["element"])
 
                 i_file += 1
-                if i_file == t_chunk_size or i_file == element_count:
+                if (i_file % t_chunk_size == 0) or i_file == element_count:
+                    # If we have reached the chunk size or the end of the
+                    # elements, write the data
+
                     # Store one chunk of data
                     features_data = np.concatenate(chunk_data, axis=-1)
                     to_write = static_data.copy()
@@ -917,7 +921,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     )
                     if i_file == element_count:
                         to_write["element"] = elements
-                    i_chunk += 1
 
                     # Write to HDF5
                     write_hdf5(
@@ -929,3 +932,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                         slash="error",
                         use_json=False,
                     )
+
+                    # Increment counters and data
+                    i_chunk += 1
+                    chunk_data = []
