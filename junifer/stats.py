@@ -91,7 +91,7 @@ def get_aggfunc_by_name(
     return func
 
 
-def count(data: np.ndarray, axis: int = 0) -> int:
+def count(data: np.ndarray, axis: int = 0) -> np.ndarray:
     """Count the number elements along the given axis.
 
     Parameters
@@ -103,10 +103,15 @@ def count(data: np.ndarray, axis: int = 0) -> int:
 
     Returns
     -------
-    int
+    numpy.ndarray
         Number of elements along the given axis.
     """
-    return data.shape[axis]
+    ax_size = data.shape[axis]
+    if axis < 0:
+        axis = data.ndim + axis
+    # keep the shape on the other axes
+    out = np.ones([x for i, x in enumerate(data.shape) if i != axis]) * ax_size
+    return out
 
 
 def winsorized_mean(
