@@ -474,11 +474,15 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The metadata as a dictionary.
 
         """
-        # Read metadata; if no file found, create an empty dictionary
-        try:
+        # Get correct URI for element;
+        # is different from uri if single_output is False
+        uri = self._fetch_correct_uri_for_io(element=element)
+
+        # Check if file exists, then read metadata else create empty dictionary
+        if Path(uri).exists():
             metadata = self._read_metadata(element=element)
-        except IOError:
-            logger.debug(f"Creating new metadata map for {meta_md5} ...")
+        else:
+            logger.debug(f"Creating new file at {uri} ...")
             metadata = {}
 
         # Only add entry if MD5 is not present
@@ -486,10 +490,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             logger.debug(f"HDF5 metadata for {meta_md5} not found, adding ...")
             # Update metadata
             metadata[meta_md5] = meta
-
-            # Get correct URI for element;
-            # is different from uri if single_output is False
-            uri = self._fetch_correct_uri_for_io(element=element)
 
             logger.info(f"Writing HDF5 metadata for {meta_md5} to: {uri}")
             logger.debug(f"HDF5 overwrite is set to: {self.overwrite} ...")
