@@ -61,6 +61,8 @@ Enhancements
 
 - Allow for empty parcels in :class:`junifer.markers.ParcelAggregation`, that will result in NaNs (:gh:`194` by `Fede Raimondo`_).
 
+- Improve metadata and data I/O for :class:`junifer.storage.HDF5FeatureStorage` (:gh:`196` by `Synchon Mandal`_).
+
 Bugs
 ~~~~
 
