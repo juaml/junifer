@@ -160,9 +160,7 @@ def test_datalad_clone_cleanup(
     assert len(list(datadir.glob("*"))) == 0
 
 
-def test_datalad_clone_create_cleanup(
-    concrete_datagrabber: Type
-) -> None:
+def test_datalad_clone_create_cleanup(concrete_datagrabber: Type) -> None:
     """Test datalad base tempdir clone and remove.
 
     Parameters
@@ -203,8 +201,6 @@ def test_datalad_clone_create_cleanup(
 
     assert datadir.exists() is False
     assert len(list(datadir.glob("*"))) == 0
-
-
 
 
 def test_datalad_previously_cloned(
