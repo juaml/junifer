@@ -810,7 +810,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Glob files
         globbed_files = list(
-            self.uri.parent.glob(f"*{self.uri.name}")  # type: ignore
+            self.uri.parent.glob(f"*_{self.uri.name}")  # type: ignore
         )
 
         # Create new storage instance
@@ -819,10 +819,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         # Run loop to collect metadata
         logger.info(
             "Collecting metadata from "
-            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
+            f"{self.uri.parent}/*_{self.uri.name}"  # type: ignore
         )
         # Collect element files per feature MD5
         elements_per_feature_md5 = defaultdict(list)
+        out_metadata = {}
         for file_ in tqdm(globbed_files, desc="file-metadata"):
             logger.debug(f"Reading HDF5 file: {file_} ...")
             # Create new storage instance to load metadata
@@ -831,29 +832,26 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             in_metadata = in_storage._read_metadata()
 
             logger.debug(f"Updating HDF5 metadata with metadata from: {file_}")
-            # Load metadata; empty dictionary if first entry;
-            # can be replaced with store_metadata() if run on a loop
-            # for the metadata entries from in_storage
-            try:
-                out_metadata = out_storage._read_metadata()
-            except IOError:
-                out_metadata = {}
-            # Update metadata
+
+            # Update metadata to store
             out_metadata.update(in_metadata)
-            # Save metadata
-            out_storage._write_processed_data(
-                fname=str(self.uri.resolve()),  # type: ignore
-                processed_data=out_metadata,
-                title="meta",
-            )
+
             # Update element files for found MD5s
             for feature_md5 in in_metadata.keys():
                 elements_per_feature_md5[feature_md5].append(file_)
 
+        logger.info("Writing metadata to HDF5 file ...")
+        # Save metadata out metadata
+        out_storage._write_processed_data(
+            fname=str(self.uri.resolve()),  # type: ignore
+            processed_data=out_metadata,
+            title="meta",
+        )
+
         # Run loop to collect data per feature per file
         logger.info(
             "Collecting data from "
-            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
+            f"{self.uri.parent}/*_{self.uri.name}"  # type: ignore
         )
         logger.info(f"Will collect {len(elements_per_feature_md5)} features.")
         for feature_md5, element_files in tqdm(
@@ -889,7 +887,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
                 # Append the "dynamic" data
                 chunk_data.append(t_data["data"])
-                elements.append(t_data["element"])
+                elements.extend(t_data["element"])
 
                 i_file += 1
                 if (i_file % t_chunk_size == 0) or i_file == element_count:
@@ -926,7 +924,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     write_hdf5(
                         fname=str(self.uri.resolve()),  # type: ignore
                         data=to_write,
-                        overwrite=self.overwrite,  # type: ignore
+                        overwrite="update",  # type: ignore
                         compression=0,
                         title=feature_md5,
                         slash="error",
