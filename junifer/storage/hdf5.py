@@ -151,34 +151,40 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Raises
         ------
-        IOError
-            If HDF5 file or `meta` does not exist.
+        FileNotFoundError
+            If HDF5 file does not exist.
+        RuntimeError
+            If ``meta`` does not exist in the file.
 
         """
         # Get correct URI for element;
         # is different from uri if single_output is False
         uri = self._fetch_correct_uri_for_io(element=element)
 
-        try:
-            logger.info(f"Loading HDF5 metadata from: {uri}")
-            metadata = read_hdf5(
-                fname=uri,
-                title="meta",
-                slash="ignore",
-            )
-        except IOError:
+        # Check if file exists
+        if not Path(uri).exists():
             raise_error(
-                msg=f"HDF5 file not found at: {uri}",
-                klass=IOError,
+                f"HDF5 file not found at: {uri}",
+                klass=FileNotFoundError,
             )
-        except ValueError:
+
+        # Check if group is found in the storage
+        if not has_hdf5(fname=uri, title="meta"):
             raise_error(
-                msg=f"`meta` not found in: {uri}",
-                klass=IOError,
+                f"Invalid junifer HDF5 file at: {uri}",
+                klass=RuntimeError,
             )
-        else:
-            logger.info(f"Loaded HDF5 metadata from: {uri}")
-            return metadata
+
+        # Read metadata
+        logger.info(f"Loading HDF5 metadata from: {uri}")
+        metadata = read_hdf5(
+            fname=uri,
+            title="meta",
+            slash="ignore",
+        )
+        logger.info(f"Loaded HDF5 metadata from: {uri}")
+
+        return metadata
 
     def list_features(self) -> Dict[str, Dict[str, Any]]:
         """List the features in the storage.
