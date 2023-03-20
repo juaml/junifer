@@ -51,9 +51,16 @@ The following parameters are avilable for HTCondor:
   directory.
 * ``extra_preamble``: Extra lines to be added to the HTCondor submit file. This can be used to add
   extra parameters to the job, such as ``requirements``.
-* ``collect``: If ``true``, a final job will be added to the DAG to collect the results once all of the individual
+* ``collect``: This parameter allows to include a collect to the DAG to collect the results once all of the individual
   element jobs are finished. This is useful if you want to run a ``junifer collect`` job only once all of the
-  individual element jobs are finished. If not specified, it will default to ``true``.
+  individual element jobs are finished. Valid options are:
+
+  * ``true`` or ``yes``: Include a collect job to the DAG that will be executed even if some of the individual element
+    jobs fail.
+  * ``on_success_only``: Include a collect job to the DAG, but will only run if all of the individual element jobs are
+    successful.
+  * ``false`` or ``no``: Do not include a collect job to the DAG.
+
 
 
 Example:
