@@ -66,7 +66,11 @@ class FunctionalConnectivityBase(BaseMarker):
         super().__init__(on="BOLD", name=name)
 
     @abstractmethod
-    def aggregate(self, input: Dict[str, Any]) -> Dict[str, Any]:
+    def aggregate(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
         """Perform aggregation."""
         raise_error(
             msg="Concrete classes need to implement aggregate().",
@@ -130,7 +134,7 @@ class FunctionalConnectivityBase(BaseMarker):
 
         """
         # Perform necessary aggregation
-        aggregation = self.aggregate(input)
+        aggregation = self.aggregate(input, extra_input=extra_input)
         # Compute correlation
         if self.cor_method_params["empirical"]:
             connectivity = ConnectivityMeasure(
