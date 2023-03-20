@@ -71,6 +71,8 @@ Bugs
 
 - Fix a bug in which :func:`junifer.stats.count` will not be correctly applied across an axis (:gh:`195` by `Fede Raimondo`_).
 
+- Fix an issue with datalad cache and locks in which the overriden settings in Junifer were not propagated to subprocesses, resulting in using the default settings (:gh:`199` by `Fede Raimondo`_).
+
 API changes
 ~~~~~~~~~~~
 
