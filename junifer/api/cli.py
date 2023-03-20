@@ -74,7 +74,9 @@ def _parse_elements(element: str, config: Dict) -> Union[List, None]:
     return elements
 
 
-def _validate_verbose(ctx: click.Context, param: str, value: str):
+def _validate_verbose(
+    ctx: click.Context, param: str, value: str
+) -> Union[str, int]:
     """Validate verbose option.
 
     Parameters
@@ -96,12 +98,11 @@ def _validate_verbose(ctx: click.Context, param: str, value: str):
         return value
     elif isinstance(value, str) and value.lower() in valid_values:
         return value.upper()
-    else:
-        try:
-            value = int(value)  # type: ignore
-            return value
-        except ValueError:
-            pass
+    try:
+        value = int(value)  # type: ignore
+        return value
+    except ValueError:
+        pass
     raise click.BadParameter(
         f"verbose must be one of {valid_values} or an integer"
     )
