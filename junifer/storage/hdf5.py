@@ -540,10 +540,15 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             Keyword arguments passed from the calling method.
 
         """
-        # Read existing data; if no file found, create an empty dictionary
-        try:
+        # Get correct URI for element;
+        # is different from uri if single_output is False
+        uri = self._fetch_correct_uri_for_io(element=element[0])
+
+        # Check if MD5 exists, then read data else create empty dictionary
+        # File should be present here already
+        if has_hdf5(fname=uri, title=meta_md5):
             stored_data = self._read_data(md5=meta_md5, element=element[0])
-        except IOError:
+        else:
             logger.debug(f"Creating new data map for {meta_md5} ...")
             stored_data = {}
 
@@ -615,10 +620,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     "kind": kind,
                 }
             )
-
-        # Get correct URI for element;
-        # is different from uri if single_output is False
-        uri = self._fetch_correct_uri_for_io(element=element[0])
 
         logger.info(f"Writing HDF5 data for {meta_md5} to: {uri}")
         logger.debug(f"HDF5 overwrite is set to: {self.overwrite} ...")
