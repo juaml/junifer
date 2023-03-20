@@ -626,7 +626,15 @@ def test_queue_condor_venv_python(
             "4G",
             4,
             "4G",
-            True,
+            "yes",
+        ),
+        (
+            ["sub-001"],
+            {"kind": "conda", "name": "conda-env"},
+            "4G",
+            4,
+            "4G",
+            "on_success_only",
         ),
         (
             ["sub-001"],
@@ -634,9 +642,9 @@ def test_queue_condor_venv_python(
             "8G",
             8,
             "8G",
-            False,
+            "no",
         ),
-        (["sub-001"], {"kind": "local"}, "12G", 12, "12G", True),
+        (["sub-001"], {"kind": "local"}, "12G", 12, "12G", "yes"),
     ],
 )
 def test_queue_condor_assets_generation(
@@ -648,7 +656,7 @@ def test_queue_condor_assets_generation(
     mem: str,
     cpus: int,
     disk: str,
-    collect: bool,
+    collect: str,
 ) -> None:
     """Test HTCondor generated assets.
 
@@ -670,7 +678,7 @@ def test_queue_condor_assets_generation(
         The parametrized CPUs.
     disk : str
         The parametrized disk size.
-    collect : bool
+    collect : str
         The parametrized collect option.
 
     """
@@ -723,19 +731,33 @@ def test_queue_condor_assets_generation(
             # Read dag file to check if collect job is found
             element_count = 0
             has_collect_job = False
+            has_final_collect_job = False
             with open(dag_file_path, "r") as f:
                 for line in f.read().splitlines():
                     if "JOB" in line:
                         element_count += 1
                     if "collect" in line:
                         has_collect_job = True
+                    if "FINAL" in line:
+                        has_final_collect_job = True
 
-            if collect:
+            if collect == "yes":
+                assert len(elements) == element_count
+                assert has_collect_job is True
+                assert has_final_collect_job is True
+            elif collect == "on_success_only":
                 assert len(elements) == element_count - 1
                 assert has_collect_job is True
+                assert has_final_collect_job is False
             else:
                 assert len(elements) == element_count
                 assert has_collect_job is False
+
+            if has_final_collect_job is True:
+                pre_collect_fname = Path(
+                    tmp_path / "junifer_jobs" / jobname / "collect_pre.pl"
+                )
+                assert pre_collect_fname.exists()
 
             # Check submit log
             assert (
