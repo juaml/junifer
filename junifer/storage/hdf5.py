@@ -15,7 +15,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
-from ..external.h5io.h5io import ChunkedArray, read_hdf5, write_hdf5
+from ..external.h5io.h5io import ChunkedArray, has_hdf5, read_hdf5, write_hdf5
 from ..utils import logger, raise_error
 from .base import BaseFeatureStorage
 from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
@@ -151,34 +151,40 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Raises
         ------
-        IOError
-            If HDF5 file or `meta` does not exist.
+        FileNotFoundError
+            If HDF5 file does not exist.
+        RuntimeError
+            If ``meta`` does not exist in the file.
 
         """
         # Get correct URI for element;
         # is different from uri if single_output is False
         uri = self._fetch_correct_uri_for_io(element=element)
 
-        try:
-            logger.info(f"Loading HDF5 metadata from: {uri}")
-            metadata = read_hdf5(
-                fname=uri,
-                title="meta",
-                slash="ignore",
-            )
-        except IOError:
+        # Check if file exists
+        if not Path(uri).exists():
             raise_error(
-                msg=f"HDF5 file not found at: {uri}",
-                klass=IOError,
+                f"HDF5 file not found at: {uri}",
+                klass=FileNotFoundError,
             )
-        except ValueError:
+
+        # Check if group is found in the storage
+        if not has_hdf5(fname=uri, title="meta"):
             raise_error(
-                msg=f"`meta` not found in: {uri}",
-                klass=IOError,
+                f"Invalid junifer HDF5 file at: {uri}",
+                klass=RuntimeError,
             )
-        else:
-            logger.info(f"Loaded HDF5 metadata from: {uri}")
-            return metadata
+
+        # Read metadata
+        logger.info(f"Loading HDF5 metadata from: {uri}")
+        metadata = read_hdf5(
+            fname=uri,
+            title="meta",
+            slash="ignore",
+        )
+        logger.info(f"Loaded HDF5 metadata from: {uri}")
+
+        return metadata
 
     def list_features(self) -> Dict[str, Dict[str, Any]]:
         """List the features in the storage.
@@ -218,34 +224,40 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Raises
         ------
-        IOError
-            If HDF5 file or data does not exist.
+        FileNotFoundError
+            If HDF5 file does not exist.
+        RuntimeError
+            If the specified ``md5`` does not exist in the file.
 
         """
         # Get correct URI for element;
         # is different from uri if single_output is False
         uri = self._fetch_correct_uri_for_io(element=element)
 
-        try:
-            logger.info(f"Loading HDF5 data for {md5} from: {uri}")
-            data = read_hdf5(
-                fname=uri,
-                title=md5,
-                slash="ignore",
-            )
-        except IOError:
+        # Check if file exists
+        if not Path(uri).exists():
             raise_error(
-                msg=f"HDF5 file not found at: {uri}",
-                klass=IOError,
+                f"HDF5 file not found at: {uri}",
+                klass=FileNotFoundError,
             )
-        except ValueError:
+
+        # Check if group is found in the storage
+        if not has_hdf5(fname=uri, title=md5):
             raise_error(
-                msg=f"`{md5}` not found in: {uri}",
-                klass=IOError,
+                f"{md5} not found in HDF5 file at: {uri}",
+                klass=RuntimeError,
             )
-        else:
-            logger.info(f"Loaded HDF5 data for {md5} from: {uri}")
-            return data
+
+        # Read data
+        logger.info(f"Loading HDF5 data for {md5} from: {uri}")
+        data = read_hdf5(
+            fname=uri,
+            title=md5,
+            slash="ignore",
+        )
+        logger.info(f"Loaded HDF5 data for {md5} from: {uri}")
+
+        return data
 
     def read_df(
         self,
@@ -462,11 +474,15 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The metadata as a dictionary.
 
         """
-        # Read metadata; if no file found, create an empty dictionary
-        try:
+        # Get correct URI for element;
+        # is different from uri if single_output is False
+        uri = self._fetch_correct_uri_for_io(element=element)
+
+        # Check if file exists, then read metadata else create empty dictionary
+        if Path(uri).exists():
             metadata = self._read_metadata(element=element)
-        except IOError:
-            logger.debug(f"Creating new metadata map for {meta_md5} ...")
+        else:
+            logger.debug(f"Creating new file at {uri} ...")
             metadata = {}
 
         # Only add entry if MD5 is not present
@@ -474,10 +490,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             logger.debug(f"HDF5 metadata for {meta_md5} not found, adding ...")
             # Update metadata
             metadata[meta_md5] = meta
-
-            # Get correct URI for element;
-            # is different from uri if single_output is False
-            uri = self._fetch_correct_uri_for_io(element=element)
 
             logger.info(f"Writing HDF5 metadata for {meta_md5} to: {uri}")
             logger.debug(f"HDF5 overwrite is set to: {self.overwrite} ...")
@@ -528,10 +540,15 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             Keyword arguments passed from the calling method.
 
         """
-        # Read existing data; if no file found, create an empty dictionary
-        try:
+        # Get correct URI for element;
+        # is different from uri if single_output is False
+        uri = self._fetch_correct_uri_for_io(element=element[0])
+
+        # Check if MD5 exists, then read data else create empty dictionary
+        # File should be present here already
+        if has_hdf5(fname=uri, title=meta_md5):
             stored_data = self._read_data(md5=meta_md5, element=element[0])
-        except IOError:
+        else:
             logger.debug(f"Creating new data map for {meta_md5} ...")
             stored_data = {}
 
@@ -603,10 +620,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     "kind": kind,
                 }
             )
-
-        # Get correct URI for element;
-        # is different from uri if single_output is False
-        uri = self._fetch_correct_uri_for_io(element=element[0])
 
         logger.info(f"Writing HDF5 data for {meta_md5} to: {uri}")
         logger.debug(f"HDF5 overwrite is set to: {self.overwrite} ...")
