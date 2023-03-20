@@ -329,8 +329,12 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
     nib.save(parcellation1_img, parcellation1_path)
     nib.save(parcellation2_img, parcellation2_path)
 
-    register_parcellation("Schaefer100x7_low", parcellation1_path, labels1)
-    register_parcellation("Schaefer100x7_high", parcellation2_path, labels2)
+    register_parcellation(
+        "Schaefer100x7_low", parcellation1_path, labels1, overwrite=True
+    )
+    register_parcellation(
+        "Schaefer100x7_high", parcellation2_path, labels2, overwrite=True
+    )
 
     # Use the ParcelAggregation object on the original parcellation
     marker_original = ParcelAggregation(
@@ -413,8 +417,12 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
     nib.save(parcellation1_img, parcellation1_path)
     nib.save(parcellation2_img, parcellation2_path)
 
-    register_parcellation("Schaefer100x7_low2", parcellation1_path, labels1)
-    register_parcellation("Schaefer100x7_high2", parcellation2_path, labels2)
+    register_parcellation(
+        "Schaefer100x7_low2", parcellation1_path, labels1, overwrite=True
+    )
+    register_parcellation(
+        "Schaefer100x7_high2", parcellation2_path, labels2, overwrite=True
+    )
 
     # Use the ParcelAggregation object on the original parcellation
     marker_original = ParcelAggregation(
@@ -501,8 +509,12 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
     nib.save(parcellation1_img, parcellation1_path)
     nib.save(parcellation2_img, parcellation2_path)
 
-    register_parcellation("Schaefer100x7_low", parcellation1_path, labels1)
-    register_parcellation("Schaefer100x7_high", parcellation2_path, labels2)
+    register_parcellation(
+        "Schaefer100x7_low", parcellation1_path, labels1, overwrite=True
+    )
+    register_parcellation(
+        "Schaefer100x7_high", parcellation2_path, labels2, overwrite=True
+    )
 
     # Use the ParcelAggregation object on the original parcellation
     marker_original = ParcelAggregation(
