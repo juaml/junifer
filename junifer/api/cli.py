@@ -93,18 +93,23 @@ def _validate_verbose(
     str or int
         The validated value.
     """
-    valid_values = ["error", "warning", "info", "debug"]
     if isinstance(value, int):
         return value
-    elif isinstance(value, str) and value.lower() in valid_values:
+
+    valid_strings = ["error", "warning", "info", "debug"]
+    if isinstance(value, str) and value.lower() in valid_strings:
         return value.upper()
+
     try:
         value = int(value)  # type: ignore
         return value
     except ValueError:
+        # If we get here, the value is not a valid integer.
         pass
+
+    # If we get here, the value is not valid.
     raise click.BadParameter(
-        f"verbose must be one of {valid_values} or an integer"
+        f"verbose must be one of {valid_strings} or an integer"
     )
 
 
