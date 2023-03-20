@@ -69,6 +69,8 @@ Bugs
 
 - Fix an issue with datalad cache and locks in which the user-specific configuration might create a conflict in high throughput systems (:gh:`192` by `Fede Raimondo`_).
 
+- Fix a bug in which :func:`junifer.stats.count` will not be correctly applied across an axis (:gh:`195` by `Fede Raimondo`_).
+
 API changes
 ~~~~~~~~~~~
 
