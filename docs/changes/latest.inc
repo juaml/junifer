@@ -81,6 +81,8 @@ Bugs
 
 - Fix a bug in which :class:`junifer.markers.ParcelAggregation` could yield duplicated column names if two or more parcels were used and label names were not unique (:gh:`194` by `Fede Raimondo`_).
 
+- Fix a bug in which :func:`junifer.data.masks.get_mask` fails for FunctionalConnectivityBase class, because of missing extra_input parameter (:gh:`200` by `Leonard Sasse`_)
+
 API changes
 ~~~~~~~~~~~
 
