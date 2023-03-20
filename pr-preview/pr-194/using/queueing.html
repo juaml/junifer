@@ -295,9 +295,17 @@ mind that junifer uses a local working directory for each job, and datalad datas
 directory.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">extra_preamble</span></code>: Extra lines to be added to the HTCondor submit file. This can be used to add
 extra parameters to the job, such as <code class="docutils literal notranslate"><span class="pre">requirements</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">collect</span></code>: If <code class="docutils literal notranslate"><span class="pre">true</span></code>, a final job will be added to the DAG to collect the results once all of the individual
+<li><p><code class="docutils literal notranslate"><span class="pre">collect</span></code>: This parameter allows to include a collect to the DAG to collect the results once all of the individual
 element jobs are finished. This is useful if you want to run a <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code> job only once all of the
-individual element jobs are finished. If not specified, it will default to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+individual element jobs are finished. Valid options are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">yes</span></code>: Include a collect job to the DAG that will be executed even if some of the individual element
+jobs fail.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_success_only</span></code>: Include a collect job to the DAG, but will only run if all of the individual element jobs are
+successful.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">no</span></code>: Do not include a collect job to the DAG.</p></li>
+</ul>
+</li>
 </ul>
 <p>Example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span>
