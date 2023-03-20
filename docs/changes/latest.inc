@@ -59,6 +59,7 @@ Enhancements
 
 - Modify the behaviour of the ``collect`` parameter in HTCondor ``queue`` function to run a collect job even if some of the previous jobs fail. This is useful to collect the results of a pipeline even if some of the jobs fail (:gh:`190` by `Fede Raimondo`_).
 
+- Allow for empty parcels in :class:`junifer.markers.ParcelAggregation`, that will result in NaNs (:gh:`194` by `Fede Raimondo`_).
 
 Bugs
 ~~~~
@@ -75,6 +76,8 @@ Bugs
 - Fix a bug in which :func:`junifer.stats.count` will not be correctly applied across an axis (:gh:`195` by `Fede Raimondo`_).
 
 - Fix an issue with datalad cache and locks in which the overriden settings in Junifer were not propagated to subprocesses, resulting in using the default settings (:gh:`199` by `Fede Raimondo`_).
+
+- Fix a bug in which :class:`junifer.markers.ParcelAggregation` could yield duplicated column names if two or more parcels were used and label names were not unique (:gh:`194` by `Fede Raimondo`_).
 
 API changes
 ~~~~~~~~~~~

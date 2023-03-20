@@ -13,7 +13,7 @@ from nilearn.maskers import NiftiMasker
 from ..api.decorators import register_marker
 from ..data import get_mask, load_parcellation
 from ..stats import get_aggfunc_by_name
-from ..utils import logger
+from ..utils import logger, warn_with_log
 from .base import BaseMarker
 
 
@@ -159,6 +159,22 @@ class ParcelAggregation(BaseMarker):
             labels = all_labels[0]
         else:
             # Merge the parcellations
+
+            # Check for duplicated labels
+            all_labels_flat = [
+                item for sublist in all_labels for item in sublist
+            ]
+            if len(all_labels_flat) != len(set(all_labels_flat)):
+                warn_with_log(
+                    "The parcellations have duplicated labels. "
+                    "Each label will be prefixed with the parcellation name."
+                )
+                for i_parcellation, t_labels in enumerate(all_labels):
+                    all_labels[i_parcellation] = [
+                        f"{self.parcellation[i_parcellation]}_{t_label}"
+                        for t_label in t_labels
+                    ]
+            overlapping_voxels = False
             parc_data = all_parcelations[0].get_fdata()
             labels = all_labels[0]
             for t_parc, t_labels in zip(all_parcelations[1:], all_labels[1:]):
@@ -171,8 +187,18 @@ class ParcelAggregation(BaseMarker):
                 # This makes sure that the voxels that are in multiple
                 # parcellations are assigned to the parcellation that was
                 # first in the list.
+                if np.any(parc_data[t_parc_data != 0] != 0):
+                    overlapping_voxels = True
+
                 parc_data[parc_data == 0] += t_parc_data[parc_data == 0]
                 labels.extend(t_labels)
+
+            if overlapping_voxels:
+                warn_with_log(
+                    "The parcellations have overlapping voxels. "
+                    "The overlapping voxels will be assigned to the "
+                    "parcellation that was first in the list."
+                )
 
             parcellation_img_res = new_img_like(
                 all_parcelations[0],
@@ -208,17 +234,14 @@ class ParcelAggregation(BaseMarker):
 
         # Get the values for each parcel and apply agg function
         logger.debug("Computing ROI means")
-        parcellation_roi_vals = sorted(np.unique(parcellation_values))
-        out_labels = []
         out_values = []
         # Iterate over the parcels (existing)
-        for t_v in parcellation_roi_vals:
+        for t_v in range(1, len(labels) + 1):
             t_values = agg_func(data[:, parcellation_values == t_v], axis=-1)
             out_values.append(t_values)
             # Update the labels just in case a parcel has no voxels
             # in it
-            out_labels.append(labels[t_v - 1])
 
         out_values = np.array(out_values).T
-        out = {"data": out_values, "col_names": out_labels}
+        out = {"data": out_values, "col_names": labels}
         return out
