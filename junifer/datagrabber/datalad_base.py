@@ -6,6 +6,7 @@
 # License: AGPL
 
 import atexit
+import os
 import shutil
 import tempfile
 from pathlib import Path
@@ -13,6 +14,7 @@ from typing import Dict, Optional, Tuple, Union
 
 import datalad
 import datalad.api as dl
+from datalad.support.exceptions import IncompleteResultsError
 from datalad.support.gitrepo import GitRepo
 
 from ..api.decorators import register_datagrabber
@@ -82,21 +84,10 @@ class DataladDataGrabber(BaseDataGrabber):
             sockets_dir.mkdir(parents=True, exist_ok=False)
             locks_dir.mkdir(parents=True, exist_ok=False)
             logger.debug(f"Setting datalad cache to {cache_dir}")
-            datalad.cfg.set(
-                "datalad.locations.cache",
-                cache_dir.as_posix(),
-                scope="override",
-            )
-            datalad.cfg.set(
-                "datalad.locations.sockets",
-                sockets_dir.as_posix(),
-                scope="override",
-            )
-            datalad.cfg.set(
-                "datalad.locations.locks",
-                locks_dir.as_posix(),
-                scope="override",
-            )
+            os.environ["DATALAD_LOCATIONS_CACHE"] = cache_dir.as_posix()
+            os.environ["DATALAD_LOCATIONS_SOCKETS"] = sockets_dir.as_posix()
+            os.environ["DATALAD_LOCATIONS_LOCKS"] = locks_dir.as_posix()
+            datalad.cfg.reload()
             logger.debug(
                 "Datalad cache set to "
                 f"{datalad.cfg.get('datalad.locations.cache')}"
@@ -184,7 +175,12 @@ class DataladDataGrabber(BaseDataGrabber):
             for fname in to_get:
                 logger.debug(f"\t: {fname}")
 
-            dl_out = self._dataset.get(to_get, result_renderer="disabled")
+            try:
+                dl_out = self._dataset.get(to_get, result_renderer="disabled")
+            except IncompleteResultsError as e:
+                raise_error(
+                    f"Failed to get from dataset: {e.failed}"
+                )
             if not self._was_cloned:
                 # If the dataset was already installed, check that the
                 # file was actually downloaded to avoid removing a
