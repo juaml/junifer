@@ -6,6 +6,7 @@
 
 from pathlib import Path
 
+import h5py
 import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
@@ -34,22 +35,6 @@ def test_single_output(tmp_path: Path) -> None:
     # Single storage, must be the uri
     storage = HDF5FeatureStorage(uri=uri, single_output=True)
     assert storage.single_output is True
-
-
-def test_single_output_file_not_found_error(tmp_path: Path) -> None:
-    """Test single output file not found error.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
-    uri = tmp_path / "test_single_output_no_file.hdf5"
-    storage = HDF5FeatureStorage(uri=uri, single_output=True)
-    # Check file error
-    with pytest.raises(IOError, match="HDF5 file not found at:"):
-        storage._read_data(md5="md5")
 
 
 def test_multi_output_error(tmp_path: Path) -> None:
@@ -84,6 +69,76 @@ def test_single_output_parent_path_creation(tmp_path: Path) -> None:
     _ = HDF5FeatureStorage(uri=uri, single_output=True)
     # Path exists now
     assert to_create_hdf5.exists()
+
+
+def test_read_metadata_file_not_found_error(tmp_path: Path) -> None:
+    """Test file not found error when reading metadata.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_read_metadata_no_file.hdf5"
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Check file not found error
+    with pytest.raises(FileNotFoundError, match="HDF5 file not found at:"):
+        storage._read_metadata()
+
+
+def test_read_metadata_meta_not_found_error(tmp_path: Path) -> None:
+    """Test meta not found error when reading metadata.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_read_metadata_no_meta.hdf5"
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Create file
+    with h5py.File(uri, "w") as f:
+        f.create_dataset("mydataset", (100,), dtype="i")
+    # Check meta not found error
+    with pytest.raises(RuntimeError, match="Invalid junifer HDF5 file at:"):
+        storage._read_metadata()
+
+
+def test_read_data_file_not_found_error(tmp_path: Path) -> None:
+    """Test file not found error when reading data.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_read_data_no_file.hdf5"
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Check file not found error
+    with pytest.raises(FileNotFoundError, match="HDF5 file not found at:"):
+        storage._read_data(md5="md5")
+
+
+def test_read_data_md5_not_found_error(tmp_path: Path) -> None:
+    """Test meta not found error when reading data.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_read_data_no_md5.hdf5"
+    storage = HDF5FeatureStorage(uri=uri, single_output=True)
+    # Create file
+    with h5py.File(uri, "w") as f:
+        f.create_dataset("mydataset", (100,), dtype="i")
+    # Check MD5 not found error
+    with pytest.raises(RuntimeError, match="not found in HDF5 file at:"):
+        storage._read_data(md5="md5")
 
 
 def test_store_metadata_and_list_features(tmp_path: Path) -> None:
