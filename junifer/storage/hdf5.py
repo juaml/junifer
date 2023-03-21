@@ -6,7 +6,6 @@
 
 
 from collections import defaultdict
-from functools import reduce
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
