@@ -4,10 +4,9 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from typing import Tuple, Dict
-
 from copy import deepcopy
 from pathlib import Path
+from typing import Dict, Tuple
 
 import h5py
 import numpy as np
@@ -18,8 +17,8 @@ from pandas.testing import assert_frame_equal
 from junifer.storage import HDF5FeatureStorage
 from junifer.storage.utils import (
     element_to_prefix,
-    process_meta,
     matrix_to_vector,
+    process_meta,
 )
 
 
@@ -948,9 +947,13 @@ def test_multi_output_store_and_collect(
     assert all(x["meta"] == read_unified_meta[meta_md5] for x in all_data)
 
     all_df = storage.read_df(feature_md5=meta_md5)
-    idx_names = all_df.index.names
-    assert len(all_df) == len(all_data)
-
+    if kind == "timeseries":
+        data_size = np.sum([x["data"]["data"].shape[0] for x in all_data])
+        assert len(all_df) == data_size
+        idx_names = [x for x in all_df.index.names if x != "timepoint"]
+    else:
+        assert len(all_df) == len(all_data)
+        idx_names = all_df.index.names
     for t_data in all_data:
         t_series = all_df.loc[tuple([t_data["element"][v] for v in idx_names])]
         if kind == "vector":
@@ -968,6 +971,10 @@ def test_multi_output_store_and_collect(
             assert_array_equal(t_series.values, flat_data)
             series_names = t_series.index.values.tolist()
             assert series_names == columns
+        elif kind == "timeseries":
+            assert_array_equal(t_series.values, t_data["data"]["data"])
+            series_names = t_series.columns.values.tolist()
+            assert series_names == t_data["data"]["col_names"]
 
 
 def test_collect_error_single_output() -> None:

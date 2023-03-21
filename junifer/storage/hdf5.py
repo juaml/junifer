@@ -7,17 +7,62 @@
 
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, Iterable, List, Optional, Union, cast
 
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
-from ..external.h5io.h5io import ChunkedArray, has_hdf5, read_hdf5, write_hdf5
+from ..external.h5io.h5io import (
+    ChunkedArray,
+    ChunkedList,
+    has_hdf5,
+    read_hdf5,
+    write_hdf5,
+)
 from ..utils import logger, raise_error
 from .base import BaseFeatureStorage
 from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
+
+
+def _create_chunk(
+    chunk_data: List[np.ndarray],
+    kind: str,
+    element_count: int,
+    chunk_size: int,
+    i_chunk: int,
+) -> Union[ChunkedArray, ChunkedList]:
+    if kind in ["vector", "matrix"]:
+        features_data = np.concatenate(chunk_data, axis=-1)
+        array_shape = [features_data.shape[0]]
+        array_chunk_size = [features_data.shape[0]]
+        # Append second dimension for 3D
+        if features_data.ndim == 3:
+            array_shape.append(features_data.shape[1])
+            array_chunk_size.append(features_data.shape[1])
+        # Append final dimension of element count
+        array_shape.append(element_count)
+        # Append final dimension of chunk size
+        array_chunk_size.append(chunk_size)
+        out = ChunkedArray(
+            data=features_data,
+            shape=tuple(array_shape),
+            chunk_size=tuple(array_chunk_size),
+            n_chunk=i_chunk,
+        )
+    elif kind == "timeseries":
+        out = ChunkedList(
+            data=chunk_data,
+            size=element_count,
+            offset=i_chunk * chunk_size,
+        )
+    else:
+        raise_error(
+            f"Invalid kind: {kind}. "
+            "Must be one of ['vector', 'matrix', 'timeseries']."
+        )
+    return out
 
 
 @register_storage
@@ -385,9 +430,12 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         elif hdf_data["kind"] == "timeseries":
             # Create dictionary for aggregating index data
             element_idx = defaultdict(list)
+            all_data = []
             for idx, element in enumerate(hdf_data["element"]):
                 # Get row count for the element
-                n_rows, _ = hdf_data["data"][:, :, idx].shape
+                t_data = hdf_data["data"][idx]
+                all_data.append(t_data)
+                n_rows, _ = t_data.shape
                 # Set rows for the index
                 for key, val in element.items():
                     element_idx[key].extend([val] * n_rows)
@@ -398,7 +446,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             # Set column headers for dataframe
             columns = hdf_data["column_headers"]
             # Convert data from 3D to 2D
-            reshaped_data = hdf_data["data"].reshape(-1, 1)
+            reshaped_data = np.concatenate(all_data, axis=0)
 
         # Create dataframe for index
         idx_df = pd.DataFrame(data=element_idx)  # type: ignore
@@ -412,7 +460,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             data=reshaped_data,
             index=hdf_data_idx,
             columns=columns,  # type: ignore
-            dtype=hdf_data["data"].dtype,
+            dtype=reshaped_data.dtype,
         )
         logger.debug(f"Converted HDF5 data for {md5} to pandas.DataFrame ...")
 
@@ -555,9 +603,17 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         data_to_write = kwargs
 
         # Optional casting of float64 values to float32 for numpy.ndarray
-        if data.dtype == np.dtype("float64") and self.force_float32:
-            data = data.astype(dtype=np.dtype("float32"), casting="same_kind")
-
+        if isinstance(data, np.ndarray):
+            if data.dtype == np.dtype("float64") and self.force_float32:
+                data = data.astype(
+                    dtype=np.dtype("float32"), casting="same_kind"
+                )
+        elif isinstance(data, list):
+            if self.force_float32:
+                data = [
+                    x.astype(dtype=np.dtype("float32"), casting="same_kind")
+                    if x.dtype == np.dtype("float64") else x for x in data
+                ]
         # Handle cases for existing and new entry
         if not stored_data:
             logger.debug(f"Writing new data for {meta_md5} ...")
@@ -607,14 +663,18 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             logger.debug(
                 f"Existing data found for {meta_md5}, appending to it ..."
             )
+
+            t_data = stored_data["data"]
+            if kind == "timeseries":
+                t_data.append(data)
+            else:
+                t_data = np.concatenate((t_data, data), axis=-1)
             # Existing entry; append to existing
             # "element" and "data"
             data_to_write.update(
                 {
                     "element": stored_data["element"] + element,
-                    "data": np.concatenate(
-                        (stored_data["data"], data), axis=-1
-                    ),
+                    "data": t_data,
                     # for serialization / deserialization of storage type
                     "kind": kind,
                 }
@@ -782,7 +842,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             kind="timeseries",
             meta_md5=meta_md5,
             element=[element],  # convert to list
-            data=data[:, :, np.newaxis],  # convert to 3D
+            data=[data],  # convert to list
             column_headers=col_names,
             row_header_column_name="timepoint",
         )
@@ -864,6 +924,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             chunk_data = []
             elements = []
             static_data = None
+            kind = None
             for file_ in tqdm(element_files, desc="file-data"):
                 logger.debug(
                     f"Reading feature MD5: '{feature_md5}' "
@@ -883,9 +944,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                         for k, v in t_data.items()
                         if k not in ["data", "element"]
                     }
+                    kind = static_data["kind"]
 
                 # Append the "dynamic" data
-                chunk_data.append(t_data["data"])
+                if kind == "timeseries":
+                    chunk_data.extend(t_data["data"])
+                else:
+                    chunk_data.append(t_data["data"])
                 elements.extend(t_data["element"])
 
                 i_file += 1
@@ -894,27 +959,17 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     # elements, write the data
 
                     # Store one chunk of data
-                    features_data = np.concatenate(chunk_data, axis=-1)
                     to_write = static_data.copy()
                     to_write["element"] = []
                     # Write data in chunks to avoid memory usage spikes
                     # Start with the case for 2D
-                    array_shape = [features_data.shape[0]]
-                    array_chunk_size = [features_data.shape[0]]
-                    # Append second dimension for 3D
-                    if features_data.ndim == 3:
-                        array_shape.append(features_data.shape[1])
-                        array_chunk_size.append(features_data.shape[1])
-                    # Append final dimension of element count
-                    array_shape.append(element_count)
-                    # Append final dimension of chunk size
-                    array_chunk_size.append(t_chunk_size)
                     # Write chunked array
-                    to_write["data"] = ChunkedArray(
-                        data=features_data,
-                        shape=tuple(array_shape),
-                        chunk_size=tuple(array_chunk_size),
-                        n_chunk=i_chunk,
+                    to_write["data"] = _create_chunk(
+                        chunk_data=chunk_data,
+                        kind=kind,
+                        element_count=element_count,
+                        chunk_size=t_chunk_size,
+                        i_chunk=i_chunk,
                     )
                     if i_file == element_count:
                         to_write["element"] = elements
