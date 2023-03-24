@@ -33,6 +33,31 @@ def _create_chunk(
     chunk_size: int,
     i_chunk: int,
 ) -> Union[ChunkedArray, ChunkedList]:
+    """Create chunked array or list.
+
+    Parameters
+    ----------
+    chunk_data : list of numpy.ndarray
+        The data to be chunked.
+    kind : str
+        The kind of data to be chunked.
+    element_count : int
+        The total number of elements.
+    chunk_size : int
+        The chunk size.
+    i_chunk : int
+        The chunk index.
+
+    Returns
+    -------
+    ChunkedArray or ChunkedList
+        The chunked array or list.
+
+    Raises
+    ------
+    ValueError
+        If `kind` is not one of ['vector', 'matrix', 'timeseries'].
+    """
     if kind in ["vector", "matrix"]:
         features_data = np.concatenate(chunk_data, axis=-1)
         array_shape = [features_data.shape[0]]
@@ -612,7 +637,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             if self.force_float32:
                 data = [
                     x.astype(dtype=np.dtype("float32"), casting="same_kind")
-                    if x.dtype == np.dtype("float64") else x for x in data
+                    if x.dtype == np.dtype("float64")
+                    else x
+                    for x in data
                 ]
         # Handle cases for existing and new entry
         if not stored_data:

@@ -791,7 +791,7 @@ def test_store_timeseries(tmp_path: Path) -> None:
     assert_array_equal(read_df.values, data)
 
 
-def _create_data_to_store(n_elements, kind) -> Tuple[str, Dict]:
+def _create_data_to_store(n_elements: int, kind: str) -> Tuple[str, Dict]:
     """Create data to store.
 
     Parameters
