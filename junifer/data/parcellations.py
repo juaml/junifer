@@ -16,9 +16,9 @@ import nibabel as nib
 import numpy as np
 import pandas as pd
 import requests
-from nilearn import datasets
+from nilearn import datasets, image
 
-from ..utils.logging import logger, raise_error
+from ..utils.logging import logger, raise_error, warn_with_log
 from .utils import closest_resolution
 
 
@@ -700,3 +700,72 @@ def _retrieve_suit(
     ].to_list()
 
     return parcellation_fname, labels
+
+
+def merge_parcellations(
+    parcellations_list: List,
+    parcellations_names: List,
+    labels_lists: List[List],
+) -> Tuple:
+    """Merge all parcellations from a list into one parcellation.
+
+    Parameters
+    ----------
+    parcellations_list : list
+        List of parcellations to merge.
+    parcellations_names: list
+        List of names for parcellations at the corresponding indices.
+    labels_lists : list of lists
+        A list of lists. Each list in the list contains the labels for the
+        parcellation at the corresponding index.
+
+    Returns
+    -------
+    parcellation : niimg
+        The parcellation that results from merging the list of input
+        parcellations.
+    labels : list
+        List of labels for the resultant parcellation.
+
+    """
+    # Check for duplicated labels
+    labels_lists_flat = [item for sublist in labels_lists for item in sublist]
+    if len(labels_lists_flat) != len(set(labels_lists_flat)):
+        warn_with_log(
+            "The parcellations have duplicated labels. "
+            "Each label will be prefixed with the parcellation name."
+        )
+        for i_parcellation, t_labels in enumerate(labels_lists):
+            labels_lists[i_parcellation] = [
+                f"{parcellations_names[i_parcellation]}_{t_label}"
+                for t_label in t_labels
+            ]
+    overlapping_voxels = False
+    parc_data = parcellations_list[0].get_fdata()
+    labels = labels_lists[0]
+    for t_parc, t_labels in zip(parcellations_list[1:], labels_lists[1:]):
+        # Get the data from this parcellation
+        t_parc_data = t_parc.get_fdata().copy()  # must be copied
+        # Increase the values of each ROI to match the labels
+        t_parc_data[t_parc_data != 0] += len(labels)
+
+        # Only set new values for the voxels that are 0
+        # This makes sure that the voxels that are in multiple
+        # parcellations are assigned to the parcellation that was
+        # first in the list.
+        if np.any(parc_data[t_parc_data != 0] != 0):
+            overlapping_voxels = True
+
+        parc_data[parc_data == 0] += t_parc_data[parc_data == 0]
+        labels.extend(t_labels)
+
+    if overlapping_voxels:
+        warn_with_log(
+            "The parcellations have overlapping voxels. "
+            "The overlapping voxels will be assigned to the "
+            "parcellation that was first in the list."
+        )
+
+    parcellation_img_res = image.new_img_like(parcellations_list[0], parc_data)
+
+    return parcellation_img_res, labels

@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import List
 
 import nibabel as nib
+import numpy as np
 import pytest
 from nilearn.image import new_img_like
 from numpy.testing import assert_array_almost_equal, assert_array_equal
@@ -20,6 +21,7 @@ from junifer.data.parcellations import (
     _retrieve_tian,
     list_parcellations,
     load_parcellation,
+    merge_parcellations,
     register_parcellation,
 )
 
@@ -236,9 +238,7 @@ def test_schaefer_parcellation(tmp_path: Path) -> None:
     )
     # Load parcellation
     img2, lbl, fname = load_parcellation(
-        name="Schaefer100x7",
-        parcellations_dir=tmp_path,
-        resolution=3,
+        name="Schaefer100x7", parcellations_dir=tmp_path, resolution=3
     )
     # Check parcellation values
     assert fname.name == fname2
@@ -247,9 +247,7 @@ def test_schaefer_parcellation(tmp_path: Path) -> None:
     assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
     # Load parcellation
     img2, lbl, fname = load_parcellation(
-        "Schaefer100x7",
-        parcellations_dir=tmp_path,
-        resolution=2.1,
+        "Schaefer100x7", parcellations_dir=tmp_path, resolution=2.1
     )
     # Check parcellation values
     assert fname.name == fname2
@@ -258,9 +256,7 @@ def test_schaefer_parcellation(tmp_path: Path) -> None:
     assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
     # Load parcellation
     img2, lbl, fname = load_parcellation(
-        "Schaefer100x7",
-        parcellations_dir=tmp_path,
-        resolution=1.99,
+        "Schaefer100x7", parcellations_dir=tmp_path, resolution=1.99
     )
     # Check parcellation values
     assert fname.name == fname1
@@ -269,9 +265,7 @@ def test_schaefer_parcellation(tmp_path: Path) -> None:
     assert_array_equal(img2.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
     # Load parcellation
     img2, lbl, fname = load_parcellation(
-        "Schaefer100x7",
-        parcellations_dir=tmp_path,
-        resolution=0.5,
+        "Schaefer100x7", parcellations_dir=tmp_path, resolution=0.5
     )
     # Check parcellation values
     assert fname.name == fname1
@@ -383,18 +377,10 @@ def test_retrieve_suit_incorrect_space(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
-    "scale, n_label",
-    [
-        (1, 16),
-        (2, 32),
-        (3, 50),
-        (4, 54),
-    ],
+    "scale, n_label", [(1, 16), (2, 32), (3, 50), (4, 54)]
 )
 def test_tian_3T_6thgeneration(
-    tmp_path: Path,
-    scale: int,
-    n_label: int,
+    tmp_path: Path, scale: int, n_label: int
 ) -> None:
     """Test Tian parcellation.
 
@@ -415,8 +401,7 @@ def test_tian_3T_6thgeneration(
     assert "TianxS4x3TxMNI6thgeneration" in parcellations
     # Load parcellation
     img, lbl, fname = load_parcellation(
-        name=f"TianxS{scale}x3TxMNI6thgeneration",
-        parcellations_dir=tmp_path,
+        name=f"TianxS{scale}x3TxMNI6thgeneration", parcellations_dir=tmp_path
     )
     fname1 = f"Tian_Subcortex_S{scale}_3T_1mm.nii.gz"
     assert img is not None
@@ -437,18 +422,10 @@ def test_tian_3T_6thgeneration(
 
 
 @pytest.mark.parametrize(
-    "scale, n_label",
-    [
-        (1, 16),
-        (2, 32),
-        (3, 50),
-        (4, 54),
-    ],
+    "scale, n_label", [(1, 16), (2, 32), (3, 50), (4, 54)]
 )
 def test_tian_3T_nonlinear2009cAsym(
-    tmp_path: Path,
-    scale: int,
-    n_label: int,
+    tmp_path: Path, scale: int, n_label: int
 ) -> None:
     """Test Tian parcellation.
 
@@ -480,18 +457,10 @@ def test_tian_3T_nonlinear2009cAsym(
 
 
 @pytest.mark.parametrize(
-    "scale, n_label",
-    [
-        (1, 16),
-        (2, 34),
-        (3, 54),
-        (4, 62),
-    ],
+    "scale, n_label", [(1, 16), (2, 34), (3, 54), (4, 62)]
 )
 def test_tian_7T_6thgeneration(
-    tmp_path: Path,
-    scale: int,
-    n_label: int,
+    tmp_path: Path, scale: int, n_label: int
 ) -> None:
     """Test Tian parcellation.
 
@@ -534,10 +503,7 @@ def test_retrieve_tian_incorrect_space(tmp_path: Path) -> None:
     """
     with pytest.raises(ValueError, match=r"The parameter `space`"):
         _retrieve_tian(
-            parcellations_dir=tmp_path,
-            resolution=1,
-            scale=1,
-            space="wrong",
+            parcellations_dir=tmp_path, resolution=1, scale=1, space="wrong"
         )
 
     with pytest.raises(ValueError, match=r"MNI6thgeneration"):
@@ -584,3 +550,29 @@ def test_retrieve_tian_incorrect_scale(tmp_path: Path) -> None:
             scale=5,
             space="MNI6thgeneration",
         )
+
+
+def test_merge_parcellations() -> None:
+    """Test merging parcellations."""
+    # load some parcellations for testing
+    schaefer_parcellation, schaefer_labels = load_parcellation(
+        "Schaefer100x17"
+    )
+    tian_parcellation, tian_labels = load_parcellation(
+        "TianxS2x3TxMNInonlinear2009cAsym"
+    )
+    # prepare the list of the actual parcellations
+    parcellation_list = [schaefer_parcellation, tian_parcellation]
+    # prepare a list of names
+    names = ["Schaefer100x17", "TianxS2x3TxMNInonlinear2009cAsym"]
+    # prepare a list of label lists
+    labels_lists = [schaefer_labels, tian_labels]
+    # merge the parcellations
+    merged_parc, labels = merge_parcellations(
+        parcellation_list, names, labels_lists
+    )
+
+    # we should have 132 integer labels plus 1 for background
+    parc_data = merged_parc.get_fdata()
+    assert len(np.unique(parc_data)) == 133
+    assert len(labels) == 133
