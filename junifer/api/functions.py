@@ -417,13 +417,15 @@ def _queue_condor(
     else:
         raise ValueError(f'Unknown env kind: {env["kind"]}')
 
-    if pre_run is not None:
-        logger.info("Writing pre_run.sh to jobdir")
-        pre_run_fname = jobdir / "pre_run.sh"
-        with open(pre_run_fname, "w") as f:
-            f.write("#!/bin/bash\n\n")
+    logger.info("Writing pre_run.sh to jobdir")
+    pre_run_fname = jobdir / "pre_run.sh"
+    with open(pre_run_fname, "w") as f:
+        f.write("#!/bin/bash\n\n")
+        f.write("# Force datalad to run in non-interactive mode\n")
+        f.write("DATALAD_UI_INTERACTIVE=false\n\n")
+        if pre_run is not None:
             f.write(pre_run)
-        make_executable(pre_run_fname)
+    make_executable(pre_run_fname)
 
     # Create log directory
     log_dir = jobdir / "logs"
