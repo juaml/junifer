@@ -4,7 +4,9 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+from copy import deepcopy
 from pathlib import Path
+from typing import Dict, Tuple
 
 import h5py
 import numpy as np
@@ -13,7 +15,11 @@ from numpy.testing import assert_array_equal
 from pandas.testing import assert_frame_equal
 
 from junifer.storage import HDF5FeatureStorage
-from junifer.storage.utils import element_to_prefix, process_meta
+from junifer.storage.utils import (
+    element_to_prefix,
+    matrix_to_vector,
+    process_meta,
+)
 
 
 def test_get_valid_inputs() -> None:
@@ -785,7 +791,91 @@ def test_store_timeseries(tmp_path: Path) -> None:
     assert_array_equal(read_df.values, data)
 
 
-def test_multi_output_store_and_collect(tmp_path: Path):
+def _create_data_to_store(n_elements: int, kind: str) -> Tuple[str, Dict]:
+    """Create data to store.
+
+    Parameters
+    ----------
+    n_elements : int
+        The number of elements to create.
+    kind : str
+        The kind of data to create.
+
+    Returns
+    -------
+    str
+        The meta md5.
+    dict
+        The data to store.
+    """
+    all_data = []
+    t_md5 = None
+    if kind == "vector":
+        data_to_store = {
+            "data": np.arange(10),
+            "col_names": [f"col-{i}" for i in range(10)],
+        }
+    elif kind == "matrix":
+        data_to_store = {
+            "data": np.arange(100).reshape(10, 10),
+            "row_names": [f"row-{i}" for i in range(10)],
+            "col_names": [f"col-{i}" for i in range(10)],
+            "matrix_kind": "full",
+        }
+    elif kind == "timeseries":
+        data_to_store = {
+            "data": np.arange(20).reshape(2, 10),
+            "col_names": [f"col-{i}" for i in range(10)],
+        }
+    else:
+        raise ValueError(f"Unknown kind {kind}.")
+    for i in range(n_elements):
+        element = {"subject": f"sub-{i // 2}", "session": f"ses-{i % 2}"}
+        meta = {
+            "element": element,
+            "dependencies": ["numpy"],
+            "marker": {"name": f"test-{kind}"},
+            "type": "BOLD",
+        }
+        # Process the metadata
+        meta_md5, meta_to_store, element_to_store = process_meta(meta)
+        if kind == "timeseries":
+            t_data = data_to_store["data"]
+            data_to_store["data"] = np.r_[
+                t_data, (t_data[-1, :] + t_data[-1, :])[None]
+            ]
+        else:
+            data_to_store["data"] = data_to_store["data"] + i
+
+        if t_md5 is None:
+            t_md5 = meta_md5
+        else:
+            assert t_md5 == meta_md5
+
+        # Store metadata
+        all_data.append(
+            {
+                "element": element_to_store,
+                "meta": meta_to_store,
+                "data": deepcopy(data_to_store),
+            }
+        )
+    return t_md5, all_data
+
+
+@pytest.mark.parametrize(
+    "n_elements, chunk_size, kind",
+    [
+        (10, 3, "vector"),
+        (10, 5, "vector"),
+        (10, 3, "matrix"),
+        (10, 5, "matrix"),
+        (10, 5, "timeseries"),
+    ],
+)
+def test_multi_output_store_and_collect(
+    tmp_path: Path, n_elements: int, chunk_size: int, kind: str
+) -> None:
     """Test multi output storing and collection.
 
     Parameters
@@ -795,121 +885,96 @@ def test_multi_output_store_and_collect(tmp_path: Path):
 
     """
     uri = tmp_path / "test_multi_output_store_and_collect.hdf5"
-    storage = HDF5FeatureStorage(uri=uri, single_output=False)
-
-    # Metadata to store
-    meta_1 = {
-        "element": {"subject": "test-01", "session": "ses-01"},
-        "dependencies": ["numpy"],
-        "marker": {"name": "fc"},
-        "type": "BOLD",
-    }
-    meta_2 = {
-        "element": {"subject": "test-02", "session": "ses-01"},
-        "dependencies": ["numpy"],
-        "marker": {"name": "fc"},
-        "type": "BOLD",
-    }
-    meta_3 = {
-        "element": {"subject": "test-01", "session": "ses-02"},
-        "dependencies": ["numpy"],
-        "marker": {"name": "fc"},
-        "type": "BOLD",
-    }
-
-    # Data to store
-    data_1 = np.array([10, 20, 30, 40, 50])
-    data_2 = data_1 * 10
-    data_3 = data_1 * 20
-    col_headers = ["f1", "f2", "f3", "f4", "f5"]
-
-    # Process metadata for storage
-    hash_1, meta_to_store_1, element_to_store_1 = process_meta(meta_1)
-
-    # Process metadata for storage
-    hash_2, meta_to_store_2, element_to_store_2 = process_meta(meta_2)
-
-    # Process metadata for storage
-    hash_3, meta_to_store_3, element_to_store_3 = process_meta(meta_3)
-
-    # Check hash equality as element is not considered for hash
-    assert hash_1 == hash_2
-    assert hash_2 == hash_3
-
-    # Store metadata for tables
-    storage.store_metadata(
-        meta_md5=hash_1,
-        element=element_to_store_1,
-        meta=meta_to_store_1,
-    )
-    storage.store_metadata(
-        meta_md5=hash_2,
-        element=element_to_store_2,
-        meta=meta_to_store_2,
-    )
-    storage.store_metadata(
-        meta_md5=hash_3,
-        element=element_to_store_3,
-        meta=meta_to_store_3,
+    storage = HDF5FeatureStorage(
+        uri=uri, single_output=False, chunk_size=chunk_size
     )
 
-    # Store tables
-    storage.store_vector(
-        meta_md5=hash_1,
-        element=element_to_store_1,
-        data=data_1,
-        col_names=col_headers,
-    )
-    storage.store_vector(
-        meta_md5=hash_2,
-        element=element_to_store_2,
-        data=data_2,
-        col_names=col_headers,
-    )
-    storage.store_vector(
-        meta_md5=hash_3,
-        element=element_to_store_3,
-        data=data_3,
-        col_names=col_headers,
-    )
+    meta_md5, all_data = _create_data_to_store(n_elements, kind)
 
+    for t_data in all_data:
+        # Store metadata for tables
+        storage.store_metadata(
+            meta_md5=meta_md5,
+            element=t_data["element"],
+            meta=t_data["meta"],
+        )
+        if kind == "vector":
+            # Store tables
+            storage.store_vector(
+                meta_md5=meta_md5,
+                element=t_data["element"],
+                **t_data["data"],
+            )
+        elif kind == "matrix":
+            # Store tables
+            storage.store_matrix(
+                meta_md5=meta_md5,
+                element=t_data["element"],
+                **t_data["data"],
+            )
+        elif kind == "timeseries":
+            storage.store_timeseries(
+                meta_md5=meta_md5,
+                element=t_data["element"],
+                **t_data["data"],
+            )
     # Check that base URI does not exist yet
     assert not uri.exists()
 
-    # Convert element to preifx
-    prefix_1 = element_to_prefix(meta_1["element"])  # type: ignore
-    prefix_2 = element_to_prefix(meta_2["element"])  # type: ignore
-    prefix_3 = element_to_prefix(meta_3["element"])  # type: ignore
+    for t_data in all_data:
+        # Convert element to preifx
+        prefix = element_to_prefix(t_data["element"])
+        # URIs for data storage
+        elem_uri = uri.parent / f"{prefix}{uri.name}"
+        # Check URIs for data storage exist
+        assert elem_uri.exists()
 
-    # URIs for data storage
-    uri_1 = uri.parent / f"{prefix_1}{uri.name}"
-    uri_2 = uri.parent / f"{prefix_2}{uri.name}"
-    uri_3 = uri.parent / f"{prefix_3}{uri.name}"
-
-    # Check URIs for data storage exist
-    assert uri_1.exists()
-    assert uri_2.exists()
-    assert uri_3.exists()
-
-    # Read stored metadata from different files using element
-    read_meta_1 = storage._read_metadata(element=meta_1["element"])
-    read_meta_2 = storage._read_metadata(element=meta_2["element"])
-    read_meta_3 = storage._read_metadata(element=meta_3["element"])
-
-    # Check if metadata are equal
-    assert read_meta_1 == read_meta_2
-    assert read_meta_2 == read_meta_3
+        # Read stored metadata from different files using element
+        read_meta = storage._read_metadata(element=t_data["element"])
+        # Check if metadata are equal
+        assert read_meta == {meta_md5: t_data["meta"]}
 
     # Collect data
     storage.collect()
     # Check that base URI exists now
     assert uri.exists()
 
-    # Read unified metadata
+    # # Read unified metadata
     read_unified_meta = storage.list_features()
+    assert meta_md5 in read_unified_meta
 
     # Check if aggregated metadata are equal
-    assert read_unified_meta == {**read_meta_1, **read_meta_2, **read_meta_3}
+    assert all(x["meta"] == read_unified_meta[meta_md5] for x in all_data)
+
+    all_df = storage.read_df(feature_md5=meta_md5)
+    if kind == "timeseries":
+        data_size = np.sum([x["data"]["data"].shape[0] for x in all_data])
+        assert len(all_df) == data_size
+        idx_names = [x for x in all_df.index.names if x != "timepoint"]
+    else:
+        assert len(all_df) == len(all_data)
+        idx_names = all_df.index.names
+    for t_data in all_data:
+        t_series = all_df.loc[tuple([t_data["element"][v] for v in idx_names])]
+        if kind == "vector":
+            assert_array_equal(t_series.values, t_data["data"]["data"])
+            series_names = t_series.index.values.tolist()
+            assert series_names == t_data["data"]["col_names"]
+        elif kind == "matrix":
+            flat_data, columns = matrix_to_vector(
+                t_data["data"]["data"],
+                col_names=t_data["data"]["col_names"],
+                row_names=t_data["data"]["row_names"],
+                matrix_kind="full",
+                diagonal=True,
+            )
+            assert_array_equal(t_series.values, flat_data)
+            series_names = t_series.index.values.tolist()
+            assert series_names == columns
+        elif kind == "timeseries":
+            assert_array_equal(t_series.values, t_data["data"]["data"])
+            series_names = t_series.columns.values.tolist()
+            assert series_names == t_data["data"]["col_names"]
 
 
 def test_collect_error_single_output() -> None:

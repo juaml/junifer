@@ -6,7 +6,6 @@
 
 
 from collections import defaultdict
-from functools import reduce
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
@@ -15,10 +14,80 @@ import pandas as pd
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
-from ..external.h5io.h5io import ChunkedArray, has_hdf5, read_hdf5, write_hdf5
+from ..external.h5io.h5io import (
+    ChunkedArray,
+    ChunkedList,
+    has_hdf5,
+    read_hdf5,
+    write_hdf5,
+)
 from ..utils import logger, raise_error
 from .base import BaseFeatureStorage
 from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
+
+
+def _create_chunk(
+    chunk_data: List[np.ndarray],
+    kind: str,
+    element_count: int,
+    chunk_size: int,
+    i_chunk: int,
+) -> Union[ChunkedArray, ChunkedList]:
+    """Create chunked array or list.
+
+    Parameters
+    ----------
+    chunk_data : list of numpy.ndarray
+        The data to be chunked.
+    kind : str
+        The kind of data to be chunked.
+    element_count : int
+        The total number of elements.
+    chunk_size : int
+        The chunk size.
+    i_chunk : int
+        The chunk index.
+
+    Returns
+    -------
+    ChunkedArray or ChunkedList
+        The chunked array or list.
+
+    Raises
+    ------
+    ValueError
+        If `kind` is not one of ['vector', 'matrix', 'timeseries'].
+    """
+    if kind in ["vector", "matrix"]:
+        features_data = np.concatenate(chunk_data, axis=-1)
+        array_shape = [features_data.shape[0]]
+        array_chunk_size = [features_data.shape[0]]
+        # Append second dimension for 3D
+        if features_data.ndim == 3:
+            array_shape.append(features_data.shape[1])
+            array_chunk_size.append(features_data.shape[1])
+        # Append final dimension of element count
+        array_shape.append(element_count)
+        # Append final dimension of chunk size
+        array_chunk_size.append(chunk_size)
+        out = ChunkedArray(
+            data=features_data,
+            shape=tuple(array_shape),
+            chunk_size=tuple(array_chunk_size),
+            n_chunk=i_chunk,
+        )
+    elif kind == "timeseries":
+        out = ChunkedList(
+            data=chunk_data,
+            size=element_count,
+            offset=i_chunk * chunk_size,
+        )
+    else:
+        raise_error(
+            f"Invalid kind: {kind}. "
+            "Must be one of ['vector', 'matrix', 'timeseries']."
+        )
+    return out
 
 
 @register_storage
@@ -176,13 +245,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
         # Read metadata
-        logger.info(f"Loading HDF5 metadata from: {uri}")
+        logger.debug(f"Loading HDF5 metadata from: {uri}")
         metadata = read_hdf5(
             fname=uri,
             title="meta",
             slash="ignore",
         )
-        logger.info(f"Loaded HDF5 metadata from: {uri}")
+        logger.debug(f"Loaded HDF5 metadata from: {uri}")
 
         return metadata
 
@@ -249,13 +318,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
         # Read data
-        logger.info(f"Loading HDF5 data for {md5} from: {uri}")
+        logger.debug(f"Loading HDF5 data for {md5} from: {uri}")
         data = read_hdf5(
             fname=uri,
             title=md5,
             slash="ignore",
         )
-        logger.info(f"Loaded HDF5 data for {md5} from: {uri}")
+        logger.debug(f"Loaded HDF5 data for {md5} from: {uri}")
 
         return data
 
@@ -386,9 +455,12 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         elif hdf_data["kind"] == "timeseries":
             # Create dictionary for aggregating index data
             element_idx = defaultdict(list)
+            all_data = []
             for idx, element in enumerate(hdf_data["element"]):
                 # Get row count for the element
-                n_rows, _ = hdf_data["data"][:, :, idx].shape
+                t_data = hdf_data["data"][idx]
+                all_data.append(t_data)
+                n_rows, _ = t_data.shape
                 # Set rows for the index
                 for key, val in element.items():
                     element_idx[key].extend([val] * n_rows)
@@ -399,7 +471,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             # Set column headers for dataframe
             columns = hdf_data["column_headers"]
             # Convert data from 3D to 2D
-            reshaped_data = hdf_data["data"].reshape(-1, 1)
+            reshaped_data = np.concatenate(all_data, axis=0)
 
         # Create dataframe for index
         idx_df = pd.DataFrame(data=element_idx)  # type: ignore
@@ -413,7 +485,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             data=reshaped_data,
             index=hdf_data_idx,
             columns=columns,  # type: ignore
-            dtype=hdf_data["data"].dtype,
+            dtype=reshaped_data.dtype,
         )
         logger.debug(f"Converted HDF5 data for {md5} to pandas.DataFrame ...")
 
@@ -556,9 +628,19 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         data_to_write = kwargs
 
         # Optional casting of float64 values to float32 for numpy.ndarray
-        if data.dtype == np.dtype("float64") and self.force_float32:
-            data = data.astype(dtype=np.dtype("float32"), casting="same_kind")
-
+        if isinstance(data, np.ndarray):
+            if data.dtype == np.dtype("float64") and self.force_float32:
+                data = data.astype(
+                    dtype=np.dtype("float32"), casting="same_kind"
+                )
+        elif isinstance(data, list):
+            if self.force_float32:
+                data = [
+                    x.astype(dtype=np.dtype("float32"), casting="same_kind")
+                    if x.dtype == np.dtype("float64")
+                    else x
+                    for x in data
+                ]
         # Handle cases for existing and new entry
         if not stored_data:
             logger.debug(f"Writing new data for {meta_md5} ...")
@@ -608,14 +690,18 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             logger.debug(
                 f"Existing data found for {meta_md5}, appending to it ..."
             )
+
+            t_data = stored_data["data"]
+            if kind == "timeseries":
+                t_data.append(data)
+            else:
+                t_data = np.concatenate((t_data, data), axis=-1)
             # Existing entry; append to existing
             # "element" and "data"
             data_to_write.update(
                 {
                     "element": stored_data["element"] + element,
-                    "data": np.concatenate(
-                        (stored_data["data"], data), axis=-1
-                    ),
+                    "data": t_data,
                     # for serialization / deserialization of storage type
                     "kind": kind,
                 }
@@ -783,7 +869,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             kind="timeseries",
             meta_md5=meta_md5,
             element=[element],  # convert to list
-            data=data[:, :, np.newaxis],  # convert to 3D
+            data=[data],  # convert to list
             column_headers=col_names,
             row_header_column_name="timepoint",
         )
@@ -809,8 +895,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
         # Glob files
-        globbed_files = self.uri.parent.glob(  # type: ignore
-            f"*{self.uri.name}"  # type: ignore
+        globbed_files = list(
+            self.uri.parent.glob(f"*_{self.uri.name}")  # type: ignore
         )
 
         # Create new storage instance
@@ -819,10 +905,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         # Run loop to collect metadata
         logger.info(
             "Collecting metadata from "
-            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
+            f"{self.uri.parent}/*_{self.uri.name}"  # type: ignore
         )
         # Collect element files per feature MD5
         elements_per_feature_md5 = defaultdict(list)
+        out_metadata = {}
         for file_ in tqdm(globbed_files, desc="file-metadata"):
             logger.debug(f"Reading HDF5 file: {file_} ...")
             # Create new storage instance to load metadata
@@ -830,105 +917,101 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             # Load metadata from new instance
             in_metadata = in_storage._read_metadata()
 
-            logger.info(f"Updating HDF5 metadata with metadata from: {file_}")
-            # Load metadata; empty dictionary if first entry;
-            # can be replaced with store_metadata() if run on a loop
-            # for the metadata entries from in_storage
-            try:
-                out_metadata = out_storage._read_metadata()
-            except IOError:
-                out_metadata = {}
-            # Update metadata
+            logger.debug(f"Updating HDF5 metadata with metadata from: {file_}")
+
+            # Update metadata to store
             out_metadata.update(in_metadata)
-            # Save metadata
-            out_storage._write_processed_data(
-                fname=str(self.uri.resolve()),  # type: ignore
-                processed_data=out_metadata,
-                title="meta",
-            )
+
             # Update element files for found MD5s
             for feature_md5 in in_metadata.keys():
                 elements_per_feature_md5[feature_md5].append(file_)
 
+        logger.info("Writing metadata to HDF5 file ...")
+        # Save metadata out metadata
+        out_storage._write_processed_data(
+            fname=str(self.uri.resolve()),  # type: ignore
+            processed_data=out_metadata,
+            title="meta",
+        )
+
         # Run loop to collect data per feature per file
         logger.info(
             "Collecting data from "
-            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
+            f"{self.uri.parent}/*_{self.uri.name}"  # type: ignore
         )
+        logger.info(f"Will collect {len(elements_per_feature_md5)} features.")
         for feature_md5, element_files in tqdm(
             elements_per_feature_md5.items(), desc="feature"
         ):
             element_count = len(element_files)
-            # Chunk size for collecting
-            chunk_size = min(self.chunk_size, element_count)
-            # Operate on chunks
-            for chunk_idx, chunk_start in tqdm(
-                enumerate(range(0, element_count, chunk_size)), desc="chunk"
-            ):
-                # Store the chunk files' data
-                stored_data_for_chunk: List[Dict[str, Any]] = []
-                # Read the files of a chunk
-                for i in tqdm(
-                    range(chunk_start, chunk_start + chunk_size),
-                    desc="file-data",
-                ):
-                    file_ = element_files[i]
-                    logger.debug(
-                        f"Reading feature MD5: '{feature_md5}' "
-                        f"from HDF5 file: {file_} ..."
+
+            i_file = 0
+            i_chunk = 0
+            t_chunk_size = min(self.chunk_size, element_count)
+            chunk_data = []
+            elements = []
+            static_data = None
+            kind = None
+            for file_ in tqdm(element_files, desc="file-data"):
+                logger.debug(
+                    f"Reading feature MD5: '{feature_md5}' "
+                    f"from HDF5 file: {file_} ..."
+                )
+
+                # Read the data
+                t_data = read_hdf5(
+                    fname=str(file_),
+                    title=feature_md5,
+                    slash="ignore",
+                )
+                if i_file == 0:
+                    # Store the "static" data
+                    static_data = {
+                        k: v
+                        for k, v in t_data.items()
+                        if k not in ["data", "element"]
+                    }
+                    kind = static_data["kind"]
+
+                # Append the "dynamic" data
+                if kind == "timeseries":
+                    chunk_data.extend(t_data["data"])
+                else:
+                    chunk_data.append(t_data["data"])
+                elements.extend(t_data["element"])
+
+                i_file += 1
+                if (i_file % t_chunk_size == 0) or i_file == element_count:
+                    # If we have reached the chunk size or the end of the
+                    # elements, write the data
+
+                    # Store one chunk of data
+                    to_write = static_data.copy()
+                    to_write["element"] = []
+                    # Write data in chunks to avoid memory usage spikes
+                    # Start with the case for 2D
+                    # Write chunked array
+                    to_write["data"] = _create_chunk(
+                        chunk_data=chunk_data,
+                        kind=kind,
+                        element_count=element_count,
+                        chunk_size=t_chunk_size,
+                        i_chunk=i_chunk,
                     )
-                    # Read from HDF5 and collect data
-                    stored_data_for_chunk.append(
-                        read_hdf5(
-                            fname=str(file_),
-                            title=feature_md5,
-                            slash="ignore",
-                        )
+                    if i_file == element_count:
+                        to_write["element"] = elements
+
+                    # Write to HDF5
+                    write_hdf5(
+                        fname=str(self.uri.resolve()),  # type: ignore
+                        data=to_write,
+                        overwrite="update",  # type: ignore
+                        compression=0,
+                        title=feature_md5,
+                        slash="error",
+                        use_json=False,
                     )
 
-                # Concatenate the features data for a chunk
-                features_data = np.concatenate(
-                    [x["data"] for x in stored_data_for_chunk], axis=-1
-                )
-                # Make dictionary to write the collected data;
-                # first the static data then the dynamic data
-                data_to_write = {
-                    key: val
-                    for key, val in stored_data_for_chunk[0].items()
-                    if key not in ("data", "element")
-                }
-                # Join the features element for a chunk
-                data_to_write["element"] = reduce(
-                    lambda acc, elem: acc + elem,
-                    [x["element"] for x in stored_data_for_chunk],
-                    [],
-                )
-                # Write data in chunks to avoid memory usage spikes
-                # Start with the case for 2D
-                array_shape = [features_data.shape[0]]
-                array_chunk_size = [features_data.shape[0]]
-                # Append second dimension for 3D
-                if features_data.ndim == 3:
-                    array_shape.append(features_data.shape[1])
-                    array_chunk_size.append(features_data.shape[1])
-                # Append final dimension of element count
-                array_shape.append(element_count)
-                # Append final dimension of chunk size
-                array_chunk_size.append(chunk_size)
-                # Write chunked array
-                data_to_write["data"] = ChunkedArray(
-                    data=features_data,
-                    shape=tuple(array_shape),
-                    chunk_size=tuple(array_chunk_size),
-                    n_chunk=chunk_idx,
-                )
-                # Write to HDF5
-                write_hdf5(
-                    fname=str(self.uri.resolve()),  # type: ignore
-                    data=data_to_write,
-                    overwrite=self.overwrite,  # type: ignore
-                    compression=0,
-                    title=feature_md5,
-                    slash="error",
-                    use_json=False,
-                )
+                    # Increment counters and data
+                    i_chunk += 1
+                    chunk_data = []
