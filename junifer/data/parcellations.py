@@ -741,9 +741,21 @@ def merge_parcellations(
                 for t_label in t_labels
             ]
     overlapping_voxels = False
-    parc_data = parcellations_list[0].get_fdata()
+    ref_parc = parcellations_list[0]
+    parc_data = ref_parc.get_fdata()
+
     labels = labels_lists[0]
+
     for t_parc, t_labels in zip(parcellations_list[1:], labels_lists[1:]):
+        if t_parc.shape != ref_parc.shape:
+            warn_with_log(
+                "The parcellations have different resolutions!"
+                "Resampling all parcellations to the first one in the list."
+            )
+            t_parc = image.resample_to_img(
+                t_parc, ref_parc, interpolation="nearest", copy=True
+            )
+
         # Get the data from this parcellation
         t_parc_data = t_parc.get_fdata().copy()  # must be copied
         # Increase the values of each ROI to match the labels

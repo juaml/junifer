@@ -555,10 +555,10 @@ def test_retrieve_tian_incorrect_scale(tmp_path: Path) -> None:
 def test_merge_parcellations() -> None:
     """Test merging parcellations."""
     # load some parcellations for testing
-    schaefer_parcellation, schaefer_labels = load_parcellation(
+    schaefer_parcellation, schaefer_labels, _ = load_parcellation(
         "Schaefer100x17"
     )
-    tian_parcellation, tian_labels = load_parcellation(
+    tian_parcellation, tian_labels, _ = load_parcellation(
         "TianxS2x3TxMNInonlinear2009cAsym"
     )
     # prepare the list of the actual parcellations
@@ -575,4 +575,5 @@ def test_merge_parcellations() -> None:
     # we should have 132 integer labels plus 1 for background
     parc_data = merged_parc.get_fdata()
     assert len(np.unique(parc_data)) == 133
-    assert len(labels) == 133
+    # no background label, so labels is one less
+    assert len(labels) == 132

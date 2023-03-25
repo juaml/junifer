@@ -67,6 +67,8 @@ Enhancements
 
 - Add more documentation on registering parcellations, coordinates, and masks (:gh:`166` by `Leonard Sasse`_)
 
+- Expose a function to merge a list of parcellations (:gh:`146` by Leonard Sasse`_).
+
 Bugs
 ~~~~
 
