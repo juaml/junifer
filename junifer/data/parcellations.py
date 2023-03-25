@@ -715,13 +715,13 @@ def merge_parcellations(
         List of parcellations to merge.
     parcellations_names: list
         List of names for parcellations at the corresponding indices.
-    labels_lists : list
+    labels_lists : list of list
         A list of lists. Each list in the list contains the labels for the
         parcellation at the corresponding index.
 
     Returns
     -------
-    parcellation : niimg
+    parcellation : Nifti1Image
         The parcellation that results from merging the list of input
         parcellations.
     labels : list
