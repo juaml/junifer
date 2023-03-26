@@ -24,7 +24,7 @@ From the API reference, we can see that it has 3 positional arguments
 (``name``, ``parcellation_path``, and ``parcels_labels``) as well as one
 optional keyword argument (``overwrite``).
 
-The ``name`` of the parcellation is up to you and will the the name that Junifer
+The ``name`` of the parcellation is up to you and will be the name that Junifer
 will use to refer to this particular parcellation. You can think of this as being
 similar to a key in a python dictionary, i.e. a key that is used to obtain and
 operate on the actual parcellation data. This ``name`` must always be a string.
@@ -33,11 +33,12 @@ For example, we could call our parcellation ``"my_custom_parcellation"``
 should try to choose a meaningful name that conveys as much relevant information
 about your parcellation as necessary).
 
-The ``parcellation_path`` must be a ``str`` or ``Path`` object to a valid
-``NIfTI`` image, which contains integer labels indicating the individual ROIs
-of your parcellation. The background in this parcellation should be indicated by
-0, and the labels of ROIs should go from 1 to N (where N is the total number
-of ROIs in your parcellation). Now, we nearly have everything we need.
+The ``parcellation_path`` must be a ``str`` or ``Path`` object indicating a path
+to a valid ``NIfTI`` image, which contains integer labels indicating the
+individual regions-of-interest (ROIs) of your parcellation. The background in
+this parcellation should be indicated by 0, and the labels of ROIs should go
+from 1 to N (where N is the total number of ROIs in your parcellation). Now,
+we nearly have everything we need.
 
 Lastly, we also want to make sure that we can associate each integer label with
 a human readable name (i.e. the name for each ROI). This serves naming the features
@@ -53,7 +54,7 @@ and so on).
 Step 1: Prepare code to register a parcellation
 -----------------------------------------------
 
-Now we know everything that we need to know, to make sure Junifer can use our
+Now we know everything that we need to know to make sure Junifer can use our
 own parcellation to compute any parcellation-based marker. For example,
 a simple example could look like this:
 
@@ -66,10 +67,10 @@ a simple example could look like this:
 
 	# these are of course just example paths, replace it with your own:
 	path_to_parcellation = Path(
-		"project_data" / "parcellations" / "my_custom_parcellation.nii.gz"
+		".." / ".." / "parcellations" / "my_custom_parcellation.nii.gz"
 	)
 	path_to_labels = Path(
-		"project_data" / "labels" / "my_custom_parcellation_labels.txt"
+		".." / ".." / "labels" / "my_custom_parcellation_labels.txt"
 	)
 
 	my_labels = list(np.loadtxt(path_to_labels, dtype=str))
@@ -80,7 +81,7 @@ a simple example could look like this:
 		parcels_labels=my_labels
 	)
 
-Now, we can run this code, and it seems to work, however, how can we actually
+We can run this code and it seems to work, however, how can we actually
 include the custom parcellation in a Junifer pipeline using a
 :ref:`code-less YAML configuration<codeless>`?
 
@@ -96,7 +97,7 @@ file, we can save the above code in a python file, say
 
 	with: registering_my_parcellation.py
 
-Afterwards, continue configuring the rest of the pipeline in this YAML file, and
+Afterwards continue configuring the rest of the pipeline in this YAML file, and
 you will be able to use this parcellation using the name you gave the parcellation
 when registering it. For example, we can add a :class:`junifer.markers.parcel_aggregation.ParcelAggregation`
 marker to demonstrate how this can be done:
@@ -109,8 +110,11 @@ marker to demonstrate how this can be done:
 	    parcellation: my_custom_parcellation
 	    method: mean
 
-Now, you can simply use this YAML file to run your pipeline. One important point,
-however, to keep in mind, is that the paths given in ``registering_my_parcellation.py``
+Now, you can simply use this YAML file to run your pipeline. One important point
+to keep in mind is that if the paths given in ``registering_my_parcellation.py``
 are relative paths, they will be interpreted by Junifer as relative to the
-jobs directory. For simplicity, you may just want to use absolute paths, to avoid
-confusion.
+jobs directory (i.e. where Junifer will create submit files, logs directory and
+so on). For simplicity, you may just want to use absolute paths to avoid
+confusion, yet using relative paths is likely a better way to make your pipeline
+directory/repository more portable. Really, once you understand how these paths
+are interpreted by Junifer, it is quite easy.
