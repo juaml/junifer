@@ -26,3 +26,4 @@ datagrabbers, preprocessing and markers, following the *junifer* way.
    extension
    datagrabber
    marker
+   parcellations
