@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import List
 
 import nibabel as nib
+import numpy as np
 import pytest
 from nilearn.image import new_img_like
 from numpy.testing import assert_array_almost_equal, assert_array_equal
@@ -20,6 +21,7 @@ from junifer.data.parcellations import (
     _retrieve_tian,
     list_parcellations,
     load_parcellation,
+    merge_parcellations,
     register_parcellation,
 )
 
@@ -236,9 +238,7 @@ def test_schaefer_parcellation(tmp_path: Path) -> None:
     )
     # Load parcellation
     img2, lbl, fname = load_parcellation(
-        name="Schaefer100x7",
-        parcellations_dir=tmp_path,
-        resolution=3,
+        name="Schaefer100x7", parcellations_dir=tmp_path, resolution=3
     )
     # Check parcellation values
     assert fname.name == fname2
@@ -247,9 +247,7 @@ def test_schaefer_parcellation(tmp_path: Path) -> None:
     assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
     # Load parcellation
     img2, lbl, fname = load_parcellation(
-        "Schaefer100x7",
-        parcellations_dir=tmp_path,
-        resolution=2.1,
+        "Schaefer100x7", parcellations_dir=tmp_path, resolution=2.1
     )
     # Check parcellation values
     assert fname.name == fname2
@@ -258,9 +256,7 @@ def test_schaefer_parcellation(tmp_path: Path) -> None:
     assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
     # Load parcellation
     img2, lbl, fname = load_parcellation(
-        "Schaefer100x7",
-        parcellations_dir=tmp_path,
-        resolution=1.99,
+        "Schaefer100x7", parcellations_dir=tmp_path, resolution=1.99
     )
     # Check parcellation values
     assert fname.name == fname1
@@ -269,9 +265,7 @@ def test_schaefer_parcellation(tmp_path: Path) -> None:
     assert_array_equal(img2.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
     # Load parcellation
     img2, lbl, fname = load_parcellation(
-        "Schaefer100x7",
-        parcellations_dir=tmp_path,
-        resolution=0.5,
+        "Schaefer100x7", parcellations_dir=tmp_path, resolution=0.5
     )
     # Check parcellation values
     assert fname.name == fname1
@@ -383,18 +377,10 @@ def test_retrieve_suit_incorrect_space(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
-    "scale, n_label",
-    [
-        (1, 16),
-        (2, 32),
-        (3, 50),
-        (4, 54),
-    ],
+    "scale, n_label", [(1, 16), (2, 32), (3, 50), (4, 54)]
 )
 def test_tian_3T_6thgeneration(
-    tmp_path: Path,
-    scale: int,
-    n_label: int,
+    tmp_path: Path, scale: int, n_label: int
 ) -> None:
     """Test Tian parcellation.
 
@@ -415,8 +401,7 @@ def test_tian_3T_6thgeneration(
     assert "TianxS4x3TxMNI6thgeneration" in parcellations
     # Load parcellation
     img, lbl, fname = load_parcellation(
-        name=f"TianxS{scale}x3TxMNI6thgeneration",
-        parcellations_dir=tmp_path,
+        name=f"TianxS{scale}x3TxMNI6thgeneration", parcellations_dir=tmp_path
     )
     fname1 = f"Tian_Subcortex_S{scale}_3T_1mm.nii.gz"
     assert img is not None
@@ -437,18 +422,10 @@ def test_tian_3T_6thgeneration(
 
 
 @pytest.mark.parametrize(
-    "scale, n_label",
-    [
-        (1, 16),
-        (2, 32),
-        (3, 50),
-        (4, 54),
-    ],
+    "scale, n_label", [(1, 16), (2, 32), (3, 50), (4, 54)]
 )
 def test_tian_3T_nonlinear2009cAsym(
-    tmp_path: Path,
-    scale: int,
-    n_label: int,
+    tmp_path: Path, scale: int, n_label: int
 ) -> None:
     """Test Tian parcellation.
 
@@ -480,18 +457,10 @@ def test_tian_3T_nonlinear2009cAsym(
 
 
 @pytest.mark.parametrize(
-    "scale, n_label",
-    [
-        (1, 16),
-        (2, 34),
-        (3, 54),
-        (4, 62),
-    ],
+    "scale, n_label", [(1, 16), (2, 34), (3, 54), (4, 62)]
 )
 def test_tian_7T_6thgeneration(
-    tmp_path: Path,
-    scale: int,
-    n_label: int,
+    tmp_path: Path, scale: int, n_label: int
 ) -> None:
     """Test Tian parcellation.
 
@@ -534,10 +503,7 @@ def test_retrieve_tian_incorrect_space(tmp_path: Path) -> None:
     """
     with pytest.raises(ValueError, match=r"The parameter `space`"):
         _retrieve_tian(
-            parcellations_dir=tmp_path,
-            resolution=1,
-            scale=1,
-            space="wrong",
+            parcellations_dir=tmp_path, resolution=1, scale=1, space="wrong"
         )
 
     with pytest.raises(ValueError, match=r"MNI6thgeneration"):
@@ -584,3 +550,162 @@ def test_retrieve_tian_incorrect_scale(tmp_path: Path) -> None:
             scale=5,
             space="MNI6thgeneration",
         )
+
+
+def test_merge_parcellations() -> None:
+    """Test merging parcellations."""
+    # load some parcellations for testing
+    schaefer_parcellation, schaefer_labels, _ = load_parcellation(
+        "Schaefer100x17"
+    )
+    tian_parcellation, tian_labels, _ = load_parcellation(
+        "TianxS2x3TxMNInonlinear2009cAsym"
+    )
+    # prepare the list of the actual parcellations
+    parcellation_list = [schaefer_parcellation, tian_parcellation]
+    # prepare a list of names
+    names = ["Schaefer100x17", "TianxS2x3TxMNInonlinear2009cAsym"]
+    # prepare a list of label lists
+    labels_lists = [schaefer_labels, tian_labels]
+    # merge the parcellations
+    merged_parc, labels = merge_parcellations(
+        parcellation_list, names, labels_lists
+    )
+
+    # we should have 132 integer labels plus 1 for background
+    parc_data = merged_parc.get_fdata()
+    assert len(np.unique(parc_data)) == 133
+    # no background label, so labels is one less
+    assert len(labels) == 132
+
+
+def test_merge_parcellations_3D_multiple_non_overlapping(
+    tmp_path: Path,
+) -> None:
+    """Test merge_parcellations with multiple non-overlapping parcellations.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Get the testing parcellation
+    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+
+    assert parcellation is not None
+
+    # Create two parcellations from it
+    parcellation_data = parcellation.get_fdata()
+    parcellation1_data = parcellation_data.copy()
+    parcellation1_data[parcellation1_data > 50] = 0
+    parcellation2_data = parcellation_data.copy()
+    parcellation2_data[parcellation2_data <= 50] = 0
+    parcellation2_data[parcellation2_data > 0] -= 50
+    labels1 = labels[:50]
+    labels2 = labels[50:]
+
+    parcellation1_img = new_img_like(parcellation, parcellation1_data)
+    parcellation2_img = new_img_like(parcellation, parcellation2_data)
+
+    parcellation_list = [parcellation1_img, parcellation2_img]
+    names = ["high", "low"]
+    labels_lists = [labels1, labels2]
+
+    merged_parc, merged_labels = merge_parcellations(
+        parcellation_list, names, labels_lists
+    )
+
+    parc_data = parcellation.get_fdata()
+    assert_array_equal(parc_data, merged_parc.get_fdata())
+    assert len(labels) == 100
+    assert len(np.unique(parc_data)) == 101  # 100 + 1 because background 0
+
+
+def test_merge_parcellations_3D_multiple_overlapping(tmp_path: Path) -> None:
+    """Test merge_parcellations with multiple overlapping parcellations.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+
+    # Get the testing parcellation
+    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+
+    assert parcellation is not None
+
+    # Create two parcellations from it
+    parcellation_data = parcellation.get_fdata()
+    parcellation1_data = parcellation_data.copy()
+    parcellation1_data[parcellation1_data > 50] = 0
+    parcellation2_data = parcellation_data.copy()
+
+    # Make the second parcellation overlap with the first
+    parcellation2_data[parcellation2_data <= 45] = 0
+    parcellation2_data[parcellation2_data > 0] -= 45
+    labels1 = [f"low_{x}" for x in labels[:50]]  # Change the labels
+    labels2 = [f"high_{x}" for x in labels[45:]]  # Change the labels
+
+    parcellation1_img = new_img_like(parcellation, parcellation1_data)
+    parcellation2_img = new_img_like(parcellation, parcellation2_data)
+
+    parcellation_list = [parcellation1_img, parcellation2_img]
+    names = ["high", "low"]
+    labels_lists = [labels1, labels2]
+
+    with pytest.warns(RuntimeWarning, match="overlapping voxels"):
+        merged_parc, merged_labels = merge_parcellations(
+            parcellation_list, names, labels_lists
+        )
+
+    parc_data = parcellation.get_fdata()
+    assert len(labels) == 100
+    assert len(np.unique(parc_data)) == 101  # 100 + 1 because background 0
+
+
+def test_merge_parcellations_3D_multiple_duplicated_labels(
+    tmp_path: Path,
+) -> None:
+    """Test merge_parcellations with two parcellations with duplicated labels.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+
+    # Get the testing parcellation
+    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+
+    assert parcellation is not None
+
+    # Create two parcellations from it
+    parcellation_data = parcellation.get_fdata()
+    parcellation1_data = parcellation_data.copy()
+    parcellation1_data[parcellation1_data > 50] = 0
+    parcellation2_data = parcellation_data.copy()
+    parcellation2_data[parcellation2_data <= 50] = 0
+    parcellation2_data[parcellation2_data > 0] -= 50
+    labels1 = labels[:50]
+    labels2 = labels[49:-1]  # One label is duplicated
+
+    parcellation1_img = new_img_like(parcellation, parcellation1_data)
+    parcellation2_img = new_img_like(parcellation, parcellation2_data)
+
+    parcellation_list = [parcellation1_img, parcellation2_img]
+    names = ["high", "low"]
+    labels_lists = [labels1, labels2]
+
+    with pytest.warns(RuntimeWarning, match="duplicated labels."):
+        merged_parc, merged_labels = merge_parcellations(
+            parcellation_list, names, labels_lists
+        )
+
+    parc_data = parcellation.get_fdata()
+    assert_array_equal(parc_data, merged_parc.get_fdata())
+    assert len(labels) == 100
+    assert len(np.unique(parc_data)) == 101  # 100 + 1 because background 0

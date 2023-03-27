@@ -178,9 +178,7 @@ class DataladDataGrabber(BaseDataGrabber):
             try:
                 dl_out = self._dataset.get(to_get, result_renderer="disabled")
             except IncompleteResultsError as e:
-                raise_error(
-                    f"Failed to get from dataset: {e.failed}"
-                )
+                raise_error(f"Failed to get from dataset: {e.failed}")
             if not self._was_cloned:
                 # If the dataset was already installed, check that the
                 # file was actually downloaded to avoid removing a

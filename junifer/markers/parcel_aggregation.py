@@ -7,13 +7,13 @@
 from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
-from nilearn.image import math_img, new_img_like, resample_to_img
+from nilearn.image import math_img, resample_to_img
 from nilearn.maskers import NiftiMasker
 
 from ..api.decorators import register_marker
-from ..data import get_mask, load_parcellation
+from ..data import get_mask, load_parcellation, merge_parcellations
 from ..stats import get_aggfunc_by_name
-from ..utils import logger, warn_with_log
+from ..utils import logger
 from .base import BaseMarker
 
 
@@ -98,9 +98,7 @@ class ParcelAggregation(BaseMarker):
             raise ValueError(f"Unknown input kind for {input_type}")
 
     def compute(
-        self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict] = None,
+        self, input: Dict[str, Any], extra_input: Optional[Dict] = None
     ) -> Dict:
         """Compute.
 
@@ -129,8 +127,7 @@ class ParcelAggregation(BaseMarker):
         t_input_img = input["data"]
         logger.debug(f"Parcel aggregation using {self.method}")
         agg_func = get_aggfunc_by_name(
-            name=self.method,
-            func_params=self.method_params,
+            name=self.method, func_params=self.method_params
         )
         # Get the min of the voxels sizes and use it as the resolution
         resolution = np.min(t_input_img.header.get_zooms()[:3])
@@ -140,15 +137,11 @@ class ParcelAggregation(BaseMarker):
         all_labels = []
         for t_parc_name in self.parcellation:
             t_parcellation, t_labels, _ = load_parcellation(
-                name=t_parc_name,
-                resolution=resolution,
+                name=t_parc_name, resolution=resolution
             )
             # Resample all of them to the image
             t_parcellation_img_res = resample_to_img(
-                t_parcellation,
-                t_input_img,
-                interpolation="nearest",
-                copy=True,
+                t_parcellation, t_input_img, interpolation="nearest", copy=True
             )
             all_parcelations.append(t_parcellation_img_res)
             all_labels.append(t_labels)
@@ -159,56 +152,11 @@ class ParcelAggregation(BaseMarker):
             labels = all_labels[0]
         else:
             # Merge the parcellations
-
-            # Check for duplicated labels
-            all_labels_flat = [
-                item for sublist in all_labels for item in sublist
-            ]
-            if len(all_labels_flat) != len(set(all_labels_flat)):
-                warn_with_log(
-                    "The parcellations have duplicated labels. "
-                    "Each label will be prefixed with the parcellation name."
-                )
-                for i_parcellation, t_labels in enumerate(all_labels):
-                    all_labels[i_parcellation] = [
-                        f"{self.parcellation[i_parcellation]}_{t_label}"
-                        for t_label in t_labels
-                    ]
-            overlapping_voxels = False
-            parc_data = all_parcelations[0].get_fdata()
-            labels = all_labels[0]
-            for t_parc, t_labels in zip(all_parcelations[1:], all_labels[1:]):
-                # Get the data from this parcellation
-                t_parc_data = t_parc.get_fdata().copy()  # must be copied
-                # Increase the values of each ROI to match the labels
-                t_parc_data[t_parc_data != 0] += len(labels)
-
-                # Only set new values for the voxels that are 0
-                # This makes sure that the voxels that are in multiple
-                # parcellations are assigned to the parcellation that was
-                # first in the list.
-                if np.any(parc_data[t_parc_data != 0] != 0):
-                    overlapping_voxels = True
-
-                parc_data[parc_data == 0] += t_parc_data[parc_data == 0]
-                labels.extend(t_labels)
-
-            if overlapping_voxels:
-                warn_with_log(
-                    "The parcellations have overlapping voxels. "
-                    "The overlapping voxels will be assigned to the "
-                    "parcellation that was first in the list."
-                )
-
-            parcellation_img_res = new_img_like(
-                all_parcelations[0],
-                parc_data,
+            parcellation_img_res, labels = merge_parcellations(
+                all_parcelations, self.parcellation, all_labels
             )
 
-        parcellation_bin = math_img(
-            "img != 0",
-            img=parcellation_img_res,
-        )
+        parcellation_bin = math_img("img != 0", img=parcellation_img_res)
 
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
