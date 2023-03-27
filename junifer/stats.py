@@ -29,6 +29,7 @@ def get_aggfunc_by_name(
         * ``std`` -> :func:`numpy.std`
         * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
         * ``count`` -> :func:`junifer.stats.count`
+        * ``select`` -> :func:`junifer.stats.select`
 
     func_params : dict, optional
         Parameters to pass to the function.
@@ -49,6 +50,7 @@ def get_aggfunc_by_name(
         "std",
         "trim_mean",
         "count",
+        "select",
     }
     if func_params is None:
         func_params = {}
@@ -83,6 +85,14 @@ def get_aggfunc_by_name(
         func = partial(trim_mean, **func_params)
     elif name == "count":
         func = count
+    elif name == "select":
+        pick = func_params.get("pick", None)
+        drop = func_params.get("drop", None)
+        if pick is None and drop is None:
+            raise_error("Either pick or drop must be specified.")
+        elif pick is not None and drop is not None:
+            raise_error("Either pick or drop must be specified, not both.")
+        func = partial(select, **func_params)
     else:
         raise_error(
             f"Function {name} unknown. Please provide any of "
@@ -146,7 +156,9 @@ def winsorized_mean(
     return win_mean
 
 
-def select(data: np.ndarray, axis: int = 0, pick=None, drop=None) -> np.ndarray:
+def select(
+    data: np.ndarray, axis: int = 0, pick=None, drop=None
+) -> np.ndarray:
     """Select a subset of the data.
 
     Parameters

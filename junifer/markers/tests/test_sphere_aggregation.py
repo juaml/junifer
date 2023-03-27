@@ -185,13 +185,37 @@ def test_SphereAggregation_4D_agg_time() -> None:
 
     # Create SphereAggregation object
     marker = SphereAggregation(
-        coords=COORDS, method="mean", radius=RADIUS,
-        time_method="mean"
+        coords=COORDS, method="mean", radius=RADIUS, time_method="mean"
     )
     input = {"BOLD": {"data": fmri_img, "meta": {}}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
-    assert jun_values4d.ndim == 2
+    assert jun_values4d.ndim == 1
     assert_array_equal(auto_mean.shape, jun_values4d.shape)
     assert_array_equal(auto_mean, jun_values4d)
 
+    auto_pick_0 = auto4d[:1, :]
+    marker = SphereAggregation(
+        coords=COORDS,
+        method="mean",
+        radius=RADIUS,
+        time_method="select",
+        time_method_params={"pick": [0]},
+    )
+
+    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
+
+    assert jun_values4d.ndim == 2
+    assert_array_equal(auto_pick_0.shape, jun_values4d.shape)
+    assert_array_equal(auto_pick_0, jun_values4d)
+
+    with pytest.raises(ValueError, match="can only be used with BOLD data"):
+        SphereAggregation(
+            coords=COORDS,
+            method="mean",
+            radius=RADIUS,
+            time_method="pick",
+            time_method_params={"pick": [0]},
+            on="VBM_GM",
+        )

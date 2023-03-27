@@ -70,6 +70,14 @@ def test_get_aggfunc_by_name_errors() -> None:
             name="winsorized_mean", func_params={"limits": [0.1, 2]}
         )
 
+    with pytest.raises(ValueError, match="must be specified."):
+        get_aggfunc_by_name(name="select", func_params=None)
+
+    with pytest.raises(ValueError, match="must be specified, not both."):
+        get_aggfunc_by_name(
+            name="select", func_params={"pick": [0], "drop": [1]}
+        )
+
 
 def test_winsorized_mean() -> None:
     """Test winsorized mean."""
