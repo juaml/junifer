@@ -703,28 +703,28 @@ def _retrieve_suit(
 
 
 def merge_parcellations(
-    parcellations_list: List,
-    parcellations_names: List,
-    labels_lists: List[List],
-) -> Tuple:
+    parcellations_list: List["Nifti1Image"],
+    parcellations_names: List[str],
+    labels_lists: List[List[str]],
+) -> Tuple["Nifti1Image", List[str]]:
     """Merge all parcellations from a list into one parcellation.
 
     Parameters
     ----------
-    parcellations_list : list
+    parcellations_list : list of niimg-like object
         List of parcellations to merge.
-    parcellations_names: list
+    parcellations_names: list of str
         List of names for parcellations at the corresponding indices.
-    labels_lists : list of list
+    labels_lists : list of list of str
         A list of lists. Each list in the list contains the labels for the
         parcellation at the corresponding index.
 
     Returns
     -------
-    parcellation : Nifti1Image
+    parcellation : niimg-like object
         The parcellation that results from merging the list of input
         parcellations.
-    labels : list
+    labels : list of str
         List of labels for the resultant parcellation.
 
     """

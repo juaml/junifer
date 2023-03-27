@@ -577,3 +577,124 @@ def test_merge_parcellations() -> None:
     assert len(np.unique(parc_data)) == 133
     # no background label, so labels is one less
     assert len(labels) == 132
+
+
+def test_merge_parcellations_3D_multiple_non_overlapping(
+    tmp_path: Path,
+) -> None:
+    """Test merge_parcellations with multiple non-overlapping parcellations.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Get the testing parcellation
+    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+
+    assert parcellation is not None
+
+    # Create two parcellations from it
+    parcellation_data = parcellation.get_fdata()
+    parcellation1_data = parcellation_data.copy()
+    parcellation1_data[parcellation1_data > 50] = 0
+    parcellation2_data = parcellation_data.copy()
+    parcellation2_data[parcellation2_data <= 50] = 0
+    parcellation2_data[parcellation2_data > 0] -= 50
+    labels1 = labels[:50]
+    labels2 = labels[50:]
+
+    parcellation1_img = new_img_like(parcellation, parcellation1_data)
+    parcellation2_img = new_img_like(parcellation, parcellation2_data)
+
+    parcellation_list = [parcellation1_img, parcellation2_img]
+    names = ["high", "low"]
+    labels_lists = [labels1, labels2]
+
+    merged_parc, merged_labels = merge_parcellations(
+        parcellation_list, names, labels_lists
+    )
+
+    assert_array_equal(parcellation.get_fdata(), merged_parc.get_fdata())
+    assert merged_labels == labels
+
+
+def test_merge_parcellations_3D_multiple_overlapping(tmp_path: Path) -> None:
+    """Test merge_parcellations with multiple overlapping parcellations.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+
+    # Get the testing parcellation
+    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+
+    assert parcellation is not None
+
+    # Create two parcellations from it
+    parcellation_data = parcellation.get_fdata()
+    parcellation1_data = parcellation_data.copy()
+    parcellation1_data[parcellation1_data > 50] = 0
+    parcellation2_data = parcellation_data.copy()
+
+    # Make the second parcellation overlap with the first
+    parcellation2_data[parcellation2_data <= 45] = 0
+    parcellation2_data[parcellation2_data > 0] -= 45
+    labels1 = [f"low_{x}" for x in labels[:50]]  # Change the labels
+    labels2 = [f"high_{x}" for x in labels[45:]]  # Change the labels
+
+    parcellation1_img = new_img_like(parcellation, parcellation1_data)
+    parcellation2_img = new_img_like(parcellation, parcellation2_data)
+
+    parcellation_list = [parcellation1_img, parcellation2_img]
+    names = ["high", "low"]
+    labels_lists = [labels1, labels2]
+
+    with pytest.warns(RuntimeWarning, match="overlapping voxels"):
+        merged_parc, merged_labels = merge_parcellations(
+            parcellation_list, names, labels_lists
+        )
+
+
+def test_ParcelAggregation_3D_multiple_duplicated_labels(
+    tmp_path: Path,
+) -> None:
+    """Test ParcelAggregation with two parcellations with duplicated labels.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+
+    # Get the testing parcellation
+    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+
+    assert parcellation is not None
+
+    # Create two parcellations from it
+    parcellation_data = parcellation.get_fdata()
+    parcellation1_data = parcellation_data.copy()
+    parcellation1_data[parcellation1_data > 50] = 0
+    parcellation2_data = parcellation_data.copy()
+    parcellation2_data[parcellation2_data <= 50] = 0
+    parcellation2_data[parcellation2_data > 0] -= 50
+    labels1 = labels[:50]
+    labels2 = labels[49:-1]  # One label is duplicated
+
+    parcellation1_img = new_img_like(parcellation, parcellation1_data)
+    parcellation2_img = new_img_like(parcellation, parcellation2_data)
+
+    parcellation_list = [parcellation1_img, parcellation2_img]
+    names = ["high", "low"]
+    labels_lists = [labels1, labels2]
+
+    with pytest.warns(RuntimeWarning, match="duplicated labels."):
+        merged_parc, merged_labels = merge_parcellations(
+            parcellation_list, names, labels_lists
+        )
