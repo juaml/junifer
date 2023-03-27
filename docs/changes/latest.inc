@@ -65,7 +65,7 @@ Enhancements
 
 - Force datalad to be non-interactive on _queued_ jobs (:gh:`201` by `Fede Raimondo`_).
 
-- Add documentation on registering parcellations, coordinates, and masks (:gh:`166` by `Leonard Sasse`_)
+- Add more documentation on registering parcellations, coordinates, and masks (:gh:`166` by `Leonard Sasse`_)
 
 Bugs
 ~~~~
