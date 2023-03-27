@@ -66,11 +66,11 @@ a simple example could look like this:
 	import numpy as np
 
 	# these are of course just example paths, replace it with your own:
-	path_to_parcellation = Path(
-		".." / ".." / "parcellations" / "my_custom_parcellation.nii.gz"
+	path_to_parcellation = (
+		Path("..") / ".." / "parcellations" / "my_custom_parcellation.nii.gz"
 	)
-	path_to_labels = Path(
-		".." / ".." / "labels" / "my_custom_parcellation_labels.txt"
+	path_to_labels = (
+		Path("..") / ".." / "labels" / "my_custom_parcellation_labels.txt"
 	)
 
 	my_labels = list(np.loadtxt(path_to_labels, dtype=str))
@@ -117,5 +117,5 @@ are relative paths, they will be interpreted by Junifer as relative to the
 jobs directory (i.e. where Junifer will create submit files, logs directory and
 so on). For simplicity, you may just want to use absolute paths to avoid
 confusion, yet using relative paths is likely a better way to make your pipeline
-directory/repository more portable. Really, once you understand how these paths
-are interpreted by Junifer, it is quite easy.
+directory/repository more portable and therefore more reproducible for others.
+Really, once you understand how these paths are interpreted by Junifer, it is quite easy.

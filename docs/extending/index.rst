@@ -27,3 +27,5 @@ datagrabbers, preprocessing and markers, following the *junifer* way.
    datagrabber
    marker
    parcellations
+   coordinates
+   masks

@@ -1,6 +1,6 @@
 .. include:: ../links.inc
 
-.._adding_coordinates:
+.. _adding_coordinates:
 
 Adding Coordinates
 ==================
@@ -33,7 +33,7 @@ We could simply call it ``"my_set_of_coordinates"``, but likely you want a more
 descriptive and more informative name most of the time.
 
 The ``coordinates`` argument takes the actual coordinates as a 2-dimensional
-:class:`numpy.array`. It contains one row for every location, and three columns
+:func:`numpy.array`. It contains one row for every location, and three columns
 (one for each spatial dimension). That is, the first, second, and third columns
 indicate the x-, y-, and z-coordinates in MNI space respectively. Note, that
 Junifer (as of yet) only works in MNI space, and so therefore these coordinates
@@ -61,7 +61,8 @@ Let's make a simple script to register our coordinates. We could simply call it
 For the sake of this example, we can create a set of coordinates that belong
 to the default mode network (DMN), and register this set of coordinates with
 Junifer. Note, that Junifer already has a :ref:`set of coordinates built-in<builtin>`
-("DMNBuckner") that is associated with the DMN.
+("DMNBuckner") that is associated with the DMN. Here, we use the DMN coordinates
+used in a `nilearn example <https://nilearn.github.io/dev/auto_examples/03_connectivity/plot_sphere_based_connectome.html>`_.
 
 .. code-block:: python
 
