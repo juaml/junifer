@@ -14,7 +14,7 @@ signals from individual voxels. Now, before you start specifying your own sets
 of coordinates, check the coordinates that Junifer already has
 :ref:`built in already<builtin>`. If you simply want to use a well known set of
 coordinates from the literature, there is a reasonable chance, that Junifer provides
-them.
+them already.
 
 If you checked the in-built coordinates, and they are not there already (
 for example if you came up with your own set of coordinates), then Junifer provides
