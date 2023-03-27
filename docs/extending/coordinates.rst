@@ -116,13 +116,12 @@ this can be done:
 
 .. code-block:: yaml
 
-
 	markers:
-	  - name: DMNCustom_mean
-	    kind: SphereAggregation
-	    coords: DMNCustom
-		radius: 5
-	    method: mean
+		- name: DMNCustom_mean
+		  kind: SphereAggregation
+	      coords: DMNCustom
+		  radius: 5
+	      method: mean
 
 This will aggregate signals from a sphere around each of our coordinates with a
 radius of 5mm.
