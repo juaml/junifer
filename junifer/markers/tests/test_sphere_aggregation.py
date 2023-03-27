@@ -167,3 +167,31 @@ def test_SphereAggregation_3D_mask() -> None:
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
+
+
+def test_SphereAggregation_4D_agg_time() -> None:
+    """Test SphereAggregation object on 4D images, aggregating time."""
+    # Get the testing coordinates (for nilearn)
+    coordinates, _ = load_coordinates(COORDS)
+
+    # Get the SPM auditory data
+    subject_data = datasets.fetch_spm_auditory()
+    fmri_img = concat_imgs(subject_data.func)  # type: ignore
+
+    # Create NiftSpheresMasker
+    nifti_masker = NiftiSpheresMasker(seeds=coordinates, radius=RADIUS)
+    auto4d = nifti_masker.fit_transform(fmri_img)
+    auto_mean = auto4d.mean(axis=0)
+
+    # Create SphereAggregation object
+    marker = SphereAggregation(
+        coords=COORDS, method="mean", radius=RADIUS,
+        time_method="mean"
+    )
+    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
+
+    assert jun_values4d.ndim == 2
+    assert_array_equal(auto_mean.shape, jun_values4d.shape)
+    assert_array_equal(auto_mean, jun_values4d)
+
