@@ -95,7 +95,8 @@ file, we can save the above code in a python file, say
 
 .. code-block:: yaml
 
-	with: registering_my_parcellation.py
+	with:
+		- registering_my_parcellation.py
 
 Afterwards continue configuring the rest of the pipeline in this YAML file, and
 you will be able to use this parcellation using the name you gave the parcellation
