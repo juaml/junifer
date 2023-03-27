@@ -63,6 +63,8 @@ Enhancements
 
 - Improve metadata and data I/O for :class:`junifer.storage.HDF5FeatureStorage` (:gh:`196` by `Synchon Mandal`_).
 
+- Force datalad to be non-interactive on _queued_ jobs (:gh:`201` by `Fede Raimondo`_).
+
 Bugs
 ~~~~
 
