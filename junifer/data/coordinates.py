@@ -64,7 +64,10 @@ def register_coordinates(
     name : str
         The name of the coordinates.
     coordinates : numpy.ndarray
-        The coordinates.
+        The coordinates. This should be a 2-dimensional array with three
+        columns. Each row corresponds to a volume-of-interest (VOI) and each
+        column corresponds to a spatial dimension (i.e. x, y, and
+        z-coordinates).
     voi_names : list of str
         The names of the VOIs.
     overwrite : bool, optional
