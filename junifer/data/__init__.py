@@ -13,7 +13,7 @@ from .parcellations import (
     list_parcellations,
     load_parcellation,
     register_parcellation,
-    merge_parcellations
+    merge_parcellations,
 )
 
 from .masks import (
