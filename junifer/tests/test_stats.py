@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from junifer.stats import count, get_aggfunc_by_name, winsorized_mean
+from junifer.stats import count, get_aggfunc_by_name, select, winsorized_mean
 
 
 @pytest.mark.parametrize(
@@ -94,3 +94,26 @@ def test_count() -> None:
     assert_array_equal(count(input, axis=-1), ax1)
     assert_array_equal(count(input, axis=1), ax1)
     assert_array_equal(count(input, axis=0), ax2)
+
+
+def test_select() -> None:
+    """Test select."""
+    input = np.arange(28).reshape(7, 4)
+
+    with pytest.raises(ValueError, match="must be specified."):
+        select(input, axis=2)
+
+    with pytest.raises(ValueError, match="must be specified, not both."):
+        select(input, pick=[1], drop=[2], axis=2)
+
+    out1 = select(input, pick=[1], axis=0)
+    assert_array_equal(out1, input[1:2, :])
+
+    out2 = select(input, pick=[1, 4, 6], axis=0)
+    assert_array_equal(out2, input[[1, 4, 6], :])
+
+    out3 = select(input, drop=[0, 2, 3, 4, 5, 6], axis=0)
+    assert_array_equal(out1, out3)
+
+    out4 = select(input, drop=[0, 2, 3, 5], axis=0)
+    assert_array_equal(out2, out4)

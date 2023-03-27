@@ -144,3 +144,36 @@ def winsorized_mean(
     win_mean = win_dat.mean(axis=axis)
 
     return win_mean
+
+
+def select(data: np.ndarray, axis: int = 0, pick=None, drop=None) -> np.ndarray:
+    """Select a subset of the data.
+
+    Parameters
+    ----------
+    data : numpy.ndarray
+        Data to select a subset from.
+    axis : int, optional
+        The axis to select a subset from (default 0).
+    pick : list, optional
+        List of indices to select (default None).
+    drop : list, optional
+        List of indices to drop (default None).
+
+    Returns
+    -------
+    numpy.ndarray
+        Subset of the inputted data with the select settings
+        applied as specified in ``select_params``.
+    """
+
+    if pick is None and drop is None:
+        raise_error("Either pick or drop must be specified.")
+    elif pick is not None and drop is not None:
+        raise_error("Either pick or drop must be specified, not both.")
+    elif drop is not None:
+        pick = [i for i in range(data.shape[axis]) if i not in drop]
+    if not isinstance(pick, np.ndarray):
+        pick = np.array(pick)
+    out = data.take(pick, axis=axis)
+    return out

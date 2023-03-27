@@ -10,7 +10,7 @@ from ..api.decorators import register_marker
 from ..data import get_mask, load_coordinates
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
-from ..utils import logger
+from ..utils import logger, raise_error
 from .base import BaseMarker
 
 
@@ -60,6 +60,8 @@ class SphereAggregation(BaseMarker):
         allow_overlap: bool = False,
         method: str = "mean",
         method_params: Optional[Dict[str, Any]] = None,
+        time_method: Optional[str] = None,
+        time_method_params: Optional[Dict[str, Any]] = None,
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         on: Union[List[str], str, None] = None,
         name: Optional[str] = None,
@@ -71,6 +73,21 @@ class SphereAggregation(BaseMarker):
         self.method_params = method_params or {}
         self.masks = masks
         super().__init__(on=on, name=name)
+
+        # Verify after super init so self._on is set
+        if "BOLD" not in self._on and time_method is not None:
+            raise_error(
+                "`time_method` can only be used with BOLD data. "
+                "Please remove `time_method` parameter."
+            )
+        if time_method is None and time_method_params is not None:
+            raise_error(
+                "`time_method_params` can only be used with `time_method`. "
+                "Please remove `time_method_params` parameter."
+            )
+        self.time_method = time_method
+        self.time_method_params = time_method_params or {}
+
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -158,6 +175,17 @@ class SphereAggregation(BaseMarker):
         )
         # Fit and transform the marker on the data
         out_values = masker.fit_transform(t_input_img)
+        if self.time_method is not None:
+            if out_values.shape[0] > 1:
+                logger.debug("Aggregating time dimension")
+                time_agg_func = get_aggfunc_by_name(
+                    self.time_method, func_params=self.time_method_params
+                )
+                out_values = time_agg_func(out_values, axis=0)
+            else:
+                logger.debug(
+                    "No time dimension to aggregate as only one time point is "
+                    "available.")
         # Format the output
         out = {"data": out_values, "col_names": out_labels}
         return out
