@@ -63,15 +63,11 @@ Enhancements
 
 - Improve metadata and data I/O for :class:`junifer.storage.HDF5FeatureStorage` (:gh:`196` by `Synchon Mandal`_).
 
-<<<<<<< HEAD
 - Force datalad to be non-interactive on _queued_ jobs (:gh:`201` by `Fede Raimondo`_).
 
 - Add more documentation on registering parcellations, coordinates, and masks (:gh:`166` by `Leonard Sasse`_)
 
-- Expose a function to merge a list of parcellations (:gh:`146` by Leonard Sasse`_).
-=======
 - Expose a :func:`junifer.data.parcellations.merge_parcellations` function to merge a list of parcellations (:gh:`146` by Leonard Sasse`_).
->>>>>>> some type hints, formatting, and tests added
 
 Bugs
 ~~~~
