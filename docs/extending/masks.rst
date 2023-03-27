@@ -17,7 +17,7 @@ The principle is fairly simple and quite similar to :ref:`adding_parcellations`
 and :ref:`adding_coordinates`. Junifer provides a
 :func:`junifer.data.masks.register_mask` function that lets you register your
 own custom masks. It consists of two positional arguments (``name`` and
-``mask_path``) and one optional key word argument (``overwrite``).
+``mask_path``) and one optional keyword argument (``overwrite``).
 
 The ``name`` argument is a string indicating the name of the mask. This name
 is used to refer to that mask in Junifer internally in order to obtain the
