@@ -616,8 +616,10 @@ def test_merge_parcellations_3D_multiple_non_overlapping(
         parcellation_list, names, labels_lists
     )
 
-    assert_array_equal(parcellation.get_fdata(), merged_parc.get_fdata())
-    assert merged_labels == labels
+    parc_data = parcellation.get_fdata()
+    assert_array_equal(parc_data, merged_parc.get_fdata())
+    assert len(labels) == 100
+    assert len(np.unique(parc_data)) == 101  # 100 + 1 because background 0
 
 
 def test_merge_parcellations_3D_multiple_overlapping(tmp_path: Path) -> None:
@@ -659,11 +661,15 @@ def test_merge_parcellations_3D_multiple_overlapping(tmp_path: Path) -> None:
             parcellation_list, names, labels_lists
         )
 
+    parc_data = parcellation.get_fdata()
+    assert len(labels) == 100
+    assert len(np.unique(parc_data)) == 101  # 100 + 1 because background 0
 
-def test_ParcelAggregation_3D_multiple_duplicated_labels(
+
+def test_merge_parcellations_3D_multiple_duplicated_labels(
     tmp_path: Path,
 ) -> None:
-    """Test ParcelAggregation with two parcellations with duplicated labels.
+    """Test merge_parcellations with two parcellations with duplicated labels.
 
     Parameters
     ----------
@@ -698,3 +704,8 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
         merged_parc, merged_labels = merge_parcellations(
             parcellation_list, names, labels_lists
         )
+
+    parc_data = parcellation.get_fdata()
+    assert_array_equal(parc_data, merged_parc.get_fdata())
+    assert len(labels) == 100
+    assert len(np.unique(parc_data)) == 101  # 100 + 1 because background 0
