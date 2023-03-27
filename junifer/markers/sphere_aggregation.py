@@ -10,7 +10,7 @@ from ..api.decorators import register_marker
 from ..data import get_mask, load_coordinates
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
-from ..utils import logger, raise_error
+from ..utils import logger, raise_error, warn_with_log
 from .base import BaseMarker
 
 
@@ -37,6 +37,12 @@ class SphereAggregation(BaseMarker):
         (default "mean").
     method_params : dict, optional
         The parameters to pass to the aggregation method (default None).
+    time_method : str, optional
+        The method to use to aggregate the time series over the time points,
+        after applying `method` (only applicable to BOLD data). If None, it
+        will not operate on the time dimension (default None).
+    time_method_params : dict, optional
+        The parameters to pass to the time aggregation method (default None).
     masks : str, dict or list of dict or str, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
@@ -87,7 +93,6 @@ class SphereAggregation(BaseMarker):
             )
         self.time_method = time_method
         self.time_method_params = time_method_params or {}
-
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -183,9 +188,10 @@ class SphereAggregation(BaseMarker):
                 )
                 out_values = time_agg_func(out_values, axis=0)
             else:
-                logger.debug(
+                warn_with_log(
                     "No time dimension to aggregate as only one time point is "
-                    "available.")
+                    "available."
+                )
         # Format the output
         out = {"data": out_values, "col_names": out_labels}
         return out

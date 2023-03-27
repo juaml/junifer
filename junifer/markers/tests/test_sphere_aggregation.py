@@ -219,3 +219,7 @@ def test_SphereAggregation_4D_agg_time() -> None:
             time_method_params={"pick": [0]},
             on="VBM_GM",
         )
+
+    with pytest.warns(RuntimeWarning, match="No time dimension to aggregate"):
+        input = {"BOLD": {"data": fmri_img.slicer[..., 0:1], "meta": {}}}
+        marker.fit_transform(input)
