@@ -116,7 +116,7 @@ this can be done:
 
 .. code-block:: yaml
 
-	markers:
+    markers:
 	  - name: DMNCustom_mean
 	    kind: SphereAggregation
 	    coords: DMNCustom
