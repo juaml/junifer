@@ -1,5 +1,7 @@
 .. include:: links.inc
 
+.. _builtin:
+
 Built-in Pipeline steps and data
 ================================
 
