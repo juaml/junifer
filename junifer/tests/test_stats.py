@@ -128,3 +128,6 @@ def test_select() -> None:
 
     out5 = select(input, drop=np.array([0, 2, 3, 5]), axis=0)  # type: ignore
     assert_array_equal(out2, out5)
+
+    out6 = select(input, pick=np.array([1, 4, 6]), axis=0)  # type: ignore
+    assert_array_equal(out2, out6)
