@@ -133,7 +133,10 @@ class PipelineStepMixin:
                     setattr(self, f"use_{dependency['name']}", out)
 
         self.validate_input(input=input)
-        outputs = [self.get_output_type(t_input) for t_input in input]
+        fit_input = input
+        if hasattr(self, "_on"):
+            fit_input = [i for i in input if i in getattr(self, "_on")]
+        outputs = [self.get_output_type(t_input) for t_input in fit_input]
         return outputs
 
     def fit_transform(
