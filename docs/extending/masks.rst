@@ -32,8 +32,8 @@ MR images.
 Step 1: Prepare code to register a mask
 ---------------------------------------
 
-A simple script called ``register_mask.py`` to register a mask could look as
-follows:
+A simple script called ``register_custom_mask.py`` to register a mask could
+look as follows:
 
 .. code-block:: python
 

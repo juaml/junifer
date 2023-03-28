@@ -13,7 +13,7 @@ aggregate (for example using the
 :class:`junifer.markers.sphere_aggregation.SphereAggregation` marker) the MR
 signals from individual voxels. Now, before you start specifying your own sets
 of coordinates, check the coordinates that Junifer already has
-:ref:`built in already<builtin>`. If you simply want to use a well known set of
+:ref:`built in <builtin>`. If you simply want to use a well known set of
 coordinates from the literature, there is a reasonable chance, that Junifer
 provides them already.
 
@@ -36,25 +36,25 @@ after registration by providing ``name`` to
 informative name most of the time.
 
 The ``coordinates`` argument takes the actual coordinates as a 2-dimensional
-:func:`numpy.array`. It contains one row for every location, and three columns
-(one for each spatial dimension). That is, the first, second, and third columns
-indicate the x-, y-, and z-coordinates in MNI space respectively. Note, that
-Junifer (as of yet) only works in MNI space, and so therefore these coordinates
-should always be real-world coordinates of the MNI space. From this description
-it follows that the number of rows in the array correspond to the number of
-coordinates that belong to this set.
+:class:`numpy.ndarray`. It contains one row for every location, and three
+columns (one for each spatial dimension). That is, the first, second, and third
+columns indicate the x-, y-, and z-coordinates in MNI space respectively.
+The number of rows in the array correspond to the number of coordinates that
+belong to this set. Note, that Junifer (as of yet) only works in MNI space, and
+so therefore these coordinates should always be real-world coordinates of the
+MNI space.
 
-Lastly, the ``voi_names`` argument takes a list of strings indicating the names
-of each coordinate (i.e. volume-of-interest) in the ``coordinates`` array.
-Therefore, the length of this list should correspond to the number of rows in
-the coordinates array. Now, we know everything we need to register a set of
-coordinates.
+Lastly, the ``voi_names`` argument takes a list of strings
+indicating the names of each coordinate (i.e. volume-of-interest) in the
+``coordinates`` array. Therefore, the length of this list should correspond to
+the number of rows in the coordinates array. Now, we know everything we need to
+know to register a set of coordinates.
 
 Step 1: Prepare code to register a set of coordinates
 -----------------------------------------------------
 
 Let's make a simple script to register our coordinates. We could simply call it
-``register_coordinates.py``. We may start by importing the appropriate
+``register_custom_coordinates.py``. We may start by importing the appropriate
 packages:
 
 .. code-block:: python
@@ -111,7 +111,7 @@ you can use the ``with`` keyword provided by Junifer:
 .. code-block:: yaml
 
   with:
-    - registering_my_parcellation.py
+    - register_custom_coordinates.py
 
 Afterwards continue configuring the rest of your pipeline in this YAML file,
 and you will be able to use this set of coordinates using the name you gave it
