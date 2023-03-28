@@ -73,7 +73,7 @@ Enhancements
 
 - Add func:`junifer.stats.select` as an aggregation function that allows to select a subset of elements (:gh:`204` by `Fede Raimondo`_).
 
-- Added ``time_method`` and ``time_method_params`` to  :class:`junifer.markers.ParcelAggregation` and  :class:`junifer.markers.SphereAggregation`, allowing to apply an aggregation on the time axis after the aggregation on the spheres/parcels (:gh:`204` by `Fede Raimondo`_).
+- Add ``time_method`` and ``time_method_params`` to  :class:`junifer.markers.ParcelAggregation` and  :class:`junifer.markers.SphereAggregation`, allowing to apply an aggregation on the time axis after the aggregation on the parcels and spheres respectively (:gh:`204` by `Fede Raimondo`_).
 
 Bugs
 ~~~~

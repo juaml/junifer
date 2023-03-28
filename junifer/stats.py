@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
 from scipy.stats import trim_mean
@@ -157,7 +157,10 @@ def winsorized_mean(
 
 
 def select(
-    data: np.ndarray, axis: int = 0, pick=None, drop=None
+    data: np.ndarray,
+    axis: int = 0,
+    pick: Optional[List[int]] = None,
+    drop: Optional[List[int]] = None,
 ) -> np.ndarray:
     """Select a subset of the data.
 
@@ -167,9 +170,9 @@ def select(
         Data to select a subset from.
     axis : int, optional
         The axis to select a subset from (default 0).
-    pick : list, optional
+    pick : list of int, optional
         List of indices to select (default None).
-    drop : list, optional
+    drop : list of int, optional
         List of indices to drop (default None).
 
     Returns
@@ -186,6 +189,6 @@ def select(
     elif drop is not None:
         pick = [i for i in range(data.shape[axis]) if i not in drop]
     if not isinstance(pick, np.ndarray):
-        pick = np.array(pick)
-    out = data.take(pick, axis=axis)
+        pick = np.array(pick)  # type: ignore
+    out = data.take(pick, axis=axis)  # type: ignore
     return out

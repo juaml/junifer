@@ -34,8 +34,8 @@ class ParcelAggregation(BaseMarker):
         :func:`junifer.stats.get_aggfunc_by_name`.
     time_method : str, optional
         The method to use to aggregate the time series over the time points,
-        after applying `method` (only applicable to BOLD data). If None, it
-        will not operate on the time dimension (default None).
+        after applying :term:`method` (only applicable to BOLD data). If None,
+        it will not operate on the time dimension (default None).
     time_method_params : dict, optional
         The parameters to pass to the time aggregation method (default None).
     masks : str, dict or list of dict or str, optional
