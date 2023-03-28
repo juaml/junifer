@@ -132,7 +132,10 @@ def build(
     if init_params is None:
         init_params = {}
     # Get class of the registered function
+    logger.debug(f"Building {step}/{name}")
     klass = get_class(step=step, name=name)
+    logger.debug(f"\tClass: {klass.__name__}")
+    logger.debug(f"\tInit params: {init_params}")
     # Create instance of the class
     object_ = klass(**init_params)
     # Verify created instance belongs to the base class
