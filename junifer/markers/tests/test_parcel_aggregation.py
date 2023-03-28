@@ -556,3 +556,69 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
     col_names = [f"Schaefer100x7_low_{x}" for x in labels1]
     col_names += [f"Schaefer100x7_high_{x}" for x in labels2]
     assert col_names == split_mean["col_names"]
+
+
+def test_ParcelAggregation_4D_agg_time():
+    """Test ParcelAggregation object on 4D images, aggregating time."""
+    # Get the testing parcellation (for nilearn)
+    parcellation = datasets.fetch_atlas_schaefer_2018(
+        n_rois=100, yeo_networks=7, resolution_mm=2
+    )
+
+    # Get the SPM auditory data:
+    subject_data = datasets.fetch_spm_auditory()
+    fmri_img = concat_imgs(subject_data.func)  # type: ignore
+
+    # Create NiftiLabelsMasker
+    nifti_masker = NiftiLabelsMasker(labels_img=parcellation.maps)
+    auto4d = nifti_masker.fit_transform(fmri_img)
+    auto_mean = auto4d.mean(axis=0)
+
+    # Create ParcelAggregation object
+    marker = ParcelAggregation(
+        parcellation="Schaefer100x7", method="mean", time_method="mean"
+    )
+    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
+
+    assert jun_values4d.ndim == 1
+    assert_array_equal(auto_mean.shape, jun_values4d.shape)
+    assert_array_almost_equal(auto_mean, jun_values4d, decimal=2)
+
+    auto_pick_0 = auto4d[:1, :]
+    marker = ParcelAggregation(
+        parcellation="Schaefer100x7",
+        method="mean",
+        time_method="select",
+        time_method_params={"pick": [0]},
+    )
+
+    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
+
+    assert jun_values4d.ndim == 2
+    assert_array_equal(auto_pick_0.shape, jun_values4d.shape)
+    assert_array_equal(auto_pick_0, jun_values4d)
+
+    with pytest.raises(ValueError, match="can only be used with BOLD data"):
+        ParcelAggregation(
+            parcellation="Schaefer100x7",
+            method="mean",
+            time_method="select",
+            time_method_params={"pick": [0]},
+            on="VBM_GM",
+        )
+
+    with pytest.raises(
+        ValueError, match="can only be used with `time_method`"
+    ):
+        ParcelAggregation(
+            parcellation="Schaefer100x7",
+            method="mean",
+            time_method_params={"pick": [0]},
+            on="VBM_GM",
+        )
+
+    with pytest.warns(RuntimeWarning, match="No time dimension to aggregate"):
+        input = {"BOLD": {"data": fmri_img.slicer[..., 0:1], "meta": {}}}
+        marker.fit_transform(input)

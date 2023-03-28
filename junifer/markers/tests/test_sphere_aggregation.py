@@ -167,3 +167,70 @@ def test_SphereAggregation_3D_mask() -> None:
     assert jun_values4d.ndim == 2
     assert_array_equal(auto4d.shape, jun_values4d.shape)
     assert_array_equal(auto4d, jun_values4d)
+
+
+def test_SphereAggregation_4D_agg_time() -> None:
+    """Test SphereAggregation object on 4D images, aggregating time."""
+    # Get the testing coordinates (for nilearn)
+    coordinates, _ = load_coordinates(COORDS)
+
+    # Get the SPM auditory data
+    subject_data = datasets.fetch_spm_auditory()
+    fmri_img = concat_imgs(subject_data.func)  # type: ignore
+
+    # Create NiftSpheresMasker
+    nifti_masker = NiftiSpheresMasker(seeds=coordinates, radius=RADIUS)
+    auto4d = nifti_masker.fit_transform(fmri_img)
+    auto_mean = auto4d.mean(axis=0)
+
+    # Create SphereAggregation object
+    marker = SphereAggregation(
+        coords=COORDS, method="mean", radius=RADIUS, time_method="mean"
+    )
+    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
+
+    assert jun_values4d.ndim == 1
+    assert_array_equal(auto_mean.shape, jun_values4d.shape)
+    assert_array_equal(auto_mean, jun_values4d)
+
+    auto_pick_0 = auto4d[:1, :]
+    marker = SphereAggregation(
+        coords=COORDS,
+        method="mean",
+        radius=RADIUS,
+        time_method="select",
+        time_method_params={"pick": [0]},
+    )
+
+    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
+
+    assert jun_values4d.ndim == 2
+    assert_array_equal(auto_pick_0.shape, jun_values4d.shape)
+    assert_array_equal(auto_pick_0, jun_values4d)
+
+    with pytest.raises(ValueError, match="can only be used with BOLD data"):
+        SphereAggregation(
+            coords=COORDS,
+            method="mean",
+            radius=RADIUS,
+            time_method="pick",
+            time_method_params={"pick": [0]},
+            on="VBM_GM",
+        )
+
+    with pytest.raises(
+        ValueError, match="can only be used with `time_method`"
+    ):
+        SphereAggregation(
+            coords=COORDS,
+            method="mean",
+            radius=RADIUS,
+            time_method_params={"pick": [0]},
+            on="VBM_GM",
+        )
+
+    with pytest.warns(RuntimeWarning, match="No time dimension to aggregate"):
+        input = {"BOLD": {"data": fmri_img.slicer[..., 0:1], "meta": {}}}
+        marker.fit_transform(input)

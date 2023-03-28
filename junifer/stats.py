@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
 from scipy.stats import trim_mean
@@ -29,6 +29,7 @@ def get_aggfunc_by_name(
         * ``std`` -> :func:`numpy.std`
         * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
         * ``count`` -> :func:`junifer.stats.count`
+        * ``select`` -> :func:`junifer.stats.select`
 
     func_params : dict, optional
         Parameters to pass to the function.
@@ -49,6 +50,7 @@ def get_aggfunc_by_name(
         "std",
         "trim_mean",
         "count",
+        "select",
     }
     if func_params is None:
         func_params = {}
@@ -83,6 +85,14 @@ def get_aggfunc_by_name(
         func = partial(trim_mean, **func_params)
     elif name == "count":
         func = count
+    elif name == "select":
+        pick = func_params.get("pick", None)
+        drop = func_params.get("drop", None)
+        if pick is None and drop is None:
+            raise_error("Either pick or drop must be specified.")
+        elif pick is not None and drop is not None:
+            raise_error("Either pick or drop must be specified, not both.")
+        func = partial(select, **func_params)
     else:
         raise_error(
             f"Function {name} unknown. Please provide any of "
@@ -144,3 +154,41 @@ def winsorized_mean(
     win_mean = win_dat.mean(axis=axis)
 
     return win_mean
+
+
+def select(
+    data: np.ndarray,
+    axis: int = 0,
+    pick: Optional[List[int]] = None,
+    drop: Optional[List[int]] = None,
+) -> np.ndarray:
+    """Select a subset of the data.
+
+    Parameters
+    ----------
+    data : numpy.ndarray
+        Data to select a subset from.
+    axis : int, optional
+        The axis to select a subset from (default 0).
+    pick : list of int, optional
+        List of indices to select (default None).
+    drop : list of int, optional
+        List of indices to drop (default None).
+
+    Returns
+    -------
+    numpy.ndarray
+        Subset of the inputted data with the select settings
+        applied as specified in ``select_params``.
+    """
+
+    if pick is None and drop is None:
+        raise_error("Either pick or drop must be specified.")
+    elif pick is not None and drop is not None:
+        raise_error("Either pick or drop must be specified, not both.")
+    elif drop is not None:
+        pick = [i for i in range(data.shape[axis]) if i not in drop]
+    if not isinstance(pick, np.ndarray):
+        pick = np.array(pick)  # type: ignore
+    out = data.take(pick, axis=axis)  # type: ignore
+    return out
