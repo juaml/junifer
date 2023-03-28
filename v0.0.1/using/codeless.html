@@ -231,11 +231,6 @@
   </p> 
   <div id="versions">
     
-    <span class="caption-text">Branches</span>
-    <ul>
-      <li><a class="reference internal" href="../../main/using/codeless.html">main</a></li>
-    </ul>
-    
     
     <span class="caption-text">Tags</span>
     <ul>
@@ -296,8 +291,8 @@ junifer as a whole. These parameters are:</p>
 </ul>
 <p>Since the example uses a specific datagrabber for testing, we need to add <code class="docutils literal notranslate"><span class="pre">junifer.testing.registry</span></code> to the
 <code class="docutils literal notranslate"><span class="pre">with</span></code> section. This will allow junifer to find the datagrabber. We will set the <code class="docutils literal notranslate"><span class="pre">workdir</span></code> to <code class="docutils literal notranslate"><span class="pre">/tmp</span></code>.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">with</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer.testing.registry</span>
-<span class="nt">workdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">with</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer.testing.registry</span><span class="w"></span>
+<span class="nt">workdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -322,20 +317,20 @@ it is possible to extend junifer with custom datareaders, and thus, it is also p
 keys correspond to the parameters of the datagrabber.</p>
 <p>For example, to use the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladAOMICPIOP1</span></code></a> datagrabber, we just need to
 specify its name as the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataladAOMICPIOP1</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataladAOMICPIOP1</span><span class="w"></span>
 </pre></div>
 </div>
 <p>However, it is also possible to pass parameters to the datagrabber. In this case, we can restrict the datagrabber to
 fetch only the  <code class="docutils literal notranslate"><span class="pre">restingstate</span></code> task.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataladAOMICPIOP1</span>
-<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restingstate</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataladAOMICPIOP1</span><span class="w"></span>
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restingstate</span><span class="w"></span>
 </pre></div>
 </div>
 <p>In the <em>Oasis VBM Testing dataset</em> example, the section will look like this:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OasisVBMTesting</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OasisVBMTesting</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -345,8 +340,8 @@ fetch only the  <code class="docutils literal notranslate"><span class="pre">res
 (<a class="reference internal" href="../api/datareaders.html#junifer.datareader.DefaultDataReader" title="junifer.datareader.DefaultDataReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datareader.DefaultDataReader</span></code></a>), which is the default in case the section is not specified.</p>
 <p>In any case, the syntax of the section is the same as for the <code class="docutils literal notranslate"><span class="pre">datagrabber</span></code> section, using the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key to
 specify the data reader to use, and additional keys to pass parameters to the data reader:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datareader</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DefaultDataReader</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datareader</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DefaultDataReader</span><span class="w"></span>
 </pre></div>
 </div>
 <p>For the <em>Oasis VBM Testing dataset</em> example, we will not specify a <code class="docutils literal notranslate"><span class="pre">datareader</span></code> step.</p>
@@ -358,15 +353,15 @@ preprocessing is needed, the section must be configured using the <code class="d
 and additional keys to pass parameters to the preprocessor.</p>
 <p>For example, to use the <a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.preprocess.fMRIPrepConfoundRemover</span></code></a> preprocessor, we just need to specify its
 name as the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key, as well as its parameters.</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">preproces</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fMRIPrepConfoundRemover</span>
-<span class="w">  </span><span class="nt">strategy</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">motion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">full</span>
-<span class="w">    </span><span class="nt">wm_csf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">full</span>
-<span class="w">    </span><span class="nt">global_signal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span>
-<span class="w">  </span><span class="nt">spike</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span>
-<span class="w">  </span><span class="nt">detrend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">standardize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">preproces</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fMRIPrepConfoundRemover</span><span class="w"></span>
+<span class="w">  </span><span class="nt">strategy</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">motion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">full</span><span class="w"></span>
+<span class="w">    </span><span class="nt">wm_csf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">full</span><span class="w"></span>
+<span class="w">    </span><span class="nt">global_signal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">basic</span><span class="w"></span>
+<span class="w">  </span><span class="nt">spike</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w"></span>
+<span class="w">  </span><span class="nt">detrend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w"></span>
+<span class="w">  </span><span class="nt">standardize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
 </pre></div>
 </div>
 <p>For the <em>Oasis VBM Testing dataset</em> example, we will not specify a preprocessing step.</p>
@@ -378,20 +373,20 @@ name that we can use to refer to it later, and a set of parameters that will be 
 <p>For the <em>Oasis VBM Testing dataset</em> example, we want to compute the mean <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> value for each parcel using the
 Schaefer parcellation (100 parcels, 7 networks), Schaefer parcellation (200 parcels, 7 networks), and the <em>DMNBuckner</em>
 network, using 5mm spheres. Thus, we will configure the <code class="docutils literal notranslate"><span class="pre">markers</span></code> section as follows:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">markers</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7_mean</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span>
-<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7</span>
-<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7_mean</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span>
-<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7</span>
-<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner_5mm_mean</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SphereAggregation</span>
-<span class="w">    </span><span class="nt">coords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner</span>
-<span class="w">    </span><span class="nt">radius</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">markers</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7_mean</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span><span class="w"></span>
+<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7</span><span class="w"></span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7_mean</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span><span class="w"></span>
+<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7</span><span class="w"></span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner_5mm_mean</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SphereAggregation</span><span class="w"></span>
+<span class="w">    </span><span class="nt">coords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner</span><span class="w"></span>
+<span class="w">    </span><span class="nt">radius</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -401,9 +396,9 @@ network, using 5mm spheres. Thus, we will configure the <code class="docutils li
 which must be configured using the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key to specify the storage to use, and additional keys to pass parameters.</p>
 <p>For example, to use the <a class="reference internal" href="../api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.storage.SQLiteFeatureStorage</span></code></a> storage, we just need to specify where we want
 to store the results:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">storage</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SQLiteFeatureStorage</span>
-<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/junifer/example/oasis_vbm_testing.sqlite</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">storage</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SQLiteFeatureStorage</span><span class="w"></span>
+<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/junifer/example/oasis_vbm_testing.sqlite</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -411,30 +406,30 @@ to store the results:</p>
 <section id="the-full-example">
 <h2><span class="section-number">4.1.3. </span>The full example<a class="headerlink" href="#the-full-example" title="Permalink to this heading">#</a></h2>
 <p>This is how the full <em>Oasis VBM Testing dataset</em> example configuration file looks like:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">with</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer.testing.registry</span>
-<span class="nt">workdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">with</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer.testing.registry</span><span class="w"></span>
+<span class="nt">workdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp</span><span class="w"></span>
 
-<span class="nt">datagrabber</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OasisVBMTesting</span>
+<span class="nt">datagrabber</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OasisVBMTesting</span><span class="w"></span>
 
-<span class="nt">markers</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7_mean</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span>
-<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7</span>
-<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7_mean</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span>
-<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7</span>
-<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner_5mm_mean</span>
-<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SphereAggregation</span>
-<span class="w">    </span><span class="nt">coords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner</span>
-<span class="w">    </span><span class="nt">radius</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span>
-<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
+<span class="nt">markers</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7_mean</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span><span class="w"></span>
+<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7</span><span class="w"></span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7_mean</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span><span class="w"></span>
+<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7</span><span class="w"></span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner_5mm_mean</span><span class="w"></span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SphereAggregation</span><span class="w"></span>
+<span class="w">    </span><span class="nt">coords</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner</span><span class="w"></span>
+<span class="w">    </span><span class="nt">radius</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5</span><span class="w"></span>
+<span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span><span class="w"></span>
 
-<span class="nt">storage</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SQLiteFeatureStorage</span>
-<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/junifer/example/oasis_vbm_testing.sqlite</span>
+<span class="nt">storage</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SQLiteFeatureStorage</span><span class="w"></span>
+<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/junifer/example/oasis_vbm_testing.sqlite</span><span class="w"></span>
 </pre></div>
 </div>
 </section>

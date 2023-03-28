@@ -231,11 +231,6 @@
   </p> 
   <div id="versions">
     
-    <span class="caption-text">Branches</span>
-    <ul>
-      <li><a class="reference internal" href="../../main/api/data.html">main</a></li>
-    </ul>
-    
     
     <span class="caption-text">Tags</span>
     <ul>
@@ -318,7 +313,7 @@ highest one (default None).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v5.0.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Loaded parcellation image.</p>
+<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v4.0.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Loaded parcellation image.</p>
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>Parcellation labels.</p>
 </dd>
@@ -423,30 +418,6 @@ Does not apply to built-in coordinates (default False).</p>
 <span id="masks"></span><h1><span class="section-number">8.2.3. </span>Masks<a class="headerlink" href="#module-junifer.data.masks" title="Permalink to this heading">#</a></h1>
 <p>Provide functions for masks.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="junifer.data.masks.get_mask">
-<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">get_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.get_mask" title="Permalink to this definition">#</a></dt>
-<dd><p>Get mask, tailored for the target image.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The name of the mask, or the name of a callable mask and the parameters
-of the mask.</p>
-</dd>
-<dt><strong>target_data</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The corresponding item of the data object to which the mask will be
-applied.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v5.0.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a></dt><dd><p>The mask image.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.masks.list_masks">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">list_masks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.list_masks" title="Permalink to this definition">#</a></dt>
 <dd><p>List all the available masks.</p>
@@ -480,9 +451,9 @@ highest one (default None).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v5.0.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Callable</span></code> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Loaded mask image.</p>
+<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v4.0.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Loaded mask image.</p>
 </dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>File path to the mask image.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></dt><dd><p>File path to the mask image.</p>
 </dd>
 </dl>
 </dd>
@@ -585,7 +556,6 @@ False or if the mask name is a built-in mask.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-junifer.data.masks">8.2.3. Masks</a><ul>
-<li><a class="reference internal" href="#junifer.data.masks.get_mask"><code class="docutils literal notranslate"><span class="pre">get_mask()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.masks.list_masks"><code class="docutils literal notranslate"><span class="pre">list_masks()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.masks.load_mask"><code class="docutils literal notranslate"><span class="pre">load_mask()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.masks.register_mask"><code class="docutils literal notranslate"><span class="pre">register_mask()</span></code></a></li>
