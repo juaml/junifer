@@ -96,3 +96,24 @@ extend-exclude = """
 [tool.pytest.ini_options]
 minversion = "7.0"
 addopts = "--ignore=junifer/external/h5io -vv"
+
+[tool.towncrier]
+directory = "docs/changes/newsfragments"
+filename = "docs/whats_new.rst"
+package = "junifer"
+# to use gh_substitutions
+issue_format = ":gh:`{issue}`"
+# modify to have proper toctree
+underlines = "-^~"
+# set line length to 79
+wrap = true
+
+# Add custom towncrier fragment for enhancements
+[tool.towncrier.fragment.enh]
+name = "Enhancements"
+showcontent = true
+
+# Add custom towncrier fragment for API changes
+[tool.towncrier.fragment.change]
+name = "API Changes"
+showcontent = true
