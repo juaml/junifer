@@ -44,6 +44,7 @@ extensions = [
     "sphinx_multiversion",  # self-hosted versioned documentation
     "numpydoc",  # support for NumPy style docstrings
     "gh_substitutions",  # custom GitHub substitutions
+    "sphinx_copybutton",  # copy button for code blocks
 ]
 
 # Add any paths that contain templates here, relative to this directory.

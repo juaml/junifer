@@ -67,7 +67,9 @@ Enhancements
 
 - Add more documentation on registering parcellations, coordinates, and masks (:gh:`166` by `Leonard Sasse`_)
 
-- Expose a :func:`junifer.data.parcellations.merge_parcellations` function to merge a list of parcellations (:gh:`146` by Leonard Sasse`_).
+- Expose a :func:`junifer.data.parcellations.merge_parcellations` function to merge a list of parcellations (:gh:`146` by `Leonard Sasse`_).
+
+- Add copy button to documentation code blocks (:gh:`205` by `Synchon Mandal`_).
 
 Bugs
 ~~~~
