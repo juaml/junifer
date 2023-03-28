@@ -24,6 +24,7 @@ enabling others to extend it easily.
 
    installation
    understanding/index.rst
+   starting
    using/index.rst
    builtin
    extending/index.rst

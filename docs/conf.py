@@ -51,6 +51,7 @@ extensions = [
     "numpydoc",  # support for NumPy style docstrings
     "gh_substitutions",  # custom GitHub substitutions
     "sphinx_copybutton",  # copy button for code blocks
+    "sphinxcontrib.mermaid",  # mermaid support
 ]
 
 if use_multiversion:
