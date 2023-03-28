@@ -8,61 +8,68 @@ Contributing to junifer
 Setting up the local development environment
 --------------------------------------------
 
-1. Fork the https://github.com/juaml/junifer repository on GitHub. If you
+#. Fork the https://github.com/juaml/junifer repository on GitHub. If you
    have never done this before, `follow the official guide
    <https://guides.github.com/activities/forking/>`_.
-2. Clone your fork locally as described in the same guide.
-3. Install your local copy into a Python virtual environment. You can `read
+#. Clone your fork locally as described in the same guide but also add the
+   flag to sync the submodules as well by appending the following to the
+   clone commmand:
+
+   .. code-block:: bash
+
+      ... --recurse-submodules
+
+#. Install your local copy into a Python virtual environment. You can `read
    this guide to learn more
    <https://realpython.com/python-virtual-environments-a-primer/>`_ about them
    and how to create one.
 
-   .. code-block:: console
+   .. code-block:: bash
 
        pip install -e ".[dev]"
 
-4. Create a branch for local development using the ``main`` branch as a
+#. Create a branch for local development using the ``main`` branch as a
    starting point. Use ``fix``, ``refactor``, or ``feat`` as a prefix.
 
-   .. code-block:: console
+   .. code-block:: bash
 
        git checkout main
        git checkout -b <prefix>/<name-of-your-branch>
 
    Now you can make your changes locally.
 
-5. When making changes locally, it is helpful to ``git commit`` your work
+#. When making changes locally, it is helpful to ``git commit`` your work
    regularly. On one hand to save your work and on the other hand, the smaller
    the steps, the easier it is to review your work later. Please use `semantic
    commit messages
    <http://karma-runner.github.io/2.0/dev/git-commit-msg.html>`_.
 
-   .. code-block:: console
+   .. code-block:: bash
 
        git add .
        git commit -m "<prefix>: <summary of changes>"
 
-6. When you're done making changes, check that your changes pass our test suite.
+#. When you're done making changes, check that your changes pass our test suite.
    This is all included with ``tox``.
 
-   .. code-block:: console
+   .. code-block:: bash
 
        tox
 
    You can also run all ``tox`` tests in parallel. As of ``tox 3.7``, you can run
 
-   .. code-block:: console
+   .. code-block:: bash
 
        tox --parallel
 
 
-7. Push your branch to GitHub.
+#. Push your branch to GitHub.
 
-   .. code-block:: console
+   .. code-block:: bash
 
        git push origin <prefix>/<name-of-your-branch>
 
-8. Open the link displayed in the message when pushing your new branch in order
+#. Open the link displayed in the message when pushing your new branch in order
    to submit a pull request. Please follow the template presented to you in the
    web interface to complete your pull request.
 
@@ -72,17 +79,38 @@ GitHub Pull Request guidelines
 
 Before you submit a pull request, check that it meets these guidelines:
 
-1. The pull request should include tests in the respective ``tests`` directory.
+#. The pull request should include tests in the respective ``tests`` directory.
    Except in rare circumstances, code coverage must not decrease (as reported
    by codecov which runs automatically when you submit your pull request).
-2. If the pull request adds functionality, the docs should be
+#. If the pull request adds functionality, the docs should be
    updated. Consider creating a Python file that demonstrates the usage in
    ``examples/`` directory.
-3. The pull request should also include a short one-liner of your contribution
-   in ``docs/changes/latest.inc``. If it's your first contribution, also add
-   yourself to ``docs/changes/contributors.inc``.
-4. The pull request will be tested against several Python versions.
-5. Someone from the core team will review your work and guide you to a successful
+#. Make sure to create a Draft Pull Request. If you are not sure how to do it,
+   check `here <https://github.blog/2019-02-14-introducing-draft-pull-requests/>`_.
+#. Note the pull request ID assigned after completing the previous step and create
+   a short one-liner file of your contribution named as ``<pull-request-ID>.<type>``
+   in ``docs/changes/newsfragments/``, ``<type>`` being as per the following
+   convention:
+
+   * API change : ``change``
+   * Bug fix : ``bugfix``
+   * Enhancement : ``enh``
+   * Feature : ``feature``
+   * Documentation improvement : ``doc``
+   * Miscellaneous : ``misc``
+   * Deprecation and API removal : ``removal``
+
+   For example, a basic documentation improvement can be recorded in a file
+   ``101.doc`` with the content:
+
+   .. code-block::
+
+       Fixed a typo in intro by `junifer's biggest fan`_
+
+#. If it's your first contribution, also add yourself to
+   ``docs/changes/contributors.inc``.
+#. The pull request will be tested against several Python versions.
+#. Someone from the core team will review your work and guide you to a successful
    contribution.
 
 
@@ -95,7 +123,7 @@ tests that make sure that the code runs as intended.
 
 To run all tests
 
-.. code-block:: console
+.. code-block:: bash
 
     tox -e test
 
@@ -105,7 +133,7 @@ Adding and building documentation
 
 Building the documentation requires some extra packages and can be installed by
 
-.. code-block:: console
+.. code-block:: bash
 
     pip install -e ".[docs]"
 
