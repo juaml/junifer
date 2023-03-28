@@ -34,7 +34,7 @@ likely not a good name, and you should try to choose a meaningful name that
 conveys as much relevant information about your parcellation as necessary).
 
 The ``parcellation_path`` must be a ``str`` or ``Path`` object indicating a
-path to a valid ``NIfTI`` image, which contains integer labels indicating the
+path to a valid NIfTI image, which contains integer labels indicating the
 individual regions-of-interest (ROIs) of your parcellation. The background in
 this parcellation should be indicated by 0, and the labels of ROIs should go
 from 1 to N (where N is the total number of ROIs in your parcellation). Now,
