@@ -66,14 +66,14 @@ Set the logging level to info to see extra information:
 
  .. code-block:: none
 
-    2022-12-20 14:34:24,518 - JUNIFER - INFO - ===== Lib Versions =====
-    2022-12-20 14:34:24,518 - JUNIFER - INFO - numpy: 1.23.5
-    2022-12-20 14:34:24,518 - JUNIFER - INFO - scipy: 1.9.3
-    2022-12-20 14:34:24,518 - JUNIFER - INFO - pandas: 1.5.2
-    2022-12-20 14:34:24,518 - JUNIFER - INFO - nilearn: 0.9.2
-    2022-12-20 14:34:24,518 - JUNIFER - INFO - nibabel: 4.0.2
-    2022-12-20 14:34:24,518 - JUNIFER - INFO - junifer: 0.0.1
-    2022-12-20 14:34:24,518 - JUNIFER - INFO - ========================
+    2023-01-30 15:02:02,960 - JUNIFER - INFO - ===== Lib Versions =====
+    2023-01-30 15:02:02,960 - JUNIFER - INFO - numpy: 1.23.5
+    2023-01-30 15:02:02,960 - JUNIFER - INFO - scipy: 1.10.0
+    2023-01-30 15:02:02,960 - JUNIFER - INFO - pandas: 1.5.3
+    2023-01-30 15:02:02,960 - JUNIFER - INFO - nilearn: 0.10.0
+    2023-01-30 15:02:02,960 - JUNIFER - INFO - nibabel: 4.0.2
+    2023-01-30 15:02:02,960 - JUNIFER - INFO - junifer: 0.0.2.dev86
+    2023-01-30 15:02:02,960 - JUNIFER - INFO - ========================
 
 
 
@@ -166,48 +166,38 @@ At the end you can read the extracted data into a ``pandas.DataFrame``.
 
  .. code-block:: none
 
-    2022-12-20 14:34:24,519 - JUNIFER - INFO - Getting element sub001
-    2022-12-20 14:34:27,685 - JUNIFER - INFO - Fitting pipeline
-    2022-12-20 14:34:27,685 - JUNIFER - INFO - Reading BOLD from /tmp/tmp8gd0w1t5/sub001_bold.nii.gz
-    2022-12-20 14:34:27,686 - JUNIFER - INFO - BOLD is type NIFTI
-    2022-12-20 14:34:27,687 - JUNIFER - INFO - Reading T1w from /tmp/tmp8gd0w1t5/sub001_T1w.nii.gz
-    2022-12-20 14:34:27,687 - JUNIFER - INFO - T1w is type NIFTI
-    2022-12-20 14:34:27,688 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
-    2022-12-20 14:34:27,688 - JUNIFER - INFO - Computing BOLD
-    2022-12-20 14:34:27,688 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2022-12-20 14:34:27,688 - JUNIFER - INFO - Parcellatikon parameters:
-    2022-12-20 14:34:27,688 - JUNIFER - INFO -      n_rois: 100
-    2022-12-20 14:34:27,688 - JUNIFER - INFO -      yeo_networks: 17
-    2022-12-20 14:34:27,688 - JUNIFER - INFO -      resolution: 3.0
-    2022-12-20 14:34:27,688 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
-    Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_17Networks_order.txt ...
-     ...done. (0 seconds, 0 min)
-    Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz ...
-     ...done. (0 seconds, 0 min)
-    2022-12-20 14:34:27,850 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2022-12-20 14:34:31,276 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmp07ywouc7/test.sqlite (multiple output)>
-    2022-12-20 14:34:31,306 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
-    2022-12-20 14:34:31,306 - JUNIFER - INFO - Computing BOLD
-    2022-12-20 14:34:31,307 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2022-12-20 14:34:31,307 - JUNIFER - INFO - Parcellatikon parameters:
-    2022-12-20 14:34:31,307 - JUNIFER - INFO -      n_rois: 200
-    2022-12-20 14:34:31,307 - JUNIFER - INFO -      yeo_networks: 17
-    2022-12-20 14:34:31,307 - JUNIFER - INFO -      resolution: 3.0
-    2022-12-20 14:34:31,307 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
-    Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_200Parcels_17Networks_order.txt ...
-     ...done. (0 seconds, 0 min)
-    Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz ...
-     ...done. (0 seconds, 0 min)
-    2022-12-20 14:34:31,469 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2022-12-20 14:34:33,968 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmp07ywouc7/test.sqlite (multiple output)>
-    2022-12-20 14:34:34,003 - JUNIFER - INFO - Marker collection fitting done
-    2022-12-20 14:34:34,004 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
-    2022-12-20 14:34:34,004 - JUNIFER - INFO - Collecting data from /tmp/tmp07ywouc7/*test.sqlite
+    2023-01-30 15:02:02,961 - JUNIFER - INFO - Getting element sub001
+    2023-01-30 15:02:06,257 - JUNIFER - INFO - Fitting pipeline
+    2023-01-30 15:02:06,257 - JUNIFER - INFO - Reading BOLD from /tmp/tmpq9vcljck/sub001_bold.nii.gz
+    2023-01-30 15:02:06,257 - JUNIFER - INFO - BOLD is type NIFTI
+    2023-01-30 15:02:06,258 - JUNIFER - INFO - Reading T1w from /tmp/tmpq9vcljck/sub001_T1w.nii.gz
+    2023-01-30 15:02:06,258 - JUNIFER - INFO - T1w is type NIFTI
+    2023-01-30 15:02:06,259 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
+    2023-01-30 15:02:06,259 - JUNIFER - INFO - Computing BOLD
+    2023-01-30 15:02:06,259 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+    2023-01-30 15:02:06,259 - JUNIFER - INFO - Parcellation parameters:
+    2023-01-30 15:02:06,259 - JUNIFER - INFO -      n_rois: 100
+    2023-01-30 15:02:06,259 - JUNIFER - INFO -      yeo_networks: 17
+    2023-01-30 15:02:06,259 - JUNIFER - INFO -      resolution: 3.0
+    2023-01-30 15:02:06,261 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+    2023-01-30 15:02:08,971 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpzowfg6r4/test.sqlite (multiple output)>
+    2023-01-30 15:02:08,996 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
+    2023-01-30 15:02:08,996 - JUNIFER - INFO - Computing BOLD
+    2023-01-30 15:02:08,996 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+    2023-01-30 15:02:08,996 - JUNIFER - INFO - Parcellation parameters:
+    2023-01-30 15:02:08,996 - JUNIFER - INFO -      n_rois: 200
+    2023-01-30 15:02:08,996 - JUNIFER - INFO -      yeo_networks: 17
+    2023-01-30 15:02:08,996 - JUNIFER - INFO -      resolution: 3.0
+    2023-01-30 15:02:08,998 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+    2023-01-30 15:02:10,691 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpzowfg6r4/test.sqlite (multiple output)>
+    2023-01-30 15:02:10,719 - JUNIFER - INFO - Marker collection fitting done
+    2023-01-30 15:02:10,719 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
+    2023-01-30 15:02:10,720 - JUNIFER - INFO - Collecting data from /tmp/tmpzowfg6r4/*test.sqlite
     file: 0it [00:00, ?it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|##########| 2/2 [00:00<00:00, 46.29it/s]
-    file: 1it [00:00, 15.97it/s]
-    2022-12-20 14:34:34,068 - JUNIFER - INFO - Collect done
-    {'76d87c5c1e936aeb2df95400767134ef': {'datagrabber': {'class': 'SPMAuditoryTestingDatagrabber', 'types': ['BOLD', 'T1w']}, 'dependencies': {'nilearn': '0.9.2'}, 'datareader': {'class': 'DefaultDataReader'}, 'type': 'BOLD', 'marker': {'agg_method': 'mean', 'agg_method_params': None, 'class': 'RSSETSMarker', 'mask': None, 'name': 'Schaefer100x17_RSSETS', 'parcellation': 'Schaefer100x17'}, '_element_keys': ['subject'], 'name': 'BOLD_Schaefer100x17_RSSETS'}, 'ba261e032ab21eda639cf47af4ed4b9f': {'datagrabber': {'class': 'SPMAuditoryTestingDatagrabber', 'types': ['BOLD', 'T1w']}, 'dependencies': {'nilearn': '0.9.2'}, 'datareader': {'class': 'DefaultDataReader'}, 'type': 'BOLD', 'marker': {'agg_method': 'mean', 'agg_method_params': None, 'class': 'RSSETSMarker', 'mask': None, 'name': 'Schaefer200x17_RSSETS', 'parcellation': 'Schaefer200x17'}, '_element_keys': ['subject'], 'name': 'BOLD_Schaefer200x17_RSSETS'}}
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|##########| 2/2 [00:00<00:00, 55.12it/s]
+    file: 1it [00:00, 18.98it/s]
+    2023-01-30 15:02:10,773 - JUNIFER - INFO - Collect done
+    {'1c20eb610cb7af4e1676e47f427c6f4b': {'datagrabber': {'class': 'SPMAuditoryTestingDatagrabber', 'types': ['BOLD', 'T1w']}, 'dependencies': {'nilearn': '0.10.0'}, 'datareader': {'class': 'DefaultDataReader'}, 'type': 'BOLD', 'marker': {'agg_method': 'mean', 'agg_method_params': None, 'class': 'RSSETSMarker', 'mask': None, 'name': 'Schaefer100x17_RSSETS', 'parcellation': 'Schaefer100x17'}, '_element_keys': ['subject'], 'name': 'BOLD_Schaefer100x17_RSSETS'}, '1349699b555113d4000e60cbe4d91bcf': {'datagrabber': {'class': 'SPMAuditoryTestingDatagrabber', 'types': ['BOLD', 'T1w']}, 'dependencies': {'nilearn': '0.10.0'}, 'datareader': {'class': 'DefaultDataReader'}, 'type': 'BOLD', 'marker': {'agg_method': 'mean', 'agg_method_params': None, 'class': 'RSSETSMarker', 'mask': None, 'name': 'Schaefer200x17_RSSETS', 'parcellation': 'Schaefer200x17'}, '_element_keys': ['subject'], 'name': 'BOLD_Schaefer200x17_RSSETS'}}
 
 
 
@@ -288,7 +278,7 @@ Now we take a look at the dataframe
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  9.579 seconds)
+   **Total running time of the script:** ( 0 minutes  7.842 seconds)
 
 
 .. _sphx_glr_download_auto_examples_run_ets_rss_marker.py:

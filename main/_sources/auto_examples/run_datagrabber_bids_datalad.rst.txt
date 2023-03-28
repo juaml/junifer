@@ -63,14 +63,14 @@ Set the logging level to info to see extra information
 
  .. code-block:: none
 
-    2023-01-30 14:58:53,185 - JUNIFER - INFO - ===== Lib Versions =====
-    2023-01-30 14:58:53,185 - JUNIFER - INFO - numpy: 1.23.5
-    2023-01-30 14:58:53,185 - JUNIFER - INFO - scipy: 1.10.0
-    2023-01-30 14:58:53,185 - JUNIFER - INFO - pandas: 1.5.3
-    2023-01-30 14:58:53,185 - JUNIFER - INFO - nilearn: 0.10.0
-    2023-01-30 14:58:53,185 - JUNIFER - INFO - nibabel: 4.0.2
-    2023-01-30 14:58:53,185 - JUNIFER - INFO - junifer: 0.0.2.dev86
-    2023-01-30 14:58:53,185 - JUNIFER - INFO - ========================
+    2023-03-28 06:10:34,708 - JUNIFER - INFO - ===== Lib Versions =====
+    2023-03-28 06:10:34,709 - JUNIFER - INFO - numpy: 1.23.5
+    2023-03-28 06:10:34,709 - JUNIFER - INFO - scipy: 1.10.1
+    2023-03-28 06:10:34,709 - JUNIFER - INFO - pandas: 1.5.3
+    2023-03-28 06:10:34,709 - JUNIFER - INFO - nilearn: 0.10.0
+    2023-03-28 06:10:34,709 - JUNIFER - INFO - nibabel: 4.0.2
+    2023-03-28 06:10:34,709 - JUNIFER - INFO - junifer: 0.0.2.dev322
+    2023-03-28 06:10:34,709 - JUNIFER - INFO - ========================
 
 
 
@@ -145,16 +145,16 @@ In this case, each element of the datagrabber is one session.
 
  .. code-block:: none
 
-    2023-01-30 14:58:53,186 - JUNIFER - WARNING - `datadir` is None, creating a temporary directory
-    2023-01-30 14:58:53,186 - JUNIFER - INFO - `datadir` set to /tmp/tmpjjnnn429
-    sub-03
+    2023-03-28 06:10:34,710 - JUNIFER - WARNING - `datadir` is None, creating a temporary directory
+    2023-03-28 06:10:34,710 - JUNIFER - INFO - `datadir` set to /tmp/tmpn0qa1jrq/datadir
     sub-06
     sub-05
-    sub-02
     sub-07
     sub-09
-    sub-08
+    sub-02
     sub-04
+    sub-03
+    sub-08
     sub-01
 
 
@@ -187,10 +187,10 @@ paths for the two types of data we want (T1w and bold).
 
  .. code-block:: none
 
-    2023-01-30 14:58:58,445 - JUNIFER - WARNING - `datadir` is None, creating a temporary directory
-    2023-01-30 14:58:58,445 - JUNIFER - INFO - `datadir` set to /tmp/tmpkprr3vs9
-    2023-01-30 14:59:01,142 - JUNIFER - INFO - Getting element sub-01
-    {'T1w': {'path': PosixPath('/tmp/tmpkprr3vs9/example_bids/sub-01/anat/sub-01_T1w.nii.gz'), 'meta': {'datagrabber': {'class': 'PatternDataladDataGrabber', 'confounds_format': None, 'types': ['T1w', 'BOLD'], 'patterns': {'T1w': '{subject}/anat/{subject}_T1w.nii.gz', 'BOLD': '{subject}/func/{subject}_task-rest_bold.nii.gz'}, 'replacements': ['subject'], 'uri': 'https://gin.g-node.org/juaml/datalad-example-bids', 'datalad_dirty': False, 'datalad_commit_id': '522dfb203afcd2cd55799bf347f9b211919a7338', 'datalad_id': 'fec92475-d9c0-4409-92ba-f041b6a12c40'}, 'dependencies': set(), 'element': {'subject': 'sub-01'}}}, 'BOLD': {'path': PosixPath('/tmp/tmpkprr3vs9/example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz'), 'meta': {'datagrabber': {'class': 'PatternDataladDataGrabber', 'confounds_format': None, 'types': ['T1w', 'BOLD'], 'patterns': {'T1w': '{subject}/anat/{subject}_T1w.nii.gz', 'BOLD': '{subject}/func/{subject}_task-rest_bold.nii.gz'}, 'replacements': ['subject'], 'uri': 'https://gin.g-node.org/juaml/datalad-example-bids', 'datalad_dirty': False, 'datalad_commit_id': '522dfb203afcd2cd55799bf347f9b211919a7338', 'datalad_id': 'fec92475-d9c0-4409-92ba-f041b6a12c40'}, 'dependencies': set(), 'element': {'subject': 'sub-01'}}}}
+    2023-03-28 06:10:38,768 - JUNIFER - WARNING - `datadir` is None, creating a temporary directory
+    2023-03-28 06:10:38,768 - JUNIFER - INFO - `datadir` set to /tmp/tmpogycftk4/datadir
+    2023-03-28 06:10:41,589 - JUNIFER - INFO - Getting element sub-01
+    {'T1w': {'path': PosixPath('/tmp/tmpogycftk4/datadir/example_bids/sub-01/anat/sub-01_T1w.nii.gz'), 'meta': {'datagrabber': {'class': 'PatternDataladDataGrabber', 'confounds_format': None, 'types': ['T1w', 'BOLD'], 'patterns': {'T1w': '{subject}/anat/{subject}_T1w.nii.gz', 'BOLD': '{subject}/func/{subject}_task-rest_bold.nii.gz'}, 'replacements': ['subject'], 'uri': 'https://gin.g-node.org/juaml/datalad-example-bids', 'datalad_dirty': False, 'datalad_commit_id': '522dfb203afcd2cd55799bf347f9b211919a7338', 'datalad_id': 'fec92475-d9c0-4409-92ba-f041b6a12c40'}, 'dependencies': set(), 'element': {'subject': 'sub-01'}}}, 'BOLD': {'path': PosixPath('/tmp/tmpogycftk4/datadir/example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz'), 'meta': {'datagrabber': {'class': 'PatternDataladDataGrabber', 'confounds_format': None, 'types': ['T1w', 'BOLD'], 'patterns': {'T1w': '{subject}/anat/{subject}_T1w.nii.gz', 'BOLD': '{subject}/func/{subject}_task-rest_bold.nii.gz'}, 'replacements': ['subject'], 'uri': 'https://gin.g-node.org/juaml/datalad-example-bids', 'datalad_dirty': False, 'datalad_commit_id': '522dfb203afcd2cd55799bf347f9b211919a7338', 'datalad_id': 'fec92475-d9c0-4409-92ba-f041b6a12c40'}, 'dependencies': set(), 'element': {'subject': 'sub-01'}}}}
 
 
 
@@ -198,7 +198,7 @@ paths for the two types of data we want (T1w and bold).
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  9.413 seconds)
+   **Total running time of the script:** ( 0 minutes  8.153 seconds)
 
 
 .. _sphx_glr_download_auto_examples_run_datagrabber_bids_datalad.py:

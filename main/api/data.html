@@ -9,6 +9,7 @@
         <title>8.2.1. Parcellations - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
@@ -181,6 +182,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../using/running.html">4.2. Running jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">4.3. Collecting results</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">4.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/masks.html">4.5.1. Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">5. Built-in Pipeline steps and data</a></li>
@@ -188,6 +190,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">6.1. Creating a Junifer extension</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">6.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">6.3. Creating Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">6.4. Adding Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">6.5. Adding Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">6.6. Adding Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">7. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -216,6 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="utils.html">8.2.8. Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html">8.2.9. Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configs.html">8.3.1. Configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nilearn.html">8.4.1. Nilearn</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">9. Contributing to junifer</a></li>
@@ -330,6 +336,34 @@ highest one (default None).</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.parcellations.merge_parcellations">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">merge_parcellations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellations_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellations_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_lists</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.merge_parcellations" title="Permalink to this definition">#</a></dt>
+<dd><p>Merge all parcellations from a list into one parcellation.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellations_list</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of niimg-like object</span></dt><dd><p>List of parcellations to merge.</p>
+</dd>
+<dt><strong>parcellations_names: list of str</strong></dt><dd><p>List of names for parcellations at the corresponding indices.</p>
+</dd>
+<dt><strong>labels_lists</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>A list of lists. Each list in the list contains the labels for the
+parcellation at the corresponding index.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>parcellation</strong><span class="classifier">niimg-like object</span></dt><dd><p>The parcellation that results from merging the list of input
+parcellations.</p>
+</dd>
+<dt><strong>labels</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>List of labels for the resultant parcellation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.parcellations.register_parcellation">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">register_parcellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellation_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcels_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.register_parcellation" title="Permalink to this definition">#</a></dt>
 <dd><p>Register a custom user parcellation.</p>
@@ -406,7 +440,10 @@ False or if the parcellation name is a built-in parcellation.</p>
 <dd class="field-odd"><dl>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the coordinates.</p>
 </dd>
-<dt><strong>coordinates</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The coordinates.</p>
+<dt><strong>coordinates</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The coordinates. This should be a 2-dimensional array with three
+columns. Each row corresponds to a volume-of-interest (VOI) and each
+column corresponds to a spatial dimension (i.e. x, y, and
+z-coordinates).</p>
 </dd>
 <dt><strong>voi_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The names of the VOIs.</p>
 </dd>
@@ -424,16 +461,19 @@ Does not apply to built-in coordinates (default False).</p>
 <p>Provide functions for masks.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.masks.get_mask">
-<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">get_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.get_mask" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">get_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">masks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.get_mask" title="Permalink to this definition">#</a></dt>
 <dd><p>Get mask, tailored for the target image.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The name of the mask, or the name of a callable mask and the parameters
-of the mask.</p>
+<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the mask, or the name of a callable mask and the parameters
+of the mask as a dictionary. Several masks can be passed as a list.</p>
 </dd>
 <dt><strong>target_data</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The corresponding item of the data object to which the mask will be
 applied.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other data
+kinds that needs to be used in the computation of masks (default None).</p>
 </dd>
 </dl>
 </dd>
@@ -546,7 +586,7 @@ False or if the mask name is a built-in mask.</p>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Authors of junifer
+                Copyright &#169; 2023, Authors of junifer
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -575,6 +615,7 @@ False or if the mask name is a built-in mask.</p>
 <li><a class="reference internal" href="#">8.2.1. Parcellations</a><ul>
 <li><a class="reference internal" href="#junifer.data.parcellations.list_parcellations"><code class="docutils literal notranslate"><span class="pre">list_parcellations()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.parcellations.load_parcellation"><code class="docutils literal notranslate"><span class="pre">load_parcellation()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.data.parcellations.merge_parcellations"><code class="docutils literal notranslate"><span class="pre">merge_parcellations()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.parcellations.register_parcellation"><code class="docutils literal notranslate"><span class="pre">register_parcellation()</span></code></a></li>
 </ul>
 </li>
@@ -607,6 +648,8 @@ False or if the mask name is a built-in mask.</p>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     <script src="../_static/js/custom.js"></script>
     </body>
 </html>

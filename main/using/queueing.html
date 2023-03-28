@@ -3,12 +3,13 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5. Built-in Pipeline steps and data" href="../builtin.html" /><link rel="prev" title="4.2. Running jobs" href="running.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="4.5.1. Masks" href="masks.html" /><link rel="prev" title="4.2. Running jobs" href="running.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
         <title>4.4. Queueing jobs (HPC, HTC) - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
@@ -181,6 +182,7 @@
 <li class="toctree-l2"><a class="reference internal" href="running.html">4.2. Running jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running.html#collecting-results">4.3. Collecting results</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">4.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="masks.html">4.5.1. Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">5. Built-in Pipeline steps and data</a></li>
@@ -188,6 +190,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">6.1. Creating a Junifer extension</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">6.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">6.3. Creating Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">6.4. Adding Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">6.5. Adding Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">6.6. Adding Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">7. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -216,6 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/utils.html">8.2.8. Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/testing.html">8.2.9. Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/configs.html">8.3.1. Configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/nilearn.html">8.4.1. Nilearn</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">9. Contributing to junifer</a></li>
@@ -313,9 +319,17 @@ mind that junifer uses a local working directory for each job, and datalad datas
 directory.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">extra_preamble</span></code>: Extra lines to be added to the HTCondor submit file. This can be used to add
 extra parameters to the job, such as <code class="docutils literal notranslate"><span class="pre">requirements</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">collect</span></code>: If <code class="docutils literal notranslate"><span class="pre">true</span></code>, a final job will be added to the DAG to collect the results once all of the individual
+<li><p><code class="docutils literal notranslate"><span class="pre">collect</span></code>: This parameter allows to include a collect to the DAG to collect the results once all of the individual
 element jobs are finished. This is useful if you want to run a <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code> job only once all of the
-individual element jobs are finished. If not specified, it will default to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+individual element jobs are finished. Valid options are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">yes</span></code>: Include a collect job to the DAG that will be executed even if some of the individual element
+jobs fail.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_success_only</span></code>: Include a collect job to the DAG, but will only run if all of the individual element jobs are
+successful.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">no</span></code>: Do not include a collect job to the DAG.</p></li>
+</ul>
+</li>
 </ul>
 <p>Example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span>
@@ -351,12 +365,12 @@ folder already exists.</p></li>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../builtin.html">
+          <a class="next-page" href="masks.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">5. </span>Built-in Pipeline steps and data</div>
+                <div class="title"><span class="section-number">4.5.1. </span>Masks</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -375,7 +389,7 @@ folder already exists.</p></li>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Authors of junifer
+                Copyright &#169; 2023, Authors of junifer
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -421,6 +435,8 @@ folder already exists.</p></li>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     <script src="../_static/js/custom.js"></script>
     </body>
 </html>
