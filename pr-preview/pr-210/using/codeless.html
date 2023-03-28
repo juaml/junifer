@@ -268,8 +268,18 @@
 achieved by using a configuration file that is written in <a class="reference external" href="https://yaml.org">YAML</a>. In this file, we configure the different steps of
 <a class="reference internal" href="../understanding/pipeline.html#pipeline"><span class="std std-ref">The Junifer Pipeline</span></a>.</p>
 <p>As a reminder, this is how the pipeline looks like:</p>
-<img alt="../_images/pipeline.001.png" src="../_images/pipeline.001.png" />
-<p>Thus, the configuration file must configure each of the sections of the pipeline, as well as some general parameters.</p>
+<div class="mermaid">
+            flowchart LR
+  dg[Data Grabber]
+  dr[Data Reader]
+  pp[Pre-processing]
+  mc[Marker Computation]
+  st[Storage]
+  dg --&gt; dr
+  dr --&gt; pp
+  pp --&gt; mc
+  mc --&gt; st
+        </div><p>Thus, the configuration file must configure each of the sections of the pipeline, as well as some general parameters.</p>
 <p>As an example, we will generate the configuration file for a pipeline that will extract the mean <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> values
 using two different parcellations and one set of coordinates, from the <em>Oasis VBM Testing dataset</em> included in
 junifer.</p>

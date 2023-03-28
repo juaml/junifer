@@ -272,7 +272,7 @@ aggregate (for example using the
 <a class="reference internal" href="../api/markers.html#junifer.markers.SphereAggregation" title="junifer.markers.sphere_aggregation.SphereAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.sphere_aggregation.SphereAggregation</span></code></a> marker) the MR
 signals from individual voxels. Now, before you start specifying your own sets
 of coordinates, check the coordinates that Junifer already has
-<a class="reference internal" href="../builtin.html#builtin"><span class="std std-ref">built in already</span></a>. If you simply want to use a well known set of
+<a class="reference internal" href="../builtin.html#builtin"><span class="std std-ref">built in</span></a>. If you simply want to use a well known set of
 coordinates from the literature, there is a reasonable chance, that Junifer
 provides them already.</p>
 <p>If you checked the in-built coordinates, and they are not there already (for
@@ -291,22 +291,22 @@ after registration by providing <code class="docutils literal notranslate"><span
 <code class="docutils literal notranslate"><span class="pre">&quot;my_set_of_coordinates&quot;</span></code>, but likely you want a more descriptive and more
 informative name most of the time.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">coordinates</span></code> argument takes the actual coordinates as a 2-dimensional
-<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="(in NumPy v1.24)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.array()</span></code></a>. It contains one row for every location, and three columns
-(one for each spatial dimension). That is, the first, second, and third columns
-indicate the x-, y-, and z-coordinates in MNI space respectively. Note, that
-Junifer (as of yet) only works in MNI space, and so therefore these coordinates
-should always be real-world coordinates of the MNI space. From this description
-it follows that the number of rows in the array correspond to the number of
-coordinates that belong to this set.</p>
-<p>Lastly, the <code class="docutils literal notranslate"><span class="pre">voi_names</span></code> argument takes a list of strings indicating the names
-of each coordinate (i.e. volume-of-interest) in the <code class="docutils literal notranslate"><span class="pre">coordinates</span></code> array.
-Therefore, the length of this list should correspond to the number of rows in
-the coordinates array. Now, we know everything we need to register a set of
-coordinates.</p>
+<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>. It contains one row for every location, and three
+columns (one for each spatial dimension). That is, the first, second, and third
+columns indicate the x-, y-, and z-coordinates in MNI space respectively.
+The number of rows in the array correspond to the number of coordinates that
+belong to this set. Note, that Junifer (as of yet) only works in MNI space, and
+so therefore these coordinates should always be real-world coordinates of the
+MNI space.</p>
+<p>Lastly, the <code class="docutils literal notranslate"><span class="pre">voi_names</span></code> argument takes a list of strings
+indicating the names of each coordinate (i.e. volume-of-interest) in the
+<code class="docutils literal notranslate"><span class="pre">coordinates</span></code> array. Therefore, the length of this list should correspond to
+the number of rows in the coordinates array. Now, we know everything we need to
+know to register a set of coordinates.</p>
 <section id="step-1-prepare-code-to-register-a-set-of-coordinates">
 <h2><span class="section-number">7.5.1. </span>Step 1: Prepare code to register a set of coordinates<a class="headerlink" href="#step-1-prepare-code-to-register-a-set-of-coordinates" title="Permalink to this heading">#</a></h2>
 <p>Let’s make a simple script to register our coordinates. We could simply call it
-<code class="docutils literal notranslate"><span class="pre">register_coordinates.py</span></code>. We may start by importing the appropriate
+<code class="docutils literal notranslate"><span class="pre">register_custom_coordinates.py</span></code>. We may start by importing the appropriate
 packages:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">register_coordinates</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -353,7 +353,7 @@ registration in combination with
 <p>In order to register your coordinates for a pipeline configured by a YAML file,
 you can use the <code class="docutils literal notranslate"><span class="pre">with</span></code> keyword provided by Junifer:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">with</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">registering_my_parcellation.py</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">register_custom_coordinates.py</span>
 </pre></div>
 </div>
 <p>Afterwards continue configuring the rest of your pipeline in this YAML file,

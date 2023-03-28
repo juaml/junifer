@@ -11,7 +11,19 @@ achieved by using a configuration file that is written in YAML_. In this file, w
 
 As a reminder, this is how the pipeline looks like:
 
-.. image:: ../images/pipeline/pipeline.001.png
+.. mermaid:: 
+
+   flowchart LR
+     dg[Data Grabber]
+     dr[Data Reader]
+     pp[Pre-processing]
+     mc[Marker Computation]
+     st[Storage]
+     dg --> dr
+     dr --> pp
+     pp --> mc
+     mc --> st
+
 
 Thus, the configuration file must configure each of the sections of the pipeline, as well as some general parameters.
 
