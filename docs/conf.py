@@ -19,6 +19,13 @@
 import sys
 from pathlib import Path
 
+# Check if sphinx-multiversion is installed
+use_multiversion = False
+try:
+    import sphinx_multiversion  # noqa: F401
+    use_multiversion = True
+except ImportError:
+    pass
 
 curdir = Path(__file__).parent
 sys.path.append((curdir / "sphinxext").as_posix())
@@ -41,11 +48,13 @@ extensions = [
     "sphinx.ext.intersphinx",  # link to other projects’ documentation
     "sphinx.ext.mathjax",  # math support for HTML outputs in Sphinx
     "sphinx_gallery.gen_gallery",  # HTML gallery of examples
-    "sphinx_multiversion",  # self-hosted versioned documentation
     "numpydoc",  # support for NumPy style docstrings
     "gh_substitutions",  # custom GitHub substitutions
     "sphinx_copybutton",  # copy button for code blocks
 ]
+
+if use_multiversion:
+    extensions.append("sphinx_multiversion")
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = [
