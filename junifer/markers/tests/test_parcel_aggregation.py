@@ -609,6 +609,16 @@ def test_ParcelAggregation_4D_agg_time():
             on="VBM_GM",
         )
 
+    with pytest.raises(
+        ValueError, match="can only be used with `time_method`"
+    ):
+        ParcelAggregation(
+            parcellation="Schaefer100x7",
+            method="mean",
+            time_method_params={"pick": [0]},
+            on="VBM_GM",
+        )
+
     with pytest.warns(RuntimeWarning, match="No time dimension to aggregate"):
         input = {"BOLD": {"data": fmri_img.slicer[..., 0:1], "meta": {}}}
         marker.fit_transform(input)
