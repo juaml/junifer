@@ -1,0 +1,1 @@
+Add :class:`junifer.markers.TemporalSNRParcels` and :class:`junifer.markers.TemporalSNRSpheres` by `Leonard Sasse`_

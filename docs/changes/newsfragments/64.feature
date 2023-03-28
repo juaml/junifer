@@ -1,0 +1,1 @@
+Add :class:`junifer.markers.EdgeCentricFCParcels` and :class:`junifer.markers.EdgeCentricFCSpheres` by `Leonard Sasse`_
