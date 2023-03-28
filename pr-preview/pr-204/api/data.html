@@ -9,6 +9,7 @@
         <title>8.2.1. Parcellations - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
@@ -315,6 +316,34 @@ highest one (default None).</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.parcellations.merge_parcellations">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">merge_parcellations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellations_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellations_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_lists</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.merge_parcellations" title="Permalink to this definition">#</a></dt>
+<dd><p>Merge all parcellations from a list into one parcellation.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellations_list</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of niimg-like object</span></dt><dd><p>List of parcellations to merge.</p>
+</dd>
+<dt><strong>parcellations_names: list of str</strong></dt><dd><p>List of names for parcellations at the corresponding indices.</p>
+</dd>
+<dt><strong>labels_lists</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>A list of lists. Each list in the list contains the labels for the
+parcellation at the corresponding index.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><strong>parcellation</strong><span class="classifier">niimg-like object</span></dt><dd><p>The parcellation that results from merging the list of input
+parcellations.</p>
+</dd>
+<dt><strong>labels</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>List of labels for the resultant parcellation.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.parcellations.register_parcellation">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">register_parcellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellation_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcels_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.register_parcellation" title="Permalink to this definition">#</a></dt>
 <dd><p>Register a custom user parcellation.</p>
@@ -566,6 +595,7 @@ False or if the mask name is a built-in mask.</p>
 <li><a class="reference internal" href="#">8.2.1. Parcellations</a><ul>
 <li><a class="reference internal" href="#junifer.data.parcellations.list_parcellations"><code class="docutils literal notranslate"><span class="pre">list_parcellations()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.parcellations.load_parcellation"><code class="docutils literal notranslate"><span class="pre">load_parcellation()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.data.parcellations.merge_parcellations"><code class="docutils literal notranslate"><span class="pre">merge_parcellations()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.parcellations.register_parcellation"><code class="docutils literal notranslate"><span class="pre">register_parcellation()</span></code></a></li>
 </ul>
 </li>
@@ -598,6 +628,8 @@ False or if the mask name is a built-in mask.</p>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
     <script src="../_static/js/custom.js"></script>
     </body>
 </html>
