@@ -136,8 +136,18 @@ def build(
     klass = get_class(step=step, name=name)
     logger.debug(f"\tClass: {klass.__name__}")
     logger.debug(f"\tInit params: {init_params}")
-    # Create instance of the class
-    object_ = klass(**init_params)
+    try:
+        # Create instance of the class
+        object_ = klass(**init_params)
+    except Exception as e:
+        raise_error(
+            msg=(
+                f"Failed to create {step} ({name}). "
+                f"Error: {e}"
+            ),
+            klass=RuntimeError,
+            exception=e,
+        )
     # Verify created instance belongs to the base class
     if not isinstance(object_, baseclass):
         raise_error(

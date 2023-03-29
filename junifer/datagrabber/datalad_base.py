@@ -72,7 +72,7 @@ class DataladDataGrabber(BaseDataGrabber):
         **kwargs,
     ):
         if datadir is None:
-            logger.warning("`datadir` is None, creating a temporary directory")
+            logger.info("`datadir` is None, creating a temporary directory")
             # Create temporary directory
             tmpdir = Path(tempfile.mkdtemp())
             datadir = tmpdir / "datadir"
