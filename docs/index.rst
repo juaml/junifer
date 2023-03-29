@@ -4,6 +4,9 @@
    :width: 300px
    :alt: junifer logo
 
+.. include:: non-existing.rst
+  :orphan:
+
 Welcome to junifer's documentation!
 ===================================
 
@@ -23,8 +26,8 @@ enabling others to extend it easily.
    :caption: Contents:
 
    installation
-   understanding/index.rst
    starting
+   understanding/index.rst
    using/index.rst
    builtin
    extending/index.rst
@@ -33,7 +36,7 @@ enabling others to extend it easily.
    contribution
    maintaining
    faq
-   whats_new
+   changes/whats_new.rst
 
 
 Indices and tables

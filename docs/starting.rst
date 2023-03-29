@@ -49,14 +49,32 @@ First steps with Junifer
      question_datagrabber_solved{Can you use\nyour data now?}
      question_datagrabber_solved -->|Yes| question_contribute_datagrabber
      question_datagrabber_solved -->|No| contact_help
-
      question_contribute_datagrabber{Do you think\nyour DataGrabber\nis useful for other users?}
      question_contribute_datagrabber -->|Yes| contribute_datagrabber
      question_contribute_datagrabber -->|No| final_run
      contribute_datagrabber(Create a\nDATASET REQUEST\nissue on Github)
      contribute_datagrabber --> final_run
 
+     missing_marker --> question_marker_junifarm
+     question_marker_junifarm{Is the marker\nin juni-farm?}
+     question_marker_junifarm -->|Yes| read_using_final
+     question_marker_junifarm -->|No| read_extending_marker_start
+     read_extending_marker_start(Read Creating a Junifer extension)
+     read_extending_marker_start --> read_extending_marker
+     read_extending_marker(Read Creating Markers)
+     read_extending_marker --> question_marker_solved
+     question_marker_solved{Can you use\nyour marker now?}
+     question_marker_solved -->|Yes| question_contribute_marker
+    question_marker_solved -->|No| contact_help
+     question_contribute_marker{Do you think\nyour Marker\nis useful for other users?}
+     question_contribute_marker -->|Yes| contribute_marker
+     question_contribute_marker -->|No| final_run
+     contribute_marker(Create a\nMARKER REQUEST\nissue on Github)
+     contribute_marker --> final_run
+    
+
      missing_preprocessing --> contact_help
+
      missing_other --> contact_help
      contact_help(((Contact the Junifer\nteam on Matrix)))
 
