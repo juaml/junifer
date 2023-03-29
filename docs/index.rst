@@ -4,9 +4,6 @@
    :width: 300px
    :alt: junifer logo
 
-.. include:: non-existing.rst
-  :orphan:
-
 Welcome to junifer's documentation!
 ===================================
 
