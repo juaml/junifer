@@ -12,15 +12,33 @@ BUILDDIR      ?= _build
 help:
 	@$(SPHINXBUILD) --help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: help Makefile
+.PHONY: help Makefile clean local news _build_local _html
 
 clean:
 	rm -rf $(BUILDDIR)/*
 	rm -rf auto_examples/
 
 # For local build
-local:
+local: news
+	make _build_local; STATUS=$$?; make news_cleanup; exit $$STATUS
+
+news: 
+	@echo "Generating whats_new.rst"
+	cd ../ && towncrier build --keep
+
+news_cleanup:
+	@echo "Cleaning up whats_new.rst"
+	git restore --staged whats_new.rst
+	git restore whats_new.rst
+
+_build_local:
 	sphinx-build "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+html: news
+	make _html; STATUS=$$?; make news_cleanup; exit $$STATUS
+
+_html:
+	$(SPHINXBUILD) "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

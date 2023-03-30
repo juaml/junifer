@@ -70,6 +70,7 @@ docs = [
     "numpydoc>=1.5.0,<1.6",
     "julearn==0.2.5",
     "sphinx-copybutton==0.5.1",
+    "towncrier==22.12.0",
 ]
 
 ################
@@ -96,3 +97,46 @@ extend-exclude = """
 [tool.pytest.ini_options]
 minversion = "7.0"
 addopts = "--ignore=junifer/external/h5io -vv"
+
+[tool.towncrier]
+directory = "docs/changes/newsfragments"
+filename = "docs/whats_new.rst"
+package = "junifer"
+# to use gh_substitutions
+issue_format = ":gh:`{issue}`"
+# modify to have proper toctree
+underlines = "-^~"
+# set line length to 79
+wrap = true
+
+# Need to put default explicitly as custom is not combined with default
+
+[tool.towncrier.fragment.bugfix]
+name = "Bugfixes"
+showcontent = true
+
+[tool.towncrier.fragment.doc]
+name = "Improved Documentation"
+showcontent = true
+
+[tool.towncrier.fragment.feature]
+name = "Features"
+showcontent = true
+
+[tool.towncrier.fragment.misc]
+name = "Misc"
+showcontent = true
+
+[tool.towncrier.fragment.removal]
+name = "Deprecations and Removals"
+showcontent = true
+
+# Add custom towncrier fragment for enhancements
+[tool.towncrier.fragment.enh]
+name = "Enhancements"
+showcontent = true
+
+# Add custom towncrier fragment for API changes
+[tool.towncrier.fragment.change]
+name = "API Changes"
+showcontent = true
