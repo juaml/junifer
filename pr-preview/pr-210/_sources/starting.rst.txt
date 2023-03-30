@@ -6,6 +6,9 @@ First steps with Junifer
 ========================
 
 
+.. note:: 
+  To scroll the graph left and right, click on the graph and use the arrows on your keyboard.
+
 .. mermaid::
 
    flowchart TD
