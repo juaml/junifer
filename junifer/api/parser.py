@@ -55,6 +55,7 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
         for t_module in to_load:
             if t_module.endswith(".py"):
                 logger.debug(f"Importing file: {t_module}")
+                # This resolves both absolute and relative paths
                 file_path = filepath.parent / t_module
                 if not file_path.exists():
                     raise_error(
