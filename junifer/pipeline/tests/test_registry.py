@@ -139,3 +139,12 @@ def test_build():
     # Check error
     with pytest.raises(ValueError, match="Must inherit"):
         build(step="datagrabber", name="concrete", baseclass=np.ndarray)
+
+    # Check error
+    with pytest.raises(RuntimeError, match="Failed to create"):
+        build(
+            step="datagrabber",
+            name="concrete",
+            baseclass=SuperClass,
+            init_params={"wrong": 2},
+        )
