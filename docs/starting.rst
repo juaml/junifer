@@ -87,19 +87,19 @@ First steps with Junifer
 
      contact_help(((Contact the Junifer\nteam on Matrix)))
 
-     missing_mask --> read_adding_mask
+     missing_mask --> read_adding_mask_start
      read_adding_mask_start("Creating a Junifer extension")
      read_adding_mask_start --> read_adding_mask
      read_adding_mask("Read Adding Masks")
      read_adding_mask --> missing_other_solved
 
-     missing_parcellation --> read_adding_parcellation
+     missing_parcellation --> read_adding_parcellation_start
      read_adding_parcellation_start("Read Creating a Junifer extension")
      read_adding_parcellation_start --> read_adding_parcellation
      read_adding_parcellation("Read Adding Parcellations")
      read_adding_parcellation --> missing_other_solved
      
-     missing_coordinates --> read_adding_coordinates
+     missing_coordinates --> read_adding_coordinates_start
      read_adding_coordinates_start("Creating a Junifer extension")
      read_adding_coordinates_start --> read_adding_coordinates
      read_adding_coordinates("Read Adding Coordinates")
@@ -150,6 +150,6 @@ First steps with Junifer
      click contribute_marker href "https://github.com/juaml/junifer/issues/new/choose" _blank
      click contribute_datagrabber href "https://github.com/juaml/junifer/issues/new/choose" _blank
 
-     click error_contact href "https://matrix.to/#/#junifer-gen:inm7.de" _blank
-     click contact_help href "https://matrix.to/#/#junifer-gen:inm7.de" _blank
-     click missing_other_contact href "https://matrix.to/#/#junifer-gen:inm7.de" _blank
+     click error_contact href "https://juaml.github.io/junifer/main/help.html"
+     click contact_help href "https://juaml.github.io/junifer/main/help.html"
+     click missing_other_contact href "https://juaml.github.io/junifer/main/help.html"
