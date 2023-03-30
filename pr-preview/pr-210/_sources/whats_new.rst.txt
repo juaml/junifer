@@ -8,22 +8,24 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.2.dev348 (2023-03-30)
+Junifer 0.0.2.dev373 (2023-03-30)
 ---------------------------------
 
 Bugfixes
 ^^^^^^^^
 
+- Fix a bug in which relative storage URIs will be computed relative to the CWD
+  and not to the location of the YAML file by `Fede Raimondo`_. (:gh:`127`)
 - Fix ``junifer run`` to respect preprocess step specified in the pipeline by
   `Synchon Mandal`_ (:gh:`159`)
 - Fix a bug in which fitting a marker (e.g. ``SphereAggregation``) on a
   specific type (e.g.: ``BOLD``) will fail if another non-supported type (e.g.:
   ``BOLD_confounds``) is present in the data object by `Fede Raimondo`_
   (:gh:`185`)
-- Fix :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels`,
-  :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres`,
-  :class:`junifer.markers.ReHoSpheres` and :class:`junifer.markers.ReHoParcels`
-  pass the ``extra_input`` parameter by `Fede Raimondo`_ (:gh:`187`)
+- Fix :class:`junifer.markers.ALFFParcels`,
+  :class:`junifer.markers.ALFFSpheres`, :class:`junifer.markers.ReHoSpheres`
+  and :class:`junifer.markers.ReHoParcels` pass the ``extra_input`` parameter
+  by `Fede Raimondo`_ (:gh:`187`)
 - Fix several markers that did not properly handle the ``extra_input``
   parameter by `Fede Raimondo`_ (:gh:`189`)
 - Fix a bug in which relative paths in the YAML ``with`` directive would be
@@ -63,6 +65,10 @@ API Changes
 - Expose ``allow_overlap`` parameter in
   :class:`junifer.markers.SphereAggregation` and related markers by `Fede
   Raimondo`_ (:gh:`190`)
+- ``AmplitudeLowFrequencyFluctuationParcels`` and
+  ``AmplitudeLowFrequencyFluctuationSpheres`` are renamed to
+  :class:`junifer.markers.ALFFParcels` and :class:`junifer.markers.ALFFSpheres`
+  by `Synchon Mandal`_ (:gh:`216`)
 
 
 Improved Documentation
@@ -274,9 +280,8 @@ Features
 - Implement :class:`junifer.markers.ReHoParcels` and
   :class:`junifer.markers.ReHoSpheres` markers by `Synchon Mandal`_ (:gh:`36`)
 
-- Implement :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels` and
-  :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres` markers by
-  `Fede Raimondo`_ (:gh:`35`)
+- Implement :class:`junifer.markers.ALFFParcels` and
+  :class:`junifer.markers.ALFFSpheres` markers by `Fede Raimondo`_ (:gh:`35`)
 
 Misc
 ^^^^
