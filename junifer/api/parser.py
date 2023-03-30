@@ -71,4 +71,23 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
                 logger.info(f"Importing module: {t_module}")
                 importlib.import_module(t_module)
 
+    # Compute path for the URI parameter in storage files that are relative
+    # This is a tricky thing that appeared in #127. The problem is that
+    # the path in the URI parameter is relative to YAML file, not to the
+    # current working directory. If we leave it as is in the contents
+    # dict, then it will be used later in the ``build`` function as is,
+    # which will be computed relative to the current working directory.
+    # The solution is to compute the absolute path and replace the
+    # relative path in the contents dict with the absolute path.
+
+    # Check if the storage file is defined
+    if "storage" in contents:
+        if "uri" in contents["storage"]:
+            # Check if the storage file is relative
+            uri_path = Path(contents["storage"]["uri"])
+            if not uri_path.is_absolute():
+                # Compute the absolute path
+                contents["storage"]["uri"] = str(
+                    (filepath.parent / uri_path).resolve()
+                )
     return contents
