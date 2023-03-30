@@ -91,7 +91,7 @@ First steps with Junifer
      contact_help(((Contact the\nJunifer team)))
 
      missing_mask --> read_adding_mask_start
-     read_adding_mask_start("Creating a Junifer extension")
+     read_adding_mask_start("Read Creating a Junifer extension")
      read_adding_mask_start --> read_adding_mask
      read_adding_mask("Read Adding Masks")
      read_adding_mask --> missing_other_solved
@@ -103,12 +103,12 @@ First steps with Junifer
      read_adding_parcellation --> missing_other_solved
      
      missing_coordinates --> read_adding_coordinates_start
-     read_adding_coordinates_start("Creating a Junifer extension")
+     read_adding_coordinates_start("Read Creating a Junifer extension")
      read_adding_coordinates_start --> read_adding_coordinates
      read_adding_coordinates("Read Adding Coordinates")
      read_adding_coordinates --> missing_other_solved
      
-     missing_other_solved{Did you solved your issue?}
+     missing_other_solved{Did you solve your issue?}
      missing_other_solved -->|Yes| read_using_final
      missing_other_solved -->|No| missing_other_contact
      missing_other_contact(Contact the\nJunifer team)
