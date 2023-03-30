@@ -133,6 +133,8 @@ class RSSETSMarker(BaseMarker):
         edge_ts, _ = _ets(out["data"])
         # Compute the RSS
         out["data"] = np.sum(edge_ts**2, 1) ** 0.5
+        # Make it 2D
+        out["data"] = out["data"][:, np.newaxis]
         # Set correct column label
         out["col_names"] = ["root_sum_of_squares_ets"]
         return out
