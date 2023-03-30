@@ -75,18 +75,19 @@ In short, these are the 3 communication channels to get help:
 #. Discussions on Github (`junifer Discussions`_):
 
    * **+** You can write your question in detail.
+   * **-** You need to write your question in detail.
    * **+** Your question will not get mixed with other conversations.
-   * **+** Likely to be the fastest way to solve the issue in the long-run
+   * **+** Likely to be the fastest way to solve the issue in the long-run.
 
 #. Chat (`junifer matrix channel`_):
 
    * **+** You can ask questions in real-time, including code and figures.
    * **-** Real-time depends on the availability of the other users.
-   * **-** Conversations will mix
+   * **-** Conversations will mix.
 
 #. Video Calls (*office hours*)
 
-   * **+** You can get real-time feedback
+   * **+** You can get real-time feedback.
    * **-** We can't read or write code, or even propose solutions for you to test.
 
 
