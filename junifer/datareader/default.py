@@ -34,7 +34,7 @@ _readers["TSV"] = {"func": pd.read_csv, "params": {"sep": "\t"}}
 class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
     """Mixin class for default data reader."""
 
-    def validate_input(self, input: List[str]) -> None:
+    def validate_input(self, input: List[str]) -> List[str]:
         """Validate input.
 
         Parameters
@@ -43,9 +43,14 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
             The input to the pipeline step. The list must contain the
             available Junifer Data dictionary keys.
 
+        Returns
+        -------
+        list of str
+            The actual elements of the input that will be processed by this
+            pipeline step.
         """
         # Nothing to validate, any input is fine
-        pass
+        return input
 
     def get_output_type(self, input: List[str]) -> List[str]:
         """Get output type.

@@ -132,9 +132,22 @@ def build(
     if init_params is None:
         init_params = {}
     # Get class of the registered function
+    logger.debug(f"Building {step}/{name}")
     klass = get_class(step=step, name=name)
-    # Create instance of the class
-    object_ = klass(**init_params)
+    logger.debug(f"\tClass: {klass.__name__}")
+    logger.debug(f"\tInit params: {init_params}")
+    try:
+        # Create instance of the class
+        object_ = klass(**init_params)
+    except Exception as e:
+        raise_error(
+            msg=(
+                f"Failed to create {step} ({name}). "
+                f"Error: {e}"
+            ),
+            klass=RuntimeError,
+            exception=e,
+        )
     # Verify created instance belongs to the base class
     if not isinstance(object_, baseclass):
         raise_error(

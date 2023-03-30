@@ -512,17 +512,21 @@ def _queue_condor(
             )
         if collect == "yes":
             dag_file.write(f"FINAL collect {submit_collect_fname}\n")
-            dag_file.write("SCRIPT PRE collect collect_pre.pl $DAG_STATUS\n")
-            collect_pre_fname = jobdir / "collect_pre.pl"
+            collect_pre_fname = jobdir / "collect_pre.sh"
+            dag_file.write(
+                f"SCRIPT PRE collect {collect_pre_fname.as_posix()} "
+                "$DAG_STATUS\n")
             with open(collect_pre_fname, "w") as pre_file:
-                pre_file.write("#!/usr/bin/env perl\n\n")
-                pre_file.write("if ($ARGV[0] eq 4) {\n")
-                pre_file.write("    exit(1);\n")
-                pre_file.write("}\n")
+                pre_file.write("#!/bin/bash\n\n")
+                pre_file.write("if [ \"${1}\" == \"4\" ]; then\n")
+                pre_file.write("    exit 1\n")
+                pre_file.write("fi\n")
+
+            make_executable(collect_pre_fname)
         elif collect == "on_success_only":
             dag_file.write(f"JOB collect {submit_collect_fname}\n")
             dag_file.write("PARENT ")
-            for i_job, _t_elem in enumerate(elements):
+            for i_job, _ in enumerate(elements):
                 dag_file.write(f"run{i_job} ")
             dag_file.write("CHILD collect\n\n")
 

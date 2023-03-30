@@ -20,7 +20,7 @@ from .utils import check_ext_dependencies
 class PipelineStepMixin:
     """Mixin class for a pipeline step."""
 
-    def validate_input(self, input: List[str]) -> None:
+    def validate_input(self, input: List[str]) -> List[str]:
         """Validate the input to the pipeline step.
 
         Parameters
@@ -28,6 +28,12 @@ class PipelineStepMixin:
         input : list of str
             The input to the pipeline step. The list must contain the
             available Junifer Data dictionary keys.
+
+        Returns
+        -------
+        list of str
+            The actual elements of the input that will be processed by this
+            pipeline step.
 
         Raises
         ------
@@ -132,8 +138,8 @@ class PipelineStepMixin:
                     # Set attribute for using external tools
                     setattr(self, f"use_{dependency['name']}", out)
 
-        self.validate_input(input=input)
-        outputs = [self.get_output_type(t_input) for t_input in input]
+        fit_input = self.validate_input(input=input)
+        outputs = [self.get_output_type(t_input) for t_input in fit_input]
         return outputs
 
     def fit_transform(

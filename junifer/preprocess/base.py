@@ -36,7 +36,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             raise ValueError(f"{name} cannot be computed on {wrong_on}")
         self._on = on
 
-    def validate_input(self, input: List[str]) -> None:
+    def validate_input(self, input: List[str]) -> List[str]:
         """Validate input.
 
         Parameters
@@ -44,6 +44,12 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         input : list of str
             The input to the pipeline step. The list must contain the
             available Junifer Data dictionary keys.
+
+        Returns
+        -------
+        list of str
+            The actual elements of the input that will be processed by this
+            pipeline step.
 
         Raises
         ------
@@ -56,6 +62,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
                 f"\t Input: {input}"
                 f"\t Required (any of): {self._on}"
             )
+        return [x for x in self._on if x in input]
 
     @abstractmethod
     def get_output_type(self, input: List[str]) -> List[str]:
@@ -114,22 +121,27 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         out = input
         for type_ in self._on:
             if type_ in input.keys():
-                logger.info(f"Computing {type_}")
+                logger.info(f"Preprocessing {type_}")
                 t_input = input[type_]
 
                 # Pass the other data types as extra input, removing
                 # the current type
                 extra_input = input
                 extra_input.pop(type_)
+                logger.debug(
+                    f"Extra input for preprocess: {extra_input.keys()}"
+                )
                 key, t_out = self.preprocess(
                     input=t_input, extra_input=extra_input
                 )
 
                 # Add the output to the Junifer Data object
+                logger.debug(f"Adding {key} to output")
                 out[key] = t_out
 
                 # In case we are creating a new type, re-add the original input
                 if key != type_:
+                    logger.debug("Adding original input back to output")
                     out[type_] = t_input
 
                 self.update_meta(out[key], "preprocess")

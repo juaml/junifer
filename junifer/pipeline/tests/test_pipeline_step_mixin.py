@@ -32,8 +32,8 @@ def test_pipeline_step_mixin_validate_correct_dependencies() -> None:
 
         _DEPENDENCIES = {"setuptools"}
 
-        def validate_input(self, input: List[str]) -> None:
-            print(input)
+        def validate_input(self, input: List[str]) -> List[str]:
+            return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
@@ -53,8 +53,8 @@ def test_pipeline_step_mixin_validate_incorrect_dependencies() -> None:
 
         _DEPENDENCIES = {"foobar"}
 
-        def validate_input(self, input: List[str]) -> None:
-            print(input)
+        def validate_input(self, input: List[str]) -> List[str]:
+            return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
@@ -78,8 +78,8 @@ def test_pipeline_step_mixin_validate_correct_ext_dependencies() -> None:
 
         _EXT_DEPENDENCIES = [{"name": "afni", "optional": False}]
 
-        def validate_input(self, input: List[str]) -> None:
-            print(input)
+        def validate_input(self, input: List[str]) -> List[str]:
+            return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
@@ -104,8 +104,8 @@ def test_pipeline_step_mixin_validate_ext_deps_correct_commands() -> None:
             {"name": "afni", "optional": False, "commands": ["3dReHo"]}
         ]
 
-        def validate_input(self, input: List[str]) -> None:
-            print(input)
+        def validate_input(self, input: List[str]) -> List[str]:
+            return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
@@ -132,8 +132,8 @@ def test_pipeline_step_mixin_validate_ext_deps_incorrect_commands() -> None:
             {"name": "afni", "optional": False, "commands": ["3d"]}
         ]
 
-        def validate_input(self, input: List[str]) -> None:
-            print(input)
+        def validate_input(self, input: List[str]) -> List[str]:
+            return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
@@ -154,8 +154,8 @@ def test_pipeline_step_mixin_validate_incorrect_ext_dependencies() -> None:
 
         _EXT_DEPENDENCIES = [{"name": "foobar", "optional": True}]
 
-        def validate_input(self, input: List[str]) -> None:
-            print(input)
+        def validate_input(self, input: List[str]) -> List[str]:
+            return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type

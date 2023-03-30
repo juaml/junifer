@@ -940,6 +940,14 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             f"{self.uri.parent}/*_{self.uri.name}"  # type: ignore
         )
         logger.info(f"Will collect {len(elements_per_feature_md5)} features.")
+
+        # Print info before to avoid tqdm progress bar interference
+        for feature_md5, element_files in elements_per_feature_md5.items():
+            logger.info(
+                f"Collecting {len(element_files)} files for feature MD5: "
+                f"{feature_md5}."
+            )
+
         for feature_md5, element_files in tqdm(
             elements_per_feature_md5.items(), desc="feature"
         ):

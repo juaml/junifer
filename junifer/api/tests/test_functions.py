@@ -755,9 +755,14 @@ def test_queue_condor_assets_generation(
 
             if has_final_collect_job is True:
                 pre_collect_fname = Path(
-                    tmp_path / "junifer_jobs" / jobname / "collect_pre.pl"
+                    tmp_path / "junifer_jobs" / jobname / "collect_pre.sh"
                 )
                 assert pre_collect_fname.exists()
+                assert (
+                    stat.S_IMODE(pre_collect_fname.stat().st_mode)
+                    & stat.S_IEXEC
+                    != 0
+                )
 
             # Check submit log
             assert (

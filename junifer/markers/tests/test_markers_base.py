@@ -27,7 +27,9 @@ def test_base_marker_subclassing() -> None:
             return ["BOLD", "T1w"]
 
         def get_output_type(self, input):
-            return ["timeseries"]
+            if input == "BOLD":
+                return "timeseries"
+            raise ValueError(f"Cannot compute output type for {input}")
 
         def compute(self, input, extra_input):
             return {
@@ -56,6 +58,8 @@ def test_base_marker_subclassing() -> None:
     with pytest.raises(ValueError, match="not have the required data"):
         marker.validate_input(["T1w"])
 
+    assert marker.validate_input(["BOLD", "Other"]) == ["BOLD"]
+
     output = marker.fit_transform(input=input_)  # process
     # Check output
     assert "BOLD" in output
@@ -75,3 +79,30 @@ def test_base_marker_subclassing() -> None:
 
     # Check attributes
     assert marker.name == "MyBaseMarker"
+
+    # Add one extra input that will not be used to compute
+    input_ = {
+        "BOLD": {
+            "path": ".",
+            "data": "data",
+            "meta": {
+                "datagrabber": "dg",
+                "element": "elem",
+                "datareader": "dr",
+            },
+        },
+        "T2": {
+            "path": ".",
+            "data": "data",
+            "meta": {
+                "datagrabber": "dg",
+                "element": "elem",
+                "datareader": "dr",
+            },
+        }
+    }
+    marker = MyBaseMarker(on=["BOLD"])
+    output = marker.fit_transform(input=input_)  # process
+    # Check output
+    assert "BOLD" in output
+    assert "T2" not in output
