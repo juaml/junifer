@@ -135,3 +135,50 @@ def test_parse_yaml_absolute_path(tmp_path: Path) -> None:
 
     # Check test file
     parse_yaml(yaml_fname)
+
+
+def test_parse_storage_uri_relative(tmp_path: Path) -> None:
+    """Test YAML parsing with storage and relative URI.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    fname = tmp_path / "test_parse_yaml_with_storage_uri.yaml"
+    fname.write_text(
+        "foo: bar\nwith: numpy\nstorage:\n  uri: test.db\n"
+    )
+
+    contents = parse_yaml(fname)
+    assert "foo" in contents
+    assert contents["foo"] == "bar"
+    assert "storage" in contents
+    assert "uri" in contents["storage"]
+    assert contents["storage"]["uri"] == str(tmp_path / "test.db")
+
+    fname = tmp_path / "test_parse_yaml_with_storage_uri.yaml"
+    fname.write_text(
+        "foo: bar\nwith: numpy\nstorage:\n  uri: ../another/test.db\n"
+    )
+
+    contents = parse_yaml(fname)
+    assert "foo" in contents
+    assert contents["foo"] == "bar"
+    assert "storage" in contents
+    assert "uri" in contents["storage"]
+    assert contents["storage"]["uri"] == str(
+        (tmp_path / "../another/test.db").resolve())
+
+    fname = tmp_path / "test_parse_yaml_with_storage_uri.yaml"
+    fname.write_text(
+        "foo: bar\nwith: numpy\nstorage:\n  uri: /absolute/test.db\n"
+    )
+
+    contents = parse_yaml(fname)
+    assert "foo" in contents
+    assert contents["foo"] == "bar"
+    assert "storage" in contents
+    assert "uri" in contents["storage"]
+    assert contents["storage"]["uri"] == "/absolute/test.db"
