@@ -13,7 +13,7 @@ from nilearn.maskers import NiftiMasker
 from ..api.decorators import register_marker
 from ..data import get_mask, load_parcellation, merge_parcellations
 from ..stats import get_aggfunc_by_name
-from ..utils import logger, warn_with_log, raise_error
+from ..utils import logger, raise_error, warn_with_log
 from .base import BaseMarker
 
 
