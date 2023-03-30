@@ -88,5 +88,6 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
             if not uri_path.is_absolute():
                 # Compute the absolute path
                 contents["storage"]["uri"] = str(
-                    (filepath.parent / uri_path).resolve())
+                    (filepath.parent / uri_path).resolve()
+                )
     return contents

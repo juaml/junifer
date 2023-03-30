@@ -147,9 +147,7 @@ def test_parse_storage_uri_relative(tmp_path: Path) -> None:
 
     """
     fname = tmp_path / "test_parse_yaml_with_storage_uri.yaml"
-    fname.write_text(
-        "foo: bar\nwith: numpy\nstorage:\n  uri: test.db\n"
-    )
+    fname.write_text("foo: bar\nwith: numpy\nstorage:\n  uri: test.db\n")
 
     contents = parse_yaml(fname)
     assert "foo" in contents
@@ -169,7 +167,8 @@ def test_parse_storage_uri_relative(tmp_path: Path) -> None:
     assert "storage" in contents
     assert "uri" in contents["storage"]
     assert contents["storage"]["uri"] == str(
-        (tmp_path / "../another/test.db").resolve())
+        (tmp_path / "../another/test.db").resolve()
+    )
 
     fname = tmp_path / "test_parse_yaml_with_storage_uri.yaml"
     fname.write_text(
