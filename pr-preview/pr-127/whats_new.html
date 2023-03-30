@@ -263,8 +263,8 @@
         <article role="main">
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">12. </span>What’s new<a class="headerlink" href="#what-s-new" title="Permalink to this heading">#</a></h1>
-<section id="junifer-0-0-2-dev338-2023-03-30">
-<h2><span class="section-number">12.1. </span>Junifer 0.0.2.dev338 (2023-03-30)<a class="headerlink" href="#junifer-0-0-2-dev338-2023-03-30" title="Permalink to this heading">#</a></h2>
+<section id="junifer-0-0-2-dev340-2023-03-30">
+<h2><span class="section-number">12.1. </span>Junifer 0.0.2.dev340 (2023-03-30)<a class="headerlink" href="#junifer-0-0-2-dev340-2023-03-30" title="Permalink to this heading">#</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">12.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Permalink to this heading">#</a></h3>
 <ul class="simple">
@@ -272,12 +272,19 @@
 and not to the location of the YAML file by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>. (<a class="reference external" href="https://github.com/juaml/junifer/issues/127">#127</a>)</p></li>
 <li><p>Fix <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">run</span></code> to respect preprocess step specified in the pipeline by
 <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/159">#159</a>)</p></li>
+<li><p>Fix a bug in which fitting a marker (e.g. <code class="docutils literal notranslate"><span class="pre">SphereAggregation</span></code>) on a
+specific type (e.g.: <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>) will fail if another non-supported type (e.g.:
+<code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code>) is present in the data object by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="reference external" href="https://github.com/juaml/junifer/issues/185">#185</a>)</p></li>
 <li><p>Fix <a class="reference internal" href="api/markers.html#junifer.markers.AmplitudeLowFrequencyFluctuationParcels" title="junifer.markers.AmplitudeLowFrequencyFluctuationParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.AmplitudeLowFrequencyFluctuationParcels</span></code></a>,
 <a class="reference internal" href="api/markers.html#junifer.markers.AmplitudeLowFrequencyFluctuationSpheres" title="junifer.markers.AmplitudeLowFrequencyFluctuationSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.AmplitudeLowFrequencyFluctuationSpheres</span></code></a>,
 <a class="reference internal" href="api/markers.html#junifer.markers.ReHoSpheres" title="junifer.markers.ReHoSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.ReHoSpheres</span></code></a> and <a class="reference internal" href="api/markers.html#junifer.markers.ReHoParcels" title="junifer.markers.ReHoParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.ReHoParcels</span></code></a>
 pass the <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> parameter by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/187">#187</a>)</p></li>
 <li><p>Fix several markers that did not properly handle the <code class="docutils literal notranslate"><span class="pre">extra_input</span></code>
 parameter by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/189">#189</a>)</p></li>
+<li><p>Fix a bug in which relative paths in the YAML <code class="docutils literal notranslate"><span class="pre">with</span></code> directive would be
+computed relative to the current working directory of the process instead of
+the location of the YAML file by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>. (<a class="reference external" href="https://github.com/juaml/junifer/issues/191">#191</a>)</p></li>
 <li><p>Fix an issue with datalad cache and locks in which the user-specific
 configuration might create a conflict in high throughput systems by <a class="reference external" href="https://fraimondo.github.io">Fede
 Raimondo</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/192">#192</a>)</p></li>
@@ -338,6 +345,8 @@ be accessible via <code class="docutils literal notranslate"><span class="pre">i
 (<a class="reference external" href="https://github.com/juaml/junifer/issues/165">#165</a>)</p></li>
 <li><p>Add fMRIPrep brain masks to the datagrabber patterns for all datagrabbers in
 the aomic sub-package by <a class="reference external" href="https://github.com/LeSasse">Leonard Sasse</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/177">#177</a>)</p></li>
+<li><p>Improved logging output for preprocessing, collecting and pipeline building
+from YAML by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/185">#185</a>)</p></li>
 <li><p>Allow for empty spheres in
 <a class="reference internal" href="api/nilearn.html#junifer.external.nilearn.JuniferNiftiSpheresMasker" title="junifer.external.nilearn.JuniferNiftiSpheresMasker"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.external.nilearn.JuniferNiftiSpheresMasker</span></code></a>, that will result
 in NaNs. Also, modify the behaviour of the <code class="docutils literal notranslate"><span class="pre">collect</span></code> parameter in HTCondor
@@ -348,7 +357,7 @@ jobs fail by <a class="reference external" href="https://fraimondo.github.io">Fe
 will result in NaNs by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/194">#194</a>)</p></li>
 <li><p>Improve metadata and data I/O for <a class="reference internal" href="api/storage.html#junifer.storage.HDF5FeatureStorage" title="junifer.storage.HDF5FeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.storage.HDF5FeatureStorage</span></code></a>
 by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/196">#196</a>)</p></li>
-<li><p>Force datalad to be non-interactive on _queued_ jobs by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+<li><p>Force datalad to be non-interactive on <em>queued</em> jobs by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
 (<a class="reference external" href="https://github.com/juaml/junifer/issues/201">#201</a>)</p></li>
 <li><p>Add missing <code class="docutils literal notranslate"><span class="pre">abstractmethod</span></code> decorators for <code class="docutils literal notranslate"><span class="pre">get_valid_inputs</span></code> methods of
 <a class="reference internal" href="api/markers.html#junifer.markers.BaseMarker" title="junifer.markers.BaseMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.BaseMarker</span></code></a> and
@@ -550,7 +559,7 @@ for the UCLA dataset available on juseless by <a class="reference external" href
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">12. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-0-0-2-dev338-2023-03-30">12.1. Junifer 0.0.2.dev338 (2023-03-30)</a><ul>
+<li><a class="reference internal" href="#junifer-0-0-2-dev340-2023-03-30">12.1. Junifer 0.0.2.dev340 (2023-03-30)</a><ul>
 <li><a class="reference internal" href="#bugfixes">12.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">12.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">12.1.3. Improved Documentation</a></li>
