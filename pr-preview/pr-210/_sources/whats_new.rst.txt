@@ -8,7 +8,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.2.dev339 (2023-03-30)
+Junifer 0.0.2.dev348 (2023-03-30)
 ---------------------------------
 
 Bugfixes
@@ -16,12 +16,19 @@ Bugfixes
 
 - Fix ``junifer run`` to respect preprocess step specified in the pipeline by
   `Synchon Mandal`_ (:gh:`159`)
+- Fix a bug in which fitting a marker (e.g. ``SphereAggregation``) on a
+  specific type (e.g.: ``BOLD``) will fail if another non-supported type (e.g.:
+  ``BOLD_confounds``) is present in the data object by `Fede Raimondo`_
+  (:gh:`185`)
 - Fix :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels`,
   :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres`,
   :class:`junifer.markers.ReHoSpheres` and :class:`junifer.markers.ReHoParcels`
   pass the ``extra_input`` parameter by `Fede Raimondo`_ (:gh:`187`)
 - Fix several markers that did not properly handle the ``extra_input``
   parameter by `Fede Raimondo`_ (:gh:`189`)
+- Fix a bug in which relative paths in the YAML ``with`` directive would be
+  computed relative to the current working directory of the process instead of
+  the location of the YAML file by `Fede Raimondo`_. (:gh:`191`)
 - Fix an issue with datalad cache and locks in which the user-specific
   configuration might create a conflict in high throughput systems by `Fede
   Raimondo`_ (:gh:`192`)
@@ -84,6 +91,8 @@ Enhancements
   (:gh:`165`)
 - Add fMRIPrep brain masks to the datagrabber patterns for all datagrabbers in
   the aomic sub-package by `Leonard Sasse`_ (:gh:`177`)
+- Improved logging output for preprocessing, collecting and pipeline building
+  from YAML by `Fede Raimondo`_ (:gh:`185`)
 - Allow for empty spheres in
   :class:`junifer.external.nilearn.JuniferNiftiSpheresMasker`, that will result
   in NaNs. Also, modify the behaviour of the ``collect`` parameter in HTCondor
@@ -94,8 +103,11 @@ Enhancements
   will result in NaNs by `Fede Raimondo`_ (:gh:`194`)
 - Improve metadata and data I/O for :class:`junifer.storage.HDF5FeatureStorage`
   by `Synchon Mandal`_ (:gh:`196`)
-- Force datalad to be non-interactive on _queued_ jobs by `Fede Raimondo`_
+- Force datalad to be non-interactive on *queued* jobs by `Fede Raimondo`_
   (:gh:`201`)
+- Add missing ``abstractmethod`` decorators for ``get_valid_inputs`` methods of
+  :class:`junifer.markers.BaseMarker` and
+  :class:`junifer.preprocess.BasePreprocessor` by `Synchon Mandal`_ (:gh:`214`)
 
 
 Features
