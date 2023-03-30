@@ -6,7 +6,6 @@
 
 import importlib
 import importlib.util
-import os
 import sys
 from pathlib import Path
 from typing import Dict, Union
@@ -56,7 +55,7 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
         for t_module in to_load:
             if t_module.endswith(".py"):
                 logger.debug(f"Importing file: {t_module}")
-                file_path = Path(os.getcwd()) / t_module
+                file_path = filepath.parent / t_module
                 if not file_path.exists():
                     raise_error(
                         f"File in 'with' section does not exist: {file_path}"
