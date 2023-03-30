@@ -29,33 +29,38 @@ def hcpdg() -> Iterable[DataladHCP1200]:
 
 
 @pytest.mark.parametrize(
-    "tasks, phase_encodings, expected_path_name",
+    "tasks, phase_encodings, ica_fix, expected_path_name",
     [
-        (None, None, "rfMRI_REST1_LR_hp2000_clean.nii.gz"),
-        ("REST1", "LR", "rfMRI_REST1_LR_hp2000_clean.nii.gz"),
-        ("REST1", "RL", "rfMRI_REST1_RL_hp2000_clean.nii.gz"),
-        ("REST2", "LR", "rfMRI_REST2_LR_hp2000_clean.nii.gz"),
-        ("REST2", "RL", "rfMRI_REST2_RL_hp2000_clean.nii.gz"),
-        ("SOCIAL", "LR", "tfMRI_SOCIAL_LR_hp2000_clean.nii.gz"),
-        ("SOCIAL", "RL", "tfMRI_SOCIAL_RL_hp2000_clean.nii.gz"),
-        ("WM", "LR", "tfMRI_WM_LR_hp2000_clean.nii.gz"),
-        ("WM", "RL", "tfMRI_WM_RL_hp2000_clean.nii.gz"),
-        ("RELATIONAL", "LR", "tfMRI_RELATIONAL_LR_hp2000_clean.nii.gz"),
-        ("RELATIONAL", "RL", "tfMRI_RELATIONAL_RL_hp2000_clean.nii.gz"),
-        ("EMOTION", "LR", "tfMRI_EMOTION_LR_hp2000_clean.nii.gz"),
-        ("EMOTION", "RL", "tfMRI_EMOTION_RL_hp2000_clean.nii.gz"),
-        ("LANGUAGE", "LR", "tfMRI_LANGUAGE_LR_hp2000_clean.nii.gz"),
-        ("LANGUAGE", "RL", "tfMRI_LANGUAGE_RL_hp2000_clean.nii.gz"),
-        ("GAMBLING", "LR", "tfMRI_GAMBLING_LR_hp2000_clean.nii.gz"),
-        ("GAMBLING", "RL", "tfMRI_GAMBLING_RL_hp2000_clean.nii.gz"),
-        ("MOTOR", "LR", "tfMRI_MOTOR_LR_hp2000_clean.nii.gz"),
-        ("MOTOR", "RL", "tfMRI_MOTOR_RL_hp2000_clean.nii.gz"),
+        (None, None, False, "rfMRI_REST1_LR.nii.gz"),
+        ("REST1", "LR", False, "rfMRI_REST1_LR.nii.gz"),
+        ("REST1", "RL", False, "rfMRI_REST1_RL.nii.gz"),
+        ("REST2", "LR", False, "rfMRI_REST2_LR.nii.gz"),
+        ("REST2", "RL", False, "rfMRI_REST2_RL.nii.gz"),
+        ("SOCIAL", "LR", False, "tfMRI_SOCIAL_LR.nii.gz"),
+        ("SOCIAL", "RL", False, "tfMRI_SOCIAL_RL.nii.gz"),
+        ("WM", "LR", False, "tfMRI_WM_LR.nii.gz"),
+        ("WM", "RL", False, "tfMRI_WM_RL.nii.gz"),
+        ("RELATIONAL", "LR", False, "tfMRI_RELATIONAL_LR.nii.gz"),
+        ("RELATIONAL", "RL", False, "tfMRI_RELATIONAL_RL.nii.gz"),
+        ("EMOTION", "LR", False, "tfMRI_EMOTION_LR.nii.gz"),
+        ("EMOTION", "RL", False, "tfMRI_EMOTION_RL.nii.gz"),
+        ("LANGUAGE", "LR", False, "tfMRI_LANGUAGE_LR.nii.gz"),
+        ("LANGUAGE", "RL", False, "tfMRI_LANGUAGE_RL.nii.gz"),
+        ("GAMBLING", "LR", False, "tfMRI_GAMBLING_LR.nii.gz"),
+        ("GAMBLING", "RL", False, "tfMRI_GAMBLING_RL.nii.gz"),
+        ("MOTOR", "LR", False, "tfMRI_MOTOR_LR.nii.gz"),
+        ("MOTOR", "RL", False, "tfMRI_MOTOR_RL.nii.gz"),
+        ("REST1", "LR", True, "rfMRI_REST1_LR_hp2000_clean.nii.gz"),
+        ("REST1", "RL", True, "rfMRI_REST1_RL_hp2000_clean.nii.gz"),
+        ("REST2", "LR", True, "rfMRI_REST2_LR_hp2000_clean.nii.gz"),
+        ("REST2", "RL", True, "rfMRI_REST2_RL_hp2000_clean.nii.gz"),
     ],
 )
 def test_hcp1200_datagrabber(
     hcpdg: DataladHCP1200,
     tasks: Optional[str],
     phase_encodings: Optional[str],
+    ica_fix: bool,
     expected_path_name: str,
 ) -> None:
     """Test HCP1200 datagrabber.
@@ -69,6 +74,8 @@ def test_hcp1200_datagrabber(
         The parametrized tasks.
     phase_encodings : str
         The parametrized phase encodings.
+    ica_fix : bool
+        The parametrized ICA-FIX flag.
     expected_path_name : str
         The parametrized expected path name.
 
@@ -78,6 +85,7 @@ def test_hcp1200_datagrabber(
         datadir=hcpdg.datadir,
         tasks=tasks,
         phase_encodings=phase_encodings,
+        ica_fix=ica_fix,
     )
     # Get all elements
     all_elements = dg.get_elements()
@@ -342,3 +350,38 @@ def test_hcp1200_datagrabber_elements(
             assert element[2] in ["LR", "RL"]
 
         assert set(found_subjects) == set(expected_subjects)
+
+
+@pytest.mark.parametrize(
+    "tasks, ica_fix",
+    [
+        ("SOCIAL", True),
+        ("WM", True),
+        ("RELATIONAL", True),
+        ("EMOTION", True),
+        ("LANGUAGE", True),
+        ("GAMBLING", True),
+        ("MOTOR", True),
+    ],
+)
+def test_hcp1200_datagrabber_incorrect_access_icafix(
+    tasks: Optional[str],
+    ica_fix: bool
+) -> None:
+    """Test HCP1200 datagrabber incorrect access for icafix.
+
+    Parameters
+    ----------
+    tasks : str
+        The parametrized tasks.
+    ica_fix : bool
+        The parametrized ICA-FIX flag.
+
+    """
+    configure_logging(level="DEBUG")
+    with pytest.raises(ValueError, match="is only available for"):
+        _ = HCP1200(
+            datadir=".",
+            tasks=tasks,
+            ica_fix=ica_fix,
+        )
