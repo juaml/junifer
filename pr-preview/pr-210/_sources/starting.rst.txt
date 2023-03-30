@@ -85,7 +85,7 @@ First steps with Junifer
      missing_other --> missing_other_other
      missing_other_other --> contact_help
 
-     contact_help(((Contact the Junifer\nteam on Matrix)))
+     contact_help(((Contact the\nJunifer team)))
 
      missing_mask --> read_adding_mask_start
      read_adding_mask_start("Creating a Junifer extension")
@@ -108,7 +108,7 @@ First steps with Junifer
      missing_other_solved{Did you solved your issue?}
      missing_other_solved -->|Yes| read_using_final
      missing_other_solved -->|No| missing_other_contact
-     missing_other_contact(Contact the Junifer team on Matrix)
+     missing_other_contact(Contact the\nJunifer team)
      missing_other_contact --> missing_other_issue
      missing_other_issue(((Submit a\nFEATURE REQUEST\nissue in Github)))
 
@@ -123,7 +123,7 @@ First steps with Junifer
      question_error_run{"Is it an issue\nwith my YAML file?"}
      question_error_run -->|Yes| final_yaml
      question_error_run -->|No| error_contact
-     error_contact(Contact the Junifer team on Matrix)
+     error_contact(Contact the\nJunifer team)
      error_contact --> error_issue
      error_issue(((Submit a\nBUG REPORT issue\nin Github)))
      question_final_run_worked -->|Yes| final_queue
