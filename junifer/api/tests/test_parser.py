@@ -75,3 +75,63 @@ def test_parse_yaml_failure_with_multi_module_autoload(tmp_path: Path) -> None:
     # Check test file
     with pytest.raises(ImportError, match="wrong_config"):
         parse_yaml(fname)
+
+
+def test_parse_yaml_relative_path(tmp_path: Path) -> None:
+    """Test YAML parsing with relative paths in with.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    t_tmp_path = tmp_path / "test_relative_with"
+
+    # Write .py to include
+    py_path = t_tmp_path / "external"
+    py_path.mkdir(exist_ok=True, parents=True)
+    py_fname = py_path / "first.py"
+    py_fname.write_text("import numpy as np\n")
+
+    # Write yaml that includes a relative path
+    yaml_path = t_tmp_path / "yamls"
+    yaml_path.mkdir(exist_ok=True, parents=True)
+    yaml_fname = yaml_path / "test_parse_yaml_relative_path.yaml"
+
+    yaml_fname.write_text(
+        "foo: bar\nwith:\n  - ../external/first.py\n  - scipy\n"
+    )
+
+    # Check test file
+    parse_yaml(yaml_fname)
+
+
+def test_parse_yaml_absolute_path(tmp_path: Path) -> None:
+    """Test YAML parsing with absolute paths in with.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    t_tmp_path = tmp_path / "test_relative_with"
+
+    # Write .py to include
+    py_path = t_tmp_path / "external"
+    py_path.mkdir(exist_ok=True, parents=True)
+    py_fname = py_path / "first.py"
+    py_fname.write_text("import numpy as np\n")
+
+    # Write yaml that includes a relative path
+    yaml_path = t_tmp_path / "yamls"
+    yaml_path.mkdir(exist_ok=True, parents=True)
+    yaml_fname = yaml_path / "test_parse_yaml_relative_path.yaml"
+
+    yaml_fname.write_text(
+        f"foo: bar\nwith:\n  - {py_fname.absolute()}\n  - scipy\n"
+    )
+
+    # Check test file
+    parse_yaml(yaml_fname)
