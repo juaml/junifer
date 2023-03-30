@@ -9,13 +9,11 @@ from typing import Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
 from .. import SphereAggregation
-from .falff_base import AmplitudeLowFrequencyFluctuationBase
+from .falff_base import ALFFBase
 
 
 @register_marker
-class AmplitudeLowFrequencyFluctuationSpheres(
-    AmplitudeLowFrequencyFluctuationBase
-):
+class ALFFSpheres(ALFFBase):
     """Class for computing fALFF/ALFF on spheres.
 
     Parameters
