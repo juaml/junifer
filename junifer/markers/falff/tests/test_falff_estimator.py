@@ -10,22 +10,20 @@ from nibabel import Nifti1Image
 from scipy.stats import pearsonr
 
 from junifer.datareader import DefaultDataReader
-from junifer.markers.falff.falff_estimator import (
-    AmplitudeLowFrequencyFluctuationEstimator,
-)
+from junifer.markers.falff.falff_estimator import ALFFEstimator
 from junifer.pipeline.utils import _check_afni
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.utils import logger
 
 
-def test_AmplitudeLowFrequencyFluctuationEstimator_cache_python() -> None:
+def test_ALFFEstimator_cache_python() -> None:
     """Test that the cache works properly when using python."""
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
 
-    estimator = AmplitudeLowFrequencyFluctuationEstimator()
+    estimator = ALFFEstimator()
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=False,
@@ -111,14 +109,14 @@ def test_AmplitudeLowFrequencyFluctuationEstimator_cache_python() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_AmplitudeLowFrequencyFluctuationEstimator_cache_afni() -> None:
+def test_ALFFEstimator_cache_afni() -> None:
     """Test that the cache works properly when using afni."""
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
 
-    estimator = AmplitudeLowFrequencyFluctuationEstimator()
+    estimator = ALFFEstimator()
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=True,
@@ -204,13 +202,13 @@ def test_AmplitudeLowFrequencyFluctuationEstimator_cache_afni() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_AmplitudeLowFrequencyFluctuationEstimator_afni_vs_python() -> None:
+def test_ALFFEstimator_afni_vs_python() -> None:
     """Test that the cache works properly when using afni."""
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
-    estimator = AmplitudeLowFrequencyFluctuationEstimator()
+    estimator = ALFFEstimator()
 
     # Use an arbitrary TR to test the AFNI vs Python implementation
     afni_alff, afni_falff = estimator.fit_transform(
