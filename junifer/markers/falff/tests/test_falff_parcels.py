@@ -11,7 +11,7 @@ from numpy.testing import assert_array_equal
 from scipy.stats import pearsonr
 
 from junifer.datareader import DefaultDataReader
-from junifer.markers.falff import AmplitudeLowFrequencyFluctuationParcels
+from junifer.markers.falff import ALFFParcels
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
@@ -21,8 +21,8 @@ from junifer.utils import logger
 _PARCELLATION = "Schaefer100x7"
 
 
-def test_AmplitudeLowFrequencyFluctuationParcels_python() -> None:
-    """Test AmplitudeLowFrequencyFluctuationParcels using python."""
+def test_ALFFParcels_python() -> None:
+    """Test ALFFParcels using python."""
     # Get the SPM auditory data:
 
     with PartlyCloudyTestingDataGrabber() as dg:
@@ -30,7 +30,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python() -> None:
 
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
-    marker = AmplitudeLowFrequencyFluctuationParcels(
+    marker = ALFFParcels(
         parcellation=_PARCELLATION,
         method="mean",
         use_afni=False,
@@ -46,15 +46,15 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_AmplitudeLowFrequencyFluctuationParcels_afni() -> None:
-    """Test AmplitudeLowFrequencyFluctuationParcels using afni."""
+def test_ALFFParcels_afni() -> None:
+    """Test ALFFParcels using afni."""
     # Get the SPM auditory data:
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
-    marker = AmplitudeLowFrequencyFluctuationParcels(
+    marker = ALFFParcels(
         parcellation=_PARCELLATION,
         method="mean",
         use_afni=True,
@@ -67,7 +67,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_afni() -> None:
     assert afni_values.shape == (1, 100)
 
     # Again, should be blazing fast
-    marker = AmplitudeLowFrequencyFluctuationParcels(
+    marker = ALFFParcels(
         parcellation=_PARCELLATION, method="mean", fractional=False
     )
     assert marker.use_afni is None
@@ -82,10 +82,10 @@ def test_AmplitudeLowFrequencyFluctuationParcels_afni() -> None:
 @pytest.mark.parametrize(
     "fractional", [True, False], ids=["fractional", "non-fractional"]
 )
-def test_AmplitudeLowFrequencyFluctuationParcels_python_vs_afni(
+def test_ALFFParcels_python_vs_afni(
     fractional: bool,
 ) -> None:
-    """Test AmplitudeLowFrequencyFluctuationParcels using python.
+    """Test ALFFParcels using python.
 
     Parameters
     ----------
@@ -98,7 +98,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python_vs_afni(
 
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
-    marker_python = AmplitudeLowFrequencyFluctuationParcels(
+    marker_python = ALFFParcels(
         parcellation=_PARCELLATION,
         method="mean",
         use_afni=False,
@@ -110,7 +110,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python_vs_afni(
     assert python_values.ndim == 2
     assert python_values.shape == (1, 100)
 
-    marker_afni = AmplitudeLowFrequencyFluctuationParcels(
+    marker_afni = ALFFParcels(
         parcellation=_PARCELLATION,
         method="mean",
         use_afni=True,
@@ -127,10 +127,10 @@ def test_AmplitudeLowFrequencyFluctuationParcels_python_vs_afni(
     assert r > 0.99
 
 
-def test_AmplitudeLowFrequencyFluctuationParcels_storage(
+def test_ALFFParcels_storage(
     tmp_path: Path,
 ) -> None:
-    """Test AmplitudeLowFrequencyFluctuationParcels storage.
+    """Test ALFFParcels storage.
 
     Parameters
     ----------
@@ -142,7 +142,7 @@ def test_AmplitudeLowFrequencyFluctuationParcels_storage(
         input = dg["sub-01"]
         input = DefaultDataReader().fit_transform(input)
         # Create ParcelAggregation object
-        marker = AmplitudeLowFrequencyFluctuationParcels(
+        marker = ALFFParcels(
             parcellation=_PARCELLATION,
             method="mean",
             use_afni=False,
