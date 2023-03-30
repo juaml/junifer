@@ -9,13 +9,11 @@ from typing import Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
 from .. import ParcelAggregation
-from .falff_base import AmplitudeLowFrequencyFluctuationBase
+from .falff_base import ALFFBase
 
 
 @register_marker
-class AmplitudeLowFrequencyFluctuationParcels(
-    AmplitudeLowFrequencyFluctuationBase
-):
+class ALFFParcels(ALFFBase):
     """Class for computing fALFF/ALFF on parcels.
 
     Parameters
