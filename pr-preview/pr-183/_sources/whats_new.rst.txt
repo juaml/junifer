@@ -1,0 +1,273 @@
+.. include:: links.inc
+.. include:: changes/contributors.inc
+
+.. _whats_new:
+
+What's new
+==========
+
+.. towncrier release notes start
+
+Junifer 0.0.2.dev337 (2023-03-30)
+---------------------------------
+
+Bugfixes
+^^^^^^^^
+
+- Fix ``junifer run`` to respect preprocess step specified in the pipeline by
+  `Synchon Mandal`_ (:gh:`159`)
+- Fix :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels`,
+  :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres`,
+  :class:`junifer.markers.ReHoSpheres` and :class:`junifer.markers.ReHoParcels`
+  pass the ``extra_input`` parameter by `Fede Raimondo`_ (:gh:`187`)
+- Fix several markers that did not properly handle the ``extra_input``
+  parameter by `Fede Raimondo`_ (:gh:`189`)
+- Fix an issue with datalad cache and locks in which the user-specific
+  configuration might create a conflict in high throughput systems by `Fede
+  Raimondo`_ (:gh:`192`)
+- Fix a bug in which :class:`junifer.markers.ParcelAggregation` could yield
+  duplicated column names if two or more parcels were used and label names were
+  not unique by `Fede Raimondo`_ (:gh:`194`)
+- Fix a bug in which :func:`junifer.stats.count` will not be correctly applied
+  across an axis by `Fede Raimondo`_ (:gh:`195`)
+- Fix an issue with datalad cache and locks in which the overriden settings in
+  Junifer were not propagated to subprocesses, resulting in using the default
+  settings by `Fede Raimondo`_ (:gh:`199`)
+- Fix a bug in which :func:`junifer.data.masks.get_mask` fails for
+  FunctionalConnectivityBase class, because of missing extra_input parameter by
+  `Leonard Sasse`_ (:gh:`200`)
+- Fix the output of :class:`junifer.markers.RSSETSMarker` to be 2D by `Synchon
+  Mandal`_ (:gh:`215`)
+
+
+API Changes
+^^^^^^^^^^^
+
+- Add ``confounds_format`` parameter to
+  :class:`junifer.datagrabber.PatternDataGrabber` constructor for improved
+  handling of confounds specified via ``BOLD_confounds`` data type by `Synchon
+  Mandal`_ (:gh:`158`)
+- Rename ``store_table()`` to ``store_vector()`` for storage-like objects and
+  adapt marker-like objects to use ``"vector"`` in place of ``"table"`` for
+  storage. Also, improve the logic of storing vectors by `Synchon Mandal`_
+  (:gh:`181`)
+- Add ``pre_run`` parameter to ``_queue_condor`` by `Fede Raimondo`_
+  (:gh:`188`)
+- Expose ``allow_overlap`` parameter in
+  :class:`junifer.markers.SphereAggregation` and related markers by `Fede
+  Raimondo`_ (:gh:`190`)
+
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Add more documentation on registering parcellations, coordinates, and masks
+  by `Leonard Sasse`_ (:gh:`166`)
+- Migrate and document changelog creation and maintenance via ``towncrier`` by
+  `Synchon Mandal`_ (:gh:`203`)
+- Add copy button to documentation code blocks by `Synchon Mandal`_ (:gh:`205`)
+
+
+Enhancements
+^^^^^^^^^^^^
+
+- Organize functional connectivity markers in
+  ``junifer.markers.functional_connectivity`` by `Synchon Mandal`_ (:gh:`107`)
+- Change HCP datagrabber tests to decrease CI running time by `Fede Raimondo`_
+  (:gh:`155`)
+- Allow :class:`junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber` to
+  be accessible via ``import junifer.testing.registry`` by `Synchon Mandal`_
+  (:gh:`160`)
+- Update docstrings and fix typo in log message by `Synchon Mandal`_
+  (:gh:`165`)
+- Add fMRIPrep brain masks to the datagrabber patterns for all datagrabbers in
+  the aomic sub-package by `Leonard Sasse`_ (:gh:`177`)
+- Allow for empty spheres in
+  :class:`junifer.external.nilearn.JuniferNiftiSpheresMasker`, that will result
+  in NaNs. Also, modify the behaviour of the ``collect`` parameter in HTCondor
+  ``queue`` function to run a collect job even if some of the previous jobs
+  fail. This is useful to collect the results of a pipeline even if some of the
+  jobs fail by `Fede Raimondo`_ (:gh:`190`)
+- Allow for empty parcels in :class:`junifer.markers.ParcelAggregation`, that
+  will result in NaNs by `Fede Raimondo`_ (:gh:`194`)
+- Improve metadata and data I/O for :class:`junifer.storage.HDF5FeatureStorage`
+  by `Synchon Mandal`_ (:gh:`196`)
+- Force datalad to be non-interactive on _queued_ jobs by `Fede Raimondo`_
+  (:gh:`201`)
+- Add missing ``abstractmethod`` decorators for ``get_valid_inputs`` methods of
+  :class:`junifer.markers.BaseMarker` and
+  :class:`junifer.preprocess.BasePreprocessor` by `Synchon Mandal`_ (:gh:`214`)
+
+
+Features
+^^^^^^^^
+
+- Add :class:`junifer.markers.EdgeCentricFCParcels` and
+  :class:`junifer.markers.EdgeCentricFCSpheres` by `Leonard Sasse`_ (:gh:`64`)
+- Expose a :func:`junifer.data.parcellations.merge_parcellations` function to
+  merge a list of parcellations by `Leonard Sasse`_ (:gh:`146`)
+- Add support for HDF5 feature storage via
+  :class:`junifer.storage.HDF5FeatureStorage` by `Synchon Mandal`_ (:gh:`147`)
+- Add :class:`junifer.markers.TemporalSNRParcels` and
+  :class:`junifer.markers.TemporalSNRSpheres` by `Leonard Sasse`_ (:gh:`163`)
+- Add support for ``Power`` coordinates by `Synchon Mandal`_ (:gh:`167`)
+- Add support for ``Dosenbach`` coordinates by `Synchon Mandal`_ (:gh:`168`)
+- Add support for nilearn computed masks (``compute_epi_mask``,
+  ``compute_brain_mask``, ``compute_background_mask``,
+  ``fetch_icbm152_brain_gm_mask``) by `Fede Raimondo`_ (:gh:`175`)
+- Add aggregation function :func:`junifer.stats.count` that returns the number
+  of elements in a given axis. This allows to count the number of voxels per
+  sphere/parcel when used as ``method`` in markers by `Fede Raimondo`_
+  (:gh:`190`)
+
+
+junifer 0.0.1 (2022-12-20)
+--------------------------
+
+API Changes
+^^^^^^^^^^^
+
+- Change the ``single_output`` default parameter in storage classes from
+  ``False`` to ``True`` by `Fede Raimondo`_ (:gh:`134`)
+
+Bugfixes
+^^^^^^^^
+
+- Fix a bug in which a :class:`junifer.datagrabber.PatternDataGrabber` would
+  now work with relative ``datadir`` paths (reported by `Leonard Sasse`_,
+  fixed by `Fede Raimondo`_) (:gh:`96`, :gh:`98`)
+
+- Fix a bug in which :class:`junifer.datagrabber.DataladAOMICPIOP2` datagrabber
+  did not use user input to constrain elements based on tasks by
+  `Leonard Sasse`_ (:gh:`105`)
+
+- Fix a bug in which a datalad dataset could remove a user-cloned dataset by
+  `Fede Raimondo`_ (:gh:`53`)
+
+- Fix a bug in which CLI command would not work using elements with more than
+  one field by `Fede Raimondo`_
+
+- Fix a bug in which the generated DAG for HTCondor will not work by
+  `Fede Raimondo`_ (:gh:`143`)
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Add an example how to use ``junifer`` and ``julearn`` in one pipeline to
+  extract features and do machine learning by `Leonard Sasse`_,
+  `Nicolas Nieto`_, and `Sami Hamdan`_ (:gh:`40`)
+
+- Add documentation for the datagrabbers by `Leonard Sasse`_,
+  `Nicolas Nieto`_, and `Sami Hamdan`_
+
+- Change documentation template to furo. Fix references and standardize
+  documentation by `Fede Raimondo`_ (:gh:`114`)
+
+Enhancements
+^^^^^^^^^^^^
+
+- Add comments to :class:`junifer.datagrabber.DataladDataGrabber` datagrabber
+  and change to use ``datalad-clone`` instead of ``datalad-install`` by
+  `Benjamin Poldrack`_ (:gh:`55`)
+
+- Upgrade storage interface for storage-like objects by `Synchon Mandal`_
+  (:gh:`84`)
+
+- Add missing type annotations by `Synchon Mandal`_ (:gh:`74`)
+
+- Refactor markers ``on`` attribute and ``get_valid_inputs`` to verify that the
+  marker can be computed on the input data types by `Fede Raimondo`_
+
+- Add test for :class:`junifer.datagrabber.DataladHCP1200` datagrabber by
+  `Synchon Mandal`_ (:gh:`93`)
+
+- Rename "atlas" to "parcellation" by `Fede Raimondo`_ (:gh:`116`)
+
+- Refactor the :class:`junifer.datagrabber.BaseDataGrabber` class to allow for
+  easier subclassing by `Fede Raimondo`_ (:gh:`123`)
+
+- Allow custom aggregation method for :class:`junifer.markers.SphereAggregation`
+  by `Synchon Mandal`_ (:gh:`102`)
+
+- Add support for "masks" by `Fede Raimondo`_ (:gh:`79`)
+
+- Allow :class:`junifer.markers.ParcelAggregation` to apply multiple
+  parcellations at once by `Fede Raimondo`_ (:gh:`131`)
+
+- Refactor :class:`junifer.pipeline.PipelineStepMixin` to improve its
+  implementation and validation for pipeline steps by `Synchon Mandal`_
+  (:gh:`152`)
+
+Features
+^^^^^^^^
+
+- Implement :class:`junifer.testing.datagrabbers.SPMAuditoryTestingDatagrabber`
+  datagrabber by `Fede Raimondo`_ (:gh:`52`)
+
+- Implement matrix storage in SQliteFeatureStorage by `Fede Raimondo`_
+  (:gh:`42`)
+
+- Implement :class:`junifer.markers.FunctionalConnectivityParcels` marker for
+  functional connectivity using a parcellation by `Amir Omidvarnia`_ and
+  `Kaustubh R. Patil`_ (:gh:`41`)
+
+- Implement coordinate register, list and load by `Fede Raimondo`_ (:gh:`11`)
+
+- Add :class:`junifer.datagrabber.DataladAOMICID1000` datagrabber for AOMIC
+  ID1000 dataset including tests and creation of mock dataset for testing by
+  `Vera Komeyer`_ and `Xuan Li`_ (:gh:`60`)
+
+- Add support to access other input in the data object in the ``compute`` method
+  by `Fede Raimondo`_
+
+- Implement :class:`junifer.markers.RSSETSMarker` marker by `Leonard Sasse`_,
+  `Nicolas Nieto`_ and `Sami Hamdan`_ (:gh:`51`)
+
+- Implement :class:`junifer.markers.SphereAggregation` marker by
+  `Fede Raimondo`_
+
+- Implement :class:`junifer.datagrabber.DataladAOMICPIOP1` and
+  :class:`junifer.datagrabber.DataladAOMICPIOP2` datagrabbers for AOMIC PIOP1
+  and PIOP2 datasets respectively and refactor
+  :class:`junifer.datagrabber.DataladAOMICID1000` slightly by `Leonard Sasse`_
+  (:gh:`94`)
+
+- Implement :class:`junifer.configs.juseless.datagrabbers.JuselessDataladCamCANVBM`
+  datagrabber by `Leonard Sasse`_ (:gh:`99`)
+
+- Implement :class:`junifer.configs.juseless.datagrabbers.JuselessDataladIXIVBM`
+  CAT output datagrabber for juseless by `Leonard Sasse`_ (:gh:`48`)
+
+- Add ``junifer wtf`` to report environment details by `Synchon Mandal`_
+  (:gh:`33`)
+
+- Add ``junifer selftest`` to report environment details by `Synchon Mandal`_
+  (:gh:`9`)
+
+- Implement :class:`junifer.configs.juseless.datagrabbers.JuselessDataladAOMICID1000VBM`
+  datagrabber for accessing AOMIC ID1000 VBM from juseless by `Felix Hoffstaedter`_
+  and `Synchon Mandal`_ (:gh:`57`)
+
+- Add :class:`junifer.preprocess.fMRIPrepConfoundRemover` by `Fede Raimondo`_
+  and `Leonard Sasse`_ (:gh:`111`)
+
+- Implement :class:`junifer.markers.CrossParcellationFC` marker by
+  `Leonard Sasse`_ and `Kaustubh R. Patil`_ (:gh:`85`)
+
+- Add :class:`junifer.configs.juseless.datagrabbers.JuselessUCLA` datagrabber
+  for the UCLA dataset available on juseless by `Leonard Sasse`_ (:gh:`118`)
+
+- Introduce a singleton decorator for marker computations by `Synchon Mandal`_
+  (:gh:`151`)
+
+- Implement :class:`junifer.markers.ReHoParcels` and
+  :class:`junifer.markers.ReHoSpheres` markers by `Synchon Mandal`_ (:gh:`36`)
+
+- Implement :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels` and
+  :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres` markers by
+  `Fede Raimondo`_ (:gh:`35`)
+
+Misc
+^^^^
+
+- Create the repository based on the mockup by `Fede Raimondo`_
