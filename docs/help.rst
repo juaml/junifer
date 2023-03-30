@@ -18,7 +18,7 @@ Lennon was just trying to write an email to McCartney.
 
 While the song might have been written with another meaning in mind, it is a good way to describe the situation of many
 researchers who are presented with a new toolbox. Indeed, the situation of many researchers is that the projects they
-are working on are becoming more and more complex in terms of methods and data. Thus, we *open up the doors* to new 
+are working on are becoming more and more complex in terms of methods and data. Thus, we *open up the doors* to new
 possibilites:
 
     | When I was younger, so much younger than today
@@ -28,8 +28,8 @@ possibilites:
 
     -- The Beatles, Help!
 
-The setback with modern reseearch is that nowaday's methods are often more complex and require more computing, which
-means that we need to learn concepts from computer sciences, mathematics, statistics, etc. This is a good thing, but it
+The setback with modern research is that current methods are often more complex and require more computing, which
+means that we need to learn concepts from computer science, mathematics, statistics, etc. This is a good thing, but it
 also means that we need to learn new tools and new ways of thinking, which can be a bit overwhelming, to the point that
 we start relying more and more on other researchers. In the end, we might feel like we lose our independence:
 
@@ -45,11 +45,10 @@ to ask for it. We will need to ask for help from our colleagues, from our superv
 
 We are a small team of researchers and developers, and we are not experts in *everything at once*. Each one of us has
 a specific expertise, and we are trying to use this expertise to create Junifer. When we conceived Junifer, we thought
-of researcher's problems, and tried to come up with the best way to help them, by building a tool that is easy to 
-understand, learn and use. Most importantly, we made it to help. We are here to help you
-and your research.
+of researchers' problems and tried to come up with the best way to help them, by building a tool that is easy to
+understand, learn and use. Most importantly, we made it to help. We are here to help you and your research.
 
-If you have any questions, problems or suggestions, please do not hesitate to contact us. We will be happy to help you
+If you have any questions, problems and / or suggestions, please do not hesitate to contact us. We will be happy to help you
 and we will be happy to hear from you.
 
 Seems nice, no? But we have one condition: **help us help you**.
@@ -62,8 +61,8 @@ Some people prefer to **write, in detail, with code and figures**. If you are on
 `junifer Discussions`_. site on GitHub. This is a place where you can ask questions, and where you can discuss topics
 such as potential new features, or potential new methods.
 
-Some other people do **not have a clear idea of what they want**, but they know that they need help. This is not a
-problem, but it is a bit more difficult to help. Since it will require more frequent interactions to try to understand
+Some people do **not have a clear idea of what they want**, but they know that they need help. This is not a
+problem, but it is a bit more involved. Since it will require more frequent interactions to try to understand
 what you are trying to do, we have the `junifer matrix channel`_ in which you can chat with us and other junifer users.
 
 Finally, some people **prefer to communicate verbally**. If you are one of those, you might want to join our
@@ -107,9 +106,3 @@ In short, these are the 3 communication channels to get help:
 
    * We can't read or write code, or even propose solutions for you to test.
    * You will need to wait for the next *office hour*.
-
-
-
-
-
-
