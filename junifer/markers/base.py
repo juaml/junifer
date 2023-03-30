@@ -45,6 +45,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             raise ValueError(f"{self.name} cannot be computed on {wrong_on}")
         self._on = on
 
+    @abstractmethod
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
 
