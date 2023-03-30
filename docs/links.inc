@@ -30,6 +30,7 @@
 .. _`Github`: https://github.com/
 .. _`junifer Github`: https://github.com/juaml/junifer
 .. _`junifer Discussions`: https://github.com/juaml/junifer/discussions
+.. _`junifer matrix channel`: https://matrix.to/#/#junifer-gen:inm7.de
 
 .. _`Wikipedia`: https://wikipedia.org
 .. _`YAML`: https://yaml.org

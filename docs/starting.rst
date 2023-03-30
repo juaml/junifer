@@ -65,7 +65,7 @@ First steps with Junifer
      read_extending_marker --> question_marker_solved
      question_marker_solved{Can you use\nyour marker now?}
      question_marker_solved -->|Yes| question_contribute_marker
-    question_marker_solved -->|No| contact_help
+     question_marker_solved -->|No| contact_help
      question_contribute_marker{Do you think\nyour Marker\nis useful for other users?}
      question_contribute_marker -->|Yes| contribute_marker
      question_contribute_marker -->|No| final_run
@@ -75,8 +75,42 @@ First steps with Junifer
 
      missing_preprocessing --> contact_help
 
-     missing_other --> contact_help
+     missing_mask{"A Mask?"}
+     missing_parcellation{"A Parcellation?"}
+     missing_coordinates{"Coordinates?"}
+     missing_other_other{"Something else?"}
+     missing_other --> missing_mask
+     missing_other --> missing_parcellation
+     missing_other --> missing_coordinates
+     missing_other --> missing_other_other
+     missing_other_other --> contact_help
+
      contact_help(((Contact the Junifer\nteam on Matrix)))
+
+     missing_mask --> read_adding_mask
+     read_adding_mask_start("Creating a Junifer extension")
+     read_adding_mask_start --> read_adding_mask
+     read_adding_mask("Read Adding Masks")
+     read_adding_mask --> missing_other_solved
+
+     missing_parcellation --> read_adding_parcellation
+     read_adding_parcellation_start("Read Creating a Junifer extension")
+     read_adding_parcellation_start --> read_adding_parcellation
+     read_adding_parcellation("Read Adding Parcellations")
+     read_adding_parcellation --> missing_other_solved
+     
+     missing_coordinates --> read_adding_coordinates
+     read_adding_coordinates_start("Creating a Junifer extension")
+     read_adding_coordinates_start --> read_adding_coordinates
+     read_adding_coordinates("Read Adding Coordinates")
+     read_adding_coordinates --> missing_other_solved
+     
+     missing_other_solved{Did you solved your issue?}
+     missing_other_solved -->|Yes| read_using_final
+     missing_other_solved -->|No| missing_other_contact
+     missing_other_contact(Contact the Junifer team on Matrix)
+     missing_other_contact --> missing_other_issue
+     missing_other_issue(((Submit a\nFEATURE REQUEST\nissue in Github)))
 
      read_using_final(Read Using Junifer)
      read_using_final --> final_yaml
@@ -96,4 +130,26 @@ First steps with Junifer
      final_queue(Use junifer queue to compute your features)
      final_queue --> final_magic
      final_magic(((Let junifer do its magic!)))
+     
      click read_understanding href "https://juaml.github.io/junifer/main/understanding/index.html"
+     click read_using href "https://juaml.github.io/junifer/main/using/index.html"
+     click read_using_final href "https://juaml.github.io/junifer/main/using/index.html"
+     click read_extending_datagrabber_start href "https://juaml.github.io/junifer/main/extending/extension.html"
+     click read_extending_datagrabber href "https://juaml.github.io/junifer/main/extending/datagrabber.html"
+     click read_extending_marker_start href "https://juaml.github.io/junifer/main/extending/extension.html"
+     click read_extending_marker href "https://juaml.github.io/junifer/main/extending/marker.html"
+     click read_adding_mask_start href "https://juaml.github.io/junifer/main/extending/extension.html"
+     click read_adding_mask href "https://juaml.github.io/junifer/main/extending/masks.html"
+     click read_adding_parcellation_start href "https://juaml.github.io/junifer/main/extending/extension.html"
+     click read_adding_parcellation href "https://juaml.github.io/junifer/main/extending/parcellations.html"
+     click read_adding_coordinates_start href "https://juaml.github.io/junifer/main/extending/extension.html"
+     click read_adding_coordinates href "https://juaml.github.io/junifer/main/extending/coordinates.html"
+
+     click error_issue href "https://github.com/juaml/junifer/issues/new/choose" _blank
+     click missing_other_issue href "https://github.com/juaml/junifer/issues/new/choose" _blank
+     click contribute_marker href "https://github.com/juaml/junifer/issues/new/choose" _blank
+     click contribute_datagrabber href "https://github.com/juaml/junifer/issues/new/choose" _blank
+
+     click error_contact href "https://matrix.to/#/#junifer-gen:inm7.de" _blank
+     click contact_help href "https://matrix.to/#/#junifer-gen:inm7.de" _blank
+     click missing_other_contact href "https://matrix.to/#/#junifer-gen:inm7.de" _blank

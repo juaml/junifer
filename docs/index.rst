@@ -30,6 +30,7 @@ enabling others to extend it easily.
    extending/index.rst
    auto_examples/index.rst
    api/index.rst
+   help
    contribution
    maintaining
    faq
