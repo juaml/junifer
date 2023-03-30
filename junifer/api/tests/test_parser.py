@@ -77,6 +77,28 @@ def test_parse_yaml_failure_with_multi_module_autoload(tmp_path: Path) -> None:
         parse_yaml(fname)
 
 
+def test_parse_yaml_with_wrong_path(tmp_path: Path) -> None:
+    """Test YAML parsing with wrong paths in with.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    t_tmp_path = tmp_path / "test_relative_with"
+    # Write yaml that includes a relative path
+    yaml_path = t_tmp_path / "yamls"
+    yaml_path.mkdir(exist_ok=True, parents=True)
+    yaml_fname = yaml_path / "test_parse_yaml_wrong_path.yaml"
+
+    yaml_fname.write_text("foo: bar\nwith:\n  -  missingt.py\n  - scipy\n")
+
+    # Check test file
+    with pytest.raises(ValueError, match="does not exist"):
+        parse_yaml(yaml_fname)
+
+
 def test_parse_yaml_relative_path(tmp_path: Path) -> None:
     """Test YAML parsing with relative paths in with.
 
@@ -181,3 +203,12 @@ def test_parse_storage_uri_relative(tmp_path: Path) -> None:
     assert "storage" in contents
     assert "uri" in contents["storage"]
     assert contents["storage"]["uri"] == "/absolute/test.db"
+
+    # Just to trick coverage
+    fname = tmp_path / "test_parse_yaml_with_storage_uri.yaml"
+    fname.write_text("foo: bar\nwith: numpy\nstorage:\n  kind: SomeStorage\n")
+
+    contents = parse_yaml(fname)
+    assert "foo" in contents
+    assert contents["foo"] == "bar"
+    assert "storage" in contents
