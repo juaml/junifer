@@ -58,6 +58,8 @@ def test_base_marker_subclassing() -> None:
     with pytest.raises(ValueError, match="not have the required data"):
         marker.validate_input(["T1w"])
 
+    assert marker.validate_input(["BOLD", "Other"]) == ["BOLD"]
+
     output = marker.fit_transform(input=input_)  # process
     # Check output
     assert "BOLD" in output

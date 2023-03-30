@@ -58,7 +58,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             klass=NotImplementedError,
         )
 
-    def validate_input(self, input: List[str]) -> None:
+    def validate_input(self, input: List[str]) -> List[str]:
         """Validate input.
 
         Parameters
@@ -66,6 +66,12 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         input : list of str
             The input to the pipeline step. The list must contain the
             available Junifer Data dictionary keys.
+
+        Returns
+        -------
+        list of str
+            The actual elements of the input that will be processed by this
+            pipeline step.
 
         Raises
         ------
@@ -79,6 +85,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
                 f"\t Input: {input}"
                 f"\t Required (any of): {self._on}"
             )
+        return [x for x in self._on if x in input]
 
     @abstractmethod
     def get_output_type(self, input_type: str) -> str:

@@ -200,7 +200,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             )
         super().__init__()
 
-    def validate_input(self, input: List[str]) -> None:
+    def validate_input(self, input: List[str]) -> List[str]:
         """Validate the input to the pipeline step.
 
         Parameters
@@ -208,6 +208,11 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         input : list of str
             The input to the pipeline step. The list must contain the
             available Junifer Data object keys.
+        Returns
+        -------
+        list of str
+            The actual elements of the input that will be processed by this
+            pipeline step.
 
         Raises
         ------
@@ -223,6 +228,8 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 f"Required (all off): {_required_inputs} \n",
                 klass=ValueError,
             )
+
+        return [x for x in self._on if x in input]
 
     def get_output_type(self, input: List[str]) -> List[str]:
         """Get the kind of the pipeline step.
