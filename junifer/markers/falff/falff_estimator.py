@@ -26,16 +26,15 @@ if TYPE_CHECKING:
 
 
 @singleton
-class AmplitudeLowFrequencyFluctuationEstimator:
-    """Estimator class for AmplitudeLowFrequencyFluctuationBase.
+class ALFFEstimator:
+    """Estimator class for (fractional) Amplitude Low Frequency Fluctuation.
 
     This class is a singleton and is used for efficient computation of fALFF,
     by caching the voxel-wise ALFF map for a given set of file path and
     computation parameters.
 
     .. warning:: This class can only be used via
-    :class:`junifer.markers.falff.AmplitudeLowFrequencyFluctuationBase`
-    as it serves a specific purpose.
+    :class:`junifer.markers.falff.ALFFBase` as it serves a specific purpose.
 
     Parameters
     ----------

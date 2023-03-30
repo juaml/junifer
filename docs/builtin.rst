@@ -176,11 +176,11 @@ Available
      - Calculate regional homogeneity over spheres placed on coordinates
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels`
+   * - :class:`junifer.markers.ALFFParcels`
      - Calculate (f)ALFF and aggregate using parcellations
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres`
+   * - :class:`junifer.markers.ALFFSpheres`
      - Calculate (f)ALFF and aggregate using spheres placed on coordinates
      - Done
      - 0.0.1
@@ -541,13 +541,13 @@ Available
    * - Nilearn's MNI152 1mm-resolution mask
      - | ``compute_brain_mask``
      - 0.0.2
-     - | Compute the whole-brain mask. This mask is calculated using MNI152 1mm-resolution template mask onto the 
+     - | Compute the whole-brain mask. This mask is calculated using MNI152 1mm-resolution template mask onto the
        | target image. See :func:`nilearn.masking.compute_brain_mask`
    * - Nilearn's mask computed from FMRI data
      - | ``compute_epi_mask``
      - 0.0.2
-     - | Compute a brain mask from fMRI data. This is based on an heuristic proposed by T.Nichols: find the least 
-       | dense point of the histogram, between fractions ``lower_cutoff`` and ``upper_cutoff`` of the total image 
+     - | Compute a brain mask from fMRI data. This is based on an heuristic proposed by T.Nichols: find the least
+       | dense point of the histogram, between fractions ``lower_cutoff`` and ``upper_cutoff`` of the total image
        | histogram. See :func:`nilearn.masking.compute_epi_mask`
    * - Nilearn's background mask
      - | ``compute_background_mask``

@@ -10,10 +10,10 @@ from typing import Dict, List, Optional
 
 from ...utils.logging import raise_error
 from ..base import BaseMarker
-from .falff_estimator import AmplitudeLowFrequencyFluctuationEstimator
+from .falff_estimator import ALFFEstimator
 
 
-class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
+class ALFFBase(BaseMarker):
     """Base class for (fractional) Amplitude Low Frequency Fluctuation.
 
     Parameters
@@ -144,7 +144,7 @@ class AmplitudeLowFrequencyFluctuationBase(BaseMarker):
                 "before calling the `compute` method."
             )
 
-        estimator = AmplitudeLowFrequencyFluctuationEstimator()
+        estimator = ALFFEstimator()
 
         alff, falff = estimator.fit_transform(
             use_afni=self.use_afni,
