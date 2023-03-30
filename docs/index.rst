@@ -34,7 +34,7 @@ enabling others to extend it easily.
    contribution
    maintaining
    faq
-   changes/whats_new.rst
+   whats_new
 
 
 Indices and tables
