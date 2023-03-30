@@ -8,7 +8,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.2.dev337 (2023-03-30)
+Junifer 0.0.2.dev338 (2023-03-30)
 ---------------------------------
 
 Bugfixes
@@ -16,6 +16,9 @@ Bugfixes
 
 - Fix ``junifer run`` to respect preprocess step specified in the pipeline by
   `Synchon Mandal`_ (:gh:`159`)
+- Fix a bug in which only `REST1` and `REST2` tasks could be accesed in
+  :class:`.DataladHCP1200` and :class:`.HCP1200` datagrabbers by `Fede
+  Raimondo`_ (:gh:`183`)
 - Fix :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels`,
   :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres`,
   :class:`junifer.markers.ReHoSpheres` and :class:`junifer.markers.ReHoParcels`
@@ -51,6 +54,10 @@ API Changes
   adapt marker-like objects to use ``"vector"`` in place of ``"table"`` for
   storage. Also, improve the logic of storing vectors by `Synchon Mandal`_
   (:gh:`181`)
+- Add ``ica_fix`` parameter to :class:`.DataladHCP1200` and :class:`.HCP1200`
+  datagrabbers to allow for selecting data processed with ICA+FIX. Default
+  value is ``False`` which changes behaviour since 0.0.1 release. By `Fede
+  Raimondo`_ (:gh:`183`)
 - Add ``pre_run`` parameter to ``_queue_condor`` by `Fede Raimondo`_
   (:gh:`188`)
 - Expose ``allow_overlap`` parameter in
