@@ -18,10 +18,7 @@ from .functional_connectivity import (
     EdgeCentricFCSpheres,
 )
 from .reho import ReHoParcels, ReHoSpheres
-from .falff import (
-    AmplitudeLowFrequencyFluctuationParcels,
-    AmplitudeLowFrequencyFluctuationSpheres,
-)
+from .falff import ALFFParcels, ALFFSpheres
 from .temporal_snr import (
     TemporalSNRParcels,
     TemporalSNRSpheres,
