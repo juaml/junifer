@@ -79,6 +79,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             klass=NotImplementedError,
         )
 
+    @abstractmethod
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
 
