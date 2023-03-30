@@ -34,8 +34,7 @@ class ALFFEstimator:
     computation parameters.
 
     .. warning:: This class can only be used via
-    :class:`junifer.markers.falff.AmplitudeLowFrequencyFluctuationBase`
-    as it serves a specific purpose.
+    :class:`junifer.markers.falff.ALFFBase` as it serves a specific purpose.
 
     Parameters
     ----------
