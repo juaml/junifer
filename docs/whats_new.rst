@@ -150,8 +150,8 @@ Features
 - Implement :class:`junifer.markers.ReHoParcels` and
   :class:`junifer.markers.ReHoSpheres` markers by `Synchon Mandal`_ (:gh:`36`)
 
-- Implement :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels` and
-  :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres` markers by
+- Implement ``junifer.markers.AmplitudeLowFrequencyFluctuationParcels`` and
+  ``junifer.markers.AmplitudeLowFrequencyFluctuationSpheres`` markers by
   `Fede Raimondo`_ (:gh:`35`)
 
 Misc
