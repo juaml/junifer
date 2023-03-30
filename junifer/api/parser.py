@@ -71,4 +71,5 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
                 logger.info(f"Importing module: {t_module}")
                 importlib.import_module(t_module)
 
+    # Compute path for the URI parameter in storage files that are relative
     return contents
