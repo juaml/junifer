@@ -11,7 +11,7 @@ from numpy.testing import assert_array_equal
 from scipy.stats import pearsonr
 
 from junifer.datareader import DefaultDataReader
-from junifer.markers.falff import AmplitudeLowFrequencyFluctuationSpheres
+from junifer.markers.falff import ALFFSpheres
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
@@ -21,8 +21,8 @@ from junifer.utils import logger
 _COORDINATES = "DMNBuckner"
 
 
-def test_AmplitudeLowFrequencyFluctuationSpheres_python() -> None:
-    """Test AmplitudeLowFrequencyFluctuationSpheres using python."""
+def test_ALFFSpheres_python() -> None:
+    """Test ALFFSpheres using python."""
     # Get the SPM auditory data:
 
     with PartlyCloudyTestingDataGrabber() as dg:
@@ -30,7 +30,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_python() -> None:
 
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
-    marker = AmplitudeLowFrequencyFluctuationSpheres(
+    marker = ALFFSpheres(
         coords=_COORDINATES,
         radius=5,
         method="mean",
@@ -47,15 +47,15 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_python() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_AmplitudeLowFrequencyFluctuationSpheres_afni() -> None:
-    """Test AmplitudeLowFrequencyFluctuationSpheres using afni."""
+def test_ALFFSpheres_afni() -> None:
+    """Test ALFFSpheres using afni."""
     # Get the SPM auditory data:
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
-    marker = AmplitudeLowFrequencyFluctuationSpheres(
+    marker = ALFFSpheres(
         coords=_COORDINATES,
         radius=5,
         method="mean",
@@ -69,7 +69,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_afni() -> None:
     assert afni_values.shape == (1, 6)
 
     # Again, should be blazing fast
-    marker = AmplitudeLowFrequencyFluctuationSpheres(
+    marker = ALFFSpheres(
         coords=_COORDINATES,
         radius=5,
         method="mean",
@@ -87,10 +87,10 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_afni() -> None:
 @pytest.mark.parametrize(
     "fractional", [True, False], ids=["fractional", "non-fractional"]
 )
-def test_AmplitudeLowFrequencyFluctuationSpheres_python_vs_afni(
+def test_ALFFSpheres_python_vs_afni(
     fractional: bool,
 ) -> None:
-    """Test AmplitudeLowFrequencyFluctuationSpheres python vs afni results.
+    """Test ALFFSpheres python vs afni results.
 
     Parameters
     ----------
@@ -102,7 +102,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_python_vs_afni(
 
     input = DefaultDataReader().fit_transform(input)
     # Create ParcelAggregation object
-    marker_python = AmplitudeLowFrequencyFluctuationSpheres(
+    marker_python = ALFFSpheres(
         coords=_COORDINATES,
         radius=5,
         method="mean",
@@ -115,7 +115,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_python_vs_afni(
     assert python_values.ndim == 2
     assert python_values.shape == (1, 6)
 
-    marker_afni = AmplitudeLowFrequencyFluctuationSpheres(
+    marker_afni = ALFFSpheres(
         coords=_COORDINATES,
         radius=5,
         method="mean",
@@ -133,10 +133,10 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_python_vs_afni(
     assert r > 0.99
 
 
-def test_AmplitudeLowFrequencyFluctuationSpheres_storage(
+def test_ALFFSpheres_storage(
     tmp_path: Path,
 ) -> None:
-    """Test AmplitudeLowFrequencyFluctuationSpheres storage.
+    """Test ALFFSpheres storage.
 
     Parameters
     ----------
@@ -148,7 +148,7 @@ def test_AmplitudeLowFrequencyFluctuationSpheres_storage(
         input = dg["sub-01"]
         input = DefaultDataReader().fit_transform(input)
         # Create ParcelAggregation object
-        marker = AmplitudeLowFrequencyFluctuationSpheres(
+        marker = ALFFSpheres(
             coords=_COORDINATES,
             radius=5,
             method="mean",
