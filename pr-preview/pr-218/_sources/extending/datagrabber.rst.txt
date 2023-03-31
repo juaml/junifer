@@ -195,9 +195,8 @@ set the ``datadir``.
 Optional: Using datalad
 """""""""""""""""""""""
 
-If you are using `datalad`_, you can use the
-:py:class:`~junifer.datagrabber.PatternDataladDataGrabber` instead of the
-:py:class:`~junifer.datagrabber.PatternDataGrabber`. This class will not only
+If you are using `datalad`_, you can use the :class:`.PatternDataladDataGrabber`
+instead of the :class:`.PatternDataGrabber`. This class will not only
 interpret patterns, but also use `datalad`_ to `clone` and `get` the data.
 
 The main difference between the two is that the ``datadir`` is not the actual
