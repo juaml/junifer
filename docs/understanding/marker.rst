@@ -19,5 +19,5 @@ Markers are meant to be used inside the datagrabber context but you can operate 
 as the actual data is in the memory and the Python runtime has not garbage-collected it.
 
 If you are interested in using already provided markers, please go to :doc:`../builtin`. And, if you want to implement
-your own marker, you need to provide concrete implementation of :class:`junifer.markers.BaseMarker`. Specifically, you
+your own marker, you need to provide concrete implementation of :class:`.BaseMarker`. Specifically, you
 need to override ``get_output_type``, ``store`` and ``compute`` methods.
