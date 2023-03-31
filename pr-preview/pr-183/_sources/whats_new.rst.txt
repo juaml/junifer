@@ -8,23 +8,32 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.2.dev338 (2023-03-30)
+Junifer 0.0.2.dev414 (2023-03-31)
 ---------------------------------
 
 Bugfixes
 ^^^^^^^^
 
+- Fix a bug in which relative storage URIs will be computed relative to the CWD
+  and not to the location of the YAML file by `Fede Raimondo`_. (:gh:`127`)
 - Fix ``junifer run`` to respect preprocess step specified in the pipeline by
   `Synchon Mandal`_ (:gh:`159`)
-- Fix a bug in which only `REST1` and `REST2` tasks could be accesed in
+- Fix a bug in which only ``REST1`` and ``REST2`` tasks could be accesed in
   :class:`.DataladHCP1200` and :class:`.HCP1200` datagrabbers by `Fede
   Raimondo`_ (:gh:`183`)
-- Fix :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels`,
-  :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres`,
-  :class:`junifer.markers.ReHoSpheres` and :class:`junifer.markers.ReHoParcels`
-  pass the ``extra_input`` parameter by `Fede Raimondo`_ (:gh:`187`)
+- Fix a bug in which fitting a marker (e.g. ``SphereAggregation``) on a
+  specific type (e.g.: ``BOLD``) will fail if another non-supported type (e.g.:
+  ``BOLD_confounds``) is present in the data object by `Fede Raimondo`_
+  (:gh:`185`)
+- Fix :class:`junifer.markers.ALFFParcels`,
+  :class:`junifer.markers.ALFFSpheres`, :class:`junifer.markers.ReHoSpheres`
+  and :class:`junifer.markers.ReHoParcels` pass the ``extra_input`` parameter
+  by `Fede Raimondo`_ (:gh:`187`)
 - Fix several markers that did not properly handle the ``extra_input``
   parameter by `Fede Raimondo`_ (:gh:`189`)
+- Fix a bug in which relative paths in the YAML ``with`` directive would be
+  computed relative to the current working directory of the process instead of
+  the location of the YAML file by `Fede Raimondo`_. (:gh:`191`)
 - Fix an issue with datalad cache and locks in which the user-specific
   configuration might create a conflict in high throughput systems by `Fede
   Raimondo`_ (:gh:`192`)
@@ -63,6 +72,10 @@ API Changes
 - Expose ``allow_overlap`` parameter in
   :class:`junifer.markers.SphereAggregation` and related markers by `Fede
   Raimondo`_ (:gh:`190`)
+- ``AmplitudeLowFrequencyFluctuationParcels`` and
+  ``AmplitudeLowFrequencyFluctuationSpheres`` are renamed to
+  :class:`junifer.markers.ALFFParcels` and :class:`junifer.markers.ALFFSpheres`
+  by `Synchon Mandal`_ (:gh:`216`)
 
 
 Improved Documentation
@@ -73,6 +86,8 @@ Improved Documentation
 - Migrate and document changelog creation and maintenance via ``towncrier`` by
   `Synchon Mandal`_ (:gh:`203`)
 - Add copy button to documentation code blocks by `Synchon Mandal`_ (:gh:`205`)
+- Add sections *starting* and *help* in the documentation by `Fede Raimondo`_
+  (:gh:`210`)
 
 
 Enhancements
@@ -89,6 +104,8 @@ Enhancements
   (:gh:`165`)
 - Add fMRIPrep brain masks to the datagrabber patterns for all datagrabbers in
   the aomic sub-package by `Leonard Sasse`_ (:gh:`177`)
+- Improved logging output for preprocessing, collecting and pipeline building
+  from YAML by `Fede Raimondo`_ (:gh:`185`)
 - Allow for empty spheres in
   :class:`junifer.external.nilearn.JuniferNiftiSpheresMasker`, that will result
   in NaNs. Also, modify the behaviour of the ``collect`` parameter in HTCondor
@@ -99,7 +116,7 @@ Enhancements
   will result in NaNs by `Fede Raimondo`_ (:gh:`194`)
 - Improve metadata and data I/O for :class:`junifer.storage.HDF5FeatureStorage`
   by `Synchon Mandal`_ (:gh:`196`)
-- Force datalad to be non-interactive on _queued_ jobs by `Fede Raimondo`_
+- Force datalad to be non-interactive on *queued* jobs by `Fede Raimondo`_
   (:gh:`201`)
 - Add missing ``abstractmethod`` decorators for ``get_valid_inputs`` methods of
   :class:`junifer.markers.BaseMarker` and
@@ -270,9 +287,8 @@ Features
 - Implement :class:`junifer.markers.ReHoParcels` and
   :class:`junifer.markers.ReHoSpheres` markers by `Synchon Mandal`_ (:gh:`36`)
 
-- Implement :class:`junifer.markers.AmplitudeLowFrequencyFluctuationParcels` and
-  :class:`junifer.markers.AmplitudeLowFrequencyFluctuationSpheres` markers by
-  `Fede Raimondo`_ (:gh:`35`)
+- Implement :class:`junifer.markers.ALFFParcels` and
+  :class:`junifer.markers.ALFFSpheres` markers by `Fede Raimondo`_ (:gh:`35`)
 
 Misc
 ^^^^

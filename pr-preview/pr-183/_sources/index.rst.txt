@@ -23,12 +23,14 @@ enabling others to extend it easily.
    :caption: Contents:
 
    installation
+   starting
    understanding/index.rst
    using/index.rst
    builtin
    extending/index.rst
    auto_examples/index.rst
    api/index.rst
+   help
    contribution
    maintaining
    faq
