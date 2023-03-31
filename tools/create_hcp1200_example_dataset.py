@@ -22,7 +22,7 @@ if __name__ == "__main__":
         # Set base directory
         basedir = tmpdir_path / "example_hcp1200"
         # Create new datalad dataset
-        dataset = dl.create(path=str(basedir.absolute()))
+        dataset = dl.create(path=str(basedir.absolute()))  # type: ignore
         # Generate subject directories
         for sub in range(1, 10):
             subdir = basedir / f"sub-{sub:02d}"
@@ -57,14 +57,25 @@ if __name__ == "__main__":
                 )
                 # Create subject data directory
                 sub_datadir.mkdir(parents=True)
+
                 # Set subject data file
                 sub_datafile = (
                     sub_datadir
-                    / f"{new_task}_{phase_encoding}_hp2000_clean.nii.gz"
+                    / f"{new_task}_{phase_encoding}.nii.gz"
                 )
                 # Create subject data file
                 with open(sub_datafile, "w") as f:
                     f.write("placeholder")
+
+                if "REST" in task:
+                    # Set subject data file with ICA+FIX
+                    sub_datafile = (
+                        sub_datadir
+                        / f"{new_task}_{phase_encoding}_hp2000_clean.nii.gz"
+                    )
+                    # Create subject data file with ICA+FIX
+                    with open(sub_datafile, "w") as f:
+                        f.write("placeholder")
 
         # Save datalad dataset
         dataset.save(recursive=True)

@@ -26,9 +26,12 @@ class HCP1200(PatternDataGrabber):
     phase_encodings : {"LR", "RL"} or list of the options, optional
         HCP phase encoding directions. If None, both will be used
         (default None).
+    ica_fix : bool, optional
+        Whether to retrieve data that was processed with ICA+FIX.
+        Only 'REST1' and 'REST2' tasks are available with ICA+FIX (default
+        False).
     **kwargs
         Keyword arguments passed to superclass.
-
     """
 
     def __init__(
@@ -36,6 +39,7 @@ class HCP1200(PatternDataGrabber):
         datadir: Union[str, Path],
         tasks: Union[str, List[str], None] = None,
         phase_encodings: Union[str, List[str], None] = None,
+        ica_fix: bool = False,
         **kwargs,
     ) -> None:
         # All tasks
@@ -82,6 +86,12 @@ class HCP1200(PatternDataGrabber):
                     f"{all_phase_encodings}."
                 )
 
+        if ica_fix:
+            if not all([task in ["REST1", "REST2"] for task in self.tasks]):
+                raise_error(
+                    "ICA+FIX is only available for 'REST1' and 'REST2' tasks."
+                )
+        suffix = "_hp2000_clean" if ica_fix else ""
         # The types of data
         types = ["BOLD"]
         # The patterns
@@ -89,7 +99,8 @@ class HCP1200(PatternDataGrabber):
             "BOLD": (
                 "{subject}/MNINonLinear/Results/"
                 "{task}_{phase_encoding}/"
-                "{task}_{phase_encoding}_hp2000_clean.nii.gz"
+                "{task}_{phase_encoding}"
+                f"{suffix}.nii.gz"
             )
         }
         # The replacements
@@ -173,6 +184,10 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
     phase_encodings : {"LR", "RL"} or list of the options, optional
         HCP phase encoding directions. If None, both will be used
         (default None).
+    ica_fix : bool, optional
+        Whether to retrieve data that was processed with ICA+FIX.
+        Only 'REST1' and 'REST2' tasks are available with ICA+FIX (default
+        False).
     """
 
     def __init__(
@@ -180,6 +195,7 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
         datadir: Union[str, Path, None] = None,
         tasks: Union[str, List[str], None] = None,
         phase_encodings: Union[str, List[str], None] = None,
+        ica_fix: bool = False,
     ) -> None:
         uri = (
             "https://github.com/datalad-datasets/"
@@ -192,6 +208,7 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
             phase_encodings=phase_encodings,
             uri=uri,
             rootdir=rootdir,
+            ica_fix=ica_fix,
         )
 
     @property
