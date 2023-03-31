@@ -43,55 +43,55 @@ Available
      - Type/Config
      - State
      - Version Added
-   * - :class:`junifer.datagrabber.DataladHCP1200`
+   * - :class:`.DataladHCP1200`
      - `HCP OpenAccess dataset <https://github.com/datalad-datasets/human-connectome-project-openaccess>`_
      - Open with registration
      - Built-in
      - Done
      - 0.0.1
-   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladUKBVBM`
+   * - :class:`.JuselessDataladUKBVBM`
      - UKB VBM dataset preprocessed with CAT. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless``
      - Done
      - 0.0.1
-   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladCamCANVBM`
+   * - :class:`.JuselessDataladCamCANVBM`
      - CamCAN VBM dataset preprocessed with CAT. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless``
      - Done
      - 0.0.1
-   * - :class:`junifer.datagrabber.DataladAOMICID1000`
+   * - :class:`.DataladAOMICID1000`
      - `AOMIC 1000 dataset <https://github.com/OpenNeuroDatasets/ds003097>`_
      - Open without registration
      - Built-in
      - Done
      - 0.0.1
-   * - :class:`junifer.datagrabber.DataladAOMICPIOP1`
+   * - :class:`.DataladAOMICPIOP1`
      - `AOMIC PIOP1 dataset <https://github.com/OpenNeuroDatasets/ds002785>`_
      - Open without registration
      - Built-in
      - Done
      - 0.0.1
-   * - :class:`junifer.datagrabber.DataladAOMICPIOP2`
+   * - :class:`.DataladAOMICPIOP2`
      - `AOMIC PIOP2 dataset <https://github.com/OpenNeuroDatasets/ds002790>`_
      - Open without registration
      - Built-in
      - Done
      - 0.0.1
-   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladAOMICID1000VBM`
+   * - :class:`.JuselessDataladAOMICID1000VBM`
      - AOMIC ID1000 VBM dataset. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless``
      - Done
      - 0.0.1
-   * - :class:`junifer.configs.juseless.datagrabbers.JuselessDataladIXIVBM`
+   * - :class:`.JuselessDataladIXIVBM`
      - `IXI VBM dataset <https://brain-development.org/ixi-dataset/>`_. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless``
      - Done
      - 0.0.1
-   * - :class:`junifer.configs.juseless.datagrabbers.JuselessUCLA`
+   * - :class:`.JuselessUCLA`
      - UCLA fMRIPrep dataset. Available for Juseless only.
      - Restricted
      - ``junifer.configs.juseless``
@@ -144,61 +144,61 @@ Available
      - Description
      - State
      - Version Added
-   * - :class:`junifer.markers.ParcelAggregation`
+   * - :class:`.ParcelAggregation`
      - Apply parcellation and perform aggregation function
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.FunctionalConnectivityParcels`
+   * - :class:`.FunctionalConnectivityParcels`
      - Compute functional connectivity over parcellation
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.CrossParcellationFC`
+   * - :class:`.CrossParcellationFC`
      - Compute functional connectivity across two parcellations
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.SphereAggregation`
+   * - :class:`.SphereAggregation`
      - Spherical aggregation using mean
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.FunctionalConnectivitySpheres`
+   * - :class:`.FunctionalConnectivitySpheres`
      - Compute functional connectivity over spheres placed on coordinates
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.RSSETSMarker`
+   * - :class:`.RSSETSMarker`
      - Compute root sum of squares of edgewise timeseries
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.ReHoParcels`
+   * - :class:`.ReHoParcels`
      - Calculate regional homogeneity over parcellation
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.ReHoSpheres`
+   * - :class:`.ReHoSpheres`
      - Calculate regional homogeneity over spheres placed on coordinates
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.ALFFParcels`
+   * - :class:`.ALFFParcels`
      - Calculate (f)ALFF and aggregate using parcellations
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.ALFFSpheres`
+   * - :class:`.ALFFSpheres`
      - Calculate (f)ALFF and aggregate using spheres placed on coordinates
      - Done
      - 0.0.1
-   * - :class:`junifer.markers.EdgeCentricFCParcels`
+   * - :class:`.EdgeCentricFCParcels`
      - Calculate edge-centric functional connectivity over parcellation, as found in
        `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.2
-   * - :class:`junifer.markers.EdgeCentricFCSpheres`
+   * - :class:`.EdgeCentricFCSpheres`
      - Calculate edge-centric functional connectivity over spheres placed on coordinates,
        as found in `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.2
-   * - :class:`junifer.markers.TemporalSNRParcels`
+   * - :class:`.TemporalSNRParcels`
      - Calculate temporal signal-to-noise ratio using parcellations
      - Done
      - 0.0.2
-   * - :class:`junifer.markers.TemporalSNRSpheres`
+   * - :class:`.TemporalSNRSpheres`
      - Calculate temporal signal-to-noise ratio using spheres placed on coordinates
      - Done
      - 0.0.2
