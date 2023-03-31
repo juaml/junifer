@@ -20,7 +20,7 @@ class ALFFParcels(ALFFBase):
     ----------
     parcellation : str or list of str
         The name(s) of the parcellation(s). Check valid options by calling
-        :func:`junifer.data.parcellations.list_parcellations`.
+        :func:`.list_parcellations`.
     fractional : bool
         Whether to compute fractional ALFF.
     highpass : positive float, optional
@@ -40,10 +40,10 @@ class ALFFParcels(ALFFBase):
         If None, will not apply any mask (default None).
     method : str, optional
         The method to perform aggregation using. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
+        :func:`.get_aggfunc_by_name` (default "mean").
     method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name`.
+        :func:`.get_aggfunc_by_name`.
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
