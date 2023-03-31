@@ -1,1 +1,1 @@
-Add support for HDF5 feature storage via :class:`junifer.storage.HDF5FeatureStorage` by `Synchon Mandal`_
+Add support for HDF5 feature storage via :class:`.HDF5FeatureStorage` by `Synchon Mandal`_
