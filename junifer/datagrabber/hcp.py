@@ -27,7 +27,7 @@ class HCP1200(PatternDataGrabber):
         HCP phase encoding directions. If None, both will be used
         (default None).
     icafix : bool, optional
-        Whether to use retrieve data that was processed with ICA+FIX.
+        Whether to retrieve data that was processed with ICA+FIX.
         Only 'REST1' and 'REST2' tasks are available with ICA+FIX (default
         False).
     **kwargs
@@ -86,12 +86,12 @@ class HCP1200(PatternDataGrabber):
                     f"{all_phase_encodings}."
                 )
 
-        if ica_fix is True:
+        if ica_fix:
             if not all([task in ["REST1", "REST2"] for task in self.tasks]):
                 raise_error(
                     "ICA+FIX is only available for 'REST1' and 'REST2' tasks."
                 )
-        suffix = "_hp2000_clean" if ica_fix is True else ""
+        suffix = "_hp2000_clean" if ica_fix else ""
         # The types of data
         types = ["BOLD"]
         # The patterns
@@ -184,8 +184,8 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
     phase_encodings : {"LR", "RL"} or list of the options, optional
         HCP phase encoding directions. If None, both will be used
         (default None).
-    icafix : bool, optional
-        Whether to use retrieve data that was processed with ICA+FIX.
+    ica_fix : bool, optional
+        Whether to retrieve data that was processed with ICA+FIX.
         Only 'REST1' and 'REST2' tasks are available with ICA+FIX (default
         False).
     """
