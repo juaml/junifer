@@ -286,11 +286,9 @@
           <section id="adding-coordinates">
 <span id="id1"></span><h1><span class="section-number">7.5. </span>Adding Coordinates<a class="headerlink" href="#adding-coordinates" title="Permalink to this heading">#</a></h1>
 <p>Instead of using whole-brain parcellations to aggregate voxel-wise signals from
-MR images (as for example in the
-<a class="reference internal" href="../api/markers.html#junifer.markers.ParcelAggregation" title="junifer.markers.parcel_aggregation.ParcelAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.parcel_aggregation.ParcelAggregation</span></code></a> marker), Junifer
+MR images (as for example in the <a class="reference internal" href="../api/markers.html#junifer.markers.ParcelAggregation" title="junifer.markers.ParcelAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParcelAggregation</span></code></a> marker), Junifer
 allows you to specify a set of coordinates around which to draw spheres to
-aggregate (for example using the
-<a class="reference internal" href="../api/markers.html#junifer.markers.SphereAggregation" title="junifer.markers.sphere_aggregation.SphereAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.sphere_aggregation.SphereAggregation</span></code></a> marker) the MR
+aggregate (for example using the <a class="reference internal" href="../api/markers.html#junifer.markers.SphereAggregation" title="junifer.markers.SphereAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">SphereAggregation</span></code></a> marker) the MR
 signals from individual voxels. Now, before you start specifying your own sets
 of coordinates, check the coordinates that Junifer already has
 <a class="reference internal" href="../builtin.html#builtin"><span class="std std-ref">built in</span></a>. If you simply want to use a well known set of
@@ -298,19 +296,17 @@ coordinates from the literature, there is a reasonable chance, that Junifer
 provides them already.</p>
 <p>If you checked the in-built coordinates, and they are not there already (for
 example if you came up with your own set of coordinates), then Junifer provides
-an easy way for you to register them using the
-<a class="reference internal" href="../api/data.html#junifer.data.coordinates.register_coordinates" title="junifer.data.coordinates.register_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.coordinates.register_coordinates()</span></code></a> function, so you can use
-your own set of coordinates within a Junifer pipeline.</p>
+an easy way for you to register them using the <a class="reference internal" href="../api/data.html#junifer.data.coordinates.register_coordinates" title="junifer.data.coordinates.register_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_coordinates()</span></code></a>
+function, so you can use your own set of coordinates within a Junifer pipeline.</p>
 <p>From the API reference, we can see that it has 3 positional arguments
 (<code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">coordinates</span></code>, and <code class="docutils literal notranslate"><span class="pre">voi_names</span></code>) as well as one
 optional keyword argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">name</span></code> argument takes a string indicating the name you want to give to
 this set of coordinates. This <code class="docutils literal notranslate"><span class="pre">name</span></code> can be used to obtain and operate on a
 set of coordinates in Junifer. For example, you can obtain your coordinates
-after registration by providing <code class="docutils literal notranslate"><span class="pre">name</span></code> to
-<a class="reference internal" href="../api/data.html#junifer.data.coordinates.load_coordinates" title="junifer.data.coordinates.load_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.coordinates.load_coordinates()</span></code></a>. We could simply call it
-<code class="docutils literal notranslate"><span class="pre">&quot;my_set_of_coordinates&quot;</span></code>, but likely you want a more descriptive and more
-informative name most of the time.</p>
+after registration by providing <code class="docutils literal notranslate"><span class="pre">name</span></code> to <a class="reference internal" href="../api/data.html#junifer.data.coordinates.load_coordinates" title="junifer.data.coordinates.load_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_coordinates()</span></code></a>. We could
+simply call it <code class="docutils literal notranslate"><span class="pre">&quot;my_set_of_coordinates&quot;</span></code>, but likely you want a more
+descriptive and more informative name most of the time.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">coordinates</span></code> argument takes the actual coordinates as a 2-dimensional
 <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a>. It contains one row for every location, and three
 columns (one for each spatial dimension). That is, the first, second, and third
@@ -380,8 +376,7 @@ you can use the <code class="docutils literal notranslate"><span class="pre">wit
 <p>Afterwards continue configuring the rest of your pipeline in this YAML file,
 and you will be able to use this set of coordinates using the name you gave it
 during registration (in our example “DMNCustom”). We can add a
-<a class="reference internal" href="../api/markers.html#junifer.markers.SphereAggregation" title="junifer.markers.sphere_aggregation.SphereAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.sphere_aggregation.SphereAggregation</span></code></a> to demonstrate
-how this can be done:</p>
+<a class="reference internal" href="../api/markers.html#junifer.markers.SphereAggregation" title="junifer.markers.SphereAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">SphereAggregation</span></code></a> to demonstrate how this can be done:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">markers</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNCustom_mean</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SphereAggregation</span>

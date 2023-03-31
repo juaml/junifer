@@ -439,9 +439,8 @@ set the <code class="docutils literal notranslate"><span class="pre">datadir</sp
 </div>
 <section id="optional-using-datalad">
 <h4>Optional: Using datalad<a class="headerlink" href="#optional-using-datalad" title="Permalink to this heading">#</a></h4>
-<p>If you are using <a class="reference external" href="https://datalad.org">datalad</a>, you can use the
-<a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a> instead of the
-<a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a>. This class will not only
+<p>If you are using <a class="reference external" href="https://datalad.org">datalad</a>, you can use the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a>
+instead of the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a>. This class will not only
 interpret patterns, but also use <a class="reference external" href="https://datalad.org">datalad</a> to <cite>clone</cite> and <cite>get</cite> the data.</p>
 <p>The main difference between the two is that the <code class="docutils literal notranslate"><span class="pre">datadir</span></code> is not the actual
 location of the dataset, but the location where the dataset will be cloned. It
@@ -587,8 +586,9 @@ represent each of the items in the element tuple. As a rule of thumb, they shoul
 </div>
 <section id="id1">
 <h4>Optional: Using datalad<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h4>
-<p>If this dataset is in a datalad dataset, we can extend from <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladDataGrabber</span></code></a> instead of
-<a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.BaseDataGrabber</span></code></a>. This will allow us to use the datalad API to obtain the data.</p>
+<p>If this dataset is in a datalad dataset, we can extend from
+<a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a> instead of <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a>. This will
+allow us to use the datalad API to obtain the data.</p>
 </section>
 </section>
 </section>
@@ -610,7 +610,7 @@ Thus, the <code class="docutils literal notranslate"><span class="pre">BOLD_conf
 <code class="docutils literal notranslate"><span class="pre">mappings</span></code> key is not required.</p>
 </div>
 <p>Currently, Junifer provides only one confound remover step
-(<a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.preprocess.fMRIPrepConfoundRemover</span></code></a>), which relies entirely on the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> confound
+(<a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover</span></code></a>), which relies entirely on the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> confound
 variable names. Thus, if the confounds are not in <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> format, the user will need to provide the mappings
 between the <em>ad-hoc</em> variable names and the <code class="docutils literal notranslate"><span class="pre">fmriprep</span></code> variable names.
 This is done by specifying the <code class="docutils literal notranslate"><span class="pre">adhoc</span></code> format and providing the mappings as a dictionary in the <code class="docutils literal notranslate"><span class="pre">mappings</span></code> key.</p>
@@ -632,7 +632,7 @@ provide the mappings for these variables to the <code class="docutils literal no
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Not all of the mappings need to be provided. For the moment, this is used only by the
-<a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.preprocess.fMRIPrepConfoundRemover</span></code></a> step, which requires variables based on the
+<a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover</span></code></a> step, which requires variables based on the
 strategy selected. However, it is recommended to provide all the mappings, as this will allow the user to
 choose different strategies with the same dataset.</p>
 </div>

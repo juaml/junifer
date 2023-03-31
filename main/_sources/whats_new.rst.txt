@@ -20,13 +20,12 @@ API Changes
 Bugfixes
 ^^^^^^^^
 
-- Fix a bug in which a :class:`junifer.datagrabber.PatternDataGrabber` would
-  now work with relative ``datadir`` paths (reported by `Leonard Sasse`_,
-  fixed by `Fede Raimondo`_) (:gh:`96`, :gh:`98`)
+- Fix a bug in which a :class:`.PatternDataGrabber` would now work with
+  relative ``datadir`` paths (reported by `Leonard Sasse`_, fixed by
+  `Fede Raimondo`_) (:gh:`96`, :gh:`98`)
 
-- Fix a bug in which :class:`junifer.datagrabber.DataladAOMICPIOP2` datagrabber
-  did not use user input to constrain elements based on tasks by
-  `Leonard Sasse`_ (:gh:`105`)
+- Fix a bug in which :class:`.DataladAOMICPIOP2` datagrabber did not use user
+  input to constrain elements based on tasks by `Leonard Sasse`_ (:gh:`105`)
 
 - Fix a bug in which a datalad dataset could remove a user-cloned dataset by
   `Fede Raimondo`_ (:gh:`53`)
@@ -53,9 +52,9 @@ Improved Documentation
 Enhancements
 ^^^^^^^^^^^^
 
-- Add comments to :class:`junifer.datagrabber.DataladDataGrabber` datagrabber
-  and change to use ``datalad-clone`` instead of ``datalad-install`` by
-  `Benjamin Poldrack`_ (:gh:`55`)
+- Add comments to :class:`.DataladDataGrabber` datagrabber and change to use
+  ``datalad-clone`` instead of ``datalad-install`` by `Benjamin Poldrack`_
+  (:gh:`55`)
 
 - Upgrade storage interface for storage-like objects by `Synchon Mandal`_
   (:gh:`84`)
@@ -65,65 +64,64 @@ Enhancements
 - Refactor markers ``on`` attribute and ``get_valid_inputs`` to verify that the
   marker can be computed on the input data types by `Fede Raimondo`_
 
-- Add test for :class:`junifer.datagrabber.DataladHCP1200` datagrabber by
-  `Synchon Mandal`_ (:gh:`93`)
+- Add test for :class:`.DataladHCP1200` datagrabber by `Synchon Mandal`_
+  (:gh:`93`)
+
+- Refactor :class:`.DataladAOMICID1000` slightly by `Leonard Sasse`_ (:gh:`94`)
 
 - Rename "atlas" to "parcellation" by `Fede Raimondo`_ (:gh:`116`)
 
-- Refactor the :class:`junifer.datagrabber.BaseDataGrabber` class to allow for
-  easier subclassing by `Fede Raimondo`_ (:gh:`123`)
+- Refactor the :class:`.BaseDataGrabber` class to allow for easier subclassing
+  by `Fede Raimondo`_ (:gh:`123`)
 
-- Allow custom aggregation method for :class:`junifer.markers.SphereAggregation`
-  by `Synchon Mandal`_ (:gh:`102`)
+- Allow custom aggregation method for :class:`.SphereAggregation` by
+  `Synchon Mandal`_ (:gh:`102`)
 
 - Add support for "masks" by `Fede Raimondo`_ (:gh:`79`)
 
-- Allow :class:`junifer.markers.ParcelAggregation` to apply multiple
-  parcellations at once by `Fede Raimondo`_ (:gh:`131`)
+- Allow :class:`.ParcelAggregation` to apply multiple parcellations at once by
+  `Fede Raimondo`_ (:gh:`131`)
 
-- Refactor :class:`junifer.pipeline.PipelineStepMixin` to improve its
-  implementation and validation for pipeline steps by `Synchon Mandal`_
-  (:gh:`152`)
+- Refactor :class:`.PipelineStepMixin` to improve its implementation and
+  validation for pipeline steps by `Synchon Mandal`_ (:gh:`152`)
 
 Features
 ^^^^^^^^
 
-- Implement :class:`junifer.testing.datagrabbers.SPMAuditoryTestingDatagrabber`
-  datagrabber by `Fede Raimondo`_ (:gh:`52`)
+- Implement :class:`.SPMAuditoryTestingDatagrabber` datagrabber by
+  `Fede Raimondo`_ (:gh:`52`)
 
 - Implement matrix storage in SQliteFeatureStorage by `Fede Raimondo`_
   (:gh:`42`)
 
-- Implement :class:`junifer.markers.FunctionalConnectivityParcels` marker for
-  functional connectivity using a parcellation by `Amir Omidvarnia`_ and
+- Implement :class:`.FunctionalConnectivityParcels` marker for functional
+  connectivity using a parcellation by `Amir Omidvarnia`_ and
   `Kaustubh R. Patil`_ (:gh:`41`)
 
-- Implement coordinate register, list and load by `Fede Raimondo`_ (:gh:`11`)
+- Implement :func:`.register_coordinates`, :func:`.list_coordinates` and
+  :func:`.load_coordinates` by `Fede Raimondo`_ (:gh:`11`)
 
-- Add :class:`junifer.datagrabber.DataladAOMICID1000` datagrabber for AOMIC
-  ID1000 dataset including tests and creation of mock dataset for testing by
+- Add :class:`.DataladAOMICID1000` datagrabber for AOMIC ID1000 dataset
+  including tests and creation of mock dataset for testing by
   `Vera Komeyer`_ and `Xuan Li`_ (:gh:`60`)
 
 - Add support to access other input in the data object in the ``compute`` method
   by `Fede Raimondo`_
 
-- Implement :class:`junifer.markers.RSSETSMarker` marker by `Leonard Sasse`_,
-  `Nicolas Nieto`_ and `Sami Hamdan`_ (:gh:`51`)
+- Implement :class:`.RSSETSMarker` marker by `Leonard Sasse`_, `Nicolas Nieto`_
+  and `Sami Hamdan`_ (:gh:`51`)
 
-- Implement :class:`junifer.markers.SphereAggregation` marker by
-  `Fede Raimondo`_
+- Implement :class:`.SphereAggregation` marker by `Fede Raimondo`_ (:gh:`83`)
 
-- Implement :class:`junifer.datagrabber.DataladAOMICPIOP1` and
-  :class:`junifer.datagrabber.DataladAOMICPIOP2` datagrabbers for AOMIC PIOP1
-  and PIOP2 datasets respectively and refactor
-  :class:`junifer.datagrabber.DataladAOMICID1000` slightly by `Leonard Sasse`_
-  (:gh:`94`)
+- Implement :class:`.DataladAOMICPIOP1` and :class:`.DataladAOMICPIOP2`
+  datagrabbers for AOMIC PIOP1 and PIOP2 datasets respectively by
+  `Leonard Sasse`_ (:gh:`94`)
 
-- Implement :class:`junifer.configs.juseless.datagrabbers.JuselessDataladCamCANVBM`
-  datagrabber by `Leonard Sasse`_ (:gh:`99`)
+- Implement :class:`.JuselessDataladCamCANVBM` datagrabber by `Leonard Sasse`_
+  (:gh:`99`)
 
-- Implement :class:`junifer.configs.juseless.datagrabbers.JuselessDataladIXIVBM`
-  CAT output datagrabber for juseless by `Leonard Sasse`_ (:gh:`48`)
+- Implement :class:`.JuselessDataladIXIVBM` CAT output datagrabber for juseless
+  by `Leonard Sasse`_ (:gh:`48`)
 
 - Add ``junifer wtf`` to report environment details by `Synchon Mandal`_
   (:gh:`33`)
@@ -131,27 +129,27 @@ Features
 - Add ``junifer selftest`` to report environment details by `Synchon Mandal`_
   (:gh:`9`)
 
-- Implement :class:`junifer.configs.juseless.datagrabbers.JuselessDataladAOMICID1000VBM`
-  datagrabber for accessing AOMIC ID1000 VBM from juseless by `Felix Hoffstaedter`_
-  and `Synchon Mandal`_ (:gh:`57`)
+- Implement :class:`.JuselessDataladAOMICID1000VBM` datagrabber for accessing
+  AOMIC ID1000 VBM from juseless by `Felix Hoffstaedter`_ and `Synchon Mandal`_
+  (:gh:`57`)
 
-- Add :class:`junifer.preprocess.fMRIPrepConfoundRemover` by `Fede Raimondo`_
-  and `Leonard Sasse`_ (:gh:`111`)
+- Add :class:`.fMRIPrepConfoundRemover` by `Fede Raimondo`_ and `Leonard Sasse`_
+  (:gh:`111`)
 
-- Implement :class:`junifer.markers.CrossParcellationFC` marker by
-  `Leonard Sasse`_ and `Kaustubh R. Patil`_ (:gh:`85`)
+- Implement :class:`.CrossParcellationFC` marker by `Leonard Sasse`_ and
+  `Kaustubh R. Patil`_ (:gh:`85`)
 
-- Add :class:`junifer.configs.juseless.datagrabbers.JuselessUCLA` datagrabber
-  for the UCLA dataset available on juseless by `Leonard Sasse`_ (:gh:`118`)
+- Add :class:`.JuselessUCLA` datagrabber for the UCLA dataset available on
+  juseless by `Leonard Sasse`_ (:gh:`118`)
 
 - Introduce a singleton decorator for marker computations by `Synchon Mandal`_
   (:gh:`151`)
 
-- Implement :class:`junifer.markers.ReHoParcels` and
-  :class:`junifer.markers.ReHoSpheres` markers by `Synchon Mandal`_ (:gh:`36`)
+- Implement :class:`.ReHoParcels` and :class:`.ReHoSpheres` markers by
+  `Synchon Mandal`_ (:gh:`36`)
 
-- Implement :class:`junifer.markers.ALFFParcels` and
-  :class:`junifer.markers.ALFFSpheres` markers by `Fede Raimondo`_ (:gh:`35`)
+- Implement :class:`.ALFFParcels` and :class:`.ALFFSpheres` markers by
+  `Fede Raimondo`_ (:gh:`35`)
 
 Misc
 ^^^^

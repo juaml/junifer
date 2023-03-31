@@ -293,15 +293,15 @@ you know how to use these masks, and you checked whether the in-built masks
 suit your needs, and you have found that they don’t, you can come back here to
 learn how to use your own masks.</p>
 <p>The principle is fairly simple and quite similar to <a class="reference internal" href="parcellations.html#adding-parcellations"><span class="std std-ref">Adding Parcellations</span></a>
-and <a class="reference internal" href="coordinates.html#adding-coordinates"><span class="std std-ref">Adding Coordinates</span></a>. Junifer provides a
-<a class="reference internal" href="../api/data.html#junifer.data.masks.register_mask" title="junifer.data.masks.register_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.masks.register_mask()</span></code></a> function that lets you register your
-own custom masks. It consists of two positional arguments (<code class="docutils literal notranslate"><span class="pre">name</span></code> and
-<code class="docutils literal notranslate"><span class="pre">mask_path</span></code>) and one optional keyword argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
+and <a class="reference internal" href="coordinates.html#adding-coordinates"><span class="std std-ref">Adding Coordinates</span></a>. Junifer provides a <a class="reference internal" href="../api/data.html#junifer.data.masks.register_mask" title="junifer.data.masks.register_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_mask()</span></code></a>
+function that lets you register your own custom masks. It consists of two
+positional arguments (<code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">mask_path</span></code>) and one optional keyword
+argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">name</span></code> argument is a string indicating the name of the mask. This name
 is used to refer to that mask in Junifer internally in order to obtain the
 actual mask data and perform operations on it. For example, using the name you
 can load a mask after registration using the
-<a class="reference internal" href="../api/data.html#junifer.data.masks.load_mask" title="junifer.data.masks.load_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.masks.load_mask()</span></code></a> function.</p>
+<a class="reference internal" href="../api/data.html#junifer.data.masks.load_mask" title="junifer.data.masks.load_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_mask()</span></code></a> function.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">mask_path</span></code> should contain the path to a valid NIfTI image with binary
 voxel values (i.e. 0 or 1). This data can then be used by Junifer to mask other
 MR images.</p>

@@ -294,7 +294,7 @@ in the <a class="reference internal" href="data.html#data-object"><span class="s
 <p>Datagrabbers are intended to be used as context managers. When used within a context, a datagrabber takes care
 of any pre and post steps for interacting with the dataset, for example, downloading and cleaning up. As the interface
 is consistent, you always use the same procedure to interact with the datagrabber.</p>
-<p>For example, a concrete implementation of <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladDataGrabber</span></code></a> can provide junifer
+<p>For example, a concrete implementation of <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a> can provide junifer
 with data from a Datalad dataset. Of course, datagrabbers are not only meant to work with Datalad datasets but
 any dataset.</p>
 <p>If you are interested in using already provided datagrabbers, please go to <a class="reference internal" href="../builtin.html"><span class="doc">Built-in Pipeline steps and data</span></a>. And, if you want
@@ -312,17 +312,17 @@ provided.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.BaseDataGrabber</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a></p></td>
 <td><div class="line-block">
 <div class="line">The abstract base class providing you an interface to implement your own datagrabber.</div>
 <div class="line">You should try to avoid using this directly and instead use</div>
-<div class="line"><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.PatternDataGrabber</span></code></a> or <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladDataGrabber</span></code></a>.</div>
+<div class="line"><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> or <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a>.</div>
 <div class="line">To build your own custom <em>low-level</em> datagrabber, you need to at least implement the <code class="docutils literal notranslate"><span class="pre">get_elements</span></code> method,</div>
 <div class="line">but most of the time you should also override other existing methods like <code class="docutils literal notranslate"><span class="pre">__enter__</span></code> and <code class="docutils literal notranslate"><span class="pre">__exit__</span></code>.</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.PatternDataGrabber</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a></p></td>
 <td><div class="line-block">
 <div class="line">It implements functionality to help you define the pattern of the dataset you want to get. For example,</div>
 <div class="line">you know that T1 images are found in a directory following this pattern <code class="docutils literal notranslate"><span class="pre">{subject}/anat/{subject}_T1w.nii.gz</span></code></div>
@@ -330,17 +330,17 @@ provided.</p>
 </div>
 </td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladDataGrabber</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a></p></td>
 <td><div class="line-block">
 <div class="line">It implements functionality to deal with Datalad datasets. Specifically, the <code class="docutils literal notranslate"><span class="pre">__enter__</span></code> and <code class="docutils literal notranslate"><span class="pre">__exit__</span></code> methods</div>
 <div class="line">take care of cloning and removing the Datalad dataset.</div>
 </div>
 </td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.PatternDataladDataGrabber</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a></p></td>
 <td><div class="line-block">
-<div class="line">It is a combination of <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.PatternDataladDataGrabber</span></code></a> and</div>
-<div class="line"><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.datagrabber.DataladDataGrabber</span></code></a>. This is probably the class you are looking for when using Datalad.</div>
+<div class="line">It is a combination of <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a> and</div>
+<div class="line"><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a>. This is probably the class you are looking for when using Datalad.</div>
 </div>
 </td>
 </tr>

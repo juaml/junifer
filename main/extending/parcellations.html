@@ -295,9 +295,9 @@ and then adding them to Junifer, so you can use Junifer to obtain different
 markers to assess and validate your own parcellation. So, how can you do this?</p>
 <p>Since both of these use-cases are quite common, and not being able to use your
 favourite parcellation is of course quite a buzzkill, Junifer actually provides
-the easy-to-use <a class="reference internal" href="../api/data.html#junifer.data.parcellations.register_parcellation" title="junifer.data.parcellations.register_parcellation"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.register_parcellation()</span></code></a>
-function to do just that. Let’s try to understand the API reference
-and then use this function to register our own parcellation.</p>
+the easy-to-use <a class="reference internal" href="../api/data.html#junifer.data.parcellations.register_parcellation" title="junifer.data.parcellations.register_parcellation"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_parcellation()</span></code></a> function to do just that. Let’s
+try to understand the API reference and then use this function to register our
+own parcellation.</p>
 <p>From the API reference, we can see that it has 3 positional arguments
 (<code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">parcellation_path</span></code>, and <code class="docutils literal notranslate"><span class="pre">parcels_labels</span></code>) as well as one
 optional keyword argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
@@ -369,8 +369,7 @@ file, we can save the above code in a python file, say
 <p>Afterwards continue configuring the rest of the pipeline in this YAML file, and
 you will be able to use this parcellation using the name you gave the
 parcellation when registering it. For example, we can add a
-<a class="reference internal" href="../api/markers.html#junifer.markers.ParcelAggregation" title="junifer.markers.parcel_aggregation.ParcelAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.markers.parcel_aggregation.ParcelAggregation</span></code></a> marker to
-demonstrate how this can be done:</p>
+<a class="reference internal" href="../api/markers.html#junifer.markers.ParcelAggregation" title="junifer.markers.ParcelAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParcelAggregation</span></code></a> marker to demonstrate how this can be done:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">markers</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CustomParcellation_mean</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span>
