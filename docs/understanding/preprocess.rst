@@ -23,8 +23,8 @@ The *Confound Removal* step is meant to remove *confounds* from the ``BOLD`` dat
 extracted from the ``BOLD_confounds`` data (must be provided by the :ref:`Data Grabber <datagrabber>`).
 The confounds are then regressed out from the ``BOLD`` data using :func:`nilearn.image.clean_img`.
 
-Currently, junifer supports only one confound removal class: 
-:class:`junifer.preprocess.fMRIPrepConfoundRemover`. This class is meant to remove confounds as described
+Currently, junifer supports only one confound removal class:
+:class:`.fMRIPrepConfoundRemover`. This class is meant to remove confounds as described
 before, using the output of `fMRIPrep`_ as reference.
 
 Strategy
@@ -54,7 +54,7 @@ The *strategy* is defined as a dictionary, with the *noise components* as keys a
 
 Example in python format:
 
-.. code-block:: 
+.. code-block::
 
     strategy = {
         "motion": "basic",
@@ -64,8 +64,8 @@ Example in python format:
 
 or in YAML format:
 
-.. code-block:: 
-    
+.. code-block::
+
     strategy:
         motion: basic
         wm_csf: full
@@ -73,7 +73,7 @@ or in YAML format:
 
 The default value is to use all the *noise components* with the ``full`` *confounds*:
 
-.. code-block:: 
+.. code-block::
 
     strategy = {
         "motion": "full",
@@ -84,7 +84,7 @@ The default value is to use all the *noise components* with the ``full`` *confou
 Other parameters
 ~~~~~~~~~~~~~~~~
 
-Additionaly, the :class:`junifer.preprocess.fMRIPrepConfoundRemover` supports the following parameters:
+Additionaly, the :class:`.fMRIPrepConfoundRemover` supports the following parameters:
 
 .. list-table::
    :widths: 10, 30, 5
