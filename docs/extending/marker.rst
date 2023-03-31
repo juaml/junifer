@@ -9,14 +9,14 @@ Computing a marker (a.k.a. *feature*) is the main goal of junifer. While we aim 
 it might be the case that the marker you are looking for is not available. In this case, you can create your own marker
 by following this tutorial.
 
-Most of the functionality of a junifer marker has been taken care by the :class:`junifer.markers.BaseMarker` class. 
+Most of the functionality of a junifer marker has been taken care by the :class:`.BaseMarker` class.
 Thus, only a few methods are required:
 
 1. ``get_valid_inputs``: a method to obtain the list of valid inputs for the marker. This is used to check that the
-   inputs provided by the user are valid. This method should return a list of strings, representing 
+   inputs provided by the user are valid. This method should return a list of strings, representing
    :ref:`data types <data_types>`
 2. ``get_output_type``: a method to obtain the kind of output of the marker. This is used to check that the output
-   of the marker is compatible with the storage. This method should return a string, representing 
+   of the marker is compatible with the storage. This method should return a string, representing
    :ref:`storage types <storage_types>`
 3. ``compute``: the method that given the data, computes the marker.
 4. ``__init__``: the initialization method, where the marker is configured.
@@ -57,7 +57,7 @@ Step 2: Initialize the marker
 In this step we need to define the parameters of the marker. That is, all the parameters that the user can provide
 to configure how the marker will behave.
 
-The parameters of the marker are defined in the ``__init__`` method. The :class:`junifer.markers.BaseMarker` class
+The parameters of the marker are defined in the ``__init__`` method. The :class:`.BaseMarker` class
 requires two optional parameters:
 
 1. ``name``: the name of the marker. This is used to identify the marker in the configuration file.
@@ -71,13 +71,13 @@ In this example, the is only paramater required for the computation is the name 
 define the ``__init__`` method as follows:
 
 .. code-block:: python
-    
+
     def __init__(self, parcellation_name, on=None, name=None):
         self.parcellation_name = parcellation_name
         super().__init__(on=on, name=name)
 
 .. caution:: Parameters of the marker must be stored as object attributes without using ``_`` as prefix. This is
-             because any attribute that starts with ``_`` will not be considered as a parameter and not stored as 
+             because any attribute that starts with ``_`` will not be considered as a parameter and not stored as
              part of the metadata of the marker.
 
 
@@ -89,7 +89,7 @@ Step 3: Compute the marker
 In this step, we will define the method that computes the marker. This method will be called by junifer when needed,
 using the data provided by the datagrabber, as configured by the user. The function ``compute`` has two arguments:
 
-* ``input``: a dictionary with the data to be used to compute the marker. This will be the corresponding element in the 
+* ``input``: a dictionary with the data to be used to compute the marker. This will be the corresponding element in the
   :ref:`Data Object<data_object>` alredy indexing. Thus, the dictionary has at least two keys: ``data`` and ``path``.
   The first one contains the data, while the second one contains the path to the data. The dictionary can also contain
   other keys, depending on the data type.
@@ -176,7 +176,7 @@ Finally, we need to register the marker using the ``@register_marker`` decorator
         def __init__(self, parcellation_name, on=None, name=None):
             self.parcellation_name = parcellation_name
             super().__init__(on=on, name=name)
-        
+
         def get_valid_inputs(self):
             return ['BOLD', 'VBM_WM', 'VBM_GM']
 
@@ -235,7 +235,7 @@ Template for a custom Marker
         def __init__(self, on=None, name=None):
             # TODO: add marker-specific parameters
             super().__init__(on=on, name=name)
-        
+
         def get_valid_inputs(self):
             # TODO: Complete with the valid inputs
             valid = []
