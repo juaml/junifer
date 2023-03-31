@@ -114,8 +114,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         values are found (default True).
     chunk_size : int, optional
         The chunk size to use when collecting data from element files in
-        :meth:`junifer.storage.HDF5FeatureStorage.collect`. If the file count
-        is smaller than the value, the minimum is used (default 100).
+        :meth:`.collect`. If the file count is smaller than the value, the
+        minimum is used (default 100).
 
     See Also
     --------
@@ -262,8 +262,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         -------
         dict
             List of features in the storage. The keys are the feature MD5 to
-            be used in :meth:`junifer.storage.HDF5FeatureStorage.read_df`
-            and the values are the metadata of each feature.
+            be used in :meth:`.read_df` and the values are the metadata of each
+            feature.
 
         """
         # Read metadata
@@ -496,9 +496,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     ) -> None:
         """Write processed data to HDF5 (should not be called directly).
 
-        This is used primarily in
-        :func:`junifer.storage.HDF5FeatureStorage.store_metadata` and
-        ``_store_data``.
+        This is used primarily in :meth:`.store_metadata` and ``_store_data``.
 
         Parameters
         ----------
