@@ -26,7 +26,7 @@ class HCP1200(PatternDataGrabber):
     phase_encodings : {"LR", "RL"} or list of the options, optional
         HCP phase encoding directions. If None, both will be used
         (default None).
-    icafix : bool, optional
+    ica_fix : bool, optional
         Whether to retrieve data that was processed with ICA+FIX.
         Only 'REST1' and 'REST2' tasks are available with ICA+FIX (default
         False).
