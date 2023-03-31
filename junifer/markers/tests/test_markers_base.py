@@ -99,7 +99,7 @@ def test_base_marker_subclassing() -> None:
                 "element": "elem",
                 "datareader": "dr",
             },
-        }
+        },
     }
     marker = MyBaseMarker(on=["BOLD"])
     output = marker.fit_transform(input=input_)  # process

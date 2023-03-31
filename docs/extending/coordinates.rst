@@ -6,11 +6,9 @@ Adding Coordinates
 ==================
 
 Instead of using whole-brain parcellations to aggregate voxel-wise signals from
-MR images (as for example in the
-:class:`junifer.markers.parcel_aggregation.ParcelAggregation` marker), Junifer
+MR images (as for example in the :class:`.ParcelAggregation` marker), Junifer
 allows you to specify a set of coordinates around which to draw spheres to
-aggregate (for example using the
-:class:`junifer.markers.sphere_aggregation.SphereAggregation` marker) the MR
+aggregate (for example using the :class:`.SphereAggregation` marker) the MR
 signals from individual voxels. Now, before you start specifying your own sets
 of coordinates, check the coordinates that Junifer already has
 :ref:`built in <builtin>`. If you simply want to use a well known set of
@@ -19,9 +17,8 @@ provides them already.
 
 If you checked the in-built coordinates, and they are not there already (for
 example if you came up with your own set of coordinates), then Junifer provides
-an easy way for you to register them using the
-:func:`junifer.data.coordinates.register_coordinates` function, so you can use
-your own set of coordinates within a Junifer pipeline.
+an easy way for you to register them using the :func:`.register_coordinates`
+function, so you can use your own set of coordinates within a Junifer pipeline.
 
 From the API reference, we can see that it has 3 positional arguments
 (``name``, ``coordinates``, and ``voi_names``) as well as one
@@ -30,10 +27,9 @@ optional keyword argument (``overwrite``).
 The ``name`` argument takes a string indicating the name you want to give to
 this set of coordinates. This ``name`` can be used to obtain and operate on a
 set of coordinates in Junifer. For example, you can obtain your coordinates
-after registration by providing ``name`` to
-:func:`junifer.data.coordinates.load_coordinates`. We could simply call it
-``"my_set_of_coordinates"``, but likely you want a more descriptive and more
-informative name most of the time.
+after registration by providing ``name`` to :func:`.load_coordinates`. We could
+simply call it ``"my_set_of_coordinates"``, but likely you want a more
+descriptive and more informative name most of the time.
 
 The ``coordinates`` argument takes the actual coordinates as a 2-dimensional
 :class:`numpy.ndarray`. It contains one row for every location, and three
@@ -116,8 +112,7 @@ you can use the ``with`` keyword provided by Junifer:
 Afterwards continue configuring the rest of your pipeline in this YAML file,
 and you will be able to use this set of coordinates using the name you gave it
 during registration (in our example "DMNCustom"). We can add a
-:class:`junifer.markers.sphere_aggregation.SphereAggregation` to demonstrate
-how this can be done:
+:class:`.SphereAggregation` to demonstrate how this can be done:
 
 .. code-block:: yaml
 

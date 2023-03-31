@@ -16,9 +16,9 @@ markers to assess and validate your own parcellation. So, how can you do this?
 
 Since both of these use-cases are quite common, and not being able to use your
 favourite parcellation is of course quite a buzzkill, Junifer actually provides
-the easy-to-use :func:`junifer.data.parcellations.register_parcellation`
-function to do just that. Let's try to understand the API reference
-and then use this function to register our own parcellation.
+the easy-to-use :func:`.register_parcellation` function to do just that. Let's
+try to understand the API reference and then use this function to register our
+own parcellation.
 
 From the API reference, we can see that it has 3 positional arguments
 (``name``, ``parcellation_path``, and ``parcels_labels``) as well as one
@@ -101,8 +101,7 @@ file, we can save the above code in a python file, say
 Afterwards continue configuring the rest of the pipeline in this YAML file, and
 you will be able to use this parcellation using the name you gave the
 parcellation when registering it. For example, we can add a
-:class:`junifer.markers.parcel_aggregation.ParcelAggregation` marker to
-demonstrate how this can be done:
+:class:`.ParcelAggregation` marker to demonstrate how this can be done:
 
 .. code-block:: yaml
 

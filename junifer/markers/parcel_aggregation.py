@@ -25,13 +25,13 @@ class ParcelAggregation(BaseMarker):
     ----------
     parcellation : str or list of str
         The name(s) of the parcellation(s). Check valid options by calling
-        :func:`junifer.data.parcellations.list_parcellations`.
+        :func:`.list_parcellations`.
     method : str
         The method to perform aggregation using. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name`.
+        :func:`.get_aggfunc_by_name`.
     method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name`.
+        :func:`.get_aggfunc_by_name`.
     time_method : str, optional
         The method to use to aggregate the time series over the time points,
         after applying :term:`method` (only applicable to BOLD data). If None,

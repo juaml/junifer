@@ -515,10 +515,11 @@ def _queue_condor(
             collect_pre_fname = jobdir / "collect_pre.sh"
             dag_file.write(
                 f"SCRIPT PRE collect {collect_pre_fname.as_posix()} "
-                "$DAG_STATUS\n")
+                "$DAG_STATUS\n"
+            )
             with open(collect_pre_fname, "w") as pre_file:
                 pre_file.write("#!/bin/bash\n\n")
-                pre_file.write("if [ \"${1}\" == \"4\" ]; then\n")
+                pre_file.write('if [ "${1}" == "4" ]; then\n')
                 pre_file.write("    exit 1\n")
                 pre_file.write("fi\n")
 

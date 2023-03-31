@@ -22,7 +22,7 @@ class ReHoParcels(ReHoBase):
     ----------
     parcellation : str
         The name of the parcellation. Check valid options by calling
-        :func:`junifer.data.parcellations.list_parcellations`.
+        :func:`.list_parcellations`.
     use_afni : bool, optional
         Whether to use AFNI for computing. If None, will use AFNI only
         if available (default None).
@@ -70,10 +70,10 @@ class ReHoParcels(ReHoBase):
 
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
+        :func:`.get_aggfunc_by_name` (default "mean").
     agg_method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default None).
+        :func:`.get_aggfunc_by_name` (default None).
     masks : str, dict or list of dict or str, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.

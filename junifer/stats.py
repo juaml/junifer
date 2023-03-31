@@ -28,8 +28,8 @@ def get_aggfunc_by_name(
         * ``mean`` -> :func:`numpy.mean`
         * ``std`` -> :func:`numpy.std`
         * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
-        * ``count`` -> :func:`junifer.stats.count`
-        * ``select`` -> :func:`junifer.stats.select`
+        * ``count`` -> :func:`.count`
+        * ``select`` -> :func:`.select`
 
     func_params : dict, optional
         Parameters to pass to the function.

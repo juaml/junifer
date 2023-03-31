@@ -20,7 +20,7 @@ class ALFFSpheres(ALFFBase):
     ----------
     coords : str
         The name of the coordinates list to use. See
-        :func:`junifer.data.coordinates.list_coordinates` for options.
+        :func:`.list_coordinates` for options.
     radius : float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
@@ -47,10 +47,10 @@ class ALFFSpheres(ALFFBase):
         If None, will not apply any mask (default None).
     method : str, optional
         The method to perform aggregation using. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
+        :func:`.get_aggfunc_by_name` (default "mean").
     method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name`.
+        :func:`.get_aggfunc_by_name`.
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).

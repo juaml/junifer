@@ -7,6 +7,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/junifer?style=flat-square)
 ![GitHub](https://img.shields.io/github/license/juaml/junifer?style=flat-square)
 ![Codecov](https://img.shields.io/codecov/c/github/juaml/junifer?style=flat-square)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 
 ## About
 

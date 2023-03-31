@@ -13,7 +13,7 @@ the structure of a dataset and provide two specific functionalities:
 2) Provide the list of *elements* available in the dataset.
 
 In this section, we will see how to create a datagrabber for a dataset. Basic
-aspects of datagrabbers are covered in the 
+aspects of datagrabbers are covered in the
 :ref:`Understanding Data Grabbers <datagrabber>` section.
 
 .. _extending_datagrabbers_think:
@@ -29,7 +29,7 @@ only one of each *data type* (see :ref:`data_types`).
 
 For example, if we have a dataset from an fMRI study in which:
 
-a) both T1w and fMRI was acquired 
+a) both T1w and fMRI was acquired
 b) 20 subjects went through an experiment twice
 c) the experiment included resting-stage fMRI and a task named *stroop*
 
@@ -64,7 +64,7 @@ Junifer provides an abstract class to deal with datasets that can be thought in
 terms of *patterns*. A *pattern* is a string that contains placeholders that are
 replaced by the actual values of the element. In our BIDS example, the path
 to the T1w image of subject `sub-01` and session `ses-01`, relative to the
-dataset location, is ``sub-01/ses-01/anat/sub-01_ses-01_T1w.nii.gz``. By 
+dataset location, is ``sub-01/ses-01/anat/sub-01_ses-01_T1w.nii.gz``. By
 replacing ``sub-01`` with ``sub-02``, we can obtain the T1w image of the first
 session of the second subject. Indeed, the path to the T1w images can be
 expressed as a pattern:
@@ -105,7 +105,7 @@ in it.
 
 Before creating the datagrabber, we need to define 3 variables:
 
-* ``types``: A list with the available :ref:`data_types` in our dataset 
+* ``types``: A list with the available :ref:`data_types` in our dataset
 * ``patterns``: A dictionary that specifies the pattern for each data type.
 * ``replacements``: A list indicating which of the elements in the patterns
   should be replaced by the values of the element.
@@ -125,7 +125,7 @@ An additional fourth variable is the ``datadir``, which should be the path to
 where the dataset is located. For example, if the dataset is located in
 ``/data/project/test/data``, then ``datadir`` should be
 ``/data/project/test/data``. Or, if we want to allow the user to specify the
-location of the dataset, we can expose the variable in the constructor, as in 
+location of the dataset, we can expose the variable in the constructor, as in
 this example
 
 With this defined, we can now create our datagrabber, we will name it
@@ -147,7 +147,7 @@ With this defined, we can now create our datagrabber, we will name it
             replacements = ["subject", "session"]
             super().__init__(
                datadir=datadir,
-               types=types, 
+               types=types,
                patterns=patterns,
                replacements=replacements,
             )
@@ -175,7 +175,7 @@ use the :py:func:`~junifer.api.decorators.register_datagrabber` decorator.
             replacements = ["subject", "session"]
             super().__init__(
                datadir=datadir,
-               types=types, 
+               types=types,
                patterns=patterns,
                replacements=replacements,
             )
@@ -186,29 +186,28 @@ in the yaml file to ``ExampleBIDSDataGrabber``. Remember that we still need to
 set the ``datadir``.
 
 .. code-block:: yaml
-   
+
       datagrabber:
          kind: ExampleBIDSDataGrabber
          datadir: /data/project/test/data
 
 
-Optional: Using datalad 
+Optional: Using datalad
 """""""""""""""""""""""
 
-If you are using `datalad`_, you can use the 
-:py:class:`~junifer.datagrabber.PatternDataladDataGrabber` instead of the 
-:py:class:`~junifer.datagrabber.PatternDataGrabber`. This class will not only
+If you are using `datalad`_, you can use the :class:`.PatternDataladDataGrabber`
+instead of the :class:`.PatternDataGrabber`. This class will not only
 interpret patterns, but also use `datalad`_ to `clone` and `get` the data.
 
 The main difference between the two is that the ``datadir`` is not the actual
-location of the dataset, but the location where the dataset will be cloned. It 
+location of the dataset, but the location where the dataset will be cloned. It
 can now be ``None``, which means that the data will be downloaded to a
 temporary directory. To set the location of the dataset, you can use the
 ``uri`` argument in the constructor. Additionally, a ``rootdir`` argument can
 be used to specify the path to the root directory of the dataset after doing
 ``datalad clone``.
 
-In the example, the dataset is hosted in gin 
+In the example, the dataset is hosted in gin
 (``https://gin.g-node.org/juaml/datalad-example-bids``).
 
 When we clone this dataset, we will see the following structure:
@@ -262,7 +261,7 @@ And we can create our datagrabber:
                datadir=None,
                uri=uri,
                rootdir=rootdir,
-               types=types, 
+               types=types,
                patterns=patterns,
                replacements=replacements,
             )
@@ -287,7 +286,7 @@ implement the following methods:
    The ``__init__`` method could also be implemented, but it is not mandatory. This is required if the datagrabber
    requires any parameter.
 
-We will now implement our BIDS example with this method. 
+We will now implement our BIDS example with this method.
 
 The first method, ``get_item``, needs to obtain a single
 item from the dataset. Since this dataset requires two variables, ``subject`` and ``session``, we will use them
@@ -366,11 +365,12 @@ So, to summarize, our datagrabber will look like this:
       def get_element_keys(self):
          return ["subject", "session"]
 
-Optional: Using datalad 
+Optional: Using datalad
 """""""""""""""""""""""
 
-If this dataset is in a datalad dataset, we can extend from :class:`junifer.datagrabber.DataladDataGrabber` instead of
-:class:`junifer.datagrabber.BaseDataGrabber`. This will allow us to use the datalad API to obtain the data.
+If this dataset is in a datalad dataset, we can extend from
+:class:`.DataladDataGrabber` instead of :class:`.BaseDataGrabber`. This will
+allow us to use the datalad API to obtain the data.
 
 
 Step 4: Optional: Adding *BOLD confounds*
@@ -385,7 +385,7 @@ Thus, the ``BOLD_confounds`` element is a dictionary with the following keys:
 - ``format``: the format of the confounds file. Currently, this can be either ``fmriprep`` or ``adhoc``.
 
 The ``fmriprep`` format corresponds to the format of the confounds files generated by `fMRIPrep`_. The
-``adhoc`` format corresponds to a format that is not standardized. 
+``adhoc`` format corresponds to a format that is not standardized.
 
 .. note::
    The ``mappings`` key is only required if the ``format`` is ``adhoc``. If the ``format`` is ``fmriprep``, the
@@ -393,9 +393,9 @@ The ``fmriprep`` format corresponds to the format of the confounds files generat
 
 
 Currently, Junifer provides only one confound remover step
-(:class:`junifer.preprocess.fMRIPrepConfoundRemover`), which relies entirely on the ``fmriprep`` confound
-variable names. Thus, if the confounds are not in ``fmriprep`` format, the user will need to provide the mappings 
-between the *ad-hoc* variable names and the ``fmriprep`` variable names. 
+(:class:`.fMRIPrepConfoundRemover`), which relies entirely on the ``fmriprep`` confound
+variable names. Thus, if the confounds are not in ``fmriprep`` format, the user will need to provide the mappings
+between the *ad-hoc* variable names and the ``fmriprep`` variable names.
 This is done by specifying the ``adhoc`` format and providing the mappings as a dictionary in the ``mappings`` key.
 
 In the following example, the confounds file has 3 variables that are not in the ``fmriprep`` format. Thus, we will
@@ -418,7 +418,6 @@ provide the mappings for these variables to the ``fmriprep`` format.
 
 .. note::
    Not all of the mappings need to be provided. For the moment, this is used only by the
-   :class:`junifer.preprocess.fMRIPrepConfoundRemover` step, which requires variables based on the
+   :class:`.fMRIPrepConfoundRemover` step, which requires variables based on the
    strategy selected. However, it is recommended to provide all the mappings, as this will allow the user to
    choose different strategies with the same dataset.
-

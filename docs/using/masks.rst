@@ -11,12 +11,12 @@ voxels that contain a certain ratio of gray matter to white matter / cerebrospin
 are not extracted from voxels that contain mostly white matter or cerebrospinal fluid, which could add noise to the
 BOLD signal.
 
-Junifer provides a number of built-in masks, which can be listed using the :func:`junifer.data.masks.list_masks`. Some
-masks are images, while other masks can be computed using :ref:`nilearn` functions. 
+Junifer provides a number of built-in masks, which can be listed using the :func:`.list_masks`. Some
+masks are images, while other masks can be computed using :ref:`nilearn` functions.
 
 For markers and steps that accept ``masks`` as an argument, the mask can be specified as a string, which will be the
-name of a built-in mask, or as a dictionary in which the **only** key is the built-in mask name and the value is a 
-dictionary of keyword arguments to pass to the mask function. 
+name of a built-in mask, or as a dictionary in which the **only** key is the built-in mask name and the value is a
+dictionary of keyword arguments to pass to the mask function.
 
 For example, the following is a valid mask specification that specified the ``GM_prob0.2`` mask.
 
@@ -29,7 +29,7 @@ with a threshold of 0.5.
 
 .. code-block:: yaml
 
-    masks: 
+    masks:
         compute_brain_mask:
             threshold: 0.5
 
@@ -39,7 +39,7 @@ is a valid mask specification that specifies the intersection of the ``GM_prob0.
 
 .. code-block:: yaml
 
-    masks: 
+    masks:
         - GM_prob0.2
         - compute_brain_mask:
             threshold: 0.5
@@ -50,7 +50,7 @@ following example combines the same masks as the previous one, but computing the
 
 .. code-block:: yaml
 
-    masks: 
+    masks:
         - GM_prob0.2
         - compute_brain_mask:
             threshold: 0.5
@@ -60,7 +60,7 @@ Alternatively, we can also compute the union, even if the voxels do not form a c
 
 .. code-block:: yaml
 
-    masks: 
+    masks:
         - GM_prob0.2
         - compute_brain_mask:
             threshold: 0.5

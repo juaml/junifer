@@ -21,7 +21,7 @@ The following steps are specific to VSCode and you can choose to go with it:
 
 2. We recommend using ``conda`` to create your virtual environment
 
-   .. code-block:: console
+   .. code-block:: bash
 
        conda env create -n <your-environment-name> -f conda-env.yml python=3.9
        conda activate <your-environment-name>

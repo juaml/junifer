@@ -213,8 +213,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         -------
         dict
             List of features in the storage. The keys are the feature MD5 to
-            be used in :meth:`junifer.storage.SQLiteFeatureStorage.read_df`
-            and the values are the metadata of each feature.
+            be used in :meth:`.read_df` and the values are the metadata of each
+            feature.
 
         """
         # Retrieve meta table from storage

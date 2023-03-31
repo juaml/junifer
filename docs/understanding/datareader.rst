@@ -22,7 +22,7 @@ For data formats not supported by junifer yet, you can either make your own *Dat
 Currently supported file-formats
 --------------------------------
 
-We already provide a concrete implementation :class:`junifer.datareader.DefaultDataReader` which knows how to
+We already provide a concrete implementation :class:`.DefaultDataReader` which knows how to
 read the following file formats:
 
 .. list-table::

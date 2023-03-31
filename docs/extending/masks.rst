@@ -14,16 +14,16 @@ suit your needs, and you have found that they don't, you can come back here to
 learn how to use your own masks.
 
 The principle is fairly simple and quite similar to :ref:`adding_parcellations`
-and :ref:`adding_coordinates`. Junifer provides a
-:func:`junifer.data.masks.register_mask` function that lets you register your
-own custom masks. It consists of two positional arguments (``name`` and
-``mask_path``) and one optional keyword argument (``overwrite``).
+and :ref:`adding_coordinates`. Junifer provides a :func:`.register_mask`
+function that lets you register your own custom masks. It consists of two
+positional arguments (``name`` and ``mask_path``) and one optional keyword
+argument (``overwrite``).
 
 The ``name`` argument is a string indicating the name of the mask. This name
 is used to refer to that mask in Junifer internally in order to obtain the
 actual mask data and perform operations on it. For example, using the name you
 can load a mask after registration using the
-:func:`junifer.data.masks.load_mask` function.
+:func:`.load_mask` function.
 
 The ``mask_path`` should contain the path to a valid NIfTI image with binary
 voxel values (i.e. 0 or 1). This data can then be used by Junifer to mask other

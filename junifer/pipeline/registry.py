@@ -141,10 +141,7 @@ def build(
         object_ = klass(**init_params)
     except Exception as e:
         raise_error(
-            msg=(
-                f"Failed to create {step} ({name}). "
-                f"Error: {e}"
-            ),
+            msg=(f"Failed to create {step} ({name}). " f"Error: {e}"),
             klass=RuntimeError,
             exception=e,
         )
