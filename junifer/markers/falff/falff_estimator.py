@@ -33,8 +33,8 @@ class ALFFEstimator:
     by caching the voxel-wise ALFF map for a given set of file path and
     computation parameters.
 
-    .. warning:: This class can only be used via
-    :class:`junifer.markers.falff.ALFFBase` as it serves a specific purpose.
+    .. warning:: This class can only be used via :class:`.ALFFBase` as it
+    serves a specific purpose.
 
     Parameters
     ----------
