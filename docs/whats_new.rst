@@ -98,8 +98,8 @@ Features
   connectivity using a parcellation by `Amir Omidvarnia`_ and
   `Kaustubh R. Patil`_ (:gh:`41`)
 
-- Implement :func:`register_coordinates`, :func:`list_coordinates` and
-  :func:`load_coordinates` by `Fede Raimondo`_ (:gh:`11`)
+- Implement :func:`.register_coordinates`, :func:`.list_coordinates` and
+  :func:`.load_coordinates` by `Fede Raimondo`_ (:gh:`11`)
 
 - Add :class:`.DataladAOMICID1000` datagrabber for AOMIC ID1000 dataset
   including tests and creation of mock dataset for testing by
