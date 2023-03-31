@@ -22,7 +22,7 @@ class SphereAggregation(BaseMarker):
     ----------
     coords : str
         The name of the coordinates list to use. See
-        :func:`junifer.data.coordinates.list_coordinates` for options.
+        :func:`.list_coordinates` for options.
     radius : float, optional
         The radius of the sphere in millimeters. If None, the signal will be
         extracted from a single voxel. See
@@ -33,7 +33,7 @@ class SphereAggregation(BaseMarker):
         the spheres overlap (default is False).
     method : str, optional
         The aggregation method to use.
-        See :func:`junifer.stats.get_aggfunc_by_name` for more information
+        See :func:`.get_aggfunc_by_name` for more information
         (default "mean").
     method_params : dict, optional
         The parameters to pass to the aggregation method (default None).
