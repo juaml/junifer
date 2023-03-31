@@ -19,7 +19,7 @@ class TemporalSNRSpheres(TemporalSNRBase):
     ----------
     coords : str
         The name of the coordinates list to use. See
-        :func:`junifer.data.coordinates.list_coordinates` for options.
+        :func:`.list_coordinates` for options.
     radius : float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
@@ -29,7 +29,7 @@ class TemporalSNRSpheres(TemporalSNRBase):
         the spheres overlap (default is False).
     agg_method : str, optional
         The aggregation method to use.
-        See :func:`junifer.stats.get_aggfunc_by_name` for more information
+        See :func:`.get_aggfunc_by_name` for more information
         (default None).
     agg_method_params : dict, optional
         The parameters to pass to the aggregation method (default None).
