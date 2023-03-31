@@ -1,1 +1,0 @@
-Add support for ``Dosenbach`` coordinates by `Synchon Mandal`_

@@ -1,1 +1,0 @@
-Add :class:`.EdgeCentricFCParcels` and :class:`.EdgeCentricFCSpheres` by `Leonard Sasse`_

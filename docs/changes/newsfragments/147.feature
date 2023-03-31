@@ -1,1 +1,0 @@
-Add support for HDF5 feature storage via :class:`.HDF5FeatureStorage` by `Synchon Mandal`_
