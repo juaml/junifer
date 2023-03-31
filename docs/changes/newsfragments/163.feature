@@ -1,1 +1,0 @@
-Add :class:`.TemporalSNRParcels` and :class:`.TemporalSNRSpheres` by `Leonard Sasse`_
