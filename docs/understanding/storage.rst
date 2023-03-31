@@ -17,12 +17,12 @@ as the processed data is in the memory and the Python runtime has not garbage-co
 
 The :ref:`Markers <marker>` are responsible for defining what *storage kind* (``matrix``, ``vector``, ``timeseries``)
 they support for which :ref:`data type <data_types>` by overriding its ``store`` method. The storage object in turn
-declares and provides implementation for specific *storage kind*. For example, :class:`junifer.storage.SQLiteFeatureStorage`
+declares and provides implementation for specific *storage kind*. For example, :class:`.SQLiteFeatureStorage`
 supports saving ``matrix``, ``vector`` and ``timeseries`` via ``store_matrix``, ``store_vector`` and ``store_timeseries``
 methods respectively.
 
 For storage interfaces not supported by junifer yet, you can either make your own ``Storage`` by providing a concrete
-implementation of :class:`junifer.storage.BaseFeatureStorage` or open an issue on `junifer Github`_ and we can help you out.
+implementation of :class:`.BaseFeatureStorage` or open an issue on `junifer Github`_ and we can help you out.
 
 
 .. _storage_types:
@@ -41,15 +41,15 @@ Currently supported storage types
    * - ``matrix``
      - A 2D matrix with row and column names
      -  ``col_names``, ``row_names``, ``matrix_kind``, ``diagonal``
-     -  :meth:`junifer.storage.BaseFeatureStorage.store_matrix`
+     -  :meth:`.BaseFeatureStorage.store_matrix`
    * - ``vector``
      - A vector of values with column names
      - ``columns``, ``row_names``
-     -  :meth:`junifer.storage.BaseFeatureStorage.store_vector`
+     -  :meth:`.BaseFeatureStorage.store_vector`
    * - ``timeseries``
      - A 2D matrix of values with column names
      - ``columns``, ``row_names``
-     -  :meth:`junifer.storage.BaseFeatureStorage.store_timeseries`
+     -  :meth:`.BaseFeatureStorage.store_timeseries`
 
 .. _storage_interfaces:
 
@@ -64,11 +64,11 @@ Currently supported storage interfaces
      - File extension
      - File type
      - Storage kinds
-   * - :class:`junifer.storage.SQLiteFeatureStorage`
+   * - :class:`.SQLiteFeatureStorage`
      - ``.sqlite``
      - SQLite
      - ``matrix``, ``vector``, ``timeseries``
-   * - :class:`junifer.storage.HDF5FeatureStorage`
+   * - :class:`.HDF5FeatureStorage`
      - ``.hdf5``
      - HDF5
      - ``matrix``, ``vector``, ``timeseries``
