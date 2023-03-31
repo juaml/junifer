@@ -20,13 +20,13 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
     ----------
     parcellation : str or list of str
         The name(s) of the parcellation(s). Check valid options by calling
-        :func:`junifer.data.parcellations.list_parcellations`.
+        :func:`.list_parcellations`.
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
+        :func:`.get_aggfunc_by_name` (default "mean").
     agg_method_params : dict, optional
         Parameters to pass to the aggregation function. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default None).
+        :func:`.get_aggfunc_by_name` (default None).
     cor_method : str, optional
         The method to perform correlation using. Check valid options in
         :class:`nilearn.connectome.ConnectivityMeasure`
