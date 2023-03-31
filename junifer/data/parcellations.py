@@ -167,7 +167,7 @@ def load_parcellation(
     ----------
     name : str
         The name of the parcellation. Check valid options by calling
-        :func:`junifer.data.parcellations.list_parcellations`.
+        :func:`.list_parcellations`.
     parcellations_dir : str or pathlib.Path, optional
         Path where the parcellations files are stored. The default location is
         "$HOME/junifer/data/parcellations" (default None).
