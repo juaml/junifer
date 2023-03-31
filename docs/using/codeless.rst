@@ -11,7 +11,7 @@ achieved by using a configuration file that is written in YAML_. In this file, w
 
 As a reminder, this is how the pipeline looks like:
 
-.. mermaid:: 
+.. mermaid::
 
    flowchart LR
      dg[Data Grabber]
@@ -70,7 +70,7 @@ Data Grabber
 The ``datagrabber`` section must be configured using the ``kind`` key to specify the datagrabber to use. Additional
 keys correspond to the parameters of the datagrabber.
 
-For example, to use the :class:`junifer.datagrabber.DataladAOMICPIOP1` datagrabber, we just need to
+For example, to use the :class:`.DataladAOMICPIOP1` datagrabber, we just need to
 specify its name as the ``kind`` key.
 
 .. code-block:: yaml
@@ -99,7 +99,7 @@ Data Reader
 ^^^^^^^^^^^
 
 As mentioned before, this section is entirely optional, as junifer only provides one data reader
-(:class:`junifer.datareader.DefaultDataReader`), which is the default in case the section is not specified.
+(:class:`.DefaultDataReader`), which is the default in case the section is not specified.
 
 In any case, the syntax of the section is the same as for the ``datagrabber`` section, using the ``kind`` key to
 specify the data reader to use, and additional keys to pass parameters to the data reader:
@@ -119,7 +119,7 @@ Preprocessing is also an optional step, as it might be the case that no pre-proc
 preprocessing is needed, the section must be configured using the ``kind`` key to specify the preprocessor to use,
 and additional keys to pass parameters to the preprocessor.
 
-For example, to use the :class:`junifer.preprocess.fMRIPrepConfoundRemover` preprocessor, we just need to specify its
+For example, to use the :class:`.fMRIPrepConfoundRemover` preprocessor, we just need to specify its
 name as the ``kind`` key, as well as its parameters.
 
 
@@ -173,7 +173,7 @@ Storage
 Finally, we need to define how and where the results will be stored. This is done using the ``storage`` section,
 which must be configured using the ``kind`` key to specify the storage to use, and additional keys to pass parameters.
 
-For example, to use the :class:`junifer.storage.SQLiteFeatureStorage` storage, we just need to specify where we want
+For example, to use the :class:`.SQLiteFeatureStorage` storage, we just need to specify where we want
 to store the results:
 
 .. code-block:: yaml
