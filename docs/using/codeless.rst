@@ -100,7 +100,7 @@ In the ``Oasis VBM Testing dataset`` example, the section will look like this:
 .. code-block:: yaml
 
   datagrabber:
-    kind: OasisVBMTesting
+    kind: OasisVBMTestingDatagrabber
 
 
 Data Reader
@@ -120,7 +120,8 @@ keys to pass parameters to the datareader:
       kind: DefaultDataReader
 
 
-For the *Oasis VBM Testing dataset* example, we will not specify a ``datareader`` step.
+For the ``Oasis VBM Testing dataset`` example, we will not specify a
+``datareader`` step.
 
 Preprocess
 ^^^^^^^^^^
@@ -146,7 +147,8 @@ need to specify its name as the ``kind`` key, as well as its parameters.
     standardize: true
 
 
-For the ``Oasis VBM Testing dataset`` example, we will not specify a preprocessing step.
+For the ``Oasis VBM Testing dataset`` example, we will not specify a
+preprocessing step.
 
 
 Marker
@@ -210,7 +212,7 @@ looks like:
   workdir: /tmp
 
   datagrabber:
-    kind: OasisVBMTesting
+    kind: OasisVBMTestingDatagrabber
 
   markers:
     - name: Schaefer100x7_mean
