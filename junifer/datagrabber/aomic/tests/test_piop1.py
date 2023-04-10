@@ -147,5 +147,4 @@ def test_piop1_invalid_tasks():
             "the AOMIC PIOP1 dataset!"
         ),
     ):
-
         DataladAOMICPIOP1(tasks="thisisnotarealtask")

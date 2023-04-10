@@ -19,6 +19,7 @@ def test_BaseFeatureStorage_abstractness() -> None:
 
 def test_BaseFeatureStorage() -> None:
     """Test proper subclassing of BaseFeatureStorage."""
+
     # Create concrete class
     class MyFeatureStorage(BaseFeatureStorage):
         """Implement concrete class."""

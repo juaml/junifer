@@ -365,8 +365,7 @@ def test_hcp1200_datagrabber_elements(
     ],
 )
 def test_hcp1200_datagrabber_incorrect_access_icafix(
-    tasks: Optional[str],
-    ica_fix: bool
+    tasks: Optional[str], ica_fix: bool
 ) -> None:
     """Test HCP1200 datagrabber incorrect access for icafix.
 
