@@ -23,7 +23,7 @@ The following steps are specific to VSCode and you can choose to go with it:
 
    .. code-block:: bash
 
-       conda env create -n <your-environment-name> -f conda-env.yml python=3.9
+       conda env create -n <your-environment-name> -f conda-env.yml python=3.10
        conda activate <your-environment-name>
 
    The ``conda-env.yml`` can be found at the root of the repository.
