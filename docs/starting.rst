@@ -2,12 +2,12 @@
 
 .. _starting:
 
-First steps with Junifer
+First steps with junifer
 ========================
 
+.. note::
 
-.. note:: 
-  To scroll the graph left and right, click on the graph and use the arrows on your keyboard.
+   To scroll the graph left and right, click on the graph and use the arrows on your keyboard.
 
 .. mermaid::
 
@@ -74,7 +74,6 @@ First steps with Junifer
      question_contribute_marker -->|No| final_run
      contribute_marker(Create a\nMARKER REQUEST\nissue on Github)
      contribute_marker --> final_run
-    
 
      missing_preprocessing --> contact_help
 
@@ -101,13 +100,13 @@ First steps with Junifer
      read_adding_parcellation_start --> read_adding_parcellation
      read_adding_parcellation("Read Adding Parcellations")
      read_adding_parcellation --> missing_other_solved
-     
+
      missing_coordinates --> read_adding_coordinates_start
      read_adding_coordinates_start("Read Creating a Junifer extension")
      read_adding_coordinates_start --> read_adding_coordinates
      read_adding_coordinates("Read Adding Coordinates")
      read_adding_coordinates --> missing_other_solved
-     
+
      missing_other_solved{Did you solve your issue?}
      missing_other_solved -->|Yes| read_using_final
      missing_other_solved -->|No| missing_other_contact
@@ -133,7 +132,7 @@ First steps with Junifer
      final_queue(Use junifer queue to compute your features)
      final_queue --> final_magic
      final_magic(((Let junifer do its magic!)))
-     
+
      click read_understanding href "https://juaml.github.io/junifer/main/understanding/index.html"
      click read_using href "https://juaml.github.io/junifer/main/using/index.html"
      click read_using_final href "https://juaml.github.io/junifer/main/using/index.html"
