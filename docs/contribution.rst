@@ -86,11 +86,12 @@ Before you submit a pull request, check that it meets these guidelines:
    updated. Consider creating a Python file that demonstrates the usage in
    ``examples/`` directory.
 #. Make sure to create a Draft Pull Request. If you are not sure how to do it,
-   check `here <https://github.blog/2019-02-14-introducing-draft-pull-requests/>`_.
-#. Note the pull request ID assigned after completing the previous step and create
-   a short one-liner file of your contribution named as ``<pull-request-ID>.<type>``
-   in ``docs/changes/newsfragments/``, ``<type>`` being as per the following
-   convention:
+   check
+   `here <https://github.blog/2019-02-14-introducing-draft-pull-requests/>`_.
+#. Note the pull request ID assigned after completing the previous step and
+   create a short one-liner file of your contribution named as
+   ``<pull-request-ID>.<type>`` in ``docs/changes/newsfragments/``, ``<type>``
+   being as per the following convention:
 
    * API change : ``change``
    * Bug fix : ``bugfix``
@@ -155,9 +156,10 @@ Writing Examples
 ----------------
 
 The format used for text is reST. Check the `sphinx reST reference`_ for more
-details. The examples are run and displayed in HTML format using `sphinx gallery`_. To add an
-example, just create a ``.py`` file that starts either with ``plot_`` or ``run_``,
-dependending on whether the example generates a figure or not.
+details. The examples are run and displayed in HTML format using
+`sphinx gallery`_. To add an example, just create a ``.py`` file that starts
+either with ``plot_`` or ``run_``, dependending on whether the example generates
+a figure or not.
 
 The first lines of the example should be a Python block comment with a title,
 a description of the example, authors and license name.
