@@ -49,6 +49,8 @@ Funding
 =======
 
 We thank the `Helmholtz Imaging Platform <https://helmholtz-imaging.de/>`_,
-`SMHB <https://www.fz-juelich.de/en/smhb>`_ and `eBRAIN Health <https://www.ebrain-health.eu/>`_ 
-(HORIZON-INFRA-2021-TECH-01) for supporting development of Junifer.
-(The funding sources had no role in the design, implementation and evaluation of the pipeline.)
+`SMHB <https://www.fz-juelich.de/en/smhb>`_ and
+`eBRAIN Health <https://www.ebrain-health.eu/>`_  (HORIZON-INFRA-2021-TECH-01)
+for supporting development of Junifer.
+(The funding sources had no role in the design, implementation and evaluation of
+the pipeline.)
