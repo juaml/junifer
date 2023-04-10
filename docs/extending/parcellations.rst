@@ -5,17 +5,17 @@
 Adding Parcellations
 ====================
 
-Before you start adding your own parcellations, check whether Junifer has
-the parcellation :ref:`in-built already<builtin>`. Perhaps, what is available
-there will suffice to achieve your goals. However, of course Junifer will not
+Before you start adding your own parcellations, check whether junifer has
+the parcellation :ref:`in-built already <builtin>`. Perhaps, what is available
+there will suffice to achieve your goals. However, of course junifer will not
 have every parcellation available that you may want to use, and if so, it will
-be nice to be able to add it yourself using a format that Junifer understands.
+be nice to be able to add it yourself using a format that junifer understands.
 Similarly, you may even be interested in creating your own custom parcellations
-and then adding them to Junifer, so you can use Junifer to obtain different
+and then adding them to junifer, so you can use junifer to obtain different
 markers to assess and validate your own parcellation. So, how can you do this?
 
 Since both of these use-cases are quite common, and not being able to use your
-favourite parcellation is of course quite a buzzkill, Junifer actually provides
+favourite parcellation is of course quite a buzzkill, junifer actually provides
 the easy-to-use :func:`.register_parcellation` function to do just that. Let's
 try to understand the API reference and then use this function to register our
 own parcellation.
@@ -24,7 +24,7 @@ From the API reference, we can see that it has 3 positional arguments
 (``name``, ``parcellation_path``, and ``parcels_labels``) as well as one
 optional keyword argument (``overwrite``).
 
-The ``name`` of the parcellation is up to you and will be the name that Junifer
+The ``name`` of the parcellation is up to you and will be the name that junifer
 will use to refer to this particular parcellation. You can think of this as
 being similar to a key in a python dictionary, i.e. a key that is used to
 obtain and operate on the actual parcellation data. This ``name`` must always
@@ -46,7 +46,7 @@ features that parcellation-based markers produce in an unambiguous way, such
 that a user can easily identify which ROIs were used to produce a specific
 feature (multiple ROIs, because some features consist of information from two
 or more ROIs, as for example in functional connectivity). Therefore, we provide
-Junifer with a list of strings, that contains the names for each ROI. In this
+junifer with a list of strings, that contains the names for each ROI. In this
 list, the label at the i-th position indicates the i-th integer label (i.e. the
 first label in this list corresponds to the first integer label in the
 parcellation and so on).
@@ -54,7 +54,7 @@ parcellation and so on).
 Step 1: Prepare code to register a parcellation
 -----------------------------------------------
 
-Now we know everything that we need to know to make sure Junifer can use our
+Now we know everything that we need to know to make sure junifer can use our
 own parcellation to compute any parcellation-based marker. For example,
 a simple example could look like this:
 
@@ -82,16 +82,16 @@ a simple example could look like this:
   )
 
 We can run this code and it seems to work, however, how can we actually
-include the custom parcellation in a Junifer pipeline using a
-:ref:`code-less YAML configuration<codeless>`?
+include the custom parcellation in a junifer pipeline using a
+:ref:`code-less YAML configuration <codeless>`?
 
 Step 2: Add parcellation registration to the YAML file
 ------------------------------------------------------
 
-In order to use the parcellation in a Junifer pipeline configured by a YAML
+In order to use the parcellation in a junifer pipeline configured by a YAML
 file, we can save the above code in a python file, say
 ``registering_my_parcellation.py``. We can then simply add this file using the
-``with`` keyword provided by Junifer:
+``with`` keyword provided by junifer:
 
 .. code-block:: yaml
 
@@ -114,9 +114,9 @@ parcellation when registering it. For example, we can add a
 Now, you can simply use this YAML file to run your pipeline. One important
 point to keep in mind is that if the paths given in
 ``registering_my_parcellation.py`` are relative paths, they will be interpreted
-by Junifer as relative to the jobs directory (i.e. where Junifer will create
+by junifer as relative to the jobs directory (i.e. where junifer will create
 submit files, logs directory and so on). For simplicity, you may just want to
 use absolute paths to avoid confusion, yet using relative paths is likely a
 better way to make your pipeline directory/repository more portable and
 therefore more reproducible for others. Really, once you understand how these
-paths are interpreted by Junifer, it is quite easy.
+paths are interpreted by junifer, it is quite easy.
