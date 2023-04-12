@@ -90,7 +90,7 @@ Example:
       kind: conda
       name: junifer
     mem: 8G
-    disk: 2GB
+    disk: 2G
     collect: "yes"  # wrap it in string to avoid boolean
 
 Once the :ref:`codeless` file is ready, including the ``queue`` section, you can
