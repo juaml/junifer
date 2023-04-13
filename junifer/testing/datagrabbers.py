@@ -14,8 +14,12 @@ from nilearn import datasets, image
 from ..datagrabber.base import BaseDataGrabber
 
 
-class OasisVBMTestingDatagrabber(BaseDataGrabber):
-    """Data Grabber for Oasis VBM testing data."""
+class OasisVBMTestingDataGrabber(BaseDataGrabber):
+    """Data Grabber for Oasis VBM testing data.
+
+    Wrapper for :func:`nilearn.datasets.fetch_oasis_vbm`
+
+    """
 
     def __init__(self) -> None:
         # Create temporary directory
@@ -55,12 +59,12 @@ class OasisVBMTestingDatagrabber(BaseDataGrabber):
 
         return out
 
-    def __enter__(self) -> "OasisVBMTestingDatagrabber":
+    def __enter__(self) -> "OasisVBMTestingDataGrabber":
         """Implement context entry.
 
         Returns
         -------
-        OasisVBMTestingDatagrabber
+        OasisVBMTestingDataGrabber
 
         """
         self._dataset = datasets.fetch_oasis_vbm(n_subjects=10)
