@@ -82,7 +82,7 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
         return [f"sub-{x:02d}" for x in list(range(1, 11))]
 
 
-class SPMAuditoryTestingDatagrabber(BaseDataGrabber):
+class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
     """Data Grabber for SPM Auditory dataset.
 
     Wrapper for :func:`nilearn.datasets.fetch_spm_auditory`.
