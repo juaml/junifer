@@ -3,10 +3,10 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from junifer.testing.datagrabbers import OasisVBMTestingDatagrabber
+from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
 
 
-def test_OasisVBMTestingDatagrabber() -> None:
+def test_OasisVBMTestingDataGrabber() -> None:
     """Test Oasis VBM Testing datagrabber."""
     expected_elements = [
         "sub-01",
@@ -20,7 +20,7 @@ def test_OasisVBMTestingDatagrabber() -> None:
         "sub-09",
         "sub-10",
     ]
-    with OasisVBMTestingDatagrabber() as dg:
+    with OasisVBMTestingDataGrabber() as dg:
         all_elements = dg.get_elements()
         assert set(all_elements) == set(expected_elements)
         out = dg["sub-01"]
