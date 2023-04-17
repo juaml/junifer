@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5.4. Queueing jobs (HPC, HTC)" href="queueing.html" /><link rel="prev" title="5.1. Code-less configuration" href="codeless.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5.4. Queueing Jobs (HPC, HTC)" href="queueing.html" /><link rel="prev" title="5.1. Code-less Configuration" href="codeless.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
-        <title>5.2. Running jobs - junifer documentation</title>
+        <title>5.2. Running Jobs - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
@@ -167,9 +167,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with Junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with junifer</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">4. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">4.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">4.1. The junifer Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">4.2. The Data Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">4.3. Data Grabber</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">4.4. Data Reader</a></li>
@@ -179,16 +179,16 @@
 </ul>
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">5. Using junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="codeless.html">5.1. Code-less configuration</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.2. Running jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#collecting-results">5.3. Collecting results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="queueing.html">5.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="codeless.html">5.1. Code-less Configuration</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.2. Running Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#collecting-results">5.3. Collecting Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="queueing.html">5.4. Queueing Jobs (HPC, HTC)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="masks.html">5.5.1. Masks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline Components</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">7. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">7.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">7.1. Creating a junifer extension</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">7.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">7.3. Creating Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.4. Adding Parcellations</a></li>
@@ -285,46 +285,54 @@
         </div>
         <article role="main">
           <section id="running-jobs">
-<span id="running"></span><h1><span class="section-number">5.2. </span>Running jobs<a class="headerlink" href="#running-jobs" title="Permalink to this heading">#</a></h1>
-<p>Once we have the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">code-less configuration file</span></a>, we can use the command line interface to extract the
-features. This is achieved in a two-step process: <code class="docutils literal notranslate"><span class="pre">run</span></code> and <code class="docutils literal notranslate"><span class="pre">collect</span></code>.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> command is used to extract the features from each element in the dataset. However, depending on the
-storage interface, this may create one file per subject. The <code class="docutils literal notranslate"><span class="pre">collect</span></code> command is then used to collect all of the
+<span id="running"></span><h1><span class="section-number">5.2. </span>Running Jobs<a class="headerlink" href="#running-jobs" title="Permalink to this heading">#</a></h1>
+<p>Once we have the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">code-less configuration file</span></a>, we can use the
+command line interface to extract the features. This is achieved in a two-step
+process: <code class="docutils literal notranslate"><span class="pre">run</span></code> and <code class="docutils literal notranslate"><span class="pre">collect</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> command is used to extract the features from each element in the
+dataset. However, depending on the storage interface, this may create one file
+per subject. The <code class="docutils literal notranslate"><span class="pre">collect</span></code> command is then used to collect all of the
 individual results into a single file.</p>
-<p>Assuming that we have a configuration file named <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>, the following commands will extract the features:</p>
+<p>Assuming that we have a configuration file named <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>, the following
+commands will extract the features:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>run<span class="w"> </span>config.yaml
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">run</span></code> command accepts the following additional arguments:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show a help message.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> Set the verbosity level. Options are <code class="docutils literal notranslate"><span class="pre">warning</span></code>, <code class="docutils literal notranslate"><span class="pre">info</span></code>, <code class="docutils literal notranslate"><span class="pre">debug</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--element</span></code>: The <em>element</em> to run. If not specified, all elements will be run. This parameter can be specified
-multiple times to run multiple elements. If the <em>element</em> requires several parameters, they can be specified
-by separating them with <code class="docutils literal notranslate"><span class="pre">,</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>: Set the verbosity level. Options are <code class="docutils literal notranslate"><span class="pre">warning</span></code>, <code class="docutils literal notranslate"><span class="pre">info</span></code>,
+<code class="docutils literal notranslate"><span class="pre">debug</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--element</span></code>: The <em>element</em> to run. If not specified, all elements will be
+run. This parameter can be specified multiple times to run multiple elements.
+If the <em>element</em> requires several parameters, they can be specified by
+separating them with <code class="docutils literal notranslate"><span class="pre">,</span></code>.</p></li>
 </ul>
-<p>Example on running two elements:</p>
+<p>Example of running two elements:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>run<span class="w"> </span>config.yaml<span class="w"> </span>--element<span class="w"> </span>sub-01<span class="w"> </span>--element<span class="w"> </span>sub-02
 </pre></div>
 </div>
-<p>Example on elements with multiple parameters and verbose output:</p>
+<p>Example of elements with multiple parameters and verbose output:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>run<span class="w"> </span>--verbose<span class="w"> </span>info<span class="w"> </span>config.yaml<span class="w"> </span>--element<span class="w"> </span>sub-01,ses-01
 </pre></div>
 </div>
 </section>
 <section id="collecting-results">
-<span id="collect"></span><h1><span class="section-number">5.3. </span>Collecting results<a class="headerlink" href="#collecting-results" title="Permalink to this heading">#</a></h1>
-<p>Once the <code class="docutils literal notranslate"><span class="pre">run</span></code> command has been executed, the results are stored in the output directory. However, depending on the
-storage interface, this may create one file per subject. The <code class="docutils literal notranslate"><span class="pre">collect</span></code> command is then used to collect all of the
+<span id="collect"></span><h1><span class="section-number">5.3. </span>Collecting Results<a class="headerlink" href="#collecting-results" title="Permalink to this heading">#</a></h1>
+<p>Once the <code class="docutils literal notranslate"><span class="pre">run</span></code> command has been executed, the results are stored in the output
+directory. However, depending on the storage interface, this may create one file
+per subject. The <code class="docutils literal notranslate"><span class="pre">collect</span></code> command is then used to collect all of the
 individual results into a single file.</p>
-<p>Assuming that we have a configuration file named <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>, the following commands will collect the results:</p>
+<p>Assuming that we have a configuration file named <code class="docutils literal notranslate"><span class="pre">config.yaml</span></code>, the following
+commands will collect the results:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>collect<span class="w"> </span>config.yaml
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">collect</span></code> command accepts the following additional arguments:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show a help message.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> Set the verbosity level. Options are <code class="docutils literal notranslate"><span class="pre">warning</span></code>, <code class="docutils literal notranslate"><span class="pre">info</span></code>, <code class="docutils literal notranslate"><span class="pre">debug</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>: Set the verbosity level. Options are <code class="docutils literal notranslate"><span class="pre">warning</span></code>, <code class="docutils literal notranslate"><span class="pre">info</span></code>,
+<code class="docutils literal notranslate"><span class="pre">debug</span></code>.</p></li>
 </ul>
 </section>
 
@@ -338,7 +346,7 @@ individual results into a single file.</p>
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">5.4. </span>Queueing jobs (HPC, HTC)</div>
+                <div class="title"><span class="section-number">5.4. </span>Queueing Jobs (HPC, HTC)</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -349,7 +357,7 @@ individual results into a single file.</p>
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">5.1. </span>Code-less configuration</div>
+                <div class="title"><span class="section-number">5.1. </span>Code-less Configuration</div>
                 
               </div>
             </a>

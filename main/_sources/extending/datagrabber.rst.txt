@@ -8,9 +8,9 @@ Creating Data Grabbers
 Data Grabbers are the first step of the pipeline. Its purpose is to interpret
 the structure of a dataset and provide two specific functionalities:
 
-1) Given an *element*, provide the path to each kind of data available for this
+#. Given an *element*, provide the path to each kind of data available for this
    element (e.g. the path to the T1 image, the path to the T2 image, etc.)
-2) Provide the list of *elements* available in the dataset.
+#. Provide the list of *elements* available in the dataset.
 
 In this section, we will see how to create a datagrabber for a dataset. Basic
 aspects of datagrabbers are covered in the
@@ -27,20 +27,20 @@ The *element* should be the smallest unit of data that can be processed. That
 is, for each element, there should be a set of data that can be processed, but
 only one of each *data type* (see :ref:`data_types`).
 
-For example, if we have a dataset from an fMRI study in which:
+For example, if we have a dataset from a fMRI study in which:
 
-a) both T1w and fMRI was acquired
-b) 20 subjects went through an experiment twice
-c) the experiment included resting-stage fMRI and a task named *stroop*
+a. both T1w and fMRI was acquired
+b. 20 subjects went through an experiment twice
+c. the experiment included resting-stage fMRI and a task named *stroop*
 
 then the *element* should be composed of 3 items:
 
-*  ``subject``: The subject IDs, e.g. `sub001`, `sub002`, ... `sub020`
-*  ``session``: The sesion number, e.g. `ses1`, `ses2`
-*  ``task``: The task performed, e.g. `rest`, `stroop`
+* ``subject``: The subject IDs, e.g. `sub001`, `sub002`, ... `sub020`
+* ``session``: The sesion number, e.g. `ses1`, `ses2`
+* ``task``: The task performed, e.g. `rest`, `stroop`
 
 If any of these items were not part of the element, then we will have more than
-one ``T1w`` and/or ``BOLD`` image for each subject, which is not allowed.
+one ``T1w`` and / or ``BOLD`` image for each subject, which is not allowed.
 
 Importantly, nothing prevents that one image is part of two different elements.
 For example, it is usually the case that the ``T1w`` image is not acquired for
@@ -74,11 +74,10 @@ expressed as a pattern:
 where ``{subject}`` is the replacement for the subject id and ``{session}``
 is the replacement for the session id.
 
-Since it is a BIDS dataaset, the same happens with the BOLD images. The path to
+Since it is a BIDS dataset, the same happens with the BOLD images. The path to
 the BOLD images can be expressed as a pattern:
 
 ``{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz``
-
 
 This will be the norm in most of the datasets. If your dataset can be expressed
 in terms of patterns, then follow :ref:`extending_datagrabbers_pattern`.
@@ -90,7 +89,6 @@ get your dataset in order.
 If there is no other way, then you can follow :ref:`extending_datagrabbers_base`
 to create a Data Grabber from scratch.
 
-
 .. _extending_datagrabbers_pattern:
 
 Step 3: Create a Data Grabber
@@ -99,13 +97,12 @@ Step 3: Create a Data Grabber
 Option A: Extending from PatternDataGrabber
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :py:class:`~junifer.datagrabber.PatternDataGrabber` class is an
-abstract class that has the functionality of understanding patterns embeded
-in it.
+The :class:`.PatternDataGrabber` class is an abstract class that has the
+functionality of understanding patterns embeded in it.
 
 Before creating the datagrabber, we need to define 3 variables:
 
-* ``types``: A list with the available :ref:`data_types` in our dataset
+* ``types``: A list with the available :ref:`data_types` in our dataset.
 * ``patterns``: A dictionary that specifies the pattern for each data type.
 * ``replacements``: A list indicating which of the elements in the patterns
   should be replaced by the values of the element.
@@ -126,19 +123,21 @@ where the dataset is located. For example, if the dataset is located in
 ``/data/project/test/data``, then ``datadir`` should be
 ``/data/project/test/data``. Or, if we want to allow the user to specify the
 location of the dataset, we can expose the variable in the constructor, as in
-this example
+the following example.
 
-With this defined, we can now create our datagrabber, we will name it
+With the variables defined above, we can create our datagrabber and name it
 ``ExampleBIDSDataGrabber``:
-
 
 .. code-block:: python
 
-    from junifer.datagrabber.pattern import PatternDataGrabber
+    from pathlib import Path
+
+    from junifer.datagrabber import PatternDataGrabber
+
 
     class ExampleBIDSDataGrabber(PatternDataGrabber):
 
-        def __init__(self, datadir):
+        def __init__(self, datadir: str | Path) -> None:
             types = ["T1w", "BOLD"]
             patterns = {
                "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
@@ -154,19 +153,21 @@ With this defined, we can now create our datagrabber, we will name it
 
 Our datagrabber is ready to be used by junifer. However, it is still unknown
 to the library. We need to register it in the library. To do so, we need to
-use the :py:func:`~junifer.api.decorators.register_datagrabber` decorator.
+use the :func:`.register_datagrabber` decorator.
 
 
 .. code-block:: python
 
-    from junifer.datagrabber.pattern import PatternDataGrabber
+    from pathlib import Path
+
     from junifer.api.decorators import register_datagrabber
+    from junifer.datagrabber import PatternDataGrabber
 
 
     @register_datagrabber
     class ExampleBIDSDataGrabber(PatternDataGrabber):
 
-        def __init__(self, datadir):
+        def __init__(self, datadir: str | Path) -> None:
             types = ["T1w", "BOLD"]
             patterns = {
                "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
@@ -193,11 +194,11 @@ set the ``datadir``.
 
 
 Optional: Using datalad
-"""""""""""""""""""""""
+~~~~~~~~~~~~~~~~~~~~~~~
 
 If you are using `datalad`_, you can use the :class:`.PatternDataladDataGrabber`
 instead of the :class:`.PatternDataGrabber`. This class will not only
-interpret patterns, but also use `datalad`_ to `clone` and `get` the data.
+interpret patterns, but also use `datalad`_ to ``clone`` and ``get`` the data.
 
 The main difference between the two is that the ``datadir`` is not the actual
 location of the dataset, but the location where the dataset will be cloned. It
@@ -238,17 +239,16 @@ Now we have our 2 additional variables:
 
 And we can create our datagrabber:
 
-
 .. code-block:: python
 
-    from junifer.datagrabber.pattern import PatternDataladDataGrabber
     from junifer.api.decorators import register_datagrabber
+    from junifer.datagrabber import PatternDataladDataGrabber
 
 
     @register_datagrabber
     class ExampleBIDSDataGrabber(PatternDataladDataGrabber):
 
-        def __init__(self):
+        def __init__(self) -> None:
             types = ["T1w", "BOLD"]
             patterns = {
                "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
@@ -272,29 +272,31 @@ And we can create our datagrabber:
 Option B: Extending from BaseDataGrabber
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-While we could not think of a use case in which the pattern-based data grabber would not be suitable, it is still
-possible to create a datagrabber extending from the :py:class:`~junifer.datagrabber.base.BaseDataGrabber` class.
+While we could not think of a use case in which the pattern-based datagrabber
+would not be suitable, it is still possible to create a datagrabber extending
+from the :class:`.BaseDataGrabber` class.
 
-In order to create a datagrabber extending from :py:class:`~junifer.datagrabber.base.BaseDataGrabber`, we need to
-implement the following methods:
+In order to create a datagrabber extending from :class:`.BaseDataGrabber`, we
+need to implement the following methods:
 
 - ``get_item``: to get a single item from the dataset.
 - ``get_elements``: to get the list of all elements present in the dataset
 - ``get_element_keys``: to get the keys of the elements in the dataset.
 
 .. note::
-   The ``__init__`` method could also be implemented, but it is not mandatory. This is required if the datagrabber
-   requires any parameter.
+
+   The ``__init__`` method could also be implemented, but it is not mandatory.
+   This is required if the datagrabber requires any extra parameter.
 
 We will now implement our BIDS example with this method.
 
 The first method, ``get_item``, needs to obtain a single
-item from the dataset. Since this dataset requires two variables, ``subject`` and ``session``, we will use them
-as parameters of ``get_item``:
+item from the dataset. Since this dataset requires two variables, ``subject``
+and ``session``, we will use them as parameters of ``get_item``:
 
 .. code-block:: python
 
-   def get_item(self, subject, session):
+   def get_item(self, subject: str, session: str) -> dict[str, str]:
       out = {
          "T1w": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
          "BOLD": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
@@ -302,13 +304,17 @@ as parameters of ``get_item``:
       return out
 
 
-The second method, ``get_elements``, needs to return a list of all the elements in the dataset. In this case, we
-know that the dataset contains 3 subjects and 3 sessions, so we can create a list of all the possible combinations.
-However, we need to remember that for session *ses-03* there is no BOLD data.
+The second method, ``get_elements``, needs to return a list of all the elements
+in the dataset. In this case, we know that the dataset contains 3 subjects and 3
+sessions, so we can create a list of all the possible combinations. However, we
+need to remember that for session *ses-03* there is no BOLD data.
 
 .. code-block:: python
 
-   def get_elements(self):
+   from itertools import product
+
+
+   def get_elements(self) -> list[str]:
       subjects = ["sub-01", "sub-02", "sub-03"]
       sessions = ["ses-01", "ses-02"]
 
@@ -316,19 +322,19 @@ However, we need to remember that for session *ses-03* there is no BOLD data.
       if "BOLD" not in self.types:
          sessions.append("ses-03")
       elements = []
-      for subject in subjects:
-         for session in sessions:
-            elements.append({"subject": subject, "session": session})
+      for subject, element in product(subjects, sessions):
+         elements.append({"subject": subject, "session": session})
       return elements
 
 
-And finally, we can implement the ``get_element_keys`` method. This method needs to return a list of the keys that
-represent each of the items in the element tuple. As a rule of thumb, they should be the parameters of the
-``get_item`` method, in the same order.
+And finally, we can implement the ``get_element_keys`` method. This method needs
+to return a list of the keys that represent each of the items in the element
+tuple. As a rule of thumb, they should be the parameters of the ``get_item``
+method, in the same order.
 
 .. code-block:: python
 
-   def get_element_keys(self):
+   def get_element_keys(self) -> list[str]:
       return ["subject", "session"]
 
 
@@ -336,20 +342,21 @@ So, to summarize, our datagrabber will look like this:
 
 .. code-block:: python
 
-   from junifer.datagrabber.base import BaseDataGrabber
    from junifer.api.decorators import register_datagrabber
+   from junifer.datagrabber import BaseDataGrabber
+
 
    @register_datagrabber
    class ExampleBIDSDataGrabber(BaseDataGrabber):
 
-      def get_item(self, subject, session):
+      def get_item(self, subject: str, session: str) -> dict[str, str]:
          out = {
             "T1w": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
             "BOLD": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
          }
       return out
 
-      def get_elements(self):
+      def get_elements(self) -> list[str]:
          subjects = ["sub-01", "sub-02", "sub-03"]
          sessions = ["ses-01", "ses-02"]
 
@@ -362,62 +369,74 @@ So, to summarize, our datagrabber will look like this:
                elements.append({"subject": subject, "session": session})
          return elements
 
-      def get_element_keys(self):
+      def get_element_keys(self) -> list[str]:
          return ["subject", "session"]
 
 Optional: Using datalad
-"""""""""""""""""""""""
+~~~~~~~~~~~~~~~~~~~~~~~
 
 If this dataset is in a datalad dataset, we can extend from
 :class:`.DataladDataGrabber` instead of :class:`.BaseDataGrabber`. This will
 allow us to use the datalad API to obtain the data.
 
-
 Step 4: Optional: Adding *BOLD confounds*
 -----------------------------------------
 
-For some analyses, it is useful to have the confounds associated with the BOLD data. This corresponds to the
-``BOLD_confounds`` item in the :ref:`Data Object <data_object>` (see :ref:`data_types`). However, the ``BOLD_confounds``
-element does not only consists of a ``path``, but it requries more information about the format of the confounds file.
-Thus, the ``BOLD_confounds`` element is a dictionary with the following keys:
+For some analyses, it is useful to have the confounds associated with the BOLD
+data. This corresponds to the ``BOLD_confounds`` item in the
+:ref:`Data Object <data_object>` (see :ref:`data_types`). However, the
+``BOLD_confounds`` element does not only consists of a ``path``, but it requries
+more information about the format of the confounds file. Thus, the
+``BOLD_confounds`` element is a dictionary with the following keys:
 
 - ``path``: the path to the confounds file.
-- ``format``: the format of the confounds file. Currently, this can be either ``fmriprep`` or ``adhoc``.
+- ``format``: the format of the confounds file. Currently, this can be either
+  ``fmriprep`` or ``adhoc``.
 
-The ``fmriprep`` format corresponds to the format of the confounds files generated by `fMRIPrep`_. The
-``adhoc`` format corresponds to a format that is not standardized.
+The ``fmriprep`` format corresponds to the format of the confounds files
+generated by `fMRIPrep`_. The ``adhoc`` format corresponds to a format that is
+not standardised.
 
 .. note::
-   The ``mappings`` key is only required if the ``format`` is ``adhoc``. If the ``format`` is ``fmriprep``, the
-   ``mappings`` key is not required.
 
+   The ``mappings`` key is only required if the ``format`` is ``adhoc``. If the
+   ``format`` is ``fmriprep``, the ``mappings`` key is not required.
 
-Currently, Junifer provides only one confound remover step
-(:class:`.fMRIPrepConfoundRemover`), which relies entirely on the ``fmriprep`` confound
-variable names. Thus, if the confounds are not in ``fmriprep`` format, the user will need to provide the mappings
-between the *ad-hoc* variable names and the ``fmriprep`` variable names.
-This is done by specifying the ``adhoc`` format and providing the mappings as a dictionary in the ``mappings`` key.
+Currently, junifer provides only one confound remover step
+(:class:`.fMRIPrepConfoundRemover`), which relies entirely on the ``fmriprep``
+confound variable names. Thus, if the confounds are not in ``fmriprep`` format,
+the user will need to provide the mappings between the *ad-hoc* variable names
+and the ``fmriprep`` variable names. This is done by specifying the ``adhoc``
+format and providing the mappings as a dictionary in the ``mappings`` key.
 
-In the following example, the confounds file has 3 variables that are not in the ``fmriprep`` format. Thus, we will
-provide the mappings for these variables to the ``fmriprep`` format.
+In the following example, the confounds file has 3 variables that are not in the
+``fmriprep`` format. Thus, we will provide the mappings for these variables to
+the ``fmriprep`` format. For example, the ``get_item`` method could look like
+this:
 
 .. code-block:: python
 
-   out["BOLD_confounds"]: {
-      "path": f"{subject}/{session}/func/{subject}_{session}_confounds.tsv",
-      "format": "adhoc",
-      "mappings": {
-         "fmriprep": {
-            "variable1": "rot_x",
-            "variable2": "rot_z",
-            "variable3": "rot_y",
-         }
-      },
-   }
-
+   def get_item(
+      self, subject: str, session: str
+   ) -> dict:
+      out = {
+         "BOLD": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+         "BOLD_confounds": {
+            "path": f"{subject}/{session}/func/{subject}_{session}_confounds.tsv",
+            "format": "adhoc",
+            "mappings": {
+               "fmriprep": {
+                  "variable1": "rot_x",
+                  "variable2": "rot_z",
+                  "variable3": "rot_y",
+               }
+         },
+      }
 
 .. note::
-   Not all of the mappings need to be provided. For the moment, this is used only by the
-   :class:`.fMRIPrepConfoundRemover` step, which requires variables based on the
-   strategy selected. However, it is recommended to provide all the mappings, as this will allow the user to
-   choose different strategies with the same dataset.
+
+   Not all of the mappings need to be provided. For the moment, this is used
+   only by the :class:`.fMRIPrepConfoundRemover` step, which requires variables
+   based on the strategy selected. However, it is recommended to provide all the
+   mappings, as this will allow the user to choose different strategies with the
+   same dataset.

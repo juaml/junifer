@@ -167,9 +167,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with Junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with junifer</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">4. Understanding junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="pipeline.html">4.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline.html">4.1. The junifer Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html">4.2. The Data Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabber.html">4.3. Data Grabber</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datareader.html">4.4. Data Reader</a></li>
@@ -179,16 +179,16 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">5. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">5.1. Code-less configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/running.html">5.2. Running jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">5.3. Collecting results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">5.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">5.1. Code-less Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html">5.2. Running Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">5.3. Collecting Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">5.4. Queueing Jobs (HPC, HTC)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/masks.html">5.5.1. Masks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline Components</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">7. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">7.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">7.1. Creating a junifer extension</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">7.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">7.3. Creating Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.4. Adding Parcellations</a></li>
@@ -288,21 +288,27 @@
 <span id="id1"></span><h1><span class="section-number">4.7. </span>Storage<a class="headerlink" href="#storage" title="Permalink to this heading">#</a></h1>
 <section id="description">
 <h2><span class="section-number">4.7.1. </span>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">Storage</span></code> is an object that is responsible for storing extracted features as computed from <a class="reference internal" href="marker.html#marker"><span class="std std-ref">Marker</span></a>
-step of the pipeline. If the pipeline is provided with a <code class="docutils literal notranslate"><span class="pre">storage-like</span></code> object, the extracted features are stored via
+<p>The <code class="docutils literal notranslate"><span class="pre">Storage</span></code> is an object that is responsible for storing extracted features
+as computed from <a class="reference internal" href="marker.html#marker"><span class="std std-ref">Marker</span></a> step of the pipeline. If the pipeline is
+provided with a <code class="docutils literal notranslate"><span class="pre">storage-like</span></code> object, the extracted features are stored via
 that object else they are kept in memory.</p>
-<p>Storage is meant to be used inside the datagrabber context but you can operate on them outside the context as long
-as the processed data is in the memory and the Python runtime has not garbage-collected it.</p>
-<p>The <a class="reference internal" href="marker.html#marker"><span class="std std-ref">Markers</span></a> are responsible for defining what <em>storage kind</em> (<code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">vector</span></code>, <code class="docutils literal notranslate"><span class="pre">timeseries</span></code>)
-they support for which <a class="reference internal" href="data.html#data-types"><span class="std std-ref">data type</span></a> by overriding its <code class="docutils literal notranslate"><span class="pre">store</span></code> method. The storage object in turn
-declares and provides implementation for specific <em>storage kind</em>. For example, <a class="reference internal" href="../api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">SQLiteFeatureStorage</span></code></a>
-supports saving <code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">vector</span></code> and <code class="docutils literal notranslate"><span class="pre">timeseries</span></code> via <code class="docutils literal notranslate"><span class="pre">store_matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">store_vector</span></code> and <code class="docutils literal notranslate"><span class="pre">store_timeseries</span></code>
-methods respectively.</p>
-<p>For storage interfaces not supported by junifer yet, you can either make your own <code class="docutils literal notranslate"><span class="pre">Storage</span></code> by providing a concrete
-implementation of <a class="reference internal" href="../api/storage.html#junifer.storage.BaseFeatureStorage" title="junifer.storage.BaseFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFeatureStorage</span></code></a> or open an issue on <a class="reference external" href="https://github.com/juaml/junifer">junifer Github</a> and we can help you out.</p>
+<p>Storage is meant to be used inside the datagrabber context but you can operate
+on them outside the context as long as the processed data is in the memory and
+the Python runtime has not garbage-collected it.</p>
+<p>The <a class="reference internal" href="marker.html#marker"><span class="std std-ref">Markers</span></a> are responsible for defining what <em>storage kind</em>
+(<code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">vector</span></code>, <code class="docutils literal notranslate"><span class="pre">timeseries</span></code>) they support for which
+<a class="reference internal" href="data.html#data-types"><span class="std std-ref">data type</span></a> by overriding its <code class="docutils literal notranslate"><span class="pre">get_output_type</span></code> method. The
+storage object in turn declares and provides implementation for specific
+<em>storage kind</em>. For example, <a class="reference internal" href="../api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">SQLiteFeatureStorage</span></code></a> supports saving
+<code class="docutils literal notranslate"><span class="pre">matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">vector</span></code> and <code class="docutils literal notranslate"><span class="pre">timeseries</span></code> via <code class="docutils literal notranslate"><span class="pre">store_matrix</span></code>, <code class="docutils literal notranslate"><span class="pre">store_vector</span></code>
+and <code class="docutils literal notranslate"><span class="pre">store_timeseries</span></code> methods respectively.</p>
+<p>For storage interfaces not supported by junifer yet, you can either make your
+own <code class="docutils literal notranslate"><span class="pre">Storage</span></code> by providing a concrete implementation of
+<a class="reference internal" href="../api/storage.html#junifer.storage.BaseFeatureStorage" title="junifer.storage.BaseFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFeatureStorage</span></code></a> or open an issue on <a class="reference external" href="https://github.com/juaml/junifer">junifer Github</a> and we can
+help you out.</p>
 </section>
-<section id="currently-supported-storage-types">
-<span id="storage-types"></span><h2><span class="section-number">4.7.2. </span>Currently supported storage types<a class="headerlink" href="#currently-supported-storage-types" title="Permalink to this heading">#</a></h2>
+<section id="storage-types">
+<span id="id2"></span><h2><span class="section-number">4.7.2. </span>Storage Types<a class="headerlink" href="#storage-types" title="Permalink to this heading">#</a></h2>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -319,21 +325,21 @@ implementation of <a class="reference internal" href="../api/storage.html#junife
 <td><p><a class="reference internal" href="../api/storage.html#junifer.storage.BaseFeatureStorage.store_matrix" title="junifer.storage.BaseFeatureStorage.store_matrix"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BaseFeatureStorage.store_matrix()</span></code></a></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vector</span></code></p></td>
-<td><p>A vector of values with column names</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">columns</span></code>, <code class="docutils literal notranslate"><span class="pre">row_names</span></code></p></td>
+<td><p>A 1D row vector of values with column names</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code></p></td>
 <td><p><a class="reference internal" href="../api/storage.html#junifer.storage.BaseFeatureStorage.store_vector" title="junifer.storage.BaseFeatureStorage.store_vector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BaseFeatureStorage.store_vector()</span></code></a></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">timeseries</span></code></p></td>
 <td><p>A 2D matrix of values with column names</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">columns</span></code>, <code class="docutils literal notranslate"><span class="pre">row_names</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code></p></td>
 <td><p><a class="reference internal" href="../api/storage.html#junifer.storage.BaseFeatureStorage.store_timeseries" title="junifer.storage.BaseFeatureStorage.store_timeseries"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BaseFeatureStorage.store_timeseries()</span></code></a></p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </section>
-<section id="currently-supported-storage-interfaces">
-<span id="storage-interfaces"></span><h2><span class="section-number">4.7.3. </span>Currently supported storage interfaces<a class="headerlink" href="#currently-supported-storage-interfaces" title="Permalink to this heading">#</a></h2>
+<section id="storage-interfaces">
+<span id="id3"></span><h2><span class="section-number">4.7.3. </span>Storage Interfaces<a class="headerlink" href="#storage-interfaces" title="Permalink to this heading">#</a></h2>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -417,8 +423,8 @@ implementation of <a class="reference internal" href="../api/storage.html#junife
             <ul>
 <li><a class="reference internal" href="#">4.7. Storage</a><ul>
 <li><a class="reference internal" href="#description">4.7.1. Description</a></li>
-<li><a class="reference internal" href="#currently-supported-storage-types">4.7.2. Currently supported storage types</a></li>
-<li><a class="reference internal" href="#currently-supported-storage-interfaces">4.7.3. Currently supported storage interfaces</a></li>
+<li><a class="reference internal" href="#storage-types">4.7.2. Storage Types</a></li>
+<li><a class="reference internal" href="#storage-interfaces">4.7.3. Storage Interfaces</a></li>
 </ul>
 </li>
 </ul>

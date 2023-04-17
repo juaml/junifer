@@ -5,9 +5,11 @@
 Using junifer
 =============
 
-In this section, we will cover the main aspects behind using junifer. We will first explain the basics behind junifer's
-code-less configuration. Then we will show how to use the command line interface to ``run`` junifer and ``collect`` 
-the results. Finally, we will show how to use the ``queue`` command to interact with HPC and HTC systems.
+In this section, we will cover the main aspects behind using junifer. We will
+first explain the basics behind junifer's code-less configuration. Then we will
+show how to use the command line interface to ``run`` junifer and ``collect``
+the results. Finally, we will show how to use the ``queue`` command to interact
+with HPC and HTC systems.
 
 .. toctree::
    :maxdepth: 2
@@ -20,10 +22,11 @@ the results. Finally, we will show how to use the ``queue`` command to interact 
 
 .. _using_components:
 
-Using junifer common components
--------------------------------
+Using Common Components
+-----------------------
 
-The following sections explains common components of junifer that can be used across many steps of the pipeline.
+The following sections explains common components of junifer that can be used
+across many steps of the pipeline.
 
 .. toctree::
    :maxdepth: 2

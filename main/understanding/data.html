@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="4.3. Data Grabber" href="datagrabber.html" /><link rel="prev" title="4.1. The Junifer Pipeline" href="pipeline.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="4.3. Data Grabber" href="datagrabber.html" /><link rel="prev" title="4.1. The junifer Pipeline" href="pipeline.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
         <title>4.2. The Data Object - junifer documentation</title>
@@ -167,9 +167,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with Junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with junifer</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">4. Understanding junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="pipeline.html">4.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline.html">4.1. The junifer Pipeline</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">4.2. The Data Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabber.html">4.3. Data Grabber</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datareader.html">4.4. Data Reader</a></li>
@@ -179,16 +179,16 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">5. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">5.1. Code-less configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/running.html">5.2. Running jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">5.3. Collecting results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">5.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">5.1. Code-less Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html">5.2. Running Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">5.3. Collecting Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">5.4. Queueing Jobs (HPC, HTC)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/masks.html">5.5.1. Masks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline Components</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">7. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">7.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">7.1. Creating a junifer extension</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">7.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">7.3. Creating Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.4. Adding Parcellations</a></li>
@@ -290,20 +290,77 @@
 <h2><span class="section-number">4.2.1. </span>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
 <p>This is the <em>object</em> that traverses the steps of the pipeline. It is indeed a
 dictionary of dictionaries. The first level of keys are the <a class="reference internal" href="#data-types"><span class="std std-ref">data types</span></a>
-and a special key named <code class="docutils literal notranslate"><span class="pre">meta</span></code> that contains all the information on the data
-object including source and previous transformation steps.</p>
-<p>The second level of keys are the actual data. So far, there are two keys used:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: path to the file containing the data.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code>: the data loaded in memory.</p></li>
-</ul>
-<p>The <a class="reference internal" href="datagrabber.html#datagrabber"><span class="std std-ref">Data Grabber</span></a> step will only fill the <code class="docutils literal notranslate"><span class="pre">path</span></code> value.
-The <code class="docutils literal notranslate"><span class="pre">data</span></code> value will be filled by the <a class="reference internal" href="datareader.html#datareader"><span class="std std-ref">DataReader</span></a> step, if it is one of the possible file types
-that the datareader can read.</p>
-<p>A point to note is that you never directly interact with the <em>data object</em> but it’s important to know where and how the object is being manipulated to reason about your pipeline.</p>
+and the values are the corresponding information as dictionaries.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;BOLD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s1">&#39;T1w&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+</pre></div>
+</div>
+<p>The second level of keys are the actual data. A special second-level key named
+<code class="docutils literal notranslate"><span class="pre">meta</span></code> is present in each step, that contains all the information on the
+data type including source and previous transformation steps.</p>
+<p>The <a class="reference internal" href="datagrabber.html#datagrabber"><span class="std std-ref">Data Grabber</span></a> step adds the <code class="docutils literal notranslate"><span class="pre">path</span></code> second-level key
+which gives the path to the file containing the data. The <code class="docutils literal notranslate"><span class="pre">meta</span></code> key in this
+step only contains information about the datagrabber used.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;BOLD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDatagrabber&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                   <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+                   <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">}},</span>
+          <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">&#39;/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpgxcyjfo1/sub001_bold.nii.gz&#39;</span><span class="p">)},</span>
+ <span class="s1">&#39;T1w&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDatagrabber&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                  <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+                  <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">}},</span>
+         <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">&#39;/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpgxcyjfo1/sub001_T1w.nii.gz&#39;</span><span class="p">)}}</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="datareader.html#datareader"><span class="std std-ref">Data Reader</span></a> step adds the <code class="docutils literal notranslate"><span class="pre">data</span></code> second-level key
+which is the actual data loaded into memory. The <code class="docutils literal notranslate"><span class="pre">meta</span></code> key in this step
+adds information about the datareader used to read the data.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;BOLD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Image</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x16b5d8910</span><span class="o">&gt;</span><span class="p">,</span>
+          <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDatagrabber&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                   <span class="s1">&#39;datareader&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;DefaultDataReader&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nilearn&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">}},</span>
+          <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">&#39;/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpe49321ce/sub001_bold.nii.gz&#39;</span><span class="p">)},</span>
+ <span class="s1">&#39;T1w&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Image</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x16b5d78d0</span><span class="o">&gt;</span><span class="p">,</span>
+         <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDatagrabber&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                  <span class="s1">&#39;datareader&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;DefaultDataReader&#39;</span><span class="p">},</span>
+                  <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+                  <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">}},</span>
+         <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">&#39;/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpe49321ce/sub001_T1w.nii.gz&#39;</span><span class="p">)}}</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="preprocess.html#preprocess"><span class="std std-ref">Preprocess</span></a> step, if used, modifies the <code class="docutils literal notranslate"><span class="pre">data</span></code>
+second-level key’s value and appends the <code class="docutils literal notranslate"><span class="pre">meta</span></code> key with information about
+the preprocessor.</p>
+<p>The <a class="reference internal" href="marker.html#marker"><span class="std std-ref">Marker</span></a> step removes the <code class="docutils literal notranslate"><span class="pre">path</span></code> second-level key,
+replaces the <code class="docutils literal notranslate"><span class="pre">data</span></code> second-level key’s value with the marker’s computed value
+and adds further keys needed for the storage, for example, <code class="docutils literal notranslate"><span class="pre">col_names</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;BOLD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;col_names&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;root_sum_of_squares_ets&#39;</span><span class="p">],</span>
+          <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+          <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDatagrabber&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                   <span class="s1">&#39;datareader&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;DefaultDataReader&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nilearn&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;agg_method&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;agg_method_params&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;RSSETSMarker&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;masks&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;RSSETSMarker&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;parcellation&#39;</span><span class="p">:</span> <span class="s1">&#39;Schaefer100x17&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;BOLD&#39;</span><span class="p">}}}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You never directly interact with the <em>data object</em> but it’s important to know
+where and how the object is being manipulated to reason about your pipeline.</p>
+</div>
 </section>
 <section id="data-types">
-<span id="id1"></span><h2><span class="section-number">4.2.2. </span>Data types<a class="headerlink" href="#data-types" title="Permalink to this heading">#</a></h2>
+<span id="id1"></span><h2><span class="section-number">4.2.2. </span>Data Types<a class="headerlink" href="#data-types" title="Permalink to this heading">#</a></h2>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -372,7 +429,7 @@ that the datareader can read.</p>
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">4.1. </span>The Junifer Pipeline</div>
+                <div class="title"><span class="section-number">4.1. </span>The junifer Pipeline</div>
                 
               </div>
             </a>
@@ -408,7 +465,7 @@ that the datareader can read.</p>
             <ul>
 <li><a class="reference internal" href="#">4.2. The Data Object</a><ul>
 <li><a class="reference internal" href="#description">4.2.1. Description</a></li>
-<li><a class="reference internal" href="#data-types">4.2.2. Data types</a></li>
+<li><a class="reference internal" href="#data-types">4.2.2. Data Types</a></li>
 </ul>
 </li>
 </ul>

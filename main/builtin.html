@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="7. Extending junifer" href="extending/index.html" /><link rel="prev" title="5.5.1. Masks" href="using/masks.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
-        <title>6. Built-in Pipeline steps and data - junifer documentation</title>
+        <title>6. Built-in Pipeline Components - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
@@ -167,9 +167,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">1. Installing junifer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="starting.html">3. First steps with Junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="starting.html">3. First steps with junifer</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="understanding/index.html">4. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="understanding/pipeline.html">4.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="understanding/pipeline.html">4.1. The junifer Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="understanding/data.html">4.2. The Data Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="understanding/datagrabber.html">4.3. Data Grabber</a></li>
 <li class="toctree-l2"><a class="reference internal" href="understanding/datareader.html">4.4. Data Reader</a></li>
@@ -179,16 +179,16 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="using/index.html">5. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="using/codeless.html">5.1. Code-less configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="using/running.html">5.2. Running jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="using/running.html#collecting-results">5.3. Collecting results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="using/queueing.html">5.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/codeless.html">5.1. Code-less Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/running.html">5.2. Running Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/running.html#collecting-results">5.3. Collecting Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/queueing.html">5.4. Queueing Jobs (HPC, HTC)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="using/masks.html">5.5.1. Masks</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">6. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">6. Built-in Pipeline Components</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="extending/index.html">7. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="extending/extension.html">7.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending/extension.html">7.1. Creating a junifer extension</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extending/datagrabber.html">7.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extending/marker.html">7.3. Creating Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extending/parcellations.html">7.4. Adding Parcellations</a></li>
@@ -284,10 +284,10 @@
           </label>
         </div>
         <article role="main">
-          <section id="built-in-pipeline-steps-and-data">
-<span id="builtin"></span><h1><span class="section-number">6. </span>Built-in Pipeline steps and data<a class="headerlink" href="#built-in-pipeline-steps-and-data" title="Permalink to this heading">#</a></h1>
-<section id="data-grabbers">
-<h2><span class="section-number">6.1. </span>Data Grabbers<a class="headerlink" href="#data-grabbers" title="Permalink to this heading">#</a></h2>
+          <section id="built-in-pipeline-components">
+<span id="builtin"></span><h1><span class="section-number">6. </span>Built-in Pipeline Components<a class="headerlink" href="#built-in-pipeline-components" title="Permalink to this heading">#</a></h1>
+<section id="data-grabber">
+<h2><span class="section-number">6.1. </span>Data Grabber<a class="headerlink" href="#data-grabber" title="Permalink to this heading">#</a></h2>
 <section id="available">
 <h3><span class="section-number">6.1.1. </span>Available<a class="headerlink" href="#available" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -310,14 +310,22 @@
 <td><p>0.0.1</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/configs.html#junifer.configs.juseless.datagrabbers.JuselessDataladUKBVBM" title="junifer.configs.juseless.datagrabbers.JuselessDataladUKBVBM"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuselessDataladUKBVBM</span></code></a></p></td>
-<td><p>UKB VBM dataset preprocessed with CAT. Available for Juseless only.</p></td>
+<td><div class="line-block">
+<div class="line">UKB VBM dataset preprocessed with CAT.</div>
+<div class="line">Available for Juseless only.</div>
+</div>
+</td>
 <td><p>Restricted</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">junifer.configs.juseless</span></code></p></td>
 <td><p>Done</p></td>
 <td><p>0.0.1</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/configs.html#junifer.configs.juseless.datagrabbers.JuselessDataladCamCANVBM" title="junifer.configs.juseless.datagrabbers.JuselessDataladCamCANVBM"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuselessDataladCamCANVBM</span></code></a></p></td>
-<td><p>CamCAN VBM dataset preprocessed with CAT. Available for Juseless only.</p></td>
+<td><div class="line-block">
+<div class="line">CamCAN VBM dataset preprocessed with CAT.</div>
+<div class="line">Available for Juseless only.</div>
+</div>
+</td>
 <td><p>Restricted</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">junifer.configs.juseless</span></code></p></td>
 <td><p>Done</p></td>
@@ -345,21 +353,33 @@
 <td><p>0.0.1</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/configs.html#junifer.configs.juseless.datagrabbers.JuselessDataladAOMICID1000VBM" title="junifer.configs.juseless.datagrabbers.JuselessDataladAOMICID1000VBM"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuselessDataladAOMICID1000VBM</span></code></a></p></td>
-<td><p>AOMIC ID1000 VBM dataset. Available for Juseless only.</p></td>
+<td><div class="line-block">
+<div class="line">AOMIC ID1000 VBM dataset.</div>
+<div class="line">Available for Juseless only.</div>
+</div>
+</td>
 <td><p>Restricted</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">junifer.configs.juseless</span></code></p></td>
 <td><p>Done</p></td>
 <td><p>0.0.1</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/configs.html#junifer.configs.juseless.datagrabbers.JuselessDataladIXIVBM" title="junifer.configs.juseless.datagrabbers.JuselessDataladIXIVBM"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuselessDataladIXIVBM</span></code></a></p></td>
-<td><p><a class="reference external" href="https://brain-development.org/ixi-dataset/">IXI VBM dataset</a>. Available for Juseless only.</p></td>
+<td><div class="line-block">
+<div class="line"><a class="reference external" href="https://brain-development.org/ixi-dataset/">IXI VBM dataset</a>.</div>
+<div class="line">Available for Juseless only.</div>
+</div>
+</td>
 <td><p>Restricted</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">junifer.configs.juseless</span></code></p></td>
 <td><p>Done</p></td>
 <td><p>0.0.1</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/configs.html#junifer.configs.juseless.datagrabbers.JuselessUCLA" title="junifer.configs.juseless.datagrabbers.JuselessUCLA"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuselessUCLA</span></code></a></p></td>
-<td><p>UCLA fMRIPrep dataset. Available for Juseless only.</p></td>
+<td><div class="line-block">
+<div class="line">UCLA fMRIPrep dataset.</div>
+<div class="line">Available for Juseless only.</div>
+</div>
+</td>
 <td><p>Restricted</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">junifer.configs.juseless</span></code></p></td>
 <td><p>Done</p></td>
@@ -393,8 +413,8 @@
 </div>
 </section>
 </section>
-<section id="markers">
-<h2><span class="section-number">6.2. </span>Markers<a class="headerlink" href="#markers" title="Permalink to this heading">#</a></h2>
+<section id="marker">
+<h2><span class="section-number">6.2. </span>Marker<a class="headerlink" href="#marker" title="Permalink to this heading">#</a></h2>
 <section id="id1">
 <h3><span class="section-number">6.2.1. </span>Available<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -458,14 +478,22 @@
 <td><p>0.0.1</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.EdgeCentricFCParcels" title="junifer.markers.EdgeCentricFCParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeCentricFCParcels</span></code></a></p></td>
-<td><p>Calculate edge-centric functional connectivity over parcellation, as found in
-<a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2021.118204">Jo et al. (2021)</a></p></td>
+<td><div class="line-block">
+<div class="line">Calculate edge-centric functional connectivity over parcellation, as</div>
+<div class="line">found in</div>
+<div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2021.118204">Jo et al. (2021)</a></div>
+</div>
+</td>
 <td><p>Done</p></td>
 <td><p>0.0.2</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.EdgeCentricFCSpheres" title="junifer.markers.EdgeCentricFCSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeCentricFCSpheres</span></code></a></p></td>
-<td><p>Calculate edge-centric functional connectivity over spheres placed on coordinates,
-as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2021.118204">Jo et al. (2021)</a></p></td>
+<td><div class="line-block">
+<div class="line">Calculate edge-centric functional connectivity over spheres placed on</div>
+<div class="line">coordinates, as found in</div>
+<div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2021.118204">Jo et al. (2021)</a></div>
+</div>
+</td>
 <td><p>Done</p></td>
 <td><p>0.0.2</p></td>
 </tr>
@@ -475,7 +503,11 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.2</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRSpheres" title="junifer.markers.TemporalSNRSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRSpheres</span></code></a></p></td>
-<td><p>Calculate temporal signal-to-noise ratio using spheres placed on coordinates</p></td>
+<td><div class="line-block">
+<div class="line">Calculate temporal signal-to-noise ratio using spheres placed on</div>
+<div class="line">coordinates</div>
+</div>
+</td>
 <td><p>Done</p></td>
 <td><p>0.0.2</p></td>
 </tr>
@@ -499,7 +531,11 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p><a class="reference external" href="https://github.com/juaml/junifer/issues/34">#34</a></p></td>
 </tr>
 <tr class="row-odd"><td><p>Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent</p></td>
-<td><p>Calculate Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent</p></td>
+<td><div class="line-block">
+<div class="line">Calculate Permutation entropy, Range entropy, Multiscale entropy and</div>
+<div class="line">Hurst exponent</div>
+</div>
+</td>
 <td><p><a class="reference external" href="https://github.com/juaml/junifer/issues/61">#61</a></p></td>
 </tr>
 </tbody>
@@ -507,8 +543,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 </div>
 </section>
 </section>
-<section id="parcellations">
-<h2><span class="section-number">6.3. </span>Parcellations<a class="headerlink" href="#parcellations" title="Permalink to this heading">#</a></h2>
+<section id="parcellation">
+<h2><span class="section-number">6.3. </span>Parcellation<a class="headerlink" href="#parcellation" title="Permalink to this heading">#</a></h2>
 <section id="id4">
 <h3><span class="section-number">6.3.1. </span>Available<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -560,8 +596,10 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS2x3TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS2x7TxMNI6thgeneration</span></code>,</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS3x3TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS3x7TxMNI6thgeneration</span></code>,</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS4x3TxMNI6thgeneration</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS4x7TxMNI6thgeneration</span></code>,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS1x3TxMNInonlinear2009cAsym</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS2x3TxMNInonlinear2009cAsym</span></code>,</div>
-<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS3x3TxMNInonlinear2009cAsym</span></code>, <code class="docutils literal notranslate"><span class="pre">TianxS4x3TxMNInonlinear2009cAsym</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS1x3TxMNInonlinear2009cAsym</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS2x3TxMNInonlinear2009cAsym</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS3x3TxMNInonlinear2009cAsym</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">TianxS4x3TxMNInonlinear2009cAsym</span></code></div>
 </div>
 </td>
 <td><p>0.0.1</p></td>
@@ -629,7 +667,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <tr class="row-even"><td><p>Mindboggle 101</p></td>
 <td><div class="line-block">
 <div class="line">Klein, A., &amp; Tourville, J.</div>
-<div class="line">101 labeled brain images and a consistent human cortical labeling protocol.</div>
+<div class="line">101 labeled brain images and a consistent human cortical labeling</div>
+<div class="line">protocol.</div>
 <div class="line">Frontiers in Neuroscience (2012).</div>
 <div class="line"><a class="reference external" href="http://doi.org/10.3389/fnins.2012.00171/abstract">http://doi.org/10.3389/fnins.2012.00171/abstract</a></div>
 </div>
@@ -658,13 +697,13 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <tr class="row-odd"><td><p>Buckner</p></td>
 <td><div class="line-block">
 <div class="line">Buckner, R.L., Krienen, F.M., Castellanos, A., Diaz, J.C., Yeo, B.T.T.</div>
-<div class="line">The organization of the human cerebellum estimated by intrinsic functional</div>
-<div class="line">connectivity.</div>
+<div class="line">The organization of the human cerebellum estimated by intrinsic</div>
+<div class="line">functional connectivity.</div>
 <div class="line">Journal of Neurophysiology, Volume 106(5), Pages 2322–2345 (2011).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1152/jn.00339.2011">https://doi.org/10.1152/jn.00339.2011</a></div>
 <div class="line">Yeo, B.T.T., Krienen, F.M., Sepulcre, J. et al.</div>
-<div class="line">The organization of the human cerebral cortex estimated by intrinsic functional</div>
-<div class="line">connectivity.</div>
+<div class="line">The organization of the human cerebral cortex estimated by intrinsic</div>
+<div class="line">functional connectivity.</div>
 <div class="line">Journal of Neurophysiology, Volume 106(3), Pages 1125–1165 (2011).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1152/jn.00338.2011">https://doi.org/10.1152/jn.00338.2011</a></div>
 </div>
@@ -693,9 +732,10 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p><code class="docutils literal notranslate"><span class="pre">CogAC</span></code></p></td>
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
-<div class="line">Cieslik, E.C., Mueller, V.I., Eickhoff, C.R., Langner, R., Eickhoff, S.B.</div>
-<div class="line">Three key regions for supervisory attentional control: Evidence from neuroimaging</div>
-<div class="line">meta-analyses.</div>
+<div class="line">Cieslik, E.C., Mueller, V.I., Eickhoff, C.R., Langner, R.,</div>
+<div class="line">Eickhoff, S.B.</div>
+<div class="line">Three key regions for supervisory attentional control: Evidence from</div>
+<div class="line">neuroimaging meta-analyses.</div>
 <div class="line">Neuroscience &amp; Biobehavioral Reviews, Volume 48, Pages 22-34 (2015).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neubiorev.2014.11.003">https://doi.org/10.1016/j.neubiorev.2014.11.003</a>.</div>
 </div>
@@ -706,8 +746,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
 <div class="line">Langner, R., Leiberg, S., Hoffstaedter, F., Eickhoff, S.B.</div>
-<div class="line">Towards a human self-regulation system: Common and distinct neural signatures</div>
-<div class="line">of emotional and behavioural control.</div>
+<div class="line">Towards a human self-regulation system: Common and distinct neural</div>
+<div class="line">signatures of emotional and behavioural control.</div>
 <div class="line">Neuroscience &amp; Biobehavioral Reviews, Volume 90, Pages 400-410 (2018).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neubiorev.2018.04.022">https://doi.org/10.1016/j.neubiorev.2018.04.022</a>.</div>
 </div>
@@ -723,8 +763,10 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <div class="line">Journal of neurophysiology, Volume 103(1), Pages 297-321 (2010).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1152/jn.00783.2009">https://doi.org/10.1152/jn.00783.2009</a></div>
 <div class="line">Buckner, R.L., Andrews‐Hanna, J.R., &amp; Schacter, D.L.</div>
-<div class="line">The brain’s default network: anatomy, function, and relevance to disease.</div>
-<div class="line">Annals of the New York Academy of Sciences, Volume 1124(1), Pages 1-38 (2008).</div>
+<div class="line">The brain’s default network: anatomy, function, and relevance to</div>
+<div class="line">disease.</div>
+<div class="line">Annals of the New York Academy of Sciences, Volume 1124(1), Pages 1-38</div>
+<div class="line">(2008).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1196/annals.1440.011">https://doi.org/10.1196/annals.1440.011</a></div>
 </div>
 </td>
@@ -739,8 +781,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
 <div class="line">Bzdok, D., Schilbach, L., Vogeley, K. et al.</div>
-<div class="line">Parsing the neural correlates of moral cognition: ALE meta-analysis on morality,</div>
-<div class="line">theory of mind, and empathy.</div>
+<div class="line">Parsing the neural correlates of moral cognition: ALE meta-analysis on</div>
+<div class="line">morality, theory of mind, and empathy.</div>
 <div class="line">Brain Structure and Function, Volume 217(4), Pages 783-796 (2012).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1007/s00429-012-0380-y">https://doi.org/10.1007/s00429-012-0380-y</a></div>
 </div>
@@ -751,7 +793,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
 <div class="line">Amft, M., Bzdok, D., Laird, A.R. et al.</div>
-<div class="line">Definition and characterization of an extended social-affective default network.</div>
+<div class="line">Definition and characterization of an extended social-affective default</div>
+<div class="line">network.</div>
 <div class="line">Brain structure &amp; function, Volume 220, Pages 1031–1049 (2015).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1007/s00429-013-0698-0">https://doi.org/10.1007/s00429-013-0698-0</a></div>
 </div>
@@ -785,8 +828,9 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
 <div class="line">Worringer, B., Langner, R., Koch, I. et al.</div>
-<div class="line">Common and distinct neural correlates of dual-tasking and task-switching:</div>
-<div class="line">a meta-analytic review and a neuro-cognitive processing model of human multitasking.</div>
+<div class="line">Common and distinct neural correlates of dual-tasking and</div>
+<div class="line">task-switching: a meta-analytic review and a neuro-cognitive processing</div>
+<div class="line">model of human multitasking.</div>
 <div class="line">Brain structure &amp; function, Volume 224(5), Pages 1845–1869 (2019).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1007/s00429-019-01870-4">https://doi.org/10.1007/s00429-019-01870-4</a></div>
 </div>
@@ -797,8 +841,9 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
 <div class="line">Kogler, L., Müller, V.I., Chang, A. et al.</div>
-<div class="line">Psychosocial versus physiological stress — Meta-analyses on deactivations and</div>
-<div class="line">activations of the neural correlates of stress reactions.</div>
+<div class="line">Psychosocial versus physiological stress — Meta-analyses on</div>
+<div class="line">deactivations and activations of the neural correlates of stress</div>
+<div class="line">reactions.</div>
 <div class="line">NeuroImage, Volume 119, Pages 235-251 (2015).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2015.06.059">https://doi.org/10.1016/j.neuroimage.2015.06.059</a>.</div>
 </div>
@@ -809,9 +854,10 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
 <div class="line">Liu, X., Hairston, J., Schrier, M., Fan, J.</div>
-<div class="line">Common and distinct networks underlying reward valence and processing stages:</div>
-<div class="line">A meta-analysis of functional neuroimaging studies.</div>
-<div class="line">Neuroscience &amp; Biobehavioral Reviews, Volume 35(5), Pages 1219-1236 (2011).</div>
+<div class="line">Common and distinct networks underlying reward valence and processing</div>
+<div class="line">stages: A meta-analysis of functional neuroimaging studies.</div>
+<div class="line">Neuroscience &amp; Biobehavioral Reviews, Volume 35(5), Pages 1219-1236</div>
+<div class="line">(2011).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neubiorev.2010.12.012">https://doi.org/10.1016/j.neubiorev.2010.12.012</a>.</div>
 </div>
 </td>
@@ -826,8 +872,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
 <div class="line">Bzdok, D., Schilbach, L., Vogeley, K. et al.</div>
-<div class="line">Parsing the neural correlates of moral cognition: ALE meta-analysis on morality,</div>
-<div class="line">theory of mind, and empathy.</div>
+<div class="line">Parsing the neural correlates of moral cognition: ALE meta-analysis on</div>
+<div class="line">morality, theory of mind, and empathy.</div>
 <div class="line">Brain Structure and Function, Volume 217(4), Pages 783-796 (2012).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1007/s00429-012-0380-y">https://doi.org/10.1007/s00429-012-0380-y</a></div>
 </div>
@@ -838,8 +884,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
 <div class="line">Langner, R., &amp; Eickhoff, S.B.</div>
-<div class="line">Sustaining attention to simple tasks: a meta-analytic review of the neural</div>
-<div class="line">mechanisms of vigilant attention.</div>
+<div class="line">Sustaining attention to simple tasks: a meta-analytic review of the</div>
+<div class="line">neural mechanisms of vigilant attention.</div>
 <div class="line">Psychological bulletin, Volume 139 4, Pages 870-900 (2013).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1037/a0030694">https://doi.org/10.1037/a0030694</a></div>
 </div>
@@ -850,7 +896,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <td><p>0.0.1</p></td>
 <td><div class="line-block">
 <div class="line">Rottschy, C., Langner, R., Dogan, I. et al.</div>
-<div class="line">Modelling neural correlates of working memory: A coordinate-based meta-analysis.</div>
+<div class="line">Modelling neural correlates of working memory: A coordinate-based</div>
+<div class="line">meta-analysis.</div>
 <div class="line">NeuroImage, Volume 60, Pages 830-846 (2012).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2011.11.050">https://doi.org/10.1016/j.neuroimage.2011.11.050</a>.</div>
 </div>
@@ -895,7 +942,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <tr class="row-even"><td><p>Emotional scene and face processing (EmoSF)</p></td>
 <td><div class="line-block">
 <div class="line">Sabatinelli, D., Fortune, E.E., Li, Q. et al.</div>
-<div class="line">Emotional perception: Meta-analyses of face and natural scene processing.</div>
+<div class="line">Emotional perception: Meta-analyses of face and natural scene</div>
+<div class="line">processing.</div>
 <div class="line">NeuroImage, Volume 54(3), Pages 2524-2533 (2011).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2010.10.011">https://doi.org/10.1016/j.neuroimage.2010.10.011</a>.</div>
 </div>
@@ -904,8 +952,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <tr class="row-odd"><td><p>Perceptuo-motor network</p></td>
 <td><div class="line-block">
 <div class="line">Heckner, M.K., Cieslik, E.C., Eickhoff, S.B. et al.</div>
-<div class="line">The Aging Brain and Executive Functions Revisited: Implications from Meta-analytic</div>
-<div class="line">and Functional-Connectivity Evidence.</div>
+<div class="line">The Aging Brain and Executive Functions Revisited: Implications from</div>
+<div class="line">Meta-analytic and Functional-Connectivity Evidence.</div>
 <div class="line">Journal of Cognitive Neuroscience, Volume 33(9), Pages 1716–1752 (2021).</div>
 <div class="line"><a class="reference external" href="https://doi.org/10.1162/jocn_a_01616">https://doi.org/10.1162/jocn_a_01616</a></div>
 </div>
@@ -916,8 +964,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 </div>
 </section>
 </section>
-<section id="masks">
-<h2><span class="section-number">6.5. </span>Masks<a class="headerlink" href="#masks" title="Permalink to this heading">#</a></h2>
+<section id="mask">
+<h2><span class="section-number">6.5. </span>Mask<a class="headerlink" href="#mask" title="Permalink to this heading">#</a></h2>
 <section id="id8">
 <h3><span class="section-number">6.5.1. </span>Available<a class="headerlink" href="#id8" title="Permalink to this heading">#</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -963,8 +1011,9 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 </td>
 <td><p>0.0.2</p></td>
 <td><div class="line-block">
-<div class="line">Compute the whole-brain mask. This mask is calculated using MNI152 1mm-resolution template mask onto the</div>
-<div class="line">target image. See <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.masking.compute_brain_mask.html#nilearn.masking.compute_brain_mask" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.compute_brain_mask()</span></code></a></div>
+<div class="line">Compute the whole-brain mask. This mask is calculated using</div>
+<div class="line">MNI152 1mm-resolution template mask onto the target image.</div>
+<div class="line">See <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.masking.compute_brain_mask.html#nilearn.masking.compute_brain_mask" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.compute_brain_mask()</span></code></a></div>
 </div>
 </td>
 </tr>
@@ -975,9 +1024,10 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 </td>
 <td><p>0.0.2</p></td>
 <td><div class="line-block">
-<div class="line">Compute a brain mask from fMRI data. This is based on an heuristic proposed by T.Nichols: find the least</div>
-<div class="line">dense point of the histogram, between fractions <code class="docutils literal notranslate"><span class="pre">lower_cutoff</span></code> and <code class="docutils literal notranslate"><span class="pre">upper_cutoff</span></code> of the total image</div>
-<div class="line">histogram. See <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.masking.compute_epi_mask.html#nilearn.masking.compute_epi_mask" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.compute_epi_mask()</span></code></a></div>
+<div class="line">Compute a brain mask from fMRI data. This is based on an heuristic</div>
+<div class="line">proposed by T.Nichols: find the least dense point of the histogram,</div>
+<div class="line">between fractions <code class="docutils literal notranslate"><span class="pre">lower_cutoff</span></code> and <code class="docutils literal notranslate"><span class="pre">upper_cutoff</span></code> of the total</div>
+<div class="line">image histogram. See <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.masking.compute_epi_mask.html#nilearn.masking.compute_epi_mask" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.compute_epi_mask()</span></code></a></div>
 </div>
 </td>
 </tr>
@@ -988,7 +1038,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 </td>
 <td><p>0.0.2</p></td>
 <td><div class="line-block">
-<div class="line">Compute a brain mask for the images by guessing the value of the background from the border of the image.</div>
+<div class="line">Compute a brain mask for the images by guessing the value of the</div>
+<div class="line">background from the border of the image.</div>
 <div class="line">See <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.masking.compute_background_mask.html#nilearn.masking.compute_background_mask" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.compute_background_mask()</span></code></a></div>
 </div>
 </td>
@@ -1000,7 +1051,8 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 </td>
 <td><p>0.0.2</p></td>
 <td><div class="line-block">
-<div class="line">Compute a gray-matter mask from the asymmetrical ICBM152 2009 template, release a.</div>
+<div class="line">Compute a gray-matter mask from the asymmetrical ICBM152 2009 template,</div>
+<div class="line">release a.</div>
 <div class="line">See <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_icbm152_brain_gm_mask.html#nilearn.datasets.fetch_icbm152_brain_gm_mask" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.datasets.fetch_icbm152_brain_gm_mask()</span></code></a></div>
 </div>
 </td>
@@ -1070,18 +1122,18 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">6. Built-in Pipeline steps and data</a><ul>
-<li><a class="reference internal" href="#data-grabbers">6.1. Data Grabbers</a><ul>
+<li><a class="reference internal" href="#">6. Built-in Pipeline Components</a><ul>
+<li><a class="reference internal" href="#data-grabber">6.1. Data Grabber</a><ul>
 <li><a class="reference internal" href="#available">6.1.1. Available</a></li>
 <li><a class="reference internal" href="#planned">6.1.2. Planned</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#markers">6.2. Markers</a><ul>
+<li><a class="reference internal" href="#marker">6.2. Marker</a><ul>
 <li><a class="reference internal" href="#id1">6.2.1. Available</a></li>
 <li><a class="reference internal" href="#id3">6.2.2. Planned</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#parcellations">6.3. Parcellations</a><ul>
+<li><a class="reference internal" href="#parcellation">6.3. Parcellation</a><ul>
 <li><a class="reference internal" href="#id4">6.3.1. Available</a></li>
 <li><a class="reference internal" href="#id5">6.3.2. Planned</a></li>
 </ul>
@@ -1091,7 +1143,7 @@ as found in <a class="reference external" href="https://doi.org/10.1016/j.neuroi
 <li><a class="reference internal" href="#id7">6.4.2. Planned</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#masks">6.5. Masks</a><ul>
+<li><a class="reference internal" href="#mask">6.5. Mask</a><ul>
 <li><a class="reference internal" href="#id8">6.5.1. Available</a></li>
 <li><a class="reference internal" href="#id9">6.5.2. Planned</a></li>
 </ul>

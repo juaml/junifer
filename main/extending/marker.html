@@ -167,9 +167,9 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with Junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with junifer</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">4. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">4.1. The Junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">4.1. The junifer Pipeline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">4.2. The Data Object</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">4.3. Data Grabber</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">4.4. Data Reader</a></li>
@@ -179,16 +179,16 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">5. Using junifer</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">5.1. Code-less configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/running.html">5.2. Running jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">5.3. Collecting results</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">5.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">5.1. Code-less Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html">5.2. Running Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">5.3. Collecting Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">5.4. Queueing Jobs (HPC, HTC)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/masks.html">5.5.1. Masks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline steps and data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline Components</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">7. Extending junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="extension.html">7.1. Creating a Junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extension.html">7.1. Creating a junifer extension</a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabber.html">7.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">7.3. Creating Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parcellations.html">7.4. Adding Parcellations</a></li>
@@ -286,96 +286,124 @@
         <article role="main">
           <section id="creating-markers">
 <span id="extending-markers"></span><h1><span class="section-number">7.3. </span>Creating Markers<a class="headerlink" href="#creating-markers" title="Permalink to this heading">#</a></h1>
-<p>Computing a marker (a.k.a. <em>feature</em>) is the main goal of junifer. While we aim to provide as many markers as possible,
-it might be the case that the marker you are looking for is not available. In this case, you can create your own marker
+<p>Computing a marker (a.k.a. <em>feature</em>) is the main goal of junifer. While we aim
+to provide as many markers as possible, it might be the case that the marker you
+are looking for is not available. In this case, you can create your own marker
 by following this tutorial.</p>
-<p>Most of the functionality of a junifer marker has been taken care by the <a class="reference internal" href="../api/markers.html#junifer.markers.BaseMarker" title="junifer.markers.BaseMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseMarker</span></code></a> class.
-Thus, only a few methods are required:</p>
+<p>Most of the functionality of a junifer marker has been taken care by the
+<a class="reference internal" href="../api/markers.html#junifer.markers.BaseMarker" title="junifer.markers.BaseMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseMarker</span></code></a> class. Thus, only a few methods are required:</p>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">get_valid_inputs</span></code>: a method to obtain the list of valid inputs for the marker. This is used to check that the
-inputs provided by the user are valid. This method should return a list of strings, representing
-<a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">get_output_type</span></code>: a method to obtain the kind of output of the marker. This is used to check that the output
-of the marker is compatible with the storage. This method should return a string, representing
-<a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">compute</span></code>: the method that given the data, computes the marker.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: the initialization method, where the marker is configured.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_valid_inputs</span></code>: The method to obtain the list of valid inputs for the
+marker. This is used to check that the inputs provided by the user are
+valid. This method should return a list of strings, representing
+<a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_output_type</span></code>: The method to obtain the kind of output of the marker.
+This is used to check that the output of the marker is compatible with the
+storage. This method should return a string, representing
+<a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute</span></code>: The method that given the data, computes the marker.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: The initialisation method, where the marker is configured.</p></li>
 </ol>
-<p>As an example, we will develop a Parcel Mean marker, that is, a marker that first applies a parcellation and
-then computes the mean of the data in each parcel. This is a very simple example, but it will show you how to create
-a new marker.</p>
+<p>As an example, we will develop a <code class="docutils literal notranslate"><span class="pre">ParcelMean</span></code> marker, a marker that first
+applies a parcellation and then computes the mean of the data in each parcel.
+This is a very simple example, but it will show you how to create a new marker.</p>
 <section id="step-1-configure-input-and-output">
 <span id="extending-markers-input-output"></span><h2><span class="section-number">7.3.1. </span>Step 1: Configure input and output<a class="headerlink" href="#step-1-configure-input-and-output" title="Permalink to this heading">#</a></h2>
-<p>This step is quite simple: we need to define the input and output of the marker. Based on the current
-<a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a>, we can define as valid inputs <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, <code class="docutils literal notranslate"><span class="pre">VBM_WM</span></code> and <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_WM&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_GM&#39;</span><span class="p">]</span>
+<p>This step is quite simple: we need to define the input and output of the marker.
+Based on the current <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a>, we can have <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>,
+<code class="docutils literal notranslate"><span class="pre">VBM_WM</span></code> and <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> as valid inputs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_WM&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_GM&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>The output of the marker depends on the input. For <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, it will be <code class="docutils literal notranslate"><span class="pre">timeseries</span></code>, while for the rest of the inputs,
-it will be <code class="docutils literal notranslate"><span class="pre">table</span></code>. Thus, we can define the output as:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">input_kind</span> <span class="o">==</span> <span class="s1">&#39;BOLD&#39;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;timeseries&#39;</span>
+<p>The output of the marker depends on the input. For <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, it will be
+<code class="docutils literal notranslate"><span class="pre">timeseries</span></code>, while for the rest of the inputs, it will be <code class="docutils literal notranslate"><span class="pre">vector</span></code>. Thus,
+we can define the output as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">input_kind</span> <span class="o">==</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;timeseries&quot;</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s1">&#39;table&#39;</span>
+        <span class="k">return</span> <span class="s2">&quot;vector&quot;</span>
 </pre></div>
 </div>
 </section>
-<section id="step-2-initialize-the-marker">
-<span id="extending-markers-init"></span><h2><span class="section-number">7.3.2. </span>Step 2: Initialize the marker<a class="headerlink" href="#step-2-initialize-the-marker" title="Permalink to this heading">#</a></h2>
-<p>In this step we need to define the parameters of the marker. That is, all the parameters that the user can provide
+<section id="step-2-initialise-the-marker">
+<span id="extending-markers-init"></span><h2><span class="section-number">7.3.2. </span>Step 2: Initialise the marker<a class="headerlink" href="#step-2-initialise-the-marker" title="Permalink to this heading">#</a></h2>
+<p>In this step we need to define the parameters of the marker the user can provide
 to configure how the marker will behave.</p>
-<p>The parameters of the marker are defined in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method. The <a class="reference internal" href="../api/markers.html#junifer.markers.BaseMarker" title="junifer.markers.BaseMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseMarker</span></code></a> class
-requires two optional parameters:</p>
+<p>The parameters of the marker are defined in the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method. The
+<a class="reference internal" href="../api/markers.html#junifer.markers.BaseMarker" title="junifer.markers.BaseMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseMarker</span></code></a> class requires two optional parameters:</p>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: the name of the marker. This is used to identify the marker in the configuration file.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">on</span></code>: a list or string with the data types that the marker will be applied to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: the name of the marker. This is used to identify the marker in the
+configuration file.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on</span></code>: a list or string with the data types that the marker will be applied
+to.</p></li>
 </ol>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>Only basic types (<em>int</em>, <em>bool</em> and <em>str</em>) as well as Lists, Tuples and Dictionaries are allowed as
-parameters. This is because the parameters are stored in a JSON file, and JSON only supports these types.</p>
+<p>Only basic types (<em>int</em>, <em>bool</em> and <em>str</em>), lists, tuples and dictionaries
+are allowed as parameters. This is because the parameters are stored in
+JSON format, and JSON only supports these types.</p>
 </div>
-<p>In this example, the is only paramater required for the computation is the name of the parcellation to use. Thus, we can
-define the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parcellation_name</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">parcellation_name</span> <span class="o">=</span> <span class="n">parcellation_name</span>
+<p>In this example, only paramater required for the computation is the name of the
+parcellation to use. Thus, we can define the <code class="docutils literal notranslate"><span class="pre">__init__</span></code> method as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+   <span class="bp">self</span><span class="p">,</span>
+   <span class="n">parcellation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+   <span class="n">on</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+   <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">parcellation</span> <span class="o">=</span> <span class="n">parcellation</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
-<p>Parameters of the marker must be stored as object attributes without using <code class="docutils literal notranslate"><span class="pre">_</span></code> as prefix. This is
-because any attribute that starts with <code class="docutils literal notranslate"><span class="pre">_</span></code> will not be considered as a parameter and not stored as
-part of the metadata of the marker.</p>
+<p>Parameters of the marker must be stored as object attributes without using
+<code class="docutils literal notranslate"><span class="pre">_</span></code> as prefix. This is because any attribute that starts with <code class="docutils literal notranslate"><span class="pre">_</span></code> will
+not be considered as a parameter and not stored as part of the metadata of
+the marker.</p>
 </div>
 </section>
 <section id="step-3-compute-the-marker">
 <span id="extending-markers-compute"></span><h2><span class="section-number">7.3.3. </span>Step 3: Compute the marker<a class="headerlink" href="#step-3-compute-the-marker" title="Permalink to this heading">#</a></h2>
-<p>In this step, we will define the method that computes the marker. This method will be called by junifer when needed,
-using the data provided by the datagrabber, as configured by the user. The function <code class="docutils literal notranslate"><span class="pre">compute</span></code> has two arguments:</p>
+<p>In this step, we will define the method that computes the marker. This method
+will be called by junifer when needed, using the data provided by the
+datagrabber, as configured by the user. The method <code class="docutils literal notranslate"><span class="pre">compute</span></code> has two
+arguments:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: a dictionary with the data to be used to compute the marker. This will be the corresponding element in the
-<a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a> alredy indexing. Thus, the dictionary has at least two keys: <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">path</span></code>.
-The first one contains the data, while the second one contains the path to the data. The dictionary can also contain
-other keys, depending on the data type.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">extra_input</span></code>: the rest of the <a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a>. This is useful if you want to use other data to
-compute the marker (e.g.: <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> can be used to de-confound the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">input</span></code>: a dictionary with the data to be used to compute the marker. This
+will be the corresponding element in the <a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a>
+alredy indexed. Thus, the dictionary has at least two keys: <code class="docutils literal notranslate"><span class="pre">data</span></code> and
+<code class="docutils literal notranslate"><span class="pre">path</span></code>. The first one contains the data, while the second one contains the
+path to the data. The dictionary can also contain other keys, depending on the
+data type.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extra_input</span></code>: the rest of the <a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a>. This is
+useful if you want to use other data to compute the marker
+(e.g.: <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> can be used to de-confound the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data).</p></li>
 </ul>
 <p>Following the example, we will compute the mean of the data in each parcel using
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.maskers.NiftiLabelsMasker.html#nilearn.maskers.NiftiLabelsMasker" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiLabelsMasker</span></code></a>. Importantly, the output of the compute function must be a dictionary.
-This dictionary will later be passed onto the <code class="docutils literal notranslate"><span class="pre">store</span></code> method.</p>
+<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.maskers.NiftiLabelsMasker.html#nilearn.maskers.NiftiLabelsMasker" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiLabelsMasker</span></code></a>. Importantly, the output of the
+compute function must be a dictionary. This dictionary will later be passed onto
+the <code class="docutils literal notranslate"><span class="pre">store</span></code> method.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>To simplify the <code class="docutils literal notranslate"><span class="pre">store</span></code> method, define keys of the dictionary based on the corresponding store functions
-in the <a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a>. For example, if the output is a <code class="docutils literal notranslate"><span class="pre">table</span></code>, the keys of the
-dictionary should be <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">columns</span></code>.</p>
+<p>To simplify the <code class="docutils literal notranslate"><span class="pre">store</span></code> method, define keys of the dictionary based on the
+corresponding store functions in the <a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a>.
+For example, if the output is a <code class="docutils literal notranslate"><span class="pre">vector</span></code>, the keys of the dictionary should
+be <code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">col_names</span></code>.</p>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
-<span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">load_parcellation</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
-<span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">extra_input</span><span class="p">):</span>
+<span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">load_parcellation</span>
+<span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
+
+
+<span class="k">def</span> <span class="nf">compute</span><span class="p">(</span>
+   <span class="bp">self</span><span class="p">,</span>
+   <span class="nb">input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+   <span class="n">extra_input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="c1"># Get the data</span>
     <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
 
@@ -392,7 +420,7 @@ dictionary should be <code class="docutils literal notranslate"><span class="pre
     <span class="n">masker</span> <span class="o">=</span> <span class="n">NiftiLabelsMasker</span><span class="p">(</span>
         <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span>
         <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;nilearn_cache&#39;</span><span class="p">,</span>
+        <span class="n">memory</span><span class="o">=</span><span class="s2">&quot;nilearn_cache&quot;</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -400,51 +428,63 @@ dictionary should be <code class="docutils literal notranslate"><span class="pre
     <span class="n">out_values</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
 
     <span class="c1"># Create the output dictionary</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">}</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span> <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">}</span>
 
-    <span class="c1"># If its 3D (BOLD), name each row as &quot;scan&quot;</span>
-    <span class="k">if</span> <span class="n">out_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">out</span><span class="p">[</span><span class="s2">&quot;row_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;scan&quot;</span>
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
 </section>
-<section id="step-4-finalize-the-marker">
-<span id="extending-markers-finalize"></span><h2><span class="section-number">7.3.4. </span>Step 4: Finalize the marker<a class="headerlink" href="#step-4-finalize-the-marker" title="Permalink to this heading">#</a></h2>
-<p>Once all of the above steps are done, we just need to give our marker a name, state its <em>dependencies</em> and register it
-using the <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator.</p>
-<p>The <em>dependencies</em> are the core packages that are required to compute the marker. This will be later used to keep track
-of the versions of the packages used to compute the marker. To inform junifer about the dependencies of a marker,
-we need to define a <code class="docutils literal notranslate"><span class="pre">_DEPENDENCIES</span></code> attribute in the class. This attribute must be a set, with the names of the
-packages as strings. For example, the <code class="docutils literal notranslate"><span class="pre">ParcelMean</span></code> marker has the following dependencies:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">}</span>
+<section id="step-4-finalise-the-marker">
+<span id="extending-markers-finalize"></span><h2><span class="section-number">7.3.4. </span>Step 4: Finalise the marker<a class="headerlink" href="#step-4-finalise-the-marker" title="Permalink to this heading">#</a></h2>
+<p>Once all of the above steps are done, we just need to give our marker a name,
+state its <em>dependencies</em> and register it using the <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code>
+decorator.</p>
+<p>The <em>dependencies</em> are the core packages that are required to compute the marker.
+This will be later used to keep track of the versions of the packages used to
+compute the marker. To inform junifer about the dependencies of a marker, we need
+to define a <code class="docutils literal notranslate"><span class="pre">_DEPENDENCIES</span></code> attribute in the class. This attribute must be a
+set, with the names of the packages as strings. For example, the <code class="docutils literal notranslate"><span class="pre">ParcelMean</span></code>
+marker has the following dependencies:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
-<p>Finally, we need to register the marker using the <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator. This decorator takes the name of the</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
-<span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">load_parcellation</span>
+<p>Finally, we need to register the marker using the <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
 <span class="kn">from</span> <span class="nn">junifer.api.decorators</span> <span class="kn">import</span> <span class="n">register_marker</span>
+<span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">load_parcellation</span>
 <span class="kn">from</span> <span class="nn">junifer.markers.base</span> <span class="kn">import</span> <span class="n">BaseMarker</span>
+<span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
+
 
 <span class="nd">@register_marker</span>
 <span class="k">class</span> <span class="nc">ParcelMean</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
 
-     <span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
+    <span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parcellation_name</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">parcellation_name</span> <span class="o">=</span> <span class="n">parcellation_name</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+       <span class="bp">self</span><span class="p">,</span>
+       <span class="n">parcellation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+       <span class="n">on</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+       <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parcellation</span> <span class="o">=</span> <span class="n">parcellation</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_WM&#39;</span><span class="p">,</span> <span class="s1">&#39;VBM_GM&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_WM&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_GM&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">input_kind</span> <span class="o">==</span> <span class="s1">&#39;BOLD&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;timeseries&#39;</span>
+    <span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">input_kind</span> <span class="o">==</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;timeseries&quot;</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;table&#39;</span>
+            <span class="k">return</span> <span class="s2">&quot;vector&quot;</span>
 
-    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">extra_input</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span>
+       <span class="bp">self</span><span class="p">,</span>
+       <span class="nb">input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+       <span class="n">extra_input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="c1"># Get the data</span>
         <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
 
@@ -461,7 +501,7 @@ packages as strings. For example, the <code class="docutils literal notranslate"
         <span class="n">masker</span> <span class="o">=</span> <span class="n">NiftiLabelsMasker</span><span class="p">(</span>
             <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span>
             <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">memory</span><span class="o">=</span><span class="s1">&#39;nilearn_cache&#39;</span><span class="p">,</span>
+            <span class="n">memory</span><span class="o">=</span><span class="s2">&quot;nilearn_cache&quot;</span><span class="p">,</span>
             <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -469,11 +509,8 @@ packages as strings. For example, the <code class="docutils literal notranslate"
         <span class="n">out_values</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
 
         <span class="c1"># Create the output dictionary</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">}</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span> <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">}</span>
 
-        <span class="c1"># If its 3D (BOLD), name each row as &quot;scan&quot;</span>
-        <span class="k">if</span> <span class="n">out_values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;row_names&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;scan&quot;</span>
         <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -481,7 +518,8 @@ packages as strings. For example, the <code class="docutils literal notranslate"
 <section id="template-for-a-custom-marker">
 <span id="extending-markers-template"></span><h2><span class="section-number">7.3.5. </span>Template for a custom Marker<a class="headerlink" href="#template-for-a-custom-marker" title="Permalink to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.api.decorators</span> <span class="kn">import</span> <span class="n">register_marker</span>
-<span class="kn">from</span> <span class="nn">junifer.markers.base</span> <span class="kn">import</span> <span class="n">BaseMarker</span>
+<span class="kn">from</span> <span class="nn">junifer.markers</span> <span class="kn">import</span> <span class="n">BaseMarker</span>
+
 
 <span class="nd">@register_marker</span>
 <span class="k">class</span> <span class="nc">TemplateMarker</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
@@ -503,7 +541,7 @@ packages as strings. For example, the <code class="docutils literal notranslate"
         <span class="c1"># TODO: compute the marker and create the output dictionary</span>
 
         <span class="c1"># Create the output dictionary</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
         <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -567,9 +605,9 @@ packages as strings. For example, the <code class="docutils literal notranslate"
             <ul>
 <li><a class="reference internal" href="#">7.3. Creating Markers</a><ul>
 <li><a class="reference internal" href="#step-1-configure-input-and-output">7.3.1. Step 1: Configure input and output</a></li>
-<li><a class="reference internal" href="#step-2-initialize-the-marker">7.3.2. Step 2: Initialize the marker</a></li>
+<li><a class="reference internal" href="#step-2-initialise-the-marker">7.3.2. Step 2: Initialise the marker</a></li>
 <li><a class="reference internal" href="#step-3-compute-the-marker">7.3.3. Step 3: Compute the marker</a></li>
-<li><a class="reference internal" href="#step-4-finalize-the-marker">7.3.4. Step 4: Finalize the marker</a></li>
+<li><a class="reference internal" href="#step-4-finalise-the-marker">7.3.4. Step 4: Finalise the marker</a></li>
 <li><a class="reference internal" href="#template-for-a-custom-marker">7.3.5. Template for a custom Marker</a></li>
 </ul>
 </li>
