@@ -342,8 +342,6 @@ So, to summarize, our datagrabber will look like this:
 
 .. code-block:: python
 
-   from itertools import product
-
    from junifer.api.decorators import register_datagrabber
    from junifer.datagrabber import BaseDataGrabber
 
@@ -366,8 +364,9 @@ So, to summarize, our datagrabber will look like this:
          if "BOLD" not in self.types:
             sessions.append("ses-03")
          elements = []
-         for subject, element in product(subjects, sessions):
-            elements.append({"subject": subject, "session": session})
+         for subject in subjects:
+            for session in sessions:
+               elements.append({"subject": subject, "session": session})
          return elements
 
       def get_element_keys(self) -> list[str]:
@@ -419,7 +418,7 @@ this:
 
    def get_item(
       self, subject: str, session: str
-   ) -> dict[str, str | dict[str, str | dict[str, dict[str, str]]]]:
+   ) -> dict:
       out = {
          "BOLD": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
          "BOLD_confounds": {
