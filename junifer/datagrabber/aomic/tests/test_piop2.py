@@ -20,7 +20,6 @@ def test_aomic_piop2_datagrabber() -> None:
     task_params = [None, "restingstate"]
 
     for task_param in task_params:
-
         dg = DataladAOMICPIOP2(tasks=task_param)
 
         # change uri here to use fake data instead of real dataset
@@ -142,5 +141,4 @@ def test_piop2_invalid_tasks():
             "the AOMIC PIOP2 dataset!"
         ),
     ):
-
         DataladAOMICPIOP2(tasks="thisisnotarealtask")

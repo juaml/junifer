@@ -17,6 +17,7 @@ def test_base_marker_abstractness() -> None:
 
 def test_base_marker_subclassing() -> None:
     """Test proper subclassing of BaseMarker."""
+
     # Create concrete class
     class MyBaseMarker(BaseMarker):
         def __init__(self, on, name=None) -> None:

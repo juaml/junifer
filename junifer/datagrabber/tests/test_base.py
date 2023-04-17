@@ -20,6 +20,7 @@ def test_BaseDataGrabber_abstractness() -> None:
 
 def test_BaseDataGrabber() -> None:
     """Test BaseDataGrabber."""
+
     # Create concrete class.
     class MyDataGrabber(BaseDataGrabber):
         def get_item(self, subject):

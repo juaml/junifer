@@ -78,7 +78,8 @@ to generate the proper changelog that should be reflected in
 
     git push origin --follow-tags
 
-#. Optional: bump the *MAJOR* or *MINOR* segment of next release (replace ``D.E.0`` with the proper version).
+#. Optional: bump the *MAJOR* or *MINOR* segment of next release (replace
+   ``D.E.0`` with the proper version).
 
 .. code-block:: bash
 
