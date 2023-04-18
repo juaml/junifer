@@ -14,7 +14,7 @@ from nilearn.maskers import NiftiLabelsMasker
 from junifer.data import load_parcellation
 from junifer.markers.ets_rss import RSSETSMarker
 from junifer.storage import SQLiteFeatureStorage
-from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
+from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
 # Set parcellation
@@ -23,7 +23,7 @@ PARCELLATION = "Schaefer100x17"
 
 def test_compute() -> None:
     """Test RSS ETS compute()."""
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         # Fetch element
         out = dg["sub001"]
         # Load BOLD image
@@ -61,7 +61,7 @@ def test_store(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         # Fetch element
         elem = dg["sub001"]
         # Load BOLD image

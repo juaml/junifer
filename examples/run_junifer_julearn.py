@@ -75,7 +75,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # run the defined junifer feature extraction pipeline
     run(
         workdir="/tmp",
-        datagrabber={"kind": "OasisVBMTestingDatagrabber"},
+        datagrabber={"kind": "OasisVBMTestingDataGrabber"},
         markers=marker_dicts,
         storage=storage,
     )

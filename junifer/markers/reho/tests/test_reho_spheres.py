@@ -12,7 +12,7 @@ from scipy.stats import pearsonr
 from junifer.markers.reho.reho_spheres import ReHoSpheres
 from junifer.pipeline.utils import _check_afni
 from junifer.storage.sqlite import SQLiteFeatureStorage
-from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
+from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
 COORDINATES = "DMNBuckner"
@@ -20,7 +20,7 @@ COORDINATES = "DMNBuckner"
 
 def test_reho_spheres_computation() -> None:
     """Test ReHoSpheres fit-transform."""
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         # Use first subject
         subject_data = dg["sub001"]
         # Load image to memory
@@ -51,7 +51,7 @@ def test_reho_spheres_computation() -> None:
 )
 def test_reho_spheres_computation_comparison() -> None:
     """Test ReHoSpheres fit-transform implementation comparison.."""
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         # Use first subject
         subject_data = dg["sub001"]
         # Load image to memory
@@ -96,7 +96,7 @@ def test_reho_spheres_storage(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         # Use first subject
         subject_data = dg["sub001"]
         # Load image to memory

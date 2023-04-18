@@ -19,7 +19,7 @@ from junifer.datareader import DefaultDataReader
 from junifer.preprocess.confounds import fMRIPrepConfoundRemover
 from junifer.testing import get_testing_data
 from junifer.testing.datagrabbers import (
-    OasisVBMTestingDatagrabber,
+    OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
 )
 
@@ -327,7 +327,7 @@ def test_fMRIPrepConfoundRemover__validate_data() -> None:
     """Test fMRIPrepConfoundRemover validate data."""
     confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
     reader = DefaultDataReader()
-    with OasisVBMTestingDatagrabber() as dg:
+    with OasisVBMTestingDataGrabber() as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
         new_input = input["VBM_GM"]

@@ -21,7 +21,7 @@ from junifer.pipeline.registry import build
 
 # Define datagrabber
 datagrabber = {
-    "kind": "OasisVBMTestingDatagrabber",
+    "kind": "OasisVBMTestingDataGrabber",
 }
 
 # Define markers
