@@ -7,8 +7,8 @@
 from ..pipeline.registry import register
 from .datagrabbers import (
     OasisVBMTestingDataGrabber,
-    SPMAuditoryTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
+    SPMAuditoryTestingDataGrabber,
 )
 
 
