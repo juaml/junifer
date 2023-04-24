@@ -4,6 +4,7 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+
 from typing import Type
 
 from ..pipeline.registry import register
