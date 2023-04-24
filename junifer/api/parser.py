@@ -10,9 +10,8 @@ import sys
 from pathlib import Path
 from typing import Dict, Union
 
-import yaml
-
 from ..utils.logging import logger, raise_error
+from .utils import yaml
 
 
 def parse_yaml(filepath: Union[str, Path]) -> Dict:
@@ -38,8 +37,7 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
     if not filepath.exists():
         raise_error(f"File does not exist: {str(filepath.absolute())}")
     # Filepath reading
-    with open(filepath, "r") as f:
-        contents = yaml.safe_load(f)
+    contents = yaml.load(filepath)
     if "elements" in contents:
         if contents["elements"] is None:
             raise_error(
