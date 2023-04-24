@@ -29,7 +29,7 @@ from junifer.storage.utils import (
         ("nibabel", "4.1"),
         ("nilearn", "0.10.0"),
         ("sqlalchemy", "1.5.0"),
-        ("pyyaml", "7.0"),
+        ("ruamel.yaml", "0.18.0"),
     ],
 )
 def test_get_dependency_version(dependency: str, max_version: str) -> None:
