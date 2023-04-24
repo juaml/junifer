@@ -8,11 +8,17 @@ from pathlib import Path
 from typing import Tuple
 
 import pytest
-import yaml
 from click.testing import CliRunner
+from ruamel.yaml import YAML
 
 from junifer.api.cli import collect, run, selftest, wtf
 
+
+# Configure YAML class
+yaml = YAML()
+yaml.default_flow_style = False
+yaml.allow_unicode = True
+yaml.indent(mapping=2, sequence=4, offset=2)
 
 # Create click test runner
 runner = CliRunner()
@@ -33,19 +39,17 @@ def test_run_and_collect_commands(
     # Get test config
     infile = Path(__file__).parent / "data" / "gmd_mean.yaml"
     # Read test config
-    with open(infile, mode="r") as f:
-        contents = yaml.safe_load(f)
+    contents = yaml.load(infile)
     # Working directory
     workdir = tmp_path / "workdir"
-    contents["workdir"] = str(workdir.absolute())
+    contents["workdir"] = str(workdir.resolve())
     # Output directory
     outdir = tmp_path / "outdir"
     # Storage
-    contents["storage"]["uri"] = str(outdir.absolute())
+    contents["storage"]["uri"] = str(outdir.resolve())
     # Write new test config
     outfile = tmp_path / "in.yaml"
-    with open(outfile, mode="w") as f:
-        yaml.dump(contents, f)
+    yaml.dump(contents, stream=outfile)
     # Run command arguments
     run_args = [
         str(outfile.absolute()),
