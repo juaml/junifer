@@ -11,13 +11,19 @@ from pathlib import Path
 from typing import List, Tuple, Union
 
 import pytest
-import yaml
+from ruamel.yaml import YAML
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api.functions import collect, queue, run
 from junifer.datagrabber.base import BaseDataGrabber
 from junifer.pipeline.registry import build
 
+
+# Configure YAML class
+yaml = YAML()
+yaml.default_flow_style = False
+yaml.allow_unicode = True
+yaml.indent(mapping=2, sequence=4, offset=2)
 
 # Define datagrabber
 datagrabber = {
@@ -264,8 +270,7 @@ def test_queue_correct_yaml_config(
         generated_config_yaml_path = Path(
             tmp_path / "junifer_jobs" / "yaml_config_gen_check" / "config.yaml"
         )
-        with open(generated_config_yaml_path, "r") as f:
-            yaml_config = yaml.unsafe_load(f)
+        yaml_config = yaml.load(generated_config_yaml_path)
         # Check for correct YAML config generation
         assert all(
             key in yaml_config.keys()
