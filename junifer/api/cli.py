@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Dict, List, Union
 
 import click
-import yaml
 
 from ..utils.logging import (
     configure_logging,
@@ -29,6 +28,7 @@ from .utils import (
     _get_junifer_version,
     _get_python_information,
     _get_system_information,
+    yaml,
 )
 
 
@@ -275,7 +275,7 @@ def wtf(long_: bool) -> None:
         "system": _get_system_information(),
         "environment": _get_environment_information(long_=long_),
     }
-    click.echo(yaml.dump(report, sort_keys=False))
+    click.echo(yaml.dump(report, stream=sys.stdout))
 
 
 @cli.command()
