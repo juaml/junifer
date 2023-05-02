@@ -16,7 +16,7 @@ This plugin reads the latest tagged version from git and automatically
 increments the *MICRO* segment and appends *devN*. This is considered a
 pre-release.
 
-The CI scripts will publish every tag with the format *v.X.Y.Z* to Pypi as
+The CI scripts will publish every tag with the format *v.X.Y.Z* to PyPI as
 version "X.Y.Z". Additionally, for every push to main, it will be published
 as pre-release to PyPI.
 
