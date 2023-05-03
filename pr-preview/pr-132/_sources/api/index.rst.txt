@@ -36,3 +36,13 @@ Configs
    :caption: Contents:
 
    configs
+
+
+External
+--------
+
+.. toctree:: 
+   :maxdepth: 2
+   :caption: Contents:
+
+   nilearn.rst

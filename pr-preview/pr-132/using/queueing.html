@@ -3,12 +3,13 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5. Built-in Pipeline steps and data" href="../builtin.html" /><link rel="prev" title="4.2. Running jobs" href="running.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5.5.1. Masks" href="masks.html" /><link rel="prev" title="5.2. Running Jobs" href="running.html" />
 
     <!-- Generated with Sphinx 5.3.0 and Furo 2022.12.07 -->
-        <title>4.4. Queueing jobs (HPC, HTC) - junifer documentation</title>
+        <title>5.4. Queueing Jobs (HPC, HTC) - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=91d0f0d1c444bdcb17a68e833c7a53903343c195" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css" />
@@ -166,62 +167,69 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing junifer</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">3. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">3.1. The Junifer Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">3.2. The Data Object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">3.3. Data Grabber</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">3.4. Data Reader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">3.5. Preprocess</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">3.6. Marker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">3.7. Storage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with junifer</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">4. Understanding junifer</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">4.1. The junifer Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">4.2. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">4.3. Data Grabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">4.4. Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">4.5. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">4.6. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">4.7. Storage</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">4. Using junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="codeless.html">4.1. Code-less configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="running.html">4.2. Running jobs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="running.html#collecting-results">4.3. Collecting results</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">4.4. Queueing jobs (HPC, HTC)</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">5. Using junifer</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="codeless.html">5.1. Code-less Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="running.html">5.2. Running Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="running.html#collecting-results">5.3. Collecting Results</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.4. Queueing Jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="masks.html">5.5.1. Masks</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../builtin.html">5. Built-in Pipeline steps and data</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">6. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">6.1. Creating a Junifer extension</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">6.2. Creating Data Grabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">6.3. Creating Markers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline Components</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">7. Extending junifer</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">7.1. Creating a junifer extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">7.2. Creating Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">7.3. Creating Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.4. Adding Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">7.5. Adding Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">7.6. Adding Masks</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">7. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">7.1. Generic BIDS datagrabber for datalad.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">7.2. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">7.3. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">7.4. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">7.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">7.6. HCP FC Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_junifer_julearn.html">7.7. Run junifer and julearn.</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">8.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_junifer_julearn.html">8.7. Run junifer and julearn.</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">8. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">8.1.1. Data Grabbers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">8.1.2. DataReaders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">8.1.3. Pre-processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">8.1.4. Markers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">8.1.5. Storage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html">8.2.1. Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">8.2.2. Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.masks">8.2.3. Masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">8.2.4. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">8.2.5. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">8.2.6. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api.html">8.2.7. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">8.2.8. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">8.2.9. Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">8.3.1. Configs</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">9. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">9.1.1. Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">9.1.2. DataReaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">9.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">9.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">9.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">9.2.1. Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">9.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.masks">9.2.3. Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">9.2.4. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">9.2.5. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">9.2.6. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">9.2.7. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">9.2.8. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">9.2.9. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">9.3.1. Configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/nilearn.html">9.4.1. Nilearn</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../contribution.html">9. Contributing to junifer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">10. Maintaining</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">11. FAQs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">12. What’s new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">10. Getting Help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">11. Contributing to junifer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">12. Maintaining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">13. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">14. What’s new</a></li>
 </ul>
 
 </div>
@@ -256,18 +264,23 @@
         </div>
         <article role="main">
           <section id="queueing-jobs-hpc-htc">
-<span id="queueing"></span><h1><span class="section-number">4.4. </span>Queueing jobs (HPC, HTC)<a class="headerlink" href="#queueing-jobs-hpc-htc" title="Permalink to this heading">#</a></h1>
-<p>Yet another interesting feature of junifer is the ability to queue jobs on computational clusters. This is done by
-adding the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section in the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less configuration</span></a> file and executing the  <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">queue</span></code> command.</p>
-<p>While junifer is meant to support <a class="reference external" href="https://research.cs.wisc.edu/htcondor/">HTCondor</a>, <a class="reference external" href="https://slurm.schedmd.com">SLURM</a> and local queueing using <a class="reference external" href="https://www.gnu.org/software/parallel/">GNU Parallel</a>, only HTCondor is
-currently supported. This will be implemented in future relases of junifer. If you are in immediate need of any of these
-schedulers, please create an issue on the <a class="reference external" href="https://github.com/juaml/junifer">junifer github</a> repository.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> section of the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less configuration</span></a> must start by defining the following general parameters:</p>
+<span id="queueing"></span><h1><span class="section-number">5.4. </span>Queueing Jobs (HPC, HTC)<a class="headerlink" href="#queueing-jobs-hpc-htc" title="Permalink to this heading">#</a></h1>
+<p>Yet another interesting feature of junifer is the ability to queue jobs on
+computational clusters. This is done by adding the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section in the
+<a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less Configuration</span></a> file and executing the  <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">queue</span></code> command.</p>
+<p>While junifer is meant to support <a class="reference external" href="https://research.cs.wisc.edu/htcondor/">HTCondor</a>, <a class="reference external" href="https://slurm.schedmd.com">SLURM</a> and local queueing
+using <a class="reference external" href="https://www.gnu.org/software/parallel/">GNU Parallel</a>, only HTCondor is currently supported. This will be
+implemented in future relases of junifer. If you are in immediate need of any of
+these schedulers, please create an issue on the <a class="reference external" href="https://github.com/juaml/junifer">junifer github</a> repository.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> section of the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less Configuration</span></a> must start by defining the
+following general parameters:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">jobname</span></code>: name of the job to be queued. This will be used to name the folder where the job files will be created,
-as well as any relevant file. Depending on the scheduler, it will also be listed in the queueing system with this
-name.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: The kind of scheduler to be used. Currently, only <code class="docutils literal notranslate"><span class="pre">HTCondor</span></code> is supported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jobname</span></code>: Name of the job to be queued. This will be used to name the
+folder where the job files will be created, as well as any relevant file.
+Depending on the scheduler, it will also be listed in the queueing system
+with this name.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: The kind of scheduler to be used. Currently, only <code class="docutils literal notranslate"><span class="pre">HTCondor</span></code> is
+supported.</p></li>
 </ul>
 <p>Example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span>
@@ -277,25 +290,47 @@ name.</p></li>
 </div>
 <p>The rest of the parameters depend on the scheduler you are using.</p>
 <section id="queueing-condor">
-<span id="id1"></span><h2><span class="section-number">4.4.1. </span>HTCondor<a class="headerlink" href="#queueing-condor" title="Permalink to this heading">#</a></h2>
-<p>When using HTCondor, junifer will use a DAG to queue one job per element (<code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">run</span></code>). As an option, the DAG can
-include a final job (<code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code>) to collect the results once all of the individual element jobs are finished.</p>
+<span id="id1"></span><h2><span class="section-number">5.4.1. </span>HTCondor<a class="headerlink" href="#queueing-condor" title="Permalink to this heading">#</a></h2>
+<p>When using HTCondor, junifer will use a DAG to queue one job per element
+(<code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">run</span></code>). As an option, the DAG can include a final job
+(<code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code>) to collect the results once all of the individual element
+jobs are finished.</p>
 <p>The following parameters are avilable for HTCondor:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">env</span></code>: Definition of the Python enviroment. It must provide two variables: <code class="docutils literal notranslate"><span class="pre">kind</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code>. The <code class="docutils literal notranslate"><span class="pre">kind</span></code>
-corresponds to the kind of virtual environment to use: <code class="docutils literal notranslate"><span class="pre">conda</span></code>,  <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> (not yet supported) or
-<code class="docutils literal notranslate"><span class="pre">local</span></code> (no virtual enviroment). The <code class="docutils literal notranslate"><span class="pre">name</span></code> is the name of the enviroment to use in case a virtual environment
-is used.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mem</span></code>: Memory to be used by the job. It must be provided as a string with the units (e.g. <code class="docutils literal notranslate"><span class="pre">2GB</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">env</span></code>: Definition of the Python enviroment. It must provide two variables:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: This is the kind of virtual environment to use:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">conda</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> (not yet supported)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">local</span></code> (no virtual enviroment)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: This is the name of the enviroment to use in case a virtual
+environment is used.</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mem</span></code>: Memory to be used by the job. It must be provided as a string with
+the units (e.g. <code class="docutils literal notranslate"><span class="pre">2GB</span></code>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cpus</span></code>: Number of CPUs to be used by the job. It must be provided as an int.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">disk</span></code>: Disk space to be used by the job. It must be provided as a string with the units (e.g. <code class="docutils literal notranslate"><span class="pre">2GB</span></code>). Keep in
-mind that junifer uses a local working directory for each job, and datalad datasets might be cloned in this temporary
+<li><p><code class="docutils literal notranslate"><span class="pre">disk</span></code>: Disk space to be used by the job. It must be provided as a string
+with the units (e.g. <code class="docutils literal notranslate"><span class="pre">2GB</span></code>). Keep in mind that junifer uses a local working
+directory for each job, and datalad datasets might be cloned in this temporary
 directory.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">extra_preamble</span></code>: Extra lines to be added to the HTCondor submit file. This can be used to add
-extra parameters to the job, such as <code class="docutils literal notranslate"><span class="pre">requirements</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">collect</span></code>: If <code class="docutils literal notranslate"><span class="pre">true</span></code>, a final job will be added to the DAG to collect the results once all of the individual
-element jobs are finished. This is useful if you want to run a <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code> job only once all of the
-individual element jobs are finished. If not specified, it will default to <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extra_preamble</span></code>: Extra lines to be added to the HTCondor submit file. This
+can be used to add extra parameters to the job, such as <code class="docutils literal notranslate"><span class="pre">requirements</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collect</span></code>: This parameter allows to include a collect to the DAG to collect
+the results once all of the individual element jobs are finished. This is
+useful if you want to run a <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code> job only once all of the
+individual element jobs are finished. Valid options are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">yes</span></code>: Include a collect job in the DAG that will be executed even if some
+of the individual element jobs fail.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_success_only</span></code>: Include a collect job to the DAG, but will only run if
+all of the individual element jobs are successful.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">no</span></code>: Do not include a collect job to the DAG.</p></li>
+</ul>
+</li>
 </ul>
 <p>Example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span>
@@ -305,23 +340,25 @@ individual element jobs are finished. If not specified, it will default to <code
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer</span>
 <span class="w">  </span><span class="nt">mem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8G</span>
-<span class="w">  </span><span class="nt">disk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2GB</span>
-<span class="w">  </span><span class="nt">collect</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">disk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2G</span>
+<span class="w">  </span><span class="nt">collect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w">  </span><span class="c1"># wrap it in string to avoid boolean</span>
 </pre></div>
 </div>
-<p>Once the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less configuration</span></a> file is ready, including the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section, you can queue the jobs by executing
-the <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">queue</span></code> command.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> command will create a folder with the name of the job (<code class="docutils literal notranslate"><span class="pre">jobname</span></code>) under the <code class="docutils literal notranslate"><span class="pre">junifer_jobs</span></code> directory
-in the current working directory.</p>
+<p>Once the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less Configuration</span></a> file is ready, including the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section, you can
+queue the jobs by executing the <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">queue</span></code> command.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> command will create a folder with the name of the job (<code class="docutils literal notranslate"><span class="pre">jobname</span></code>)
+under the <code class="docutils literal notranslate"><span class="pre">junifer_jobs</span></code> directory in the current working directory.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> command accepts the following arguments:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--help</span></code>: Show a help message.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> Set the verbosity level. Options are <code class="docutils literal notranslate"><span class="pre">warning</span></code>, <code class="docutils literal notranslate"><span class="pre">info</span></code>, <code class="docutils literal notranslate"><span class="pre">debug</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--submit</span></code>: Submit the jobs to the queueing system. If not specified, the job submit files will be created but not
-submitted.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--overwrite</span></code>: Overwrite the job folder if it already exists. If not specified, the command will fail if the job
-folder already exists.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--element</span></code>: Queue only the specified element(s). If not specified, all elements will be queued.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>: Set the verbosity level. Options are <code class="docutils literal notranslate"><span class="pre">warning</span></code>, <code class="docutils literal notranslate"><span class="pre">info</span></code>,
+<code class="docutils literal notranslate"><span class="pre">debug</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--submit</span></code>: Submit the jobs to the queueing system. If not specified, the
+job submit files will be created but not submitted.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--overwrite</span></code>: Overwrite the job folder if it already exists. If not
+specified, the command will fail if the job folder already exists.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--element</span></code>: Queue only the specified element(s). If not specified, all
+elements will be queued.</p></li>
 </ul>
 </section>
 </section>
@@ -331,12 +368,12 @@ folder already exists.</p></li>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../builtin.html">
+          <a class="next-page" href="masks.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">5. </span>Built-in Pipeline steps and data</div>
+                <div class="title"><span class="section-number">5.5.1. </span>Masks</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -347,7 +384,7 @@ folder already exists.</p></li>
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">4.2. </span>Running jobs</div>
+                <div class="title"><span class="section-number">5.2. </span>Running Jobs</div>
                 
               </div>
             </a>
@@ -355,7 +392,7 @@ folder already exists.</p></li>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2022, Authors of junifer
+                Copyright &#169; 2023, Authors of junifer
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -381,8 +418,8 @@ folder already exists.</p></li>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">4.4. Queueing jobs (HPC, HTC)</a><ul>
-<li><a class="reference internal" href="#queueing-condor">4.4.1. HTCondor</a></li>
+<li><a class="reference internal" href="#">5.4. Queueing Jobs (HPC, HTC)</a><ul>
+<li><a class="reference internal" href="#queueing-condor">5.4.1. HTCondor</a></li>
 </ul>
 </li>
 </ul>
@@ -401,6 +438,10 @@ folder already exists.</p></li>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="https://unpkg.com/mermaid@9.4.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <script src="../_static/js/custom.js"></script>
     </body>
 </html>
