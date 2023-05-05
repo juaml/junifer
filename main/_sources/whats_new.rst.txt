@@ -220,7 +220,7 @@ Enhancements
 Features
 ^^^^^^^^
 
-- Implement :class:`.SPMAuditoryTestingDatagrabber` datagrabber by
+- Implement :class:`.SPMAuditoryTestingDataGrabber` datagrabber by
   `Fede Raimondo`_ (:gh:`52`)
 
 - Implement matrix storage in SQliteFeatureStorage by `Fede Raimondo`_
