@@ -34,13 +34,18 @@ The documentation is available at [https://juaml.github.io/junifer](https://juam
   * `testing`: Testing components module.
   * `utils`: Utilities module (e.g. logging)
 
-
 ## Installation
 
 Use `pip` to install from PyPI like so:
 
 ```
 pip install junifer
+```
+
+You can also install via `conda`, like so:
+
+```
+conda install -c conda-forge junifer
 ```
 
 ## Citation
