@@ -48,6 +48,12 @@ Use ``pip`` to install julearn from `PyPI <https://pypi.org>`_, like so:
 
     pip install junifer
 
+You can also install via ``conda``, like so:
+
+.. code-block:: bash
+
+    conda install -c conda-forge junifer
+
 
 .. _install_development_git:
 
