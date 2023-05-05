@@ -27,7 +27,7 @@ configure_logging(level="INFO")
 ##############################################################################
 # Define the datagrabber interface
 datagrabber = {
-    "kind": "SPMAuditoryTestingDatagrabber",
+    "kind": "SPMAuditoryTestingDataGrabber",
 }
 
 ###############################################################################

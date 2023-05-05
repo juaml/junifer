@@ -100,7 +100,7 @@ In the ``Oasis VBM Testing dataset`` example, the section will look like this:
 .. code-block:: yaml
 
   datagrabber:
-    kind: OasisVBMTestingDatagrabber
+    kind: OasisVBMTestingDataGrabber
 
 
 Data Reader
@@ -212,7 +212,7 @@ looks like:
   workdir: /tmp
 
   datagrabber:
-    kind: OasisVBMTestingDatagrabber
+    kind: OasisVBMTestingDataGrabber
 
   markers:
     - name: Schaefer100x7_mean

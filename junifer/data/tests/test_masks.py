@@ -30,8 +30,8 @@ from junifer.data.masks import (
 )
 from junifer.datareader import DefaultDataReader
 from junifer.testing.datagrabbers import (
-    OasisVBMTestingDatagrabber,
-    SPMAuditoryTestingDatagrabber,
+    OasisVBMTestingDataGrabber,
+    SPMAuditoryTestingDataGrabber,
 )
 
 
@@ -181,7 +181,7 @@ def test_vickery_patil() -> None:
 def test_get_mask() -> None:
     """Test the get_mask function."""
     reader = DefaultDataReader()
-    with OasisVBMTestingDatagrabber() as dg:
+    with OasisVBMTestingDataGrabber() as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
         vbm_gm = input["VBM_GM"]
@@ -209,7 +209,7 @@ def test_mask_callable() -> None:
 
     _available_masks["identity"] = {"family": "Callable", "func": ident}
     reader = DefaultDataReader()
-    with OasisVBMTestingDatagrabber() as dg:
+    with OasisVBMTestingDataGrabber() as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
         vbm_gm = input["VBM_GM"]
@@ -224,7 +224,7 @@ def test_mask_callable() -> None:
 def test_get_mask_errors() -> None:
     """Test passing wrong parameters to get_mask."""
     reader = DefaultDataReader()
-    with OasisVBMTestingDatagrabber() as dg:
+    with OasisVBMTestingDataGrabber() as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
         vbm_gm = input["VBM_GM"]
@@ -306,7 +306,7 @@ def test_nilearn_compute_masks(
         Whether to resample the mask to the target data.
     """
     reader = DefaultDataReader()
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         input = dg["sub001"]
         input = reader.fit_transform(input)
         bold = input["BOLD"]
@@ -339,7 +339,7 @@ def test_nilearn_compute_masks(
 def test_get_mask_inherit() -> None:
     """Test using the inherit mask functionality."""
     reader = DefaultDataReader()
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         input = dg["sub001"]
         input = reader.fit_transform(input)
         # Compute brain mask using nilearn
@@ -394,7 +394,7 @@ def test_get_mask_multiple(
         Parameters to pass to the intersect_masks function.
     """
     reader = DefaultDataReader()
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         input = dg["sub001"]
         input = reader.fit_transform(input)
         if not isinstance(masks, list):

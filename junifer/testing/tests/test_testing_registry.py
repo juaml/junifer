@@ -12,9 +12,13 @@ def test_testing_registry() -> None:
     importlib.reload(junifer.pipeline.registry)
     importlib.reload(junifer)
 
-    assert "OasisVBMTestingDatagrabber" not in get_step_names("datagrabber")
-    assert "SPMAuditoryTestingDatagrabber" not in get_step_names("datagrabber")
+    assert "OasisVBMTestingDataGrabber" not in get_step_names("datagrabber")
+    assert "SPMAuditoryTestingDataGrabber" not in get_step_names("datagrabber")
+    assert "PartlyCloudyTestingDataGrabber" not in get_step_names(
+        "datagrabber"
+    )
     importlib.reload(junifer.testing.registry)  # type: ignore
 
-    assert "OasisVBMTestingDatagrabber" in get_step_names("datagrabber")
-    assert "SPMAuditoryTestingDatagrabber" in get_step_names("datagrabber")
+    assert "OasisVBMTestingDataGrabber" in get_step_names("datagrabber")
+    assert "SPMAuditoryTestingDataGrabber" in get_step_names("datagrabber")
+    assert "PartlyCloudyTestingDataGrabber" in get_step_names("datagrabber")

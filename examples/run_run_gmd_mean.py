@@ -13,7 +13,7 @@ from junifer.api import run
 
 
 datagrabber = {
-    "kind": "OasisVBMTestingDatagrabber",
+    "kind": "OasisVBMTestingDataGrabber",
 }
 
 markers = [

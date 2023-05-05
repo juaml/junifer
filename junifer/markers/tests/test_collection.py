@@ -19,7 +19,7 @@ from junifer.pipeline import PipelineStepMixin
 from junifer.preprocess import fMRIPrepConfoundRemover
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import (
-    OasisVBMTestingDatagrabber,
+    OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
 )
 
@@ -69,7 +69,7 @@ def test_marker_collection() -> None:
     assert isinstance(mc._datareader, DefaultDataReader)
 
     # Create testing datagrabber
-    dg = OasisVBMTestingDatagrabber()
+    dg = OasisVBMTestingDataGrabber()
     mc.validate(dg)
 
     with dg:
@@ -168,7 +168,7 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
         ),
     ]
     # Test storage
-    dg = OasisVBMTestingDatagrabber()
+    dg = OasisVBMTestingDataGrabber()
 
     uri = tmp_path / "test_marker_collection_storage.sqlite"
     storage = SQLiteFeatureStorage(uri=uri)

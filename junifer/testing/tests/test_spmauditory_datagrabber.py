@@ -3,10 +3,10 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
+from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
-def test_SPMAuditoryTestingDatagrabber() -> None:
+def test_SPMAuditoryTestingDataGrabber() -> None:
     """Test SPM Auditory datagrabber."""
     expected_elements = [
         "sub001",
@@ -20,7 +20,7 @@ def test_SPMAuditoryTestingDatagrabber() -> None:
         "sub009",
         "sub010",
     ]
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         all_elements = dg.get_elements()
         assert set(all_elements) == set(expected_elements)
         out = dg["sub001"]

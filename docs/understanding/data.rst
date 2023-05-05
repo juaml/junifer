@@ -26,12 +26,12 @@ step only contains information about the datagrabber used.
 
 .. code-block:: python
 
-   {'BOLD': {'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDatagrabber',
+   {'BOLD': {'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDataGrabber',
                                       'types': ['BOLD', 'T1w']},
                       'dependencies': set(),
                       'element': {'subject': 'sub001'}},
              'path': PosixPath('/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpgxcyjfo1/sub001_bold.nii.gz')},
-    'T1w': {'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDatagrabber',
+    'T1w': {'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDataGrabber',
                                      'types': ['BOLD', 'T1w']},
                      'dependencies': set(),
                      'element': {'subject': 'sub001'}},
@@ -44,14 +44,14 @@ adds information about the datareader used to read the data.
 .. code-block:: python
 
    {'BOLD': {'data': <nibabel.nifti1.Nifti1Image object at 0x16b5d8910>,
-             'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDatagrabber',
+             'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDataGrabber',
                                       'types': ['BOLD', 'T1w']},
                       'datareader': {'class': 'DefaultDataReader'},
                       'dependencies': {'nilearn'},
                       'element': {'subject': 'sub001'}},
              'path': PosixPath('/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpe49321ce/sub001_bold.nii.gz')},
     'T1w': {'data': <nibabel.nifti1.Nifti1Image object at 0x16b5d78d0>,
-            'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDatagrabber',
+            'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDataGrabber',
                                      'types': ['BOLD', 'T1w']},
                      'datareader': {'class': 'DefaultDataReader'},
                      'dependencies': set(),
@@ -70,7 +70,7 @@ and adds further keys needed for the storage, for example, ``col_names``.
 
    {'BOLD': {'col_names': ['root_sum_of_squares_ets'],
              'data': ...,
-             'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDatagrabber',
+             'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDataGrabber',
                                       'types': ['BOLD', 'T1w']},
                       'datareader': {'class': 'DefaultDataReader'},
                       'dependencies': {'nilearn'},

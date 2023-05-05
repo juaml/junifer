@@ -11,7 +11,7 @@ from nilearn import image
 
 from junifer.markers.functional_connectivity import CrossParcellationFC
 from junifer.storage import SQLiteFeatureStorage
-from junifer.testing.datagrabbers import SPMAuditoryTestingDatagrabber
+from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
 parcellation_ONE = "Schaefer100x17"
@@ -21,7 +21,7 @@ parcellation_TWO = "Schaefer200x17"
 def test_compute() -> None:
     """Test CrossParcellationFC compute()."""
 
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         out = dg["sub001"]
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         input_dict = {
@@ -53,7 +53,7 @@ def test_store(tmp_path: Path) -> None:
 
     """
 
-    with SPMAuditoryTestingDatagrabber() as dg:
+    with SPMAuditoryTestingDataGrabber() as dg:
         input_dict = dg["sub001"]
         niimg = image.load_img(str(input_dict["BOLD"]["path"].absolute()))
 
