@@ -54,6 +54,13 @@ You can also install via ``conda``, like so:
 
     conda install -c conda-forge junifer
 
+.. attention::
+
+   Installation on macOS and Windows might fail via ``conda`` due to ``datalad``.
+   In that case, please refer to
+   `Datalad installation instructions
+   <http://handbook.datalad.org/en/latest/intro/installation.html>`_ for solutions.
+   In case the problem persists, please install it via ``pip`` as mentioned earlier.
 
 .. _install_development_git:
 
