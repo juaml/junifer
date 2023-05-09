@@ -12,8 +12,6 @@ import typing
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
-import yaml
-
 from ..datagrabber.base import BaseDataGrabber
 from ..markers.base import BaseMarker
 from ..markers.collection import MarkerCollection
@@ -22,6 +20,7 @@ from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger, raise_error
 from ..utils.fs import make_executable
+from .utils import yaml
 
 
 def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
@@ -270,8 +269,7 @@ def queue(
 
     yaml_config = jobdir / "config.yaml"
     logger.info(f"Writing YAML config to {str(yaml_config.absolute())}")
-    with open(yaml_config, "w") as f:
-        f.write(yaml.dump(config))
+    yaml.dump(config, stream=yaml_config)
 
     # Get list of elements
     if elements is None:

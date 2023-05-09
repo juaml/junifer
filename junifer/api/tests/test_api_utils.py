@@ -40,7 +40,7 @@ def test_get_dependency_information_short() -> None:
         "nibabel",
         "nilearn",
         "sqlalchemy",
-        "yaml",
+        "ruamel.yaml",
     ]
 
 
@@ -58,7 +58,7 @@ def test_get_dependency_information_long() -> None:
         "nibabel",
         "nilearn",
         "sqlalchemy",
-        "yaml",
+        "ruamel.yaml",
     ]:
         assert key in dependency_information_keys
 

@@ -9,8 +9,17 @@ import re
 from importlib.metadata import distribution
 from typing import Dict
 
+from ruamel.yaml import YAML
+
 from .._version import __version__
 from ..utils.logging import get_versions
+
+
+# Configure YAML class once for further use
+yaml = YAML()
+yaml.default_flow_style = False
+yaml.allow_unicode = True
+yaml.indent(mapping=2, sequence=4, offset=2)
 
 
 def _get_junifer_version() -> Dict[str, str]:
@@ -71,16 +80,13 @@ def _get_dependency_information(long_: bool) -> Dict[str, str]:
         # Get dependencies for junifer
         dist = distribution("junifer")
         # Compile regex pattern
-        re_pattern = re.compile("[a-z-]+")
+        re_pattern = re.compile("[a-z-_.]+")
 
         for pkg_with_version in dist.requires:  # type: ignore
             # Perform regex search
             matches = re.findall(pattern=re_pattern, string=pkg_with_version)
-            # Fix issue with PyYAML name registration
-            if matches[0] == "pyyaml":
-                key = "yaml"
-            else:
-                key = matches[0]
+            # Extract package name
+            key = matches[0]
 
             if key in dependency_versions.keys():
                 # Check if pkg part of optional dependencies

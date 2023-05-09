@@ -11,13 +11,19 @@ from pathlib import Path
 from typing import List, Tuple, Union
 
 import pytest
-import yaml
+from ruamel.yaml import YAML
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api.functions import collect, queue, run
 from junifer.datagrabber.base import BaseDataGrabber
 from junifer.pipeline.registry import build
 
+
+# Configure YAML class
+yaml = YAML()
+yaml.default_flow_style = False
+yaml.allow_unicode = True
+yaml.indent(mapping=2, sequence=4, offset=2)
 
 # Define datagrabber
 datagrabber = {
@@ -231,6 +237,7 @@ def test_run_and_collect(tmp_path: Path) -> None:
 def test_queue_correct_yaml_config(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
     """Test proper YAML config generation for queueing.
 
@@ -240,32 +247,37 @@ def test_queue_correct_yaml_config(
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
         The monkeypatch object.
+    caplog : pytest.LogCaptureFixture
+        The logcapturefixture object.
 
     """
     with monkeypatch.context() as m:
         m.chdir(tmp_path)
-        queue(
-            config={
-                "with": "junifer.testing.registry",
-                "workdir": str(Path(tmp_path).resolve()),
-                "datagrabber": datagrabber,
-                "markers": markers,
-                "storage": storage,
-                "env": {
-                    "kind": "conda",
-                    "name": "junifer",
+        with caplog.at_level(logging.INFO):
+            queue(
+                config={
+                    "with": "junifer.testing.registry",
+                    "workdir": str(tmp_path.resolve()),
+                    "datagrabber": datagrabber,
+                    "markers": markers,
+                    "storage": {"kind": "SQLiteFeatureStorage"},
+                    "env": {
+                        "kind": "conda",
+                        "name": "junifer",
+                    },
+                    "mem": "8G",
                 },
-                "mem": "8G",
-            },
-            kind="HTCondor",
-            jobname="yaml_config_gen_check",
-        )
+                kind="HTCondor",
+                jobname="yaml_config_gen_check",
+            )
+            assert "Creating job in" in caplog.text
+            assert "Writing YAML config to" in caplog.text
+            assert "Queue done" in caplog.text
 
         generated_config_yaml_path = Path(
             tmp_path / "junifer_jobs" / "yaml_config_gen_check" / "config.yaml"
         )
-        with open(generated_config_yaml_path, "r") as f:
-            yaml_config = yaml.unsafe_load(f)
+        yaml_config = yaml.load(generated_config_yaml_path)
         # Check for correct YAML config generation
         assert all(
             key in yaml_config.keys()
