@@ -5,6 +5,7 @@
 ![PyPI](https://img.shields.io/pypi/v/junifer?style=flat-square)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/junifer?style=flat-square)
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/junifer?style=flat-square)
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/junifer/badges/version.svg)](https://anaconda.org/conda-forge/junifer)
 ![GitHub](https://img.shields.io/github/license/juaml/junifer?style=flat-square)
 ![Codecov](https://img.shields.io/codecov/c/github/juaml/junifer?style=flat-square)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
@@ -34,13 +35,18 @@ The documentation is available at [https://juaml.github.io/junifer](https://juam
   * `testing`: Testing components module.
   * `utils`: Utilities module (e.g. logging)
 
-
 ## Installation
 
 Use `pip` to install from PyPI like so:
 
 ```
 pip install junifer
+```
+
+You can also install via `conda`, like so:
+
+```
+conda install -c conda-forge junifer
 ```
 
 ## Citation
