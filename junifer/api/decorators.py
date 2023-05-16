@@ -11,14 +11,14 @@ from ..pipeline.registry import register
 
 
 def register_datagrabber(klass: Type) -> Type:
-    """Datagrabber registration decorator.
+    """DataGrabber registration decorator.
 
-    Registers the datagrabber so it can be used by name.
+    Registers the DataGrabber so it can be used by name.
 
     Parameters
     ----------
     klass: class
-        The class of the datagrabber to register.
+        The class of the DataGrabber to register.
 
     Returns
     -------
