@@ -1,4 +1,4 @@
-"""Provide abstract base class for datagrabber."""
+"""Provide abstract base class for DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -15,7 +15,7 @@ from .utils import validate_types
 
 
 class BaseDataGrabber(ABC, UpdateMetaMixin):
-    """Abstract base class for datagrabber.
+    """Abstract base class for DataGrabber.
 
     For every interface that is required, one needs to provide a concrete
     implementation of this abstract class.
@@ -31,6 +31,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
     ----------
     datadir : pathlib.Path
         The directory where the data is / will be stored.
+
     """
 
     def __init__(self, types: List[str], datadir: Union[str, Path]) -> None:
@@ -52,7 +53,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         Yields
         ------
         object
-            An element that can be indexed by the datagrabber.
+            An element that can be indexed by the DataGrabber.
 
         """
         for elem in self.get_elements():
@@ -126,7 +127,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
 
         Returns
         -------
-        str
+        list of str
             The element keys.
 
         """
@@ -144,7 +145,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         list
             List of elements that can be grabbed. The elements can be strings,
             tuples or any object that will be then used as a key to index the
-            datagrabber.
+            DataGrabber.
 
         """
         raise_error(

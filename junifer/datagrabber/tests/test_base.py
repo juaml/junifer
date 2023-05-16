@@ -1,4 +1,4 @@
-"""Provide tests for base."""
+"""Provide tests for BaseDataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from junifer.datagrabber.base import BaseDataGrabber
+from junifer.datagrabber import BaseDataGrabber
 
 
 def test_BaseDataGrabber_abstractness() -> None:
