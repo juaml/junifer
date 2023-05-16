@@ -1,4 +1,4 @@
-"""Provide abstract base class for multiple source datagrabber."""
+"""Provide concrete implementation for multi sourced DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -7,21 +7,23 @@
 
 from typing import Dict, List, Tuple, Union
 
+from ..utils import raise_error
 from .base import BaseDataGrabber
 
 
 class MultipleDataGrabber(BaseDataGrabber):
-    """Data Grabber class for data fetching from multiple sources.
+    """Concrete implementation for multi sourced data fetching.
 
-    Defines a Data Grabber which can be used to fetch data from multiple
-    datagrabbers.
+    Implements a DataGrabber which can be used to fetch data from multiple
+    DataGrabbers.
 
     Parameters
     ----------
-    datagrabbers : list of datagrabber-like objects
-        The datagrabbers to use to fetch data using.
+    datagrabbers : list of DataGrabber-like objects
+        The DataGrabbers to use for fetching data.
     **kwargs
         Keyword arguments passed to superclass.
+
     """
 
     def __init__(self, datagrabbers: List[BaseDataGrabber], **kwargs) -> None:
@@ -30,11 +32,11 @@ class MultipleDataGrabber(BaseDataGrabber):
         first_keys = datagrabbers[0].get_element_keys()
         for dg in datagrabbers[1:]:
             if dg.get_element_keys() != first_keys:
-                raise ValueError("Datagrabbers have different element keys.")
+                raise_error("DataGrabbers have different element keys.")
         # 2) no overlapping types
         types = [x for dg in datagrabbers for x in dg.get_types()]
         if len(types) != len(set(types)):
-            raise ValueError("Datagrabbers have overlapping types.")
+            raise_error("DataGrabbers have overlapping types.")
         self._datagrabbers = datagrabbers
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict:
@@ -73,8 +75,64 @@ class MultipleDataGrabber(BaseDataGrabber):
             out[kind]["meta"]["datagrabber"]["datagrabbers"] = metas
         return out
 
-    def get_item(self, **element: Dict) -> Dict[str, Dict]:
-        """Get item.
+    def __enter__(self) -> "MultipleDataGrabber":
+        """Implement context entry."""
+        for dg in self._datagrabbers:
+            dg.__enter__()
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_traceback) -> None:
+        """Implement context exit."""
+        for dg in self._datagrabbers:
+            dg.__exit__(exc_type, exc_value, exc_traceback)
+
+    # TODO: return type should be List[List[str]], but base type is List[str]
+    def get_types(self) -> List[str]:
+        """Get types.
+
+        Returns
+        -------
+        list of list of str
+            The types of data to be grabbed.
+
+        """
+        types = [x for dg in self._datagrabbers for x in dg.get_types()]
+        return types
+
+    def get_element_keys(self) -> List[str]:
+        """Get element keys.
+
+        For each item in the ``element`` tuple passed to ``__getitem__()``,
+        this method returns the corresponding key(s).
+
+        Returns
+        -------
+        list of str
+            The element keys.
+
+        """
+        return self._datagrabbers[0].get_element_keys()
+
+    def get_elements(self) -> List:
+        """Get elements.
+
+        Returns
+        -------
+        list
+            List of elements that can be grabbed. The elements can be strings,
+            tuples or any object that will be then used as a key to index the
+            the DataGrabber. The element should be present in all of the
+            related DataGrabbers.
+
+        """
+        all_elements = [dg.get_elements() for dg in self._datagrabbers]
+        elements = set(all_elements[0])
+        for s in all_elements[1:]:
+            elements.intersection_update(s)
+        return list(elements)
+
+    def get_item(self, **_: Dict) -> Dict[str, Dict]:
+        """Get the specified item from the dataset.
 
         Parameters
         ----------
@@ -90,59 +148,12 @@ class MultipleDataGrabber(BaseDataGrabber):
         Notes
         -----
             This function is not implemented for this class as it is useless.
+
         """
-        raise NotImplementedError(
-            "get_item() is not useful for this class, hence not implemented."
+        raise_error(
+            msg=(
+                "get_item() is not useful for this class, hence not "
+                "implemented."
+            ),
+            klass=NotImplementedError,
         )
-
-    def __enter__(self) -> "BaseDataGrabber":
-        """Implement context entry."""
-        for dg in self._datagrabbers:
-            dg.__enter__()
-        return self
-
-    def __exit__(self, exc_type, exc_value, exc_traceback) -> None:
-        """Implement context exit."""
-        for dg in self._datagrabbers:
-            dg.__exit__(exc_type, exc_value, exc_traceback)
-
-    def get_elements(self) -> List:
-        """Get elements.
-
-        Returns
-        -------
-        list
-            The list of elements that can be grabbed in the dataset. It
-            corresponds to the elements that are present in all the
-            related datagrabbers.
-        """
-        all_elements = [dg.get_elements() for dg in self._datagrabbers]
-        elements = set(all_elements[0])
-        for s in all_elements[1:]:
-            elements.intersection_update(s)
-        return list(elements)
-
-    def get_element_keys(self) -> List[str]:
-        """Get element keys.
-
-        For each item in the ``element`` tuple passed to ``__getitem__()``,
-        this method returns the corresponding key(s).
-
-        Returns
-        -------
-        list of str
-            The element keys.
-        """
-        return self._datagrabbers[0].get_element_keys()
-
-    def get_types(self) -> List[str]:
-        """Get types.
-
-        Returns
-        -------
-        list of list of str
-            The types of data to be grabbed.
-
-        """
-        types = [x for dg in self._datagrabbers for x in dg.get_types()]
-        return types
