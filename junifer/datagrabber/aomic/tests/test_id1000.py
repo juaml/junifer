@@ -1,4 +1,4 @@
-"""Provide tests for aomicid1000."""
+"""Provide tests for DataladAOMICID1000 DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
@@ -6,12 +6,12 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from junifer.datagrabber.aomic.id1000 import DataladAOMICID1000
+from junifer.datagrabber import DataladAOMICID1000
 from junifer.utils import configure_logging
 
 
-def test_aomic1000_datagrabber() -> None:
-    """Test datalad AOMIC1000 datagrabber."""
+def test_DataladAOMICID1000() -> None:
+    """Test DataladAOMICID1000 DataGrabber."""
 
     uri_ID1000 = "https://gin.g-node.org/juaml/datalad-example-aomic1000"
     configure_logging(level="DEBUG")
