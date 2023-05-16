@@ -33,7 +33,7 @@ def test_log_versions(caplog: pytest.LogCaptureFixture) -> None:
     Parameters
     ----------
     caplog : pytest.LogCaptureFixture
-        A pytest fixture to capture logging.
+        The pytest.LogCaptureFixture object.
 
     """
     # Set log capturing at INFO
@@ -161,7 +161,7 @@ def test_log_stdout(caplog: pytest.LogCaptureFixture) -> None:
     Parameters
     ----------
     caplog : pytest.LogCaptureFixture
-        A pytest fixture to capture logging.
+        The pytest.LogCaptureFixture object.
 
     """
     configure_logging()
@@ -197,7 +197,7 @@ def test_raise_error(caplog: pytest.LogCaptureFixture) -> None:
     Parameters
     ----------
     caplog : pytest.LogCaptureFixture
-        A pytest fixture to capture logging.
+        The pytest.LogCaptureFixture object.
 
     """
     with pytest.raises(ValueError, match="test error"):
@@ -212,7 +212,7 @@ def test_warn_with_log(caplog: pytest.LogCaptureFixture) -> None:
     Parameters
     ----------
     caplog : pytest.LogCaptureFixture
-        A pytest fixture to capture logging.
+        The pytest.LogCaptureFixture object.
 
     """
     with pytest.warns(RuntimeWarning, match="test warning"):
