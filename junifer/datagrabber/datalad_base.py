@@ -1,4 +1,4 @@
-"""Provide abstract base class for datalad datagrabber."""
+"""Provide abstract base class for datalad-based DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -24,20 +24,20 @@ from .base import BaseDataGrabber
 
 @register_datagrabber
 class DataladDataGrabber(BaseDataGrabber):
-    """Abstract base class for data fetching via Datalad.
+    """Abstract base class for datalad-based data fetching.
 
-    Defines a Data Grabber that gets data from a datalad sibling.
+    Defines a DataGrabber that gets data from a datalad sibling.
 
     Parameters
     ----------
-    rootdir : str or Path, optional
+    rootdir : str or pathlib.Path, optional
         The path within the datalad dataset to the root directory
         (default ".").
-    datadir : str or Path, optional
+    datadir : str or pathlib.Path or None, optional
         That directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    uri : str, optional
+    uri : str or None, optional
         URI of the datalad sibling (default None).
     **kwargs
         Keyword arguments passed to superclass.
@@ -45,23 +45,26 @@ class DataladDataGrabber(BaseDataGrabber):
     Methods
     -------
     install:
-        Installs (clones) the datalad dataset into the `datadir`. This method
+        Installs (clones) the datalad dataset into the ``datadir``. This method
         is called automatically when the datagrabber is used within a context.
     remove:
-        Removes the datalad dataset from the `datadir`. This method is called
+        Removes the datalad dataset from the ``datadir``. This method is called
         automatically when the datagrabber is used within a context.
 
     See Also
     --------
-    BaseDataGrabber
-        For the abstract base class of any datagrabber.
+    BaseDataGrabber:
+        Abstract base class for DataGrabber.
+    PatternDataGrabber:
+        Concrete implementation for pattern-based data fetching.
+    PatternDataladDataGrabber:
+        Concrete implementation for pattern and datalad based data fetching.
 
     Notes
     -----
-    By itself, this class is still abstract as the `__getitem__` method relies
-    on the parent class `BaseDataGrabber.__getitem__` which is not yet
-    implemented. This class is intended to be used as a superclass of a class
+    This class is intended to be used as a superclass of a subclass
     with multiple inheritance.
+
     """
 
     def __init__(
@@ -129,16 +132,23 @@ class DataladDataGrabber(BaseDataGrabber):
 
     @property
     def datadir(self) -> Path:
-        """Get data directory path."""
+        """Get data directory path.
+
+        Returns
+        -------
+        pathlib.Path
+            Path to the data directory.
+
+        """
         return super().datadir / self._rootdir
 
     def _get_dataset_id_remote(self) -> str:
-        """Get the dataset id from the remote.
+        """Get the dataset ID from the remote.
 
         Returns
         -------
         str
-            The dataset id.
+            The dataset ID.
 
         """
         remote_id = None
@@ -155,7 +165,7 @@ class DataladDataGrabber(BaseDataGrabber):
         return remote_id
 
     def _dataset_get(self, out: Dict) -> Dict:
-        """Get the dataset found from the path in `out`.
+        """Get the dataset found from the path in ``out``.
 
         Parameters
         ----------
@@ -165,7 +175,7 @@ class DataladDataGrabber(BaseDataGrabber):
         Returns
         -------
         dict
-            The modified dictionary with meta updated.
+            The unmodified input dictionary.
 
         """
         to_get = [v["path"] for v in out.values() if "path" in v]
@@ -197,12 +207,13 @@ class DataladDataGrabber(BaseDataGrabber):
         return out
 
     def install(self) -> None:
-        """Install the datalad dataset into the datadir.
+        """Install the datalad dataset into the ``datadir``.
 
         Raises
         ------
         ValueError
             If the dataset is already installed but with a different ID.
+
         """
         isinstalled = dl.Dataset(self._datadir).is_installed()
         if isinstalled:
@@ -256,9 +267,7 @@ class DataladDataGrabber(BaseDataGrabber):
         """Implement single element indexing in the Datalad database.
 
         It will first obtain the paths from the parent class and then
-        `datalad get` each of the files.
-
-        This method only works with multiple inheritance.
+        ``datalad get`` each of the files.
 
         Parameters
         ----------
@@ -279,12 +288,12 @@ class DataladDataGrabber(BaseDataGrabber):
         out = self._dataset_get(out)
         return out
 
-    def __enter__(self):
+    def __enter__(self) -> "DataladDataGrabber":
         """Implement context entry."""
         self.install()
         return self
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
+    def __exit__(self, exc_type, exc_value, exc_traceback) -> None:
         """Implement context exit."""
         logger.debug("Cleaning up dataset")
         self.cleanup()
