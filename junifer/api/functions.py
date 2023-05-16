@@ -24,17 +24,17 @@ from .utils import yaml
 
 
 def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
-    """Get datagrabber.
+    """Get DataGrabber.
 
     Parameters
     ----------
     datagrabber_config : dict
-        The config to get the datagrabber using.
+        The config to get the DataGrabber using.
 
     Returns
     -------
-    dict
-        The datagrabber.
+    object
+        The DataGrabber.
 
     """
     datagrabber_params = datagrabber_config.copy()
@@ -90,8 +90,8 @@ def run(
     workdir : str or pathlib.Path
         Directory where the pipeline will be executed.
     datagrabber : dict
-        Datagrabber to use. Must have a key ``kind`` with the kind of
-        datagrabber to use. All other keys are passed to the datagrabber
+        DataGrabber to use. Must have a key ``kind`` with the kind of
+        DataGrabber to use. All other keys are passed to the DataGrabber
         init function.
     markers : list of dict
         List of markers to extract. Each marker is a dict with at least two
@@ -108,7 +108,7 @@ def run(
         preprocessor to use. All other keys are passed to the preprocessor
         init function (default None).
     elements : str or tuple or list of str or tuple, optional
-        Element(s) to process. Will be used to index the datagrabber
+        Element(s) to process. Will be used to index the DataGrabber
         (default None).
 
     """
@@ -220,7 +220,7 @@ def queue(
     overwrite : bool, optional
         Whether to overwrite if job directory already exists (default False).
     elements : str or tuple or list of str or tuple, optional
-        Element(s) to process. Will be used to index the datagrabber
+        Element(s) to process. Will be used to index the DataGrabber
         (default None).
     **kwargs : dict
         The keyword arguments to pass to the job queue system.
@@ -339,7 +339,7 @@ def _queue_condor(
     yaml_config : pathlib.Path
         The path to the YAML config file.
     elements : list of str or tuple
-        Element(s) to process. Will be used to index the datagrabber.
+        Element(s) to process. Will be used to index the DataGrabber.
     config : dict
         The configuration to be used for queueing the job.
     env : dict, optional
@@ -559,7 +559,7 @@ def _queue_slurm(
     yaml_config : pathlib.Path
         The path to the YAML config file.
     elements : str or tuple or list[str or tuple], optional
-        Element(s) to process. Will be used to index the datagrabber
+        Element(s) to process. Will be used to index the DataGrabber
         (default None).
     config : dict
         The configuration to be used for queueing the job.
