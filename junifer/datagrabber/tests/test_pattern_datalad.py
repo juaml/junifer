@@ -1,4 +1,4 @@
-"""Provide tests for pattern_datalad."""
+"""Provide tests for PatternDataladDataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from junifer.datagrabber.pattern_datalad import PatternDataladDataGrabber
+from junifer.datagrabber import PatternDataladDataGrabber
 
 
 _testing_dataset = {
@@ -26,8 +26,8 @@ _testing_dataset = {
 }
 
 
-def test_bids_pattern_datalad_datagrabber_missing_uri() -> None:
-    """Test check of missing URI in pattern datalad datagrabber."""
+def test_bids_PatternDataladDataGrabber_missing_uri() -> None:
+    """Test check of missing URI in PatternDataladDataGrabber."""
     with pytest.raises(ValueError, match=r"`uri` must be provided"):
         PatternDataladDataGrabber(
             datadir=None,
@@ -37,15 +37,8 @@ def test_bids_pattern_datalad_datagrabber_missing_uri() -> None:
         )
 
 
-def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
-    """Test a subject-based BIDS datalad datagrabber.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_bids_PatternDataladDataGrabber() -> None:
+    """Test subject-based BIDS PatternDataladDataGrabber."""
     # Define types
     types = ["T1w", "BOLD"]
     # Define patterns
@@ -97,15 +90,8 @@ def test_bids_PatternDataladDataGrabber(tmp_path: Path) -> None:
                 assert f.readlines()[0].startswith("placeholder")
 
 
-def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:
-    """Test a datalad datagrabber with a datadir set to a relative path.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_bids_PatternDataladDataGrabber_datadir() -> None:
+    """Test PatternDataladDataGrabber with a datadir set to a relative path."""
     # Define types
     types = ["T1w", "BOLD"]
     # Define patterns
@@ -144,7 +130,7 @@ def test_bids_PatternDataladDataGrabber_datadir(tmp_path: Path) -> None:
 
 
 def test_bids_PatternDataladDataGrabber_session():
-    """Test a subject and session-based BIDS datalad datagrabber."""
+    """Test a subject and session-based BIDS PatternDataladDataGrabber."""
     types = ["T1w", "BOLD"]
     patterns = {
         "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",

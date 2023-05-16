@@ -1,4 +1,4 @@
-"""Provide base class for pattern-based datalad datagrabber."""
+"""Provide concrete implementation for pattern + datalad based DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -15,29 +15,29 @@ from .utils import validate_patterns
 
 @register_datagrabber
 class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
-    """Base class for pattern-based data fetching via Datalad.
+    """Concrete implementation for pattern and datalad based data fetching.
 
-    Defines a DataGrabber that gets data from a datalad sibling,
+    Implements a DataGrabber that gets data from a datalad sibling,
     interpreting patterns.
 
     Parameters
     ----------
     types : list of str
         The types of data to be grabbed.
-    patterns : dict, optional
+    patterns : dict
         Patterns for each type of data as a dictionary. The keys are the types
         and the values are the patterns. Each occurrence of the string
-        `{subject}` in the pattern will be replaced by the indexed element
-        (default None).
+        ``{subject}`` in the pattern will be replaced by the indexed element.
     **kwargs
         Keyword arguments passed to superclass.
 
     See Also
     --------
     DataladDataGrabber:
-        Base class for data fetching via Datalad.
+        Abstract base class for datalad-based data fetching.
     PatternDataGrabber:
-        Base class for pattern-based data fetching.
+        Concrete implementation for pattern-based data fetching.
+
     """
 
     def __init__(
