@@ -83,7 +83,7 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
 
 
 class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
-    """Data Grabber for SPM Auditory dataset.
+    """DataGrabber for SPM Auditory dataset.
 
     Wrapper for :func:`nilearn.datasets.fetch_spm_auditory`.
 
