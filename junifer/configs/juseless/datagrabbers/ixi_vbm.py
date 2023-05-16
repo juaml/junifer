@@ -1,4 +1,4 @@
-"""Provide class for IXI VBM juseless datalad datagrabber."""
+"""Provide concrete implementation for IXI VBM DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -15,19 +15,20 @@ from ....utils import raise_error
 
 @register_datagrabber
 class JuselessDataladIXIVBM(PatternDataladDataGrabber):
-    """Juseless IXI VBM Data Grabber class.
+    """Concrete implementation for Juseless IXI VBM data fetching.
 
-    Implements a Data Grabber to access the IXI VBM data in Juseless.
+    Implements a DataGrabber to access the IXI VBM data in Juseless.
 
     Parameters
     ----------
-    datadir : str or pathlib.Path, optional
+    datadir : str or pathlib.Path or None, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    sites : {"Guys", "HH", "IOP"} or list of the options, optional.
+    sites : {"Guys", "HH", "IOP"} or list of the options or None, optional
         Which sites to access data from. If None, all available sites are
         selected (default None).
+
     """
 
     def __init__(

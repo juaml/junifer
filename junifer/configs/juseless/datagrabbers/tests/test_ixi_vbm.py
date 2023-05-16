@@ -1,4 +1,4 @@
-"""Provide tests for IXI VBM juseless datagrabber."""
+"""Provide tests for JuselessDataladIXIVBM."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -20,8 +20,8 @@ if socket.gethostname() != "juseless":
 configure_logging(level="DEBUG")
 
 
-def test_juselessdataladixivbm_datagrabber() -> None:
-    """Test datalad IXIVBM datagrabber."""
+def test_JuselessDataladIXIVBM() -> None:
+    """Test JuselessDataladIXIVBM."""
     with JuselessDataladIXIVBM() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
@@ -33,8 +33,8 @@ def test_juselessdataladixivbm_datagrabber() -> None:
         assert out["VBM_GM"]["path"].exists()
 
 
-def test_juselessdataladixivbm_datagrabber_invalid_site() -> None:
-    """Test datalad IXIVBM datagrabber with invalid site."""
+def test_JuselessDataladIXIVBM_invalid_site() -> None:
+    """Test JuselessDataladIXIVBM with invalid site."""
     with pytest.raises(ValueError, match="notavalidsite not a valid site"):
         with JuselessDataladIXIVBM(sites="notavalidsite"):
             pass
