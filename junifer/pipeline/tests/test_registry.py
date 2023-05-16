@@ -42,7 +42,7 @@ def test_register(
     Parameters
     ----------
     caplog : pytest.LogCaptureFixture
-        A pytest fixture to capture logging.
+        The pytest.LogCaptureFixture object.
     step : str
         The parametrized name of the step.
     name : str
