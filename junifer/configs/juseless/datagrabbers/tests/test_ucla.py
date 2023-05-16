@@ -1,4 +1,4 @@
-"""Provide tests for UCLA juseless datagrabber."""
+"""Provide tests for JuselessUCLA."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -21,8 +21,8 @@ if socket.gethostname() != "juseless":
 configure_logging(level="DEBUG")
 
 
-def test_juseless_ucla_datagrabber() -> None:
-    """Test juseless ucla datagrabber."""
+def test_JuselessUCLA() -> None:
+    """Test JuselessUCLA."""
     with JuselessUCLA() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
@@ -46,8 +46,8 @@ def test_juseless_ucla_datagrabber() -> None:
     "tasks",
     [None, "rest", ["rest", "stopsignal"]],
 )
-def test_juseless_ucla_datagrabber_task_params(tasks: Optional[str]) -> None:
-    """Test juseless ucla datagrabber with different task parameters.
+def test_JuselessUCLA_task_params(tasks: Optional[str]) -> None:
+    """Test JuselessUCLA with different task parameters.
 
     Parameters
     ----------
@@ -81,8 +81,8 @@ def test_juseless_ucla_datagrabber_task_params(tasks: Optional[str]) -> None:
                 assert el[1] in ["rest", "stopsignal"]
 
 
-def test_juseless_ucla_datagrabber_invalid_tasks() -> None:
-    """Test juseless ucla datagrabber with invalid task parameters."""
+def test_JuselessUCLA_invalid_tasks() -> None:
+    """Test JuselessUCLA with invalid task parameters."""
     with pytest.raises(
         ValueError, match="invalid is not a valid task in the UCLA"
     ):

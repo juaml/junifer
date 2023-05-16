@@ -1,4 +1,4 @@
-"""Provide a concrete implementation for UCLA dataset."""
+"""Provide concrete implementation for UCLA DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -14,16 +14,18 @@ from ....utils import raise_error
 
 @register_datagrabber
 class JuselessUCLA(PatternDataGrabber):
-    """Concrete implementation for pattern-based data fetching of UCLA data.
+    """Concrete implementation for Juseless UCLA data fetching.
+
+    Implements a DataGrabber to access the UCLA data in Juseless.
 
     Parameters
     ----------
-    datadir : str or Path, optional
+    datadir : str or pathlib.Path, optional
         The directory where the dataset is stored
-        (default '/data/project/psychosis_thalamus/data/fmriprep').
+        (default "/data/project/psychosis_thalamus/data/fmriprep").
     tasks : {"rest", "bart", "bht", "pamenc", "pamret", \
             "scap", "taskswitch", "stopsignal"} or \
-            list of the options, optional
+            list of the options or None, optional
         UCLA task sessions. If None, all available task sessions are
         selected (default None).
 
@@ -118,5 +120,6 @@ class JuselessUCLA(PatternDataGrabber):
         elements : list
             The list of elements that can be grabbed in the dataset after
             imposing constraints based on specified tasks.
+
         """
         return [x for x in super().get_elements() if x[1] in self.tasks]
