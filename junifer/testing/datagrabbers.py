@@ -147,9 +147,9 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
 
 
 class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
-    """Data Grabber for Partly Cloudy dataset.
+    """DataGrabber for Partly Cloudy dataset.
 
-    Wrapper for :func:`nilearn.datasets.fetch_development_fmri`
+    Wrapper for :func:`nilearn.datasets.fetch_development_fmri`.
 
     Parameters
     ----------
