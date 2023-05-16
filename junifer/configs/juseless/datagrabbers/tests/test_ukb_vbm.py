@@ -1,4 +1,4 @@
-"""Provide tests for juseless datagrabber."""
+"""Provide tests for JuselessDataladUKBVBM."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -20,8 +20,8 @@ if socket.gethostname() != "juseless":
 configure_logging(level="DEBUG")
 
 
-def test_juselessdataladukbvbm_datagrabber() -> None:
-    """Test datalad UKBVBM datagrabber."""
+def test_JuselessDataladUKBVBM() -> None:
+    """Test JuselessDataladUKBVBM."""
     with JuselessDataladUKBVBM() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
