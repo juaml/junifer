@@ -22,7 +22,7 @@ data type including source and previous transformation steps.
 
 The :ref:`Data Grabber <datagrabber>` step adds the ``path`` second-level key
 which gives the path to the file containing the data. The ``meta`` key in this
-step only contains information about the datagrabber used.
+step only contains information about the DataGrabber used.
 
 .. code-block:: python
 

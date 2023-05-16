@@ -268,25 +268,25 @@
 <section id="description">
 <h2><span class="section-number">4.3.1. </span>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">DataGrabber</span></code> is an object that can provide an interface to datasets you
-want to work with in junifer. Every concrete implementation of a datagrabber is
+want to work with in junifer. Every concrete implementation of a DataGrabber is
 aware of a particular dataset’s structure and thus allows you to fetch specific
 elements of interest from the dataset. It adds the <code class="docutils literal notranslate"><span class="pre">path</span></code> key to each
 <a class="reference internal" href="data.html#data-types"><span class="std std-ref">data type</span></a> in the <a class="reference internal" href="data.html#data-object"><span class="std std-ref">Data object</span></a>.</p>
-<p>Datagrabbers are intended to be used as context managers. When used within a
-context, a datagrabber takes care of any pre and post steps for interacting with
+<p>DataGrabbers are intended to be used as context managers. When used within a
+context, a DataGrabber takes care of any pre and post steps for interacting with
 the dataset, for example, downloading and cleaning up. As the interface
-is consistent, you always use the same procedure to interact with the datagrabber.</p>
+is consistent, you always use the same procedure to interact with the DataGrabber.</p>
 <p>For example, a concrete implementation of <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a> can
-provide junifer with data from a Datalad dataset. Of course, datagrabbers are not
+provide junifer with data from a Datalad dataset. Of course, DataGrabbers are not
 only meant to work with Datalad datasets but any dataset.</p>
-<p>If you are interested in using already provided datagrabbers, please go to
-<a class="reference internal" href="../builtin.html"><span class="doc">Built-in Pipeline Components</span></a>. And, if you want to implement your own datagrabber, you need
+<p>If you are interested in using already provided DataGrabbers, please go to
+<a class="reference internal" href="../builtin.html"><span class="doc">Built-in Pipeline Components</span></a>. And, if you want to implement your own DataGrabber, you need
 to provide concrete implementations of base classes already provided.</p>
 </section>
 <section id="base-classes">
 <h2><span class="section-number">4.3.2. </span>Base Classes<a class="headerlink" href="#base-classes" title="Permalink to this heading">#</a></h2>
 <p>In this section, we showcase different abstract base classes you might want to
-use to implement your own datagrabber.</p>
+use to implement your own DataGrabber.</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -298,10 +298,10 @@ use to implement your own datagrabber.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber" title="junifer.datagrabber.BaseDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a></p></td>
 <td><div class="line-block">
 <div class="line">The abstract base class providing you an interface to implement your</div>
-<div class="line">own datagrabber. You should try to avoid using this directly and</div>
+<div class="line">own DataGrabber. You should try to avoid using this directly and</div>
 <div class="line">instead use <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> or</div>
 <div class="line"><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a>. To build your own custom <em>low-level</em></div>
-<div class="line">datagrabber, you need to override the <code class="docutils literal notranslate"><span class="pre">get_elements_keys</span></code>,</div>
+<div class="line">DataGrabber, you need to override the <code class="docutils literal notranslate"><span class="pre">get_elements_keys</span></code>,</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">get_elements</span></code> and <code class="docutils literal notranslate"><span class="pre">get_item</span></code> methods, and most of the time you</div>
 <div class="line">should also override other existing methods like <code class="docutils literal notranslate"><span class="pre">__enter__</span></code> and</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">__exit__</span></code>.</div>
@@ -311,7 +311,7 @@ use to implement your own datagrabber.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a></p></td>
 <td><div class="line-block">
 <div class="line">It implements functionality to help you define the pattern of the</div>
-<div class="line">dataset you want to get. For example, you know that T1 images are</div>
+<div class="line">dataset you want to get. For example, you know that T1w images are</div>
 <div class="line">found in a directory following the pattern:</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">{subject}/anat/{subject}_T1w.nii.gz</span></code> inside of the dataset. Now you</div>
 <div class="line">can provide this to the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> and it will be</div>
