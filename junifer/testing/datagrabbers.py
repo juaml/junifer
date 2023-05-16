@@ -15,9 +15,9 @@ from ..datagrabber.base import BaseDataGrabber
 
 
 class OasisVBMTestingDataGrabber(BaseDataGrabber):
-    """Data Grabber for Oasis VBM testing data.
+    """DataGrabber for Oasis VBM testing data.
 
-    Wrapper for :func:`nilearn.datasets.fetch_oasis_vbm`
+    Wrapper for :func:`nilearn.datasets.fetch_oasis_vbm`.
 
     """
 
