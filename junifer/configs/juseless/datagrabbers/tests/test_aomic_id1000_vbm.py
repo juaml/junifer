@@ -1,4 +1,4 @@
-"""Provide tests for AOMICID1000 VBM juseless datagrabber."""
+"""Provide tests for JuselessDataladAOMICID1000VBM."""
 
 # Authors: Felix Hoffstaedter <f.hoffstaedter@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -19,8 +19,8 @@ if socket.gethostname() != "juseless":
 configure_logging(level="DEBUG")
 
 
-def test_juselessdataladaomicid1000vbm_datagrabber() -> None:
-    """Test datalad AOMICID1000VBM datagrabber."""
+def test_JuselessDataladAOMICID1000VBM() -> None:
+    """Test JuselessDataladAOMICID1000VBM."""
     with JuselessDataladAOMICID1000VBM() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
