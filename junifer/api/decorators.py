@@ -11,7 +11,7 @@ from ..pipeline.registry import register
 
 
 def register_datagrabber(klass: Type) -> Type:
-    """DataGrabber registration decorator.
+    """Register DataGrabber.
 
     Registers the DataGrabber so it can be used by name.
 
@@ -24,6 +24,10 @@ def register_datagrabber(klass: Type) -> Type:
     -------
     klass: class
         The unmodified input class.
+
+    Notes
+    -----
+    It should only be used as a decorator.
 
     """
     register(
