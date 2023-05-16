@@ -25,8 +25,8 @@ class MarkerCollection:
     ----------
     markers : list of marker-like
         The markers to compute.
-    datareader : datareader-like, optional
-        The datareader to use (default None).
+    datareader : DataReader-like object, optional
+        The DataReader to use (default None).
     preprocessing : preprocessing-like, optional
         The preprocessing steps to apply.
     storage : storage-like, optional
