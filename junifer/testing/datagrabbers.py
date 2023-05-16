@@ -1,4 +1,4 @@
-"""Provide testing datagrabbers."""
+"""Provide testing DataGrabbers."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
