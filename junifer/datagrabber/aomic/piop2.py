@@ -1,4 +1,4 @@
-"""Provide concrete implementations for AOMICPIOP2 data access."""
+"""Provide concrete implementation for AOMIC PIOP2 DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
@@ -9,19 +9,18 @@
 from pathlib import Path
 from typing import Dict, List, Union
 
-from junifer.datagrabber import PatternDataladDataGrabber
-
 from ...api.decorators import register_datagrabber
 from ...utils import raise_error
+from ..pattern_datalad import PatternDataladDataGrabber
 
 
 @register_datagrabber
 class DataladAOMICPIOP2(PatternDataladDataGrabber):
-    """Concrete implementation for pattern-based data fetching of AOMICPIOP2.
+    """Concrete implementation for pattern-based data fetching of AOMIC PIOP2.
 
     Parameters
     ----------
-    datadir : str or Path, optional
+    datadir : str or Path or None, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
@@ -29,6 +28,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             or list of the options, optional
         AOMIC PIOP2 task sessions. If None, all available task sessions are
         selected (default None).
+
     """
 
     def __init__(
@@ -136,6 +136,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         list
             The list of elements that can be grabbed in the dataset after
             imposing constraints based on specified tasks.
+
         """
         all_elements = super().get_elements()
         return [x for x in all_elements if x[1] in self.tasks]
@@ -156,6 +157,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         out : dict
             Dictionary of paths for each type of data required for the
             specified element.
+
         """
         out = super().get_item(subject=subject, task=task)
         out["BOLD"]["mask_item"] = "BOLD_mask"
