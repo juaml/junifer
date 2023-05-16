@@ -1,4 +1,4 @@
-"""Provide tests for CamCAN VBM juseless datagrabber."""
+"""Provide tests for JuselessDataladCamCANVBM."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -20,8 +20,8 @@ if socket.gethostname() != "juseless":
 configure_logging(level="DEBUG")
 
 
-def test_juselessdataladcamcanvbm_datagrabber() -> None:
-    """Test datalad CamCANVBM datagrabber."""
+def test_JuselessDataladCamCANVBM() -> None:
+    """Test JuselessDataladCamCANVBM."""
     with JuselessDataladCamCANVBM() as dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]

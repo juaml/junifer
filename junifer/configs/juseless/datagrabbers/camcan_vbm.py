@@ -1,4 +1,4 @@
-"""Provide class for CamCAN VBM juseless datalad datagrabber."""
+"""Provide concrete implementation for CamCAN VBM DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -14,13 +14,13 @@ from ....datagrabber import PatternDataladDataGrabber
 
 @register_datagrabber
 class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
-    """Juseless CamCAN VBM Data Grabber class.
+    """Concrete implementation for Juseless CamCAN VBM data fetching.
 
-    Implements a Data Grabber to access the CamCAN VBM data in Juseless.
+    Implements a DataGrabber to access the CamCAN VBM data in Juseless.
 
     Parameters
     ----------
-    datadir : str or pathlib.Path, optional
+    datadir : str or pathlib.Path or None, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
