@@ -7,7 +7,7 @@ from typing import Iterable, Optional
 
 import pytest
 
-from junifer.datagrabber.hcp import HCP1200, DataladHCP1200
+from junifer.datagrabber import HCP1200, DataladHCP1200
 from junifer.utils import configure_logging
 
 
@@ -16,7 +16,7 @@ URI = "https://gin.g-node.org/juaml/datalad-example-hcp1200"
 
 @pytest.fixture(scope="module")
 def hcpdg() -> Iterable[DataladHCP1200]:
-    """Return a HCP1200 datagrabber."""
+    """Return a HCP1200 DataGrabber."""
     dg = DataladHCP1200()
     # Set URI to Gin
     dg.uri = URI
@@ -56,19 +56,19 @@ def hcpdg() -> Iterable[DataladHCP1200]:
         ("REST2", "RL", True, "rfMRI_REST2_RL_hp2000_clean.nii.gz"),
     ],
 )
-def test_hcp1200_datagrabber(
+def test_HCP1200(
     hcpdg: DataladHCP1200,
     tasks: Optional[str],
     phase_encodings: Optional[str],
     ica_fix: bool,
     expected_path_name: str,
 ) -> None:
-    """Test HCP1200 datagrabber.
+    """Test HCP1200 DataGrabber.
 
     Parameters
     ----------
     hcpdg : DataladHCP1200
-        The Datalad version of the datagrabber with the first subject
+        The Datalad version of the DataGrabber with the first subject
         already cloned.
     tasks : str
         The parametrized tasks.
@@ -132,17 +132,17 @@ def test_hcp1200_datagrabber(
         ("MOTOR", "RL"),
     ],
 )
-def test_hcp1200_datagrabber_single_access(
+def test_HCP1200_single_access(
     hcpdg: DataladHCP1200,
     tasks: Optional[str],
     phase_encodings: Optional[str],
 ) -> None:
-    """Test HCP1200 datagrabber single access.
+    """Test HCP1200 DataGrabber single access.
 
     Parameters
     ----------
     hcpdg : DataladHCP1200
-        The Datalad version of the datagrabber with the first subject
+        The Datalad version of the DataGrabber with the first subject
         already cloned.
     tasks : str
         The parametrized tasks.
@@ -172,17 +172,17 @@ def test_hcp1200_datagrabber_single_access(
         (["REST1", "REST2"], None),
     ],
 )
-def test_hcp1200_datagrabber_multi_access(
+def test_HCP1200_multi_access(
     hcpdg: DataladHCP1200,
     tasks: Optional[str],
     phase_encodings: Optional[str],
 ) -> None:
-    """Test HCP1200 datagrabber multiple access.
+    """Test HCP1200 DataGrabber multiple access.
 
     Parameters
     ----------
     hcpdg : DataladHCP1200
-        The Datalad version of the datagrabber with the first subject
+        The Datalad version of the DataGrabber with the first subject
         already cloned.
     tasks : str
         The parametrized tasks.
@@ -205,16 +205,17 @@ def test_hcp1200_datagrabber_multi_access(
             assert element[2] in ["LR", "RL"]
 
 
-def test_hcp1200_datagrabber_multi_access_task_simple(
+def test_HCP1200_multi_access_task_simple(
     hcpdg: DataladHCP1200,
 ) -> None:
-    """Test HCP1200 datagrabber simple multiple access for task.
+    """Test HCP1200 DataGrabber simple multiple access for task.
 
     Parameters
     ----------
     hcpdg : DataladHCP1200
-        The Datalad version of the datagrabber with the first subject
+        The Datalad version of the DataGrabber with the first subject
         already cloned.
+
     """
     configure_logging(level="DEBUG")
     dg = HCP1200(
@@ -231,16 +232,17 @@ def test_hcp1200_datagrabber_multi_access_task_simple(
             assert element[2] in ["LR", "RL"]
 
 
-def test_hcp1200_datagrabber_multi_access_phase_simple(
+def test_HCP1200_multi_access_phase_simple(
     hcpdg: DataladHCP1200,
 ) -> None:
-    """Test HCP1200 datagrabber simple multiple access for phase.
+    """Test HCP1200 DataGrabber simple multiple access for phase.
 
     Parameters
     ----------
     hcpdg : DataladHCP1200
-        The Datalad version of the datagrabber with the first subject
+        The Datalad version of the DataGrabber with the first subject
         already cloned.
+
     """
     configure_logging(level="DEBUG")
     dg = HCP1200(
@@ -266,11 +268,11 @@ def test_hcp1200_datagrabber_multi_access_phase_simple(
         (["FOO", "BAR"], "LR"),
     ],
 )
-def test_hcp1200_datagrabber_incorrect_access_task(
+def test_HCP1200_incorrect_access_task(
     tasks: Optional[str],
     phase_encodings: Optional[str],
 ) -> None:
-    """Test HCP1200 datagrabber incorrect access for task.
+    """Test HCP1200 DataGrabber incorrect access for task.
 
     Parameters
     ----------
@@ -298,11 +300,11 @@ def test_hcp1200_datagrabber_incorrect_access_task(
         (["REST1", "REST2"], "BAR"),
     ],
 )
-def test_hcp1200_datagrabber_incorrect_access_phase(
+def test_HCP1200_incorrect_access_phase(
     tasks: Optional[str],
     phase_encodings: Optional[str],
 ) -> None:
-    """Test HCP1200 datagrabber incorrect access for phase.
+    """Test HCP1200 DataGrabber incorrect access for phase.
 
     Parameters
     ----------
@@ -321,16 +323,17 @@ def test_hcp1200_datagrabber_incorrect_access_phase(
         )
 
 
-def test_hcp1200_datagrabber_elements(
+def test_HCP1200_elements(
     hcpdg: DataladHCP1200,
 ) -> None:
-    """Test HCP1200 datagrabber elements.
+    """Test HCP1200 DataGrabber elements.
 
     Parameters
     ----------
     hcpdg : DataladHCP1200
-        The Datalad version of the datagrabber with the first subject
+        The Datalad version of the DataGrabber with the first subject
         already cloned.
+
     """
     configure_logging(level="DEBUG")
     dg = HCP1200(
@@ -364,10 +367,10 @@ def test_hcp1200_datagrabber_elements(
         ("MOTOR", True),
     ],
 )
-def test_hcp1200_datagrabber_incorrect_access_icafix(
+def test_HCP1200_incorrect_access_icafix(
     tasks: Optional[str], ica_fix: bool
 ) -> None:
-    """Test HCP1200 datagrabber incorrect access for icafix.
+    """Test HCP1200 DataGrabber incorrect access for icafix.
 
     Parameters
     ----------
