@@ -18,7 +18,7 @@ Bugfixes
   and not to the location of the YAML file by `Fede Raimondo`_. (:gh:`127`)
 - Fix ``junifer run`` to respect preprocess step specified in the pipeline by
   `Synchon Mandal`_ (:gh:`159`)
-- Fix a bug in which only ``REST1`` and ``REST2`` tasks could be accesed in
+- Fix a bug in which only ``REST1`` and ``REST2`` tasks could be accessed in
   :class:`.DataladHCP1200` and :class:`.HCP1200` datagrabbers by `Fede
   Raimondo`_ (:gh:`183`)
 - Fix a bug in which fitting a marker (e.g. ``SphereAggregation``) on a
@@ -41,7 +41,7 @@ Bugfixes
   `Fede Raimondo`_ (:gh:`194`)
 - Fix a bug in which :func:`.count` will not be correctly applied across an
   axis by `Fede Raimondo`_ (:gh:`195`)
-- Fix an issue with datalad cache and locks in which the overriden settings in
+- Fix an issue with datalad cache and locks in which the overridden settings in
   Junifer were not propagated to subprocesses, resulting in using the default
   settings by `Fede Raimondo`_ (:gh:`199`)
 - Fix a bug in which :func:`.get_mask` fails for FunctionalConnectivityBase
