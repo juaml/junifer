@@ -93,7 +93,7 @@ def test_fMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
     ]
 
     # Build mappings dictionary
-    mappings = {x: y for x, y in zip(adhoc_names, fmriprep_names)}
+    mappings = dict(zip(adhoc_names, fmriprep_names))
     input = {
         "mappings": {"fmriprep": mappings},
         "data": adhoc_df,
@@ -170,7 +170,7 @@ def test_fMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
 
     confounds_df = pd.DataFrame(
         np.random.randn(7, len(var_names) + 1),
-        columns=var_names + ["framewise_displacement"],
+        columns=[*var_names, "framewise_displacement"],
     )
     out = confound_remover._process_fmriprep_spec({"data": confounds_df})
     to_select, sq_to_compute, der_to_compute, spike_name = out
@@ -248,7 +248,7 @@ def test_fMRIPrepConfoundRemover__pick_confounds_adhoc() -> None:
     ]
 
     # Build mappings dictionary
-    mappings = {x: y for x, y in zip(adhoc_names, fmriprep_names)}
+    mappings = dict(zip(adhoc_names, fmriprep_names))
     input = {
         "mappings": {"fmriprep": mappings},
         "data": adhoc_df,
@@ -281,13 +281,13 @@ def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
         out1 = confound_remover._pick_confounds(input["BOLD_confounds"])
-        assert set(out1.columns) == set(fmriprep_all_vars + ["spike"])
+        assert set(out1.columns) == {*fmriprep_all_vars, "spike"}
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
         out2 = confound_remover._pick_confounds(input["BOLD_confounds"])
-        assert set(out2.columns) == set(fmriprep_all_vars + ["spike"])
+        assert set(out2.columns) == {*fmriprep_all_vars, "spike"}
 
     assert_frame_equal(out1, out2)
 

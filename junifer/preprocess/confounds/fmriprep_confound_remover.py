@@ -208,6 +208,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         input : list of str
             The input to the pipeline step. The list must contain the
             available Junifer Data object keys.
+
         Returns
         -------
         list of str
@@ -543,7 +544,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             include the ``BOLD_confounds`` key.
 
         Returns
-        --------
+        -------
         Niimg-like object
             Input image with confounds removed.
 

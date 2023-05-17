@@ -36,7 +36,7 @@ def test_ALFFEstimator_cache_python() -> None:
     logger.info(f"ALFF Estimator First time: {first_time}")
     assert isinstance(alff, Nifti1Image)
     assert isinstance(falff, Nifti1Image)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
     # Now fit again, should be faster
@@ -51,7 +51,7 @@ def test_ALFFEstimator_cache_python() -> None:
     second_time = time.time() - start_time
     logger.info(f"ALFF Estimator Second time: {second_time}")
     assert second_time < (first_time / 1000)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
     # Now change a parameter, should compute again, without clearing the
@@ -67,7 +67,7 @@ def test_ALFFEstimator_cache_python() -> None:
     third_time = time.time() - start_time
     logger.info(f"ALFF Estimator Third time: {third_time}")
     assert third_time > (first_time / 10)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
     # Now fit again with the previous params, should be fast
@@ -82,7 +82,7 @@ def test_ALFFEstimator_cache_python() -> None:
     fourth = time.time() - start_time
     logger.info(f"ALFF Estimator Fourth time: {fourth}")
     assert fourth < (first_time / 1000)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
     # Now change the data, it should clear the cache
@@ -102,7 +102,7 @@ def test_ALFFEstimator_cache_python() -> None:
     fifth = time.time() - start_time
     logger.info(f"ALFF Estimator Fifth time: {fifth}")
     assert fifth > (first_time / 10)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
 
@@ -129,7 +129,7 @@ def test_ALFFEstimator_cache_afni() -> None:
     logger.info(f"ALFF Estimator First time: {first_time}")
     assert isinstance(alff, Nifti1Image)
     assert isinstance(falff, Nifti1Image)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 3  # input + alff + falff
 
     # Now fit again, should be faster
@@ -144,7 +144,7 @@ def test_ALFFEstimator_cache_afni() -> None:
     second_time = time.time() - start_time
     logger.info(f"ALFF Estimator Second time: {second_time}")
     assert second_time < (first_time / 1000)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 3  # input + alff + falff
 
     # Now change a parameter, should compute again, without clearing the
@@ -160,7 +160,7 @@ def test_ALFFEstimator_cache_afni() -> None:
     third_time = time.time() - start_time
     logger.info(f"ALFF Estimator Third time: {third_time}")
     assert third_time > (first_time / 10)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 5  # input + 2 * alff + 2 * falff
 
     # Now fit again with the previous params, should be fast
@@ -175,7 +175,7 @@ def test_ALFFEstimator_cache_afni() -> None:
     fourth = time.time() - start_time
     logger.info(f"ALFF Estimator Fourth time: {fourth}")
     assert fourth < (first_time / 1000)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 5  # input + 2 * alff + 2 * falff
 
     # Now change the data, it should clear the cache
@@ -195,7 +195,7 @@ def test_ALFFEstimator_cache_afni() -> None:
     fifth = time.time() - start_time
     logger.info(f"ALFF Estimator Fifth time: {fifth}")
     assert fifth > (first_time / 10)
-    n_files = len([x for x in estimator.temp_dir_path.glob("*")])
+    n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 3  # input + alff + falff
 
 

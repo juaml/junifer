@@ -61,7 +61,7 @@ def test_MultipleDataGrabber() -> None:
     ]
 
     with dg:
-        subs = [x for x in dg]
+        subs = list(dg)
         assert set(subs) == set(expected_subs)
 
         elem = dg[("sub-01", "ses-01")]
@@ -109,7 +109,7 @@ def test_MultipleDataGrabber_no_intersection() -> None:
     dg = MultipleDataGrabber([dg1, dg2])
     expected_subs = set()
     with dg:
-        subs = [x for x in dg]
+        subs = list(dg)
         assert set(subs) == set(expected_subs)
 
 

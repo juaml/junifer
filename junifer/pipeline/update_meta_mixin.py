@@ -39,5 +39,5 @@ class UpdateMetaMixin:
         dependencies = getattr(self, "_DEPENDENCIES", set())
         if dependencies is not None:
             if not isinstance(dependencies, (set, list)):
-                dependencies = set([dependencies])
+                dependencies = {dependencies}
             input["meta"]["dependencies"].update(dependencies)

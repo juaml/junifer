@@ -135,6 +135,7 @@ def cli() -> None:  # pragma: no cover
 )
 def run(filepath: click.Path, element: str, verbose: Union[str, int]) -> None:
     """Run command for CLI.
+
     \f
     Parameters
     ----------
@@ -182,6 +183,7 @@ def run(filepath: click.Path, element: str, verbose: Union[str, int]) -> None:
 )
 def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
     """Collect command for CLI.
+
     \f
     Parameters
     ----------
@@ -224,6 +226,7 @@ def queue(
     verbose: Union[str, int],
 ) -> None:
     """Queue command for CLI.
+
     \f
     Parameters
     ----------
@@ -261,6 +264,7 @@ def queue(
 @click.option("--long", "long_", is_flag=True)
 def wtf(long_: bool) -> None:
     """Wtf command for CLI.
+
     \f
     Parameters
     ----------
@@ -282,6 +286,7 @@ def wtf(long_: bool) -> None:
 @click.argument("subpkg", type=str)
 def selftest(subpkg: str) -> None:
     """Selftest command for CLI.
+
     \f
     Parameters
     ----------

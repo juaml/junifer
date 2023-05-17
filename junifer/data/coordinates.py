@@ -143,7 +143,7 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
     if isinstance(t_coord, Path):
         df_coords = pd.read_csv(t_coord, sep="\t", header=None)
         coords = df_coords.iloc[:, [0, 1, 2]].to_numpy()
-        names = [x for x in df_coords.iloc[:, [3]].values[:, 0]]
+        names = list(df_coords.iloc[:, [3]].values[:, 0])
     else:
         coords = t_coord["coords"]
         coords = typing.cast(ArrayLike, coords)

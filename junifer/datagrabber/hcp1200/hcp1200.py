@@ -92,7 +92,7 @@ class HCP1200(PatternDataGrabber):
                 )
 
         if ica_fix:
-            if not all([task in ["REST1", "REST2"] for task in self.tasks]):
+            if not all(task in ["REST1", "REST2"] for task in self.tasks):
                 raise_error(
                     "ICA+FIX is only available for 'REST1' and 'REST2' tasks."
                 )

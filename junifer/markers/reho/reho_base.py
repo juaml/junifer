@@ -102,7 +102,7 @@ class ReHoBase(BaseMarker):
         .. [1] Jiang, L., & Zuo, X. N. (2016).
                Regional Homogeneity: A Multimodal, Multiscale Neuroimaging
                Marker of the Human Connectome.
-               The Neuroscientist, Volume 22(5), Pages 486–505.
+               The Neuroscientist, Volume 22(5), Pages 486-505.
                https://doi.org/10.1177/1073858415595004
 
         """

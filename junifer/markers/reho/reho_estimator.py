@@ -250,6 +250,7 @@ class ReHoEstimator:
             * 125 : for 5x5 cuboidal volume
 
             (default 27).
+
         Returns
         -------
         Niimg-like object
@@ -481,7 +482,7 @@ def _kendall_w_reho(
 
     Parameters
     ----------
-    timeseries_matrix : 2D numpy.ndarray
+    timeseries_ranks : 2D numpy.ndarray
         A matrix of ranks of a subset subject's brain voxels.
     tied_rank_corrections : 3D numpy.ndarray
         A 3D array consisting of the tied rank corrections for the ranks

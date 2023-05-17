@@ -155,7 +155,7 @@ class ALFFBase(BaseMarker):
         )
         post_data = falff if self.fractional else alff
 
-        post_input = {k: v for k, v in input.items()}
+        post_input = dict(input.items())
         post_input["data"] = post_data
         post_input["path"] = None
 

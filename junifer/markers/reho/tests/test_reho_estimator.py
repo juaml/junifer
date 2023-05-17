@@ -38,7 +38,7 @@ def test_reho_estimator_cache_python() -> None:
     )
     assert isinstance(reho_map_without_cache, nib.Nifti1Image)
     # Count intermediate files
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
     # Now fit again, should be faster
@@ -56,7 +56,7 @@ def test_reho_estimator_cache_python() -> None:
     # Check that cache is being used
     assert (second_toc - second_tic) < ((first_toc - first_tic) / 1000)
     # Count intermediate files
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
     # Now change a parameter, should compute again, without clearing the
@@ -75,7 +75,7 @@ def test_reho_estimator_cache_python() -> None:
     # Should require more time
     assert (third_toc - third_tic) > ((first_toc - first_tic) / 10)
     # Count intermediate files
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
     # Now fit again with the previous params, should be fast
@@ -93,7 +93,7 @@ def test_reho_estimator_cache_python() -> None:
     # Should require less time
     assert (fourth_toc - fourth_tic) < ((first_toc - first_tic) / 1000)
     # Count intermediate files
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
     # Now change the data, it should clear the cache
@@ -117,7 +117,7 @@ def test_reho_estimator_cache_python() -> None:
     # Should take less time
     assert (fifth_toc - fifth_tic) > ((first_toc - first_tic) / 10)
     # Count intermediate files
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 0  # no files in python
 
 
@@ -146,7 +146,7 @@ def test_reho_estimator_cache_afni() -> None:
     )
     assert isinstance(reho_map_without_cache, nib.Nifti1Image)
     # Count intermediate files
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 2  # input + reho
 
     # Now fit again, should be faster
@@ -163,7 +163,7 @@ def test_reho_estimator_cache_afni() -> None:
     assert isinstance(reho_map_with_cache, nib.Nifti1Image)
     assert (second_toc - second_tic) < ((first_toc - first_tic) / 1000)
     # Count intermediate files
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 2  # input + reho
 
     # Now change a parameter, should compute again, without clearing the
@@ -182,7 +182,7 @@ def test_reho_estimator_cache_afni() -> None:
     # Should require more time
     assert (third_toc - third_tic) > ((first_toc - first_tic) / 10)
     # Count intermediate files
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 3  # input + 2 * reho
 
     # Now fit again with the previous params, should be fast
@@ -199,7 +199,7 @@ def test_reho_estimator_cache_afni() -> None:
     assert isinstance(reho_map_with_new_cache, nib.Nifti1Image)
     # Should require less time
     assert (fourth_toc - fourth_tic) < ((first_toc - first_tic) / 1000)
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 3  # input + 2 * reho
 
     # Now change the data, it should clear the cache
@@ -222,7 +222,7 @@ def test_reho_estimator_cache_afni() -> None:
     # Should take less time
     assert (fifth_toc - fifth_tic) > ((first_toc - first_tic) / 10)
     # Count intermediate files
-    n_files = len([x for x in reho_estimator.temp_dir_path.glob("*")])
+    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 2  # input + reho
 
 

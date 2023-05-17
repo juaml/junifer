@@ -718,7 +718,7 @@ def test_queue_condor_assets_generation(
             # Check junifer run submit file
             assert run_submit_file_path.is_file()
             # Read run submit file to check if resources are correct
-            with open(run_submit_file_path, "r") as f:
+            with open(run_submit_file_path) as f:
                 for line in f.read().splitlines():
                     if "request_cpus" in line:
                         assert int(line.split("=")[1].strip()) == cpus
@@ -744,7 +744,7 @@ def test_queue_condor_assets_generation(
             element_count = 0
             has_collect_job = False
             has_final_collect_job = False
-            with open(dag_file_path, "r") as f:
+            with open(dag_file_path) as f:
                 for line in f.read().splitlines():
                     if "JOB" in line:
                         element_count += 1
@@ -812,7 +812,7 @@ def test_queue_condor_extra_preamble(
         run_submit_file_path = Path(
             tmp_path / "junifer_jobs" / jobname / f"run_{jobname}.submit"
         )
-        with open(run_submit_file_path, "r") as f:
+        with open(run_submit_file_path) as f:
             for line in f.read().splitlines():
                 if "FOO" in line:
                     assert line.strip() == extra_preamble
@@ -821,7 +821,7 @@ def test_queue_condor_extra_preamble(
         collect_submit_file_path = Path(
             tmp_path / "junifer_jobs" / jobname / f"collect_{jobname}.submit"
         )
-        with open(collect_submit_file_path, "r") as f:
+        with open(collect_submit_file_path) as f:
             for line in f.read().splitlines():
                 if "FOO" in line:
                     assert line.strip() == extra_preamble

@@ -234,19 +234,19 @@ def queue(
     # Create a folder within the CWD to store the job files / config
     cwd = Path.cwd()
     jobdir = cwd / "junifer_jobs" / jobname
-    logger.info(f"Creating job in {str(jobdir.absolute())}")
+    logger.info(f"Creating job in {jobdir.absolute()!s}")
     if jobdir.exists():
         if not overwrite:
             raise_error(
                 f"Job folder for {jobname} already exists. "
                 "This error is raised to prevent overwriting job files "
                 "that might be scheduled but not yet executed. "
-                f"Either delete the directory {str(jobdir.absolute())} "
+                f"Either delete the directory {jobdir.absolute()!s} "
                 "or set overwrite=True."
             )
         else:
             logger.info(
-                f"Deleting existing job directory at {str(jobdir.absolute())}"
+                f"Deleting existing job directory at {jobdir.absolute()!s}"
             )
             shutil.rmtree(jobdir)
     jobdir.mkdir(exist_ok=True, parents=True)
@@ -268,7 +268,7 @@ def queue(
         config["with"] = fixed_load
 
     yaml_config = jobdir / "config.yaml"
-    logger.info(f"Writing YAML config to {str(yaml_config.absolute())}")
+    logger.info(f"Writing YAML config to {yaml_config.absolute()!s}")
     yaml.dump(config, stream=yaml_config)
 
     # Get list of elements
@@ -378,11 +378,11 @@ def _queue_condor(
     """
     logger.debug("Creating HTCondor job")
     run_junifer_args = (
-        f"run {str(yaml_config.absolute())} "
+        f"run {yaml_config.absolute()!s} "
         f"--verbose {verbose} --element $(element)"
     )
     collect_junifer_args = (
-        f"collect {str(yaml_config.absolute())} --verbose {verbose} "
+        f"collect {yaml_config.absolute()!s} --verbose {verbose} "
     )
 
     if not isinstance(collect, str):
@@ -401,7 +401,7 @@ def _queue_condor(
         executable = "run_conda.sh"
         arguments = f"{env_name} junifer"
         exec_path = jobdir / executable
-        logger.info(f"Copying {executable} to {str(exec_path.absolute())}")
+        logger.info(f"Copying {executable} to {exec_path.absolute()!s}")
         shutil.copy(Path(__file__).parent / "res" / executable, exec_path)
         make_executable(exec_path)
     elif env["kind"] == "venv":
@@ -441,7 +441,7 @@ def _queue_condor(
         request_disk = {disk}
 
         # Executable
-        initial_dir = {str(jobdir.absolute())}
+        initial_dir = {jobdir.absolute()!s}
         executable = $(initial_dir)/{executable}
         transfer_executable = False
 
@@ -450,9 +450,9 @@ def _queue_condor(
         {extra_preamble}
 
         # Logs
-        log = {str(log_dir.absolute())}/junifer_run_$(log_element).log
-        output = {str(log_dir.absolute())}/junifer_run_$(log_element).out
-        error = {str(log_dir.absolute())}/junifer_run_$(log_element).err
+        log = {log_dir.absolute()!s}/junifer_run_$(log_element).log
+        output = {log_dir.absolute()!s}/junifer_run_$(log_element).out
+        error = {log_dir.absolute()!s}/junifer_run_$(log_element).err
         """
 
     submit_run_fname = jobdir / f"run_{jobname}.submit"
@@ -475,7 +475,7 @@ def _queue_condor(
         request_disk = {disk}
 
         # Executable
-        initial_dir = {str(jobdir.absolute())}
+        initial_dir = {jobdir.absolute()!s}
         executable = $(initial_dir)/{executable}
         transfer_executable = False
 
@@ -484,9 +484,9 @@ def _queue_condor(
         {extra_preamble}
 
         # Logs
-        log = {str(log_dir.absolute())}/junifer_collect.log
-        output = {str(log_dir.absolute())}/junifer_collect.out
-        error = {str(log_dir.absolute())}/junifer_collect.err
+        log = {log_dir.absolute()!s}/junifer_collect.log
+        output = {log_dir.absolute()!s}/junifer_collect.out
+        error = {log_dir.absolute()!s}/junifer_collect.err
         """
 
     # Now create the collect submit file
@@ -535,7 +535,7 @@ def _queue_condor(
         subprocess.run(["condor_submit_dag", dag_fname])
         logger.info("HTCondor job submitted")
     else:
-        cmd = f"condor_submit_dag {str(dag_fname.absolute())}"
+        cmd = f"condor_submit_dag {dag_fname.absolute()!s}"
         logger.info(
             f"HTCondor job files created, to submit the job, run `{cmd}`"
         )

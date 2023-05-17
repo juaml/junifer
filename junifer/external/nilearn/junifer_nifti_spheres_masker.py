@@ -91,6 +91,7 @@ def _apply_mask_and_get_affinity(
         Mask to apply to regions before extracting signals. If niimg is None,
         mask_img is used as a reference space in which the spheres 'indices are
         placed.
+
     Returns
     -------
     X : 2D numpy.ndarray
@@ -261,14 +262,14 @@ class _JuniferExtractionFunctor:
 
         Parameters
         ----------
-         imgs : 4D Niimg-like object
-            If ``imgs`` is an iterable, checks if data is really 4D. Then,
-            considering that it is a list of ``img``, load them one by one.
-            If ``img`` is a string, consider it as a path to Nifti image and
-            call :func:`nibabel.load` on it.
-            If it is an object, check if the affine attribute is present and
-            that :func:`nilearn.image.get_data` returns a result, eval raise
-            TypeError.
+        imgs : 4D Niimg-like object
+           If ``imgs`` is an iterable, checks if data is really 4D. Then,
+           considering that it is a list of ``img``, load them one by one.
+           If ``img`` is a string, consider it as a path to Nifti image and
+           call :func:`nibabel.load` on it.
+           If it is an object, check if the affine attribute is present and
+           that :func:`nilearn.image.get_data` returns a result, eval raise
+           TypeError.
 
         Raises
         ------
