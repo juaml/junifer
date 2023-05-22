@@ -40,7 +40,7 @@ with TemporaryDirectory() as tmpdir_name:
                     ),
                     (
                         f"anat/{t_sub}_space-MNI152NLin2009cAsym_"
-                        "desc-brain_mask.nii.gz"  
+                        "desc-brain_mask.nii.gz"
                     ),
                     (
                         f"anat/{t_sub}_space-MNI152NLin2009cAsym_label-"
