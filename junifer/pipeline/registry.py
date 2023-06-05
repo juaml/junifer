@@ -139,7 +139,7 @@ def build(
     try:
         # Create instance of the class
         object_ = klass(**init_params)
-    except ValueError as e:
+    except (ValueError, TypeError) as e:
         raise_error(
             msg=f"Failed to create {step} ({name}). Error: {e}",
             klass=RuntimeError,
