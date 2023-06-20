@@ -246,9 +246,9 @@ def test_queue_correct_yaml_config(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
 
     """
     with monkeypatch.context() as m:
@@ -305,7 +305,7 @@ def test_queue_invalid_job_queue(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
 
     """
     with pytest.raises(ValueError, match="Unknown queue kind"):
@@ -328,7 +328,7 @@ def test_queue_assets_disallow_overwrite(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
 
     """
     with pytest.raises(ValueError, match="Either delete the directory"):
@@ -360,9 +360,9 @@ def test_queue_assets_allow_overwrite(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
 
     """
     with monkeypatch.context() as m:
@@ -405,9 +405,9 @@ def test_queue_with_imports(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
     with_ : str or list of str
         The parametrized imports.
 
@@ -456,9 +456,9 @@ def test_queue_with_elements(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
     elements : str of list of str
         The parametrized elements for the queue.
 
@@ -486,9 +486,9 @@ def test_queue_without_elements(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
 
     """
     with monkeypatch.context() as m:
@@ -512,7 +512,7 @@ def test_queue_condor_invalid_python_env(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
 
     """
     with pytest.raises(ValueError, match="Unknown env kind"):
@@ -537,9 +537,9 @@ def test_queue_condor_conda_python(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
 
     """
     with monkeypatch.context() as m:
@@ -571,9 +571,9 @@ def test_queue_condor_conda_pre_run_python(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
 
     """
     with monkeypatch.context() as m:
@@ -613,9 +613,9 @@ def test_queue_condor_venv_python(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
 
     """
     with monkeypatch.context() as m:
@@ -677,9 +677,9 @@ def test_queue_condor_assets_generation(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
     elements : str
         The parametrized element names.
     env : dict
@@ -794,7 +794,7 @@ def test_queue_condor_extra_preamble(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
 
     """
     jobname = "condor_extra_preamble_check"
@@ -839,9 +839,9 @@ def test_queue_condor_submission_fail(
     tmp_path : pathlib.Path
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
-        The monkeypatch object.
+        The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
-        The logcapturefixture object.
+        The pytest.LogCaptureFixture object.
 
     """
     with pytest.raises(
