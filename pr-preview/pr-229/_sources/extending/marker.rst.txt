@@ -76,7 +76,7 @@ The parameters of the marker are defined in the ``__init__`` method. The
    are allowed as parameters. This is because the parameters are stored in
    JSON format, and JSON only supports these types.
 
-In this example, only paramater required for the computation is the name of the
+In this example, only parameter required for the computation is the name of the
 parcellation to use. Thus, we can define the ``__init__`` method as follows:
 
 .. code-block:: python
@@ -109,7 +109,7 @@ arguments:
 
 * ``input``: a dictionary with the data to be used to compute the marker. This
   will be the corresponding element in the :ref:`Data Object<data_object>`
-  alredy indexed. Thus, the dictionary has at least two keys: ``data`` and
+  already indexed. Thus, the dictionary has at least two keys: ``data`` and
   ``path``. The first one contains the data, while the second one contains the
   path to the data. The dictionary can also contain other keys, depending on the
   data type.

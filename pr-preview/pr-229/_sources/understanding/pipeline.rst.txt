@@ -16,7 +16,7 @@ steps:
 4. :ref:`Marker Computation <marker>`: Compute the marker.
 5. :ref:`Storage <storage>`: Store the marker values.
 
-The element that is passed accross the pipeline is called the
+The element that is passed across the pipeline is called the
 :ref:`Data Object<data_object>`.
 
 The following is a graphical representation of the pipeline:
