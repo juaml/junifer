@@ -94,7 +94,7 @@ The default value is to use all the *noise components* with the ``full`` *confou
 Other Parameters
 ~~~~~~~~~~~~~~~~
 
-Additionaly, the :class:`.fMRIPrepConfoundRemover` supports the following
+Additionally, the :class:`.fMRIPrepConfoundRemover` supports the following
 parameters:
 
 .. list-table::

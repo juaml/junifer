@@ -21,7 +21,7 @@ While the song might have been written with another meaning in mind, it is a goo
 way to describe the situation of many researchers who are presented with a new
 toolbox. Indeed, the situation of many researchers is that the projects they are
 working on are becoming more and more complex in terms of methods and data. Thus,
-we *open up the doors* to new possibilites:
+we *open up the doors* to new possibilities:
 
     | When I was younger, so much younger than today
     | I never needed anybody's help in any way
