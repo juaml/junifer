@@ -1,4 +1,4 @@
-"""Provide concrete implementation for pattern-based datagrabber."""
+"""Provide concrete implementation for pattern-based DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -23,9 +23,9 @@ _CONFOUNDS_FORMATS = ("fmriprep", "adhoc")
 
 @register_datagrabber
 class PatternDataGrabber(BaseDataGrabber):
-    """Concrete implementation for data grabbing using patterns.
+    """Concrete implementation for pattern-based data fetching.
 
-    Implements a Data Grabber that understands patterns to grab data.
+    Implements a DataGrabber that understands patterns to grab data.
 
     Parameters
     ----------
@@ -34,12 +34,12 @@ class PatternDataGrabber(BaseDataGrabber):
     patterns : dict
         Patterns for each type of data as a dictionary. The keys are the types
         and the values are the patterns. Each occurrence of the string
-        `{subject}` in the pattern will be replaced by the indexed element.
-    replacements : list of str
+        ``{subject}`` in the pattern will be replaced by the indexed element.
+    replacements : str or list of str
         Replacements in the patterns for each item in the "element" tuple.
     datadir : str or pathlib.Path
         The directory where the data is / will be stored.
-    confounds_format : {"fmriprep", "adhoc"}, optional
+    confounds_format : {"fmriprep", "adhoc"} or None, optional
         The format of the confounds for the dataset (default None).
 
     """
@@ -83,7 +83,7 @@ class PatternDataGrabber(BaseDataGrabber):
     def _replace_patterns_regex(
         self, pattern: str
     ) -> Tuple[str, str, List[str]]:
-        """Replace the patterns in `pattern` with the named groups.
+        """Replace the patterns in ``pattern`` with the named groups.
 
         It allows elements to be obtained from the filesystem.
 
@@ -122,7 +122,7 @@ class PatternDataGrabber(BaseDataGrabber):
         return re_pattern, glob_pattern, t_replacements
 
     def _replace_patterns_glob(self, element: Dict, pattern: str) -> str:
-        """Replace patterns with the element so it can be globbed.
+        """Replace ``pattern`` with the ``element`` so it can be globbed.
 
         Parameters
         ----------
@@ -209,7 +209,7 @@ class PatternDataGrabber(BaseDataGrabber):
                     raise_error(
                         "`confounds_format` needs to be one of "
                         f"{_CONFOUNDS_FORMATS}, None provided. "
-                        "As the datagrabber used specifies "
+                        "As the DataGrabber used specifies "
                         "'BOLD_confounds', None is invalid."
                     )
                 # Set the format
@@ -228,6 +228,7 @@ class PatternDataGrabber(BaseDataGrabber):
         -------
         list
             The list of elements that can be grabbed in the dataset.
+
         """
         elements = None
 

@@ -75,10 +75,10 @@ Data Grabber
 ^^^^^^^^^^^^
 
 The ``datagrabber`` section must be configured using the ``kind`` key to specify
-the datagrabber to use. Additional keys correspond to the parameters of the
-datagrabber.
+the DataGrabber to use. Additional keys correspond to the parameters of the
+DataGrabber constructor.
 
-For example, to use the :class:`.DataladAOMICPIOP1` datagrabber, we just need to
+For example, to use the :class:`.DataladAOMICPIOP1` DataGrabber, we just need to
 specify its name as the ``kind`` key.
 
 .. code-block:: yaml
@@ -86,8 +86,9 @@ specify its name as the ``kind`` key.
   datagrabber:
     kind: DataladAOMICPIOP1
 
-However, it is also possible to pass parameters to the datagrabber. In this case,
-we can restrict the datagrabber to fetch only the ``restingstate`` task.
+However, it is also possible to pass parameters to the DataGrabber constructor.
+In this case, we can restrict the DataGrabber to fetch only the ``restingstate``
+task.
 
 .. code-block:: yaml
 

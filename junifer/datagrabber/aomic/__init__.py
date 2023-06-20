@@ -1,4 +1,4 @@
-"""Provide imports for datagrabber 'aomic' sub-package."""
+"""Provide imports for aomic sub-package."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>

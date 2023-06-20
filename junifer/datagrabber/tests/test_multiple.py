@@ -1,4 +1,4 @@
-"""Provide tests for multiple."""
+"""Provide tests for MultipleDataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
@@ -20,8 +20,8 @@ _testing_dataset = {
 }
 
 
-def test_multiple() -> None:
-    """Test a multiple datagrabber."""
+def test_MultipleDataGrabber() -> None:
+    """Test MultipleDataGrabber."""
     repo_uri = _testing_dataset["example_bids_ses"]["uri"]
     rootdir = "example_bids_ses"
     replacements = ["subject", "session"]
@@ -77,8 +77,8 @@ def test_multiple() -> None:
         assert meta["datagrabbers"][1]["class"] == "PatternDataladDataGrabber"
 
 
-def test_multiple_no_intersection() -> None:
-    """Test a multiple datagrabber without intersection (0 elements)."""
+def test_MultipleDataGrabber_no_intersection() -> None:
+    """Test MultipleDataGrabber without intersection (0 elements)."""
     repo_uri1 = _testing_dataset["example_bids"]["uri"]
     repo_uri2 = _testing_dataset["example_bids_ses"]["uri"]
     rootdir = "example_bids_ses"
@@ -113,8 +113,8 @@ def test_multiple_no_intersection() -> None:
         assert set(subs) == set(expected_subs)
 
 
-def test_multiple_get_item() -> None:
-    """Test a multiple datagrabber get_item error."""
+def test_MultipleDataGrabber_get_item() -> None:
+    """Test MultipleDataGrabber get_item() error."""
     repo_uri1 = _testing_dataset["example_bids"]["uri"]
     rootdir = "example_bids_ses"
     replacements = ["subject", "session"]
@@ -134,8 +134,8 @@ def test_multiple_get_item() -> None:
         dg.get_item(subject="sub-01")  # type: ignore
 
 
-def test_multiple_validation() -> None:
-    """Test a multiple datagrabber init validation."""
+def test_MultipleDataGrabber_validation() -> None:
+    """Test MultipleDataGrabber init validation."""
     repo_uri1 = _testing_dataset["example_bids"]["uri"]
     repo_uri2 = _testing_dataset["example_bids_ses"]["uri"]
     rootdir = "example_bids_ses"

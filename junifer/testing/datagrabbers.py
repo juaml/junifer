@@ -1,4 +1,4 @@
-"""Provide testing datagrabbers."""
+"""Provide testing DataGrabbers."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -15,9 +15,9 @@ from ..datagrabber.base import BaseDataGrabber
 
 
 class OasisVBMTestingDataGrabber(BaseDataGrabber):
-    """Data Grabber for Oasis VBM testing data.
+    """DataGrabber for Oasis VBM testing data.
 
-    Wrapper for :func:`nilearn.datasets.fetch_oasis_vbm`
+    Wrapper for :func:`nilearn.datasets.fetch_oasis_vbm`.
 
     """
 
@@ -83,7 +83,7 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
 
 
 class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
-    """Data Grabber for SPM Auditory dataset.
+    """DataGrabber for SPM Auditory dataset.
 
     Wrapper for :func:`nilearn.datasets.fetch_spm_auditory`.
 
@@ -147,9 +147,9 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
 
 
 class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
-    """Data Grabber for Partly Cloudy dataset.
+    """DataGrabber for Partly Cloudy dataset.
 
-    Wrapper for :func:`nilearn.datasets.fetch_development_fmri`
+    Wrapper for :func:`nilearn.datasets.fetch_development_fmri`.
 
     Parameters
     ----------

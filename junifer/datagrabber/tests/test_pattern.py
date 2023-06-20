@@ -1,4 +1,4 @@
-"""Provide tests for pattern."""
+"""Provide tests for PatternDataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from junifer.datagrabber.pattern import PatternDataGrabber
+from junifer.datagrabber import PatternDataGrabber
 
 
 def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
@@ -261,7 +261,7 @@ def test_PatternDataGrabber(tmp_path: Path) -> None:
     assert out1["vbm"]["path"] != out2["vbm"]["path"]
 
 
-def test_pattern_data_grabber_confounds_format_error_on_init() -> None:
+def test_PatternDataGrabber_confounds_format_error_on_init() -> None:
     """Test PatterDataGrabber confounds format error on initialisation."""
     with pytest.raises(
         ValueError, match="Invalid value for `confounds_format`"
@@ -275,7 +275,7 @@ def test_pattern_data_grabber_confounds_format_error_on_init() -> None:
         )
 
 
-def test_pattern_data_grabber_confounds_format_error_on_fetch(
+def test_PatternDataGrabber_confounds_format_error_on_fetch(
     tmp_path: Path,
 ) -> None:
     """Test PatterDataGrabber confounds format error on fetching.
@@ -301,6 +301,6 @@ def test_pattern_data_grabber_confounds_format_error_on_fetch(
     )
     # Check error on fetch
     with pytest.raises(
-        ValueError, match="As the datagrabber used specifies 'BOLD_confounds'"
+        ValueError, match="As the DataGrabber used specifies 'BOLD_confounds'"
     ):
         datagrabber.get_item(subject="sub-001")

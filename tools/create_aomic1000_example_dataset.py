@@ -1,4 +1,4 @@
-"""Create a testing dataset for the DataladAOMICID1000 pattern datagrabber."""
+"""Create a testing dataset for DataladAOMICID1000."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>

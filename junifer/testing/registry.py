@@ -12,7 +12,7 @@ from .datagrabbers import (
 )
 
 
-# Register testing datagrabber
+# Register testing DataGrabbers
 register(
     step="datagrabber",
     name="OasisVBMTestingDataGrabber",

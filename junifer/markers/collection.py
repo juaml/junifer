@@ -104,8 +104,8 @@ class MarkerCollection:
 
         Parameters
         ----------
-        datagrabber : datagrabber-like
-            The datagrabber to validate.
+        datagrabber : DataGrabber-like
+            The DataGrabber to validate.
 
         """
         logger.info("Validating Marker Collection")

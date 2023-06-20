@@ -1,4 +1,4 @@
-"""Provide tests for datalad_base."""
+"""Provide tests for DataladDataGrabber."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
@@ -9,7 +9,7 @@ from typing import Type
 import datalad.api as dl
 import pytest
 
-from junifer.datagrabber.datalad_base import DataladDataGrabber
+from junifer.datagrabber import DataladDataGrabber
 
 
 _testing_dataset = {
@@ -26,20 +26,20 @@ _testing_dataset = {
 }
 
 
-def test_datalad_base_abstractness() -> None:
-    """Test datalad base is abstract."""
+def test_DataladDataGrabber_abstractness() -> None:
+    """Test DataladDataGrabber is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
         DataladDataGrabber()  # type: ignore
 
 
 @pytest.fixture
 def concrete_datagrabber() -> Type[DataladDataGrabber]:
-    """Return a concrete datagrabber class.
+    """Return a concrete datalad-based DataGrabber.
 
     Returns
     -------
     DataladDataGrabber
-        A concrete datagrabber class.
+        A concrete datalad-based DataGrabber.
 
     """
 
@@ -74,17 +74,18 @@ def concrete_datagrabber() -> Type[DataladDataGrabber]:
     return MyDataGrabber
 
 
-def test_datalad_install_errors(
+def test_DataladDataGrabber_install_errors(
     tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
-    """Test datalad base install errors / warnings.
+    """Test DataladDataGrabber install errors / warnings.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
     concrete_datagrabber : DataladDataGrabber
-        A concrete datagrabber class to use.
+        A concrete datalad-based DataGrabber class to use.
+
     """
 
     # Dataset cloned outside of datagrabber
@@ -112,17 +113,18 @@ def test_datalad_install_errors(
             pass
 
 
-def test_datalad_clone_cleanup(
+def test_DataladDataGrabber_clone_cleanup(
     tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
-    """Test datalad base clone and remove.
+    """Test DataladDataGrabber clone and remove.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
     concrete_datagrabber : DataladDataGrabber
-        A concrete datagrabber class to use.
+        A concrete datalad-based DataGrabber class to use.
+
     """
 
     # Clone whole dataset
@@ -160,13 +162,16 @@ def test_datalad_clone_cleanup(
     assert len(list(datadir.glob("*"))) == 0
 
 
-def test_datalad_clone_create_cleanup(concrete_datagrabber: Type) -> None:
-    """Test datalad base tempdir clone and remove.
+def test_DataladDataGrabber_clone_create_cleanup(
+    concrete_datagrabber: Type,
+) -> None:
+    """Test DataladDataGrabber tempdir clone and remove.
 
     Parameters
     ----------
     concrete_datagrabber : DataladDataGrabber
-        A concrete datagrabber class to use.
+        A concrete datalad-based DataGrabber class to use.
+
     """
 
     # Clone whole dataset
@@ -203,17 +208,18 @@ def test_datalad_clone_create_cleanup(concrete_datagrabber: Type) -> None:
     assert len(list(datadir.glob("*"))) == 0
 
 
-def test_datalad_previously_cloned(
+def test_DataladDataGrabber_previously_cloned(
     tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
-    """Test datalad base on cloned dataset.
+    """Test DataladDataGrabber on cloned dataset.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
     concrete_datagrabber : DataladDataGrabber
-        A concrete datagrabber class to use.
+        A concrete datalad-based DataGrabber class to use.
+
     """
 
     # Dataset cloned outside of datagrabber
@@ -271,17 +277,18 @@ def test_datalad_previously_cloned(
     assert len(list(datadir.glob("*"))) > 0
 
 
-def test_datalad_previously_cloned_and_get(
+def test_DataladDataGrabber_previously_cloned_and_get(
     tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
-    """Test datalad base on cloned dataset with files present.
+    """Test DataladDataGrabber on cloned dataset with files present.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
     concrete_datagrabber : DataladDataGrabber
-        A concrete datagrabber class to use.
+        A concrete datalad-based DataGrabber class to use.
+
     """
 
     # Dataset cloned outside of datagrabber with some files present
@@ -353,17 +360,18 @@ def test_datalad_previously_cloned_and_get(
     assert elem1_t1w.is_file() is True
 
 
-def test_datalad_previously_cloned_and_get_dirty(
+def test_DataladDataGrabber_previously_cloned_and_get_dirty(
     tmp_path: Path, concrete_datagrabber: Type
 ) -> None:
-    """Test datalad base on a dirty cloned dataset.
+    """Test DataladDataGrabber on a dirty cloned dataset.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
     concrete_datagrabber : DataladDataGrabber
-        A concrete datagrabber class to use.
+        A concrete datalad-based DataGrabber class to use.
+
     """
 
     # Dataset cloned outside of datagrabber with some files present and dirty

@@ -1,4 +1,4 @@
-"""Provide concrete implementations for AOMICPIOP1 data access."""
+"""Provide concrete implementation for AOMIC PIOP1 DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
@@ -10,19 +10,18 @@ from itertools import product
 from pathlib import Path
 from typing import Dict, List, Union
 
-from junifer.datagrabber import PatternDataladDataGrabber
-
 from ...api.decorators import register_datagrabber
 from ...utils import raise_error
+from ..pattern_datalad import PatternDataladDataGrabber
 
 
 @register_datagrabber
 class DataladAOMICPIOP1(PatternDataladDataGrabber):
-    """Concrete implementation for pattern-based data fetching of AOMICPIOP1.
+    """Concrete implementation for pattern-based data fetching of AOMIC PIOP1.
 
     Parameters
     ----------
-    datadir : str or Path, optional
+    datadir : str or Path or None, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
@@ -30,6 +29,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
             "gstroop", "workingmemory"} or list of the options, optional
         AOMIC PIOP1 task sessions. If None, all available task sessions are
         selected (default None).
+
     """
 
     def __init__(
@@ -147,6 +147,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         out : dict
             Dictionary of paths for each type of data required for the
             specified element.
+
         """
 
         task_acqs = {

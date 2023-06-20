@@ -1,4 +1,4 @@
-"""Provide class for juseless datalad datagrabber."""
+"""Provide concrete implementation for UKB VBM DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -14,13 +14,13 @@ from ....datagrabber import PatternDataladDataGrabber
 
 @register_datagrabber
 class JuselessDataladUKBVBM(PatternDataladDataGrabber):
-    """Juseless UKB VBM Data Grabber class.
+    """Concrete implementation for Juseless UKB VBM data fetching.
 
-    Implements a Data Grabber to access the UKB VBM data in Juseless.
+    Implements a DataGrabber to access the UKB VBM data in Juseless.
 
     Parameters
     ----------
-    datadir : str or pathlib.Path, optional
+    datadir : str or pathlib.Path or None, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).

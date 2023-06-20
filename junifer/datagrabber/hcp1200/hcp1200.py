@@ -1,14 +1,17 @@
-"""Provide concrete implementations for HCP data access."""
+"""Provide concrete implementation for pattern-based HCP1200 DataGrabber."""
+
+# Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Leonard Sasse <l.sasse@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
+# License: AGPL
 
 from itertools import product
 from pathlib import Path
 from typing import Dict, List, Union
 
-from junifer.datagrabber.datalad_base import DataladDataGrabber
-
-from ..api.decorators import register_datagrabber
+from ...api.decorators import register_datagrabber
+from ..pattern import PatternDataGrabber
 from ..utils import raise_error
-from .pattern import PatternDataGrabber
 
 
 @register_datagrabber
@@ -18,20 +21,22 @@ class HCP1200(PatternDataGrabber):
     Parameters
     ----------
     datadir : str or Path, optional
-        The directory where the datalad dataset will be cloned.
+        The directory where the data is / will be stored.
     tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
-            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
+            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options or None \
+            , optional
         HCP task sessions. If None, all available task sessions are selected
         (default None).
-    phase_encodings : {"LR", "RL"} or list of the options, optional
+    phase_encodings : {"LR", "RL"} or list of the options or None, optional
         HCP phase encoding directions. If None, both will be used
         (default None).
     ica_fix : bool, optional
         Whether to retrieve data that was processed with ICA+FIX.
-        Only 'REST1' and 'REST2' tasks are available with ICA+FIX (default
+        Only "REST1" and "REST2" tasks are available with ICA+FIX (default
         False).
     **kwargs
         Keyword arguments passed to superclass.
+
     """
 
     def __init__(
@@ -114,7 +119,7 @@ class HCP1200(PatternDataGrabber):
         self.phase_encodings = phase_encodings
 
     def get_item(self, subject: str, task: str, phase_encoding: str) -> Dict:
-        """Index one element in the dataset.
+        """Implement single element indexing in the database.
 
         Parameters
         ----------
@@ -128,8 +133,8 @@ class HCP1200(PatternDataGrabber):
 
         Returns
         -------
-        out : dict
-            Dictionary of paths for each type of data required for the
+        dict
+            Dictionary of dictionaries for each type of data required for the
             specified element.
 
         """
@@ -150,7 +155,7 @@ class HCP1200(PatternDataGrabber):
         Returns
         -------
         list
-            The list of elements in the dataset.
+            The list of elements that can be grabbed in the dataset.
 
         """
         subjects = [
@@ -165,53 +170,3 @@ class HCP1200(PatternDataGrabber):
             elems.append((subject, task, phase_encoding))
 
         return elems
-
-
-@register_datagrabber
-class DataladHCP1200(DataladDataGrabber, HCP1200):
-    """Concrete implementation for datalad-based data fetching of HCP1200.
-
-    Parameters
-    ----------
-    datadir : str or Path, optional
-        The directory where the datalad dataset will be cloned. If None,
-        the datalad dataset will be cloned into a temporary directory
-        (default None).
-    tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
-            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
-        HCP task sessions. If None, all available task sessions are selected
-        (default None).
-    phase_encodings : {"LR", "RL"} or list of the options, optional
-        HCP phase encoding directions. If None, both will be used
-        (default None).
-    ica_fix : bool, optional
-        Whether to retrieve data that was processed with ICA+FIX.
-        Only 'REST1' and 'REST2' tasks are available with ICA+FIX (default
-        False).
-    """
-
-    def __init__(
-        self,
-        datadir: Union[str, Path, None] = None,
-        tasks: Union[str, List[str], None] = None,
-        phase_encodings: Union[str, List[str], None] = None,
-        ica_fix: bool = False,
-    ) -> None:
-        uri = (
-            "https://github.com/datalad-datasets/"
-            "human-connectome-project-openaccess.git"
-        )
-        rootdir = "HCP1200"
-        super().__init__(
-            datadir=datadir,
-            tasks=tasks,
-            phase_encodings=phase_encodings,
-            uri=uri,
-            rootdir=rootdir,
-            ica_fix=ica_fix,
-        )
-
-    @property
-    def skip_file_check(self) -> bool:
-        """Skip file check existence."""
-        return True

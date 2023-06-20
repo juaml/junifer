@@ -1,4 +1,4 @@
-"""Provide tests for Oasis VBM Testing datagrabber."""
+"""Provide tests for OasisVBMTestingDataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
@@ -7,7 +7,7 @@ from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
 
 
 def test_OasisVBMTestingDataGrabber() -> None:
-    """Test Oasis VBM Testing datagrabber."""
+    """Test OasisVBMTestingDataGrabber."""
     expected_elements = [
         "sub-01",
         "sub-02",

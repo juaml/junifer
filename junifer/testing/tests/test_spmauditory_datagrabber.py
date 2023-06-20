@@ -1,4 +1,4 @@
-"""Provide tests for SPM Auditory datagrabber."""
+"""Provide tests for SPMAuditoryTestingDataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
@@ -7,7 +7,7 @@ from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
 def test_SPMAuditoryTestingDataGrabber() -> None:
-    """Test SPM Auditory datagrabber."""
+    """Test SPMAuditoryTestingDataGrabber."""
     expected_elements = [
         "sub001",
         "sub002",

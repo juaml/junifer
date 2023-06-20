@@ -1,4 +1,4 @@
-"""Provide tests for PartlyCloudy datagrabber."""
+"""Provide tests for PartlyCloudyTestingDataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
@@ -7,7 +7,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
 def test_PartlyCloudyTestingDataGrabber() -> None:
-    """Test PartlyCloudy datagrabber."""
+    """Test PartlyCloudyTestingDataGrabber."""
     expected_elements = [
         "sub-01",
         "sub-02",

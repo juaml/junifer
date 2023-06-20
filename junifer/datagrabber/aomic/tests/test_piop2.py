@@ -1,4 +1,4 @@
-"""Provide tests for aomic piop2."""
+"""Provide tests DataladAOMICPIOP2 DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
@@ -8,12 +8,12 @@
 
 import pytest
 
-from junifer.datagrabber.aomic import DataladAOMICPIOP2
+from junifer.datagrabber import DataladAOMICPIOP2
 from junifer.utils import configure_logging
 
 
-def test_aomic_piop2_datagrabber() -> None:
-    """Test datalad AOMICPIOP2 datagrabber."""
+def test_DataladAOMICPIOP2() -> None:
+    """Test DataladAOMICPIOP2 DataGrabber."""
     configure_logging(level="DEBUG")
 
     uri_PIOP2 = "https://gin.g-node.org/juaml/datalad-example-aomicpiop2"
@@ -132,7 +132,7 @@ def test_aomic_piop2_datagrabber() -> None:
             assert sub == meta["element"]["subject"]
 
 
-def test_piop2_invalid_tasks():
+def test_DataladAOMICPIOP2_invalid_tasks():
     """Test whether invalid task fails."""
     with pytest.raises(
         ValueError,

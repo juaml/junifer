@@ -1,4 +1,4 @@
-"""Provide concrete implementations for AOMIC1000 data access."""
+"""Provide concrete implementation for AOMIC ID1000 DataGrabber."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
@@ -9,21 +9,21 @@
 from pathlib import Path
 from typing import Dict, Union
 
-from junifer.datagrabber import PatternDataladDataGrabber
-
 from ...api.decorators import register_datagrabber
+from ..pattern_datalad import PatternDataladDataGrabber
 
 
 @register_datagrabber
 class DataladAOMICID1000(PatternDataladDataGrabber):
-    """Concrete implementation for pattern-based data fetching of AOMICID1000.
+    """Concrete implementation for datalad-based data fetching of AOMIC ID1000.
 
     Parameters
     ----------
-    datadir : str or Path, optional
+    datadir : str or Path or None, optional
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
+
     """
 
     def __init__(
@@ -115,6 +115,7 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         out : dict
             Dictionary of paths for each type of data required for the
             specified element.
+
         """
         out = super().get_item(subject=subject)
         out["BOLD"]["mask_item"] = "BOLD_mask"
