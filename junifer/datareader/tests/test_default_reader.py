@@ -1,4 +1,4 @@
-"""Provide tests for default data reader."""
+"""Provide tests for DefaultDataReader."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -19,8 +19,8 @@ from junifer.datareader import DefaultDataReader
 @pytest.mark.parametrize(
     "type_", [["T1w", "BOLD", "T2", "dwi"], [], ["whatever"]]
 )
-def test_validation(type_) -> None:
-    """Test validating input/output.
+def test_DefaultDataReader_validation(type_) -> None:
+    """Test DefaultDataReader validating input/output.
 
     Parameters
     ----------
@@ -34,8 +34,8 @@ def test_validation(type_) -> None:
     assert reader.validate(type_) == type_
 
 
-def test_meta() -> None:
-    """Test reader metadata."""
+def test_DefaultDataReader_meta() -> None:
+    """Test DefaultDataReader metadata."""
     reader = DefaultDataReader()
 
     nib_data_path = Path(nib_testing.data_path)
@@ -52,8 +52,8 @@ def test_meta() -> None:
 @pytest.mark.parametrize(
     "fname", ["example4d.nii.gz", "reoriented_anat_moved.nii"]
 )
-def test_read_nifti(fname: str) -> None:
-    """Test reading NIFTI files.
+def test_DefaultDataReader_nifti(fname: str) -> None:
+    """Test DefaultDataReader reading NIfTI files.
 
     Parameters
     ----------
@@ -85,8 +85,8 @@ def test_read_nifti(fname: str) -> None:
     assert output["BOLD"]["path"] == output2["BOLD"]["path"]
 
 
-def test_read_unknown() -> None:
-    """Test (not) reading unknown files."""
+def test_DefaultDataReader_unknown() -> None:
+    """Test DefaultDataReader (not) reading unknown files."""
     reader = DefaultDataReader()
     nib_data_path = Path(nib_testing.data_path)
 
@@ -115,8 +115,8 @@ def test_read_unknown() -> None:
         reader.fit_transform(input)
 
 
-def test_read_csv(tmp_path: Path) -> None:
-    """Test reading CSV files.
+def test_DefaultDataReader_csv(tmp_path: Path) -> None:
+    """Test DefaultDataReader reading CSV files.
 
     Parameters
     ----------

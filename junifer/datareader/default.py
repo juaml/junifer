@@ -1,4 +1,4 @@
-"""Provide class for default data reader."""
+"""Provide concrete implementation for default DataReader."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -32,7 +32,7 @@ _readers["TSV"] = {"func": pd.read_csv, "params": {"sep": "\t"}}
 
 @register_datareader
 class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
-    """Mixin class for default data reader."""
+    """Concrete implementation for common data reading."""
 
     def validate_input(self, input: List[str]) -> List[str]:
         """Validate input.
@@ -48,6 +48,7 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
         list of str
             The actual elements of the input that will be processed by this
             pipeline step.
+
         """
         # Nothing to validate, any input is fine
         return input

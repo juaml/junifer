@@ -39,19 +39,23 @@ def register_datagrabber(klass: Type) -> Type:
 
 
 def register_datareader(klass: Type) -> Type:
-    """Datareader registration decorator.
+    """Register DataReader.
 
-    Registers the datareader so it can be used by name.
+    Registers the DataReader so it can be used by name.
 
     Parameters
     ----------
     klass: class
-        The class of the datareader to register.
+        The class of the DataReader to register.
 
     Returns
     -------
     klass: class
         The unmodified input class.
+
+    Notes
+    -----
+    It should only be used as a decorator.
 
     """
     register(
