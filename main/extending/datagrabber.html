@@ -236,7 +236,7 @@
 <div class="sidebar-tree">
   <p class="version-select">
     <span class="caption-text">Other Versions</span>
-  </p> 
+  </p>
   <div id="versions">
     
     <span class="caption-text">Branches</span>
@@ -311,9 +311,9 @@ only one of each <em>data type</em> (see <a class="reference internal" href="../
 </ol>
 <p>then the <em>element</em> should be composed of 3 items:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">subject</span></code>: The subject IDs, e.g. <cite>sub001</cite>, <cite>sub002</cite>, … <cite>sub020</cite></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">session</span></code>: The session number, e.g. <cite>ses1</cite>, <cite>ses2</cite></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">task</span></code>: The task performed, e.g. <cite>rest</cite>, <cite>stroop</cite></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">subject</span></code>: The subject IDs, e.g. <code class="docutils literal notranslate"><span class="pre">sub001</span></code>, <code class="docutils literal notranslate"><span class="pre">sub002</span></code>, … <code class="docutils literal notranslate"><span class="pre">sub020</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">session</span></code>: The session number, e.g. <code class="docutils literal notranslate"><span class="pre">ses1</span></code>, <code class="docutils literal notranslate"><span class="pre">ses2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">task</span></code>: The task performed, e.g. <code class="docutils literal notranslate"><span class="pre">rest</span></code>, <code class="docutils literal notranslate"><span class="pre">stroop</span></code></p></li>
 </ul>
 <p>If any of these items were not part of the element, then we will have more than
 one <code class="docutils literal notranslate"><span class="pre">T1w</span></code> and / or <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> image for each subject, which is not allowed.</p>
@@ -323,9 +323,10 @@ each task, but once in the entire session. So in this case, the <code class="doc
 for the element (<code class="docutils literal notranslate"><span class="pre">sub001</span></code>, <code class="docutils literal notranslate"><span class="pre">ses1</span></code>, <code class="docutils literal notranslate"><span class="pre">rest</span></code>) will be the same as the
 <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image for the element (<code class="docutils literal notranslate"><span class="pre">sub001</span></code>, <code class="docutils literal notranslate"><span class="pre">ses1</span></code>, <code class="docutils literal notranslate"><span class="pre">stroop</span></code>).</p>
 <p>We will now continue this section using as an example, a dataset in BIDS format
-in which 9 subjects (<cite>sub-01</cite> to <cite>sub-09</cite>) were scanned each during 3
-sessions (<cite>ses-01</cite>, <cite>ses-02</cite>, <cite>ses-03</cite>) and each session included a <cite>T1w</cite> and
-a <cite>BOLD</cite> image (resting-state), except for <cite>ses-03</cite> which was only anatomical.</p>
+in which 9 subjects (<code class="docutils literal notranslate"><span class="pre">sub-01</span></code> to <code class="docutils literal notranslate"><span class="pre">sub-09</span></code>) were scanned each during 3
+sessions (<code class="docutils literal notranslate"><span class="pre">ses-01</span></code>, <code class="docutils literal notranslate"><span class="pre">ses-02</span></code>, <code class="docutils literal notranslate"><span class="pre">ses-03</span></code>) and each session included a
+<code class="docutils literal notranslate"><span class="pre">T1w</span></code> and a <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> image (resting-state), except for <code class="docutils literal notranslate"><span class="pre">ses-03</span></code> which was
+only anatomical.</p>
 </section>
 <section id="step-2-think-about-the-dataset-s-structure">
 <h2><span class="section-number">7.2.2. </span>Step 2: Think about the dataset’s structure<a class="headerlink" href="#step-2-think-about-the-dataset-s-structure" title="Permalink to this heading">#</a></h2>
@@ -335,7 +336,7 @@ the Data Grabber needs to be implemented.</p>
 <p>Junifer provides an abstract class to deal with datasets that can be thought in
 terms of <em>patterns</em>. A <em>pattern</em> is a string that contains placeholders that are
 replaced by the actual values of the element. In our BIDS example, the path
-to the T1w image of subject <cite>sub-01</cite> and session <cite>ses-01</cite>, relative to the
+to the T1w image of subject <code class="docutils literal notranslate"><span class="pre">sub-01</span></code> and session <code class="docutils literal notranslate"><span class="pre">ses-01</span></code>, relative to the
 dataset location, is <code class="docutils literal notranslate"><span class="pre">sub-01/ses-01/anat/sub-01_ses-01_T1w.nii.gz</span></code>. By
 replacing <code class="docutils literal notranslate"><span class="pre">sub-01</span></code> with <code class="docutils literal notranslate"><span class="pre">sub-02</span></code>, we can obtain the T1w image of the first
 session of the second subject. Indeed, the path to the T1w images can be
