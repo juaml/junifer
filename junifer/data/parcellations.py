@@ -26,18 +26,16 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
-"""
-A dictionary containing all supported parcellations and their respective valid
-parameters.
+# A dictionary containing all supported parcellations and their respective
+# valid parameters.
 
-Each entry is a dictionary that must contain at least the following keys:
-* 'family': the parcellation's family name (e.g. 'Schaefer', 'SUIT')
+# Each entry is a dictionary that must contain at least the following keys:
+# * 'family': the parcellation's family name (e.g. 'Schaefer', 'SUIT')
 
-Optional keys:
-* 'valid_resolutions': a list of valid resolutions for the parcellation
-(e.g. [1, 2])
+# Optional keys:
+# * 'valid_resolutions': a list of valid resolutions for the parcellation
+# (e.g. [1, 2])
 
-"""
 # TODO: have separate dictionary for built-in
 _available_parcellations: Dict[str, Dict[Any, Any]] = {
     "SUITxSUIT": {"family": "SUIT", "space": "SUIT"},

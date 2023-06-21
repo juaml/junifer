@@ -41,7 +41,7 @@ Configs
 External
 --------
 
-.. toctree:: 
+.. toctree::
    :maxdepth: 2
    :caption: Contents:
 

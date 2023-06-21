@@ -4,7 +4,7 @@ corrected_args=()
 docker_args=()
 mounts=0
 for var in "$@"
-do 
+do
 if [ -d "${var}" ]; then
         echo "$var is a directory"
         var=$(realpath "${var}")

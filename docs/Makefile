@@ -22,7 +22,7 @@ clean:
 local: news
 	make _build_local; STATUS=$$?; make news_cleanup; exit $$STATUS
 
-news: 
+news:
 	@echo "Generating whats_new.rst"
 	cd ../ && towncrier build --keep
 

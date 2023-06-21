@@ -20,14 +20,12 @@ _vois_path = Path(__file__).parent / "VOIs"
 # Path to the metadata of the VOIs
 _vois_meta_path = _vois_path / "meta"
 
-"""
-A dictionary containing all supported coordinates and their respective file or
-data.
+# A dictionary containing all supported coordinates and their respective file
+# or data.
 
-The built-in coordinates are files that are shipped with the package in the
-data/VOIs directory. The user can also register their own coordinates, which
-will be stored as numpy arrays in the dictionary.
-"""
+# The built-in coordinates are files that are shipped with the package in the
+# data/VOIs directory. The user can also register their own coordinates, which
+# will be stored as numpy arrays in the dictionary.
 _available_coordinates: Dict[
     str, Union[Path, Dict[str, Union[ArrayLike, List[str]]]]
 ] = {

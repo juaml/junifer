@@ -63,16 +63,14 @@ def _fetch_icbm152_brain_gm_mask(
     return mask
 
 
-"""
-A dictionary containing all supported masks and their respective file or
-data.
+# A dictionary containing all supported masks and their respective file or
+# data.
 
-The built-in masks are files that are shipped with the package in the
-data/masks directory. The user can also register their own masks.
+# The built-in masks are files that are shipped with the package in the
+# data/masks directory. The user can also register their own masks.
 
-Callable masks should be functions that take at least one parameter:
-* `target_img`: the image to which the mask will be applied.
-"""
+# Callable masks should be functions that take at least one parameter:
+# * `target_img`: the image to which the mask will be applied.
 _available_masks: Dict[str, Dict[str, Any]] = {
     "GM_prob0.2": {"family": "Vickery-Patil"},
     "GM_prob0.2_cortex": {"family": "Vickery-Patil"},
