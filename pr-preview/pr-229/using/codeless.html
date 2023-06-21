@@ -197,7 +197,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
@@ -322,16 +322,17 @@ datareaders, and thus, it is also possible to configure this step.</p>
 <section id="data-grabber">
 <h3>Data Grabber<a class="headerlink" href="#data-grabber" title="Permalink to this heading">#</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">datagrabber</span></code> section must be configured using the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key to specify
-the datagrabber to use. Additional keys correspond to the parameters of the
-datagrabber.</p>
-<p>For example, to use the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a> datagrabber, we just need to
+the DataGrabber to use. Additional keys correspond to the parameters of the
+DataGrabber constructor.</p>
+<p>For example, to use the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a> DataGrabber, we just need to
 specify its name as the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataladAOMICPIOP1</span>
 </pre></div>
 </div>
-<p>However, it is also possible to pass parameters to the datagrabber. In this case,
-we can restrict the datagrabber to fetch only the <code class="docutils literal notranslate"><span class="pre">restingstate</span></code> task.</p>
+<p>However, it is also possible to pass parameters to the DataGrabber constructor.
+In this case, we can restrict the DataGrabber to fetch only the <code class="docutils literal notranslate"><span class="pre">restingstate</span></code>
+task.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataladAOMICPIOP1</span>
 <span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restingstate</span>
@@ -346,11 +347,11 @@ we can restrict the datagrabber to fetch only the <code class="docutils literal 
 <section id="data-reader">
 <h3>Data Reader<a class="headerlink" href="#data-reader" title="Permalink to this heading">#</a></h3>
 <p>As mentioned before, this section is entirely optional, as junifer only provides
-one data reader (<a class="reference internal" href="../api/datareaders.html#junifer.datareader.DefaultDataReader" title="junifer.datareader.DefaultDataReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDataReader</span></code></a>), which is the default in case the
+one DataReader (<a class="reference internal" href="../api/datareaders.html#junifer.datareader.DefaultDataReader" title="junifer.datareader.DefaultDataReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDataReader</span></code></a>), which is the default in case the
 section is not specified.</p>
 <p>In any case, the syntax of the section is the same as for the <code class="docutils literal notranslate"><span class="pre">datagrabber</span></code>
-section, using the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key to specify the datareader to use, and additional
-keys to pass parameters to the datareader:</p>
+section, using the <code class="docutils literal notranslate"><span class="pre">kind</span></code> key to specify the DataReader to use, and additional
+keys to pass parameters to the DataReader constructor:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datareader</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DefaultDataReader</span>
 </pre></div>
