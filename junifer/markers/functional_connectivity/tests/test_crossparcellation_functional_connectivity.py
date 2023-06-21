@@ -14,8 +14,8 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
-parcellation_ONE = "Schaefer100x17"
-parcellation_TWO = "Schaefer200x17"
+parcellation_one = "Schaefer100x17"
+parcellation_two = "Schaefer200x17"
 
 
 def test_compute() -> None:
@@ -33,8 +33,8 @@ def test_compute() -> None:
         }
 
         crossparcellation = CrossParcellationFC(
-            parcellation_one=parcellation_ONE,
-            parcellation_two=parcellation_TWO,
+            parcellation_one=parcellation_one,
+            parcellation_two=parcellation_two,
             correlation_method="spearman",
         )
         out = crossparcellation.compute(input_dict["BOLD"])
@@ -60,8 +60,8 @@ def test_store(tmp_path: Path) -> None:
         input_dict["BOLD"]["data"] = niimg
 
         crossparcellation = CrossParcellationFC(
-            parcellation_one=parcellation_ONE,
-            parcellation_two=parcellation_TWO,
+            parcellation_one=parcellation_one,
+            parcellation_two=parcellation_two,
             correlation_method="spearman",
         )
         uri = tmp_path / "test_crossparcellation.sqlite"
@@ -77,7 +77,7 @@ def test_get_output_type() -> None:
     """Test CrossParcellationFC get_output_type()."""
 
     crossparcellation = CrossParcellationFC(
-        parcellation_one=parcellation_ONE, parcellation_two=parcellation_TWO
+        parcellation_one=parcellation_one, parcellation_two=parcellation_two
     )
     input_ = "BOLD"
     output = crossparcellation.get_output_type(input_)

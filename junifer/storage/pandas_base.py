@@ -131,10 +131,12 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
         Parameters
         ----------
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
         df : pandas.DataFrame or pandas.Series
             The pandas DataFrame or Series to store.
-        meta : dict
-            The metadata as a dictionary.
 
         Raises
         ------

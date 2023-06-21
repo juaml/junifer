@@ -113,7 +113,7 @@ def build(
         Name of the function.
     baseclass : class
         Class to be checked against.
-    init_parms : dict, optional
+    init_params : dict or None, optional
         Parameters to pass to the base class constructor (default None).
 
     Returns
@@ -139,9 +139,9 @@ def build(
     try:
         # Create instance of the class
         object_ = klass(**init_params)
-    except Exception as e:
+    except (ValueError, TypeError) as e:
         raise_error(
-            msg=(f"Failed to create {step} ({name}). " f"Error: {e}"),
+            msg=f"Failed to create {step} ({name}). Error: {e}",
             klass=RuntimeError,
             exception=e,
         )

@@ -89,15 +89,15 @@ def test_winsorized_mean() -> None:
 def test_count() -> None:
     """Test count."""
     input = np.zeros((10, 3))
-    ax1 = np.ones((10)) * 3
-    ax2 = np.ones((3)) * 10
+    ax1 = np.ones(10) * 3
+    ax2 = np.ones(3) * 10
     assert_array_equal(count(input, axis=-1), ax1)
     assert_array_equal(count(input, axis=1), ax1)
     assert_array_equal(count(input, axis=0), ax2)
 
     input = np.zeros((10, 0))
-    ax1 = np.zeros((10))
-    ax2 = np.zeros((0))
+    ax1 = np.zeros(10)
+    ax2 = np.zeros(0)
 
     assert_array_equal(count(input, axis=-1), ax1)
     assert_array_equal(count(input, axis=1), ax1)

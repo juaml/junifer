@@ -89,8 +89,9 @@ def test_ALFFParcels_python_vs_afni(
 
     Parameters
     ----------
-    factional : bool
+    fractional : bool
         Whether to compute fractional ALFF or not.
+
     """
 
     with PartlyCloudyTestingDataGrabber() as dg:

@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 from ..api.decorators import register_marker
 from ..data import get_mask, load_coordinates
@@ -57,7 +57,7 @@ class SphereAggregation(BaseMarker):
 
     """
 
-    _DEPENDENCIES = {"nilearn", "numpy"}
+    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "numpy"}
 
     def __init__(
         self,

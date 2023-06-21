@@ -178,8 +178,8 @@ def test_lib_logging(tmp_path: Path) -> None:
 
     """
     # Import third-party packages
-    import numpy as np  # noqa
-    import pandas  # noqa
+    import numpy  # noqa: F401
+    import pandas  # noqa: F401
 
     log_file_path = tmp_path / "test_lib_logging.log"
     configure_logging(fname=log_file_path, level="INFO")

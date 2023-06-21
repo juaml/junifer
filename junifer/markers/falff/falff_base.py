@@ -6,7 +6,7 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import Dict, List, Optional
+from typing import ClassVar, Dict, List, Optional, Union
 
 from ...utils.logging import raise_error
 from ..base import BaseMarker
@@ -44,7 +44,9 @@ class ALFFBase(BaseMarker):
 
     """
 
-    _EXT_DEPENDENCIES = [
+    _EXT_DEPENDENCIES: ClassVar[
+        List[Dict[str, Union[str, bool, List[str]]]]
+    ] = [
         {
             "name": "afni",
             "optional": True,
@@ -155,7 +157,7 @@ class ALFFBase(BaseMarker):
         )
         post_data = falff if self.fractional else alff
 
-        post_input = {k: v for k, v in input.items()}
+        post_input = dict(input.items())
         post_input["data"] = post_data
         post_input["path"] = None
 

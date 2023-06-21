@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 import numpy as np
 from nilearn.image import math_img, resample_to_img
@@ -51,7 +51,7 @@ class ParcelAggregation(BaseMarker):
         None).
     """
 
-    _DEPENDENCIES = {"nilearn", "numpy"}
+    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "numpy"}
 
     def __init__(
         self,

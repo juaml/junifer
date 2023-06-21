@@ -15,9 +15,9 @@ from junifer.pipeline.update_meta_mixin import UpdateMetaMixin
     "input, step_name, dependencies, expected",
     [
         ({}, "step_name", None, set()),
-        ({}, "step_name", ["numpy"], set(["numpy"])),
-        ({}, "step_name", "numpy", set(["numpy"])),
-        ({}, "step_name", set(["numpy"]), set(["numpy"])),
+        ({}, "step_name", ["numpy"], {"numpy"}),
+        ({}, "step_name", "numpy", {"numpy"}),
+        ({}, "step_name", {"numpy"}, {"numpy"}),
     ],
 )
 def test_UpdateMetaMixin(

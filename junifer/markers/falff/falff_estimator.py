@@ -237,7 +237,7 @@ class ALFFEstimator:
         falff_img = nimg.new_img_like(data, python_falff)
         return alff_img, falff_img
 
-    @lru_cache(maxsize=None, typed=True)  # noqa: B019
+    @lru_cache(maxsize=None, typed=True)
     def _compute(
         self,
         use_afni: bool,

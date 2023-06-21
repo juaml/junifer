@@ -155,7 +155,7 @@ def test_nifti_spheres_masker_overlap() -> None:
     affine = np.eye(4)
     shape = (5, 5, 5)
 
-    data = np.random.RandomState(42).random_sample(shape + (5,))
+    data = np.random.RandomState(42).random_sample((*shape, 5))
     fmri_img = nibabel.Nifti1Image(data, affine)
 
     seeds = [(0, 0, 0), (2, 2, 2)]

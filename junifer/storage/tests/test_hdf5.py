@@ -882,6 +882,12 @@ def test_multi_output_store_and_collect(
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    n_elements : int
+        The parametrized element count.
+    chunk_size : int
+        The parametrized chunk size.
+    kind : str
+        The parametrized storage kind.
 
     """
     uri = tmp_path / "test_multi_output_store_and_collect.hdf5"

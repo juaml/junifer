@@ -94,7 +94,7 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
         load_parcellation("WrongLabels")
 
     # Test wrong number of labels
-    register_parcellation("WrongLabels2", schaefer_path, labels + ["wrong"])
+    register_parcellation("WrongLabels2", schaefer_path, [*labels, "wrong"])
 
     with pytest.raises(ValueError, match=r"has 100 parcels but 101"):
         load_parcellation("WrongLabels2")

@@ -74,7 +74,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Create parent directories if not present
         if not uri.parent.exists():
             logger.info(
-                f"Output directory ({str(uri.parent.absolute())}) "
+                f"Output directory ({uri.parent.absolute()!s}) "
                 "does not exist, creating now."
             )
             uri.parent.mkdir(parents=True, exist_ok=True)
@@ -351,10 +351,12 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         Parameters
         ----------
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
         df : pandas.DataFrame or pandas.Series
             The pandas DataFrame or Series to store.
-        meta : dict
-            The metadata as a dictionary.
 
         Raises
         ------
@@ -476,7 +478,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 "options that will not raise this warning.",
             )
             data_df = data_df.stack()
-            new_names = [x for x in data_df.index.names[:-1]]
+            new_names = list(data_df.index.names[:-1])
             new_names.append("pair")
             data_df.index.names = new_names
 
@@ -506,7 +508,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Glob files
         files = self.uri.parent.glob(f"*{self.uri.name}")  # type: ignore
         for elem in tqdm(files, desc="file"):
-            logger.debug(f"Reading from {str(elem.absolute())}")
+            logger.debug(f"Reading from {elem.absolute()!s}")
             in_storage = SQLiteFeatureStorage(uri=elem)
             in_engine = in_storage.get_engine()
             # Open "meta" table

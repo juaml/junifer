@@ -103,6 +103,7 @@ def register_parcellation(
     ValueError
         If the parcellation name is already registered and overwrite is set to
         False or if the parcellation name is a built-in parcellation.
+
     """
     # Check for attempt of overwriting built-in parcellations
     if name in _available_parcellations:
@@ -139,6 +140,7 @@ def list_parcellations() -> List[str]:
     -------
     list of str
         A list with all available parcellations.
+
     """
     return sorted(_available_parcellations.keys())
 
@@ -187,6 +189,7 @@ def load_parcellation(
         Parcellation labels.
     pathlib.Path
         File path to the parcellation image.
+
     """
     # Invalid parcellation name
     if name not in _available_parcellations:
@@ -209,7 +212,7 @@ def load_parcellation(
             **parcellation_definition,
         )
 
-    logger.info(f"Loading parcellation {str(parcellation_fname.absolute())}")
+    logger.info(f"Loading parcellation {parcellation_fname.absolute()!s}")
 
     parcellation_img = None
     if path_only is False:
@@ -254,12 +257,12 @@ def _retrieve_parcellation(
         available, the closest resolution will be loaded. Preferably, use a
         resolution higher than the desired one. By default, will load the
         highest one (default None).
+    **kwargs
+        Use to specify parcellation-specific keyword arguments found in the
+        following section.
 
     Other Parameters
     ----------------
-    **kwargs
-        Use to specify parcellation-specific keyword arguments:
-
     * Schaefer :
       ``n_rois`` : {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}
             Granularity of parcellation to be used.
@@ -289,6 +292,7 @@ def _retrieve_parcellation(
     ------
     ValueError
         If the parcellation's name is invalid.
+
     """
     if parcellations_dir is None:
         parcellations_dir = (
@@ -364,6 +368,7 @@ def _retrieve_schaefer(
     ValueError
         If invalid value is provided for `n_rois` or `yeo_networks` or if
         there is a problem fetching the parcellation.
+
     """
     logger.info("Parcellation parameters:")
     logger.info(f"\tn_rois: {n_rois}")
@@ -471,6 +476,7 @@ def _retrieve_tian(
     ValueError
         If invalid value is provided for `scale` or `magneticfield` or `space`
         or if there is a problem fetching the parcellation.
+
     """
     # show parameters to user
     logger.info("Parcellation parameters:")
@@ -619,7 +625,7 @@ def _retrieve_suit(
         see http://www.diedrichsenlab.org/imaging/suit.htm).
 
     Returns
-    ------
+    -------
     pathlib.Path
         File path to the parcellation image.
     list of str
@@ -630,6 +636,7 @@ def _retrieve_suit(
     ValueError
         If invalid value is provided for `space` or if there is a problem
         fetching the parcellation.
+
     """
     logger.info("Parcellation parameters:")
     logger.info(f"\tspace: {space}")

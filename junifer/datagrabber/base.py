@@ -56,8 +56,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
             An element that can be indexed by the DataGrabber.
 
         """
-        for elem in self.get_elements():
-            yield elem
+        yield from self.get_elements()
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Dict]:
         """Enable indexing support.

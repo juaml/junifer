@@ -5,7 +5,7 @@
 
 
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 from nilearn.connectome import ConnectivityMeasure
 from sklearn.covariance import EmpiricalCovariance
@@ -42,7 +42,7 @@ class FunctionalConnectivityBase(BaseMarker):
 
     """
 
-    _DEPENDENCIES = {"nilearn", "scikit-learn"}
+    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "scikit-learn"}
 
     def __init__(
         self,

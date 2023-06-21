@@ -230,7 +230,7 @@ class DataladDataGrabber(BaseDataGrabber):
 
             # Check for dirty datasets:
             status = self._dataset.status()
-            if any([x["state"] != "clean" for x in status]):
+            if any(x["state"] != "clean" for x in status):
                 self.datalad_dirty = True
                 warn_with_log(
                     "At least one file is not clean, Junifer will "

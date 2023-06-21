@@ -32,10 +32,10 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
     if not isinstance(filepath, Path):
         filepath = Path(filepath)
 
-    logger.info(f"Parsing yaml file: {str(filepath.absolute())}")
+    logger.info(f"Parsing yaml file: {filepath.absolute()!s}")
     # Filepath existence check
     if not filepath.exists():
-        raise_error(f"File does not exist: {str(filepath.absolute())}")
+        raise_error(f"File does not exist: {filepath.absolute()!s}")
     # Filepath reading
     contents = yaml.load(filepath)
     if "elements" in contents:

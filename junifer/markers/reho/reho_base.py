@@ -4,7 +4,7 @@
 # License: AGPL
 
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Union
 
 from ...utils import logger, raise_error
 from ..base import BaseMarker
@@ -29,7 +29,9 @@ class ReHoBase(BaseMarker):
 
     """
 
-    _EXT_DEPENDENCIES = [
+    _EXT_DEPENDENCIES: ClassVar[
+        List[Dict[str, Union[str, bool, List[str]]]]
+    ] = [
         {
             "name": "afni",
             "optional": True,
@@ -102,7 +104,7 @@ class ReHoBase(BaseMarker):
         .. [1] Jiang, L., & Zuo, X. N. (2016).
                Regional Homogeneity: A Multimodal, Multiscale Neuroimaging
                Marker of the Human Connectome.
-               The Neuroscientist, Volume 22(5), Pages 486–505.
+               The Neuroscientist, Volume 22(5), Pages 486-505.
                https://doi.org/10.1177/1073858415595004
 
         """

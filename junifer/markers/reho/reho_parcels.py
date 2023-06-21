@@ -140,7 +140,7 @@ class ReHoParcels(ReHoBase):
             on="BOLD",
         )
         # Perform aggregation on reho map
-        parcel_aggregation_input = {k: v for k, v in input.items()}
+        parcel_aggregation_input = dict(input.items())
         parcel_aggregation_input["data"] = reho_map
         parcel_aggregation_input["path"] = None
 

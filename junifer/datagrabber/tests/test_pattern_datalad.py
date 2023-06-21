@@ -60,7 +60,7 @@ def test_bids_PatternDataladDataGrabber() -> None:
         patterns=patterns,
         replacements=replacements,
     ) as dg:
-        subs = [x for x in dg]
+        subs = list(dg)
         expected_subs = [f"sub-{i:02d}" for i in range(1, 10)]
         assert set(subs) == set(expected_subs)
 
@@ -86,7 +86,7 @@ def test_bids_PatternDataladDataGrabber() -> None:
             assert "datalad_commit_id" in dg_meta
             assert dg_meta["datalad_commit_id"] == repo_commit
 
-            with open(t_sub["T1w"]["path"], "r") as f:
+            with open(t_sub["T1w"]["path"]) as f:
                 assert f.readlines()[0].startswith("placeholder")
 
 
@@ -159,7 +159,7 @@ def test_bids_PatternDataladDataGrabber_session():
         patterns=patterns,
         replacements=replacements,
     ) as dg:
-        subs = [x for x in dg]
+        subs = list(dg)
         expected_subs = [
             (f"sub-{i:02d}", f"ses-{j:02d}")
             for j in range(1, 3)
@@ -179,7 +179,7 @@ def test_bids_PatternDataladDataGrabber_session():
         patterns=patterns,
         replacements=replacements,
     ) as dg:
-        subs = [x for x in dg]
+        subs = list(dg)
         expected_subs = [
             (f"sub-{i:02d}", f"ses-{j:02d}")
             for j in range(1, 4)

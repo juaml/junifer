@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 import pandas as pd
 
@@ -39,7 +39,7 @@ class CrossParcellationFC(BaseMarker):
         (default None).
     """
 
-    _DEPENDENCIES = {"nilearn"}
+    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}
 
     def __init__(
         self,
