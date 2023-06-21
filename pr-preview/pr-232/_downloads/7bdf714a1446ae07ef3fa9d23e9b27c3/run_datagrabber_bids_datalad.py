@@ -1,8 +1,8 @@
 """
-Generic BIDS datagrabber for datalad.
+Generic BIDS DataGrabber for datalad.
 =====================================
 
-This example uses a generic BIDS datagraber to get the data from a BIDS dataset
+This example uses a generic BIDS DataGraber to get the data from a BIDS dataset
 store in a datalad remote sibling.
 
 Authors: Federico Raimondo
@@ -20,9 +20,9 @@ configure_logging(level="INFO")
 
 
 ###############################################################################
-# The BIDS datagrabber requires three parameters: the types of data we want,
+# The BIDS DataGrabber requires three parameters: the types of data we want,
 # the specific pattern that matches each type, and the variables that will be
-# replaced int he patterns.
+# replaced in the patterns.
 types = ["T1w", "BOLD"]
 patterns = {
     "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
@@ -30,15 +30,15 @@ patterns = {
 }
 replacements = ["subject"]
 ###############################################################################
-# Additionally, a datalad datagrabber requires the URI of the remote sibling
-# and the location of the dataset within the remote sibling.
+# Additionally, a datalad-based DataGrabber requires the URI of the remote
+# sibling and the location of the dataset within the remote sibling.
 repo_uri = "https://gin.g-node.org/juaml/datalad-example-bids"
 rootdir = "example_bids"
 
 ###############################################################################
-# Now we can use the datagrabber within a `with` context
-# One thing we can do with any datagrabber is iterate over the elements.
-# In this case, each element of the datagrabber is one session.
+# Now we can use the DataGrabber within a `with` context.
+# One thing we can do with any DataGrabber is iterate over the elements.
+# In this case, each element of the DataGrabber is one session.
 with PatternDataladDataGrabber(
     rootdir=rootdir,
     types=types,
@@ -50,9 +50,9 @@ with PatternDataladDataGrabber(
         print(elem)
 
 ###############################################################################
-# Another feature of the datagrabber is the ability to get a specific
+# Another feature of the DataGrabber is the ability to get a specific
 # element by its name. In this case, we index `sub-01` and we get the file
-# paths for the two types of data we want (T1w and bold).
+# paths for the two types of data we want (T1w and BOLD).
 with PatternDataladDataGrabber(
     rootdir=rootdir,
     types=types,

@@ -197,7 +197,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
@@ -299,7 +299,7 @@ init function.</p>
 </dd>
 <dt><strong>overwrite</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.11)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to overwrite if job directory already exists (default False).</p>
 </dd>
-<dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a>, optional</span></dt><dd><p>Element(s) to process. Will be used to index the datagrabber
+<dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a>, optional</span></dt><dd><p>Element(s) to process. Will be used to index the DataGrabber
 (default None).</p>
 </dd>
 <dt><strong>**kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The keyword arguments to pass to the job queue system.</p>
@@ -324,8 +324,8 @@ init function.</p>
 <dd class="field-odd"><dl>
 <dt><strong>workdir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>Directory where the pipeline will be executed.</p>
 </dd>
-<dt><strong>datagrabber</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Datagrabber to use. Must have a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> with the kind of
-datagrabber to use. All other keys are passed to the datagrabber
+<dt><strong>datagrabber</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>DataGrabber to use. Must have a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> with the kind of
+DataGrabber to use. All other keys are passed to the DataGrabber
 init function.</p>
 </dd>
 <dt><strong>markers</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>List of markers to extract. Each marker is a dict with at least two
@@ -342,7 +342,7 @@ init function.</p>
 preprocessor to use. All other keys are passed to the preprocessor
 init function (default None).</p>
 </dd>
-<dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a>, optional</span></dt><dd><p>Element(s) to process. Will be used to index the datagrabber
+<dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a>, optional</span></dt><dd><p>Element(s) to process. Will be used to index the DataGrabber
 (default None).</p>
 </dd>
 </dl>
@@ -375,12 +375,12 @@ init function (default None).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.api.decorators.register_datagrabber">
 <span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_datagrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register_datagrabber" title="Permalink to this definition">#</a></dt>
-<dd><p>Datagrabber registration decorator.</p>
-<p>Registers the datagrabber so it can be used by name.</p>
+<dd><p>Register DataGrabber.</p>
+<p>Registers the DataGrabber so it can be used by name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>klass: class</strong></dt><dd><p>The class of the datagrabber to register.</p>
+<dt><strong>klass: class</strong></dt><dd><p>The class of the DataGrabber to register.</p>
 </dd>
 </dl>
 </dd>
@@ -391,17 +391,19 @@ init function (default None).</p>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>It should only be used as a decorator.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.api.decorators.register_datareader">
 <span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_datareader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register_datareader" title="Permalink to this definition">#</a></dt>
-<dd><p>Datareader registration decorator.</p>
-<p>Registers the datareader so it can be used by name.</p>
+<dd><p>Register DataReader.</p>
+<p>Registers the DataReader so it can be used by name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>klass: class</strong></dt><dd><p>The class of the datareader to register.</p>
+<dt><strong>klass: class</strong></dt><dd><p>The class of the DataReader to register.</p>
 </dd>
 </dl>
 </dd>
@@ -412,6 +414,8 @@ init function (default None).</p>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>It should only be used as a decorator.</p>
 </dd></dl>
 
 <dl class="py function">

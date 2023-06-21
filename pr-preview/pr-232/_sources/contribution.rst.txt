@@ -13,7 +13,7 @@ Setting up the local development environment
    <https://guides.github.com/activities/forking/>`_.
 #. Clone your fork locally as described in the same guide but also add the
    flag to sync the submodules as well by appending the following to the
-   clone commmand:
+   clone command:
 
    .. code-block:: bash
 
