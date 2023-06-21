@@ -39,7 +39,7 @@ step only contains information about the DataGrabber used.
 
 The :ref:`Data Reader <datareader>` step adds the ``data`` second-level key
 which is the actual data loaded into memory. The ``meta`` key in this step
-adds information about the datareader used to read the data.
+adds information about the DataReader used to read the data.
 
 .. code-block:: python
 

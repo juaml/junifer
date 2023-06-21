@@ -108,12 +108,12 @@ Data Reader
 ^^^^^^^^^^^
 
 As mentioned before, this section is entirely optional, as junifer only provides
-one data reader (:class:`.DefaultDataReader`), which is the default in case the
+one DataReader (:class:`.DefaultDataReader`), which is the default in case the
 section is not specified.
 
 In any case, the syntax of the section is the same as for the ``datagrabber``
-section, using the ``kind`` key to specify the datareader to use, and additional
-keys to pass parameters to the datareader:
+section, using the ``kind`` key to specify the DataReader to use, and additional
+keys to pass parameters to the DataReader constructor:
 
 .. code-block:: yaml
 
