@@ -4,7 +4,7 @@
 # License: AGPL
 
 
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Union
 
 from ...utils import logger, raise_error
 from ..base import BaseMarker
@@ -29,7 +29,9 @@ class ReHoBase(BaseMarker):
 
     """
 
-    _EXT_DEPENDENCIES = [
+    _EXT_DEPENDENCIES: ClassVar[
+        List[Dict[str, Union[str, bool, List[str]]]]
+    ] = [
         {
             "name": "afni",
             "optional": True,

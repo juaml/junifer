@@ -6,7 +6,7 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import Dict, List, Optional
+from typing import ClassVar, Dict, List, Optional, Union
 
 from ...utils.logging import raise_error
 from ..base import BaseMarker
@@ -44,7 +44,9 @@ class ALFFBase(BaseMarker):
 
     """
 
-    _EXT_DEPENDENCIES = [
+    _EXT_DEPENDENCIES: ClassVar[
+        List[Dict[str, Union[str, bool, List[str]]]]
+    ] = [
         {
             "name": "afni",
             "optional": True,

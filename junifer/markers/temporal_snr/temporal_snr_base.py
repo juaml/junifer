@@ -5,7 +5,7 @@
 
 
 from abc import abstractmethod
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 from nilearn import image as nimg
 
@@ -34,7 +34,7 @@ class TemporalSNRBase(BaseMarker):
 
     """
 
-    _DEPENDENCIES = {"nilearn"}
+    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}
 
     def __init__(
         self,

@@ -5,7 +5,7 @@
 # License: AGPL
 
 import warnings
-from typing import Dict, List
+from typing import ClassVar, Dict, List, Set, Union
 
 import pytest
 
@@ -30,7 +30,7 @@ def test_pipeline_step_mixin_validate_correct_dependencies() -> None:
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _DEPENDENCIES = {"setuptools"}
+        _DEPENDENCIES: ClassVar[Set[str]] = {"setuptools"}
 
         def validate_input(self, input: List[str]) -> List[str]:
             return input
@@ -51,7 +51,7 @@ def test_pipeline_step_mixin_validate_incorrect_dependencies() -> None:
     class IncorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _DEPENDENCIES = {"foobar"}
+        _DEPENDENCIES: ClassVar[Set[str]] = {"foobar"}
 
         def validate_input(self, input: List[str]) -> List[str]:
             return input
@@ -76,7 +76,9 @@ def test_pipeline_step_mixin_validate_correct_ext_dependencies() -> None:
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _EXT_DEPENDENCIES = [{"name": "afni", "optional": False}]
+        _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, bool]]]] = [
+            {"name": "afni", "optional": False}
+        ]
 
         def validate_input(self, input: List[str]) -> List[str]:
             return input
@@ -100,9 +102,9 @@ def test_pipeline_step_mixin_validate_ext_deps_correct_commands() -> None:
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _EXT_DEPENDENCIES = [
-            {"name": "afni", "optional": False, "commands": ["3dReHo"]}
-        ]
+        _EXT_DEPENDENCIES: ClassVar[
+            List[Dict[str, Union[str, bool, List[str]]]]
+        ] = [{"name": "afni", "optional": False, "commands": ["3dReHo"]}]
 
         def validate_input(self, input: List[str]) -> List[str]:
             return input
@@ -128,9 +130,9 @@ def test_pipeline_step_mixin_validate_ext_deps_incorrect_commands() -> None:
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _EXT_DEPENDENCIES = [
-            {"name": "afni", "optional": False, "commands": ["3d"]}
-        ]
+        _EXT_DEPENDENCIES: ClassVar[
+            List[Dict[str, Union[str, bool, List[str]]]]
+        ] = [{"name": "afni", "optional": False, "commands": ["3d"]}]
 
         def validate_input(self, input: List[str]) -> List[str]:
             return input
@@ -152,7 +154,9 @@ def test_pipeline_step_mixin_validate_incorrect_ext_dependencies() -> None:
     class IncorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _EXT_DEPENDENCIES = [{"name": "foobar", "optional": True}]
+        _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, bool]]]] = [
+            {"name": "foobar", "optional": True}
+        ]
 
         def validate_input(self, input: List[str]) -> List[str]:
             return input
