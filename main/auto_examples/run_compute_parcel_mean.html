@@ -306,14 +306,14 @@ using the Schaefer parcellations (100 rois, 7 Yeo networks) for both a 3D and
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-06-21 10:52:17,735 - JUNIFER - INFO - ===== Lib Versions =====
-2023-06-21 10:52:17,735 - JUNIFER - INFO - numpy: 1.23.5
-2023-06-21 10:52:17,735 - JUNIFER - INFO - scipy: 1.10.1
-2023-06-21 10:52:17,735 - JUNIFER - INFO - pandas: 1.5.3
-2023-06-21 10:52:17,735 - JUNIFER - INFO - nilearn: 0.10.0
-2023-06-21 10:52:17,735 - JUNIFER - INFO - nibabel: 4.0.2
-2023-06-21 10:52:17,735 - JUNIFER - INFO - junifer: 0.0.3.dev100
-2023-06-21 10:52:17,735 - JUNIFER - INFO - ========================
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-06-27 09:04:05,705 - JUNIFER - INFO - ===== Lib Versions =====
+2023-06-27 09:04:05,706 - JUNIFER - INFO - numpy: 1.23.5
+2023-06-27 09:04:05,706 - JUNIFER - INFO - scipy: 1.11.0
+2023-06-27 09:04:05,706 - JUNIFER - INFO - pandas: 1.5.3
+2023-06-27 09:04:05,706 - JUNIFER - INFO - nilearn: 0.10.0
+2023-06-27 09:04:05,706 - JUNIFER - INFO - nibabel: 4.0.2
+2023-06-27 09:04:05,706 - JUNIFER - INFO - junifer: 0.0.3.dev101
+2023-06-27 09:04:05,706 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>Load the VBM GM data (3d):
@@ -327,11 +327,37 @@ using the Schaefer parcellations (100 rois, 7 Yeo networks) for both a 3D and
 
 Downloading data from https://www.nitrc.org/frs/download.php/6364/archive_dartel.tgz ...
 
-Downloaded 191012864 of 905208634 bytes (21.1%,    3.7s remaining)
-Downloaded 385646592 of 905208634 bytes (42.6%,    2.7s remaining)
-Downloaded 583499776 of 905208634 bytes (64.5%,    1.7s remaining)
-Downloaded 780550144 of 905208634 bytes (86.2%,    0.6s remaining)
-Downloaded 891043840 of 905208634 bytes (98.4%,    0.1s remaining) ...done. (6 seconds, 0 min)
+Downloaded 17580032 of 905208634 bytes (1.9%,   51.1s remaining)
+Downloaded 54034432 of 905208634 bytes (6.0%,   31.9s remaining)
+Downloaded 91873280 of 905208634 bytes (10.1%,   26.9s remaining)
+Downloaded 134119424 of 905208634 bytes (14.8%,   23.3s remaining)
+Downloaded 176816128 of 905208634 bytes (19.5%,   20.8s remaining)
+Downloaded 217513984 of 905208634 bytes (24.0%,   19.3s remaining)
+Downloaded 249290752 of 905208634 bytes (27.5%,   18.7s remaining)
+Downloaded 284459008 of 905208634 bytes (31.4%,   17.7s remaining)
+Downloaded 320929792 of 905208634 bytes (35.5%,   16.6s remaining)
+Downloaded 338255872 of 905208634 bytes (37.4%,   17.0s remaining)
+Downloaded 376569856 of 905208634 bytes (41.6%,   15.6s remaining)
+Downloaded 415399936 of 905208634 bytes (45.9%,   14.3s remaining)
+Downloaded 454492160 of 905208634 bytes (50.2%,   13.0s remaining)
+Downloaded 487063552 of 905208634 bytes (53.8%,   12.1s remaining)
+Downloaded 515588096 of 905208634 bytes (57.0%,   11.4s remaining)
+Downloaded 545316864 of 905208634 bytes (60.2%,   10.7s remaining)
+Downloaded 572145664 of 905208634 bytes (63.2%,   10.0s remaining)
+Downloaded 595861504 of 905208634 bytes (65.8%,    9.4s remaining)
+Downloaded 620797952 of 905208634 bytes (68.6%,    8.8s remaining)
+Downloaded 646578176 of 905208634 bytes (71.4%,    8.1s remaining)
+Downloaded 669491200 of 905208634 bytes (74.0%,    7.5s remaining)
+Downloaded 688242688 of 905208634 bytes (76.0%,    7.0s remaining)
+Downloaded 708591616 of 905208634 bytes (78.3%,    6.4s remaining)
+Downloaded 729915392 of 905208634 bytes (80.6%,    5.8s remaining)
+Downloaded 751845376 of 905208634 bytes (83.1%,    5.1s remaining)
+Downloaded 774062080 of 905208634 bytes (85.5%,    4.4s remaining)
+Downloaded 796450816 of 905208634 bytes (88.0%,    3.7s remaining)
+Downloaded 818618368 of 905208634 bytes (90.4%,    3.0s remaining)
+Downloaded 840097792 of 905208634 bytes (92.8%,    2.3s remaining)
+Downloaded 862289920 of 905208634 bytes (95.3%,    1.5s remaining)
+Downloaded 884752384 of 905208634 bytes (97.7%,    0.7s remaining) ...done. (33 seconds, 0 min)
 Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8baa05152/archive_dartel.tgz..... done.
 /opt/hostedtoolcache/Python/3.10.12/x64/lib/python3.10/site-packages/nilearn/datasets/struct.py:733: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
   warnings.warn(_LEGACY_FORMAT_MSG)
@@ -349,11 +375,15 @@ Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8ba
 Data absent, downloading...
 Downloading data from http://www.fil.ion.ucl.ac.uk/spm/download/data/MoAEpilot/MoAEpilot.zip ...
 
-Downloaded 5046272 of 34212021 bytes (14.7%,    5.8s remaining)
-Downloaded 11796480 of 34212021 bytes (34.5%,    3.9s remaining)
-Downloaded 17186816 of 34212021 bytes (50.2%,    3.0s remaining)
-Downloaded 22896640 of 34212021 bytes (66.9%,    2.0s remaining)
-Downloaded 28909568 of 34212021 bytes (84.5%,    0.9s remaining) ...done. (7 seconds, 0 min)
+Downloaded 1499136 of 34212021 bytes (4.4%,   22.0s remaining)
+Downloaded 7184384 of 34212021 bytes (21.0%,    7.6s remaining)
+Downloaded 11337728 of 34212021 bytes (33.1%,    6.1s remaining)
+Downloaded 15147008 of 34212021 bytes (44.3%,    5.1s remaining)
+Downloaded 18472960 of 34212021 bytes (54.0%,    4.3s remaining)
+Downloaded 22011904 of 34212021 bytes (64.3%,    3.4s remaining)
+Downloaded 25673728 of 34212021 bytes (75.0%,    2.4s remaining)
+Downloaded 29409280 of 34212021 bytes (86.0%,    1.3s remaining)
+Downloaded 33169408 of 34212021 bytes (97.0%,    0.3s remaining) ...done. (11 seconds, 0 min)
 Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip..... done.
 </pre></div>
 </div>
@@ -372,13 +402,13 @@ Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">out</span></a> <span class="o">=</span> <span class="n">marker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-06-21 10:52:40,053 - JUNIFER - INFO - Computing BOLD
-2023-06-21 10:52:40,054 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2023-06-21 10:52:40,054 - JUNIFER - INFO - Parcellation parameters:
-2023-06-21 10:52:40,054 - JUNIFER - INFO -      n_rois: 100
-2023-06-21 10:52:40,054 - JUNIFER - INFO -      yeo_networks: 7
-2023-06-21 10:52:40,054 - JUNIFER - INFO -      resolution: 3.0
-2023-06-21 10:52:40,054 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-06-27 09:05:00,222 - JUNIFER - INFO - Computing BOLD
+2023-06-27 09:05:00,223 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2023-06-27 09:05:00,223 - JUNIFER - INFO - Parcellation parameters:
+2023-06-27 09:05:00,224 - JUNIFER - INFO -      n_rois: 100
+2023-06-27 09:05:00,224 - JUNIFER - INFO -      yeo_networks: 7
+2023-06-27 09:05:00,224 - JUNIFER - INFO -      resolution: 3.0
+2023-06-27 09:05:00,224 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
 
 Dataset created in /home/runner/junifer/data/parcellations/schaefer_2018
 
@@ -386,16 +416,16 @@ Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2023-06-21 10:52:40,163 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2023-06-21 10:52:41,835 - JUNIFER - INFO - No storage specified, returning dictionary
-2023-06-21 10:52:41,835 - JUNIFER - INFO - Computing VBM_GM
-2023-06-21 10:52:41,836 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2023-06-21 10:52:41,836 - JUNIFER - INFO - Parcellation parameters:
-2023-06-21 10:52:41,836 - JUNIFER - INFO -      n_rois: 100
-2023-06-21 10:52:41,836 - JUNIFER - INFO -      yeo_networks: 7
-2023-06-21 10:52:41,836 - JUNIFER - INFO -      resolution: 2.0
-2023-06-21 10:52:41,838 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2023-06-21 10:52:42,533 - JUNIFER - INFO - No storage specified, returning dictionary
+2023-06-27 09:05:00,772 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2023-06-27 09:05:02,697 - JUNIFER - INFO - No storage specified, returning dictionary
+2023-06-27 09:05:02,697 - JUNIFER - INFO - Computing VBM_GM
+2023-06-27 09:05:02,697 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2023-06-27 09:05:02,698 - JUNIFER - INFO - Parcellation parameters:
+2023-06-27 09:05:02,698 - JUNIFER - INFO -      n_rois: 100
+2023-06-27 09:05:02,698 - JUNIFER - INFO -      yeo_networks: 7
+2023-06-27 09:05:02,698 - JUNIFER - INFO -      resolution: 2.0
+2023-06-27 09:05:02,702 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2023-06-27 09:05:03,606 - JUNIFER - INFO - No storage specified, returning dictionary
 </pre></div>
 </div>
 <p>Check the results</p>
@@ -412,7 +442,7 @@ dict_keys([&#39;BOLD&#39;, &#39;VBM_GM&#39;])
 (96, 100)
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  24.804 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  57.907 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-compute-parcel-mean-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/c1da12f6e22b8ea8de3cd5add55a3fa8/run_compute_parcel_mean.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_compute_parcel_mean.py</span></code></a></p>
