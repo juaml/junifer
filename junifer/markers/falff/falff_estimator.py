@@ -70,12 +70,11 @@ class ALFFEstimator:
             If AFNI command fails.
         """
         logger.info(f"AFNI command to be executed: {cmd}")
-        # TODO: Figure out how to capture stdout and stderr
         process = subprocess.run(
             cmd,
             stdin=subprocess.DEVNULL,
-            # stdout=subprocess.STDOUT,
-            # stderr=subprocess.STDOUT,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
             shell=True,
             check=False,
         )
