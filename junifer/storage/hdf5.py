@@ -328,15 +328,14 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         return data
 
-    def read_df(
+    def read(
         self,
         feature_name: Optional[str] = None,
-        feature_md5: Optional[bool] = None,
-    ) -> pd.DataFrame:
-        """Read feature into a pandas.DataFrame.
-
-        Either one of ``feature_name`` or ``feature_md5`` needs to be
-        specified.
+        feature_md5: Optional[str] = None,
+    ) -> Dict[
+        str, Union[str, List[Union[int, str, Dict[str, str]]], np.ndarray]
+    ]:
+        """Read stored feature.
 
         Parameters
         ----------
@@ -347,8 +346,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Returns
         -------
-        pandas.DataFrame
-            The features as a dataframe.
+        dict
+            The stored feature as a dictionary.
 
         Raises
         ------
@@ -427,10 +426,46 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             title=md5,
             slash="ignore",
         )
+        return hdf_data
+
+    def read_df(
+        self,
+        feature_name: Optional[str] = None,
+        feature_md5: Optional[str] = None,
+    ) -> pd.DataFrame:
+        """Read feature into a pandas.DataFrame.
+
+        Either one of ``feature_name`` or ``feature_md5`` needs to be
+        specified.
+
+        Parameters
+        ----------
+        feature_name : str, optional
+            Name of the feature to read (default None).
+        feature_md5 : str, optional
+            MD5 hash of the feature to read (default None).
+
+        Returns
+        -------
+        pandas.DataFrame
+            The features as a dataframe.
+
+        Raises
+        ------
+        IOError
+            If HDF5 file does not exist.
+
+        """
+        hdf_data = self.read(
+            feature_name=feature_name, feature_md5=feature_md5
+        )
         reshaped_data = hdf_data["data"]
 
         # Generate index for the data
-        logger.debug(f"Generating pandas.MultiIndex for {md5} ...")
+        logger.debug(
+            "Generating pandas.MultiIndex for feature "
+            f"{feature_name or feature_md5} ..."
+        )
 
         if hdf_data["kind"] == "matrix":
             # Set index for element
@@ -477,17 +512,26 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         idx_df = pd.DataFrame(data=element_idx)  # type: ignore
         # Create multiindex from dataframe
         hdf_data_idx = pd.MultiIndex.from_frame(df=idx_df)
-        logger.debug(f"Generated pandas.MultiIndex for {md5} ...")
+        logger.debug(
+            "Generated pandas.MultiIndex for feature "
+            f"{feature_name or feature_md5} ..."
+        )
 
         # Convert to DataFrame
-        logger.debug(f"Converting HDF5 data for {md5} to pandas.DataFrame ...")
+        logger.debug(
+            "Converting HDF5 data for feature "
+            f"{feature_name or feature_md5} to pandas.DataFrame ..."
+        )
         df = pd.DataFrame(
             data=reshaped_data,
             index=hdf_data_idx,
             columns=columns,  # type: ignore
             dtype=reshaped_data.dtype,
         )
-        logger.debug(f"Converted HDF5 data for {md5} to pandas.DataFrame ...")
+        logger.debug(
+            "Converted HDF5 data for feature "
+            f"{feature_name or feature_md5} to pandas.DataFrame ..."
+        )
 
         return df
 
