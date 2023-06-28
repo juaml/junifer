@@ -253,6 +253,22 @@ def test_upsert_invalid_option(tmp_path: Path) -> None:
         SQLiteFeatureStorage(uri=uri, upsert="wrong")
 
 
+def test_read(tmp_path: Path) -> None:
+    """Test reading of stored feature.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_read.sqlite"
+    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
+    # Check error
+    with pytest.raises(NotImplementedError):
+        storage.read()
+
+
 # TODO: can the tests be separated?
 def test_store_df_and_read_df(tmp_path: Path) -> None:
     """Test storing dataframe and reading of stored table into dataframe.
