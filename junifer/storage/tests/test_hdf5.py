@@ -220,6 +220,37 @@ def test_store_metadata_ignore_duplicate(tmp_path: Path) -> None:
     assert len(features) == 1
 
 
+def test_read(tmp_path: Path) -> None:
+    """Test read.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_read.hdf5"
+    storage = HDF5FeatureStorage(uri=uri)
+    # Data to store
+    to_store_data = {
+        "meta": {
+            "element": {"subject": "test"},
+            "dependencies": ["numpy"],
+            "marker": {"name": "test"},
+            "type": "BOLD",
+        },
+        "data": np.array([[1, 10]]),
+        "col_names": ["f1", "f2"],
+    }
+    # Store data
+    storage.store(kind="vector", **to_store_data)
+    # Read and check
+    stored_data = storage.read(feature_name="BOLD_test")
+    assert ["column_headers", "data", "element", "kind"] == list(
+        stored_data.keys()
+    )
+
+
 def test_read_df_params_error(tmp_path: Path) -> None:
     """Test parameter validation errors for read_df.
 
