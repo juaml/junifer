@@ -241,9 +241,12 @@ class DataladDataGrabber(BaseDataGrabber):
 
         else:
             logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
-            self._dataset: dl.Dataset = dl.clone(  # type: ignore
-                self.uri, self._datadir, result_renderer="disabled"
-            )
+            try:
+                self._dataset: dl.Dataset = dl.clone(  # type: ignore
+                    self.uri, self._datadir, result_renderer="disabled"
+                )
+            except IncompleteResultsError as e:
+                raise_error(f"Failed to clone dataset: {e.failed}")
             logger.debug("Dataset installed")
         self._was_cloned = not isinstalled
 
