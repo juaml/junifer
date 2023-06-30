@@ -49,10 +49,10 @@ def read_transform(
     -----
     This function has been only tested for:
 
-    * bct.degrees_und
-    * bct.strengths_und
-    * bct.clustering_coef_wu
-    * bct.eigenvector_centrality_und
+    * ``bct.degrees_und``
+    * ``bct.strengths_und``
+    * ``bct.clustering_coef_wu``
+    * ``bct.eigenvector_centrality_und``
 
     Using other functions may fail and require tweaking.
 
