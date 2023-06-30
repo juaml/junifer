@@ -27,6 +27,7 @@ Utilities
    api
    utils
    testing
+   onthefly
 
 Configs
 -------
