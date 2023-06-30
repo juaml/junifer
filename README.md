@@ -31,6 +31,7 @@ The documentation is available at [https://juaml.github.io/junifer](https://juam
   * `datagrabber`: DataGrabber module.
   * `datareader`: DataReader module.
   * `markers`: Markers module.
+  * `onthefly`: Transformation components (on-the-fly) module.
   * `pipeline`: Pipeline module.
   * `preprocess`: Preprocessing module.
   * `storage`: Storage module.
