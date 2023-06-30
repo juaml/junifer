@@ -17,5 +17,6 @@ from . import (
     storage,
     utils,
     external,
+    onthefly,
 )
 from ._version import __version__
