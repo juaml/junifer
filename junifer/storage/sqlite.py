@@ -235,6 +235,38 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 out[md5][k] = json.loads(v)
         return out
 
+    def read(
+        self,
+        feature_name: Optional[str] = None,
+        feature_md5: Optional[str] = None,
+    ) -> Dict[
+        str, Union[str, List[Union[int, str, Dict[str, str]]], np.ndarray]
+    ]:
+        """Read stored feature.
+
+        Parameters
+        ----------
+        feature_name : str, optional
+            Name of the feature to read (default None).
+        feature_md5 : str, optional
+            MD5 hash of the feature to read (default None).
+
+        Returns
+        -------
+        dict
+            The stored feature as a dictionary.
+
+        """
+        raise_error(
+            msg=(
+                "read() for SQLiteFeatureStorage is not currently planned to "
+                "be implemented in the near future. If you need the "
+                "functionality, contact the junifer developers "
+                "(https://juaml.github.io/junifer/main/help.html)."
+            ),
+            klass=NotImplementedError,
+        )
+
     def read_df(
         self,
         feature_name: Optional[str] = None,

@@ -38,6 +38,12 @@ def test_BaseFeatureStorage() -> None:
         def list_features(self):
             super().list_features()
 
+        def read(self, feature_name=None, feature_md5=None):
+            super().read(
+                feature_name=feature_name,
+                feature_md5=feature_md5,
+            )
+
         def read_df(self, feature_name=None, feature_md5=None):
             super().read_df(
                 feature_name=feature_name,
@@ -65,6 +71,9 @@ def test_BaseFeatureStorage() -> None:
 
     with pytest.raises(NotImplementedError):
         st.list_features()
+
+    with pytest.raises(NotImplementedError):
+        st.read(None)
 
     with pytest.raises(NotImplementedError):
         st.read_df(None)

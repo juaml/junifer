@@ -105,6 +105,34 @@ class BaseFeatureStorage(ABC):
         )
 
     @abstractmethod
+    def read(
+        self,
+        feature_name: Optional[str] = None,
+        feature_md5: Optional[str] = None,
+    ) -> Dict[
+        str, Union[str, List[Union[int, str, Dict[str, str]]], np.ndarray]
+    ]:
+        """Read stored feature.
+
+        Parameters
+        ----------
+        feature_name : str, optional
+            Name of the feature to read (default None).
+        feature_md5 : str, optional
+            MD5 hash of the feature to read (default None).
+
+        Returns
+        -------
+        dict
+            The stored feature as a dictionary.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement read().",
+            klass=NotImplementedError,
+        )
+
+    @abstractmethod
     def read_df(
         self,
         feature_name: Optional[str] = None,
