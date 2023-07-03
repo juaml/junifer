@@ -166,6 +166,9 @@ def test_bctpy_function(
         The function to test.
 
     """
+    # Skip test if import fails
+    pytest.importorskip("bct")
+
     with caplog.at_level(logging.DEBUG):
         read_transform(
             storage=matrix_storage,  # type: ignore
