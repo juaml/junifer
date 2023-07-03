@@ -258,7 +258,12 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         """
         raise_error(
-            msg="read() is not implemented for SQLiteFeatureStorage.",
+            msg=(
+                "read() for SQLiteFeatureStorage is not currently planned to "
+                "be implemented in the near future. If you need the "
+                "functionality, contact the junifer developers "
+                "(https://juaml.github.io/junifer/main/help.html)."
+            ),
             klass=NotImplementedError,
         )
 
