@@ -7,6 +7,7 @@
 
 import io
 import shutil
+import tarfile
 import tempfile
 import zipfile
 from pathlib import Path
@@ -17,6 +18,7 @@ import numpy as np
 import pandas as pd
 import requests
 from nilearn import datasets, image
+from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 
 from ..utils.logging import logger, raise_error, warn_with_log
 from .utils import closest_resolution
@@ -73,6 +75,12 @@ for scale in range(1, 5):
         "scale": scale,
         "magneticfield": "3T",
         "space": "MNInonlinear2009cAsym",
+    }
+# Add AICHA parcellation info
+for version in (1, 2):
+    _available_parcellations[f"AICHA_v{version}"] = {
+        "family": "AICHA",
+        "version": version,
     }
 
 
@@ -278,6 +286,9 @@ def _retrieve_parcellation(
         ``space`` : {"MNI", "SUIT"}, optional
             Space of parcellation (default "MNI"). (For more information
             see http://www.diedrichsenlab.org/imaging/suit.htm).
+    * AICHA :
+        ``version`` : {1, 2}, optional
+            Version of parcellation (default 2).
 
     Returns
     -------
@@ -319,6 +330,12 @@ def _retrieve_parcellation(
         )
     elif family == "Tian":
         parcellation_fname, parcellation_labesl = _retrieve_tian(
+            parcellations_dir=parcellations_dir,
+            resolution=resolution,
+            **kwargs,
+        )
+    elif family == "AICHA":
+        parcellation_fname, parcellation_labels = _retrieve_aicha(
             parcellations_dir=parcellations_dir,
             resolution=resolution,
             **kwargs,
@@ -703,6 +720,143 @@ def _retrieve_suit(
     labels = pd.read_csv(parcellation_lname, sep="\t", usecols=["name"])[
         "name"
     ].to_list()
+
+    return parcellation_fname, labels
+
+
+def _retrieve_aicha(
+    parcellations_dir: Path,
+    resolution: Optional[float] = None,
+    version: int = 2,
+) -> Tuple[Path, List[str]]:
+    """Retrieve AICHA parcellation.
+
+    Parameters
+    ----------
+    parcellations_dir : pathlib.Path
+        The path to the parcellation data directory.
+    resolution : float, optional
+        The desired resolution of the parcellation to load. If it is not
+        available, the closest resolution will be loaded. Preferably, use a
+        resolution higher than the desired one. By default, will load the
+        highest one (default None). Available resolution for this
+        parcellation is 2mm.
+    version : {1, 2}, optional
+        The version of the parcellation to use (default 2).
+
+    Returns
+    -------
+    pathlib.Path
+        File path to the parcellation image.
+    list of str
+        Parcellation labels.
+
+    Raises
+    ------
+    ValueError
+        If invalid value is provided for ``version`` or if there is a problem
+        fetching the parcellation.
+
+    Notes
+    -----
+    The resolution of the parcellation is 2mm and although v2 provides
+    1mm, it is only for display purpose as noted in the release document.
+
+    """
+    # show parameters to user
+    logger.info("Parcellation parameters:")
+    logger.info(f"\tversion: {version}")
+
+    # Check version value
+    _valid_version = (1, 2)
+    if version not in _valid_version:
+        raise_error(
+            f"The parameter `version` ({version}) needs to be one of the "
+            f"following: {_valid_version}"
+        )
+
+    _valid_resolutions = [1]
+    resolution = closest_resolution(resolution, _valid_resolutions)
+
+    # Define image file
+    parcellation_fname = (
+        parcellations_dir / f"AICHA_v{version}" / "AICHA" / "AICHA.nii"
+    )
+
+    # Define label file name according to version
+    if version == 1:
+        parcellation_lname = (
+            parcellations_dir
+            / f"AICHA_v{version}"
+            / "AICHA"
+            / "AICHA_vol1.txt"
+        )
+    elif version == 2:
+        parcellation_lname = (
+            parcellations_dir
+            / f"AICHA_v{version}"
+            / "AICHA"
+            / "AICHA_vol3.txt"
+        )
+
+    # Check existence of parcellation
+    if not (parcellation_fname.exists() and parcellation_lname.exists()):
+        logger.info(
+            "At least one of the parcellation files are missing, fetching."
+        )
+
+        # Set file name on server according to version
+        if version == 1:
+            server_filename = "aicha_v1.zip"
+        elif version == 2:
+            server_filename = "AICHA_v2.tar.zip"
+
+        # Set URL
+        url = f"http://www.gin.cnrs.fr/wp-content/uploads/{server_filename}"
+
+        logger.info(f"Downloading AICHA v{version} from {url}")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Make HTTP request
+            try:
+                resp = requests.get(url)
+                resp.raise_for_status()
+            except (ConnectionError, ReadTimeout, HTTPError) as err:
+                raise_error(
+                    f"Failed to download AICHA v{version} due to: {err}"
+                )
+            else:
+                parcellation_zip_path = Path(tmpdir) / server_filename
+                with open(parcellation_zip_path, "wb") as f:
+                    f.write(resp.content)
+
+            # Extract zipfile
+            with zipfile.ZipFile(parcellation_zip_path, "r") as zip_ref:
+                if version == 1:
+                    zip_ref.extractall(
+                        (parcellations_dir / "AICHA_v1").as_posix()
+                    )
+                elif version == 2:
+                    zip_ref.extractall(Path(tmpdir).as_posix())
+                    # Extract tarfile for v2
+                    with tarfile.TarFile(
+                        Path(tmpdir) / "AICHA_v2.tar", "r"
+                    ) as tar_ref:
+                        tar_ref.extractall(
+                            (parcellations_dir / "AICHA_v2").as_posix()
+                        )
+
+            # Cleanup after unzipping
+            if (parcellations_dir / f"AICHA_v{version}" / "__MACOSX").exists():
+                shutil.rmtree(
+                    (
+                        parcellations_dir / f"AICHA_v{version}" / "__MACOSX"
+                    ).as_posix()
+                )
+
+    # Load labels
+    labels = pd.read_csv(
+        parcellation_lname, sep="\t", header=None, skiprows=[0]  # type: ignore
+    )[0].to_list()
 
     return parcellation_fname, labels
 
