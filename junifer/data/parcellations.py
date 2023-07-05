@@ -253,8 +253,8 @@ def _retrieve_parcellation(
 
     Parameters
     ----------
-    family : str
-        The name of the parcellation's family, e.g. 'Schaefer'.
+    family : {"Schaefer", "SUIT", "Tian", "AICHA"}
+        The name of the parcellation family.
     parcellations_dir : str or pathlib.Path, optional
         Path where the retrieved parcellations file are stored. The default
         location is "$HOME/junifer/data/parcellations" (default None).
@@ -317,19 +317,19 @@ def _retrieve_parcellation(
 
     # Retrieval details per family
     if family == "Schaefer":
-        parcellation_fname, parcellation_labesl = _retrieve_schaefer(
+        parcellation_fname, parcellation_labels = _retrieve_schaefer(
             parcellations_dir=parcellations_dir,
             resolution=resolution,
             **kwargs,
         )
     elif family == "SUIT":
-        parcellation_fname, parcellation_labesl = _retrieve_suit(
+        parcellation_fname, parcellation_labels = _retrieve_suit(
             parcellations_dir=parcellations_dir,
             resolution=resolution,
             **kwargs,
         )
     elif family == "Tian":
-        parcellation_fname, parcellation_labesl = _retrieve_tian(
+        parcellation_fname, parcellation_labels = _retrieve_tian(
             parcellations_dir=parcellations_dir,
             resolution=resolution,
             **kwargs,
@@ -345,7 +345,7 @@ def _retrieve_parcellation(
             f"The provided parcellation name {family} cannot be retrieved."
         )
 
-    return parcellation_fname, parcellation_labesl
+    return parcellation_fname, parcellation_labels
 
 
 def _retrieve_schaefer(
