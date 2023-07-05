@@ -648,7 +648,7 @@ def _retrieve_suit(
     Raises
     ------
     ValueError
-        If invalid value is provided for `space` or if there is a problem
+        If invalid value is provided for ``space`` or if there is a problem
         fetching the parcellation.
 
     """
