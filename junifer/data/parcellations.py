@@ -465,7 +465,6 @@ def _retrieve_tian(
     parcellations_dir : pathlib.Path
         The path to the parcellation data directory.
     resolution : float, optional
-    resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
         resolution higher than the desired one. By default, will load the
@@ -489,8 +488,8 @@ def _retrieve_tian(
     Raises
     ------
     ValueError
-        If invalid value is provided for `scale` or `magneticfield` or `space`
-        or if there is a problem fetching the parcellation.
+        If invalid value is provided for ``scale`` or ``magneticfield`` or
+        ``space`` or if there is a problem fetching the parcellation.
 
     """
     # show parameters to user
