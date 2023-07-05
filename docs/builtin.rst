@@ -285,6 +285,14 @@ Available
        | unveiled with functional connectivity gradients.
        | Nature Neuroscience, Volume 23, Pages 1421–1432 (2020).
        | https://doi.org/10.1038/s41593-020-00711-6
+   * - AICHA
+     - ``version``
+     - ``AICHA_v1``, ``AICHA_v2``
+     - 0.0.3
+     - | Joliot, M., Jobard, G., Naveau, M. et al.
+       | AICHA: An atlas of intrinsic connectivity of homotopic areas.
+       | Journal of Neuroscience Methods, Volume 254, Pages 46-59 (2015).
+       | https://doi.org/10.1016/j.jneumeth.2015.07.013
 
 
 Planned
