@@ -159,7 +159,6 @@ def list_parcellations() -> List[str]:
 #     return resolution
 
 
-# TODO: keyword arguments are not passed, check
 def load_parcellation(
     name: str,
     parcellations_dir: Union[str, Path, None] = None,
