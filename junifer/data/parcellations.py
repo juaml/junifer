@@ -359,7 +359,7 @@ def _retrieve_schaefer(
     Parameters
     ----------
     parcellations_dir : pathlib.Path
-        The path to the parcallations' data directory.
+        The path to the parcellation data directory.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -381,7 +381,7 @@ def _retrieve_schaefer(
     Raises
     ------
     ValueError
-        If invalid value is provided for `n_rois` or `yeo_networks` or if
+        If invalid value is provided for ``n_rois`` or ``yeo_networks`` or if
         there is a problem fetching the parcellation.
 
     """
