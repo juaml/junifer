@@ -137,6 +137,7 @@ def run(filepath: click.Path, element: str, verbose: Union[str, int]) -> None:
     """Run command for CLI.
 
     \f
+
     Parameters
     ----------
     filepath : click.Path
@@ -185,6 +186,7 @@ def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
     """Collect command for CLI.
 
     \f
+
     Parameters
     ----------
     filepath : click.Path
@@ -228,6 +230,7 @@ def queue(
     """Queue command for CLI.
 
     \f
+
     Parameters
     ----------
     filepath : click.Path
@@ -266,6 +269,7 @@ def wtf(long_: bool) -> None:
     """Wtf command for CLI.
 
     \f
+
     Parameters
     ----------
     long_ : bool
@@ -288,6 +292,7 @@ def selftest(subpkg: str) -> None:
     """Selftest command for CLI.
 
     \f
+
     Parameters
     ----------
     subpkg : {"all", "api", "configs", "data", "datagrabber", "datareader",
