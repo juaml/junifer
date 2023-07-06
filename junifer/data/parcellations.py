@@ -837,7 +837,7 @@ def _retrieve_aicha(
                     zip_ref.extractall(Path(tmpdir).as_posix())
                     # Extract tarfile for v2
                     with tarfile.TarFile(
-                        Path(tmpdir) / "AICHA_v2.tar", "r"
+                        Path(tmpdir) / "aicha_v2.tar", "r"
                     ) as tar_ref:
                         tar_ref.extractall(
                             (parcellations_dir / "AICHA_v2").as_posix()
