@@ -293,6 +293,21 @@ Available
        | AICHA: An atlas of intrinsic connectivity of homotopic areas.
        | Journal of Neuroscience Methods, Volume 254, Pages 46-59 (2015).
        | https://doi.org/10.1016/j.jneumeth.2015.07.013
+   * - Shen
+     - ``year``, ``n_rois``
+     - | ``Shen_2013_50``, ``Shen_2013_100``, ``Shen_2013_150``,
+       | ``Shen_2015_268``, ``Shen_2019_368``
+     - 0.0.3
+     - | Shen, X., Tokoglu, F., Papademetris, X., Constable, R.T.
+       | Groupwise whole-brain parcellation from resting-state fMRI data
+       | for network node identification.
+       | Neuroimage, Volume 82 (2013).
+       | https://doi.org/10.1016/j.neuroimage.2013.05.081.
+       | Finn, E.S., Shen, X., Scheinost, D., et al.
+       | Functional connectome fingerprinting: identifying individuals using
+       | patterns of brain connectivity.
+       | Nature Neuroscience, Volume 18(11), Pages 1664-1671 (2015).
+       | https://doi:10.1038/nn.4135
 
 
 Planned
@@ -320,12 +335,6 @@ Planned
        | Automated anatomical labelling atlas 3.
        | Neuroimage, Volume 206 (2020).
        | https://doi.org/10.1016/j.neuroimage.2019.116189
-   * - Shen
-     - | Shen, X., Tokoglu, F., Papademetris, X., Constable, R.T.
-       | Groupwise whole-brain parcellation from resting-state fMRI data
-       | for network node identification.
-       | Neuroimage, Volume 82 (2013).
-       | https://doi.org/10.1016/j.neuroimage.2013.05.081.
    * - Mindboggle 101
      - | Klein, A., & Tourville, J.
        | 101 labeled brain images and a consistent human cortical labeling
