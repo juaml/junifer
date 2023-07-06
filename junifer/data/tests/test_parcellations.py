@@ -15,6 +15,7 @@ from nilearn.image import new_img_like
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 from junifer.data.parcellations import (
+    _retrieve_aicha,
     _retrieve_parcellation,
     _retrieve_schaefer,
     _retrieve_suit,
@@ -168,6 +169,8 @@ def test_register_parcellation(
 @pytest.mark.parametrize(
     "parcellation_name",
     [
+        "AICHA_v1",
+        "AICHA_v2",
         "SUITxSUIT",
         "SUITxMNI",
         "Schaefer100x7",
@@ -549,6 +552,46 @@ def test_retrieve_tian_incorrect_scale(tmp_path: Path) -> None:
             resolution=1,
             scale=5,
             space="MNI6thgeneration",
+        )
+
+
+@pytest.mark.parametrize("version", [1, 2])
+def test_aicha(tmp_path: Path, version: int) -> None:
+    """Test AICHA parcellation.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    version : int
+        The parametrized version values.
+
+    """
+    parcellations = list_parcellations()
+    assert f"AICHA_v{version}" in parcellations
+    # Load parcellation
+    img, label, img_path = load_parcellation(
+        name=f"AICHA_v{version}", parcellations_dir=tmp_path
+    )
+    assert img is not None
+    assert img_path.name == "AICHA.nii"
+    assert len(label) == 384
+    assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
+
+
+def test_retrieve_aicha_incorrect_version(tmp_path: Path) -> None:
+    """Test retrieve AICHA with incorrect version.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    with pytest.raises(ValueError, match="The parameter `version`"):
+        _retrieve_aicha(
+            parcellations_dir=tmp_path,
+            version=100,
         )
 
 
