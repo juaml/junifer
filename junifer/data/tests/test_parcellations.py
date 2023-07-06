@@ -18,6 +18,7 @@ from junifer.data.parcellations import (
     _retrieve_aicha,
     _retrieve_parcellation,
     _retrieve_schaefer,
+    _retrieve_shen,
     _retrieve_suit,
     _retrieve_tian,
     list_parcellations,
@@ -592,6 +593,138 @@ def test_retrieve_aicha_incorrect_version(tmp_path: Path) -> None:
         _retrieve_aicha(
             parcellations_dir=tmp_path,
             version=100,
+        )
+
+
+@pytest.mark.parametrize(
+    "resolution, year, n_rois, n_labels, img_name",
+    [
+        (1.0, 2013, 50, 93, "fconn_atlas"),
+        (1.0, 2013, 50, 93, "fconn_atlas"),
+        (1.0, 2013, 100, 184, "fconn_atlas"),
+        (1.0, 2013, 100, 184, "fconn_atlas"),
+        (1.0, 2013, 150, 278, "fconn_atlas"),
+        (1.0, 2013, 150, 278, "fconn_atlas"),
+        (1.0, 2015, 268, 268, "268_parcellation"),
+        (1.0, 2015, 268, 268, "268_parcellation"),
+        (1.0, 2019, 368, 368, "368_parcellation"),
+    ],
+)
+def test_shen(
+    tmp_path: Path,
+    resolution: float,
+    year: int,
+    n_rois: int,
+    n_labels: int,
+    img_name: str,
+) -> None:
+    """Test Shen parcellation.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    resolution : float
+        The parametrized resolution values.
+    year : int
+        The parametrized year values.
+    n_rois : int
+        The parametrized ROI count values.
+    n_labels : int
+        The parametrized label count values.
+    img_name : str
+        The parametrized partial file names.
+
+    """
+    parcellations = list_parcellations()
+    assert f"Shen_{year}_{n_rois}" in parcellations
+    # Load parcellation
+    img, label, img_path = load_parcellation(
+        name=f"Shen_{year}_{n_rois}", parcellations_dir=tmp_path
+    )
+    assert img is not None
+    assert img_name in img_path.name
+    assert len(label) == n_labels
+    assert_array_equal(
+        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+    )
+
+
+def test_retrieve_shen_incorrect_year(tmp_path: Path) -> None:
+    """Test retrieve Shen with incorrect year.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    with pytest.raises(ValueError, match="The parameter `year`"):
+        _retrieve_shen(
+            parcellations_dir=tmp_path,
+            year=1969,
+        )
+
+
+def test_retrieve_shen_incorrect_n_rois(tmp_path: Path) -> None:
+    """Test retrieve Shen with incorrect ROIs.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    with pytest.raises(ValueError, match="The parameter `year`"):
+        _retrieve_shen(
+            parcellations_dir=tmp_path,
+            year=2015,
+            n_rois=10,
+        )
+
+
+@pytest.mark.parametrize(
+    "resolution, year, n_rois",
+    [
+        (2.0, 2019, 368),
+        (1.0, 2013, 268),
+        (1.0, 2013, 368),
+        (1.0, 2015, 50),
+        (1.0, 2015, 100),
+        (1.0, 2015, 150),
+        (1.0, 2019, 50),
+        (1.0, 2019, 100),
+        (1.0, 2019, 150),
+        (1.0, 2015, 368),
+        (1.0, 2019, 268),
+    ],
+)
+def test_retrieve_shen_incorrect_param_combo(
+    tmp_path: Path,
+    resolution: float,
+    year: int,
+    n_rois: int,
+) -> None:
+    """Test retrieve Shen with incorrect parameter combinations.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    resolution : float
+        The parametrized resolution values.
+    year : int
+        The parametrized year values.
+    n_rois : int
+        The parametrized ROI count values.
+
+    """
+    with pytest.raises(ValueError, match="The parameter combination"):
+        _retrieve_shen(
+            parcellations_dir=tmp_path,
+            resolution=resolution,
+            year=year,
+            n_rois=n_rois,
         )
 
 
