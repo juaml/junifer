@@ -675,7 +675,7 @@ def test_retrieve_shen_incorrect_n_rois(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    with pytest.raises(ValueError, match="The parameter `year`"):
+    with pytest.raises(ValueError, match="The parameter `n_rois`"):
         _retrieve_shen(
             parcellations_dir=tmp_path,
             year=2015,
