@@ -30,7 +30,9 @@ The documentation is available at [https://juaml.github.io/junifer](https://juam
   * `data`: Module that handles data required for the library to work (e.g. parcels, coordinates).
   * `datagrabber`: DataGrabber module.
   * `datareader`: DataReader module.
+  * `external`: Module for external libraries and tools.
   * `markers`: Markers module.
+  * `onthefly`: Transformation components (on-the-fly) module.
   * `pipeline`: Pipeline module.
   * `preprocess`: Preprocessing module.
   * `storage`: Storage module.
