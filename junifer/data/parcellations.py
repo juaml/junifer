@@ -82,6 +82,27 @@ for version in (1, 2):
         "family": "AICHA",
         "version": version,
     }
+# Add Shen parcellation info
+for year in (2013, 2015, 2019):
+    if year == 2013:
+        for n_rois in (50, 100, 150):
+            _available_parcellations[f"Shen_{year}_{n_rois}"] = {
+                "family": "Shen",
+                "year": 2013,
+                "n_rois": n_rois,
+            }
+    elif year == 2015:
+        _available_parcellations["Shen_2015_268"] = {
+            "family": "Shen",
+            "year": 2015,
+            "n_rois": 268,
+        }
+    elif year == 2019:
+        _available_parcellations["Shen_2019_368"] = {
+            "family": "Shen",
+            "year": 2019,
+            "n_rois": 368,
+        }
 
 
 def register_parcellation(
@@ -252,7 +273,7 @@ def _retrieve_parcellation(
 
     Parameters
     ----------
-    family : {"Schaefer", "SUIT", "Tian", "AICHA"}
+    family : {"Schaefer", "SUIT", "Tian", "AICHA", "Shen"}
         The name of the parcellation family.
     parcellations_dir : str or pathlib.Path, optional
         Path where the retrieved parcellations file are stored. The default
@@ -288,6 +309,13 @@ def _retrieve_parcellation(
     * AICHA :
         ``version`` : {1, 2}, optional
             Version of parcellation (default 2).
+    * Shen :
+        ``year`` : {2013, 2015, 2019}, optional
+            Year of the parcellation to use (default 2015).
+        ``n_rois`` : int, optional
+            Number of ROIs to use. Can be ``50, 100, or 150`` for
+            ``year = 2013`` but is fixed at ``268`` for ``year = 2015`` and at
+            ``368`` for ``year = 2019``.
 
     Returns
     -------
@@ -335,6 +363,12 @@ def _retrieve_parcellation(
         )
     elif family == "AICHA":
         parcellation_fname, parcellation_labels = _retrieve_aicha(
+            parcellations_dir=parcellations_dir,
+            resolution=resolution,
+            **kwargs,
+        )
+    elif family == "Shen":
+        parcellation_fname, parcellation_labels = _retrieve_shen(
             parcellations_dir=parcellations_dir,
             resolution=resolution,
             **kwargs,
@@ -855,6 +889,202 @@ def _retrieve_aicha(
     labels = pd.read_csv(
         parcellation_lname, sep="\t", header=None, skiprows=[0]  # type: ignore
     )[0].to_list()
+
+    return parcellation_fname, labels
+
+
+def _retrieve_shen(  # noqa: C901
+    parcellations_dir: Path,
+    resolution: Optional[float] = None,
+    year: int = 2015,
+    n_rois: int = 268,
+) -> Tuple[Path, List[str]]:
+    """Retrieve Shen parcellation.
+
+    Parameters
+    ----------
+    parcellations_dir : pathlib.Path
+        The path to the parcellation data directory.
+    resolution : float, optional
+        The desired resolution of the parcellation to load. If it is not
+        available, the closest resolution will be loaded. Preferably, use a
+        resolution higher than the desired one. By default, will load the
+        highest one (default None). Available resolutions for this parcellation
+        are 1mm and 2mm for ``year = 2013`` and ``year = 2015`` but fixed to
+        1mm for ``year = 2019``.
+    year : {2013, 2015, 2019}, optional
+        The year of the parcellation to use (default 2015).
+    n_rois : int, optional
+        Number of ROIs. Can be ``50, 100, or 150`` for ``year = 2013`` but is
+        fixed at ``268`` for ``year = 2015`` and at ``368`` for
+        ``year = 2019``.
+
+    Returns
+    -------
+    pathlib.Path
+        File path to the parcellation image.
+    list of str
+        Parcellation labels.
+
+    Raises
+    ------
+    ValueError
+        If invalid value or combination is provided for ``year`` and ``n_rois``
+        or if there is a problem fetching the parcellation.
+
+    """
+    # show parameters to user
+    logger.info("Parcellation parameters:")
+    logger.info(f"\tyear: {year}")
+    logger.info(f"\tn_rois: {n_rois}")
+
+    # Check resolution
+    _valid_resolutions = [1, 2]
+    resolution = closest_resolution(resolution, _valid_resolutions)
+
+    # Check year value
+    _valid_year = (2013, 2015, 2019)
+    if year not in _valid_year:
+        raise_error(
+            f"The parameter `year` ({year}) needs to be one of the "
+            f"following: {_valid_year}"
+        )
+
+    # Check n_rois value
+    _valid_n_rois = [50, 100, 150, 268, 368]
+    if n_rois not in _valid_n_rois:
+        raise_error(
+            f"The parameter `n_rois` ({n_rois}) needs to be one of the "
+            f"following: {_valid_n_rois}"
+        )
+
+    # Check combinations
+    if resolution == 2 and year == 2019:
+        raise_error(
+            "The parameter combination `resolution = 2` and `year = 2019` is "
+            "invalid"
+        )
+    if n_rois in (268, 368) and year == 2013:
+        raise_error(
+            f"The parameter combination `resolution = {resolution}` and "
+            "`year = 2013` is invalid"
+        )
+    if n_rois in (50, 100, 150) and year in (2015, 2019):
+        raise_error(
+            f"The parameter combination `resolution = {resolution}` and "
+            f"`year = {year}` is invalid"
+        )
+    if (n_rois == 268 and year == 2019) or (n_rois == 368 and year == 2015):
+        raise_error(
+            f"The parameter combination `resolution = {resolution}` and "
+            f"`year = {year}` is invalid"
+        )
+
+    # Define image file according to constraints
+    if year == 2013:
+        parcellation_fname = (
+            parcellations_dir
+            / "Shen_2013"
+            / "shenetal_neuroimage2013"
+            / f"fconn_atlas_{n_rois}_{resolution}mm.nii"
+        )
+        parcellation_lname = (
+            parcellations_dir
+            / "Shen_2013"
+            / "shenetal_neuroimage2013"
+            / f"Group_seg{n_rois}_BAindexing_setA.txt"
+        )
+    elif year == 2015:
+        parcellation_fname = (
+            parcellations_dir
+            / "Shen_2015"
+            / f"shen_{resolution}mm_268_parcellation.nii.gz"
+        )
+    elif year == 2019:
+        parcellation_fname = (
+            parcellations_dir
+            / "Shen_2019"
+            / "Shen_1mm_368_parcellation.nii.gz"
+        )
+
+    # Check existence of parcellation
+    if not parcellation_fname.exists():
+        logger.info(
+            "At least one of the parcellation files are missing, fetching."
+        )
+
+        # Set URL based on year
+        url = ""
+        if year == 2013:
+            url = "https://www.nitrc.org/frs/download.php/5785/shenetal_neuroimage2013_funcatlas.zip"
+        elif year == 2015:
+            # Set URL based on resolution
+            if resolution == 1:
+                url = "https://www.nitrc.org/frs/download.php/7976/shen_1mm_268_parcellation.nii.gz"
+            elif resolution == 2:
+                url = "https://www.nitrc.org/frs/download.php/7977/shen_2mm_268_parcellation.nii.gz"
+        elif year == 2019:
+            url = "https://www.nitrc.org/frs/download.php/11629/shen_368.zip"
+
+        logger.info(f"Downloading Shen {year} from {url}")
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Make HTTP request
+            try:
+                resp = requests.get(url)
+                resp.raise_for_status()
+            except (ConnectionError, ReadTimeout, HTTPError) as err:
+                raise_error(f"Failed to download Shen {year} due to {err}")
+            else:
+                if year in (2013, 2019):
+                    parcellation_zip_path = Path(tmpdir) / f"Shen{year}.zip"
+                    with open(parcellation_zip_path, "wb") as f:
+                        f.write(resp.content)
+
+                    # Extract zipfile
+                    with zipfile.ZipFile(
+                        parcellation_zip_path, "r"
+                    ) as zip_ref:
+                        zip_ref.extractall(
+                            (parcellations_dir / f"Shen_{year}").as_posix()
+                        )
+
+                    # Cleanup after unzipping
+                    if (
+                        parcellations_dir / f"Shen_{year}" / "__MACOSX"
+                    ).exists():
+                        shutil.rmtree(
+                            (
+                                parcellations_dir / f"Shen_{year}" / "__MACOSX"
+                            ).as_posix()
+                        )
+
+                elif year == 2015:
+                    img_dir_path = parcellations_dir / "Shen_2015"
+                    img_dir_path.mkdir(parents=True, exist_ok=True)
+                    img_path = (
+                        img_dir_path
+                        / f"shen_{resolution}mm_268_parcellation.nii.gz"
+                    )
+                    img_path.touch(exist_ok=True)
+                    with open(img_path.as_posix(), "wb") as f:
+                        f.write(resp.content)
+
+    # Load labels based on year
+    if year == 2013:
+        labels = (
+            pd.read_csv(
+                parcellation_lname,  # type: ignore
+                sep=",",  # type: ignore
+                header=None,  # type: ignore
+                skiprows=[0],  # type: ignore
+            )[1]
+            .map(lambda x: x.strip())  # fix formatting
+            .to_list()
+        )
+    elif year == 2015:
+        labels = list(range(1, 269))
+    elif year == 2019:
+        labels = list(range(1, 369))
 
     return parcellation_fname, labels
 
