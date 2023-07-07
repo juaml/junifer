@@ -295,7 +295,7 @@ def test_schaefer(
 
 
 def test_retrieve_schaefer_incorrect_n_rois(tmp_path: Path) -> None:
-    """Test retrieve schaefer with incorrect n_rois.
+    """Test retrieve Schaefer with incorrect ROIs.
 
     Parameters
     ----------
@@ -313,7 +313,7 @@ def test_retrieve_schaefer_incorrect_n_rois(tmp_path: Path) -> None:
 
 
 def test_retrieve_schaefer_incorrect_yeo_networks(tmp_path: Path) -> None:
-    """Test retrieve schaefer with incorrect yeo_networks.
+    """Test retrieve Schaefer with incorrect Yeo networks.
 
     Parameters
     ----------
@@ -376,7 +376,7 @@ def test_suit(tmp_path: Path) -> None:
 
 
 def test_retrieve_suit_incorrect_space(tmp_path: Path) -> None:
-    """Test retrieve suit with incorrect space.
+    """Test retrieve SUIT with incorrect space.
 
     Parameters
     ----------
