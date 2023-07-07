@@ -103,6 +103,21 @@ for year in (2013, 2015, 2019):
             "year": 2019,
             "n_rois": 368,
         }
+# Add Yan parcellation info
+for n_rois in range(100, 1001, 100):
+    # Add Yeo networks
+    for yeo_network in [7, 17]:
+        _available_parcellations[f"Yan{n_rois}xYeo{yeo_network}"] = {
+            "family": "Yan",
+            "n_rois": n_rois,
+            "yeo_networks": yeo_network,
+        }
+    # Add Kong networks
+    _available_parcellations[f"Yan{n_rois}xKong17"] = {
+        "family": "Yan",
+        "n_rois": n_rois,
+        "kong_networks": 17,
+    }
 
 
 def register_parcellation(
@@ -273,7 +288,7 @@ def _retrieve_parcellation(
 
     Parameters
     ----------
-    family : {"Schaefer", "SUIT", "Tian", "AICHA", "Shen"}
+    family : {"Schaefer", "SUIT", "Tian", "AICHA", "Shen", "Yan"}
         The name of the parcellation family.
     parcellations_dir : str or pathlib.Path, optional
         Path where the retrieved parcellations file are stored. The default
@@ -316,6 +331,13 @@ def _retrieve_parcellation(
             Number of ROIs to use. Can be ``50, 100, or 150`` for
             ``year = 2013`` but is fixed at ``268`` for ``year = 2015`` and at
             ``368`` for ``year = 2019``.
+    * Yan :
+        ``n_rois`` : {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}
+            Granularity of the parcellation to be used.
+        ``yeo_networks`` : {7, 17}, optional
+            Number of Yeo networks to use (default None).
+        ``kong_networks`` : {17}, optional
+            Number of Kong networks to use (default None).
 
     Returns
     -------
@@ -369,6 +391,12 @@ def _retrieve_parcellation(
         )
     elif family == "Shen":
         parcellation_fname, parcellation_labels = _retrieve_shen(
+            parcellations_dir=parcellations_dir,
+            resolution=resolution,
+            **kwargs,
+        )
+    elif family == "Yan":
+        parcellation_fname, parcellation_labels = _retrieve_yan(
             parcellations_dir=parcellations_dir,
             resolution=resolution,
             **kwargs,
@@ -1085,6 +1113,188 @@ def _retrieve_shen(  # noqa: C901
         labels = list(range(1, 269))
     elif year == 2019:
         labels = list(range(1, 369))
+
+    return parcellation_fname, labels
+
+
+def _retrieve_yan(
+    parcellations_dir: Path,
+    resolution: Optional[float] = None,
+    n_rois: Optional[int] = None,
+    yeo_networks: Optional[int] = None,
+    kong_networks: Optional[int] = None,
+) -> Tuple[Path, List[str]]:
+    """Retrieve Yan parcellation.
+
+    Parameters
+    ----------
+    parcellations_dir : pathlib.Path
+        The path to the parcellation data directory.
+    resolution : float, optional
+        The desired resolution of the parcellation to load. If it is not
+        available, the closest resolution will be loaded. Preferably, use a
+        resolution higher than the desired one. By default, will load the
+        highest one (default None). Available resolutions for this
+        parcellation are 1mm and 2mm.
+    n_rois : {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}, optional
+        Granularity of the parcellation to be used (default None).
+    yeo_networks : {7, 17}, optional
+        Number of Yeo networks to use (default None).
+    kong_networks : {17}, optional
+        Number of Kong networks to use (default None).
+
+    Returns
+    -------
+    pathlib.Path
+        File path to the parcellation image.
+    list of str
+        Parcellation labels.
+
+    Raises
+    ------
+    ValueError
+        If invalid value is provided for ``n_rois``, ``yeo_networks`` or
+        ``kong_networks`` or if there is a problem fetching the parcellation.
+
+    """
+    logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
+    logger.info(f"\tn_rois: {n_rois}")
+    logger.info(f"\tyeo_networks: {yeo_networks}")
+    logger.info(f"\tkong_networks: {kong_networks}")
+
+    # Allow single network type
+    if (not yeo_networks and not kong_networks) or (
+        yeo_networks and kong_networks
+    ):
+        raise_error(
+            "Either one of `yeo_networks` or `kong_networks` need to be "
+            "specified."
+        )
+
+    # Check resolution
+    _valid_resolutions = [1, 2]
+    resolution = closest_resolution(resolution, _valid_resolutions)
+
+    # Check n_rois value
+    _valid_n_rois = list(range(100, 1001, 100))
+    if n_rois not in _valid_n_rois:
+        raise_error(
+            f"The parameter `n_rois` ({n_rois}) needs to be one of the "
+            f"following: {_valid_n_rois}"
+        )
+
+    if yeo_networks:
+        # Check yeo_networks value
+        _valid_yeo_networks = [7, 17]
+        if yeo_networks not in _valid_yeo_networks:
+            raise_error(
+                f"The parameter `yeo_networks` ({yeo_networks}) needs to be "
+                f"one of the following: {_valid_yeo_networks}"
+            )
+        # Define image and label file according to network
+        parcellation_fname = (
+            parcellations_dir
+            / "Yan_2023"
+            / (
+                f"{n_rois}Parcels_Yeo2011_{yeo_networks}Networks_FSLMNI152_"
+                f"{resolution}mm.nii.gz"
+            )
+        )
+        parcellation_lname = (
+            parcellations_dir
+            / "Yan_2023"
+            / f"{n_rois}Parcels_Yeo2011_{yeo_networks}Networks_LUT.txt"
+        )
+    elif kong_networks:
+        # Check kong_networks value
+        _valid_kong_networks = [17]
+        if kong_networks not in _valid_kong_networks:
+            raise_error(
+                f"The parameter `kong_networks` ({kong_networks}) needs to be "
+                f"one of the following: {_valid_kong_networks}"
+            )
+        # Define image and label file according to network
+        parcellation_fname = (
+            parcellations_dir
+            / "Yan_2023"
+            / (
+                f"{n_rois}Parcels_Kong2022_{kong_networks}Networks_FSLMNI152_"
+                f"{resolution}mm.nii.gz"
+            )
+        )
+        parcellation_lname = (
+            parcellations_dir
+            / "Yan_2023"
+            / f"{n_rois}Parcels_Kong2022_{kong_networks}Networks_LUT.txt"
+        )
+
+    # Check for existence of parcellation:
+    if not parcellation_fname.exists() and not parcellation_lname.exists():
+        logger.info(
+            "At least one of the parcellation files are missing, fetching."
+        )
+
+        # Set URL based on network
+        if yeo_networks:
+            img_url = (
+                "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/"
+                "master/stable_projects/brain_parcellation/Yan2023_homotopic/"
+                f"parcellations/MNI/yeo{yeo_networks}/{n_rois}Parcels_Yeo2011"
+                f"_{yeo_networks}Networks_FSLMNI152_{resolution}mm.nii.gz"
+            )
+            label_url = (
+                "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/"
+                "master/stable_projects/brain_parcellation/Yan2023_homotopic/"
+                f"parcellations/MNI/yeo{yeo_networks}/freeview_lut/{n_rois}"
+                f"Parcels_Yeo2011_{yeo_networks}Networks_LUT.txt"
+            )
+        elif kong_networks:
+            img_url = (
+                "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/"
+                "master/stable_projects/brain_parcellation/Yan2023_homotopic/"
+                f"parcellations/MNI/kong17/{n_rois}Parcels_Kong2022"
+                f"_17Networks_FSLMNI152_{resolution}mm.nii.gz"
+            )
+            label_url = (
+                "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/"
+                "master/stable_projects/brain_parcellation/Yan2023_homotopic/"
+                f"parcellations/MNI/kong17/freeview_lut/{n_rois}Parcels_"
+                "Kong2022_17Networks_LUT.txt"
+            )
+
+        # Initiate a session and make HTTP requests
+        session = requests.Session()
+        # Download parcellation file
+        logger.info(f"Downloading Yan 2023 parcellation from {img_url}")
+        try:
+            img_resp = session.get(img_url)
+            img_resp.raise_for_status()
+        except (ConnectionError, ReadTimeout, HTTPError) as err:
+            raise_error(
+                f"Failed to download Yan 2023 parcellation due to: {err}"
+            )
+        else:
+            parcellation_img_path = Path(parcellation_fname)
+            parcellation_img_path.parent.mkdir(parents=True, exist_ok=True)
+            parcellation_img_path.touch(exist_ok=True)
+            with open(parcellation_img_path, "wb") as f:
+                f.write(img_resp.content)
+        # Download label file
+        logger.info(f"Downloading Yan 2023 labels from {label_url}")
+        try:
+            label_resp = session.get(label_url)
+            label_resp.raise_for_status()
+        except (ConnectionError, ReadTimeout, HTTPError) as err:
+            raise_error(f"Failed to download Yan 2023 labels due to: {err}")
+        else:
+            parcellation_labels_path = Path(parcellation_lname)
+            parcellation_labels_path.touch(exist_ok=True)
+            with open(parcellation_labels_path, "wb") as f:
+                f.write(label_resp.content)
+
+    # Load label file
+    labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[1].to_list()
 
     return parcellation_fname, labels
 
