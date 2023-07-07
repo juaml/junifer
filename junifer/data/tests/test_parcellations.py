@@ -330,48 +330,31 @@ def test_retrieve_schaefer_incorrect_yeo_networks(tmp_path: Path) -> None:
         )
 
 
-# TODO: parametrize test
-def test_suit(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "space",
+    ["SUIT", "MNI"],
+)
+def test_suit(tmp_path: Path, space: str) -> None:
     """Test SUIT parcellation.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    space : str
+        The parametrized space values.
 
     """
     parcellations = list_parcellations()
-    assert "SUITxSUIT" in parcellations
-    assert "SUITxMNI" in parcellations
-
+    assert f"SUITx{space}" in parcellations
     # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="SUITxSUIT", parcellations_dir=tmp_path
+    img, label, img_path = load_parcellation(
+        name=f"SUITx{space}",
+        parcellations_dir=tmp_path,
     )
-    fname1 = "SUIT_SUITSpace_1mm.nii"
     assert img is not None
-    assert fname.name == fname1
-    assert len(lbl) == 34
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
-
-    # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="SUITxSUIT", parcellations_dir=tmp_path
-    )
-    fname1 = "SUIT_SUITSpace_1mm.nii"
-    assert img is not None
-    assert fname.name == fname1
-    assert len(lbl) == 34
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
-
-    # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="SUITxMNI", parcellations_dir=tmp_path
-    )
-    fname1 = "SUIT_MNISpace_1mm.nii"
-    assert img is not None
-    assert fname.name == fname1
-    assert len(lbl) == 34
+    assert img_path.name == f"SUIT_{space}Space_1mm.nii"
+    assert len(label) == 34
     assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
 
