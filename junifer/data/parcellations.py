@@ -308,7 +308,7 @@ def _retrieve_parcellation(
       ``n_rois`` : {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}
             Granularity of parcellation to be used.
        ``yeo_network`` : {7, 17}, optional
-            Number of yeo networks to use (default 7).
+            Number of Yeo networks to use (default 7).
     * Tian :
         ``scale`` : {1, 2, 3, 4}
             Scale of parcellation (defines granularity).
@@ -430,7 +430,7 @@ def _retrieve_schaefer(
     n_rois : {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}, optional
         Granularity of the parceallation to be used (default None).
     yeo_networks : {7, 17}, optional
-        Number of yeo networks to use (default 7).
+        Number of Yeo networks to use (default 7).
 
     Returns
     -------
