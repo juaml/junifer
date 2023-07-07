@@ -308,6 +308,26 @@ Available
        | patterns of brain connectivity.
        | Nature Neuroscience, Volume 18(11), Pages 1664-1671 (2015).
        | https://doi:10.1038/nn.4135
+   * - Yan
+     - ``n_rois``, ``yeo_networks``, ``kong_networks``
+     - | ``Yan100xYeo7``, ``Yan200xYeo7``, ``Yan300xYeo7``,
+       | ``Yan400xYeo7``, ``Yan500xYeo7``, ``Yan600xYeo7``,
+       | ``Yan700xYeo7``, ``Yan800xYeo7``, ``Yan900xYeo7``,
+       | ``Yan1000xYeo7``,
+       | ``Yan100xYeo17``, ``Yan200xYeo17``, ``Yan300xYeo17``,
+       | ``Yan400xYeo17``, ``Yan500xYeo17``, ``Yan600xYeo17``,
+       | ``Yan700xYeo17``, ``Yan800xYeo17``, ``Yan900xYeo17``,
+       | ``Yan1000xYeo17``,
+       | ``Yan100xKong17``, ``Yan200xKong17``, ``Yan300xKong17``,
+       | ``Yan400xKong17``, ``Yan500xKong17``, ``Yan600xKong17``,
+       | ``Yan700xKong17``, ``Yan800xKong17``, ``Yan900xKong17``,
+       | ``Yan1000xKong17``
+     - 0.0.3
+     - | Yan, X., Kong, R., Xue, A., et al.
+       | Homotopic local-global parcellation of the human cerebral cortex from
+       | resting-state functional connectivity.
+       | NeuroImage, Volume 273 (2023).
+       | https://doi.org/10.1016/j.neuroimage.2023.120010
 
 
 Planned
