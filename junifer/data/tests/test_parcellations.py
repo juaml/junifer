@@ -21,6 +21,7 @@ from junifer.data.parcellations import (
     _retrieve_shen,
     _retrieve_suit,
     _retrieve_tian,
+    _retrieve_yan,
     list_parcellations,
     load_parcellation,
     merge_parcellations,
@@ -725,6 +726,204 @@ def test_retrieve_shen_incorrect_param_combo(
             resolution=resolution,
             year=year,
             n_rois=n_rois,
+        )
+
+
+@pytest.mark.parametrize(
+    "resolution, n_rois, yeo_networks, kong_networks",
+    [
+        (1.0, 100, 7, None),
+        (1.0, 200, 7, None),
+        (1.0, 300, 7, None),
+        (1.0, 400, 7, None),
+        (1.0, 500, 7, None),
+        (1.0, 600, 7, None),
+        (1.0, 700, 7, None),
+        (1.0, 800, 7, None),
+        (1.0, 900, 7, None),
+        (1.0, 1000, 7, None),
+        (2.0, 100, 7, None),
+        (2.0, 200, 7, None),
+        (2.0, 300, 7, None),
+        (2.0, 400, 7, None),
+        (2.0, 500, 7, None),
+        (2.0, 600, 7, None),
+        (2.0, 700, 7, None),
+        (2.0, 800, 7, None),
+        (2.0, 900, 7, None),
+        (2.0, 1000, 7, None),
+        (1.0, 100, 17, None),
+        (1.0, 200, 17, None),
+        (1.0, 300, 17, None),
+        (1.0, 400, 17, None),
+        (1.0, 500, 17, None),
+        (1.0, 600, 17, None),
+        (1.0, 700, 17, None),
+        (1.0, 800, 17, None),
+        (1.0, 900, 17, None),
+        (1.0, 1000, 17, None),
+        (2.0, 100, 17, None),
+        (2.0, 200, 17, None),
+        (2.0, 300, 17, None),
+        (2.0, 400, 17, None),
+        (2.0, 500, 17, None),
+        (2.0, 600, 17, None),
+        (2.0, 700, 17, None),
+        (2.0, 800, 17, None),
+        (2.0, 900, 17, None),
+        (2.0, 1000, 17, None),
+        (1.0, 100, None, 17),
+        (1.0, 200, None, 17),
+        (1.0, 300, None, 17),
+        (1.0, 400, None, 17),
+        (1.0, 500, None, 17),
+        (1.0, 600, None, 17),
+        (1.0, 700, None, 17),
+        (1.0, 800, None, 17),
+        (1.0, 900, None, 17),
+        (1.0, 1000, None, 17),
+        (2.0, 100, None, 17),
+        (2.0, 200, None, 17),
+        (2.0, 300, None, 17),
+        (2.0, 400, None, 17),
+        (2.0, 500, None, 17),
+        (2.0, 600, None, 17),
+        (2.0, 700, None, 17),
+        (2.0, 800, None, 17),
+        (2.0, 900, None, 17),
+        (2.0, 1000, None, 17),
+    ],
+)
+def test_yan(
+    tmp_path: Path,
+    resolution: float,
+    n_rois: int,
+    yeo_networks: int,
+    kong_networks: int,
+) -> None:
+    """Test Yan parcellation.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    resolution : float
+        The parametrized resolution values.
+    n_rois : int
+        The parametrized ROI count values.
+    yeo_networks : int
+        The parametrized Yeo networks values.
+    kong_networks : int
+        The parametrized Kong networks values.
+
+    """
+    parcellations = list_parcellations()
+    if yeo_networks:
+        parcellation_name = f"Yan{n_rois}xYeo{yeo_networks}"
+        assert parcellation_name in parcellations
+        parcellation_file = (
+            f"{n_rois}Parcels_Yeo2011_{yeo_networks}Networks_FSLMNI152_"
+            f"{int(resolution)}mm.nii.gz"
+        )
+    elif kong_networks:
+        parcellation_name = f"Yan{n_rois}xKong{kong_networks}"
+        assert parcellation_name in parcellations
+        parcellation_file = (
+            f"{n_rois}Parcels_Kong2022_{kong_networks}Networks_FSLMNI152_"
+            f"{int(resolution)}mm.nii.gz"
+        )
+    # Load parcellation
+    img, label, img_path = load_parcellation(
+        name=parcellation_name,  # type: ignore
+        parcellations_dir=tmp_path,
+        resolution=resolution,
+    )
+    assert img is not None
+    assert img_path.name == parcellation_file  # type: ignore
+    assert len(label) == n_rois
+    assert_array_equal(
+        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+    )
+
+
+def test_retrieve_yan_incorrect_networks(tmp_path: Path) -> None:
+    """Test retrieve Yan with incorrect networks.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    with pytest.raises(
+        ValueError, match="Either one of `yeo_networks` or `kong_networks`"
+    ):
+        _retrieve_yan(
+            parcellations_dir=tmp_path,
+            n_rois=31418,
+            yeo_networks=100,
+            kong_networks=100,
+        )
+
+    with pytest.raises(
+        ValueError, match="Either one of `yeo_networks` or `kong_networks`"
+    ):
+        _retrieve_yan(
+            parcellations_dir=tmp_path,
+            n_rois=31418,
+            yeo_networks=None,
+            kong_networks=None,
+        )
+
+
+def test_retrieve_yan_incorrect_n_rois(tmp_path: Path) -> None:
+    """Test retrieve Yan with incorrect ROIs.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    with pytest.raises(ValueError, match="The parameter `n_rois`"):
+        _retrieve_yan(
+            parcellations_dir=tmp_path,
+            n_rois=31418,
+            yeo_networks=7,
+        )
+
+
+def test_retrieve_yan_incorrect_yeo_networks(tmp_path: Path) -> None:
+    """Test retrieve Yan with incorrect Yeo networks.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    with pytest.raises(ValueError, match="The parameter `yeo_networks`"):
+        _retrieve_yan(
+            parcellations_dir=tmp_path,
+            n_rois=100,
+            yeo_networks=27,
+        )
+
+
+def test_retrieve_yan_incorrect_kong_networks(tmp_path: Path) -> None:
+    """Test retrieve Yan with incorrect Kong networks.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    with pytest.raises(ValueError, match="The parameter `kong_networks`"):
+        _retrieve_yan(
+            parcellations_dir=tmp_path,
+            n_rois=100,
+            kong_networks=27,
         )
 
 
