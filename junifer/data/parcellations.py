@@ -447,9 +447,9 @@ def _retrieve_schaefer(
 
     """
     logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tn_rois: {n_rois}")
     logger.info(f"\tyeo_networks: {yeo_networks}")
-    logger.info(f"\tresolution: {resolution}")
 
     _valid_n_rois = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
     _valid_networks = [7, 17]
@@ -555,10 +555,11 @@ def _retrieve_tian(
     """
     # show parameters to user
     logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tscale: {scale}")
     logger.info(f"\tspace: {space}")
     logger.info(f"\tmagneticfield: {magneticfield}")
-    logger.info(f"\tresolution: {resolution}")
+
     # check validity of parameters
     _valid_scales = [1, 2, 3, 4]
     if scale not in _valid_scales:
@@ -714,6 +715,7 @@ def _retrieve_suit(
 
     """
     logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tspace: {space}")
 
     _valid_spaces = ["MNI", "SUIT"]
@@ -825,6 +827,7 @@ def _retrieve_aicha(
     """
     # show parameters to user
     logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tversion: {version}")
 
     # Check version value
@@ -963,6 +966,7 @@ def _retrieve_shen(  # noqa: C901
     """
     # show parameters to user
     logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tyear: {year}")
     logger.info(f"\tn_rois: {n_rois}")
 
