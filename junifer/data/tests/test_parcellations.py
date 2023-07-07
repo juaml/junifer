@@ -368,7 +368,9 @@ def test_retrieve_suit_incorrect_space(tmp_path: Path) -> None:
 
     """
     with pytest.raises(ValueError, match=r"The parameter `space`"):
-        _retrieve_suit(parcellations_dir=tmp_path, resolution=1, space="wrong")
+        _retrieve_suit(
+            parcellations_dir=tmp_path, resolution=1.0, space="wrong"
+        )
 
 
 @pytest.mark.parametrize(
@@ -631,7 +633,9 @@ def test_shen(
     assert f"Shen_{year}_{n_rois}" in parcellations
     # Load parcellation
     img, label, img_path = load_parcellation(
-        name=f"Shen_{year}_{n_rois}", parcellations_dir=tmp_path
+        name=f"Shen_{year}_{n_rois}",
+        parcellations_dir=tmp_path,
+        resolution=resolution,
     )
     assert img is not None
     assert img_name in img_path.name
