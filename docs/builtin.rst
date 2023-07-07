@@ -269,7 +269,7 @@ Available
        | A spatially unbiased atlas template of the human cerebellum.
        | NeuroImage, Volume 33(1), Pages 127–138 (2006).
        | https://doi.org/10.1016/j.neuroimage.2006.05.056
-   * - TIAN
+   * - Tian
      - ``scale``, ``space``, ``magneticfield``
      - | ``TianxS1x3TxMNI6thgeneration``, ``TianxS1x7TxMNI6thgeneration``,
        | ``TianxS2x3TxMNI6thgeneration``, ``TianxS2x7TxMNI6thgeneration``,
@@ -301,7 +301,7 @@ Available
      - | Shen, X., Tokoglu, F., Papademetris, X., Constable, R.T.
        | Groupwise whole-brain parcellation from resting-state fMRI data
        | for network node identification.
-       | Neuroimage, Volume 82 (2013).
+       | NeuroImage, Volume 82 (2013).
        | https://doi.org/10.1016/j.neuroimage.2013.05.081.
        | Finn, E.S., Shen, X., Scheinost, D., et al.
        | Functional connectome fingerprinting: identifying individuals using
@@ -353,7 +353,7 @@ Planned
    * - AAL
      - | Rolls, E.T., Huang, C.C., Lin, C.P., et al.
        | Automated anatomical labelling atlas 3.
-       | Neuroimage, Volume 206 (2020).
+       | NeuroImage, Volume 206 (2020).
        | https://doi.org/10.1016/j.neuroimage.2019.116189
    * - Mindboggle 101
      - | Klein, A., & Tourville, J.

@@ -207,88 +207,95 @@ def test_retrieve_parcellation_incorrect() -> None:
         _retrieve_parcellation("wrongparcellation")
 
 
-# TODO: paramdtrize test
-def test_schaefer_parcellation(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "resolution, n_rois, yeo_networks",
+    [
+        (1.0, 100, 7),
+        (1.0, 200, 7),
+        (1.0, 300, 7),
+        (1.0, 400, 7),
+        (1.0, 500, 7),
+        (1.0, 600, 7),
+        (1.0, 700, 7),
+        (1.0, 800, 7),
+        (1.0, 900, 7),
+        (1.0, 1000, 7),
+        (2.0, 100, 7),
+        (2.0, 200, 7),
+        (2.0, 300, 7),
+        (2.0, 400, 7),
+        (2.0, 500, 7),
+        (2.0, 600, 7),
+        (2.0, 700, 7),
+        (2.0, 800, 7),
+        (2.0, 900, 7),
+        (2.0, 1000, 7),
+        (1.0, 100, 17),
+        (1.0, 200, 17),
+        (1.0, 300, 17),
+        (1.0, 400, 17),
+        (1.0, 500, 17),
+        (1.0, 600, 17),
+        (1.0, 700, 17),
+        (1.0, 800, 17),
+        (1.0, 900, 17),
+        (1.0, 1000, 17),
+        (2.0, 100, 17),
+        (2.0, 200, 17),
+        (2.0, 300, 17),
+        (2.0, 400, 17),
+        (2.0, 500, 17),
+        (2.0, 600, 17),
+        (2.0, 700, 17),
+        (2.0, 800, 17),
+        (2.0, 900, 17),
+        (2.0, 1000, 17),
+    ],
+)
+def test_schaefer(
+    tmp_path: Path,
+    resolution: float,
+    n_rois: int,
+    yeo_networks: int,
+) -> None:
     """Test Schaefer parcellation.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    resolution : float
+        The parametrized resolution values.
+    n_rois : int
+        The parametrized ROI count values.
+    yeo_networks : int
+        The parametrized Yeo networks values.
 
     """
     parcellations = list_parcellations()
-    for n_rois in range(100, 1001, 100):
-        for t_net in [7, 17]:
-            t_name = f"Schaefer{n_rois}x{t_net}"
-            assert t_name in parcellations
+    parcellation_name = f"Schaefer{n_rois}x{yeo_networks}"
+    assert parcellation_name in parcellations
 
-    # Define parcellation file names
-    fname1 = "Schaefer2018_100Parcels_7Networks_order_FSLMNI152_1mm.nii.gz"
-    fname2 = "Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz"
-
-    # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="Schaefer100x7", parcellations_dir=str(tmp_path.absolute())
+    parcellation_file = (
+        f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order_FSLMNI152_"
+        f"{int(resolution)}mm.nii.gz"
     )
-    # Check parcellation values
+    # Load parcellation
+    img, label, img_path = load_parcellation(
+        name=parcellation_name,
+        parcellations_dir=tmp_path,
+        resolution=resolution,
+    )
     assert img is not None
-    assert fname.name == fname1
-    assert len(lbl) == 100
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
-
-    # Test with Path
-    img, lbl, fname = load_parcellation(
-        name="Schaefer100x7", parcellations_dir=tmp_path
+    assert img_path.name == parcellation_file
+    assert len(label) == n_rois
+    assert_array_equal(
+        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
     )
-    # Load parcellation
-    img2, lbl, fname = load_parcellation(
-        name="Schaefer100x7", parcellations_dir=tmp_path, resolution=3
-    )
-    # Check parcellation values
-    assert fname.name == fname2
-    assert len(lbl) == 100
-    assert img2 is not None
-    assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
-    # Load parcellation
-    img2, lbl, fname = load_parcellation(
-        "Schaefer100x7", parcellations_dir=tmp_path, resolution=2.1
-    )
-    # Check parcellation values
-    assert fname.name == fname2
-    assert len(lbl) == 100
-    assert img2 is not None
-    assert_array_equal(img2.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
-    # Load parcellation
-    img2, lbl, fname = load_parcellation(
-        "Schaefer100x7", parcellations_dir=tmp_path, resolution=1.99
-    )
-    # Check parcellation values
-    assert fname.name == fname1
-    assert len(lbl) == 100
-    assert img2 is not None
-    assert_array_equal(img2.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
-    # Load parcellation
-    img2, lbl, fname = load_parcellation(
-        "Schaefer100x7", parcellations_dir=tmp_path, resolution=0.5
-    )
-    # Check parcellation values
-    assert fname.name == fname1
-    assert len(lbl) == 100
-    assert img2 is not None
-    assert_array_equal(img2.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
-
-
-def test_load_parcellation_schaefer() -> None:
-    """Test Schaefer parcellation loading."""
-    img, lbl, fname = load_parcellation(name="Schaefer100x7")
-    assert img is not None
-    home_dir = Path().home() / "junifer" / "data" / "parcellations"
-    assert home_dir in fname.parents
 
 
 def test_retrieve_schaefer_incorrect_n_rois(tmp_path: Path) -> None:
-    """Test retrieve schaefer with incorrect n_rois.
+    """Test retrieve Schaefer with incorrect ROIs.
 
     Parameters
     ----------
@@ -306,7 +313,7 @@ def test_retrieve_schaefer_incorrect_n_rois(tmp_path: Path) -> None:
 
 
 def test_retrieve_schaefer_incorrect_yeo_networks(tmp_path: Path) -> None:
-    """Test retrieve schaefer with incorrect yeo_networks.
+    """Test retrieve Schaefer with incorrect Yeo networks.
 
     Parameters
     ----------
@@ -323,53 +330,36 @@ def test_retrieve_schaefer_incorrect_yeo_networks(tmp_path: Path) -> None:
         )
 
 
-# TODO: parametrize test
-def test_suit(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "space",
+    ["SUIT", "MNI"],
+)
+def test_suit(tmp_path: Path, space: str) -> None:
     """Test SUIT parcellation.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    space : str
+        The parametrized space values.
 
     """
     parcellations = list_parcellations()
-    assert "SUITxSUIT" in parcellations
-    assert "SUITxMNI" in parcellations
-
+    assert f"SUITx{space}" in parcellations
     # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="SUITxSUIT", parcellations_dir=tmp_path
+    img, label, img_path = load_parcellation(
+        name=f"SUITx{space}",
+        parcellations_dir=tmp_path,
     )
-    fname1 = "SUIT_SUITSpace_1mm.nii"
     assert img is not None
-    assert fname.name == fname1
-    assert len(lbl) == 34
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
-
-    # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="SUITxSUIT", parcellations_dir=tmp_path
-    )
-    fname1 = "SUIT_SUITSpace_1mm.nii"
-    assert img is not None
-    assert fname.name == fname1
-    assert len(lbl) == 34
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
-
-    # Load parcellation
-    img, lbl, fname = load_parcellation(
-        name="SUITxMNI", parcellations_dir=tmp_path
-    )
-    fname1 = "SUIT_MNISpace_1mm.nii"
-    assert img is not None
-    assert fname.name == fname1
-    assert len(lbl) == 34
+    assert img_path.name == f"SUIT_{space}Space_1mm.nii"
+    assert len(label) == 34
     assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
 
 def test_retrieve_suit_incorrect_space(tmp_path: Path) -> None:
-    """Test retrieve suit with incorrect space.
+    """Test retrieve SUIT with incorrect space.
 
     Parameters
     ----------
@@ -378,7 +368,9 @@ def test_retrieve_suit_incorrect_space(tmp_path: Path) -> None:
 
     """
     with pytest.raises(ValueError, match=r"The parameter `space`"):
-        _retrieve_suit(parcellations_dir=tmp_path, resolution=1, space="wrong")
+        _retrieve_suit(
+            parcellations_dir=tmp_path, resolution=1.0, space="wrong"
+        )
 
 
 @pytest.mark.parametrize(
@@ -641,7 +633,9 @@ def test_shen(
     assert f"Shen_{year}_{n_rois}" in parcellations
     # Load parcellation
     img, label, img_path = load_parcellation(
-        name=f"Shen_{year}_{n_rois}", parcellations_dir=tmp_path
+        name=f"Shen_{year}_{n_rois}",
+        parcellations_dir=tmp_path,
+        resolution=resolution,
     )
     assert img is not None
     assert img_name in img_path.name
