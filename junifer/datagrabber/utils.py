@@ -82,12 +82,12 @@ def validate_patterns(types: List[str], patterns: Dict[str, str]) -> None:
             msg="Length of `types` more than that of `patterns`.",
             klass=ValueError,
         )
-
+    # Missing type in patterns
     if any(x not in patterns for x in types):
         raise_error(
             msg="`patterns` must contain all `types`", klass=ValueError
         )
-
+    # Wildcard check in patterns
     if any("}*" in pattern for pattern in patterns.values()):
         raise_error(
             msg="`patterns` must not contain `*` following a replacement",
