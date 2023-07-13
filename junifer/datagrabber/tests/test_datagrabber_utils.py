@@ -61,7 +61,9 @@ def test_validate_patterns() -> None:
         "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
     }
 
-    with pytest.raises(ValueError, match="same length"):
+    with pytest.raises(
+        ValueError, match="Length of `types` more than that of `patterns`."
+    ):
         validate_patterns(types, wrongpatterns)  # type: ignore
 
     wrongpatterns = {
