@@ -119,6 +119,8 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
 
         """
         out = super().get_item(subject=subject)
-        out["BOLD"]["mask_item"] = "BOLD_mask"
-        out["T1w"]["mask_item"] = "T1w_mask"
+        if out.get("BOLD"):
+            out["BOLD"]["mask_item"] = "BOLD_mask"
+        if out.get("T1w"):
+            out["T1w"]["mask_item"] = "T1w_mask"
         return out
