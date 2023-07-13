@@ -7,6 +7,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from itertools import product
 from pathlib import Path
 from typing import Dict, List, Union
 
@@ -29,7 +30,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
            "probseg_WM", "DWI"} or a list of the options, optional
         AOMIC data types. If None, all available data types are selected.
         (default None).
-    tasks : {"restingstate", "stopsignal", "emomatching", "workingmemory"} \
+    tasks : {"restingstate", "stopsignal", "workingmemory"} \
             or list of the options, optional
         AOMIC PIOP2 task sessions. If None, all available task sessions are
         selected (default None).
@@ -45,10 +46,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         # Declare all tasks
         all_tasks = [
             "restingstate",
-            "anticipation",
-            "emomatching",
-            "faces",
-            "gstroop",
+            "stopsignal",
             "workingmemory",
         ]
         # Set default tasks
@@ -142,8 +140,11 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             imposing constraints based on specified tasks.
 
         """
-        all_elements = super().get_elements()
-        return [x for x in all_elements if x[1] in self.tasks]
+        subjects = [f"{x:04d}" for x in range(1, 227)]
+        elems = []
+        for subject, task in product(subjects, self.tasks):
+            elems.append((subject, task))
+        return elems
 
     def get_item(self, subject: str, task: str) -> Dict:
         """Index one element in the dataset.
@@ -152,9 +153,8 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         ----------
         subject : str
             The subject ID.
-        task : str
-            The task to get. Possible values are:
-            {"restingstate", "stopsignal", "emomatching", "workingmemory"}
+        task : {"restingstate", "stopsignal", "workingmemory"}
+            The task to get.
 
         Returns
         -------
@@ -163,7 +163,9 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             specified element.
 
         """
-        out = super().get_item(subject=subject, task=task)
-        out["BOLD"]["mask_item"] = "BOLD_mask"
-        out["T1w"]["mask_item"] = "T1w_mask"
+        out = super().get_item(subject=subject, task=f"{task}_acq-seq")
+        if out.get("BOLD"):
+            out["BOLD"]["mask_item"] = "BOLD_mask"
+        if out.get("T1w"):
+            out["T1w"]["mask_item"] = "T1w_mask"
         return out
