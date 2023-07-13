@@ -164,8 +164,10 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         new_task = f"{task}_acq-{acq}"
 
         out = super().get_item(subject=subject, task=new_task)
-        out["BOLD"]["mask_item"] = "BOLD_mask"
-        out["T1w"]["mask_item"] = "T1w_mask"
+        if out.get("BOLD"):
+            out["BOLD"]["mask_item"] = "BOLD_mask"
+        if out.get("T1w"):
+            out["T1w"]["mask_item"] = "T1w_mask"
         return out
 
     def get_elements(self) -> List:
