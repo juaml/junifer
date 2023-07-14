@@ -6,19 +6,16 @@
 # License: AGPL
 
 import socket
-from typing import Optional
+from typing import List, Optional, Union
 
 import pytest
 
 from junifer.configs.juseless.datagrabbers import JuselessUCLA
-from junifer.utils.logging import configure_logging
 
 
 # Check if the test is running on juseless
 if socket.gethostname() != "juseless":
     pytest.skip("These tests are only for juseless", allow_module_level=True)
-
-configure_logging(level="DEBUG")
 
 
 def test_JuselessUCLA() -> None:
@@ -40,6 +37,57 @@ def test_JuselessUCLA() -> None:
         for t in types:
             assert t in out
             assert out[t]["path"].exists()
+
+
+@pytest.mark.parametrize(
+    "types",
+    [
+        "BOLD",
+        "BOLD_confounds",
+        "T1w",
+        "probseg_CSF",
+        "probseg_GM",
+        "probseg_WM",
+        ["BOLD", "BOLD_confounds"],
+        ["T1w", "probseg_CSF"],
+        ["probseg_GM", "probseg_WM"],
+        ["BOLD", "T1w"],
+    ],
+)
+def test_JuselessUCLA_partial_data_access(
+    types: Union[str, List[str]],
+) -> None:
+    """Test JuselessUCLA DataGrabber partial data access.
+
+    Parameters
+    ----------
+    types : str or list of str
+        The parametrized types.
+
+    """
+    dg = JuselessUCLA(types=types)
+
+    with dg:
+        # Get all elements
+        all_elements = dg.get_elements()
+        # Get test element
+        test_element = all_elements[0]
+        # Get test element data
+        out = dg[test_element]
+        # Assert data type
+        if isinstance(types, list):
+            for type_ in types:
+                assert type_ in out
+        else:
+            assert types in out
+
+
+def test_JuselessUCLA_incorrect_data_type() -> None:
+    """Test JuselessUCLA DataGrabber incorrect data type."""
+    with pytest.raises(
+        ValueError, match="`patterns` must contain all `types`"
+    ):
+        _ = JuselessUCLA(types="Eunomia")
 
 
 @pytest.mark.parametrize(
