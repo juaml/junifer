@@ -20,9 +20,13 @@ class JuselessUCLA(PatternDataGrabber):
 
     Parameters
     ----------
-    datadir : str or pathlib.Path, optional
-        The directory where the dataset is stored
+    datadir : str or Path, optional
+        The directory where the dataset is stored.
         (default "/data/project/psychosis_thalamus/data/fmriprep").
+    types: {"BOLD", "BOLD_confounds", "T1w", "probseg_CSF", "probseg_GM", \
+           "probseg_WM"} or a list of the options, optional
+        UCLA data types. If None, all available data types are selected.
+        (default None).
     tasks : {"rest", "bart", "bht", "pamenc", "pamret", \
             "scap", "taskswitch", "stopsignal"} or \
             list of the options or None, optional
@@ -36,20 +40,10 @@ class JuselessUCLA(PatternDataGrabber):
         datadir: Union[
             str, Path
         ] = "/data/project/psychosis_thalamus/data/fmriprep",
+        types: Union[str, List[str], None] = None,
         tasks: Union[str, List[str], None] = None,
     ) -> None:
-        types = [
-            "BOLD",
-            "BOLD_confounds",
-            "T1w",
-            "probseg_CSF",
-            "probseg_GM",
-            "probseg_WM",
-        ]
-
-        if isinstance(tasks, str):
-            tasks = [tasks]
-
+        # Declare all tasks
         all_tasks = [
             "rest",
             "bart",
@@ -60,18 +54,21 @@ class JuselessUCLA(PatternDataGrabber):
             "taskswitch",
             "stopsignal",
         ]
-
+        # Set default tasks
         if tasks is None:
             tasks = all_tasks
         else:
+            # Convert single task into list
+            if isinstance(tasks, str):
+                tasks = [tasks]
+            # Verify valid tasks
             for t in tasks:
                 if t not in all_tasks:
                     raise_error(
                         f"{t} is not a valid task in the UCLA dataset!"
                     )
-
         self.tasks = tasks
-
+        # The patterns
         patterns = {
             "BOLD": (
                 "sub-{subject}/func/sub-{subject}_task-{task}_bold_space-"
@@ -98,12 +95,18 @@ class JuselessUCLA(PatternDataGrabber):
                 "-MNI152NLin2009cAsym_class-WM_probtissue.nii.gz"
             ),
         }
-
+        # Set default types
+        if types is None:
+            types = list(patterns.keys())
+        # Convert single type into list
+        else:
+            if not isinstance(types, list):
+                types = [types]
+        # The replacements
+        replacements = ["subject", "task"]
         # the commented out uri leads to new open neuro dataset which does
         # NOT have preprocessed data
         # uri = "https://github.com/OpenNeuroDatasets/ds000030.git"
-
-        replacements = ["subject", "task"]
         super().__init__(
             types=types,
             datadir=datadir,
