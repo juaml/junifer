@@ -23,7 +23,7 @@ from junifer.storage.utils import (
     "dependency, max_version",
     [
         ("click", "8.2"),
-        ("numpy", "1.24"),
+        ("numpy", "1.26"),
         ("datalad", "0.19"),
         ("pandas", "1.6"),
         ("nibabel", "4.1"),
