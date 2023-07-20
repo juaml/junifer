@@ -17,6 +17,7 @@ help:
 clean:
 	rm -rf $(BUILDDIR)/*
 	rm -rf auto_examples/
+	rm -rf api/generated/
 
 # For local build
 local: news

@@ -81,6 +81,7 @@ nitpick_ignore_regex = [
     ("py:class", "typing.Any"),  # python 3.11 error
     # ('py:class', 'numpy.typing.ArrayLike')
     ("py:obj", "sqlalchemy.engine.Engine"),  # ignore sqlalchemy
+    ("py:class", "pipeline.Pipeline"),  # nilearn
 ]
 
 # -- Options for HTML output -------------------------------------------------
