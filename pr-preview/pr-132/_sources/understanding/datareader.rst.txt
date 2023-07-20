@@ -14,7 +14,7 @@ files in junifer. It reads the value of the key ``path`` for each
 them into memory. After reading the data into memory, it adds the key ``data``
 to the same level as ``path`` and the value is the actual data in the memory.
 
-Datareaders are meant to be used inside the datagrabber context but you can
+DataReaders are meant to be used inside the datagrabber context but you can
 operate on them outside the context as long as the actual data is in the memory
 and the Python runtime has not garbage-collected it.
 

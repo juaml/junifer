@@ -197,7 +197,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
@@ -221,6 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html">9.2.7. API Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">9.2.8. Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html">9.2.9. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="onthefly.html">9.2.10. On-the-fly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configs.html">9.3.1. Configs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilearn.html">9.4.1. Nilearn</a></li>
 </ul>
@@ -324,6 +325,28 @@ feature.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="junifer.storage.BaseFeatureStorage.read">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.BaseFeatureStorage.read" title="Permalink to this definition">#</a></dt>
+<dd><p>Read stored feature.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>feature_name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Name of the feature to read (default None).</p>
+</dd>
+<dt><strong>feature_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>MD5 hash of the feature to read (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The stored feature as a dictionary.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="junifer.storage.BaseFeatureStorage.read_df">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">read_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.BaseFeatureStorage.read_df" title="Permalink to this definition">#</a></dt>
 <dd><p>Read feature into a pandas DataFrame.</p>
@@ -338,7 +361,7 @@ feature.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -378,7 +401,7 @@ feature.</p>
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The matrix data to store.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The matrix data to store.</p>
 </dd>
 <dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
 </dd>
@@ -429,7 +452,7 @@ this to False will raise an error (default True).</p>
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The timeseries data to store.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The timeseries data to store.</p>
 </dd>
 <dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
 </dd>
@@ -449,7 +472,7 @@ this to False will raise an error (default True).</p>
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></span></dt><dd><p>The vector data to store.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></span></dt><dd><p>The vector data to store.</p>
 </dd>
 <dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
 </dd>
@@ -567,6 +590,34 @@ feature.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="junifer.storage.HDF5FeatureStorage.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.read" title="Permalink to this definition">#</a></dt>
+<dd><p>Read stored feature.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>feature_name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Name of the feature to read (default None).</p>
+</dd>
+<dt><strong>feature_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>MD5 hash of the feature to read (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The stored feature as a dictionary.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IOError" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IOError</span></code></a></dt><dd><p>If HDF5 file does not exist.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="junifer.storage.HDF5FeatureStorage.read_df">
 <span class="sig-name descname"><span class="pre">read_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.read_df" title="Permalink to this definition">#</a></dt>
 <dd><p>Read feature into a pandas.DataFrame.</p>
@@ -583,7 +634,7 @@ specified.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -609,7 +660,7 @@ specified.</p>
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as dictionary.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The matrix data to store.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The matrix data to store.</p>
 </dd>
 <dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
 </dd>
@@ -676,7 +727,7 @@ store metadata if <code class="docutils literal notranslate"><span class="pre">m
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as dictionary.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The timeseries data to store.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The timeseries data to store.</p>
 </dd>
 <dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
 </dd>
@@ -696,7 +747,7 @@ store metadata if <code class="docutils literal notranslate"><span class="pre">m
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as dictionary.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></span></dt><dd><p>The vector data to store.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></span></dt><dd><p>The vector data to store.</p>
 </dd>
 <dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
 </dd>
@@ -750,7 +801,7 @@ implementation of this abstract class.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Index</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.MultiIndex.html#pandas.MultiIndex" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.MultiIndex</span></code></a></dt><dd><p>The index of the dataframe to store.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Index</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.MultiIndex.html#pandas.MultiIndex" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.MultiIndex</span></code></a></dt><dd><p>The index of the dataframe to store.</p>
 </dd>
 </dl>
 </dd>
@@ -779,9 +830,11 @@ storage interface.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
+<dt><strong>meta_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The metadata MD5 hash.</p>
 </dd>
-<dt><strong>meta</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The metadata as a dictionary.</p>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
+</dd>
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
 </dd>
 </dl>
 </dd>
@@ -806,7 +859,7 @@ generated from the metadata.</p>
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The timeseries data to store.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The timeseries data to store.</p>
 </dd>
 <dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
 </dd>
@@ -826,7 +879,7 @@ generated from the metadata.</p>
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></span></dt><dd><p>The vector data to store.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a></span></dt><dd><p>The vector data to store.</p>
 </dd>
 <dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
 </dd>
@@ -921,6 +974,28 @@ feature.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="junifer.storage.SQLiteFeatureStorage.read">
+<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.SQLiteFeatureStorage.read" title="Permalink to this definition">#</a></dt>
+<dd><p>Read stored feature.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>feature_name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Name of the feature to read (default None).</p>
+</dd>
+<dt><strong>feature_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>MD5 hash of the feature to read (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The stored feature as a dictionary.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="junifer.storage.SQLiteFeatureStorage.read_df">
 <span class="sig-name descname"><span class="pre">read_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.SQLiteFeatureStorage.read_df" title="Permalink to this definition">#</a></dt>
 <dd><p>Implement feature reading into a pandas DataFrame.</p>
@@ -937,7 +1012,7 @@ specified.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -958,9 +1033,11 @@ multiple features are found.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
+<dt><strong>meta_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The metadata MD5 hash.</p>
 </dd>
-<dt><strong>meta</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The metadata as a dictionary.</p>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
+</dd>
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
 </dd>
 </dl>
 </dd>
@@ -985,7 +1062,7 @@ generated from the metadata.</p>
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
 </dd>
-<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The matrix data to store.</p>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.25)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The matrix data to store.</p>
 </dd>
 <dt><strong>meta</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The metadata as a dictionary.</p>
 </dd>
@@ -1091,6 +1168,7 @@ this to False will raise an error (default True).</p>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.collect"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.collect()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.get_valid_inputs()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.list_features"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.list_features()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.read"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.read()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.read_df"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.read_df()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.store"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.store()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.store_matrix"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.store_matrix()</span></code></a></li>
@@ -1104,6 +1182,7 @@ this to False will raise an error (default True).</p>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.collect"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.collect()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.get_valid_inputs()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.list_features"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.list_features()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.read"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.read()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.read_df"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.read_df()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_matrix"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_matrix()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_metadata"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_metadata()</span></code></a></li>
@@ -1123,6 +1202,7 @@ this to False will raise an error (default True).</p>
 <li><a class="reference internal" href="#junifer.storage.SQLiteFeatureStorage.collect"><code class="docutils literal notranslate"><span class="pre">SQLiteFeatureStorage.collect()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.SQLiteFeatureStorage.get_engine"><code class="docutils literal notranslate"><span class="pre">SQLiteFeatureStorage.get_engine()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.SQLiteFeatureStorage.list_features"><code class="docutils literal notranslate"><span class="pre">SQLiteFeatureStorage.list_features()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.storage.SQLiteFeatureStorage.read"><code class="docutils literal notranslate"><span class="pre">SQLiteFeatureStorage.read()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.SQLiteFeatureStorage.read_df"><code class="docutils literal notranslate"><span class="pre">SQLiteFeatureStorage.read_df()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.SQLiteFeatureStorage.store_df"><code class="docutils literal notranslate"><span class="pre">SQLiteFeatureStorage.store_df()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.SQLiteFeatureStorage.store_matrix"><code class="docutils literal notranslate"><span class="pre">SQLiteFeatureStorage.store_matrix()</span></code></a></li>

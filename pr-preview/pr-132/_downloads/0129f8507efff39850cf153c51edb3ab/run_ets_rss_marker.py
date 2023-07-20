@@ -25,9 +25,9 @@ from junifer.utils import configure_logging
 configure_logging(level="INFO")
 
 ##############################################################################
-# Define the datagrabber interface
+# Define the DataGrabber interface
 datagrabber = {
-    "kind": "SPMAuditoryTestingDatagrabber",
+    "kind": "SPMAuditoryTestingDataGrabber",
 }
 
 ###############################################################################

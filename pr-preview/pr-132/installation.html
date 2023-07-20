@@ -197,7 +197,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
@@ -221,6 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/api.html">9.2.7. API Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/utils.html">9.2.8. Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/testing.html">9.2.9. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/onthefly.html">9.2.10. On-the-fly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/configs.html">9.3.1. Configs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/nilearn.html">9.4.1. Nilearn</a></li>
 </ul>
@@ -276,7 +277,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">nibabel&gt;=3.2.0,&lt;4.1</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">nilearn&gt;=0.9.0,&lt;=0.10.0</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">sqlalchemy&gt;=1.4.27,&lt;=</span> <span class="pre">1.5.0</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pyyaml&gt;=5.1.2,&lt;7.0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ruamel.yaml&gt;=0.17,&lt;0.18</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">h5py&gt;=3.8.0,&lt;3.9</span></code></p></li>
 </ul>
 <p>Depending on the installation method, these packages might be installed
@@ -298,6 +299,17 @@ for developers.</p></li>
 <p>Use <code class="docutils literal notranslate"><span class="pre">pip</span></code> to install julearn from <a class="reference external" href="https://pypi.org">PyPI</a>, like so:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>junifer
 </pre></div>
+</div>
+<p>You can also install via <code class="docutils literal notranslate"><span class="pre">conda</span></code>, like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>junifer
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Installation on macOS and Windows might fail via <code class="docutils literal notranslate"><span class="pre">conda</span></code> due to <code class="docutils literal notranslate"><span class="pre">datalad</span></code>.
+In that case, please refer to
+<a class="reference external" href="http://handbook.datalad.org/en/latest/intro/installation.html">Datalad installation instructions</a> for solutions.
+In case the problem persists, please install it via <code class="docutils literal notranslate"><span class="pre">pip</span></code> as mentioned earlier.</p>
 </div>
 </section>
 <section id="local-git-repository">
@@ -341,7 +353,7 @@ following command:</p></li>
 </pre></div>
 </div>
 <p>Take the last line and copy it to your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> file.</p>
-<p>Or, alternatively, you can exceute this command which will update the
+<p>Or, alternatively, you can execute this command which will update the
 <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> for you:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>setup<span class="w"> </span>afni-docker<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;PATH=&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span><span class="p">|</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 </pre></div>

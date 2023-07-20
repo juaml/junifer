@@ -75,10 +75,10 @@ Data Grabber
 ^^^^^^^^^^^^
 
 The ``datagrabber`` section must be configured using the ``kind`` key to specify
-the datagrabber to use. Additional keys correspond to the parameters of the
-datagrabber.
+the DataGrabber to use. Additional keys correspond to the parameters of the
+DataGrabber constructor.
 
-For example, to use the :class:`.DataladAOMICPIOP1` datagrabber, we just need to
+For example, to use the :class:`.DataladAOMICPIOP1` DataGrabber, we just need to
 specify its name as the ``kind`` key.
 
 .. code-block:: yaml
@@ -86,8 +86,9 @@ specify its name as the ``kind`` key.
   datagrabber:
     kind: DataladAOMICPIOP1
 
-However, it is also possible to pass parameters to the datagrabber. In this case,
-we can restrict the datagrabber to fetch only the ``restingstate`` task.
+However, it is also possible to pass parameters to the DataGrabber constructor.
+In this case, we can restrict the DataGrabber to fetch only the ``restingstate``
+task.
 
 .. code-block:: yaml
 
@@ -100,19 +101,19 @@ In the ``Oasis VBM Testing dataset`` example, the section will look like this:
 .. code-block:: yaml
 
   datagrabber:
-    kind: OasisVBMTestingDatagrabber
+    kind: OasisVBMTestingDataGrabber
 
 
 Data Reader
 ^^^^^^^^^^^
 
 As mentioned before, this section is entirely optional, as junifer only provides
-one data reader (:class:`.DefaultDataReader`), which is the default in case the
+one DataReader (:class:`.DefaultDataReader`), which is the default in case the
 section is not specified.
 
 In any case, the syntax of the section is the same as for the ``datagrabber``
-section, using the ``kind`` key to specify the datareader to use, and additional
-keys to pass parameters to the datareader:
+section, using the ``kind`` key to specify the DataReader to use, and additional
+keys to pass parameters to the DataReader constructor:
 
 .. code-block:: yaml
 
@@ -212,7 +213,7 @@ looks like:
   workdir: /tmp
 
   datagrabber:
-    kind: OasisVBMTestingDatagrabber
+    kind: OasisVBMTestingDataGrabber
 
   markers:
     - name: Schaefer100x7_mean

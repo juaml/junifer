@@ -197,7 +197,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
@@ -221,6 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api/api.html">9.2.7. API Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/utils.html">9.2.8. Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/testing.html">9.2.9. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/onthefly.html">9.2.10. On-the-fly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/configs.html">9.3.1. Configs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/nilearn.html">9.4.1. Nilearn</a></li>
 </ul>
@@ -272,7 +273,7 @@
 have never done this before, <a class="reference external" href="https://guides.github.com/activities/forking/">follow the official guide</a>.</p></li>
 <li><p>Clone your fork locally as described in the same guide but also add the
 flag to sync the submodules as well by appending the following to the
-clone commmand:</p>
+clone command:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>...<span class="w"> </span>--recurse-submodules
 </pre></div>
 </div>
@@ -292,12 +293,23 @@ git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </
 </div>
 <p>Now you can make your changes locally.</p>
 </li>
+<li><p>Make sure you install git pre-commit hooks like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+</li>
 <li><p>When making changes locally, it is helpful to <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> your work
 regularly. On one hand to save your work and on the other hand, the smaller
 the steps, the easier it is to review your work later. Please use <a class="reference external" href="http://karma-runner.github.io/2.0/dev/git-commit-msg.html">semantic
 commit messages</a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;&lt;prefix&gt;: &lt;summary of changes&gt;&quot;</span>
+</pre></div>
+</div>
+<p>In case, you want to commit some WIP (work-in-progress) code, please indicate
+that in the commit message and use the flag <code class="docutils literal notranslate"><span class="pre">--no-verify</span></code> with
+<code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>commit<span class="w"> </span>--no-verify<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;WIP: &lt;summary of changes&gt;&quot;</span>
 </pre></div>
 </div>
 </li>

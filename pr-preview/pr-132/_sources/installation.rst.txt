@@ -16,7 +16,7 @@ junifer is compatible with `Python`_ >= 3.8 and requires the following packages:
 * ``nibabel>=3.2.0,<4.1``
 * ``nilearn>=0.9.0,<=0.10.0``
 * ``sqlalchemy>=1.4.27,<= 1.5.0``
-* ``pyyaml>=5.1.2,<7.0``
+* ``ruamel.yaml>=0.17,<0.18``
 * ``h5py>=3.8.0,<3.9``
 
 Depending on the installation method, these packages might be installed
@@ -48,6 +48,19 @@ Use ``pip`` to install julearn from `PyPI <https://pypi.org>`_, like so:
 
     pip install junifer
 
+You can also install via ``conda``, like so:
+
+.. code-block:: bash
+
+    conda install -c conda-forge junifer
+
+.. attention::
+
+   Installation on macOS and Windows might fail via ``conda`` due to ``datalad``.
+   In that case, please refer to
+   `Datalad installation instructions
+   <http://handbook.datalad.org/en/latest/intro/installation.html>`_ for solutions.
+   In case the problem persists, please install it via ``pip`` as mentioned earlier.
 
 .. _install_development_git:
 
@@ -100,7 +113,7 @@ the AFNI Docker container in your local system.
 
 Take the last line and copy it to your ``.bashrc`` or ``.zshrc`` file.
 
-Or, alternatively, you can exceute this command which will update the
+Or, alternatively, you can execute this command which will update the
 ``~/.bashrc`` for you:
 
 .. code-block:: bash

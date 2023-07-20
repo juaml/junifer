@@ -197,7 +197,7 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS datagrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
@@ -221,6 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="api.html">9.2.7. API Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html">9.2.8. Utils</a></li>
 <li class="toctree-l2"><a class="reference internal" href="testing.html">9.2.9. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="onthefly.html">9.2.10. On-the-fly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configs.html">9.3.1. Configs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilearn.html">9.4.1. Nilearn</a></li>
 </ul>
@@ -312,7 +313,7 @@ extracted from the NIFTI without any issue. However, it has been
 reported that some preprocessed data might not have the correct TR in
 the NIFTI header.</p>
 <p>ALFF/fALFF are computed using a bandpass butterworth filter. See
-<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.10.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.10.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.11.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.11.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
 details.</p>
 </dd></dl>
 
@@ -369,7 +370,7 @@ extracted from the NIFTI without any issue. However, it has been
 reported that some preprocessed data might not have the correct TR in
 the NIFTI header.</p>
 <p>ALFF/fALFF are computed using a bandpass butterworth filter. See
-<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.10.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.10.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.11.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.11.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
 details.</p>
 </dd></dl>
 
@@ -513,7 +514,7 @@ pipeline step.</p>
 <dt><strong>aggregation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method (default “mean”).</p>
 </dd>
 <dt><strong>correlation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Any method that can be passed to
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.1.0.dev0+689.g4f14b456b7)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.1.0.dev0+1257.g587176ea5e)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
 </dd>
 <dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
 signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
@@ -907,7 +908,7 @@ with this as a parameter. The dictionary has the following keys:</p>
 <dd class="field-odd"><dl>
 <dt><strong>markers</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of marker-like</span></dt><dd><p>The markers to compute.</p>
 </dd>
-<dt><strong>datareader</strong><span class="classifier">datareader-like, optional</span></dt><dd><p>The datareader to use (default None).</p>
+<dt><strong>datareader</strong><span class="classifier">DataReader-like object, optional</span></dt><dd><p>The DataReader to use (default None).</p>
 </dd>
 <dt><strong>preprocessing</strong><span class="classifier">preprocessing-like, optional</span></dt><dd><p>The preprocessing steps to apply.</p>
 </dd>
@@ -950,7 +951,7 @@ check that the storage can handle the markers output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>datagrabber</strong><span class="classifier">datagrabber-like</span></dt><dd><p>The datagrabber to validate.</p>
+<dt><strong>datagrabber</strong><span class="classifier">DataGrabber-like</span></dt><dd><p>The DataGrabber to validate.</p>
 </dd>
 </dl>
 </dd>

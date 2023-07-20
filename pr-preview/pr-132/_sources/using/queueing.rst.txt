@@ -11,7 +11,7 @@ computational clusters. This is done by adding the ``queue`` section in the
 
 While junifer is meant to support `HTCondor`_, `SLURM`_ and local queueing
 using `GNU Parallel`_, only HTCondor is currently supported. This will be
-implemented in future relases of junifer. If you are in immediate need of any of
+implemented in future releases of junifer. If you are in immediate need of any of
 these schedulers, please create an issue on the `junifer github`_ repository.
 
 The ``queue`` section of the :ref:`codeless` must start by defining the
@@ -45,17 +45,17 @@ When using HTCondor, junifer will use a DAG to queue one job per element
 (``junifer collect``) to collect the results once all of the individual element
 jobs are finished.
 
-The following parameters are avilable for HTCondor:
+The following parameters are available for HTCondor:
 
-* ``env``: Definition of the Python enviroment. It must provide two variables:
+* ``env``: Definition of the Python environment. It must provide two variables:
 
   * ``kind``: This is the kind of virtual environment to use:
 
     * ``conda``
     * ``virtualenv`` (not yet supported)
-    * ``local`` (no virtual enviroment)
+    * ``local`` (no virtual environment)
 
-  * ``name``: This is the name of the enviroment to use in case a virtual
+  * ``name``: This is the name of the environment to use in case a virtual
     environment is used.
 
 * ``mem``: Memory to be used by the job. It must be provided as a string with
