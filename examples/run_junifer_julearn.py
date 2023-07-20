@@ -16,9 +16,9 @@ import tempfile
 
 import nilearn
 import pandas as pd
-from julearn import run_cross_validation
+from julearn import run_cross_validation, PipelineCreator
 
-import junifer.testing.registry  # noqa
+import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, run
 from junifer.storage.sqlite import SQLiteFeatureStorage
 from junifer.utils import configure_logging
@@ -70,7 +70,6 @@ sex = (
 ###############################################################################
 # Create a temporary directory for junifer feature extraction:
 with tempfile.TemporaryDirectory() as tmpdir:
-
     storage = {"kind": "SQLiteFeatureStorage", "uri": f"{tmpdir}/test.sqlite"}
     # run the defined junifer feature extraction pipeline
     run(
@@ -97,15 +96,23 @@ X = list(df_vbm.columns)
 df_vbm[y] = age
 df_vbm[confound] = sex
 
+X_types = {
+    "features": X,
+    "confound": confound,
+}
+
+creator = PipelineCreator(problem_type="regression", apply_to="features")
+creator.add("zscore", apply_to=["features", "confound"])
+creator.add("confound_removal", apply_to="features", confounds="confound")
+creator.add("ridge")
+
 scores = run_cross_validation(
-    X=X,
-    confounds=confound,
+    X=X + [confound],
     y=y,
+    X_types=X_types,
     data=df_vbm,
-    problem_type="regression",
-    model="ridge",
+    model=creator,
     cv=3,
-    preprocess_X=["zscore", "remove_confound"],
 )
 print(scores)
 
