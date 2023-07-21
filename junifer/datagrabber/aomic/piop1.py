@@ -4,6 +4,7 @@
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
 #          Xuan Li <xu.li@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 from itertools import product
@@ -25,6 +26,10 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
+    types: {"BOLD", "BOLD_confounds", "T1w", "probseg_CSF", "probseg_GM", \
+           "probseg_WM", "DWI"} or a list of the options, optional
+        AOMIC data types. If None, all available data types are selected.
+        (default None).
     tasks : {"restingstate", "anticipation", "emomatching", "faces", \
             "gstroop", "workingmemory"} or list of the options, optional
         AOMIC PIOP1 task sessions. If None, all available task sessions are
@@ -35,24 +40,10 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
+        types: Union[str, List[str], None] = None,
         tasks: Union[str, List[str], None] = None,
     ) -> None:
-        # The types of data
-        types = [
-            "BOLD",
-            "BOLD_confounds",
-            "BOLD_mask",
-            "T1w",
-            "T1w_mask",
-            "probseg_CSF",
-            "probseg_GM",
-            "probseg_WM",
-            "DWI",
-        ]
-
-        if isinstance(tasks, str):
-            tasks = [tasks]
-
+        # Declare all tasks
         all_tasks = [
             "restingstate",
             "anticipation",
@@ -61,19 +52,22 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
             "gstroop",
             "workingmemory",
         ]
-
+        # Set default tasks
         if tasks is None:
             tasks = all_tasks
         else:
+            # Convert single task into list
+            if isinstance(tasks, str):
+                tasks = [tasks]
+            # Verify valid tasks
             for t in tasks:
                 if t not in all_tasks:
                     raise_error(
                         f"{t} is not a valid task in the AOMIC PIOP1"
                         " dataset!"
                     )
-
         self.tasks = tasks
-
+        # The patterns
         patterns = {
             "BOLD": (
                 "derivatives/fmriprep/sub-{subject}/func/"
@@ -120,8 +114,16 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
                 "sub-{subject}_desc-preproc_dwi.nii.gz"
             ),
         }
-        uri = "https://github.com/OpenNeuroDatasets/ds002785"
+        # Set default types
+        if types is None:
+            types = list(patterns.keys())
+        # Convert single type into list
+        else:
+            if not isinstance(types, list):
+                types = [types]
+        # The replacements
         replacements = ["subject", "task"]
+        uri = "https://github.com/OpenNeuroDatasets/ds002785"
         super().__init__(
             types=types,
             datadir=datadir,
@@ -162,8 +164,10 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         new_task = f"{task}_acq-{acq}"
 
         out = super().get_item(subject=subject, task=new_task)
-        out["BOLD"]["mask_item"] = "BOLD_mask"
-        out["T1w"]["mask_item"] = "T1w_mask"
+        if out.get("BOLD"):
+            out["BOLD"]["mask_item"] = "BOLD_mask"
+        if out.get("T1w"):
+            out["T1w"]["mask_item"] = "T1w_mask"
         return out
 
     def get_elements(self) -> List:

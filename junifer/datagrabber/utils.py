@@ -77,17 +77,17 @@ def validate_patterns(types: List[str], patterns: Dict[str, str]) -> None:
     if not isinstance(patterns, dict):
         raise_error(msg="`patterns` must be a dict.", klass=TypeError)
     # Unequal length of objects
-    if len(types) != len(patterns):
+    if len(types) > len(patterns):
         raise_error(
-            msg="`types` and `patterns` must have the same length.",
+            msg="Length of `types` more than that of `patterns`.",
             klass=ValueError,
         )
-
+    # Missing type in patterns
     if any(x not in patterns for x in types):
         raise_error(
             msg="`patterns` must contain all `types`", klass=ValueError
         )
-
+    # Wildcard check in patterns
     if any("}*" in pattern for pattern in patterns.values()):
         raise_error(
             msg="`patterns` must not contain `*` following a replacement",

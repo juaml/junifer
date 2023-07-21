@@ -38,7 +38,9 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
             replacements="subject",  # type: ignore
         )
 
-    with pytest.raises(ValueError, match=r"must have the same length"):
+    with pytest.raises(
+        ValueError, match=r"`patterns` must contain all `types`"
+    ):
         PatternDataGrabber(
             datadir="/tmp",
             types=["func", "anat"],
@@ -55,7 +57,7 @@ def test_PatternDataGrabber_errors(tmp_path: Path) -> None:
         )
 
     with pytest.raises(
-        ValueError, match=r"`patterns` must have the same length"
+        ValueError, match=r"Length of `types` more than that of `patterns`"
     ):
         PatternDataGrabber(
             datadir="/tmp",
