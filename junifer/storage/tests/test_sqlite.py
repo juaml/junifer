@@ -335,7 +335,7 @@ def test_store_df_and_read_df(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="Only one"):
         storage.read_df(feature_name="wrong_name", feature_md5="wrong_md5")
     # Get MD5 hash of features
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     assert "feature_md5" == feature_md5
     # Check for key
     assert "BOLD_markername" == features[feature_md5]["name"]
@@ -373,7 +373,7 @@ def test_store_metadata(tmp_path: Path) -> None:
         meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
     )
     features = storage.list_features()
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     assert meta_md5 == feature_md5
 
 
@@ -474,7 +474,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     stored_names = [f"{i}~{j}" for i in row_names for j in col_names]
 
     features = storage.list_features()
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     assert "BOLD_fc" == features[feature_md5]["name"]
 
     read_df = storage.read_df(feature_md5=feature_md5)
@@ -498,7 +498,7 @@ def test_store_matrix(tmp_path: Path) -> None:
         for j in range(data.shape[1])
     ]
     features = storage.list_features()
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
@@ -563,7 +563,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     ]
 
     features = storage.list_features()
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
@@ -595,7 +595,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     ]
 
     features = storage.list_features()
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
@@ -632,7 +632,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     ]
 
     features = storage.list_features()
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
@@ -663,7 +663,7 @@ def test_store_matrix(tmp_path: Path) -> None:
     ]
 
     features = storage.list_features()
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     assert "BOLD_fc" == features[feature_md5]["name"]
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names

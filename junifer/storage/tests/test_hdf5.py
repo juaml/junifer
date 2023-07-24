@@ -175,7 +175,7 @@ def test_store_metadata_and_list_features(tmp_path: Path) -> None:
     # List the stored features
     features = storage.list_features()
     # Get the first MD5
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     # Check the MD5
     assert meta_md5 == feature_md5
 

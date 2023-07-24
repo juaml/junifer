@@ -213,7 +213,7 @@ def get_mask(
     all_masks = []
     for t_mask in true_masks:
         if isinstance(t_mask, dict):
-            mask_name = list(t_mask.keys())[0]
+            mask_name = next(iter(t_mask.keys()))
             mask_params = t_mask[mask_name]
         else:
             mask_name = t_mask
