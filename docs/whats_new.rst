@@ -8,6 +8,91 @@ What's new
 
 .. towncrier release notes start
 
+Junifer 0.0.3 (2023-07-21)
+---------------------------------
+
+Bugfixes
+^^^^^^^^
+
+- Enable YAML 1.2 support and allow multiline strings in YAML which would not
+  work earlier by `Synchon Mandal`_ (:gh:`223`)
+- Handle ``datalad.IncompleteResultsError`` exception for partial clone in
+  :class:`.DataladDataGrabber` by `Synchon Mandal`_ (:gh:`235`)
+
+
+API Changes
+^^^^^^^^^^^
+
+- Expose ``types`` parameter for :class:`.DataladAOMICID1000`,
+  :class:`.DataladAOMICPIOP1`, :class:`.DataladAOMICPIOP2` and
+  :class:`.JuselessUCLA` by `Synchon Mandal`_ (:gh:`132`)
+- Rename ``junifer.testing.datagrabbers.SPMAuditoryTestingDatagrabber`` to
+  :class:`.SPMAuditoryTestingDataGrabber` and
+  ``junifer.testing.datagrabbers.OasisVBMTestingDatagrabber`` to
+  :class:`.OasisVBMTestingDataGrabber` by `Synchon Mandal`_ (:gh:`222`)
+- Add :meth:`.BaseFeatureStorage.read` method for storage-like objects by
+  `Synchon Mandal`_ (:gh:`236`)
+
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Improve general prose, formatting and code blocks in docs and set line length
+  for ``.rst`` files to 80 by `Synchon Mandal`_ (:gh:`220`)
+- Update ``julearn`` example under ``examples`` by `Synchon Mandal`_
+  (:gh:`242`)
+
+
+Enhancements
+^^^^^^^^^^^^
+
+- Change validation of ``types`` against ``patterns`` to allow a subset of
+  ``patterns``'s types to be used for ``DataGrabber`` data fetch by `Synchon
+  Mandal`_ (:gh:`132`)
+- Rename instances of "Datagrabber" to "DataGrabber" especially in
+  ``junifer.testing`` to be consistent by `Synchon Mandal`_ (:gh:`222`)
+- Use ``ruamel.yaml`` instead of ``pyyaml`` as YAML I/O library by `Synchon
+  Mandal`_ (:gh:`223`)
+- Adopt ``DataGrabber`` consistently throughout codebase to match with the
+  documentation by `Synchon Mandal`_ (:gh:`226`)
+- Adopt ``DataReader`` consistently throughout codebase to match with the
+  documentation by `Synchon Mandal`_ (:gh:`227`)
+- Enable ``stdout`` and ``stderr`` capture for AFNI commands by `Synchon
+  Mandal`_ (:gh:`234`)
+- Adapt :meth:`.HDF5FeatureStorage.read_df` due to addition of
+  :meth:`.HDF5FeatureStorage.read` by `Synchon Mandal`_ (:gh:`236`)
+
+
+Features
+^^^^^^^^
+
+- Add ``AICHA v1`` and ``AICHA v2`` parcellations to ``junifer.data`` by
+  `Synchon Mandal`_ (:gh:`173`)
+- Add ``Shen 2013``, ``Shen 2015`` and ``Shen 2019`` parcellations to
+  ``junifer.data`` by `Synchon Mandal`_ (:gh:`184`)
+- Add ``Yan 2023`` parcellation to ``junifer.data`` by `Synchon Mandal`_
+  (:gh:`225`)
+- Introduce :mod:`.onthefly` sub-module and :func:`.read_transform` for quick
+  transform operations on stored data by `Synchon Mandal`_ (:gh:`237`)
+
+
+Misc
+^^^^
+
+- Consistent docstrings for pytest fixtures used in the test suite by `Synchon
+  Mandal`_ (:gh:`228`)
+- Adopt ``ruff`` as the only linter for the codebase by `Synchon Mandal`_
+  (:gh:`229`)
+- Improve ``codespell`` support by fixing typos in documentation by `Synchon
+  Mandal`_ (:gh:`230`)
+- Adopt ``pre-commit`` for adding and managing git pre-commit hooks by
+  `Synchon Mandal`_ (:gh:`232`)
+- Improve docstrings and code style and parametrize remaining tests for
+  ``junifer.data.parcellations`` by `Synchon Mandal`_ (:gh:`238`)
+- Bump ``numpy`` version constraint to ``>=1.24,<1.26`` by `Synchon Mandal`_
+  (:gh:`241`)
+
+
 Junifer 0.0.2 (2023-03-31)
 --------------------------
 
@@ -140,14 +225,8 @@ Features
   when used as ``method`` in markers by `Fede Raimondo`_ (:gh:`190`)
 
 
-junifer 0.0.1 (2022-12-20)
+Junifer 0.0.1 (2022-12-20)
 --------------------------
-
-API Changes
-^^^^^^^^^^^
-
-- Change the ``single_output`` default parameter in storage classes from
-  ``False`` to ``True`` by `Fede Raimondo`_ (:gh:`134`)
 
 Bugfixes
 ^^^^^^^^
@@ -168,6 +247,14 @@ Bugfixes
 - Fix a bug in which the generated DAG for HTCondor will not work by
   `Fede Raimondo`_ (:gh:`143`)
 
+
+API Changes
+^^^^^^^^^^^
+
+- Change the ``single_output`` default parameter in storage classes from
+  ``False`` to ``True`` by `Fede Raimondo`_ (:gh:`134`)
+
+
 Improved Documentation
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -180,6 +267,7 @@ Improved Documentation
 
 - Change documentation template to furo. Fix references and standardize
   documentation by `Fede Raimondo`_ (:gh:`114`)
+
 
 Enhancements
 ^^^^^^^^^^^^
@@ -216,6 +304,7 @@ Enhancements
 
 - Refactor :class:`.PipelineStepMixin` to improve its implementation and
   validation for pipeline steps by `Synchon Mandal`_ (:gh:`152`)
+
 
 Features
 ^^^^^^^^
@@ -282,6 +371,7 @@ Features
 
 - Implement :class:`.ALFFParcels` and :class:`.ALFFSpheres` markers by
   `Fede Raimondo`_ (:gh:`35`)
+
 
 Misc
 ^^^^
