@@ -11,6 +11,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/charliermarsh/ruff)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8176570.svg)](https://doi.org/10.5281/zenodo.8176570)
 
 ## About
 
@@ -55,7 +56,7 @@ conda install -c conda-forge junifer
 
 ## Citation
 
-If you use junifer in a scientific publication, we would appreciate if you cite our work. Currently, we do not have a publication, so feel free to use the project [URL](https://juaml.github.io/junifer).
+If you use `junifer` in a scientific publication, we would appreciate if you cite our work. Currently, we do not have a publication, so feel free to use the project's [Zenodo URL](https://doi.org/10.5281/zenodo.8176569).
 
 ## Funding
 
