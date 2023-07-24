@@ -15,7 +15,7 @@
 
 ## About
 
-junifer is a data handling and feature extraction library targeted towards neuroimaging data specifically functional MRI data.
+`junifer` is a data handling and feature extraction library targeted towards neuroimaging data specifically functional MRI data.
 
 It is currently being developed and maintained at the [Applied Machine Learning](https://www.fz-juelich.de/en/inm/inm-7/research-groups/applied-machine-learning-aml) group at [Forschungszentrum Juelich](https://www.fz-juelich.de/en), Germany. Although the library is designed for people working at [Institute of Neuroscience and Medicine - Brain and Behaviour (INM-7)](https://www.fz-juelich.de/en/inm/inm-7), it is designed to be as modular as possible thus enabling others to extend it easily.
 
@@ -61,7 +61,7 @@ If you use `junifer` in a scientific publication, we would appreciate if you cit
 ## Funding
 
 We thank the [Helmholtz Imaging Platform](https://helmholtz-imaging.de/) and
-[SMHB](https://www.fz-juelich.de/en/smhb) for supporting development of Junifer.
+[SMHB](https://www.fz-juelich.de/en/smhb) for supporting development of `junifer`.
 (The funding sources had no role in the design, implementation and evaluation of the pipeline.)
 
 ## Contribution
