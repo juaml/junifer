@@ -11,10 +11,11 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/charliermarsh/ruff)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8176570.svg)](https://doi.org/10.5281/zenodo.8176570)
 
 ## About
 
-junifer is a data handling and feature extraction library targeted towards neuroimaging data specifically functional MRI data.
+`junifer` is a data handling and feature extraction library targeted towards neuroimaging data specifically functional MRI data.
 
 It is currently being developed and maintained at the [Applied Machine Learning](https://www.fz-juelich.de/en/inm/inm-7/research-groups/applied-machine-learning-aml) group at [Forschungszentrum Juelich](https://www.fz-juelich.de/en), Germany. Although the library is designed for people working at [Institute of Neuroscience and Medicine - Brain and Behaviour (INM-7)](https://www.fz-juelich.de/en/inm/inm-7), it is designed to be as modular as possible thus enabling others to extend it easily.
 
@@ -55,12 +56,12 @@ conda install -c conda-forge junifer
 
 ## Citation
 
-If you use junifer in a scientific publication, we would appreciate if you cite our work. Currently, we do not have a publication, so feel free to use the project [URL](https://juaml.github.io/junifer).
+If you use `junifer` in a scientific publication, we would appreciate if you cite our work. Currently, we do not have a publication, so feel free to use the project's [Zenodo URL](https://doi.org/10.5281/zenodo.8176569).
 
 ## Funding
 
 We thank the [Helmholtz Imaging Platform](https://helmholtz-imaging.de/) and
-[SMHB](https://www.fz-juelich.de/en/smhb) for supporting development of Junifer.
+[SMHB](https://www.fz-juelich.de/en/smhb) for supporting development of `junifer`.
 (The funding sources had no role in the design, implementation and evaluation of the pipeline.)
 
 ## Contribution
@@ -72,7 +73,7 @@ Contributions are welcome and greatly appreciated. Please read the [guidelines](
 junifer is released under the AGPL v3 license:
 
 junifer, FZJuelich AML neuroimaging feature extraction library.
-Copyright (C) 2022, authors of junifer.
+Copyright (C) 2023, authors of junifer.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by

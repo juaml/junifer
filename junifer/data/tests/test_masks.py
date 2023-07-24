@@ -411,7 +411,7 @@ def test_get_mask_multiple(
         computed = get_mask(masks=junifer_masks, target_data=input["BOLD"])
 
         masks_names = [
-            list(x.keys())[0] if isinstance(x, dict) else x for x in masks
+            next(iter(x.keys())) if isinstance(x, dict) else x for x in masks
         ]
 
         mask_funcs = [

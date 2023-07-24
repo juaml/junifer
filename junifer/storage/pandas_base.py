@@ -114,7 +114,8 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         if len(elem_idx) == 1:
             # Create normal index for vector
             index = pd.Index(
-                data=list(elem_idx.values())[0], name=list(elem_idx.keys())[0]
+                data=next(iter(elem_idx.values())),
+                name=next(iter(elem_idx.keys())),
             )
         else:
             # Create multiindex for timeseries

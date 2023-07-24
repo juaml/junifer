@@ -197,7 +197,7 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
 
     features = storage.list_features()
     assert len(features) == 3
-    feature_md5 = list(features.keys())[0]
+    feature_md5 = next(iter(features.keys()))
     t_feature = storage.read_df(feature_md5=feature_md5)
     fname = "gmd_schaefer100x7_mean"
     t_data = out[fname]["VBM_GM"]["data"]  # type: ignore
