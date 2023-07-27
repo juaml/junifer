@@ -532,10 +532,12 @@ def _queue_condor(
     # Submit job(s)
     if submit is True:
         logger.info("Submitting HTCondor job")
-        subprocess.run(["condor_submit_dag", dag_fname])
+        subprocess.run(
+            ["condor_submit_dag", "-include_env", "HOME", dag_fname]
+        )
         logger.info("HTCondor job submitted")
     else:
-        cmd = f"condor_submit_dag {dag_fname.absolute()!s}"
+        cmd = f"condor_submit_dag -include_env 'HOME' {dag_fname.absolute()!s}"
         logger.info(
             f"HTCondor job files created, to submit the job, run `{cmd}`"
         )
