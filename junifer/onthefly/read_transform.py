@@ -17,8 +17,9 @@ if TYPE_CHECKING:
 
 def read_transform(
     storage: Type["BaseFeatureStorage"],
-    feature_name: str,
     transform: str,
+    feature_name: Optional[str] = None,
+    feature_md5: Optional[str] = None,
     transform_args: Optional[Tuple] = None,
     transform_kw_args: Optional[Dict] = None,
 ) -> pd.DataFrame:
@@ -28,11 +29,13 @@ def read_transform(
     ----------
     storage : storage-like
         The storage class, for example, SQLiteFeatureStorage.
-    feature_name : str
-        Name of the feature to read.
     transform : str
         The kind of transform formatted as ``<package>_<function>``,
         for example, ``bctpy_degrees_und``.
+    feature_name : str, optional
+        Name of the feature to read (default None).
+    feature_md5 : str, optional
+        MD5 hash of the feature to read (default None).
     transform_args : tuple, optional
         The positional arguments for the callable of ``transform``
         (default None).
@@ -62,7 +65,9 @@ def read_transform(
     transform_kw_args = transform_kw_args or {}
 
     # Read storage
-    stored_data = storage.read(feature_name=feature_name)  # type: ignore
+    stored_data = storage.read(
+        feature_name=feature_name, feature_md5=feature_md5
+    )  # type: ignore
     # Retrieve package and function
     package, func_str = transform.split("_", 1)
     # Condition for package
