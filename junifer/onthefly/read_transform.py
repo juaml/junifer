@@ -110,7 +110,8 @@ def read_transform(
         # Apply function and store subject-wise
         output_list = []
         logger.debug(
-            f"Computing '{package}.{func_str}' for feature {feature_name} ..."
+            f"Computing '{package}.{func_str}' for feature "
+            f"{feature_name or feature_md5} ..."
         )
         for subject in range(stored_data["data"].shape[2]):
             output = func(
@@ -124,7 +125,8 @@ def read_transform(
         idx_df = pd.DataFrame(data=stored_data["element"])
         # Create multiindex from dataframe
         logger.debug(
-            f"Generating pandas.MultiIndex for feature {feature_name} ..."
+            "Generating pandas.MultiIndex for feature "
+            f"{feature_name or feature_md5} ..."
         )
         data_idx = pd.MultiIndex.from_frame(df=idx_df)
 
