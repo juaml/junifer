@@ -527,7 +527,7 @@ Available
        | NeuroImage, Volume 60, Pages 830-846 (2012).
        | https://doi.org/10.1016/j.neuroimage.2011.11.050.
    * - Areal functional network from Power et al. (2011)
-     - ``Power``
+     - ``Power2011``
      - 0.0.2
      - | Power, J. D., Cohen, A. L., Nelson, S. M. et al.
        | Functional network organization of the human brain.
@@ -540,6 +540,14 @@ Available
        | Prediction of Individual Brain Maturity Using fMRI
        | Science, Volume 329(5997), Pages 1358-1361 (2010).
        | https://doi.org/10.1126/science.1194144
+   * - Areal functional network from Power et al. (2013)
+     - ``Power2013``
+     - 0.0.4
+     - | Power, J. D., Schlaggar, B. L., Lessov-Schlaggar, C. N., &
+       | Petersen, S. E.
+       | Evidence for hubs in human functional brain networks.
+       | Neuron, Volume 79(4), Pages 798–813 (2013).
+       | https://doi.org/10.1016/j.neuron.2013.07.035
 
 
 Planned
