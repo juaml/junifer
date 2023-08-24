@@ -82,14 +82,15 @@ def _parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
             "over the configuration file. That is, the elements specified "
             "in the command line will be used. The elements specified in "
             "the configuration file will be ignored. To remove this warning, "
-            'please remove the "elements" item from the configuration file.'
+            "please remove the `elements` item from the configuration file."
         )
     elif elements is None:
+        # Check in config
         elements = config.get("elements", None)
         if elements is None:
             raise_error(
-                "The 'elements' key is set in the configuration, but its value"
-                " is 'None'. It is likely that there is an empty 'elements' "
+                "The `elements` key is set in the configuration, but its value"
+                " is `None`. It is likely that there is an empty `elements` "
                 "section in the yaml configuration file."
             )
     return elements
