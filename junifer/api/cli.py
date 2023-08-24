@@ -61,6 +61,7 @@ def _parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
 
     """
     logger.debug(f"Parsing elements: {element}")
+    # Early return None to continue with all elements
     if len(element) == 0:
         return None
     # Check if the element is a file for single element;
