@@ -74,6 +74,57 @@ def test_run_and_collect_commands(
     assert collect_result.exit_code == 0
 
 
+@pytest.mark.parametrize(
+    "elements",
+    [
+        "sub-01",
+        "sub-01\nsub-02",
+    ],
+)
+def test_run_using_element_file(tmp_path: Path, elements: str) -> None:
+    """Test run command using element file.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    elements : str
+        The elements to write to the element file.
+
+    """
+    # Create test file
+    test_file_path = tmp_path / "elements.txt"
+    with open(test_file_path, "w") as f:
+        f.write(elements)
+
+    # Get test config
+    infile = Path(__file__).parent / "data" / "gmd_mean.yaml"
+    # Read test config
+    contents = yaml.load(infile)
+    # Working directory
+    workdir = tmp_path / "workdir"
+    contents["workdir"] = str(workdir.resolve())
+    # Output directory
+    outdir = tmp_path / "outdir"
+    # Storage
+    contents["storage"]["uri"] = str(outdir.resolve())
+    # Write new test config
+    outfile = tmp_path / "in.yaml"
+    yaml.dump(contents, stream=outfile)
+    # Run command arguments
+    run_args = [
+        str(outfile.absolute()),
+        "--verbose",
+        "debug",
+        "--element",
+        str(test_file_path.resolve()),
+    ]
+    # Invoke run command
+    run_result = runner.invoke(run, run_args)
+    # Check
+    assert run_result.exit_code == 0
+
+
 def test_wtf_short() -> None:
     """Test short version of wtf command."""
     # Invoke wtf command
