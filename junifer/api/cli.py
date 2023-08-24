@@ -8,7 +8,7 @@ import pathlib
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Dict, List, Tuple, Union
 
 import click
 
@@ -32,20 +32,32 @@ from .utils import (
 )
 
 
-def _parse_elements(element: str, config: Dict) -> Union[List, None]:
+def _parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
     """Parse elements from cli.
 
     Parameters
     ----------
-    element : str
-        The element to operate on.
+    element : tuple of str
+        The element(s) to operate on.
     config : dict
         The configuration to operate using.
 
     Returns
     -------
-    list
-        The element(s) as list.
+    list or None
+        The element(s) as list or None.
+
+    Raises
+    ------
+    ValueError
+        If no element is found either in the command-line options or
+        the configuration file.
+
+    Warns
+    -----
+    RuntimeWarning
+        If elements are specified both via the command-line options and
+        the configuration file.
 
     """
     logger.debug(f"Parsing elements: {element}")
@@ -162,7 +174,9 @@ def cli() -> None:  # pragma: no cover
     callback=_validate_verbose,
     default="info",
 )
-def run(filepath: click.Path, element: str, verbose: Union[str, int]) -> None:
+def run(
+    filepath: click.Path, element: Tuple[str], verbose: Union[str, int]
+) -> None:
     """Run command for CLI.
 
     \f
@@ -171,8 +185,8 @@ def run(filepath: click.Path, element: str, verbose: Union[str, int]) -> None:
     ----------
     filepath : click.Path
         The filepath to the configuration file.
-    element : str
-        The element to operate using.
+    element : tuple of str
+        The element to operate on.
     verbose : click.Choice
         The verbosity level: warning, info or debug (default "info").
 
