@@ -51,8 +51,16 @@ def _parse_elements(element: str, config: Dict) -> Union[List, None]:
     logger.debug(f"Parsing elements: {element}")
     if len(element) == 0:
         return None
-    # TODO: If len == 1, check if its a file, then parse elements from file
-    elements = [tuple(x.split(",")) if "," in x else x for x in element]
+    # Check if the element is a file for single element;
+    # if yes, then parse elements from it
+    if len(element) == 1 and Path(element[0]).resolve().is_file():
+        fetched_element = _parse_elements_file(Path(element[0]).resolve())
+    else:
+        fetched_element = element
+    # Process multi-keyed elements
+    elements = [
+        tuple(x.split(",")) if "," in x else x for x in fetched_element
+    ]
     logger.debug(f"Parsed elements: {elements}")
     if elements is not None and "elements" in config:
         warn_with_log(
@@ -72,6 +80,27 @@ def _parse_elements(element: str, config: Dict) -> Union[List, None]:
                 "section in the yaml configuration file."
             )
     return elements
+
+
+def _parse_elements_file(filepath: Path) -> List[str]:
+    """Parse elements from file.
+
+    Parameters
+    ----------
+    filepath : pathlib.Path
+        The path to the element file.
+
+    Returns
+    -------
+    list of str
+        The element(s) as list.
+
+    """
+    # Read file
+    with open(filepath) as file:
+        raw_elements = file.readlines()
+    # Strip whitespace and return
+    return [element.strip() for element in raw_elements]
 
 
 def _validate_verbose(
