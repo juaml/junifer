@@ -58,12 +58,12 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         """
         yield from self.get_elements()
 
-    def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Dict]:
+    def __getitem__(self, element: Union[str, Tuple[str]]) -> Dict[str, Dict]:
         """Enable indexing support.
 
         Parameters
         ----------
-        element : str or tuple
+        element : str or tuple of str
             The element to be indexed.
 
         Returns
@@ -181,7 +181,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         )
 
     @abstractmethod
-    def get_elements(self) -> List:
+    def get_elements(self) -> List[Union[str, Tuple[str]]]:
         """Get elements.
 
         Returns
