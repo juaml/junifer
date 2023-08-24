@@ -35,7 +35,16 @@ runner = CliRunner()
 def test_run_and_collect_commands(
     tmp_path: Path, elements: Tuple[str, ...]
 ) -> None:
-    """Test run and collect commands."""
+    """Test run and collect commands.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    elements : tuple of str
+        The elements to operate on.
+
+    """
     # Get test config
     infile = Path(__file__).parent / "data" / "gmd_mean.yaml"
     # Read test config
