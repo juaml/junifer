@@ -140,7 +140,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -258,7 +258,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
@@ -286,16 +286,51 @@ commands will extract the features:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">--element</span></code>: The <em>element</em> to run. If not specified, all elements will be
 run. This parameter can be specified multiple times to run multiple elements.
 If the <em>element</em> requires several parameters, they can be specified by
-separating them with <code class="docutils literal notranslate"><span class="pre">,</span></code>.</p></li>
+separating them with <code class="docutils literal notranslate"><span class="pre">,</span></code>. It also accepts a file (e.g., <code class="docutils literal notranslate"><span class="pre">elements.txt</span></code>)
+containing complete or partial element(s).</p></li>
 </ul>
-<p>Example of running two elements:</p>
+<section id="example-of-running-two-elements">
+<h2><span class="section-number">5.2.1. </span>Example of running two elements:<a class="headerlink" href="#example-of-running-two-elements" title="Permalink to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>run<span class="w"> </span>config.yaml<span class="w"> </span>--element<span class="w"> </span>sub-01<span class="w"> </span>--element<span class="w"> </span>sub-02
 </pre></div>
 </div>
-<p>Example of elements with multiple parameters and verbose output:</p>
+<p>You can also specify the elements via a text file like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>run<span class="w"> </span>config.yaml<span class="w"> </span>--element<span class="w"> </span>elements.txt
+</pre></div>
+</div>
+<p>And the corresponding <code class="docutils literal notranslate"><span class="pre">elements.txt</span></code> would be like so:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sub-01
+sub-02
+</pre></div>
+</div>
+</section>
+<section id="example-of-elements-with-multiple-parameters-and-verbose-output">
+<h2><span class="section-number">5.2.2. </span>Example of elements with multiple parameters and verbose output:<a class="headerlink" href="#example-of-elements-with-multiple-parameters-and-verbose-output" title="Permalink to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>run<span class="w"> </span>--verbose<span class="w"> </span>info<span class="w"> </span>config.yaml<span class="w"> </span>--element<span class="w"> </span>sub-01,ses-01
 </pre></div>
 </div>
+<p>You can also specify the elements via a text file like so:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>run<span class="w"> </span>--verbose<span class="w"> </span>info<span class="w"> </span>config.yaml<span class="w"> </span>--element<span class="w"> </span>elements.txt
+</pre></div>
+</div>
+<p>And the corresponding <code class="docutils literal notranslate"><span class="pre">elements.txt</span></code> would be like so:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sub-01,ses-01
+</pre></div>
+</div>
+<p>In case you wanted to run for all possible sessions (e.g., <code class="docutils literal notranslate"><span class="pre">ses-01</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ses-02</span></code>, <code class="docutils literal notranslate"><span class="pre">ses-03</span></code>) but only for <code class="docutils literal notranslate"><span class="pre">sub-01</span></code>, you could also do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>run<span class="w"> </span>--verbose<span class="w"> </span>info<span class="w"> </span>config.yaml<span class="w"> </span>--element<span class="w"> </span>sub-01
+</pre></div>
+</div>
+<p>or,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>run<span class="w"> </span>--verbose<span class="w"> </span>info<span class="w"> </span>config.yaml<span class="w"> </span>--element<span class="w"> </span>elements.txt
+</pre></div>
+</div>
+<p>and then the <code class="docutils literal notranslate"><span class="pre">elements.txt</span></code> would be like so:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sub-01
+</pre></div>
+</div>
+</section>
 </section>
 <section id="collecting-results">
 <span id="collect"></span><h1><span class="section-number">5.3. </span>Collecting Results<a class="headerlink" href="#collecting-results" title="Permalink to this heading">#</a></h1>
@@ -359,8 +394,29 @@ commands will collect the results:</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">5.2. Running Jobs</a><ul>
+<li><a class="reference internal" href="#example-of-running-two-elements">5.2.1. Example of running two elements:</a></li>
+<li><a class="reference internal" href="#example-of-elements-with-multiple-parameters-and-verbose-output">5.2.2. Example of elements with multiple parameters and verbose output:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#collecting-results">5.3. Collecting Results</a></li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

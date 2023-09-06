@@ -29,19 +29,67 @@ The ``run`` command accepts the following additional arguments:
 * ``--element``: The *element* to run. If not specified, all elements will be
   run. This parameter can be specified multiple times to run multiple elements.
   If the *element* requires several parameters, they can be specified by
-  separating them with ``,``.
+  separating them with ``,``. It also accepts a file (e.g., ``elements.txt``)
+  containing complete or partial element(s).
 
 Example of running two elements:
+--------------------------------
 
 .. code-block:: bash
 
     junifer run config.yaml --element sub-01 --element sub-02
 
+You can also specify the elements via a text file like so:
+
+.. code-block:: bash
+
+    junifer run config.yaml --element elements.txt
+
+And the corresponding ``elements.txt`` would be like so:
+
+.. code-block:: text
+
+    sub-01
+    sub-02
+
 Example of elements with multiple parameters and verbose output:
+----------------------------------------------------------------
 
 .. code-block:: bash
 
     junifer run --verbose info config.yaml --element sub-01,ses-01
+
+You can also specify the elements via a text file like so:
+
+.. code-block:: bash
+
+    junifer run --verbose info config.yaml --element elements.txt
+
+And the corresponding ``elements.txt`` would be like so:
+
+.. code-block:: text
+
+    sub-01,ses-01
+
+In case you wanted to run for all possible sessions (e.g., ``ses-01``,
+``ses-02``, ``ses-03``) but only for ``sub-01``, you could also do:
+
+.. code-block:: bash
+
+    junifer run --verbose info config.yaml --element sub-01
+
+or,
+
+.. code-block:: bash
+
+    junifer run --verbose info config.yaml --element elements.txt
+
+and then the ``elements.txt`` would be like so:
+
+.. code-block:: text
+
+    sub-01
+
 
 .. _collect:
 
