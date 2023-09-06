@@ -120,7 +120,7 @@ def test_run_single_element_with_preprocessing(tmp_path: Path) -> None:
         preprocessor={
             "kind": "fMRIPrepConfoundRemover",
         },
-        elements=["sub-001"],
+        elements=["sub-01"],
     )
     # Check files
     files = list(outdir.glob("*.sqlite"))
