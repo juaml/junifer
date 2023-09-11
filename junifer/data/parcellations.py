@@ -161,8 +161,8 @@ def register_parcellation(
                 )
         else:
             raise_error(
-                f"Parcellation {name} already registered. Set `overwrite=True`"
-                "to update its value."
+                f"Parcellation {name} already registered. Set "
+                "`overwrite=True` to update its value."
             )
     # Convert str to Path
     if not isinstance(parcellation_path, Path):
