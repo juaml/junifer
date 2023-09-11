@@ -36,7 +36,7 @@ from .utils import closest_resolution
 if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
-# Path to the VOIs
+# Path to the masks
 _masks_path = Path(__file__).parent / "masks"
 
 
@@ -427,15 +427,18 @@ def load_mask(
         If the ``name`` is invalid of if the mask family is invalid.
 
     """
-    mask_img = None
+    # Check for valid mask name
     if name not in _available_masks:
         raise_error(
             f"Mask {name} not found. " f"Valid options are: {list_masks()}"
         )
 
+    # Copy mask definition to avoid edits in original object
     mask_definition = _available_masks[name].copy()
     t_family = mask_definition.pop("family")
 
+    # Check if the mask family is custom or built-in
+    mask_img = None
     if t_family == "CustomUserMask":
         mask_fname = Path(mask_definition["path"])
     elif t_family == "Vickery-Patil":
@@ -494,6 +497,8 @@ def _load_vickery_patil_mask(
         mask_fname = "GMprob0.2_cortex_3mm_NA_rm.nii.gz"
     else:
         raise_error(f"Cannot find a Vickery-Patil mask called {name}")
+
+    # Set path for masks
     mask_fname = _masks_path / "vickery-patil" / mask_fname
 
     return mask_fname
