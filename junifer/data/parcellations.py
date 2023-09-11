@@ -9,6 +9,7 @@ import io
 import shutil
 import tarfile
 import tempfile
+import typing
 import zipfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
@@ -340,6 +341,8 @@ def load_parcellation(
                 f"[0, {len(parcel_values)}]."
             )
 
+    # Type-cast to remove errors
+    parcellation_img = typing.cast("Nifti1Image", parcellation_img)
     return parcellation_img, parcellation_labels, parcellation_fname
 
 
