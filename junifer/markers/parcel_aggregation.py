@@ -165,6 +165,7 @@ class ParcelAggregation(BaseMarker):
         """
         t_input_img = input["data"]
         logger.debug(f"Parcel aggregation using {self.method}")
+        # Get aggregation function
         agg_func = get_aggfunc_by_name(
             name=self.method, func_params=self.method_params
         )
@@ -176,25 +177,28 @@ class ParcelAggregation(BaseMarker):
             extra_input=extra_input,
         )
 
+        # Get binarized parcellation image for masking
         parcellation_bin = math_img("img != 0", img=parcellation_img)
 
+        # Load mask
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
+            # Get tailored mask
             mask_img = get_mask(
                 masks=self.masks, target_data=input, extra_input=extra_input
             )
-
+            # Get "logical and" version of parcellation and mask
             parcellation_bin = math_img(
                 "np.logical_and(img, mask)",
                 img=parcellation_bin,
                 mask=mask_img,
             )
 
+        # Initialize masker
         logger.debug("Masking")
         masker = NiftiMasker(
             parcellation_bin, target_affine=t_input_img.affine
-        )  # type: ignore
-
+        )
         # Mask the input data and the parcellation
         data = masker.fit_transform(t_input_img)
         parcellation_values = np.squeeze(
@@ -213,6 +217,7 @@ class ParcelAggregation(BaseMarker):
 
         out_values = np.array(out_values).T
 
+        # Apply time dimension aggregation if required
         if self.time_method is not None:
             if out_values.shape[0] > 1:
                 logger.debug("Aggregating time dimension")
@@ -225,5 +230,6 @@ class ParcelAggregation(BaseMarker):
                     "No time dimension to aggregate as only one time point is "
                     "available."
                 )
+        # Format the output
         out = {"data": out_values, "col_names": labels}
         return out
