@@ -259,8 +259,8 @@ def load_parcellation(
 ) -> Tuple[Optional["Nifti1Image"], List[str], Path]:
     """Load a brain parcellation (including a label file).
 
-    If it is a built-in parcellaions and file is not present in the
-    `parcellations_dir` directory, it will be downloaded.
+    If it is a built-in parcellation and the file is not present in the
+    ``parcellations_dir`` directory, it will be downloaded.
 
     Parameters
     ----------
@@ -286,6 +286,12 @@ def load_parcellation(
         Parcellation labels.
     pathlib.Path
         File path to the parcellation image.
+
+    Raises
+    ------
+    ValueError
+        If ``name`` is invalid or if the parcellation values and labels
+        don't have equal dimension or if the value range is invalid.
 
     """
     # Check for valid parcellation name
