@@ -49,6 +49,13 @@ class ParcelAggregation(BaseMarker):
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
+
+    Raises
+    ------
+    ValueError
+        If ``time_method`` is specified for non-BOLD data or if
+        ``time_method_params`` is not None when ``time_method`` is None.
+
     """
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "numpy"}
@@ -110,6 +117,11 @@ class ParcelAggregation(BaseMarker):
         str
             The storage type output by the marker.
 
+        Raises
+        ------
+        ValueError
+            If the ``input_type`` is invalid.
+
         """
 
         if input_type in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
@@ -144,6 +156,11 @@ class ParcelAggregation(BaseMarker):
 
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``col_names`` : the column labels for the computed values as list
+
+        Warns
+        -----
+        RuntimeWarning
+            If time aggregation is required but only time point is available.
 
         """
         t_input_img = input["data"]
