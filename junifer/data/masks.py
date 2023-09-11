@@ -453,9 +453,11 @@ def load_mask(
     else:
         raise_error(f"I don't know about the {t_family} mask family.")
 
+    # Load mask
     if mask_fname is not None:
         logger.info(f"Loading mask {mask_fname.absolute()}")
         if path_only is False:
+            # Load via nibabel
             mask_img = nib.load(mask_fname)
 
     # Type-cast to remove error
