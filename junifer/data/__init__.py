@@ -14,6 +14,7 @@ from .parcellations import (
     load_parcellation,
     register_parcellation,
     merge_parcellations,
+    get_parcellation,
 )
 
 from .masks import (

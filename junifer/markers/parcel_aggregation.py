@@ -7,11 +7,11 @@
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 import numpy as np
-from nilearn.image import math_img, resample_to_img
+from nilearn.image import math_img
 from nilearn.maskers import NiftiMasker
 
 from ..api.decorators import register_marker
-from ..data import get_mask, load_parcellation, merge_parcellations
+from ..data import get_mask, get_parcellation
 from ..stats import get_aggfunc_by_name
 from ..utils import logger, raise_error, warn_with_log
 from .base import BaseMarker
@@ -151,34 +151,15 @@ class ParcelAggregation(BaseMarker):
         agg_func = get_aggfunc_by_name(
             name=self.method, func_params=self.method_params
         )
-        # Get the min of the voxels sizes and use it as the resolution
-        resolution = np.min(t_input_img.header.get_zooms()[:3])
 
-        # Load the parcellations
-        all_parcelations = []
-        all_labels = []
-        for t_parc_name in self.parcellation:
-            t_parcellation, t_labels, _ = load_parcellation(
-                name=t_parc_name, resolution=resolution
-            )
-            # Resample all of them to the image
-            t_parcellation_img_res = resample_to_img(
-                t_parcellation, t_input_img, interpolation="nearest", copy=True
-            )
-            all_parcelations.append(t_parcellation_img_res)
-            all_labels.append(t_labels)
+        # Get parcellation tailored to target image
+        parcellation_img, labels = get_parcellation(
+            parcellation=self.parcellation,
+            target_data=input,
+            extra_input=extra_input,
+        )
 
-        # Avoid merging if there is only one parcellation
-        if len(all_parcelations) == 1:
-            parcellation_img_res = all_parcelations[0]
-            labels = all_labels[0]
-        else:
-            # Merge the parcellations
-            parcellation_img_res, labels = merge_parcellations(
-                all_parcelations, self.parcellation, all_labels
-            )
-
-        parcellation_bin = math_img("img != 0", img=parcellation_img_res)
+        parcellation_bin = math_img("img != 0", img=parcellation_img)
 
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
@@ -199,8 +180,9 @@ class ParcelAggregation(BaseMarker):
 
         # Mask the input data and the parcellation
         data = masker.fit_transform(t_input_img)
-        parcellation_values = masker.transform(parcellation_img_res)
-        parcellation_values = np.squeeze(parcellation_values).astype(int)
+        parcellation_values = np.squeeze(
+            masker.transform(parcellation_img)
+        ).astype(int)
 
         # Get the values for each parcel and apply agg function
         logger.debug("Computing ROI means")

@@ -187,12 +187,68 @@ def list_parcellations() -> List[str]:
     return sorted(_available_parcellations.keys())
 
 
-# def _check_resolution(resolution, valid_resolution):
-#     if resolution is None:
-#         return None
-#     if resolution not in valid_resolution:
-#         raise ValueError(f'Invalid resolution: {resolution}')
-#     return resolution
+def get_parcellation(
+    parcellation: List[str],
+    target_data: Dict[str, Any],
+    extra_input: Optional[Dict[str, Any]] = None,
+) -> Tuple["Nifti1Image", List[str]]:
+    """Get parcellation, tailored for the target image.
+
+    Parameters
+    ----------
+    parcellation : list of str
+        The name(s) of the parcellation(s).
+    target_data : dict
+        The corresponding item of the data object to which the parcellation
+        will be applied.
+    extra_input : dict, optional
+        The other fields in the data object. Useful for accessing other data
+        kinds that needs to be used in the computation of parcellations
+        (default None).
+
+    Returns
+    -------
+    Nifti1Image
+        The parcellation image.
+    list of str
+        Parcellation labels.
+
+    """
+    # Get the min of the voxels sizes and use it as the resolution
+    target_img = target_data["data"]
+    resolution = np.min(target_img.header.get_zooms()[:3])
+
+    # Load the parcellations
+    all_parcellations = []
+    all_labels = []
+    for name in parcellation:
+        img, labels, _ = load_parcellation(
+            name=name,
+            resolution=resolution,
+        )
+        # Resample all of them to the image
+        resampled_img = image.resample_to_img(
+            source_img=img,
+            target_img=target_img,
+            interpolation="nearest",
+            copy=True,
+        )
+        all_parcellations.append(resampled_img)
+        all_labels.append(labels)
+
+    # Avoid merging if there is only one parcellation
+    if len(all_parcellations) == 1:
+        resampled_parcellation_img = all_parcellations[0]
+        labels = all_labels[0]
+    else:
+        # Merge the parcellations
+        resampled_parcellation_img, labels = merge_parcellations(
+            parcellations_list=all_parcellations,
+            parcellations_names=parcellation,
+            labels_lists=all_labels,
+        )
+
+    return resampled_parcellation_img, labels
 
 
 def load_parcellation(
