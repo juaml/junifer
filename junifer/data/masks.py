@@ -58,6 +58,7 @@ def _fetch_icbm152_brain_gm_mask(
     -------
     nibabel.Nifti1Image
         The resampled mask.
+
     """
     mask = fetch_icbm152_brain_gm_mask(**kwargs)
     mask = resample_to_img(
@@ -129,6 +130,7 @@ def register_mask(
     ValueError
         If the mask name is already registered and overwrite is set to
         False or if the mask name is a built-in mask.
+
     """
     # Check for attempt of overwriting built-in parcellations
     if name in _available_masks:
@@ -161,6 +163,7 @@ def list_masks() -> List[str]:
     -------
     list of str
         A list with all available masks names.
+
     """
     return sorted(_available_masks.keys())
 
@@ -403,7 +406,8 @@ def load_mask(
     Parameters
     ----------
     name : str
-        The name of the mask.
+        The name of the mask. Check valid options by calling
+        :func:`.list_masks`.
     resolution : float, optional
         The desired resolution of the mask to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -467,7 +471,7 @@ def _load_vickery_patil_mask(
 
     Parameters
     ----------
-    name : str
+    name : {'GM_prob0.2', 'GM_prob0.2_cortex'}
         The name of the mask.
     resolution : float, optional
         The desired resolution of the mask to load. If it is not
@@ -479,6 +483,13 @@ def _load_vickery_patil_mask(
     -------
     pathlib.Path
         File path to the mask image.
+
+    Raises
+    ------
+    ValueError
+        If ``name`` is invalid or if ``resolution`` is invalid for
+        ``name = 'GM_prob0.2'``.
+
     """
     if name == "GM_prob0.2":
         available_resolutions = [1.5, 3.0]
