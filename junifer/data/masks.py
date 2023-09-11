@@ -138,11 +138,11 @@ def register_mask(
             logger.info(f"Overwriting {name} mask")
             if _available_masks[name]["family"] != "CustomUserMask":
                 raise_error(
-                    f"Cannot overwrite {name} mask. " "It is a built-in mask."
+                    f"Cannot overwrite {name} mask. It is a built-in mask."
                 )
         else:
             raise_error(
-                f"Mask {name} already registered. Set `overwrite=True`"
+                f"Mask {name} already registered. Set `overwrite=True` "
                 "to update its value."
             )
     # Convert str to Path
@@ -434,7 +434,7 @@ def load_mask(
     # Check for valid mask name
     if name not in _available_masks:
         raise_error(
-            f"Mask {name} not found. " f"Valid options are: {list_masks()}"
+            f"Mask {name} not found. Valid options are: {list_masks()}"
         )
 
     # Copy mask definition to avoid edits in original object
@@ -455,7 +455,7 @@ def load_mask(
 
     # Load mask
     if mask_fname is not None:
-        logger.info(f"Loading mask {mask_fname.absolute()}")
+        logger.info(f"Loading mask {mask_fname.absolute()!s}")
         if path_only is False:
             # Load via nibabel
             mask_img = nib.load(mask_fname)
@@ -504,7 +504,7 @@ def _load_vickery_patil_mask(
             mask_fname = "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean.nii.gz"
         else:
             raise_error(
-                f"Cannot find a GM_prob0.2 mask for resolution {resolution}"
+                f"Cannot find a GM_prob0.2 mask of resolution {resolution}"
             )
     elif name == "GM_prob0.2_cortex":
         mask_fname = "GMprob0.2_cortex_3mm_NA_rm.nii.gz"
