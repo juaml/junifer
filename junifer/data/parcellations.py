@@ -288,16 +288,18 @@ def load_parcellation(
         File path to the parcellation image.
 
     """
-    # Invalid parcellation name
+    # Check for valid parcellation name
     if name not in _available_parcellations:
         raise_error(
             f"Parcellation {name} not found. "
             f"Valid options are: {list_parcellations()}"
         )
 
+    # Copy parcellation definition to avoid edits in original object
     parcellation_definition = _available_parcellations[name].copy()
     t_family = parcellation_definition.pop("family")
 
+    # Check if the parcellation family is custom or built-in
     if t_family == "CustomUserParcellation":
         parcellation_fname = Path(parcellation_definition["path"])
         parcellation_labels = parcellation_definition["labels"]
@@ -309,18 +311,23 @@ def load_parcellation(
             **parcellation_definition,
         )
 
+    # Load parcellation image and values
     logger.info(f"Loading parcellation {parcellation_fname.absolute()!s}")
-
     parcellation_img = None
     if path_only is False:
+        # Load image via nibabel
         parcellation_img = nib.load(parcellation_fname)
+        # Get unique values
         parcel_values = np.unique(parcellation_img.get_fdata())
+        # Check for dimension
         if len(parcel_values) - 1 != len(parcellation_labels):
             raise_error(
                 f"Parcellation {name} has {len(parcel_values) - 1} parcels "
                 f"but {len(parcellation_labels)} labels."
             )
+        # Sort values
         parcel_values.sort()
+        # Check if value range is invalid
         if np.any(np.diff(parcel_values) != 1):
             raise_error(
                 f"Parcellation {name} must have all the values in the range  "
