@@ -281,6 +281,8 @@ def get_mask(
             )
         mask_img = all_masks[0]
 
+    # Type-cast to remove errors
+    mask_img = typing.cast("Nifti1Image", mask_img)
     return mask_img
 
 
