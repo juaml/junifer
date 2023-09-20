@@ -32,11 +32,13 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         on: Optional[Union[List[str], str]] = None,
     ) -> None:
         """Initialize the class."""
+        # Use all data types if not provided
         if on is None:
             on = self.get_valid_inputs()
+        # Convert data types to list
         if not isinstance(on, list):
             on = [on]
-
+        # Check if required inputs are found
         if any(x not in self.get_valid_inputs() for x in on):
             name = self.__class__.__name__
             wrong_on = [x for x in on if x not in self.get_valid_inputs()]
