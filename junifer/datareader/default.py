@@ -91,6 +91,11 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
             The processed output as dictionary. The "data" key is added to
             each data type dictionary.
 
+        Warns
+        -----
+        RuntimeWarning
+            If input data type has no key called ``"path"``.
+
         """
         # For each type of data, try to read it
         out = input.copy()
