@@ -42,6 +42,11 @@ class PatternDataGrabber(BaseDataGrabber):
     confounds_format : {"fmriprep", "adhoc"} or None, optional
         The format of the confounds for the dataset (default None).
 
+    Raises
+    ------
+    ValueError
+        If ``confounds_format`` is invalid.
+
     """
 
     def __init__(
