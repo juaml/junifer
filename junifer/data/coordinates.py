@@ -201,6 +201,7 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         If ``Power`` is provided as the ``name``.
 
     """
+    # Check for valid coordinates name
     if name not in _available_coordinates:
         raise_error(
             f"Coordinates {name} not found. "
@@ -218,8 +219,10 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
             category=DeprecationWarning,
         )
 
+    # Load coordinates
     t_coord = _available_coordinates[name]
     if isinstance(t_coord, Path):
+        # Load via pandas
         df_coords = pd.read_csv(t_coord, sep="\t", header=None)
         coords = df_coords.iloc[:, [0, 1, 2]].to_numpy()
         names = list(df_coords.iloc[:, [3]].values[:, 0])
@@ -228,4 +231,5 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         coords = typing.cast(ArrayLike, coords)
         names = t_coord["voi_names"]
         names = typing.cast(List[str], names)
+
     return coords, names
