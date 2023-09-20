@@ -136,7 +136,7 @@ class SphereAggregation(BaseMarker):
         elif input_type == "BOLD":
             return "timeseries"
         else:
-            raise ValueError(f"Unknown input kind for {input_type}")
+            raise_error(f"Unknown input kind for {input_type}")
 
     def compute(
         self,
