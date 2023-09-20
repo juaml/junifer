@@ -55,6 +55,12 @@ class SphereAggregation(BaseMarker):
         The name of the marker. By default, it will use KIND_SphereAggregation
         where KIND is the kind of data it was applied to (default None).
 
+    Raises
+    ------
+    ValueError
+        If ``time_method`` is specified for non-BOLD data or if
+        ``time_method_params`` is not None when ``time_method`` is None.
+
     """
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "numpy"}
@@ -118,6 +124,11 @@ class SphereAggregation(BaseMarker):
         str
             The storage type output by the marker.
 
+        Raises
+        ------
+        ValueError
+            If the ``input_type`` is invalid.
+
         """
 
         if input_type in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
@@ -154,6 +165,11 @@ class SphereAggregation(BaseMarker):
 
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``col_names`` : the column labels for the computed values as list
+
+        Warns
+        -----
+        RuntimeWarning
+            If time aggregation is required but only time point is available.
 
         """
         t_input_img = input["data"]
