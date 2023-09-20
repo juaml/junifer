@@ -1,6 +1,7 @@
 """Provide functions for list of coordinates."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 import typing
@@ -102,7 +103,8 @@ def register_coordinates(
 
     if not isinstance(coordinates, np.ndarray):
         raise_error(
-            f"Coordinates must be a numpy.ndarray, not {type(coordinates)}."
+            f"Coordinates must be a `numpy.ndarray`, not {type(coordinates)}.",
+            klass=TypeError,
         )
     if coordinates.ndim != 2:
         raise_error(
@@ -114,8 +116,8 @@ def register_coordinates(
         )
     if len(voi_names) != coordinates.shape[0]:
         raise_error(
-            f"Length of voi_names ({len(voi_names)}) does not match the "
-            f"number of coordinates ({coordinates.shape[0]})."
+            f"Length of `voi_names` ({len(voi_names)}) does not match the "
+            f"number of `coordinates` ({coordinates.shape[0]})."
         )
     _available_coordinates[name] = {
         "coords": coordinates,
@@ -200,7 +202,10 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
 
     """
     if name not in _available_coordinates:
-        raise_error(f"Coordinates {name} not found.")
+        raise_error(
+            f"Coordinates {name} not found. "
+            f"Valid options are: {list_coordinates()}"
+        )
 
     # Put up deprecation notice
     if name == "Power":
