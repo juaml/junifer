@@ -34,12 +34,15 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         on: Optional[Union[List[str], str]] = None,
         name: Optional[str] = None,
     ) -> None:
+        # Use all data types if not provided
         if on is None:
             on = self.get_valid_inputs()
+        # Convert data types to list
         if not isinstance(on, list):
             on = [on]
+        # Set default name if not provided
         self.name = self.__class__.__name__ if name is None else name
-
+        # Check if required inputs are found
         if any(x not in self.get_valid_inputs() for x in on):
             wrong_on = [x for x in on if x not in self.get_valid_inputs()]
             raise ValueError(f"{self.name} cannot be computed on {wrong_on}")
