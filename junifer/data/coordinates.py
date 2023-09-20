@@ -57,7 +57,7 @@ def register_coordinates(
     voi_names: List[str],
     overwrite: Optional[bool] = False,
 ) -> None:
-    """Register coordinates.
+    """Register a custom user coordinates.
 
     Parameters
     ----------
@@ -73,6 +73,18 @@ def register_coordinates(
     overwrite : bool, optional
         If True, overwrite an existing list of coordinates with the same name.
         Does not apply to built-in coordinates (default False).
+
+    Raises
+    ------
+    ValueError
+        If the coordinates name is already registered and overwrite is set to
+        False or if the coordinates name is a built-in coordinates or if the
+        ``coordinates`` is not a 2D array or if coordinate value does not have
+        3 components or if the ``voi_names`` shape does not match the
+        ``coordinates`` shape.
+    TypeError
+        If ``coordinates`` is not a ``numpy.ndarray``.
+
     """
     if name in _available_coordinates:
         if isinstance(_available_coordinates[name], Path):
@@ -112,12 +124,13 @@ def register_coordinates(
 
 
 def list_coordinates() -> List[str]:
-    """List all the available coordinates lists (VOIs).
+    """List all the available coordinates (VOIs).
 
     Returns
     -------
     list of str
         A list with all available coordinates names.
+
     """
     return sorted(_available_coordinates.keys())
 
@@ -174,6 +187,11 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         The coordinates.
     list of str
         The names of the VOIs.
+
+    Raises
+    ------
+    ValueError
+        If ``name`` is invalid.
 
     Warns
     -----
