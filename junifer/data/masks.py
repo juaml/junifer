@@ -471,7 +471,7 @@ def _load_vickery_patil_mask(
 
     Parameters
     ----------
-    name : {'GM_prob0.2', 'GM_prob0.2_cortex'}
+    name : {"GM_prob0.2", "GM_prob0.2_cortex"}
         The name of the mask.
     resolution : float, optional
         The desired resolution of the mask to load. If it is not
@@ -488,7 +488,7 @@ def _load_vickery_patil_mask(
     ------
     ValueError
         If ``name`` is invalid or if ``resolution`` is invalid for
-        ``name = 'GM_prob0.2'``.
+        ``name = "GM_prob0.2"``.
 
     """
     if name == "GM_prob0.2":
