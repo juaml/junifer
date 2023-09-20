@@ -40,7 +40,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         if any(x not in self.get_valid_inputs() for x in on):
             name = self.__class__.__name__
             wrong_on = [x for x in on if x not in self.get_valid_inputs()]
-            raise ValueError(f"{name} cannot be computed on {wrong_on}")
+            raise_error(f"{name} cannot be computed on {wrong_on}")
         self._on = on
 
     def validate_input(self, input: List[str]) -> List[str]:
