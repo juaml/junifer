@@ -19,12 +19,19 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
     on : str or list of str, optional
         The kind of data to apply the preprocessor to. If None,
         will work on all available data (default None).
+
+    Raises
+    ------
+    ValueError
+        If required input data type(s) is(are) not found.
+
     """
 
     def __init__(
         self,
         on: Optional[Union[List[str], str]] = None,
     ) -> None:
+        """Initialize the class."""
         if on is None:
             on = self.get_valid_inputs()
         if not isinstance(on, list):
@@ -55,6 +62,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         ------
         ValueError
             If the input does not have the required data.
+
         """
         if not any(x in input for x in self._on):
             raise_error(
