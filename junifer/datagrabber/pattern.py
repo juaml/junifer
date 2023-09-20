@@ -60,6 +60,7 @@ class PatternDataGrabber(BaseDataGrabber):
         # Validate patterns
         validate_patterns(types=types, patterns=patterns)
 
+        # Convert replacements to list if not already
         if not isinstance(replacements, list):
             replacements = [replacements]
         # Validate replacements
