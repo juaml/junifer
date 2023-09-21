@@ -213,6 +213,9 @@ def run(
     storage = config["storage"]
     # Fetch preprocessors
     preprocessors = config.get("preprocess")
+    # Convert to list if single preprocessor
+    if preprocessors is not None and not isinstance(preprocessors, list):
+        preprocessors = [preprocessors]
     # Parse elements
     elements = _parse_elements(element, config)
     # Perform operation
