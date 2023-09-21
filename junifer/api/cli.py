@@ -200,14 +200,20 @@ def run(
 
     """
     configure_logging(level=verbose)
-    # TODO: add validation
+    # TODO(synchon): add validation
+    # Parse YAML
     config = parse_yaml(filepath)  # type: ignore
+    # Retrieve working directory
     workdir = config["workdir"]
+    # Fetch datagrabber
     datagrabber = config["datagrabber"]
+    # Fetch markers
     markers = config["markers"]
+    # Fetch storage
     storage = config["storage"]
     # Fetch preprocessors
     preprocessors = config.get("preprocess")
+    # Parse elements
     elements = _parse_elements(element, config)
     # Perform operation
     api_run(
