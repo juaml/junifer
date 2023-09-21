@@ -98,7 +98,7 @@ class HCP1200(PatternDataGrabber):
                 )
         suffix = "_hp2000_clean" if ica_fix else ""
         # The types of data
-        types = ["BOLD"]
+        types = ["BOLD", "T1w", "Warp"]
         # The patterns
         patterns = {
             "BOLD": (
@@ -106,7 +106,9 @@ class HCP1200(PatternDataGrabber):
                 "{task}_{phase_encoding}/"
                 "{task}_{phase_encoding}"
                 f"{suffix}.nii.gz"
-            )
+            ),
+            "T1w": "{subject}/T1w/T1w_acpc_dc_restore.nii.gz",
+            "Warp": "{subject}/MNINonLinear/xfms/standard2acpc_dc.nii.gz",
         }
         # The replacements
         replacements = ["subject", "task", "phase_encoding"]
