@@ -206,7 +206,8 @@ def run(
     datagrabber = config["datagrabber"]
     markers = config["markers"]
     storage = config["storage"]
-    preprocessor = config.get("preprocess")
+    # Fetch preprocessors
+    preprocessors = config.get("preprocess")
     elements = _parse_elements(element, config)
     # Perform operation
     api_run(
@@ -214,7 +215,7 @@ def run(
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        preprocessor=preprocessor,
+        preprocessors=preprocessors,
         elements=elements,
     )
 
