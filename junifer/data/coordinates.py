@@ -4,6 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import subprocess
+import tempfile
 import typing
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -227,6 +229,67 @@ def get_coordinates(
     """
     # Load the coordinates
     seeds, labels, _ = load_coordinates(name=coords)
+
+    # Transform coordinate if not in MNI space
+    if not target_data["space"].startswith("MNI"):
+        # Check for extra inputs
+        if extra_input is None:
+            raise_error(
+                "No extra input provided, requires `Warp` and `T1w` "
+                "data types in particular."
+            )
+
+        # Create tempdir
+        tempdir = Path(tempfile.mkdtemp())
+
+        # Save existing coordinates
+        pretransform_coordinates_path = (
+            tempdir / "pretransform_coordinates.txt"
+        )
+        np.savetxt(pretransform_coordinates_path, seeds)
+
+        # Create a tempfile for transformed coordinates output
+        std2imgcoord_out_path = tempdir / "coordinates_transformed.txt"
+        # Set std2imgcoord command
+        std2imgcoord_cmd = [
+            "std2imgcoord",
+            f"-img {target_data['reference_path'].resolve()}",
+            f"-warp {extra_input['Warp']['path'].resolve()}",
+            f"{pretransform_coordinates_path}",
+            f"> {std2imgcoord_out_path}",
+        ]
+        # Call std2imgcoord
+        std2imgcoord_cmd_str = " ".join(std2imgcoord_cmd)
+        logger.info(
+            f"std2imgcoord command to be executed: {std2imgcoord_cmd_str}"
+        )
+        std2imgcoord_process = subprocess.run(
+            std2imgcoord_cmd_str,  # string needed with shell=True
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=True,  # needed for respecting $PATH
+            check=False,
+        )
+        # Delete saved coordinates file
+        pretransform_coordinates_path.unlink()
+        # Check for success or failure
+        if std2imgcoord_process.returncode == 0:
+            logger.info(
+                "std2imgcoord succeeded with the following output: "
+                f"{std2imgcoord_process.stdout}"
+            )
+        else:
+            raise_error(
+                msg="std2imgcoord failed with the following error: "
+                f"{std2imgcoord_process.stdout}",
+                klass=RuntimeError,
+            )
+
+        # Load coordinates
+        seeds = np.loadtxt(std2imgcoord_out_path)
+        # Delete warped output file
+        std2imgcoord_out_path.unlink()
 
     return seeds, labels
 
