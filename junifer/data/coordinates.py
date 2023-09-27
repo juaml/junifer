@@ -5,7 +5,7 @@
 
 import typing
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -120,6 +120,44 @@ def list_coordinates() -> List[str]:
         A list with all available coordinates names.
     """
     return sorted(_available_coordinates.keys())
+
+
+def get_coordinates(
+    coords: str,
+    target_data: Dict[str, Any],
+    extra_input: Optional[Dict[str, Any]] = None,
+) -> Tuple[ArrayLike, List[str]]:
+    """Get coordinates, tailored for the target image.
+
+    Parameters
+    ----------
+    coords : str
+        The name of the coordinates.
+    target_data : dict
+        The corresponding item of the data object to which the coordinates
+        will be applied.
+    extra_input : dict, optional
+        The other fields in the data object. Useful for accessing other data
+        kinds that needs to be used in the computation of coordinates
+        (default None).
+
+    Returns
+    -------
+    numpy.ndarray
+        The coordinates.
+    list of str
+        The names of the VOIs.
+
+    Raises
+    ------
+    ValueError
+        If ``extra_input`` is None when ``target_data``'s space is not MNI.
+
+    """
+    # Load the coordinates
+    seeds, labels, _ = load_coordinates(name=coords)
+
+    return seeds, labels
 
 
 def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:

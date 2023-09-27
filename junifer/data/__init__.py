@@ -8,6 +8,7 @@ from .coordinates import (
     list_coordinates,
     load_coordinates,
     register_coordinates,
+    get_coordinates,
 )
 from .parcellations import (
     list_parcellations,
