@@ -3,6 +3,8 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+import subprocess
+import tempfile
 import typing
 from pathlib import Path
 from typing import (
@@ -163,7 +165,7 @@ def list_masks() -> List[str]:
     return sorted(_available_masks.keys())
 
 
-def get_mask(
+def get_mask(  # noqa: C901
     masks: Union[str, Dict, List[Union[Dict, str]]],
     target_data: Dict[str, Any],
     extra_input: Optional[Dict[str, Any]] = None,
@@ -186,6 +188,21 @@ def get_mask(
     -------
     Nifti1Image
         The mask image.
+
+    Raises
+    ------
+    RuntimeError
+        If masks are in different spaces and they need to be intersected /
+        unionized.
+    ValueError
+        If extra key is provided in addition to mask name in ``masks`` or
+        if no mask is provided or if ``masks = "inherit"`` but ``extra_input``
+        is None or ``mask_item`` is None or ``mask_items``'s value is not in
+        ``extra_input`` or if callable parameters are passed to non-callable
+        mask or if parameters are passed to
+        :func:`nilearn.masking.intersect_masks` when there is only one mask or
+        if ``extra_input`` is None when ``target_data``'s space is not MNI.
+
     """
     # Get the min of the voxels sizes and use it as the resolution
     target_img = target_data["data"]
@@ -224,6 +241,7 @@ def get_mask(
         raise_error("No mask was passed. At least one mask is required.")
     # Get all the masks
     all_masks = []
+    all_spaces = []
     for t_mask in true_masks:
         if isinstance(t_mask, dict):
             mask_name = next(iter(t_mask.keys()))
@@ -232,46 +250,76 @@ def get_mask(
             mask_name = t_mask
             mask_params = None
 
+        # If mask is being inherited from previous steps like preprocessing
         if mask_name == "inherit":
+            # Requires extra input to be passed
             if extra_input is None:
                 raise_error(
                     "Cannot inherit mask from another data item "
                     "because no extra data was passed."
                 )
+            # Missing inherited mask item
             if inherited_mask_item is None:
                 raise_error(
                     "Cannot inherit mask from another data item "
                     "because no mask item was specified "
                     "(missing `mask_item` key in the data object)."
                 )
+            # Missing inherited mask item in extra input
             if inherited_mask_item not in extra_input:
                 raise_error(
                     "Cannot inherit mask from another data item "
                     f"because the item ({inherited_mask_item}) does not exist."
                 )
             mask_img = extra_input[inherited_mask_item]["data"]
+        # Starting with new mask
         else:
-            mask_object, _, _ = load_mask(
+            # Load mask
+            mask_object, _, mask_space = load_mask(
                 mask_name, path_only=False, resolution=resolution
             )
+            # If mask is callable like from nilearn
             if callable(mask_object):
                 if mask_params is None:
                     mask_params = {}
                 mask_img = mask_object(target_img, **mask_params)
-            else:  # Mask is a Nifti1Image
+            # Mask is a Nifti1Image
+            else:
+                # Mask params provided
                 if mask_params is not None:
+                    # Unused params
                     raise_error(
                         "Cannot pass callable params to a non-callable mask."
                     )
+                # Resample mask to target image
                 mask_img = resample_to_img(
                     mask_object,
                     target_img,
                     interpolation="nearest",
                     copy=True,
                 )
+            all_spaces.append(mask_space)
         all_masks.append(mask_img)
+
+    # Multiple masks, need intersection / union
     if len(all_masks) > 1:
-        mask_img = intersect_masks(all_masks, **intersect_params)
+        # Intersect / union of masks only if all masks are in the same space
+        if len(set(all_spaces)) == 1 or all(
+            x.startswith("MNI") for x in all_spaces
+        ):
+            mask_img = intersect_masks(all_masks, **intersect_params)
+        else:
+            # Check for inherited masks with target image in MNI space
+            if "inherit" in all_spaces and target_data["space"].startswith(
+                "MNI"
+            ):
+                mask_img = intersect_masks(all_masks, **intersect_params)
+            else:
+                raise_error(
+                    msg="Masks are in different spaces, unable to merge.",
+                    klass=RuntimeError,
+                )
+    # Single mask
     else:
         if len(intersect_params) > 0:
             # Yes, I'm this strict!
@@ -280,6 +328,65 @@ def get_mask(
                 "when there is only one mask."
             )
         mask_img = all_masks[0]
+
+    # Warp mask if not in MNI space
+    if not target_data["space"].startswith("MNI"):
+        # Check for extra inputs
+        if extra_input is None:
+            raise_error(
+                "No extra input provided, requires `Warp` and `T1w` "
+                "data types in particular."
+            )
+
+        # Create tempdir
+        tempdir = Path(tempfile.mkdtemp())
+
+        # Save mask image
+        prewarp_mask_path = tempdir / "prewarp_mask.nii.gz"
+        nib.save(mask_img, prewarp_mask_path)
+
+        # Create a tempfile for warped output
+        applywarp_out_path = tempdir / "mask_warped.nii.gz"
+        # Set applywarp command
+        applywarp_cmd = [
+            "applywarp",
+            "--interp=spline",
+            f"-i {prewarp_mask_path.resolve()}",
+            # use resampled reference
+            f"-r {target_data['reference_path'].resolve()}",
+            f"-w {extra_input['Warp']['path'].resolve()}",
+            f"-o {applywarp_out_path.resolve()}",
+        ]
+        # Call applywarp
+        applywarp_cmd_str = " ".join(applywarp_cmd)
+        logger.info(f"applywarp command to be executed: {applywarp_cmd_str}")
+        applywarp_process = subprocess.run(
+            applywarp_cmd_str,  # string needed with shell=True
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=True,  # needed for respecting $PATH
+            check=False,
+        )
+        # Delete saved mask image
+        prewarp_mask_path.unlink()
+        # Check for success or failure
+        if applywarp_process.returncode == 0:
+            logger.info(
+                "applywarp succeeded with the following output: "
+                f"{applywarp_process.stdout}"
+            )
+        else:
+            raise_error(
+                msg="applywarp failed with the following error: "
+                f"{applywarp_process.stdout}",
+                klass=RuntimeError,
+            )
+
+        # Load nifti
+        mask_img = nib.load(applywarp_out_path)
+        # Delete warped output file
+        applywarp_out_path.unlink()
 
     # Type-cast to remove errors
     mask_img = typing.cast("Nifti1Image", mask_img)
