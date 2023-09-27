@@ -484,3 +484,19 @@ def test_get_mask_multiple(
 
         expected = intersect_masks(mask_imgs, **params)
         assert_array_equal(computed.get_fdata(), expected.get_fdata())
+
+
+def test_get_mask_multiple_incorrect_space() -> None:
+    """Test incorrect space error for getting multiple masks."""
+    reader = DefaultDataReader()
+    with SPMAuditoryTestingDataGrabber() as dg:
+        input = dg["sub001"]
+        input = reader.fit_transform(input)
+        # Edit BOLD space to trigger error
+        input["BOLD"]["space"] = "SUIT"
+
+        with pytest.raises(RuntimeError, match="unable to merge."):
+            get_mask(
+                masks=["GM_prob0.2", "compute_brain_mask"],
+                target_data=input["BOLD"],
+            )
