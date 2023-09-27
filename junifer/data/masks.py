@@ -104,6 +104,7 @@ _available_masks: Dict[str, Dict[str, Any]] = {
 def register_mask(
     name: str,
     mask_path: Union[str, Path],
+    space: str,
     overwrite: bool = False,
 ) -> None:
     """Register a custom user mask.
@@ -114,6 +115,8 @@ def register_mask(
         The name of the mask.
     mask_path : str or pathlib.Path
         The path to the mask file.
+    space : str
+        The space of the mask.
     overwrite : bool, optional
         If True, overwrite an existing mask with the same name.
         Does not apply to built-in mask (default False).
@@ -144,6 +147,7 @@ def register_mask(
     _available_masks[name] = {
         "path": str(mask_path.absolute()),
         "family": "CustomUserMask",
+        "space": space,
     }
 
 
