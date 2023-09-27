@@ -8,10 +8,13 @@ import pytest
 from numpy.testing import assert_array_equal
 
 from junifer.data.coordinates import (
+    get_coordinates,
     list_coordinates,
     load_coordinates,
     register_coordinates,
 )
+from junifer.datareader import DefaultDataReader
+from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
 
 
 def test_register_coordinates_built_in_check() -> None:
@@ -105,3 +108,21 @@ def test_load_coordinates_nonexisting() -> None:
     """Test loading coordinates that not exist."""
     with pytest.raises(ValueError, match=r"not found"):
         load_coordinates("NonExisting")
+
+
+def test_get_coordinates() -> None:
+    """Test tailored coordinates fetch."""
+    reader = DefaultDataReader()
+    with OasisVBMTestingDataGrabber() as dg:
+        element = dg["sub-01"]
+        element_data = reader.fit_transform(element)
+        vbm_gm = element_data["VBM_GM"]
+        # Get tailored coordinates
+        tailored_coords, tailored_labels = get_coordinates(
+            coords="DMNBuckner", target_data=vbm_gm
+        )
+        # Get raw coordinates
+        raw_coords, raw_labels, _ = load_coordinates("DMNBuckner")
+        # Both tailored and raw should be same for now
+        assert_array_equal(tailored_coords, raw_coords)
+        assert tailored_labels == raw_labels
