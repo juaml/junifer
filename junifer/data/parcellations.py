@@ -7,6 +7,7 @@
 
 import io
 import shutil
+import subprocess
 import tarfile
 import tempfile
 import typing
@@ -226,6 +227,13 @@ def get_parcellation(
     list of str
         Parcellation labels.
 
+    Raises
+    ------
+    RuntimeError
+        If parcellations are in different spaces and they need to be merged.
+    ValueError
+        If ``extra_input`` is None when ``target_data``'s space is not MNI.
+
     """
     # Get the min of the voxels sizes and use it as the resolution
     target_img = target_data["data"]
@@ -234,8 +242,9 @@ def get_parcellation(
     # Load the parcellations
     all_parcellations = []
     all_labels = []
+    all_spaces = []
     for name in parcellation:
-        img, labels, _, _ = load_parcellation(
+        img, labels, _, space = load_parcellation(
             name=name,
             resolution=resolution,
         )
@@ -248,17 +257,91 @@ def get_parcellation(
         )
         all_parcellations.append(resampled_img)
         all_labels.append(labels)
+        all_spaces.append(space)
 
     # Avoid merging if there is only one parcellation
     if len(all_parcellations) == 1:
         resampled_parcellation_img = all_parcellations[0]
         labels = all_labels[0]
     else:
-        # Merge the parcellations
-        resampled_parcellation_img, labels = merge_parcellations(
-            parcellations_list=all_parcellations,
-            parcellations_names=parcellation,
-            labels_lists=all_labels,
+        # Merge the parcellations only if all parcellations are in the same
+        # space
+        if len(set(all_spaces)) == 1 or all(
+            x.startswith("MNI") for x in all_spaces
+        ):
+            resampled_parcellation_img, labels = merge_parcellations(
+                parcellations_list=all_parcellations,
+                parcellations_names=parcellation,
+                labels_lists=all_labels,
+            )
+        else:
+            raise_error(
+                msg="Parcellations are in different spaces, unable to merge.",
+                klass=RuntimeError,
+            )
+
+    # Warp parcellation if not in MNI space
+    if not target_data["space"].startswith("MNI"):
+        # Check for extra inputs
+        if extra_input is None:
+            raise_error(
+                "No extra input provided, requires `Warp` and `T1w` "
+                "data types in particular."
+            )
+
+        # Create tempdir
+        tempdir = Path(tempfile.mkdtemp())
+
+        # Save parcellation image
+        prewarp_parcellation_path = tempdir / "prewarp_parcellation.nii.gz"
+        nib.save(resampled_parcellation_img, prewarp_parcellation_path)
+
+        # Create a tempfile for warped output
+        applywarp_out_path = tempdir / "parcellation_warped.nii.gz"
+        # Set applywarp command
+        applywarp_cmd = [
+            "applywarp",
+            "--interp=spline",
+            f"-i {prewarp_parcellation_path.resolve()}",
+            # use resampled reference
+            f"-r {target_data['reference_path'].resolve()}",
+            f"-w {extra_input['Warp']['path'].resolve()}",
+            f"-o {applywarp_out_path.resolve()}",
+        ]
+        # Call applywarp
+        applywarp_cmd_str = " ".join(applywarp_cmd)
+        logger.info(f"applywarp command to be executed: {applywarp_cmd_str}")
+        applywarp_process = subprocess.run(
+            applywarp_cmd_str,  # string needed with shell=True
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=True,  # needed for respecting $PATH
+            check=False,
+        )
+        # Delete saved parcellation image
+        prewarp_parcellation_path.unlink()
+        # Check for success or failure
+        if applywarp_process.returncode == 0:
+            logger.info(
+                "applywarp succeeded with the following output: "
+                f"{applywarp_process.stdout}"
+            )
+        else:
+            raise_error(
+                msg="applywarp failed with the following error: "
+                f"{applywarp_process.stdout}",
+                klass=RuntimeError,
+            )
+
+        # Load nifti
+        resampled_parcellation_img = nib.load(applywarp_out_path)
+        # Delete warped output file
+        applywarp_out_path.unlink()
+
+        # Stupid casting
+        resampled_parcellation_img = typing.cast(
+            "Nifti1Image", resampled_parcellation_img
         )
 
     return resampled_parcellation_img, labels
