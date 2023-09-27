@@ -34,6 +34,7 @@ if TYPE_CHECKING:
 
 # Each entry is a dictionary that must contain at least the following keys:
 # * 'family': the parcellation's family name (e.g. 'Schaefer', 'SUIT')
+# * 'space': the parcellation's space (e.g., 'MNI', 'SUIT')
 
 # Optional keys:
 # * 'valid_resolutions': a list of valid resolutions for the parcellation
@@ -53,6 +54,7 @@ for n_rois in range(100, 1001, 100):
             "family": "Schaefer",
             "n_rois": n_rois,
             "yeo_networks": t_net,
+            "space": "MNI",
         }
 # Add Tian parcellation info
 for scale in range(1, 5):
@@ -82,6 +84,7 @@ for version in (1, 2):
     _available_parcellations[f"AICHA_v{version}"] = {
         "family": "AICHA",
         "version": version,
+        "space": "MNI",
     }
 # Add Shen parcellation info
 for year in (2013, 2015, 2019):
@@ -91,18 +94,21 @@ for year in (2013, 2015, 2019):
                 "family": "Shen",
                 "year": 2013,
                 "n_rois": n_rois,
+                "space": "MNI",
             }
     elif year == 2015:
         _available_parcellations["Shen_2015_268"] = {
             "family": "Shen",
             "year": 2015,
             "n_rois": 268,
+            "space": "MNI",
         }
     elif year == 2019:
         _available_parcellations["Shen_2019_368"] = {
             "family": "Shen",
             "year": 2019,
             "n_rois": 368,
+            "space": "MNI",
         }
 # Add Yan parcellation info
 for n_rois in range(100, 1001, 100):
@@ -112,12 +118,14 @@ for n_rois in range(100, 1001, 100):
             "family": "Yan",
             "n_rois": n_rois,
             "yeo_networks": yeo_network,
+            "space": "MNI",
         }
     # Add Kong networks
     _available_parcellations[f"Yan{n_rois}xKong17"] = {
         "family": "Yan",
         "n_rois": n_rois,
         "kong_networks": 17,
+        "space": "MNI",
     }
 
 
