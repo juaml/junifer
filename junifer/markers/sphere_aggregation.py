@@ -190,9 +190,12 @@ class SphereAggregation(BaseMarker):
         mask_img = None
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
+            # Get tailored mask
             mask_img = get_mask(
                 masks=self.masks, target_data=input, extra_input=extra_input
             )
+
+        # Initialize masker
         masker = JuniferNiftiSpheresMasker(
             seeds=coords,
             radius=self.radius,
@@ -202,6 +205,8 @@ class SphereAggregation(BaseMarker):
         )
         # Fit and transform the marker on the data
         out_values = masker.fit_transform(t_input_img)
+
+        # Apply time dimension aggregation if required
         if self.time_method is not None:
             if out_values.shape[0] > 1:
                 logger.debug("Aggregating time dimension")
