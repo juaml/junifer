@@ -1179,3 +1179,21 @@ def test_get_parcellation_multi_same_space() -> None:
             merged_resampled_parcellations.get_fdata(),
         )
         assert tailored_labels == merged_labels
+
+
+def test_get_parcellation_multi_different_space() -> None:
+    """Test tailored multi parcellation fetch in different space."""
+    reader = DefaultDataReader()
+    with OasisVBMTestingDataGrabber() as dg:
+        element = dg["sub-01"]
+        element_data = reader.fit_transform(element)
+        vbm_gm = element_data["VBM_GM"]
+        # Get tailored parcellation
+        with pytest.raises(RuntimeError, match="unable to merge."):
+            get_parcellation(
+                parcellation=[
+                    "Schaefer100x7",
+                    "SUITxSUIT",
+                ],
+                target_data=vbm_gm,
+            )
