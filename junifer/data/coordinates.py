@@ -24,31 +24,83 @@ _vois_meta_path = _vois_path / "meta"
 # A dictionary containing all supported coordinates and their respective file
 # or data.
 
+# Each entry is a dictionary that must contain at least the following keys:
+# * 'space': the coordinates' space (e.g., 'MNI')
+
 # The built-in coordinates are files that are shipped with the package in the
 # data/VOIs directory. The user can also register their own coordinates, which
 # will be stored as numpy arrays in the dictionary.
 _available_coordinates: Dict[
-    str, Union[Path, Dict[str, Union[ArrayLike, List[str]]]]
+    str, Dict[str, Union[Path, ArrayLike, List[str]]]
 ] = {
-    "CogAC": _vois_meta_path / "CogAC_VOIs.txt",
-    "CogAR": _vois_meta_path / "CogAR_VOIs.txt",
-    "DMNBuckner": _vois_meta_path / "DMNBuckner_VOIs.txt",
-    "eMDN": _vois_meta_path / "eMDN_VOIs.txt",
-    "Empathy": _vois_meta_path / "Empathy_VOIs.txt",
-    "eSAD": _vois_meta_path / "eSAD_VOIs.txt",
-    "extDMN": _vois_meta_path / "extDMN_VOIs.txt",
-    "Motor": _vois_meta_path / "Motor_VOIs.txt",
-    "MultiTask": _vois_meta_path / "MultiTask_VOIs.txt",
-    "PhysioStress": _vois_meta_path / "PhysioStress_VOIs.txt",
-    "Rew": _vois_meta_path / "Rew_VOIs.txt",
-    "Somatosensory": _vois_meta_path / "Somatosensory_VOIs.txt",
-    "ToM": _vois_meta_path / "ToM_VOIs.txt",
-    "VigAtt": _vois_meta_path / "VigAtt_VOIs.txt",
-    "WM": _vois_meta_path / "WM_VOIs.txt",
-    "Power": _vois_meta_path / "Power2011_MNI_VOIs.txt",
-    "Power2011": _vois_meta_path / "Power2011_MNI_VOIs.txt",
-    "Dosenbach": _vois_meta_path / "Dosenbach2010_MNI_VOIs.txt",
-    "Power2013": _vois_meta_path / "Power2013_MNI_VOIs.tsv",
+    "CogAC": {
+        "path": _vois_meta_path / "CogAC_VOIs.txt",
+        "space": "MNI",
+    },
+    "CogAR": {
+        "path": _vois_meta_path / "CogAR_VOIs.txt",
+        "space": "MNI",
+    },
+    "DMNBuckner": {
+        "path": _vois_meta_path / "DMNBuckner_VOIs.txt",
+        "space": "MNI",
+    },
+    "eMDN": {
+        "path": _vois_meta_path / "eMDN_VOIs.txt",
+        "space": "MNI",
+    },
+    "Empathy": {
+        "path": _vois_meta_path / "Empathy_VOIs.txt",
+        "space": "MNI",
+    },
+    "eSAD": {
+        "path": _vois_meta_path / "eSAD_VOIs.txt",
+        "space": "MNI",
+    },
+    "extDMN": {
+        "path": _vois_meta_path / "extDMN_VOIs.txt",
+        "space": "MNI",
+    },
+    "Motor": {
+        "path": _vois_meta_path / "Motor_VOIs.txt",
+        "space": "MNI",
+    },
+    "MultiTask": {
+        "path": _vois_meta_path / "MultiTask_VOIs.txt",
+        "space": "MNI",
+    },
+    "PhysioStress": {
+        "path": _vois_meta_path / "PhysioStress_VOIs.txt",
+        "space": "MNI",
+    },
+    "Rew": {
+        "path": _vois_meta_path / "Rew_VOIs.txt",
+        "space": "MNI",
+    },
+    "Somatosensory": {
+        "path": _vois_meta_path / "Somatosensory_VOIs.txt",
+        "space": "MNI",
+    },
+    "ToM": {
+        "path": _vois_meta_path / "ToM_VOIs.txt",
+        "space": "MNI",
+    },
+    "VigAtt": {
+        "path": _vois_meta_path / "VigAtt_VOIs.txt",
+        "space": "MNI",
+    },
+    "WM": {
+        "path": _vois_meta_path / "WM_VOIs.txt",
+        "space": "MNI",
+    },
+    "Power": {
+        "path": _vois_meta_path / "Power2011_MNI_VOIs.txt",
+        "space": "MNI",
+    },
+    "Dosenbach": {
+        "path": _vois_meta_path / "Dosenbach2010_MNI_VOIs.txt",
+        "space": "MNI",
+    },
 }
 
 
