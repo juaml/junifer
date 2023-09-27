@@ -55,7 +55,10 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
         """
         out = {}
         i_sub = int(subject.split("-")[1]) - 1
-        out["VBM_GM"] = {"path": Path(self._dataset.gray_matter_maps[i_sub])}
+        out["VBM_GM"] = {
+            "path": Path(self._dataset.gray_matter_maps[i_sub]),
+            "space": "MNI",
+        }
 
         return out
 
@@ -141,8 +144,8 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         anat_fname = self.datadir / f"{subject}_T1w.nii.gz"
         nib.save(fmri_img, fmri_fname)
         nib.save(anat_img, anat_fname)
-        out["BOLD"] = {"path": fmri_fname}
-        out["T1w"] = {"path": anat_fname}
+        out["BOLD"] = {"path": fmri_fname, "space": "MNI"}
+        out["T1w"] = {"path": anat_fname, "space": "native"}
         return out
 
 
@@ -236,12 +239,14 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         """
         out = {}
         i_sub = int(subject.split("-")[1]) - 1
-        out["BOLD"] = {"path": Path(self._dataset["func"][i_sub])}
-        conf_format = "fmriprep"
-
+        out["BOLD"] = {
+            "path": Path(self._dataset["func"][i_sub]),
+            "space": "MNI",
+        }
         out["BOLD_confounds"] = {
             "path": Path(self._dataset["confounds"][i_sub]),
-            "format": conf_format,
+            "format": "fmriprep",
+            "space": "MNI",
         }
 
         return out
