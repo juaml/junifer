@@ -235,7 +235,7 @@ def get_parcellation(
     all_parcellations = []
     all_labels = []
     for name in parcellation:
-        img, labels, _ = load_parcellation(
+        img, labels, _, _ = load_parcellation(
             name=name,
             resolution=resolution,
         )
@@ -269,7 +269,7 @@ def load_parcellation(
     parcellations_dir: Union[str, Path, None] = None,
     resolution: Optional[float] = None,
     path_only: bool = False,
-) -> Tuple[Optional["Nifti1Image"], List[str], Path]:
+) -> Tuple[Optional["Nifti1Image"], List[str], Path, str]:
     """Load a brain parcellation (including a label file).
 
     If it is a built-in parcellation and the file is not present in the
@@ -299,6 +299,8 @@ def load_parcellation(
         Parcellation labels.
     pathlib.Path
         File path to the parcellation image.
+    str
+        The space of the parcellation.
 
     Raises
     ------
@@ -317,6 +319,11 @@ def load_parcellation(
     # Copy parcellation definition to avoid edits in original object
     parcellation_definition = _available_parcellations[name].copy()
     t_family = parcellation_definition.pop("family")
+    # Remove space conditionally
+    if t_family not in ["SUIT", "Tian"]:
+        space = parcellation_definition.pop("space")
+    else:
+        space = parcellation_definition["space"]
 
     # Check if the parcellation family is custom or built-in
     if t_family == "CustomUserParcellation":
@@ -355,7 +362,7 @@ def load_parcellation(
 
     # Type-cast to remove errors
     parcellation_img = typing.cast("Nifti1Image", parcellation_img)
-    return parcellation_img, parcellation_labels, parcellation_fname
+    return parcellation_img, parcellation_labels, parcellation_fname, space
 
 
 def _retrieve_parcellation(
