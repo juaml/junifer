@@ -335,7 +335,8 @@ def get_mask(  # noqa: C901
         if extra_input is None:
             raise_error(
                 "No extra input provided, requires `Warp` and `T1w` "
-                "data types in particular."
+                "data types in particular for transformation to "
+                f"{target_data['space']} space for further computation."
             )
 
         # Create tempdir
