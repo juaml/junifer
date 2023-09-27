@@ -133,6 +133,7 @@ def register_parcellation(
     name: str,
     parcellation_path: Union[str, Path],
     parcels_labels: List[str],
+    space: str,
     overwrite: bool = False,
 ) -> None:
     """Register a custom user parcellation.
@@ -145,6 +146,8 @@ def register_parcellation(
         The path to the parcellation file.
     parcels_labels : list of str
         The list of labels for the parcellation.
+    space : str
+        The space of the parcellation.
     overwrite : bool, optional
         If True, overwrite an existing parcellation with the same name.
         Does not apply to built-in parcellations (default False).
@@ -181,6 +184,7 @@ def register_parcellation(
         "path": str(parcellation_path.absolute()),
         "labels": parcels_labels,
         "family": "CustomUserParcellation",
+        "space": space,
     }
 
 
