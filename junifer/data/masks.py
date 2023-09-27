@@ -3,6 +3,7 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+import typing
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -250,7 +251,7 @@ def get_mask(
                 )
             mask_img = extra_input[inherited_mask_item]["data"]
         else:
-            mask_object, _ = load_mask(
+            mask_object, _, _ = load_mask(
                 mask_name, path_only=False, resolution=resolution
             )
             if callable(mask_object):
@@ -287,8 +288,8 @@ def load_mask(
     name: str,
     resolution: Optional[float] = None,
     path_only: bool = False,
-) -> Tuple[Optional[Union["Nifti1Image", Callable]], Optional[Path]]:
-    """Load mask.
+) -> Tuple[Optional[Union["Nifti1Image", Callable]], Optional[Path], str]:
+    """Load a mask.
 
     Parameters
     ----------
@@ -308,6 +309,14 @@ def load_mask(
         Loaded mask image.
     pathlib.Path or None
         File path to the mask image.
+    str
+        The space of the mask.
+
+    Raises
+    ------
+    ValueError
+        If the ``name`` is invalid of if the mask family is invalid.
+
     """
     mask_img = None
     if name not in _available_masks:
@@ -333,7 +342,9 @@ def load_mask(
         if path_only is False:
             mask_img = nib.load(mask_fname)
 
-    return mask_img, mask_fname
+    # Type-cast to remove error
+    mask_img = typing.cast("Nifti1Image", mask_img)
+    return mask_img, mask_fname, mask_definition["space"]
 
 
 def _load_vickery_patil_mask(
