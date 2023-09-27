@@ -66,29 +66,37 @@ def _fetch_icbm152_brain_gm_mask(
 # A dictionary containing all supported masks and their respective file or
 # data.
 
+# Each entry is a dictionary that must contain at least the following keys:
+# * 'family': the mask's family name (e.g., 'Vickery-Patil', 'Callable')
+# * 'space': the mask's space (e.g., 'MNI', 'inherit')
+
 # The built-in masks are files that are shipped with the package in the
 # data/masks directory. The user can also register their own masks.
 
 # Callable masks should be functions that take at least one parameter:
 # * `target_img`: the image to which the mask will be applied.
 _available_masks: Dict[str, Dict[str, Any]] = {
-    "GM_prob0.2": {"family": "Vickery-Patil"},
-    "GM_prob0.2_cortex": {"family": "Vickery-Patil"},
+    "GM_prob0.2": {"family": "Vickery-Patil", "space": "MNI"},
+    "GM_prob0.2_cortex": {"family": "Vickery-Patil", "space": "MNI"},
     "compute_brain_mask": {
         "family": "Callable",
         "func": compute_brain_mask,
+        "space": "inherit",
     },
     "compute_background_mask": {
         "family": "Callable",
         "func": compute_background_mask,
+        "space": "inherit",
     },
     "compute_epi_mask": {
         "family": "Callable",
         "func": compute_epi_mask,
+        "space": "inherit",
     },
     "fetch_icbm152_brain_gm_mask": {
         "family": "Callable",
         "func": _fetch_icbm152_brain_gm_mask,
+        "space": "inherit",
     },
 }
 
