@@ -7,7 +7,7 @@
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 from ..api.decorators import register_marker
-from ..data import get_mask, load_coordinates
+from ..data import get_coordinates, get_mask
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
 from ..utils import logger, raise_error, warn_with_log
@@ -162,6 +162,14 @@ class SphereAggregation(BaseMarker):
         agg_func = get_aggfunc_by_name(
             self.method, func_params=self.method_params
         )
+
+        # Get seeds and labels tailored to target image
+        coords, labels = get_coordinates(
+            coords=self.coords,
+            target_data=input,
+            extra_input=extra_input,
+        )
+
         # Load mask
         mask_img = None
         if self.masks is not None:
@@ -169,8 +177,6 @@ class SphereAggregation(BaseMarker):
             mask_img = get_mask(
                 masks=self.masks, target_data=input, extra_input=extra_input
             )
-        # Get seeds and labels
-        coords, out_labels = load_coordinates(name=self.coords)
         masker = JuniferNiftiSpheresMasker(
             seeds=coords,
             radius=self.radius,
@@ -193,5 +199,5 @@ class SphereAggregation(BaseMarker):
                     "available."
                 )
         # Format the output
-        out = {"data": out_values, "col_names": out_labels}
+        out = {"data": out_values, "col_names": labels}
         return out
