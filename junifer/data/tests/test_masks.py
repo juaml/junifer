@@ -41,6 +41,7 @@ def test_register_mask_built_in_check() -> None:
         register_mask(
             name="GM_prob0.2",
             mask_path="testmask.nii.gz",
+            space="MNI",
             overwrite=True,
         )
 
@@ -57,6 +58,7 @@ def test_register_mask_already_registered() -> None:
     register_mask(
         name="testmask",
         mask_path="testmask.nii.gz",
+        space="MNI",
     )
     out = load_mask("testmask", path_only=True)
     assert out[1] is not None
@@ -67,10 +69,12 @@ def test_register_mask_already_registered() -> None:
         register_mask(
             name="testmask",
             mask_path="testmask.nii.gz",
+            space="MNI",
         )
     register_mask(
         name="testmask",
         mask_path="testmask2.nii.gz",
+        space="MNI",
         overwrite=True,
     )
 
@@ -80,16 +84,17 @@ def test_register_mask_already_registered() -> None:
 
 
 @pytest.mark.parametrize(
-    "name, mask_path, overwrite",
+    "name, mask_path, space, overwrite",
     [
-        ("testmask_1", "testmask_1.nii.gz", True),
-        ("testmask_2", "testmask_2.nii.gz", True),
-        ("testmask_3", Path("testmask_3.nii.gz"), True),
+        ("testmask_1", "testmask_1.nii.gz", "MNI", True),
+        ("testmask_2", "testmask_2.nii.gz", "MNI", True),
+        ("testmask_3", Path("testmask_3.nii.gz"), "MNI", True),
     ],
 )
 def test_register_mask(
     name: str,
     mask_path: str,
+    space: str,
     overwrite: bool,
 ) -> None:
     """Test mask registration.
@@ -100,6 +105,8 @@ def test_register_mask(
         The parametrized mask name.
     mask_path : str or pathlib.Path
         The parametrized mask path.
+    space : str
+        The parametrized mask space.
     overwrite : bool
         The parametrized mask overwrite value.
 
@@ -108,16 +115,18 @@ def test_register_mask(
     register_mask(
         name=name,
         mask_path=mask_path,
+        space=space,
         overwrite=overwrite,
     )
     # List available mask and check registration
     masks = list_masks()
     assert name in masks
     # Load registered mask
-    _, fname = load_mask(name=name, path_only=True)
+    _, fname, mask_space = load_mask(name=name, path_only=True)
     # Check values for registered mask
     assert fname is not None
     assert fname.name == f"{name}.nii.gz"
+    assert space == mask_space
 
 
 @pytest.mark.parametrize(
@@ -191,7 +200,7 @@ def test_get_mask() -> None:
         assert mask.shape == vbm_gm_img.shape
         assert_array_equal(mask.affine, vbm_gm_img.affine)
 
-        raw_mask_img, _ = load_mask("GM_prob0.2", resolution=1.5)
+        raw_mask_img, _, _ = load_mask("GM_prob0.2", resolution=1.5)
         res_mask_img = resample_to_img(
             raw_mask_img,
             vbm_gm_img,
@@ -207,7 +216,11 @@ def test_mask_callable() -> None:
     def ident(x):
         return x
 
-    _available_masks["identity"] = {"family": "Callable", "func": ident}
+    _available_masks["identity"] = {
+        "family": "Callable",
+        "func": ident,
+        "space": "MNI",
+    }
     reader = DefaultDataReader()
     with OasisVBMTestingDataGrabber() as dg:
         input = dg["sub-01"]
