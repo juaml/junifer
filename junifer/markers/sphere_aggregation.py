@@ -196,6 +196,7 @@ class SphereAggregation(BaseMarker):
             )
 
         # Initialize masker
+        logger.debug("Masking")
         masker = JuniferNiftiSpheresMasker(
             seeds=coords,
             radius=self.radius,
