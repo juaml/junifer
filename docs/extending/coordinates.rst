@@ -20,8 +20,8 @@ example if you came up with your own set of coordinates), then junifer provides
 an easy way for you to register them using the :func:`.register_coordinates`
 function, so you can use your own set of coordinates within a junifer pipeline.
 
-From the API reference, we can see that it has 3 positional arguments
-(``name``, ``coordinates``, and ``voi_names``) as well as one
+From the API reference, we can see that it has 4 positional arguments
+(``name``, ``coordinates``, ``voi_names`` and ``space``) as well as one
 optional keyword argument (``overwrite``).
 
 The ``name`` argument takes a string indicating the name you want to give to
@@ -40,11 +40,14 @@ belong to this set. Note, that junifer (as of yet) only works in MNI space, and
 so therefore these coordinates should always be real-world coordinates of the
 MNI space.
 
-Lastly, the ``voi_names`` argument takes a list of strings
+The ``voi_names`` argument takes a list of strings
 indicating the names of each coordinate (i.e. volume-of-interest) in the
 ``coordinates`` array. Therefore, the length of this list should correspond to
 the number of rows in the coordinates array. Now, we know everything we need to
 know to register a set of coordinates.
+
+Lastly, we specify the ``space`` that the coordinates are in, for example,
+``"MNI"`` or ``"Native"`` (scanner-native space).
 
 Step 1: Prepare code to register a set of coordinates
 -----------------------------------------------------
@@ -90,7 +93,8 @@ simply use this to register our coordinates:
   register_coordinates(
       name="DMNCustom",
       coordinates=dmn_coords,
-      voi_names=voi_names
+      voi_names=voi_names,
+      space="MNI"
   )
 
 Now, when we run this script, junifer registers these coordinates and we can
