@@ -24,6 +24,7 @@ def test_register_coordinates_built_in_check() -> None:
             name="DMNBuckner",
             coordinates=np.zeros(2),
             voi_names=["1", "2"],
+            space="MNI",
             overwrite=True,
         )
 
@@ -34,6 +35,7 @@ def test_register_coordinates_overwrite() -> None:
         name="MyList",
         coordinates=np.zeros((2, 3)),
         voi_names=["roi1", "roi2"],
+        space="MNI",
         overwrite=True,
     )
     with pytest.raises(ValueError, match=r"already registered"):
@@ -41,18 +43,21 @@ def test_register_coordinates_overwrite() -> None:
             name="MyList",
             coordinates=np.ones((2, 3)),
             voi_names=["roi2", "roi3"],
+            space="MNI",
         )
 
     register_coordinates(
         name="MyList",
         coordinates=np.ones((2, 3)),
         voi_names=["roi2", "roi3"],
+        space="MNI",
         overwrite=True,
     )
 
-    coord, names = load_coordinates("MyList")
+    coord, names, space = load_coordinates("MyList")
     assert_array_equal(coord, np.ones((2, 3)))
     assert names == ["roi2", "roi3"]
+    assert space == "MNI"
 
 
 def test_register_coordinates_valid_input() -> None:
@@ -62,6 +67,7 @@ def test_register_coordinates_valid_input() -> None:
             name="MyList",
             coordinates=[1, 2],
             voi_names=["roi1", "roi2"],
+            space="MNI",
             overwrite=True,
         )
     with pytest.raises(ValueError, match=r"2D array"):
@@ -69,6 +75,7 @@ def test_register_coordinates_valid_input() -> None:
             name="MyList",
             coordinates=np.zeros((2, 3, 4)),
             voi_names=["roi1", "roi2"],
+            space="MNI",
             overwrite=True,
         )
 
@@ -77,6 +84,7 @@ def test_register_coordinates_valid_input() -> None:
             name="MyList",
             coordinates=np.zeros((2, 4)),
             voi_names=["roi1", "roi2"],
+            space="MNI",
             overwrite=True,
         )
     with pytest.raises(ValueError, match=r"voi_names"):
@@ -84,6 +92,7 @@ def test_register_coordinates_valid_input() -> None:
             name="MyList",
             coordinates=np.zeros((2, 3)),
             voi_names=["roi1", "roi2", "roi3"],
+            space="MNI",
             overwrite=True,
         )
 
@@ -99,9 +108,10 @@ def test_list_coordinates() -> None:
 
 def test_load_coordinates() -> None:
     """Test loading coordinates from file."""
-    coord, names = load_coordinates("DMNBuckner")
+    coord, names, space = load_coordinates("DMNBuckner")
     assert coord.shape == (6, 3)  # type: ignore
     assert names == ["PCC", "MPFC", "lAG", "rAG", "lHF", "rHF"]
+    assert space == "MNI"
 
 
 def test_load_coordinates_nonexisting() -> None:
