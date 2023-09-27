@@ -226,12 +226,12 @@ def get_coordinates(
 
     """
     # Load the coordinates
-    seeds, labels = load_coordinates(name=coords)
+    seeds, labels, _ = load_coordinates(name=coords)
 
     return seeds, labels
 
 
-def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
+def load_coordinates(name: str) -> Tuple[ArrayLike, List[str], str]:
     """Load coordinates.
 
     Parameters
@@ -245,6 +245,8 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         The coordinates.
     list of str
         The names of the VOIs.
+    str
+        The space of the coordinates.
 
     Raises
     ------
@@ -277,9 +279,9 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
 
     # Load coordinates
     t_coord = _available_coordinates[name]
-    if isinstance(t_coord, Path):
+    if isinstance(t_coord.get("path"), Path):
         # Load via pandas
-        df_coords = pd.read_csv(t_coord, sep="\t", header=None)
+        df_coords = pd.read_csv(t_coord["path"], sep="\t", header=None)
         coords = df_coords.iloc[:, [0, 1, 2]].to_numpy()
         names = list(df_coords.iloc[:, [3]].values[:, 0])
     else:
@@ -288,4 +290,4 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         names = t_coord["voi_names"]
         names = typing.cast(List[str], names)
 
-    return coords, names
+    return coords, names, t_coord["space"]
