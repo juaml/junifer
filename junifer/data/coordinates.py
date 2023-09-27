@@ -108,6 +108,7 @@ def register_coordinates(
     name: str,
     coordinates: ArrayLike,
     voi_names: List[str],
+    space: str,
     overwrite: Optional[bool] = False,
 ) -> None:
     """Register a custom user coordinates.
@@ -123,6 +124,8 @@ def register_coordinates(
         z-coordinates).
     voi_names : list of str
         The names of the VOIs.
+    space : str
+        The space of the coordinates.
     overwrite : bool, optional
         If True, overwrite an existing list of coordinates with the same name.
         Does not apply to built-in coordinates (default False).
@@ -140,7 +143,7 @@ def register_coordinates(
 
     """
     if name in _available_coordinates:
-        if isinstance(_available_coordinates[name], Path):
+        if isinstance(_available_coordinates[name].get("path"), Path):
             raise_error(
                 f"Coordinates {name} already registered as built-in "
                 "coordinates."
@@ -174,6 +177,7 @@ def register_coordinates(
     _available_coordinates[name] = {
         "coords": coordinates,
         "voi_names": voi_names,
+        "space": space,
     }
 
 
