@@ -149,6 +149,9 @@ class HCP1200(PatternDataGrabber):
         out = super().get_item(
             subject=subject, task=new_task, phase_encoding=phase_encoding
         )
+        # Add space for BOLD data type
+        if "BOLD" in out:
+            out["BOLD"].update({"space": "MNI"})
         # Add space for T1w data type
         if "T1w" in out:
             out["T1w"].update({"space": "native"})
