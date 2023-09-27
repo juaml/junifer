@@ -166,8 +166,12 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         out = super().get_item(subject=subject, task=new_task)
         if out.get("BOLD"):
             out["BOLD"]["mask_item"] = "BOLD_mask"
+            # Add space information
+            out["BOLD"].update({"space": "MNI"})
         if out.get("T1w"):
             out["T1w"]["mask_item"] = "T1w_mask"
+            # Add space information
+            out["T1w"].update({"space": "native"})
         return out
 
     def get_elements(self) -> List:
