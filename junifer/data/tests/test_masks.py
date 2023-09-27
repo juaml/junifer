@@ -6,7 +6,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Callable, Dict, List, Union
+from typing import Callable, Dict, List, Optional, Union
 
 import numpy as np
 import pytest
@@ -155,36 +155,62 @@ def test_load_mask_incorrect() -> None:
         load_mask("wrongmask")
 
 
-def test_vickery_patil() -> None:
-    """Test Vickery-Patil mask."""
-    mask, fname = load_mask("GM_prob0.2")
+@pytest.mark.parametrize(
+    "name, resolution, pixdim, fname",
+    [
+        (
+            "GM_prob0.2",
+            None,
+            [1.5, 1.5, 1.5],
+            "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean.nii.gz",
+        ),
+        (
+            "GM_prob0.2",
+            3.0,
+            [3.0, 3.0, 3.0],
+            "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean_3mm.nii.gz",
+        ),
+        (
+            "GM_prob0.2_cortex",
+            None,
+            [3.0, 3.0, 3.0],
+            "GMprob0.2_cortex_3mm_NA_rm.nii.gz",
+        ),
+    ],
+)
+def test_vickery_patil(
+    name: str,
+    resolution: Optional[float],
+    pixdim: List[float],
+    fname: str,
+) -> None:
+    """Test Vickery-Patil mask.
+
+    Parameters
+    ----------
+    name : str
+        The parametrized name of the mask.
+    resolution : float or None
+        The parametrized resolution of the mask.
+    pixdim : list of float
+        The parametrized pixel dimensions of the mask.
+    fname : str
+        The parametrized name of the mask file.
+
+    """
+    mask, mask_fname, space = load_mask(name, resolution=resolution)
     assert_array_almost_equal(
-        mask.header["pixdim"][1:4], [1.5, 1.5, 1.5]  # type: ignore
+        mask.header["pixdim"][1:4], pixdim  # type: ignore
     )
+    assert space == "MNI"
+    assert mask_fname is not None
+    assert mask_fname.name == fname
 
-    assert fname is not None
-    assert fname.name == "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean.nii.gz"
 
-    mask, fname = load_mask("GM_prob0.2", resolution=3)
-    assert_array_almost_equal(
-        mask.header["pixdim"][1:4], [3.0, 3.0, 3.0]  # type: ignore
-    )
-
-    assert fname is not None
-    assert (
-        fname.name == "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean_3mm.nii.gz"
-    )
-
-    mask, fname = load_mask("GM_prob0.2_cortex")
-    assert_array_almost_equal(
-        mask.header["pixdim"][1:4], [3.0, 3.0, 3.0]  # type: ignore
-    )
-
-    assert fname is not None
-    assert fname.name == "GMprob0.2_cortex_3mm_NA_rm.nii.gz"
-
+def test_vickery_patil_error() -> None:
+    """Test error for Vickery-Patil mask."""
     with pytest.raises(ValueError, match=r"find a Vickery-Patil mask "):
-        _load_vickery_patil_mask("wrong", resolution=2)
+        _load_vickery_patil_mask(name="wrong", resolution=2.0)
 
 
 def test_get_mask() -> None:
