@@ -397,6 +397,10 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
 
         params = get_params(NiftiSpheresMasker, self)
 
+        # New in nilearn 0.10.1
+        if hasattr(self, "clean_kwargs"):
+            params["clean_kwargs"] = self.clean_kwargs
+
         signals, _ = self._cache(
             _filter_and_extract, ignore=["verbose", "memory", "memory_level"]
         )(
