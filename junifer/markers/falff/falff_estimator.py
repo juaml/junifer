@@ -44,7 +44,7 @@ class ALFFEstimator:
     def __init__(self) -> None:
         self._file_path = None
         # Create temporary directory for intermittent storage of assets during
-        # computation via afni's 3dReHo
+        # computation via afni's 3dRSFC
         self.temp_dir_path = WorkDirManager().get_tempdir(prefix="falff")
 
     def __del__(self) -> None:
