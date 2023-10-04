@@ -10,14 +10,14 @@ Requirements
 junifer is compatible with `Python`_ >= 3.8 and requires the following packages:
 
 * ``click>=8.1.3,<8.2``
-* ``numpy>=1.22,<1.24``
-* ``datalad>=0.15.4,<0.19``
-* ``pandas>=1.4.0,<1.6``
-* ``nibabel>=3.2.0,<4.1``
-* ``nilearn>=0.9.0,<=0.10.0``
-* ``sqlalchemy>=1.4.27,<= 1.5.0``
+* ``numpy>=1.24,<1.27``
+* ``datalad>=0.15.4,<0.20``
+* ``pandas>=1.4.0,<2.2``
+* ``nibabel>=3.2.0,<5.11``
+* ``nilearn>=0.9.0,<=0.11.0``
+* ``sqlalchemy>=1.4.27,<= 2.1.0``
 * ``ruamel.yaml>=0.17,<0.18``
-* ``h5py>=3.8.0,<3.9``
+* ``h5py>=3.8.0,<3.10``
 
 Depending on the installation method, these packages might be installed
 automatically.
