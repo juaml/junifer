@@ -17,8 +17,8 @@ import numpy as np
 from nilearn import image as nimg
 from scipy.fft import fft, fftfreq
 
+from ...pipeline.singleton import singleton
 from ...utils import logger, raise_error
-from ..utils import singleton
 
 
 if TYPE_CHECKING:

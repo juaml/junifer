@@ -20,8 +20,8 @@ from nilearn import image as nimg
 from nilearn import masking as nmask
 from scipy.stats import rankdata
 
+from ...pipeline.singleton import singleton
 from ...utils import logger, raise_error
-from ..utils import singleton
 
 
 if TYPE_CHECKING:
