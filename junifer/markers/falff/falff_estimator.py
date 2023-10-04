@@ -54,7 +54,6 @@ class ALFFEstimator:
 
     def __del__(self) -> None:
         """Cleanup."""
-        print("Cleaning up temporary directory...")
         # Delete temporary directory and ignore errors for read-only files
         WorkDirManager().delete_tempdir(self.temp_dir_path)
 
