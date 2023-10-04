@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from numpy.typing import ArrayLike
 
-from ..utils.logging import logger, raise_error
+from ..utils.logging import logger, raise_error, warn_with_log
 
 
 # Path to the VOIs
@@ -45,7 +45,9 @@ _available_coordinates: Dict[
     "VigAtt": _vois_meta_path / "VigAtt_VOIs.txt",
     "WM": _vois_meta_path / "WM_VOIs.txt",
     "Power": _vois_meta_path / "Power2011_MNI_VOIs.txt",
+    "Power2011": _vois_meta_path / "Power2011_MNI_VOIs.txt",
     "Dosenbach": _vois_meta_path / "Dosenbach2010_MNI_VOIs.txt",
+    "Power2013": _vois_meta_path / "Power2013_MNI_VOIs.tsv",
 }
 
 
@@ -134,9 +136,27 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         The coordinates.
     list of str
         The names of the VOIs.
+
+    Warns
+    -----
+    DeprecationWarning
+        If ``Power`` is provided as the ``name``.
+
     """
     if name not in _available_coordinates:
         raise_error(f"Coordinates {name} not found.")
+
+    # Put up deprecation notice
+    if name == "Power":
+        warn_with_log(
+            msg=(
+                "`Power` has been replaced with `Power2011` and will be "
+                "removed in the next release. For now, it's available for "
+                "backward compatibility."
+            ),
+            category=DeprecationWarning,
+        )
+
     t_coord = _available_coordinates[name]
     if isinstance(t_coord, Path):
         df_coords = pd.read_csv(t_coord, sep="\t", header=None)
