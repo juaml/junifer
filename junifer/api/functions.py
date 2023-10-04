@@ -15,6 +15,7 @@ from typing import Dict, List, Optional, Tuple, Union
 from ..datagrabber.base import BaseDataGrabber
 from ..markers.base import BaseMarker
 from ..markers.collection import MarkerCollection
+from ..pipeline import WorkDirManager
 from ..pipeline.registry import build
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
@@ -115,6 +116,8 @@ def run(
     # Convert str to Path
     if isinstance(workdir, str):
         workdir = Path(workdir)
+    # Initiate working directory manager
+    WorkDirManager(workdir)
 
     if not isinstance(elements, list) and elements is not None:
         elements = [elements]
