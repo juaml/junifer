@@ -4,12 +4,9 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-import shutil
 import subprocess
-import tempfile
 import typing
 from functools import lru_cache
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
 
 import nibabel as nib
@@ -17,6 +14,7 @@ import numpy as np
 from nilearn import image as nimg
 from scipy.fft import fft, fftfreq
 
+from ...pipeline import WorkDirManager
 from ...pipeline.singleton import singleton
 from ...utils import logger, raise_error
 
@@ -47,13 +45,13 @@ class ALFFEstimator:
         self._file_path = None
         # Create temporary directory for intermittent storage of assets during
         # computation via afni's 3dReHo
-        self.temp_dir_path = Path(tempfile.mkdtemp())
+        self.temp_dir_path = WorkDirManager().get_tempdir(prefix="falff")
 
     def __del__(self) -> None:
         """Cleanup."""
         print("Cleaning up temporary directory...")
         # Delete temporary directory and ignore errors for read-only files
-        shutil.rmtree(self.temp_dir_path, ignore_errors=True)
+        WorkDirManager().delete_tempdir(self.temp_dir_path)
 
     @staticmethod
     def _run_afni_cmd(cmd: str) -> None:
