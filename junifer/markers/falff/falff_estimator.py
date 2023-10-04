@@ -39,6 +39,11 @@ class ALFFEstimator:
     use_afni : bool
         Whether to use afni for computation. If False, will use python.
 
+    Attributes
+    ----------
+    temp_dir_path : pathlib.Path
+        Path to the temporary directory for assets storage.
+
     """
 
     def __init__(self) -> None:
