@@ -6,12 +6,9 @@
 
 
 import hashlib
-import shutil
 import subprocess
-import tempfile
 from functools import lru_cache
 from itertools import product
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, cast
 
 import nibabel as nib
@@ -20,6 +17,7 @@ from nilearn import image as nimg
 from nilearn import masking as nmask
 from scipy.stats import rankdata
 
+from ...pipeline import WorkDirManager
 from ...pipeline.singleton import singleton
 from ...utils import logger, raise_error
 
@@ -50,12 +48,12 @@ class ReHoEstimator:
         self._file_path = None
         # Create temporary directory for intermittent storage of assets during
         # computation via afni's 3dReHo
-        self.temp_dir_path = Path(tempfile.mkdtemp())
+        self.temp_dir_path = WorkDirManager().get_tempdir(prefix="reho")
 
     def __del__(self) -> None:
         """Cleanup."""
         # Delete temporary directory and ignore errors for read-only files
-        shutil.rmtree(self.temp_dir_path, ignore_errors=True)
+        WorkDirManager().delete_tempdir(self.temp_dir_path)
 
     def _compute_reho_afni(
         self,
