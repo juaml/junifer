@@ -7,52 +7,13 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, Union
+from typing import Callable, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
 from scipy.stats import zscore
 
 from ..utils import raise_error
-
-
-def singleton(cls: Type) -> Type:
-    """Make a class singleton.
-
-    Parameters
-    ----------
-    cls : class
-        The class to designate as singleton.
-
-    Returns
-    -------
-    class
-        The only instance of the class.
-
-    """
-    instances: Dict = {}
-
-    def get_instance(*args: Any, **kwargs: Any) -> Type:
-        """Get the only instance for a class.
-
-        Parameters
-        ----------
-        *args : tuple
-            The positional arguments to pass to the class.
-        **kwargs : dict
-            The keyword arguments to pass to the class.
-
-        Returns
-        -------
-        class
-            The only instance of the class.
-
-        """
-        if cls not in instances:
-            instances[cls] = cls(*args, **kwargs)
-        return instances[cls]
-
-    return get_instance
 
 
 def _ets(
