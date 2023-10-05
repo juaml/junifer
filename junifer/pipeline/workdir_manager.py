@@ -88,9 +88,7 @@ class WorkDirManager:
             logger.debug(
                 f"Setting up temporary directory under {self._workdir}"
             )
-            self._root_temp_dir = Path(
-                tempfile.mkdtemp(prefix=prefix, dir=self._workdir)
-            )
+            self._root_temp_dir = Path(tempfile.mkdtemp(dir=self._workdir))
 
         logger.debug(f"Creating temporary directory at {self._root_temp_dir}")
         return Path(
