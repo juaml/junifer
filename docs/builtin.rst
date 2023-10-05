@@ -437,7 +437,7 @@ Available
        | (2008).
        | https://doi.org/10.1196/annals.1440.011
    * - Missing formal name
-     - ``eMDN``
+     - ``extDMN``
      - 0.0.1
      - Missing publication details
    * - Empathic processing
@@ -457,7 +457,7 @@ Available
        | Brain structure & function, Volume 220, Pages 1031–1049 (2015).
        | https://doi.org/10.1007/s00429-013-0698-0
    * - Extended multiple-demand network
-     - ``extMDN``
+     - ``eMDN``
      - 0.0.1
      - | Camilleri, J.A., Müller, V.I., Fox, P. et al.
        | Definition and characterization of an extended multiple-demand network.
