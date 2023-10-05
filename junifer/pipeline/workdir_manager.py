@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 from typing import Optional, Union
 
-from ..utils import logger
+from ..utils import logger, raise_error
 from .singleton import singleton
 
 
@@ -29,12 +29,24 @@ class WorkDirManager:
     workdir : str or pathlib.Path, optional
         The path to the super-directory. If None, "TMPDIR/junifer" is used
         where TMPDIR is the platform-dependent temporary directory.
+    cleanup : bool, optional
+        Whether to clean up the old instance when a new instance is requested
+        (default False).
+
+    Raises
+    ------
+    RuntimeError
+        If ``cleanup=False`` and a new instance is requested with a different
+        ``workdir`` than the old instance.
 
     """
 
-    def __init__(self, workdir: Optional[Union[str, Path]] = None) -> None:
+    def __init__(
+        self, workdir: Optional[Union[str, Path]] = None, cleanup: bool = False
+    ) -> None:
         """Initialize the class."""
         # Check if workdir is already set
+        # This runs for the first time
         if not hasattr(self, "_workdir"):
             # Check and set topmost level directory if not provided
             if workdir is None:
@@ -44,14 +56,52 @@ class WorkDirManager:
                 workdir = Path(workdir)
             logger.debug(f"Setting working directory at {workdir.resolve()!s}")
             self._workdir = workdir
+        # This runs for consecutive times
+        else:
+            # Use same workdir if not provided
+            if workdir is None:
+                logger.debug(
+                    "Using existing working directory at "
+                    f"{self._workdir.resolve()!s}"
+                )
+            # Check if workdir is changing
+            else:
+                # Convert str to Path
+                if isinstance(workdir, str):
+                    workdir = Path(workdir)
+                # Check if the existing and the new paths are same
+                if self._workdir != workdir:
+                    if not cleanup:
+                        raise_error(
+                            msg=(
+                                "Set `cleanup=True` and try again to properly "
+                                "clean up and initialize new working "
+                                "directory."
+                            ),
+                            klass=RuntimeError,
+                        )
+                    # Clean up and initialize new working directory
+                    self._cleanup()
+
+                logger.debug(
+                    f"Setting working directory at {workdir.resolve()!s}"
+                )
+                self._workdir = workdir
 
         # Initialize root temporary directory
         self._root_temp_dir: Optional[Path] = None
 
     def __del__(self) -> None:
         """Destructor."""
+        self._cleanup()
+
+    def _cleanup(self) -> None:
+        """Clean up the temporary directories."""
         # Remove root temporary directory
         if self._root_temp_dir is not None:
+            logger.debug(
+                f"Deleting temporary directory at {self._root_temp_dir}"
+            )
             shutil.rmtree(self._root_temp_dir, ignore_errors=True)
 
     @property
