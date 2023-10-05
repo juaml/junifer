@@ -59,12 +59,6 @@ class WorkDirManager:
         """Get working directory."""
         return self._workdir
 
-    @workdir.setter
-    def workdir(self, value: Path) -> None:
-        """Set working directory."""
-        logger.debug(f"Changing working directory to {value}")
-        self._workdir = value
-
     def get_tempdir(
         self, prefix: Optional[str] = None, suffix: Optional[str] = None
     ) -> Path:
