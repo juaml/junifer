@@ -36,12 +36,12 @@ class WorkDirManager:
         """Initialize the class."""
         # Check if workdir is already set
         if not hasattr(self, "_workdir"):
-            # Convert str to Path
-            if isinstance(workdir, str):
-                workdir = Path(workdir)
             # Check and set topmost level directory if not provided
             if workdir is None:
                 workdir = Path(tempfile.gettempdir())
+            # Convert str to Path
+            if isinstance(workdir, str):
+                workdir = Path(workdir)
             logger.debug(f"Setting working directory at {workdir.resolve()!s}")
             self._workdir = workdir
 
