@@ -19,6 +19,9 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
     on : str or list of str, optional
         The kind of data to apply the preprocessor to. If None,
         will work on all available data (default None).
+    required_data_types : str or list of str, optional
+        The kind of data types needed for computation. If None,
+        will be equal to ``on`` (default None).
 
     Raises
     ------
@@ -30,6 +33,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
     def __init__(
         self,
         on: Optional[Union[List[str], str]] = None,
+        required_data_types: Optional[Union[List[str], str]] = None,
     ) -> None:
         """Initialize the class."""
         # Use all data types if not provided
@@ -44,6 +48,11 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             wrong_on = [x for x in on if x not in self.get_valid_inputs()]
             raise_error(f"{name} cannot be computed on {wrong_on}")
         self._on = on
+        # Set required data types for validation
+        if required_data_types is None:
+            self._required_data_types = on
+        else:
+            self._required_data_types = required_data_types
 
     def validate_input(self, input: List[str]) -> List[str]:
         """Validate input.
@@ -66,11 +75,11 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             If the input does not have the required data.
 
         """
-        if not any(x in input for x in self._on):
+        if any(x not in input for x in self._required_data_types):
             raise_error(
                 "Input does not have the required data."
                 f"\t Input: {input}"
-                f"\t Required (any of): {self._on}"
+                f"\t Required (all of): {self._required_data_types}"
             )
         return [x for x in self._on if x in input]
 
