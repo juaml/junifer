@@ -208,48 +208,30 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 "include it in the future",
                 klass=ValueError,
             )
-        super().__init__()
+        super().__init__(
+            on="BOLD", required_data_types=["BOLD", "BOLD_confounds"]
+        )
 
-    def validate_input(self, input: List[str]) -> List[str]:
-        """Validate the input to the pipeline step.
-
-        Parameters
-        ----------
-        input : list of str
-            The input to the pipeline step. The list must contain the
-            available Junifer Data object keys.
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
 
         Returns
         -------
         list of str
-            The actual elements of the input that will be processed by this
-            pipeline step.
-
-        Raises
-        ------
-        ValueError
-            If the input does not have the required data.
+            The list of data types that can be used as input for this
+            preprocessor.
 
         """
-        _required_inputs = ["BOLD", "BOLD_confounds"]
-        if any(x not in input for x in _required_inputs):
-            raise_error(
-                msg="Input does not have the required data. \n"
-                f"Input: {input} \n"
-                f"Required (all off): {_required_inputs} \n",
-                klass=ValueError,
-            )
-
-        return [x for x in self._on if x in input]
+        return ["BOLD"]
 
     def get_output_type(self, input: List[str]) -> List[str]:
-        """Get the kind of the pipeline step.
+        """Get output type.
 
         Parameters
         ----------
         input : list of str
-            The input to the pipeline step. The list must contain the
-            available Junifer Data object keys.
+            The input to the preprocessor. The list must contain the
+            available Junifer Data dictionary keys.
 
         Returns
         -------
@@ -260,17 +242,6 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         """
         # Does not add any new keys
         return input
-
-    def get_valid_inputs(self) -> List[str]:
-        """Get the valid inputs for the pipeline step.
-
-        Returns
-        -------
-        list of str
-            The valid inputs for the pipeline step.
-
-        """
-        return ["BOLD"]
 
     def _map_adhoc_to_fmriprep(self, input: Dict[str, Any]) -> None:
         """Map the adhoc format to the fmpriprep format spec.
