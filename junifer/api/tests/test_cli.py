@@ -88,6 +88,8 @@ def test_run_and_collect_commands(
     [
         "sub-01",
         "sub-01\nsub-02",
+        "    sub-01    ",
+        "sub-01\n    sub-02",
     ],
 )
 def test_run_using_element_file(tmp_path: Path, elements: str) -> None:
