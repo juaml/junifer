@@ -323,7 +323,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
             if any(x not in available_vars for x in t_basics):
                 missing = [x for x in t_basics if x not in available_vars]
-                raise ValueError(
+                raise_error(
                     "Invalid confounds file. Missing basic confounds: "
                     f"{missing}. "
                     "Check if this file is really an fmriprep confounds file. "
@@ -353,7 +353,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         spike_name = "framewise_displacement"
         if self.spike is not None:
             if spike_name not in available_vars:
-                raise ValueError(
+                raise_error(
                     "Invalid confounds file. Missing framewise_displacement "
                     "(spike) confound. "
                     "Check if this file is really an fmriprep confounds file. "
@@ -455,11 +455,13 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         check_niimg_4d(input["data"])
 
         if extra_input is None:
-            raise_error("No extra input provided", ValueError)
+            raise_error(msg="No extra input provided", klass=ValueError)
         if "BOLD_confounds" not in extra_input:
-            raise_error("No BOLD_confounds provided", ValueError)
+            raise_error(msg="No BOLD_confounds provided", klass=ValueError)
         if "data" not in extra_input["BOLD_confounds"]:
-            raise_error("No BOLD_confounds data provided", ValueError)
+            raise_error(
+                msg="No BOLD_confounds data provided", klass=ValueError
+            )
         # Confounds must be a dataframe
         if not isinstance(extra_input["BOLD_confounds"]["data"], pd.DataFrame):
             raise_error(
@@ -517,14 +519,14 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             ]
 
             if len(missing) > 0:
-                raise ValueError(
+                raise_error(
                     "Invalid confounds file. Missing columns: "
                     f"{missing}. "
                     "Check if this file matches the adhoc specification for "
                     "this dataset."
                 )
         elif t_format != "fmriprep":
-            raise ValueError(f"Invalid confounds format {t_format}")
+            raise_error(f"Invalid confounds format {t_format}")
 
     def _remove_confounds(
         self,
