@@ -84,6 +84,22 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         return [x for x in self._on if x in input]
 
     @abstractmethod
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this
+            preprocessor.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement get_valid_inputs().",
+            klass=NotImplementedError,
+        )
+
+    @abstractmethod
     def get_output_type(self, input: List[str]) -> List[str]:
         """Get output type.
 
@@ -106,17 +122,34 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         )
 
     @abstractmethod
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
+    def preprocess(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict[str, Any]] = None,
+    ) -> Tuple[str, Dict[str, Any]]:
+        """Preprocess.
+
+        Parameters
+        ----------
+        input : dict
+            A single input from the Junifer Data object to preprocess.
+        extra_input : dict, optional
+            The other fields in the Junifer Data object. Useful for accessing
+            other data kind that needs to be used in the computation. For
+            example, the confound removers can make use of the
+            confounds if available (default None).
 
         Returns
         -------
-        list of str
-            The list of data types that can be used as input for this
-            preprocessor.
+        str
+            The key to store the output in the Junifer Data object.
+        dict
+            The computed result as dictionary. This will be stored in the
+            Junifer Data object under the key ``data`` of the data type.
+
         """
         raise_error(
-            msg="Concrete classes need to implement get_valid_inputs().",
+            msg="Concrete classes need to implement preprocess().",
             klass=NotImplementedError,
         )
 
@@ -165,35 +198,3 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
                 self.update_meta(out[key], "preprocess")
         return out
-
-    @abstractmethod
-    def preprocess(
-        self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[str, Dict[str, Any]]:
-        """Preprocess.
-
-        Parameters
-        ----------
-        input : dict
-            A single input from the Junifer Data object to preprocess.
-        extra_input : dict, optional
-            The other fields in the Junifer Data object. Useful for accessing
-            other data kind that needs to be used in the computation. For
-            example, the confound removers can make use of the
-            confounds if available (default None).
-
-        Returns
-        -------
-        key : str
-            The key to store the output in the Junifer Data object.
-        object : dict
-            The computed result as dictionary. This will be stored in the
-            Junifer Data object under the key 'key'.
-
-        """
-        raise_error(
-            msg="Concrete classes need to implement preprocess().",
-            klass=NotImplementedError,
-        )
