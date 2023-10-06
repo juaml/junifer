@@ -164,7 +164,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         t_r: Optional[float] = None,
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
     ) -> None:
-        """Initialise the class."""
+        """Initialize the class."""
         if strategy is None:
             strategy = {
                 "motion": "full",
@@ -304,6 +304,11 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         spike_name : str
             Name of the confound to use for spike detection
 
+        Raises
+        ------
+        ValueError
+            If invalid confounds file is found.
+
         """
         confounds_df = input["data"]
         available_vars = confounds_df.columns
@@ -430,6 +435,19 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         extra_input : dict, optional
             Dictionary containing the rest of the Junifer Data object. Must
             include the ``BOLD_confounds`` key.
+
+        Raises
+        ------
+        ValueError
+            If ``extra_input`` is None or
+            if ``"BOLD_confounds"`` is not found in ``extra_input`` or
+            if ``"data"`` key is not found in ``"BOLD_confounds"`` or
+            if ``"data"`` is not pandas.DataFrame or
+            if image time series and confounds have different lengths or
+            if ``"format"`` is not found in ``"BOLD_confounds"`` or
+            if ``format = "adhoc"`` and ``"mappings"`` key or ``"fmriprep"``
+            key or correct fMRIPrep mappings or required fMRIPrep mappings are
+            not found or if invalid confounds format is found.
 
         """
 
@@ -585,18 +603,18 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         Parameters
         ----------
         input : dict
-            A single input from the Junifer Data object in which to preprocess.
+            A single input from the Junifer Data object to preprocess.
         extra_input : dict, optional
             The other fields in the Junifer Data object. Must include the
             ``BOLD_confounds`` key.
 
         Returns
         -------
-        key : str
+        str
             The key to store the output in the Junifer Data object.
-        object : dict
+        dict
             The computed result as dictionary. This will be stored in the
-            Junifer Data object under the key ``key``.
+            Junifer Data object under the key ``data`` of the data type.
 
         """
         self._validate_data(input, extra_input)
