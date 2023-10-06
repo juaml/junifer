@@ -68,13 +68,10 @@ def _parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
     # Check if the element is a file for single element;
     # if yes, then parse elements from it
     if len(element) == 1 and Path(element[0]).resolve().is_file():
-        fetched_element = _parse_elements_file(Path(element[0]).resolve())
+        elements = _parse_elements_file(Path(element[0]).resolve())
     else:
-        fetched_element = element
-    # Process multi-keyed elements
-    elements = [
-        tuple(x.split(",")) if "," in x else x for x in fetched_element
-    ]
+        # Process multi-keyed elements
+        elements = [tuple(x.split(",")) if "," in x else x for x in element]
     logger.debug(f"Parsed elements: {elements}")
     if elements is not None and "elements" in config:
         warn_with_log(
