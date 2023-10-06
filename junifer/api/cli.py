@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
 import click
+import pandas as pd
 
 from ..utils.logging import (
     configure_logging,
@@ -96,7 +97,7 @@ def _parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
     return elements
 
 
-def _parse_elements_file(filepath: Path) -> List[str]:
+def _parse_elements_file(filepath: Path) -> List[Tuple[str, ...]]:
     """Parse elements from file.
 
     Parameters
@@ -106,15 +107,19 @@ def _parse_elements_file(filepath: Path) -> List[str]:
 
     Returns
     -------
-    list of str
+    list of tuple of str
         The element(s) as list.
 
     """
-    # Read file
-    with open(filepath) as file:
-        raw_elements = file.readlines()
-    # Strip whitespace and return
-    return [element.strip() for element in raw_elements]
+    # Read CSV into dataframe
+    csv_df = pd.read_csv(
+        filepath,
+        header=None,  # no header  # type: ignore
+        index_col=False,  # no index column
+        skipinitialspace=True,  # no leading space after delimiter
+    )
+    # Convert to list of tuple of str
+    return list(map(tuple, csv_df.to_numpy().astype(str)))  # type: ignore
 
 
 def _validate_verbose(
