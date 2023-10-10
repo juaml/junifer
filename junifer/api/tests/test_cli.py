@@ -42,7 +42,7 @@ def test_run_and_collect_commands(
     tmp_path : pathlib.Path
         The path to the test directory.
     elements : tuple of str
-        The elements to operate on.
+        The parametrized elements to operate on.
 
     """
     # Get test config
@@ -100,7 +100,7 @@ def test_run_using_element_file(tmp_path: Path, elements: str) -> None:
     tmp_path : pathlib.Path
         The path to the test directory.
     elements : str
-        The elements to write to the element file.
+        The parametrized elements to write to the element file.
 
     """
     # Create test file
