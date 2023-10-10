@@ -5,13 +5,13 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple
 
 import pytest
 from click.testing import CliRunner
 from ruamel.yaml import YAML
 
-from junifer.api.cli import collect, run, selftest, wtf
+from junifer.api.cli import _parse_elements_file, collect, run, selftest, wtf
 
 
 # Configure YAML class
@@ -134,6 +134,51 @@ def test_run_using_element_file(tmp_path: Path, elements: str) -> None:
     run_result = runner.invoke(run, run_args)
     # Check
     assert run_result.exit_code == 0
+
+
+@pytest.mark.parametrize(
+    "elements, expected_list",
+    [
+        ("sub-01,ses-01", [("sub-01", "ses-01")]),
+        (
+            "sub-01,ses-01\nsub-02,ses-01",
+            [("sub-01", "ses-01"), ("sub-02", "ses-01")],
+        ),
+        ("sub-01, ses-01", [("sub-01", "ses-01")]),
+        (
+            "sub-01, ses-01\nsub-02, ses-01",
+            [("sub-01", "ses-01"), ("sub-02", "ses-01")],
+        ),
+        (" sub-01 , ses-01 ", [("sub-01", "ses-01")]),
+        (
+            " sub-01 , ses-01 \n sub-02, ses-01 ",
+            [("sub-01", "ses-01"), ("sub-02", "ses-01")],
+        ),
+    ],
+)
+def test_multi_element_access(
+    tmp_path: Path, elements: str, expected_list: List[Tuple[str, ...]]
+) -> None:
+    """Test mulit-element parsing.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    elements : str
+        The parametrized elements to write to the element file.
+    expected_list : list of tuple of str
+        The parametrized list of element tuples to expect.
+
+    """
+    # Create test file
+    test_file_path = tmp_path / "elements_multi.txt"
+    with open(test_file_path, "w") as f:
+        f.write(elements)
+    # Load element file
+    read_elements = _parse_elements_file(test_file_path)
+    # Check
+    assert read_elements == expected_list
 
 
 def test_wtf_short() -> None:
