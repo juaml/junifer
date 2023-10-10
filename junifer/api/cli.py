@@ -8,9 +8,10 @@ import pathlib
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Dict, List, Tuple, Union
 
 import click
+import pandas as pd
 
 from ..utils.logging import (
     configure_logging,
@@ -32,27 +33,45 @@ from .utils import (
 )
 
 
-def _parse_elements(element: str, config: Dict) -> Union[List, None]:
+def _parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
     """Parse elements from cli.
 
     Parameters
     ----------
-    element : str
-        The element to operate on.
+    element : tuple of str
+        The element(s) to operate on.
     config : dict
         The configuration to operate using.
 
     Returns
     -------
-    list
-        The element(s) as list.
+    list or None
+        The element(s) as list or None.
+
+    Raises
+    ------
+    ValueError
+        If no element is found either in the command-line options or
+        the configuration file.
+
+    Warns
+    -----
+    RuntimeWarning
+        If elements are specified both via the command-line options and
+        the configuration file.
 
     """
     logger.debug(f"Parsing elements: {element}")
+    # Early return None to continue with all elements
     if len(element) == 0:
         return None
-    # TODO: If len == 1, check if its a file, then parse elements from file
-    elements = [tuple(x.split(",")) if "," in x else x for x in element]
+    # Check if the element is a file for single element;
+    # if yes, then parse elements from it
+    if len(element) == 1 and Path(element[0]).resolve().is_file():
+        elements = _parse_elements_file(Path(element[0]).resolve())
+    else:
+        # Process multi-keyed elements
+        elements = [tuple(x.split(",")) if "," in x else x for x in element]
     logger.debug(f"Parsed elements: {elements}")
     if elements is not None and "elements" in config:
         warn_with_log(
@@ -61,17 +80,47 @@ def _parse_elements(element: str, config: Dict) -> Union[List, None]:
             "over the configuration file. That is, the elements specified "
             "in the command line will be used. The elements specified in "
             "the configuration file will be ignored. To remove this warning, "
-            'please remove the "elements" item from the configuration file.'
+            "please remove the `elements` item from the configuration file."
         )
     elif elements is None:
+        # Check in config
         elements = config.get("elements", None)
         if elements is None:
             raise_error(
-                "The 'elements' key is set in the configuration, but its value"
-                " is 'None'. It is likely that there is an empty 'elements' "
+                "The `elements` key is set in the configuration, but its value"
+                " is `None`. It is likely that there is an empty `elements` "
                 "section in the yaml configuration file."
             )
     return elements
+
+
+def _parse_elements_file(filepath: Path) -> List[Tuple[str, ...]]:
+    """Parse elements from file.
+
+    Parameters
+    ----------
+    filepath : pathlib.Path
+        The path to the element file.
+
+    Returns
+    -------
+    list of tuple of str
+        The element(s) as list.
+
+    """
+    # Read CSV into dataframe
+    csv_df = pd.read_csv(
+        filepath,
+        header=None,  # no header  # type: ignore
+        index_col=False,  # no index column
+        skipinitialspace=True,  # no leading space after delimiter
+    )
+    # Remove trailing whitespace in cell entries
+    csv_df_trimmed = csv_df.apply(
+        lambda x: x.str.strip() if x.dtype == "object" else x
+    )
+    # Convert to list of tuple of str
+    return list(map(tuple, csv_df_trimmed.to_numpy().astype(str)))
 
 
 def _validate_verbose(
@@ -133,7 +182,9 @@ def cli() -> None:  # pragma: no cover
     callback=_validate_verbose,
     default="info",
 )
-def run(filepath: click.Path, element: str, verbose: Union[str, int]) -> None:
+def run(
+    filepath: click.Path, element: Tuple[str], verbose: Union[str, int]
+) -> None:
     """Run command for CLI.
 
     \f
@@ -142,8 +193,8 @@ def run(filepath: click.Path, element: str, verbose: Union[str, int]) -> None:
     ----------
     filepath : click.Path
         The filepath to the configuration file.
-    element : str
-        The element to operate using.
+    element : tuple of str
+        The element to operate on.
     verbose : click.Choice
         The verbosity level: warning, info or debug (default "info").
 

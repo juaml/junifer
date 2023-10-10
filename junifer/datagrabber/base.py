@@ -58,12 +58,12 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         """
         yield from self.get_elements()
 
-    def __getitem__(self, element: Union[str, Tuple]) -> Dict[str, Dict]:
+    def __getitem__(self, element: Union[str, Tuple[str]]) -> Dict[str, Dict]:
         """Enable indexing support.
 
         Parameters
         ----------
-        element : str or tuple
+        element : str or tuple of str
             The element to be indexed.
 
         Returns
@@ -117,6 +117,51 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         """
         return self._datadir
 
+    def filter(self, selection: List[Union[str, Tuple[str]]]) -> Iterator:
+        """Filter elements to be grabbed.
+
+        Parameters
+        ----------
+        selection : list of str or tuple
+            The list of partial element key values to filter using.
+
+        Yields
+        ------
+        object
+            An element that can be indexed by the DataGrabber.
+
+        """
+
+        def filter_func(element: Union[str, Tuple[str]]) -> bool:
+            """Filter element based on selection.
+
+            Parameters
+            ----------
+            element : str or tuple of str
+                The element to be filtered.
+
+            Returns
+            -------
+            bool
+                If the element passes the filter or not.
+
+            """
+            # Convert element to tuple
+            if not isinstance(element, tuple):
+                element = (element,)
+            # Filter based on selection kind
+            if isinstance(selection[0], str):
+                for opt in selection:
+                    if opt in element:
+                        return True
+            elif isinstance(selection[0], tuple):
+                for opt in selection:
+                    if set(opt).issubset(element):
+                        return True
+            return False
+
+        yield from filter(filter_func, self.get_elements())
+
     @abstractmethod
     def get_element_keys(self) -> List[str]:
         """Get element keys.
@@ -136,7 +181,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         )
 
     @abstractmethod
-    def get_elements(self) -> List:
+    def get_elements(self) -> List[Union[str, Tuple[str]]]:
         """Get elements.
 
         Returns

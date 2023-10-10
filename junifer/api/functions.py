@@ -163,7 +163,9 @@ def run(
     # Fit elements
     with datagrabber_object:
         if elements is not None:
-            for t_element in elements:
+            for t_element in datagrabber_object.filter(
+                elements  # type: ignore
+            ):
                 mc.fit(datagrabber_object[t_element])
         else:
             for t_element in datagrabber_object:
