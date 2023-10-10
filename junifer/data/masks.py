@@ -99,7 +99,7 @@ _available_masks: Dict[str, Dict[str, Any]] = {
     "fetch_icbm152_brain_gm_mask": {
         "family": "Callable",
         "func": _fetch_icbm152_brain_gm_mask,
-        "space": "inherit",
+        "space": "MNI152NLin2009aAsym",
     },
 }
 
