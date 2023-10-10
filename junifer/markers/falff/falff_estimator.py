@@ -56,6 +56,7 @@ class ALFFEstimator:
         """Cleanup."""
         # Delete temporary directory and ignore errors for read-only files
         WorkDirManager().delete_tempdir(self.temp_dir_path)
+        WorkDirManager()._cleanup()
 
     @staticmethod
     def _run_afni_cmd(cmd: str) -> None:

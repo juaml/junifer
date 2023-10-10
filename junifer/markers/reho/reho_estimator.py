@@ -54,6 +54,7 @@ class ReHoEstimator:
         """Cleanup."""
         # Delete temporary directory and ignore errors for read-only files
         WorkDirManager().delete_tempdir(self.temp_dir_path)
+        WorkDirManager()._cleanup()
 
     def _compute_reho_afni(
         self,
