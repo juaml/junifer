@@ -4,6 +4,7 @@
 # License: AGPL
 
 import time
+from pathlib import Path
 
 import pytest
 from nibabel import Nifti1Image
@@ -11,18 +12,27 @@ from scipy.stats import pearsonr
 
 from junifer.datareader import DefaultDataReader
 from junifer.markers.falff.falff_estimator import ALFFEstimator
+from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.utils import logger
 
 
-def test_ALFFEstimator_cache_python() -> None:
-    """Test that the cache works properly when using python."""
+def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
+    """Test that the cache works properly when using python.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
 
+    WorkDirManager().workdir = tmp_path
     estimator = ALFFEstimator()
     start_time = time.time()
     alff, falff = estimator.fit_transform(
@@ -109,13 +119,21 @@ def test_ALFFEstimator_cache_python() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_ALFFEstimator_cache_afni() -> None:
-    """Test that the cache works properly when using afni."""
+def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
+    """Test that the cache works properly when using afni.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
 
+    WorkDirManager().workdir = tmp_path
     estimator = ALFFEstimator()
     start_time = time.time()
     alff, falff = estimator.fit_transform(
@@ -202,12 +220,21 @@ def test_ALFFEstimator_cache_afni() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_ALFFEstimator_afni_vs_python() -> None:
-    """Test that the cache works properly when using afni."""
+def test_ALFFEstimator_afni_vs_python(tmp_path: Path) -> None:
+    """Test that the cache works properly when using afni.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
+
+    WorkDirManager().workdir = tmp_path
     estimator = ALFFEstimator()
 
     # Use an arbitrary TR to test the AFNI vs Python implementation
