@@ -29,55 +29,37 @@ class WorkDirManager:
         The path to the super-directory. If None, "TMPDIR/junifer" is used
         where TMPDIR is the platform-dependent temporary directory.
 
+    Attributes
+    ----------
+    workdir : pathlib.Path
+        The path to the working directory.
+    root_tempdir : pathlib.Path or None
+        The path to the root temporary directory.
 
     """
 
     def __init__(self, workdir: Optional[Union[str, Path]] = None) -> None:
         """Initialize the class."""
-        # Check if workdir is already set
-        # This runs for the first time
-        if not hasattr(self, "_workdir"):
-            # Check and set topmost level directory if not provided
-            if workdir is None:
-                workdir = Path(tempfile.gettempdir())
-            # Convert str to Path
-            if isinstance(workdir, str):
-                workdir = Path(workdir)
-            logger.debug(f"Setting working directory at {workdir.resolve()!s}")
-            self._workdir = workdir
-        # This runs for consecutive times
-        else:
-            # Use same workdir if not provided
-            if workdir is None:
-                logger.debug(
-                    "Using existing working directory at "
-                    f"{self._workdir.resolve()!s}"
-                )
-            # Check if workdir is changing
-            else:
-                # Convert str to Path
-                if isinstance(workdir, str):
-                    workdir = Path(workdir)
-                # Check if the existing and the new paths are same
-                if self._workdir != workdir:
-                    if not cleanup:
-                        raise_error(
-                            msg=(
-                                "Set `cleanup=True` and try again to properly "
-                                "clean up and initialize new working "
-                                "directory."
-                            ),
-                            klass=RuntimeError,
-                        )
-                    # Clean up and initialize new working directory
-                    self._cleanup()
-
-                logger.debug(
-                    f"Setting working directory at {workdir.resolve()!s}"
-                )
-                self._workdir = workdir
+        self._workdir = workdir
         self._root_tempdir = None
 
+        self._set_default_workdir()
+
+    def _set_default_workdir(self) -> None:
+        """Set the default working directory if not set already."""
+        # Check and set topmost level directory if not provided
+        if self._workdir is None:
+            self._workdir = Path(tempfile.gettempdir()) / "junifer"
+            # Create directory if not found
+            if not self._workdir.is_dir():
+                logger.debug(
+                    "Creating working directory at "
+                    f"{self._workdir.resolve()!s}"
+                )
+                self._workdir.mkdir(parents=True)
+            logger.debug(
+                f"Setting working directory to {self._workdir.resolve()!s}"
+            )
 
     def __del__(self) -> None:
         """Destructor."""
@@ -92,17 +74,45 @@ class WorkDirManager:
                 f"{self._root_tempdir.resolve()!s}"
             )
             shutil.rmtree(self._root_tempdir, ignore_errors=True)
+            self._root_tempdir = None
 
     @property
     def workdir(self) -> Path:
         """Get working directory."""
-        return self._workdir
+        return self._workdir  # type: ignore
 
     @workdir.setter
-    def workdir(self, value: Path) -> None:
-        """Set working directory."""
-        logger.debug(f"Changing working directory to {value}")
-        self._workdir = value
+    def workdir(self, path: Union[str, Path]) -> None:
+        """Set working directory.
+
+        The directory path is created if it doesn't exist yet.
+
+        Parameters
+        ----------
+        path : str or pathlib.Path
+            The path to the working directory.
+
+        """
+        # Check if existing working directory is same or not;
+        # if not, then clean up
+        if self._workdir != Path(path):
+            self._cleanup()
+        # Set working directory
+        self._workdir = Path(path)
+        logger.debug(
+            f"Changing working directory to {self._workdir.resolve()!s}"
+        )
+        # Create directory if not found
+        if not self._workdir.is_dir():
+            logger.debug(
+                f"Creating working directory at {self._workdir.resolve()!s}"
+            )
+            self._workdir.mkdir(parents=True)
+
+    @property
+    def root_tempdir(self) -> Optional[Path]:
+        """Get root temporary directory."""
+        return self._root_tempdir
 
     def get_tempdir(
         self, prefix: Optional[str] = None, suffix: Optional[str] = None
@@ -125,7 +135,8 @@ class WorkDirManager:
         # Create root temporary directory if not created already
         if self._root_tempdir is None:
             logger.debug(
-                f"Setting up temporary directory under {self._workdir}"
+                "Setting up temporary directory under "
+                f"{self._workdir.resolve()!s}"  # type: ignore
             )
             self._root_tempdir = Path(tempfile.mkdtemp(dir=self._workdir))
 
