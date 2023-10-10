@@ -76,9 +76,8 @@ class WorkDirManager:
                     f"Setting working directory at {workdir.resolve()!s}"
                 )
                 self._workdir = workdir
+        self._root_tempdir = None
 
-        # Initialize root temporary directory
-        self._root_temp_dir: Optional[Path] = None
 
     def __del__(self) -> None:
         """Destructor."""
@@ -87,11 +86,12 @@ class WorkDirManager:
     def _cleanup(self) -> None:
         """Clean up the temporary directories."""
         # Remove root temporary directory
-        if self._root_temp_dir is not None:
+        if self._root_tempdir is not None:
             logger.debug(
-                f"Deleting temporary directory at {self._root_temp_dir}"
+                "Deleting temporary directory at "
+                f"{self._root_tempdir.resolve()!s}"
             )
-            shutil.rmtree(self._root_temp_dir, ignore_errors=True)
+            shutil.rmtree(self._root_tempdir, ignore_errors=True)
 
     @property
     def workdir(self) -> Path:
@@ -123,16 +123,18 @@ class WorkDirManager:
 
         """
         # Create root temporary directory if not created already
-        if self._root_temp_dir is None:
+        if self._root_tempdir is None:
             logger.debug(
                 f"Setting up temporary directory under {self._workdir}"
             )
-            self._root_temp_dir = Path(tempfile.mkdtemp(dir=self._workdir))
+            self._root_tempdir = Path(tempfile.mkdtemp(dir=self._workdir))
 
-        logger.debug(f"Creating temporary directory at {self._root_temp_dir}")
+        logger.debug(
+            f"Creating temporary directory at {self._root_tempdir.resolve()!s}"
+        )
         return Path(
             tempfile.mkdtemp(
-                dir=self._root_temp_dir, prefix=prefix, suffix=suffix
+                dir=self._root_tempdir, prefix=prefix, suffix=suffix
             )
         )
 
