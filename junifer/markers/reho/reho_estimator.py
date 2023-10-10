@@ -465,8 +465,8 @@ class ReHoEstimator:
             # Clear the cache
             self._compute.cache_clear()
             # Clear temporary directory files
-            for file_ in self.temp_dir_path.iterdir():
-                file_.unlink(missing_ok=True)
+            WorkDirManager().delete_tempdir(self.temp_dir_path)
+            self.temp_dir_path = WorkDirManager().get_tempdir(prefix="reho")
             # Set the new file path
             self._file_path = bold_path
         else:
