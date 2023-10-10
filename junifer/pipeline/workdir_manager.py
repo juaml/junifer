@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 from typing import Optional, Union
 
-from ..utils import logger, raise_error
+from ..utils import logger
 from .singleton import singleton
 
 
@@ -23,27 +23,16 @@ class WorkDirManager:
     directories on-demand and cleans after itself thus keeping the user
     filesystem clean.
 
-
     Parameters
     ----------
     workdir : str or pathlib.Path, optional
         The path to the super-directory. If None, "TMPDIR/junifer" is used
         where TMPDIR is the platform-dependent temporary directory.
-    cleanup : bool, optional
-        Whether to clean up the old instance when a new instance is requested
-        (default False).
 
-    Raises
-    ------
-    RuntimeError
-        If ``cleanup=False`` and a new instance is requested with a different
-        ``workdir`` than the old instance.
 
     """
 
-    def __init__(
-        self, workdir: Optional[Union[str, Path]] = None, cleanup: bool = False
-    ) -> None:
+    def __init__(self, workdir: Optional[Union[str, Path]] = None) -> None:
         """Initialize the class."""
         # Check if workdir is already set
         # This runs for the first time
