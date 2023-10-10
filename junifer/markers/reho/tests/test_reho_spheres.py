@@ -10,6 +10,7 @@ from nilearn import image as nimg
 from scipy.stats import pearsonr
 
 from junifer.markers.reho.reho_spheres import ReHoSpheres
+from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage.sqlite import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
@@ -18,13 +19,22 @@ from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 COORDINATES = "DMNBuckner"
 
 
-def test_reho_spheres_computation() -> None:
-    """Test ReHoSpheres fit-transform."""
+def test_reho_spheres_computation(tmp_path: Path) -> None:
+    """Test ReHoSpheres fit-transform.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     with SPMAuditoryTestingDataGrabber() as dg:
         # Use first subject
         subject_data = dg["sub001"]
         # Load image to memory
         fmri_img = nimg.load_img(subject_data["BOLD"]["path"])
+        # Update workdir to current test's tmp_path
+        WorkDirManager().workdir = tmp_path
         # Initialize marker
         reho_spheres_marker = ReHoSpheres(coords=COORDINATES, radius=10.0)
         # Fit transform marker on data
@@ -49,14 +59,23 @@ def test_reho_spheres_computation() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_reho_spheres_computation_comparison() -> None:
-    """Test ReHoSpheres fit-transform implementation comparison.."""
+def test_reho_spheres_computation_comparison(tmp_path: Path) -> None:
+    """Test ReHoSpheres fit-transform implementation comparison.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     with SPMAuditoryTestingDataGrabber() as dg:
         # Use first subject
         subject_data = dg["sub001"]
         # Load image to memory
         fmri_img = nimg.load_img(subject_data["BOLD"]["path"])
 
+        # Update workdir to current test's tmp_path
+        WorkDirManager().workdir = tmp_path
         # Initialize marker with use_afni=False
         reho_spheres_marker_python = ReHoSpheres(
             coords=COORDINATES, radius=10.0, use_afni=False
@@ -101,6 +120,8 @@ def test_reho_spheres_storage(tmp_path: Path) -> None:
         subject_data = dg["sub001"]
         # Load image to memory
         fmri_img = nimg.load_img(subject_data["BOLD"]["path"])
+        # Update workdir to current test's tmp_path
+        WorkDirManager().workdir = tmp_path
         # Initialize marker
         reho_spheres_marker = ReHoSpheres(coords=COORDINATES, radius=10.0)
         # Initialize storage

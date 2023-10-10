@@ -4,6 +4,7 @@
 # License: AGPL
 
 import time
+from pathlib import Path
 
 import nibabel as nib
 import pytest
@@ -11,18 +12,28 @@ from scipy.stats import pearsonr
 
 from junifer.datareader.default import DefaultDataReader
 from junifer.markers.reho.reho_estimator import ReHoEstimator
+from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.utils.logging import logger
 
 
-def test_reho_estimator_cache_python() -> None:
-    """Test that the cache works properly when using Python implementation."""
+def test_reho_estimator_cache_python(tmp_path: Path) -> None:
+    """Test that the cache works properly when using Python implementation.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     # Get subject from datagrabber
     with PartlyCloudyTestingDataGrabber() as dg:
         subject = dg["sub-01"]
     # Read data for subject
     subject_data = DefaultDataReader().fit_transform(subject)
+    # Update workdir to current test's tmp_path
+    WorkDirManager().workdir = tmp_path
     # Setup estimator
     reho_estimator = ReHoEstimator()
 
@@ -124,13 +135,22 @@ def test_reho_estimator_cache_python() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_reho_estimator_cache_afni() -> None:
-    """Test that the cache works properly when using afni."""
+def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
+    """Test that the cache works properly when using afni.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     # Get subject from datagrabber
     with PartlyCloudyTestingDataGrabber() as dg:
         subject = dg["sub-01"]
     # Read data for subject
     subject_data = DefaultDataReader().fit_transform(subject)
+    # Update workdir to current test's tmp_path
+    WorkDirManager().workdir = tmp_path
     # Setup estimator
     reho_estimator = ReHoEstimator()
 
@@ -229,13 +249,22 @@ def test_reho_estimator_cache_afni() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_reho_estimator_afni_vs_python() -> None:
-    """Compare afni and Python implementations."""
+def test_reho_estimator_afni_vs_python(tmp_path: Path) -> None:
+    """Compare afni and Python implementations.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     # Get subject from datagrabber
     with PartlyCloudyTestingDataGrabber() as dg:
         subject = dg["sub-01"]
     # Read data for subject
     subject_data = DefaultDataReader().fit_transform(subject)
+    # Update workdir to current test's tmp_path
+    WorkDirManager().workdir = tmp_path
     # Setup estimator
     reho_estimator = ReHoEstimator()
 
