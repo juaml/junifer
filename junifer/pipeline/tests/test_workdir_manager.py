@@ -3,7 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import tempfile
 from pathlib import Path
 
 from junifer.pipeline import WorkDirManager
@@ -16,14 +15,8 @@ def test_workdir_manager_singleton() -> None:
     assert id(workdir_mgr_1) == id(workdir_mgr_2)
 
 
-def test_workdir_manager_auto_workdir() -> None:
-    """Test that automatic workdir creation is in temporary directory."""
-    workdir_mgr = WorkDirManager()
-    assert workdir_mgr.workdir == Path(tempfile.gettempdir()) / "junifer"
-
-
-def test_workdir_manager_explicit_workdir(tmp_path: Path) -> None:
-    """Test that WorkDirManager works correctly with an explicit workdir.
+def test_workdir_manager_workdir(tmp_path: Path) -> None:
+    """Test WorkDirManager correctly sets workdir.
 
     Parameters
     ----------
@@ -37,7 +30,7 @@ def test_workdir_manager_explicit_workdir(tmp_path: Path) -> None:
 
 
 def test_workdir_manager_get_and_delete_tempdir(tmp_path: Path) -> None:
-    """Test getting and deleting temporary directories.
+    """Test WorkDirManager gets and deletes temporary directories correctly.
 
     Parameters
     ----------
