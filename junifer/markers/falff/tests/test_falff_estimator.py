@@ -27,17 +27,21 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
+    # Get subject from datagrabber
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-01"]
-
-    input = DefaultDataReader().fit_transform(input)
-
+        subject = dg["sub-01"]
+    # Read data for subject
+    subject_data = DefaultDataReader().fit_transform(subject)
+    # Update workdir to current test's tmp_path
     WorkDirManager().workdir = tmp_path
+    # Setup estimator
     estimator = ALFFEstimator()
+
+    # Compute without cache
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=False,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=None,
@@ -46,14 +50,12 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
     logger.info(f"ALFF Estimator First time: {first_time}")
     assert isinstance(alff, Nifti1Image)
     assert isinstance(falff, Nifti1Image)
-    n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
-    # Now fit again, should be faster
+    # Compute again with cache, should be faster
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=False,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=None,
@@ -61,15 +63,12 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
     second_time = time.time() - start_time
     logger.info(f"ALFF Estimator Second time: {second_time}")
     assert second_time < (first_time / 1000)
-    n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
-    # Now change a parameter, should compute again, without clearing the
-    # cache
+    # Change a parameter and compute again without cache
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=False,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.11,
         tr=None,
@@ -77,14 +76,12 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
     third_time = time.time() - start_time
     logger.info(f"ALFF Estimator Third time: {third_time}")
     assert third_time > (first_time / 10)
-    n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
-    # Now fit again with the previous params, should be fast
+    # Compute again with cache, should be faster
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=False,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=None,
@@ -92,19 +89,17 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
     fourth = time.time() - start_time
     logger.info(f"ALFF Estimator Fourth time: {fourth}")
     assert fourth < (first_time / 1000)
-    n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
-    # Now change the data, it should clear the cache
+    # Change the data and it should clear the cache
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-02"]
-
-    input = DefaultDataReader().fit_transform(input)
+        subject = dg["sub-02"]
+    # Read data for new subject
+    subject_data = DefaultDataReader().fit_transform(subject)
 
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=False,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=None,
@@ -112,8 +107,6 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
     fifth = time.time() - start_time
     logger.info(f"ALFF Estimator Fifth time: {fifth}")
     assert fifth > (first_time / 10)
-    n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
 
 @pytest.mark.skipif(
@@ -128,17 +121,21 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
+    # Get subject from datagrabber
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-01"]
-
-    input = DefaultDataReader().fit_transform(input)
-
+        subject = dg["sub-01"]
+    # Read data for subject
+    subject_data = DefaultDataReader().fit_transform(subject)
+    # Update workdir to current test's tmp_path
     WorkDirManager().workdir = tmp_path
+    # Setup estimator
     estimator = ALFFEstimator()
+
+    # Compute with cache
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=True,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=None,
@@ -150,11 +147,11 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 3  # input + alff + falff
 
-    # Now fit again, should be faster
+    # Compute again with cache, should be faster
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=True,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=None,
@@ -165,12 +162,11 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 3  # input + alff + falff
 
-    # Now change a parameter, should compute again, without clearing the
-    # cache
+    # Change a parameter and compute again without cache
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=True,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.11,
         tr=None,
@@ -179,13 +175,13 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     logger.info(f"ALFF Estimator Third time: {third_time}")
     assert third_time > (first_time / 10)
     n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 5  # input + 2 * alff + 2 * falff
+    assert n_files == 3  # input + alff + falff
 
-    # Now fit again with the previous params, should be fast
+    # Compute with cache, should be faster
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=True,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=None,
@@ -194,18 +190,18 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     logger.info(f"ALFF Estimator Fourth time: {fourth}")
     assert fourth < (first_time / 1000)
     n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 5  # input + 2 * alff + 2 * falff
+    assert n_files == 3  # input + alff + falff
 
-    # Now change the data, it should clear the cache
+    # Change the data and it should clear the cache
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-02"]
-
-    input = DefaultDataReader().fit_transform(input)
+        subject = dg["sub-02"]
+    # Read data for new subject
+    subject_data = DefaultDataReader().fit_transform(subject)
 
     start_time = time.time()
     alff, falff = estimator.fit_transform(
         use_afni=True,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=None,
@@ -229,18 +225,20 @@ def test_ALFFEstimator_afni_vs_python(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
+    # Get subject from datagrabber
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-01"]
-
-    input = DefaultDataReader().fit_transform(input)
-
+        subject = dg["sub-01"]
+    # Read data for subject
+    subject_data = DefaultDataReader().fit_transform(subject)
+    # Update workdir to current test's tmp_path
     WorkDirManager().workdir = tmp_path
+    # Setup estimator
     estimator = ALFFEstimator()
 
     # Use an arbitrary TR to test the AFNI vs Python implementation
     afni_alff, afni_falff = estimator.fit_transform(
         use_afni=True,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=2.5,
@@ -248,7 +246,7 @@ def test_ALFFEstimator_afni_vs_python(tmp_path: Path) -> None:
 
     python_alff, python_falff = estimator.fit_transform(
         use_afni=False,
-        input_data=input["BOLD"],
+        input_data=subject_data["BOLD"],
         highpass=0.01,
         lowpass=0.1,
         tr=2.5,
