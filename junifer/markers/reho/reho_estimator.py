@@ -48,13 +48,13 @@ class ReHoEstimator:
         self._file_path = None
         # Create temporary directory for intermittent storage of assets during
         # computation via afni's 3dReHo
-        self.temp_dir_path = WorkDirManager().get_tempdir(prefix="reho")
+        self.temp_dir_path = None
 
     def __del__(self) -> None:
         """Cleanup."""
         # Delete temporary directory and ignore errors for read-only files
-        WorkDirManager().delete_tempdir(self.temp_dir_path)
-        WorkDirManager()._cleanup()
+        if self.temp_dir_path is not None:
+            WorkDirManager().delete_tempdir(self.temp_dir_path)
 
     def _compute_reho_afni(
         self,
@@ -136,12 +136,15 @@ class ReHoEstimator:
                https://doi.org/10.1089/brain.2013.0154
 
         """
+        # Note: self.temp_dir_path is sure to exist before proceeding, so
+        #       types checks are ignored further on.
+
         # Save niimg to nii.gz
-        nifti_in_file_path = self.temp_dir_path / "input.nii"
+        nifti_in_file_path = self.temp_dir_path / "input.nii"  # type: ignore
         nib.save(data, nifti_in_file_path)
 
         # Set 3dReHo command
-        reho_afni_out_path_prefix = self.temp_dir_path / "reho"
+        reho_afni_out_path_prefix = self.temp_dir_path / "reho"  # type: ignore
         reho_cmd: List[str] = [
             "3dReHo",
             f"-prefix {reho_afni_out_path_prefix.resolve()}",
@@ -193,7 +196,8 @@ class ReHoEstimator:
         sha256_params = hashlib.sha256(bytes(reho_cmd_str, "utf-8"))
         # Convert afni to nifti
         reho_afni_to_nifti_out_path = (
-            self.temp_dir_path / f"output_{sha256_params.hexdigest()}.nii"
+            self.temp_dir_path
+            / f"output_{sha256_params.hexdigest()}.nii"  # type: ignore
         )
         convert_cmd: List[str] = [
             "3dAFNItoNIFTI",
@@ -224,7 +228,7 @@ class ReHoEstimator:
             )
 
         # Cleanup intermediate files
-        for fname in self.temp_dir_path.glob("reho*"):
+        for fname in self.temp_dir_path.glob("reho*"):  # type: ignore
             fname.unlink()
 
         # Load nifti
@@ -404,7 +408,7 @@ class ReHoEstimator:
             )
 
         output = nimg.new_img_like(data, reho_map, copy_header=False)
-        return output
+        return output  # type: ignore
 
     @lru_cache(maxsize=None, typed=True)
     def _compute(
@@ -430,6 +434,8 @@ class ReHoEstimator:
 
         """
         if use_afni:
+            # Create new temporary directory before using AFNI
+            self.temp_dir_path = WorkDirManager().get_tempdir(prefix="reho")
             output = self._compute_reho_afni(data, **reho_params)
         else:
             output = self._compute_reho_python(data, **reho_params)
@@ -465,8 +471,8 @@ class ReHoEstimator:
             # Clear the cache
             self._compute.cache_clear()
             # Clear temporary directory files
-            WorkDirManager().delete_tempdir(self.temp_dir_path)
-            self.temp_dir_path = WorkDirManager().get_tempdir(prefix="reho")
+            if self.temp_dir_path is not None:
+                WorkDirManager().delete_tempdir(self.temp_dir_path)
             # Set the new file path
             self._file_path = bold_path
         else:
