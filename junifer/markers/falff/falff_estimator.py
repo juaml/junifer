@@ -50,13 +50,13 @@ class ALFFEstimator:
         self._file_path = None
         # Create temporary directory for intermittent storage of assets during
         # computation via afni's 3dRSFC
-        self.temp_dir_path = WorkDirManager().get_tempdir(prefix="falff")
+        self.temp_dir_path = None
 
     def __del__(self) -> None:
         """Cleanup."""
         # Delete temporary directory and ignore errors for read-only files
-        WorkDirManager().delete_tempdir(self.temp_dir_path)
-        WorkDirManager()._cleanup()
+        if self.temp_dir_path is not None:
+            WorkDirManager().delete_tempdir(self.temp_dir_path)
 
     @staticmethod
     def _run_afni_cmd(cmd: str) -> None:
@@ -126,6 +126,8 @@ class ALFFEstimator:
             If the AFNI commands fails due to some issues
 
         """
+        # Note: self.temp_dir_path is sure to exist before proceeding, so
+        #       types checks are ignored further on.
 
         # Save niimg to nii.gz
         nifti_in_file_path = self.temp_dir_path / "input.nii"
@@ -165,7 +167,7 @@ class ALFFEstimator:
         self._run_afni_cmd(convert_cmd)
 
         # Cleanup intermediate files
-        for fname in self.temp_dir_path.glob("temp_*"):
+        for fname in self.temp_dir_path.glob("temp_*"):  # type: ignore
             fname.unlink()
 
         # Load niftis
@@ -271,6 +273,8 @@ class ALFFEstimator:
             fALFF map.
         """
         if use_afni:
+            # Create new temporary directory before using AFNI
+            self.temp_dir_path = WorkDirManager().get_tempdir(prefix="falff")
             output = self._compute_alff_afni(
                 data=data,
                 highpass=highpass,
@@ -321,8 +325,8 @@ class ALFFEstimator:
             # Clear the cache
             self._compute.cache_clear()
             # Clear temporary directory files
-            WorkDirManager().delete_tempdir(self.temp_dir_path)
-            self.temp_dir_path = WorkDirManager().get_tempdir(prefix="falff")
+            if self.temp_dir_path is not None:
+                WorkDirManager().delete_tempdir(self.temp_dir_path)
             # Set the new file path
             self._file_path = bold_path
         else:
