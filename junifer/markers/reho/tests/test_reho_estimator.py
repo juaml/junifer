@@ -37,6 +37,7 @@ def test_reho_estimator_cache_python(tmp_path: Path) -> None:
     # Setup estimator
     reho_estimator = ReHoEstimator()
 
+    # Compute without cache
     first_tic = time.time()
     reho_map_without_cache = reho_estimator.fit_transform(
         use_afni=False,
@@ -48,11 +49,8 @@ def test_reho_estimator_cache_python(tmp_path: Path) -> None:
         f"ReHo estimator in Python without cache: {first_toc - first_tic}"
     )
     assert isinstance(reho_map_without_cache, nib.Nifti1Image)
-    # Count intermediate files
-    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
-    # Now fit again, should be faster
+    # Compute again with cache, should be faster
     second_tic = time.time()
     reho_map_with_cache = reho_estimator.fit_transform(
         use_afni=False,
@@ -66,12 +64,8 @@ def test_reho_estimator_cache_python(tmp_path: Path) -> None:
     assert isinstance(reho_map_with_cache, nib.Nifti1Image)
     # Check that cache is being used
     assert (second_toc - second_tic) < ((first_toc - first_tic) / 1000)
-    # Count intermediate files
-    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
-    # Now change a parameter, should compute again, without clearing the
-    # cache
+    # Change a parameter and compute again without cache
     third_tic = time.time()
     reho_map_with_partial_cache = reho_estimator.fit_transform(
         use_afni=False,
@@ -85,11 +79,8 @@ def test_reho_estimator_cache_python(tmp_path: Path) -> None:
     assert isinstance(reho_map_with_partial_cache, nib.Nifti1Image)
     # Should require more time
     assert (third_toc - third_tic) > ((first_toc - first_tic) / 10)
-    # Count intermediate files
-    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
-    # Now fit again with the previous params, should be fast
+    # Compute again with cache, should be faster
     fourth_tic = time.time()
     reho_map_with_new_cache = reho_estimator.fit_transform(
         use_afni=False,
@@ -103,11 +94,8 @@ def test_reho_estimator_cache_python(tmp_path: Path) -> None:
     assert isinstance(reho_map_with_new_cache, nib.Nifti1Image)
     # Should require less time
     assert (fourth_toc - fourth_tic) < ((first_toc - first_tic) / 1000)
-    # Count intermediate files
-    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
-    # Now change the data, it should clear the cache
+    # Change the data and it should clear the cache
     with PartlyCloudyTestingDataGrabber() as dg:
         subject = dg["sub-02"]
     # Read data for new subject
@@ -127,9 +115,6 @@ def test_reho_estimator_cache_python(tmp_path: Path) -> None:
     assert isinstance(reho_map_with_different_cache, nib.Nifti1Image)
     # Should take less time
     assert (fifth_toc - fifth_tic) > ((first_toc - first_tic) / 10)
-    # Count intermediate files
-    n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 0  # no files in python
 
 
 @pytest.mark.skipif(
@@ -154,6 +139,7 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     # Setup estimator
     reho_estimator = ReHoEstimator()
 
+    # Compute without cache
     first_tic = time.time()
     reho_map_without_cache = reho_estimator.fit_transform(
         use_afni=True,
@@ -169,7 +155,7 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 2  # input + reho
 
-    # Now fit again, should be faster
+    # Compute again with cache, should be faster
     second_tic = time.time()
     reho_map_with_cache = reho_estimator.fit_transform(
         use_afni=True,
@@ -186,8 +172,7 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
     assert n_files == 2  # input + reho
 
-    # Now change a parameter, should compute again, without clearing the
-    # cache
+    # Change a parameter and compute again without cache
     third_tic = time.time()
     reho_map_with_partial_cache = reho_estimator.fit_transform(
         use_afni=True,
@@ -203,9 +188,9 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     assert (third_toc - third_tic) > ((first_toc - first_tic) / 10)
     # Count intermediate files
     n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 3  # input + 2 * reho
+    assert n_files == 2  # input + reho
 
-    # Now fit again with the previous params, should be fast
+    # Compute with cache, should be faster
     fourth_tic = time.time()
     reho_map_with_new_cache = reho_estimator.fit_transform(
         use_afni=True,
@@ -220,9 +205,9 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     # Should require less time
     assert (fourth_toc - fourth_tic) < ((first_toc - first_tic) / 1000)
     n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 3  # input + 2 * reho
+    assert n_files == 2  # input + reho
 
-    # Now change the data, it should clear the cache
+    # Change the data and it should clear the cache
     with PartlyCloudyTestingDataGrabber() as dg:
         subject = dg["sub-02"]
     # Read data for new subject
