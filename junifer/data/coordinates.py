@@ -5,7 +5,6 @@
 # License: AGPL
 
 import subprocess
-import tempfile
 import typing
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -14,6 +13,7 @@ import numpy as np
 import pandas as pd
 from numpy.typing import ArrayLike
 
+from ..pipeline import WorkDirManager
 from ..utils.logging import logger, raise_error, warn_with_log
 
 
@@ -241,7 +241,7 @@ def get_coordinates(
             )
 
         # Create tempdir
-        tempdir = Path(tempfile.mkdtemp())
+        tempdir = WorkDirManager().get_tempdir(prefix="coordinates")
 
         # Save existing coordinates
         pretransform_coordinates_path = (
@@ -289,8 +289,9 @@ def get_coordinates(
 
         # Load coordinates
         seeds = np.loadtxt(std2imgcoord_out_path)
-        # Delete warped output file
-        std2imgcoord_out_path.unlink()
+
+        # Delete tempdir
+        WorkDirManager().delete_tempdir(tempdir)
 
     return seeds, labels
 
