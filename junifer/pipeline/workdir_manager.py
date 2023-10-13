@@ -69,7 +69,7 @@ class WorkDirManager:
         self._cleanup()
 
     def _cleanup(self) -> None:
-        """Clean up the temporary directories."""
+        """Clean up the element and temporary directories."""
         # Remove element directory
         if self._elementdir is not None:
             logger.debug(
@@ -186,14 +186,19 @@ class WorkDirManager:
     def get_tempdir(
         self, prefix: Optional[str] = None, suffix: Optional[str] = None
     ) -> Path:
-        """Get a temporary directory.
+        """Get a component-scoped temporary directory.
+
+        This directory should be available only for the lifetime of a component
+        like a preprocessor or marker.
 
         Parameters
         ----------
-        prefix : str
-            The temporary directory prefix. If None, a default prefix is used.
-        suffix : str
-            The temporary directory suffix. If None, no suffix is added.
+        prefix : str, optional
+            The temporary directory prefix. If None, a default prefix is used
+            (default None).
+        suffix : str, optional
+            The temporary directory suffix. If None, no suffix is added
+            (default None).
 
         Returns
         -------
@@ -219,7 +224,7 @@ class WorkDirManager:
         )
 
     def delete_tempdir(self, tempdir: Path) -> None:
-        """Delete a temporary directory.
+        """Delete a component-scoped temporary directory.
 
         Parameters
         ----------
