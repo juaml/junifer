@@ -4,7 +4,6 @@
 # License: AGPL
 
 import subprocess
-import tempfile
 import typing
 from pathlib import Path
 from typing import (
@@ -29,6 +28,7 @@ from nilearn.masking import (
     intersect_masks,
 )
 
+from ..pipeline import WorkDirManager
 from ..utils.logging import logger, raise_error
 from .utils import closest_resolution
 
@@ -340,7 +340,7 @@ def get_mask(  # noqa: C901
             )
 
         # Create tempdir
-        tempdir = Path(tempfile.mkdtemp())
+        tempdir = WorkDirManager().get_tempdir(prefix="masks")
 
         # Save mask image
         prewarp_mask_path = tempdir / "prewarp_mask.nii.gz"
@@ -369,8 +369,6 @@ def get_mask(  # noqa: C901
             shell=True,  # needed for respecting $PATH
             check=False,
         )
-        # Delete saved mask image
-        prewarp_mask_path.unlink()
         # Check for success or failure
         if applywarp_process.returncode == 0:
             logger.info(
@@ -386,8 +384,9 @@ def get_mask(  # noqa: C901
 
         # Load nifti
         mask_img = nib.load(applywarp_out_path)
-        # Delete warped output file
-        applywarp_out_path.unlink()
+
+        # Delete tempdir
+        WorkDirManager().delete_tempdir(tempdir)
 
     # Type-cast to remove errors
     mask_img = typing.cast("Nifti1Image", mask_img)
