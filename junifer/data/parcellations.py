@@ -22,6 +22,7 @@ import requests
 from nilearn import datasets, image
 from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 
+from ..pipeline import WorkDirManager
 from ..utils.logging import logger, raise_error, warn_with_log
 from .utils import closest_resolution
 
@@ -291,7 +292,7 @@ def get_parcellation(
             )
 
         # Create tempdir
-        tempdir = Path(tempfile.mkdtemp())
+        tempdir = WorkDirManager().get_tempdir(prefix="parcellations")
 
         # Save parcellation image
         prewarp_parcellation_path = tempdir / "prewarp_parcellation.nii.gz"
@@ -320,8 +321,6 @@ def get_parcellation(
             shell=True,  # needed for respecting $PATH
             check=False,
         )
-        # Delete saved parcellation image
-        prewarp_parcellation_path.unlink()
         # Check for success or failure
         if applywarp_process.returncode == 0:
             logger.info(
@@ -337,8 +336,9 @@ def get_parcellation(
 
         # Load nifti
         resampled_parcellation_img = nib.load(applywarp_out_path)
-        # Delete warped output file
-        applywarp_out_path.unlink()
+
+        # Delete tempdir
+        WorkDirManager().delete_tempdir(tempdir)
 
         # Stupid casting
         resampled_parcellation_img = typing.cast(
