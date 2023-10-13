@@ -33,6 +33,8 @@ class WorkDirManager:
     ----------
     workdir : pathlib.Path
         The path to the working directory.
+    elementdir : pathlib.Path
+        The path to the element directory.
     root_tempdir : pathlib.Path or None
         The path to the root temporary directory.
 
@@ -41,6 +43,7 @@ class WorkDirManager:
     def __init__(self, workdir: Optional[Union[str, Path]] = None) -> None:
         """Initialize the class."""
         self._workdir = workdir
+        self._elementdir = None
         self._root_tempdir = None
 
         self._set_default_workdir()
@@ -67,6 +70,14 @@ class WorkDirManager:
 
     def _cleanup(self) -> None:
         """Clean up the temporary directories."""
+        # Remove element directory
+        if self._elementdir is not None:
+            logger.debug(
+                "Deleting element directory at "
+                f"{self._elementdir.resolve()!s}"
+            )
+            shutil.rmtree(self._elementdir, ignore_errors=True)
+            self._elementdir = None
         # Remove root temporary directory
         if self._root_tempdir is not None:
             logger.debug(
@@ -108,6 +119,64 @@ class WorkDirManager:
                 f"Creating working directory at {self._workdir.resolve()!s}"
             )
             self._workdir.mkdir(parents=True)
+
+    @property
+    def elementdir(self) -> Path:
+        """Get element directory."""
+        return self._elementdir  # type: ignore
+
+    def get_element_tempdir(
+        self, prefix: Optional[str] = None, suffix: Optional[str] = None
+    ) -> Path:
+        """Get an element-scoped temporary directory.
+
+        This directory should be available only for the lifetime of an
+        element.
+
+        Parameters
+        ----------
+        prefix : str, optional
+            The temporary directory prefix. If None, a default prefix is used
+            (default None).
+        suffix : str, optional
+            The temporary directory suffix. If None, no suffix is added
+            (default None).
+
+        Returns
+        -------
+        pathlib.Path
+            The path to the temporary directory.
+
+        """
+        # Create element directory if not created already
+        if self._elementdir is None:
+            logger.debug(
+                "Setting up element directory under "
+                f"{self._workdir.resolve()!s}"  # type: ignore
+            )
+            self._elementdir = Path(tempfile.mkdtemp(dir=self._workdir))
+
+        logger.debug(
+            "Creating element temporary directory at "
+            f"{self._elementdir.resolve()!s}"
+        )
+        return Path(
+            tempfile.mkdtemp(
+                dir=self._elementdir, prefix=prefix, suffix=suffix
+            )
+        )
+
+    def delete_element_tempdir(self, tempdir: Path) -> None:
+        """Delete an element-scoped temporary directory.
+
+        Parameters
+        ----------
+        tempdir : pathlib.Path
+            The temporary directory path to be deleted.
+
+        """
+        logger.debug(f"Deleting element temporary directory at {tempdir}")
+        shutil.rmtree(tempdir, ignore_errors=True)
 
     @property
     def root_tempdir(self) -> Optional[Path]:
