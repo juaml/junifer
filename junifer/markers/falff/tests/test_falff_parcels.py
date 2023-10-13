@@ -12,6 +12,7 @@ from scipy.stats import pearsonr
 
 from junifer.datareader import DefaultDataReader
 from junifer.markers.falff import ALFFParcels
+from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
@@ -21,15 +22,20 @@ from junifer.utils import logger
 _PARCELLATION = "Schaefer100x7"
 
 
-def test_ALFFParcels_python() -> None:
-    """Test ALFFParcels using python."""
-    # Get the SPM auditory data:
+def test_ALFFParcels_python(tmp_path: Path) -> None:
+    """Test ALFFParcels using python.
 
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
-    # Create ParcelAggregation object
+    WorkDirManager().workdir = tmp_path
     marker = ALFFParcels(
         parcellation=_PARCELLATION,
         method="mean",
@@ -46,14 +52,20 @@ def test_ALFFParcels_python() -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires afni to be in PATH"
 )
-def test_ALFFParcels_afni() -> None:
-    """Test ALFFParcels using afni."""
-    # Get the SPM auditory data:
+def test_ALFFParcels_afni(tmp_path: Path) -> None:
+    """Test ALFFParcels using afni.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
-    # Create ParcelAggregation object
+    WorkDirManager().workdir = tmp_path
     marker = ALFFParcels(
         parcellation=_PARCELLATION,
         method="mean",
@@ -83,12 +95,15 @@ def test_ALFFParcels_afni() -> None:
     "fractional", [True, False], ids=["fractional", "non-fractional"]
 )
 def test_ALFFParcels_python_vs_afni(
+    tmp_path: Path,
     fractional: bool,
 ) -> None:
     """Test ALFFParcels using python.
 
     Parameters
     ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
     fractional : bool
         Whether to compute fractional ALFF or not.
 
@@ -98,7 +113,7 @@ def test_ALFFParcels_python_vs_afni(
         input = dg["sub-01"]
 
     input = DefaultDataReader().fit_transform(input)
-    # Create ParcelAggregation object
+    WorkDirManager().workdir = tmp_path
     marker_python = ALFFParcels(
         parcellation=_PARCELLATION,
         method="mean",
@@ -137,12 +152,13 @@ def test_ALFFParcels_storage(
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+
     """
     with PartlyCloudyTestingDataGrabber() as dg:
         # Use first subject
         input = dg["sub-01"]
         input = DefaultDataReader().fit_transform(input)
-        # Create ParcelAggregation object
+        WorkDirManager().workdir = tmp_path
         marker = ALFFParcels(
             parcellation=_PARCELLATION,
             method="mean",
