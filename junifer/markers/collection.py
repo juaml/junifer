@@ -104,6 +104,8 @@ class MarkerCollection:
             WorkDirManager().delete_element_tempdir(
                 WorkDirManager().elementdir
             )
+            # Reset the element-specific tempdir
+            WorkDirManager()._elementdir = None
 
         return None if self._storage else out
 
