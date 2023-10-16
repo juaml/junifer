@@ -98,14 +98,8 @@ class MarkerCollection:
                 out[marker.name] = m_value
         logger.info("Marker collection fitting done")
 
-        # Check to see if the pipeline uses element-specific tempdir;
-        # if it does, remove it
-        if WorkDirManager()._elementdir is not None:
-            WorkDirManager().delete_element_tempdir(
-                WorkDirManager().elementdir
-            )
-            # Reset the element-specific tempdir
-            WorkDirManager()._elementdir = None
+        # Cleanup element directory
+        WorkDirManager().cleanup_elementdir()
 
         return None if self._storage else out
 
