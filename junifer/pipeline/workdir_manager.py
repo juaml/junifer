@@ -71,13 +71,7 @@ class WorkDirManager:
     def _cleanup(self) -> None:
         """Clean up the element and temporary directories."""
         # Remove element directory
-        if self._elementdir is not None:
-            logger.debug(
-                "Deleting element directory at "
-                f"{self._elementdir.resolve()!s}"
-            )
-            shutil.rmtree(self._elementdir, ignore_errors=True)
-            self._elementdir = None
+        self.cleanup_elementdir()
         # Remove root temporary directory
         if self._root_tempdir is not None:
             logger.debug(
@@ -177,6 +171,22 @@ class WorkDirManager:
         """
         logger.debug(f"Deleting element temporary directory at {tempdir}")
         shutil.rmtree(tempdir, ignore_errors=True)
+
+    def cleanup_elementdir(self) -> None:
+        """Clean up element directory.
+
+        It should preferably be used after fitting a marker or something
+        similar in the element-specific scope. If called between components,
+        can lead to required intermediate files not being found.
+
+        """
+        if self._elementdir is not None:
+            logger.debug(
+                "Deleting element directory at "
+                f"{self._elementdir.resolve()!s}"
+            )
+            shutil.rmtree(self._elementdir, ignore_errors=True)
+            self._elementdir = None
 
     @property
     def root_tempdir(self) -> Optional[Path]:
