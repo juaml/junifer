@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional
 
 from ..datareader.default import DefaultDataReader
 from ..markers.base import BaseMarker
-from ..pipeline import PipelineStepMixin
+from ..pipeline import PipelineStepMixin, WorkDirManager
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger
@@ -97,6 +97,13 @@ class MarkerCollection:
             if self._storage is None:
                 out[marker.name] = m_value
         logger.info("Marker collection fitting done")
+
+        # Check to see if the pipeline uses element-specific tempdir;
+        # if it does, remove it
+        if WorkDirManager()._elementdir is not None:
+            WorkDirManager().delete_element_tempdir(
+                WorkDirManager().elementdir
+            )
 
         return None if self._storage else out
 
