@@ -19,6 +19,7 @@ from typing import (
 )
 
 import nibabel as nib
+import numpy as np
 
 from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
@@ -35,6 +36,18 @@ class ApplyWarper(BasePreprocessor):
 
     Wraps FSL FLIRT ``applywarp``.
 
+    Parameters
+    ----------
+    ref : str
+        The data type to use as reference for warping.
+    on : str
+        The data type to use for warping.
+
+    Raises
+    ------
+    ValueError
+        If a list was passed for ``on``.
+
     """
 
     _EXT_DEPENDENCIES: ClassVar[
@@ -47,9 +60,14 @@ class ApplyWarper(BasePreprocessor):
         },
     ]
 
-    def __init__(self) -> None:
+    def __init__(self, ref: str, on: str) -> None:
         """Initialize the class."""
-        super().__init__(on="BOLD")
+        self.ref = ref
+        # Check only single data type is passed
+        if isinstance(on, list):
+            raise_error("Can only work on single data type, list was passed.")
+        self.on = on  # needed for the base validation to work
+        super().__init__(on=self.on)
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -61,7 +79,8 @@ class ApplyWarper(BasePreprocessor):
             preprocessor.
 
         """
-        return ["BOLD", "T1w", "Warp"]
+        # Constructed dynamically
+        return [self.on, self.ref, "Warp"]
 
     def get_output_type(self, input: List[str]) -> List[str]:
         """Get output type.
@@ -84,7 +103,7 @@ class ApplyWarper(BasePreprocessor):
 
     def _run_applywarp(
         self,
-        input_path: Path,
+        input_data: Dict,
         ref_path: Path,
         warp_path: Path,
     ) -> "Nifti1Image":
@@ -92,8 +111,8 @@ class ApplyWarper(BasePreprocessor):
 
         Parameters
         ----------
-        input_path : pathlib.Path
-            The path to the input file.
+        input_data : dict
+            The input data.
         ref_path : pathlib.Path
             The path to the reference file.
         warp_path : pathlib.Path
@@ -103,15 +122,63 @@ class ApplyWarper(BasePreprocessor):
         -------
         Niimg-like object
 
+        Raises
+        ------
+        RuntimeError
+            If FSL commands fail.
+
         """
-        # Create a tempfile for warped BOLD output
-        applywarp_out_path = Path(tempfile.mkdtemp()) / "bold_warped.nii.gz"
+        # Get the min of the voxel sizes from input and use it as the
+        # resolution
+        resolution = np.min(input_data["data"].header.get_zooms()[:3])
+
+        # Create tempdir
+        tempdir = Path(tempfile.mkdtemp())
+
+        # Create a tempfile for resampled reference output
+        flirt_out_path = tempdir / "reference_resampled.nii.gz"
+        # Set flirt command
+        flirt_cmd = [
+            "flirt",
+            "-interp spline",
+            f"-in {ref_path.resolve()}",
+            f"-ref {ref_path.resolve()}",
+            f"-applyisoxfm {resolution}",
+            f"-out {flirt_out_path.resolve()}",
+        ]
+        # Call flirt
+        flirt_cmd_str = " ".join(flirt_cmd)
+        logger.info(f"flirt command to be executed: {flirt_cmd_str}")
+        flirt_process = subprocess.run(
+            flirt_cmd_str,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=True,  # needed for respecting $PATH
+            check=False,
+        )
+        if flirt_process.returncode == 0:
+            logger.info(
+                "flirt succeeded with the following output: "
+                f"{flirt_process.stdout}"
+            )
+        else:
+            raise_error(
+                msg="flirt failed with the following error: "
+                f"{flirt_process.stdout}",
+                klass=RuntimeError,
+            )
+
+        # TODO(synchon): Modify reference or not?
+
+        # Create a tempfile for warped output
+        applywarp_out_path = tempdir / "input_warped.nii.gz"
         # Set applywarp command
         applywarp_cmd = [
             "applywarp",
             "--interp=spline",
-            f"-i {input_path.resolve()}",
-            f"-r {ref_path.resolve()}",
+            f"-i {input_data['path'].resolve()}",
+            f"-r {flirt_out_path.resolve()}",  # use resampled reference
             f"-w {warp_path.resolve()}",
             f"-o {applywarp_out_path.resolve()}",
         ]
@@ -141,6 +208,7 @@ class ApplyWarper(BasePreprocessor):
         # Load nifti
         output_img = nib.load(applywarp_out_path)
         # Delete file
+        flirt_out_path.unlink()
         applywarp_out_path.unlink()
 
         # Stupid casting
@@ -160,7 +228,7 @@ class ApplyWarper(BasePreprocessor):
             A single input from the Junifer Data object in which to preprocess.
         extra_input : dict, optional
             The other fields in the Junifer Data object. Must include the
-            ``T1w`` and ``Warp`` keys.
+            ``Warp`` and ``ref`` value's keys.
 
         Returns
         -------
@@ -176,22 +244,23 @@ class ApplyWarper(BasePreprocessor):
             If ``extra_input`` is None.
 
         """
+        logger.debug("Warping via FSL using ApplyWarper")
         # Check for extra inputs
         if extra_input is None:
             raise_error(
-                "No extra input provided, requires `T1w` and `Warp` data "
-                "types in particular."
+                f"No extra input provided, requires `Warp` and `{self.ref}` "
+                "data types in particular."
             )
-        # Retrieve BOLD data
-        bold = input
-        # Retrieve T1w data
-        t1w = extra_input["T1w"]
+        # Retrieve data type info to warp
+        to_warp_input = input
+        # Retrieve data type info to use as reference
+        ref_input = extra_input[self.ref]
         # Retrieve Warp data
         warp = extra_input["Warp"]
-        # Replace original BOLD data with warped BOLD data
+        # Replace original data with warped data
         input["data"] = self._run_applywarp(
-            input_path=bold["path"],
-            ref_path=t1w["path"],
+            input_data=to_warp_input,
+            ref_path=ref_input["path"],
             warp_path=warp["path"],
         )
-        return "BOLD", input
+        return self.on, input
