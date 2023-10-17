@@ -36,7 +36,7 @@ class _ApplyWarper(BasePreprocessor):
 
     Parameters
     ----------
-    ref : str
+    reference : str
         The data type to use as reference for warping.
     on : str
         The data type to use for warping.
@@ -58,9 +58,9 @@ class _ApplyWarper(BasePreprocessor):
         },
     ]
 
-    def __init__(self, ref: str, on: str) -> None:
+    def __init__(self, reference: str, on: str) -> None:
         """Initialize the class."""
-        self.ref = ref
+        self.ref = reference
         # Check only single data type is passed
         if isinstance(on, list):
             raise_error("Can only work on single data type, list was passed.")
