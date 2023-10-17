@@ -4,7 +4,7 @@ ci:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-ast
       - id: check-docstring-first
@@ -17,23 +17,24 @@ repos:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.12.2
+    rev: v0.15
     hooks:
       - id: validate-pyproject
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.9.1
     hooks:
       - id: black
         exclude: ^(docs/|examples/|tools/)
         args: [--check]
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.267
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.0
     hooks:
       - id: ruff
+        types_or: [python, jupyter]
         exclude: ^(__init__.py)
-        args: [--format, grouped, --show-fixes]
+        args: [--output-format, grouped, --show-fixes]
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.4
+    rev: v2.2.6
     hooks:
       - id: codespell
         exclude: ^(.github/|docs/)
