@@ -4,7 +4,6 @@
 # License: AGPL
 
 import subprocess
-import tempfile
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -21,6 +20,7 @@ from typing import (
 import nibabel as nib
 import numpy as np
 
+from ...pipeline import WorkDirManager
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 
@@ -135,8 +135,8 @@ class _ApplyWarper(BasePreprocessor):
         # resolution
         resolution = np.min(input_data["data"].header.get_zooms()[:3])
 
-        # Create tempdir
-        tempdir = Path(tempfile.mkdtemp())
+        # Create element-specific tempdir for storing post-warping assets
+        tempdir = WorkDirManager().get_element_tempdir(prefix="applywarp")
 
         # Create a tempfile for resampled reference output
         flirt_out_path = tempdir / "reference_resampled.nii.gz"
@@ -210,8 +210,6 @@ class _ApplyWarper(BasePreprocessor):
 
         # Load nifti
         output_img = nib.load(applywarp_out_path)
-        # Delete warped output file
-        applywarp_out_path.unlink()
 
         # Stupid casting
         output_img = cast("Nifti1Image", output_img)
