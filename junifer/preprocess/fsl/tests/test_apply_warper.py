@@ -23,7 +23,7 @@ def test_ApplyWarper_init() -> None:
 def test_ApplyWarper_get_valid_inputs() -> None:
     """Test ApplyWarper get_valid_inputs."""
     apply_warper = _ApplyWarper(reference="T1w", on="BOLD")
-    assert apply_warper.get_valid_inputs() == ["BOLD", "T1w", "Warp"]
+    assert apply_warper.get_valid_inputs() == ["BOLD"]
 
 
 @pytest.mark.parametrize(

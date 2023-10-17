@@ -65,7 +65,9 @@ class _ApplyWarper(BasePreprocessor):
         if isinstance(on, list):
             raise_error("Can only work on single data type, list was passed.")
         self.on = on  # needed for the base validation to work
-        super().__init__(on=self.on)
+        super().__init__(
+            on=self.on, required_data_types=[self.on, self.ref, "Warp"]
+        )
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -78,7 +80,7 @@ class _ApplyWarper(BasePreprocessor):
 
         """
         # Constructed dynamically
-        return [self.on, self.ref, "Warp"]
+        return [self.on]
 
     def get_output_type(self, input: List[str]) -> List[str]:
         """Get output type.
