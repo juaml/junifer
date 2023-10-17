@@ -211,7 +211,7 @@ class ApplyWarper(BasePreprocessor):
         # Load nifti
         output_img = nib.load(applywarp_out_path)
         # Delete warped output file
-        flirt_out_path.unlink()
+        applywarp_out_path.unlink()
 
         # Stupid casting
         output_img = cast("Nifti1Image", output_img)
