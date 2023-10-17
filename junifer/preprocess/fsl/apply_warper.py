@@ -21,7 +21,6 @@ from typing import (
 import nibabel as nib
 import numpy as np
 
-from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 
@@ -30,7 +29,6 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
-@register_preprocessor
 class ApplyWarper(BasePreprocessor):
     """Class for warping NIfTI images via FSL FLIRT.
 
