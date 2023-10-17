@@ -106,7 +106,7 @@ class ApplyWarper(BasePreprocessor):
         input_data: Dict,
         ref_path: Path,
         warp_path: Path,
-    ) -> "Nifti1Image":
+    ) -> Tuple["Nifti1Image", Path]:
         """Run ``applywarp``.
 
         Parameters
@@ -121,6 +121,9 @@ class ApplyWarper(BasePreprocessor):
         Returns
         -------
         Niimg-like object
+            The warped input image.
+         pathlib.Path
+            The path to the resampled reference image.
 
         Raises
         ------
@@ -207,13 +210,12 @@ class ApplyWarper(BasePreprocessor):
 
         # Load nifti
         output_img = nib.load(applywarp_out_path)
-        # Delete file
+        # Delete warped output file
         flirt_out_path.unlink()
-        applywarp_out_path.unlink()
 
         # Stupid casting
         output_img = cast("Nifti1Image", output_img)
-        return output_img
+        return output_img, flirt_out_path
 
     def preprocess(
         self,
@@ -257,8 +259,9 @@ class ApplyWarper(BasePreprocessor):
         ref_input = extra_input[self.ref]
         # Retrieve Warp data
         warp = extra_input["Warp"]
-        # Replace original data with warped data
-        input["data"] = self._run_applywarp(
+        # Replace original data with warped data and add resampled reference
+        # path
+        input["data"], input["reference_path"] = self._run_applywarp(
             input_data=to_warp_input,
             ref_path=ref_input["path"],
             warp_path=warp["path"],
