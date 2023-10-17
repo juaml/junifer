@@ -266,4 +266,6 @@ class ApplyWarper(BasePreprocessor):
             ref_path=ref_input["path"],
             warp_path=warp["path"],
         )
+        # Use reference input's space as warped input's space
+        input["space"] = ref_input["space"]
         return self.on, input
