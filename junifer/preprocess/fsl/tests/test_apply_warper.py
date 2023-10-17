@@ -9,12 +9,12 @@ import pytest
 
 # from junifer.datareader import DefaultDataReader
 # from junifer.pipeline.utils import _check_fsl
-from junifer.preprocess.fsl.apply_warper import ApplyWarper
+from junifer.preprocess.fsl.apply_warper import _ApplyWarper
 
 
 def test_ApplyWarper_init() -> None:
     """Test ApplyWarper init."""
-    apply_warper = ApplyWarper(ref="T1w", on="BOLD")
+    apply_warper = _ApplyWarper(ref="T1w", on="BOLD")
     assert apply_warper.ref == "T1w"
     assert apply_warper.on == "BOLD"
     assert apply_warper._on == ["BOLD"]
@@ -22,7 +22,7 @@ def test_ApplyWarper_init() -> None:
 
 def test_ApplyWarper_get_valid_inputs() -> None:
     """Test ApplyWarper get_valid_inputs."""
-    apply_warper = ApplyWarper(ref="T1w", on="BOLD")
+    apply_warper = _ApplyWarper(ref="T1w", on="BOLD")
     assert apply_warper.get_valid_inputs() == ["BOLD", "T1w", "Warp"]
 
 
@@ -43,7 +43,7 @@ def test_ApplyWarper_get_output_type(input_: List[str]) -> None:
         The input data types.
 
     """
-    apply_warper = ApplyWarper(ref="T1w", on="BOLD")
+    apply_warper = _ApplyWarper(ref="T1w", on="BOLD")
     assert apply_warper.get_output_type(input_) == input_
 
 
@@ -56,7 +56,7 @@ def test_ApplyWarper__run_applywarp() -> None:
     # Initialize datareader
     # reader = DefaultDataReader()
     # Initialize preprocessor
-    # bold_warper = ApplyWarper(ref="T1w", on="BOLD")
+    # bold_warper = _ApplyWarper(ref="T1w", on="BOLD")
     # TODO(synchon): setup datagrabber and run pipeline
 
 
@@ -69,5 +69,5 @@ def test_ApplyWarper_preprocess() -> None:
     # Initialize datareader
     # reader = DefaultDataReader()
     # Initialize preprocessor
-    # bold_warper = ApplyWarper(ref="T1w", on="BOLD")
+    # bold_warper = _ApplyWarper(ref="T1w", on="BOLD")
     # TODO(synchon): setup datagrabber and run pipeline

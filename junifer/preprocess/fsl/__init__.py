@@ -2,5 +2,3 @@
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
-
-from .apply_warper import ApplyWarper

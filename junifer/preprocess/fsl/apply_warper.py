@@ -29,7 +29,7 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
-class ApplyWarper(BasePreprocessor):
+class _ApplyWarper(BasePreprocessor):
     """Class for warping NIfTI images via FSL FLIRT.
 
     Wraps FSL FLIRT ``applywarp``.
