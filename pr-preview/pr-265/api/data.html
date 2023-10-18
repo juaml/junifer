@@ -268,6 +268,35 @@
 <span id="parcellations"></span><h1><span class="section-number">9.2.1. </span>Parcellations<a class="headerlink" href="#module-junifer.data.parcellations" title="Link to this heading">#</a></h1>
 <p>Provide functions for parcellation.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.parcellations.get_parcellation">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">get_parcellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.get_parcellation" title="Link to this definition">#</a></dt>
+<dd><p>Get parcellation, tailored for the target image.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s).</p>
+</dd>
+<dt><strong>target_data</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The corresponding item of the data object to which the parcellation
+will be applied.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other data
+kinds that needs to be used in the computation of parcellations
+(default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v5.1.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a></dt><dd><p>The parcellation image.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>Parcellation labels.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.parcellations.list_parcellations">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">list_parcellations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.list_parcellations" title="Link to this definition">#</a></dt>
 <dd><p>List all the available parcellations.</p>
@@ -285,8 +314,8 @@
 <dt class="sig sig-object py" id="junifer.data.parcellations.load_parcellation">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">load_parcellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellations_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.load_parcellation" title="Link to this definition">#</a></dt>
 <dd><p>Load a brain parcellation (including a label file).</p>
-<p>If it is a built-in parcellaions and file is not present in the
-<cite>parcellations_dir</cite> directory, it will be downloaded.</p>
+<p>If it is a built-in parcellation and the file is not present in the
+<code class="docutils literal notranslate"><span class="pre">parcellations_dir</span></code> directory, it will be downloaded.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -312,6 +341,13 @@ highest one (default None).</p>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>Parcellation labels.</p>
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></dt><dd><p>File path to the parcellation image.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">name</span></code> is invalid or if the parcellation values and labels
+don’t have equal dimension or if the value range is invalid.</p>
 </dd>
 </dl>
 </dd>
@@ -655,6 +691,7 @@ False or if the mask name is a built-in mask.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">9.2.1. Parcellations</a><ul>
+<li><a class="reference internal" href="#junifer.data.parcellations.get_parcellation"><code class="docutils literal notranslate"><span class="pre">get_parcellation()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.parcellations.list_parcellations"><code class="docutils literal notranslate"><span class="pre">list_parcellations()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.parcellations.load_parcellation"><code class="docutils literal notranslate"><span class="pre">load_parcellation()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.parcellations.merge_parcellations"><code class="docutils literal notranslate"><span class="pre">merge_parcellations()</span></code></a></li>
