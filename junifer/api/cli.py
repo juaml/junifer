@@ -200,13 +200,23 @@ def run(
 
     """
     configure_logging(level=verbose)
-    # TODO: add validation
+    # TODO(synchon): add validation
+    # Parse YAML
     config = parse_yaml(filepath)  # type: ignore
+    # Retrieve working directory
     workdir = config["workdir"]
+    # Fetch datagrabber
     datagrabber = config["datagrabber"]
+    # Fetch markers
     markers = config["markers"]
+    # Fetch storage
     storage = config["storage"]
-    preprocessor = config.get("preprocess")
+    # Fetch preprocessors
+    preprocessors = config.get("preprocess")
+    # Convert to list if single preprocessor
+    if preprocessors is not None and not isinstance(preprocessors, list):
+        preprocessors = [preprocessors]
+    # Parse elements
     elements = _parse_elements(element, config)
     # Perform operation
     api_run(
@@ -214,7 +224,7 @@ def run(
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        preprocessor=preprocessor,
+        preprocessors=preprocessors,
         elements=elements,
     )
 

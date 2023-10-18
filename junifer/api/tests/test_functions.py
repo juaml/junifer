@@ -117,9 +117,11 @@ def test_run_single_element_with_preprocessing(tmp_path: Path) -> None:
             }
         ],
         storage=storage,
-        preprocessor={
-            "kind": "fMRIPrepConfoundRemover",
-        },
+        preprocessors=[
+            {
+                "kind": "fMRIPrepConfoundRemover",
+            }
+        ],
         elements=["sub-01"],
     )
     # Check files

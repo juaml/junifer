@@ -81,7 +81,7 @@ def run(
     datagrabber: Dict,
     markers: List[Dict],
     storage: Dict,
-    preprocessor: Optional[Dict] = None,
+    preprocessors: Optional[List[Dict]] = None,
     elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
 ) -> None:
     """Run the pipeline on the selected element.
@@ -104,10 +104,10 @@ def run(
         Storage to use. Must have a key ``kind`` with the kind of
         storage to use. All other keys are passed to the storage
         init function.
-    preprocessor : dict, optional
-        Preprocessor to use. Must have a key ``kind`` with the kind of
-        preprocessor to use. All other keys are passed to the preprocessor
-        init function (default None).
+    preprocessors : list of dict, optional
+        List of preprocessors to use. Each preprocessor is a dict with at
+        least a key ``kind`` specifying the preprocessor to use. All other keys
+        are passed to the preprocessor init function (default None).
     elements : str or tuple or list of str or tuple, optional
         Element(s) to process. Will be used to index the DataGrabber
         (default None).
@@ -152,15 +152,19 @@ def run(
     storage_object = typing.cast(BaseFeatureStorage, storage_object)
 
     # Get preprocessor to use (if provided)
-    if preprocessor is not None:
-        preprocessor_object = _get_preprocessor(preprocessor)
+    if preprocessors is not None:
+        _preprocessors = [x.copy() for x in preprocessors]
+        built_preprocessors = []
+        for preprocessor in _preprocessors:
+            preprocessor_object = _get_preprocessor(preprocessor)
+            built_preprocessors.append(preprocessor_object)
     else:
-        preprocessor_object = None
+        built_preprocessors = None
 
     # Create new marker collection
     mc = MarkerCollection(
         markers=built_markers,
-        preprocessing=preprocessor_object,
+        preprocessors=built_preprocessors,
         storage=storage_object,
     )
     # Fit elements

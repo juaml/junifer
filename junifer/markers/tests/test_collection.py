@@ -64,7 +64,7 @@ def test_marker_collection() -> None:
     ]
     mc = MarkerCollection(markers=markers)  # type: ignore
     assert mc._markers == markers
-    assert mc._preprocessing is None
+    assert mc._preprocessors is None
     assert mc._storage is None
     assert isinstance(mc._datareader, DefaultDataReader)
 
@@ -97,7 +97,7 @@ def test_marker_collection() -> None:
 
     mc2 = MarkerCollection(
         markers=markers,  # type: ignore
-        preprocessing=BypassPreprocessing(),
+        preprocessors=[BypassPreprocessing()],  # type: ignore
         datareader=DefaultDataReader(),
     )
     assert isinstance(mc2._datareader, DefaultDataReader)
@@ -128,10 +128,10 @@ def test_marker_collection_with_preprocessing() -> None:
     ]
     mc = MarkerCollection(
         markers=markers,  # type: ignore
-        preprocessing=fMRIPrepConfoundRemover(),
+        preprocessors=[fMRIPrepConfoundRemover()],
     )
     assert mc._markers == markers
-    assert mc._preprocessing is not None
+    assert mc._preprocessors is not None
     assert mc._storage is None
     assert isinstance(mc._datareader, DefaultDataReader)
 

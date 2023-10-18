@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional
 from ..datareader.default import DefaultDataReader
 from ..markers.base import BaseMarker
 from ..pipeline import PipelineStepMixin
+from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger
 
@@ -27,8 +28,8 @@ class MarkerCollection:
         The markers to compute.
     datareader : DataReader-like object, optional
         The DataReader to use (default None).
-    preprocessing : preprocessing-like, optional
-        The preprocessing steps to apply.
+    preprocessors : list of preprocessing-like, optional
+        The preprocessors to apply (default None).
     storage : storage-like, optional
         The storage to use (default None).
 
@@ -38,7 +39,7 @@ class MarkerCollection:
         self,
         markers: List[BaseMarker],
         datareader: Optional[PipelineStepMixin] = None,
-        preprocessing: Optional[PipelineStepMixin] = None,
+        preprocessors: Optional[List[BasePreprocessor]] = None,
         storage: Optional[BaseFeatureStorage] = None,
     ):
         # Check that the markers have different names
@@ -53,7 +54,7 @@ class MarkerCollection:
         if datareader is None:
             datareader = DefaultDataReader()
         self._datareader = datareader
-        self._preprocessing = preprocessing
+        self._preprocessors = preprocessors
         self._storage = storage
 
     def fit(self, input: Dict[str, Dict]) -> Optional[Dict]:
@@ -79,9 +80,14 @@ class MarkerCollection:
         data = self._datareader.fit_transform(input)
 
         # Apply preprocessing steps
-        if self._preprocessing is not None:
-            logger.info("Preprocessing data")
-            data = self._preprocessing.fit_transform(data)
+        if self._preprocessors is not None:
+            for preprocessor in self._preprocessors:
+                logger.info(
+                    "Preprocessing data with "
+                    f"{preprocessor.__class__.__name__}"
+                )
+                # Mutate data after every iteration
+                data = preprocessor.fit_transform(data)
 
         # Compute markers
         out = {}
@@ -116,10 +122,15 @@ class MarkerCollection:
         t_data = self._datareader.validate(t_data)
         logger.info(f"Data Reader output type: {t_data}")
 
-        if self._preprocessing is not None:
-            logger.info("Validating Preprocessor:")
-            t_data = self._preprocessing.validate(t_data)
-            logger.info(f"Preprocess output type: {t_data}")
+        if self._preprocessors is not None:
+            for preprocessor in self._preprocessors:
+                logger.info(
+                    "Validating Preprocessor: "
+                    f"{preprocessor.__class__.__name__}"
+                )
+                # Validate preprocessor
+                t_data = preprocessor.validate(t_data)
+                logger.info(f"Preprocess output type: {t_data}")
 
         for marker in self._markers:
             logger.info(f"Validating Marker: {marker.name}")
