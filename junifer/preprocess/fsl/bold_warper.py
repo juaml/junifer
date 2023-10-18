@@ -16,7 +16,7 @@ from typing import (
 from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
-from .apply_warper import ApplyWarper
+from .apply_warper import _ApplyWarper
 
 
 @register_preprocessor
@@ -114,7 +114,7 @@ class BOLDWarper(BasePreprocessor):
                 "data types in particular."
             )
         # Initialize ApplyWarper for computation
-        apply_warper = ApplyWarper(ref=self.ref, on="BOLD")
+        apply_warper = _ApplyWarper(ref=self.ref, on="BOLD")
         # Replace original BOLD data with warped BOLD data
         _, input = apply_warper.preprocess(
             input=input,
