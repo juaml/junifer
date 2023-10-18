@@ -25,7 +25,7 @@ class BOLDWarper(BasePreprocessor):
 
     Parameters
     ----------
-    ref : str
+    reference : str
         The data type to use as reference for warping.
 
     """
@@ -40,10 +40,10 @@ class BOLDWarper(BasePreprocessor):
         },
     ]
 
-    def __init__(self, ref: str) -> None:
+    def __init__(self, reference: str) -> None:
         """Initialize the class."""
-        self.ref = ref
         super().__init__(on="BOLD")
+        self.ref = reference
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.

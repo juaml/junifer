@@ -14,13 +14,13 @@ from junifer.preprocess.fsl import BOLDWarper
 
 def test_BOLDWarper_init() -> None:
     """Test BOLDWarper init."""
-    bold_warper = BOLDWarper(ref="T1w")
+    bold_warper = BOLDWarper(reference="T1w")
     assert bold_warper._on == ["BOLD"]
 
 
 def test_BOLDWarper_get_valid_inputs() -> None:
     """Test BOLDWarper get_valid_inputs."""
-    bold_warper = BOLDWarper(ref="T1w")
+    bold_warper = BOLDWarper(reference="T1w")
     assert bold_warper.get_valid_inputs() == ["BOLD", "T1w", "Warp"]
 
 
@@ -41,7 +41,7 @@ def test_BOLDWarper_get_output_type(input_: List[str]) -> None:
         The input data types.
 
     """
-    bold_warper = BOLDWarper(ref="T1w")
+    bold_warper = BOLDWarper(reference="T1w")
     assert bold_warper.get_output_type(input_) == input_
 
 
@@ -54,5 +54,5 @@ def test_BOLDWarper_preprocess() -> None:
     # Initialize datareader
     # reader = DefaultDataReader()
     # Initialize preprocessor
-    # bold_warper = BOLDWarper(ref="T1w")
+    # bold_warper = BOLDWarper(reference="T1w")
     # TODO(synchon): setup datagrabber and run pipeline
