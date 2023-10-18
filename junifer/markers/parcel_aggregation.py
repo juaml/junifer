@@ -7,11 +7,11 @@
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 import numpy as np
-from nilearn.image import math_img, resample_to_img
+from nilearn.image import math_img
 from nilearn.maskers import NiftiMasker
 
 from ..api.decorators import register_marker
-from ..data import get_mask, load_parcellation, merge_parcellations
+from ..data import get_mask, get_parcellation
 from ..stats import get_aggfunc_by_name
 from ..utils import logger, raise_error, warn_with_log
 from .base import BaseMarker
@@ -49,6 +49,13 @@ class ParcelAggregation(BaseMarker):
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
+
+    Raises
+    ------
+    ValueError
+        If ``time_method`` is specified for non-BOLD data or if
+        ``time_method_params`` is not None when ``time_method`` is None.
+
     """
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "numpy"}
@@ -110,6 +117,11 @@ class ParcelAggregation(BaseMarker):
         str
             The storage type output by the marker.
 
+        Raises
+        ------
+        ValueError
+            If the ``input_type`` is invalid.
+
         """
 
         if input_type in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
@@ -117,7 +129,7 @@ class ParcelAggregation(BaseMarker):
         elif input_type == "BOLD":
             return "timeseries"
         else:
-            raise ValueError(f"Unknown input kind for {input_type}")
+            raise_error(f"Unknown input kind for {input_type}")
 
     def compute(
         self, input: Dict[str, Any], extra_input: Optional[Dict] = None
@@ -145,62 +157,53 @@ class ParcelAggregation(BaseMarker):
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``col_names`` : the column labels for the computed values as list
 
+        Warns
+        -----
+        RuntimeWarning
+            If time aggregation is required but only time point is available.
+
         """
         t_input_img = input["data"]
         logger.debug(f"Parcel aggregation using {self.method}")
+        # Get aggregation function
         agg_func = get_aggfunc_by_name(
             name=self.method, func_params=self.method_params
         )
-        # Get the min of the voxels sizes and use it as the resolution
-        resolution = np.min(t_input_img.header.get_zooms()[:3])
 
-        # Load the parcellations
-        all_parcelations = []
-        all_labels = []
-        for t_parc_name in self.parcellation:
-            t_parcellation, t_labels, _ = load_parcellation(
-                name=t_parc_name, resolution=resolution
-            )
-            # Resample all of them to the image
-            t_parcellation_img_res = resample_to_img(
-                t_parcellation, t_input_img, interpolation="nearest", copy=True
-            )
-            all_parcelations.append(t_parcellation_img_res)
-            all_labels.append(t_labels)
+        # Get parcellation tailored to target image
+        parcellation_img, labels = get_parcellation(
+            parcellation=self.parcellation,
+            target_data=input,
+            extra_input=extra_input,
+        )
 
-        # Avoid merging if there is only one parcellation
-        if len(all_parcelations) == 1:
-            parcellation_img_res = all_parcelations[0]
-            labels = all_labels[0]
-        else:
-            # Merge the parcellations
-            parcellation_img_res, labels = merge_parcellations(
-                all_parcelations, self.parcellation, all_labels
-            )
+        # Get binarized parcellation image for masking
+        parcellation_bin = math_img("img != 0", img=parcellation_img)
 
-        parcellation_bin = math_img("img != 0", img=parcellation_img_res)
-
+        # Load mask
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
+            # Get tailored mask
             mask_img = get_mask(
                 masks=self.masks, target_data=input, extra_input=extra_input
             )
-
+            # Get "logical and" version of parcellation and mask
             parcellation_bin = math_img(
                 "np.logical_and(img, mask)",
                 img=parcellation_bin,
                 mask=mask_img,
             )
 
+        # Initialize masker
         logger.debug("Masking")
         masker = NiftiMasker(
             parcellation_bin, target_affine=t_input_img.affine
-        )  # type: ignore
-
+        )
         # Mask the input data and the parcellation
         data = masker.fit_transform(t_input_img)
-        parcellation_values = masker.transform(parcellation_img_res)
-        parcellation_values = np.squeeze(parcellation_values).astype(int)
+        parcellation_values = np.squeeze(
+            masker.transform(parcellation_img)
+        ).astype(int)
 
         # Get the values for each parcel and apply agg function
         logger.debug("Computing ROI means")
@@ -214,6 +217,7 @@ class ParcelAggregation(BaseMarker):
 
         out_values = np.array(out_values).T
 
+        # Apply time dimension aggregation if required
         if self.time_method is not None:
             if out_values.shape[0] > 1:
                 logger.debug("Aggregating time dimension")
@@ -226,5 +230,6 @@ class ParcelAggregation(BaseMarker):
                     "No time dimension to aggregate as only one time point is "
                     "available."
                 )
+        # Format the output
         out = {"data": out_values, "col_names": labels}
         return out

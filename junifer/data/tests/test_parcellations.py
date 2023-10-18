@@ -11,7 +11,7 @@ from typing import List
 import nibabel as nib
 import numpy as np
 import pytest
-from nilearn.image import new_img_like
+from nilearn.image import new_img_like, resample_to_img
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 from junifer.data.parcellations import (
@@ -22,11 +22,14 @@ from junifer.data.parcellations import (
     _retrieve_suit,
     _retrieve_tian,
     _retrieve_yan,
+    get_parcellation,
     list_parcellations,
     load_parcellation,
     merge_parcellations,
     register_parcellation,
 )
+from junifer.datareader import DefaultDataReader
+from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
 
 
 def test_register_parcellation_built_in_check() -> None:
@@ -1078,3 +1081,89 @@ def test_merge_parcellations_3D_multiple_duplicated_labels(
     assert_array_equal(parc_data, merged_parc.get_fdata())
     assert len(labels) == 100
     assert len(np.unique(parc_data)) == 101  # 100 + 1 because background 0
+
+
+def test_get_parcellation_single() -> None:
+    """Test tailored single parcellation fetch."""
+    reader = DefaultDataReader()
+    with OasisVBMTestingDataGrabber() as dg:
+        element = dg["sub-01"]
+        element_data = reader.fit_transform(element)
+        vbm_gm = element_data["VBM_GM"]
+        vbm_gm_img = vbm_gm["data"]
+        # Get tailored parcellation
+        tailored_parcellation, tailored_labels = get_parcellation(
+            parcellation=["Schaefer100x7"],
+            target_data=vbm_gm,
+        )
+        # Check shape and affine with original element data
+        assert tailored_parcellation.shape == vbm_gm_img.shape
+        assert_array_equal(tailored_parcellation.affine, vbm_gm_img.affine)
+        # Get raw parcellation
+        raw_parcellation, raw_labels, _ = load_parcellation(
+            "Schaefer100x7",
+            resolution=1.5,
+        )
+        resampled_raw_parcellation = resample_to_img(
+            source_img=raw_parcellation,
+            target_img=vbm_gm_img,
+            interpolation="nearest",
+            copy=True,
+        )
+        # Check resampled data with tailored data
+        assert_array_equal(
+            tailored_parcellation.get_fdata(),
+            resampled_raw_parcellation.get_fdata(),
+        )
+        assert tailored_labels == raw_labels
+
+
+def test_get_parcellation_multi() -> None:
+    """Test tailored multi parcellation fetch."""
+    reader = DefaultDataReader()
+    with OasisVBMTestingDataGrabber() as dg:
+        element = dg["sub-01"]
+        element_data = reader.fit_transform(element)
+        vbm_gm = element_data["VBM_GM"]
+        vbm_gm_img = vbm_gm["data"]
+        # Get tailored parcellation
+        tailored_parcellation, tailored_labels = get_parcellation(
+            parcellation=[
+                "Schaefer100x7",
+                "TianxS2x3TxMNInonlinear2009cAsym",
+            ],
+            target_data=vbm_gm,
+        )
+        # Check shape and affine with original element data
+        assert tailored_parcellation.shape == vbm_gm_img.shape
+        assert_array_equal(tailored_parcellation.affine, vbm_gm_img.affine)
+        # Get raw parcellations
+        raw_parcellations = []
+        raw_labels = []
+        parcellations_names = [
+            "Schaefer100x7",
+            "TianxS2x3TxMNInonlinear2009cAsym",
+        ]
+        for name in parcellations_names:
+            img, labels, _ = load_parcellation(name=name, resolution=1.5)
+            # Resample raw parcellations
+            resampled_img = resample_to_img(
+                source_img=img,
+                target_img=vbm_gm_img,
+                interpolation="nearest",
+                copy=True,
+            )
+            raw_parcellations.append(resampled_img)
+            raw_labels.append(labels)
+        # Merge resampled parcellations
+        merged_resampled_parcellations, merged_labels = merge_parcellations(
+            parcellations_list=raw_parcellations,
+            parcellations_names=parcellations_names,
+            labels_lists=raw_labels,
+        )
+        # Check resampled data with tailored data
+        assert_array_equal(
+            tailored_parcellation.get_fdata(),
+            merged_resampled_parcellations.get_fdata(),
+        )
+        assert tailored_labels == merged_labels
