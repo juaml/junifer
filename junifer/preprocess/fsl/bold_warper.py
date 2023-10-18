@@ -114,7 +114,7 @@ class BOLDWarper(BasePreprocessor):
                 "data types in particular."
             )
         # Initialize ApplyWarper for computation
-        apply_warper = _ApplyWarper(ref=self.ref, on="BOLD")
+        apply_warper = _ApplyWarper(reference=self.ref, on="BOLD")
         # Replace original BOLD data with warped BOLD data
         _, input = apply_warper.preprocess(
             input=input,
