@@ -164,7 +164,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         t_r: Optional[float] = None,
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
     ) -> None:
-        """Initialise the class."""
+        """Initialize the class."""
         if strategy is None:
             strategy = {
                 "motion": "full",
@@ -208,48 +208,30 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 "include it in the future",
                 klass=ValueError,
             )
-        super().__init__()
+        super().__init__(
+            on="BOLD", required_data_types=["BOLD", "BOLD_confounds"]
+        )
 
-    def validate_input(self, input: List[str]) -> List[str]:
-        """Validate the input to the pipeline step.
-
-        Parameters
-        ----------
-        input : list of str
-            The input to the pipeline step. The list must contain the
-            available Junifer Data object keys.
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
 
         Returns
         -------
         list of str
-            The actual elements of the input that will be processed by this
-            pipeline step.
-
-        Raises
-        ------
-        ValueError
-            If the input does not have the required data.
+            The list of data types that can be used as input for this
+            preprocessor.
 
         """
-        _required_inputs = ["BOLD", "BOLD_confounds"]
-        if any(x not in input for x in _required_inputs):
-            raise_error(
-                msg="Input does not have the required data. \n"
-                f"Input: {input} \n"
-                f"Required (all off): {_required_inputs} \n",
-                klass=ValueError,
-            )
-
-        return [x for x in self._on if x in input]
+        return ["BOLD"]
 
     def get_output_type(self, input: List[str]) -> List[str]:
-        """Get the kind of the pipeline step.
+        """Get output type.
 
         Parameters
         ----------
         input : list of str
-            The input to the pipeline step. The list must contain the
-            available Junifer Data object keys.
+            The input to the preprocessor. The list must contain the
+            available Junifer Data dictionary keys.
 
         Returns
         -------
@@ -260,17 +242,6 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         """
         # Does not add any new keys
         return input
-
-    def get_valid_inputs(self) -> List[str]:
-        """Get the valid inputs for the pipeline step.
-
-        Returns
-        -------
-        list of str
-            The valid inputs for the pipeline step.
-
-        """
-        return ["BOLD"]
 
     def _map_adhoc_to_fmriprep(self, input: Dict[str, Any]) -> None:
         """Map the adhoc format to the fmpriprep format spec.
@@ -333,6 +304,11 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         spike_name : str
             Name of the confound to use for spike detection
 
+        Raises
+        ------
+        ValueError
+            If invalid confounds file is found.
+
         """
         confounds_df = input["data"]
         available_vars = confounds_df.columns
@@ -347,7 +323,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
             if any(x not in available_vars for x in t_basics):
                 missing = [x for x in t_basics if x not in available_vars]
-                raise ValueError(
+                raise_error(
                     "Invalid confounds file. Missing basic confounds: "
                     f"{missing}. "
                     "Check if this file is really an fmriprep confounds file. "
@@ -377,7 +353,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         spike_name = "framewise_displacement"
         if self.spike is not None:
             if spike_name not in available_vars:
-                raise ValueError(
+                raise_error(
                     "Invalid confounds file. Missing framewise_displacement "
                     "(spike) confound. "
                     "Check if this file is really an fmriprep confounds file. "
@@ -460,17 +436,32 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             Dictionary containing the rest of the Junifer Data object. Must
             include the ``BOLD_confounds`` key.
 
+        Raises
+        ------
+        ValueError
+            If ``extra_input`` is None or
+            if ``"BOLD_confounds"`` is not found in ``extra_input`` or
+            if ``"data"`` key is not found in ``"BOLD_confounds"`` or
+            if ``"data"`` is not pandas.DataFrame or
+            if image time series and confounds have different lengths or
+            if ``"format"`` is not found in ``"BOLD_confounds"`` or
+            if ``format = "adhoc"`` and ``"mappings"`` key or ``"fmriprep"``
+            key or correct fMRIPrep mappings or required fMRIPrep mappings are
+            not found or if invalid confounds format is found.
+
         """
 
         # Bold must be 4D niimg
         check_niimg_4d(input["data"])
 
         if extra_input is None:
-            raise_error("No extra input provided", ValueError)
+            raise_error(msg="No extra input provided", klass=ValueError)
         if "BOLD_confounds" not in extra_input:
-            raise_error("No BOLD_confounds provided", ValueError)
+            raise_error(msg="No BOLD_confounds provided", klass=ValueError)
         if "data" not in extra_input["BOLD_confounds"]:
-            raise_error("No BOLD_confounds data provided", ValueError)
+            raise_error(
+                msg="No BOLD_confounds data provided", klass=ValueError
+            )
         # Confounds must be a dataframe
         if not isinstance(extra_input["BOLD_confounds"]["data"], pd.DataFrame):
             raise_error(
@@ -528,14 +519,14 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             ]
 
             if len(missing) > 0:
-                raise ValueError(
+                raise_error(
                     "Invalid confounds file. Missing columns: "
                     f"{missing}. "
                     "Check if this file matches the adhoc specification for "
                     "this dataset."
                 )
         elif t_format != "fmriprep":
-            raise ValueError(f"Invalid confounds format {t_format}")
+            raise_error(f"Invalid confounds format {t_format}")
 
     def _remove_confounds(
         self,
@@ -614,18 +605,18 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         Parameters
         ----------
         input : dict
-            A single input from the Junifer Data object in which to preprocess.
+            A single input from the Junifer Data object to preprocess.
         extra_input : dict, optional
             The other fields in the Junifer Data object. Must include the
             ``BOLD_confounds`` key.
 
         Returns
         -------
-        key : str
+        str
             The key to store the output in the Junifer Data object.
-        object : dict
+        dict
             The computed result as dictionary. This will be stored in the
-            Junifer Data object under the key ``key``.
+            Junifer Data object under the key ``data`` of the data type.
 
         """
         self._validate_data(input, extra_input)

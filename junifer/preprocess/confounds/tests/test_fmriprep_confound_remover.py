@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import typing
+from typing import List, cast
 
 import nibabel as nib
 import numpy as np
@@ -40,39 +40,77 @@ def test_fMRIPrepConfoundRemover_init() -> None:
         fMRIPrepConfoundRemover(strategy={"motion": "wrong"})
 
 
-def test_fMRIPrepConfoundRemover_validate_input() -> None:
-    """Test fMRIPrepConfoundRemover validate_input."""
+@pytest.mark.parametrize(
+    "input_",
+    [
+        ["T1w"],
+        ["BOLD"],
+        ["T1w", "BOLD"],
+    ],
+)
+def test_fMRIPrepConfoundRemover_validate_input_errors(
+    input_: List[str],
+) -> None:
+    """Test errors for fMRIPrepConfoundRemover validate_input.
+
+    Parameters
+    ----------
+    input_ : list of str
+        The input data types.
+
+    """
     confound_remover = fMRIPrepConfoundRemover()
 
-    # Input is valid when both BOLD and BOLD_confounds are present
-
-    input = ["T1w"]
     with pytest.raises(ValueError, match="not have the required data"):
-        confound_remover.validate_input(input)
-
-    input = ["BOLD"]
-    with pytest.raises(ValueError, match="not have the required data"):
-        confound_remover.validate_input(input)
-
-    input = ["BOLD", "T1w"]
-    with pytest.raises(ValueError, match="not have the required data"):
-        confound_remover.validate_input(input)
-
-    input = ["BOLD", "T1w", "BOLD_confounds"]
-    confound_remover.validate_input(input)
+        confound_remover.validate_input(input_)
 
 
-def test_fMRIPrepConfoundRemover_get_output_type() -> None:
-    """Test fMRIPrepConfoundRemover validate_input."""
+@pytest.mark.parametrize(
+    "input_",
+    [
+        ["BOLD", "BOLD_confounds"],
+        ["T1w", "BOLD", "BOLD_confounds"],
+    ],
+)
+def test_fMRIPrepConfoundRemover_validate_input(input_: List[str]) -> None:
+    """Test fMRIPrepConfoundRemover validate_input.
+
+    Parameters
+    ----------
+    input_ : list of str
+        The input data types.
+
+    """
     confound_remover = fMRIPrepConfoundRemover()
-    inputs = [
+    confound_remover.validate_input(input_)
+
+
+def test_fMRIPrepConfoundRemover_get_valid_inputs() -> None:
+    """Test fMRIPrepConfoundRemover get_valid_inputs."""
+    confound_remover = fMRIPrepConfoundRemover()
+    assert confound_remover.get_valid_inputs() == ["BOLD"]
+
+
+@pytest.mark.parametrize(
+    "input_",
+    [
         ["BOLD", "T1w", "BOLD_confounds"],
         ["BOLD", "VBM_GM", "BOLD_confounds"],
         ["BOLD", "BOLD_confounds"],
-    ]
+    ],
+)
+def test_fMRIPrepConfoundRemover_get_output_type(input_: List[str]) -> None:
+    """Test fMRIPrepConfoundRemover get_output_type.
+
+    Parameters
+    ----------
+    input_ : list of str
+        The input data types.
+
+    """
+    confound_remover = fMRIPrepConfoundRemover()
     # Confound remover works in place
-    for input in inputs:
-        assert confound_remover.get_output_type(input) == input
+    assert confound_remover.get_output_type(input_) == input_
 
 
 def test_fMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
@@ -259,7 +297,7 @@ def test_fMRIPrepConfoundRemover__pick_confounds_adhoc() -> None:
     assert set(out.columns) == set(fmriprep_all_vars)
 
 
-def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
+def test_fMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
     """Test fMRIPrepConfoundRemover pick confounds on fmriprep confounds."""
     confound_remover = fMRIPrepConfoundRemover(
         strategy={"wm_csf": "full"}, spike=0.2
@@ -292,7 +330,7 @@ def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
     assert_frame_equal(out1, out2)
 
 
-def test_FMRIPRepConfoundRemover__pick_confounds_fmriprep_compute() -> None:
+def test_fMRIPRepConfoundRemover__pick_confounds_fmriprep_compute() -> None:
     """Test if fmriprep returns the same derivatives/power2 as we compute."""
 
     confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
@@ -457,7 +495,7 @@ def test_fMRIPrepConfoundRemover__remove_confounds() -> None:
         clean_bold = confound_remover._remove_confounds(
             input=input["BOLD"], extra_input=extra_input
         )
-        clean_bold = typing.cast(nib.Nifti1Image, clean_bold)
+        clean_bold = cast(nib.Nifti1Image, clean_bold)
         # TODO: Find a better way to test functionality here
         assert (
             clean_bold.header.get_zooms()  # type: ignore
