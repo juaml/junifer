@@ -21,7 +21,14 @@ from .apply_warper import ApplyWarper
 
 @register_preprocessor
 class BOLDWarper(BasePreprocessor):
-    """Class for warping BOLD NifTI images via FSL FLIRT."""
+    """Class for warping BOLD NIfTI images via FSL FLIRT.
+
+    Parameters
+    ----------
+    ref : str
+        The data type to use as reference for warping.
+
+    """
 
     _EXT_DEPENDENCIES: ClassVar[
         List[Dict[str, Union[str, bool, List[str]]]]
@@ -33,8 +40,9 @@ class BOLDWarper(BasePreprocessor):
         },
     ]
 
-    def __init__(self) -> None:
+    def __init__(self, ref: str) -> None:
         """Initialize the class."""
+        self.ref = ref
         super().__init__(on="BOLD")
 
     def get_valid_inputs(self) -> List[str]:
@@ -47,7 +55,8 @@ class BOLDWarper(BasePreprocessor):
             preprocessor.
 
         """
-        return ["BOLD", "T1w", "Warp"]
+        # Constructed dynamically
+        return ["BOLD", self.ref, "Warp"]
 
     def get_output_type(self, input: List[str]) -> List[str]:
         """Get output type.
@@ -81,7 +90,7 @@ class BOLDWarper(BasePreprocessor):
             The BOLD input from the Junifer Data object.
         extra_input : dict, optional
             The other fields in the Junifer Data object. Must include the
-            ``T1w`` and ``Warp`` keys.
+            ``Warp`` and ``ref`` value's keys.
 
         Returns
         -------
@@ -101,11 +110,11 @@ class BOLDWarper(BasePreprocessor):
         # Check for extra inputs
         if extra_input is None:
             raise_error(
-                "No extra input provided, requires `T1w` and `Warp` data "
-                "types in particular."
+                f"No extra input provided, requires `Warp` and `{self.ref}` "
+                "data types in particular."
             )
         # Initialize ApplyWarper for computation
-        apply_warper = ApplyWarper(ref="T1w", on="BOLD")
+        apply_warper = ApplyWarper(ref=self.ref, on="BOLD")
         # Replace original BOLD data with warped BOLD data
         input["data"] = apply_warper.preprocess(
             input=input,
