@@ -116,7 +116,7 @@ class BOLDWarper(BasePreprocessor):
         # Initialize ApplyWarper for computation
         apply_warper = ApplyWarper(ref=self.ref, on="BOLD")
         # Replace original BOLD data with warped BOLD data
-        input["data"] = apply_warper.preprocess(
+        _, input = apply_warper.preprocess(
             input=input,
             extra_input=extra_input,
         )
