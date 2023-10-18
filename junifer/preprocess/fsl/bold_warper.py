@@ -42,8 +42,10 @@ class BOLDWarper(BasePreprocessor):
 
     def __init__(self, reference: str) -> None:
         """Initialize the class."""
-        super().__init__(on="BOLD")
         self.ref = reference
+        super().__init__(
+            on="BOLD", required_data_types=["BOLD", self.ref, "Warp"]
+        )
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -55,8 +57,7 @@ class BOLDWarper(BasePreprocessor):
             preprocessor.
 
         """
-        # Constructed dynamically
-        return ["BOLD", self.ref, "Warp"]
+        return ["BOLD"]
 
     def get_output_type(self, input: List[str]) -> List[str]:
         """Get output type.
