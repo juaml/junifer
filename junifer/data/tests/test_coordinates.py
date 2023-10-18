@@ -57,7 +57,7 @@ def test_register_coordinates_overwrite() -> None:
 
 def test_register_coordinates_valid_input() -> None:
     """Test coordinates registration check for valid input."""
-    with pytest.raises(ValueError, match=r"numpy.ndarray"):
+    with pytest.raises(TypeError, match=r"numpy.ndarray"):
         register_coordinates(
             name="MyList",
             coordinates=[1, 2],
@@ -122,7 +122,7 @@ def test_get_coordinates() -> None:
             coords="DMNBuckner", target_data=vbm_gm
         )
         # Get raw coordinates
-        raw_coords, raw_labels, _ = load_coordinates("DMNBuckner")
+        raw_coords, raw_labels = load_coordinates("DMNBuckner")
         # Both tailored and raw should be same for now
         assert_array_equal(tailored_coords, raw_coords)
         assert tailored_labels == raw_labels
