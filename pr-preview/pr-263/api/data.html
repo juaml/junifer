@@ -415,9 +415,44 @@ False or if the parcellation name is a built-in parcellation.</p>
 <span id="coordinates"></span><h1><span class="section-number">9.2.2. </span>Coordinates<a class="headerlink" href="#module-junifer.data.coordinates" title="Link to this heading">#</a></h1>
 <p>Provide functions for list of coordinates.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.coordinates.get_coordinates">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.coordinates.</span></span><span class="sig-name descname"><span class="pre">get_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.coordinates.get_coordinates" title="Link to this definition">#</a></dt>
+<dd><p>Get coordinates, tailored for the target image.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>coords</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the coordinates.</p>
+</dd>
+<dt><strong>target_data</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The corresponding item of the data object to which the coordinates
+will be applied.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other data
+kinds that needs to be used in the computation of coordinates
+(default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>The coordinates.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The names of the VOIs.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is not MNI.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.coordinates.list_coordinates">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.coordinates.</span></span><span class="sig-name descname"><span class="pre">list_coordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.coordinates.list_coordinates" title="Link to this definition">#</a></dt>
-<dd><p>List all the available coordinates lists (VOIs).</p>
+<dd><p>List all the available coordinates (VOIs).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
@@ -447,8 +482,14 @@ False or if the parcellation name is a built-in parcellation.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-odd">Warns<span class="colon">:</span></dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">name</span></code> is invalid.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Warns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#DeprecationWarning" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeprecationWarning</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">Power</span></code> is provided as the <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
 </dd>
 </dl>
@@ -459,7 +500,7 @@ False or if the parcellation name is a built-in parcellation.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.coordinates.register_coordinates">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.coordinates.</span></span><span class="sig-name descname"><span class="pre">register_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voi_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.coordinates.register_coordinates" title="Link to this definition">#</a></dt>
-<dd><p>Register coordinates.</p>
+<dd><p>Register a custom user coordinates.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -474,6 +515,18 @@ z-coordinates).</p>
 </dd>
 <dt><strong>overwrite</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, overwrite an existing list of coordinates with the same name.
 Does not apply to built-in coordinates (default False).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the coordinates name is already registered and overwrite is set to
+False or if the coordinates name is a built-in coordinates or if the
+<code class="docutils literal notranslate"><span class="pre">coordinates</span></code> is not a 2D array or if coordinate value does not have
+3 components or if the <code class="docutils literal notranslate"><span class="pre">voi_names</span></code> shape does not match the
+<code class="docutils literal notranslate"><span class="pre">coordinates</span></code> shape.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TypeError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">coordinates</span></code> is not a <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -646,6 +699,7 @@ False or if the mask name is a built-in mask.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-junifer.data.coordinates">9.2.2. Coordinates</a><ul>
+<li><a class="reference internal" href="#junifer.data.coordinates.get_coordinates"><code class="docutils literal notranslate"><span class="pre">get_coordinates()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.coordinates.list_coordinates"><code class="docutils literal notranslate"><span class="pre">list_coordinates()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.coordinates.load_coordinates"><code class="docutils literal notranslate"><span class="pre">load_coordinates()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.coordinates.register_coordinates"><code class="docutils literal notranslate"><span class="pre">register_coordinates()</span></code></a></li>
