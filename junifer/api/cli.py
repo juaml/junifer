@@ -430,3 +430,26 @@ def afni_docker() -> None:  # pragma: no cover
     export PATH="$PATH:{afni_wrappers_path}"
     """
     click.secho(msg, fg="blue")
+
+
+@setup.command("fsl-docker")
+def fsl_docker() -> None:  # pragma: no cover
+    """Configure FSL-Docker wrappers."""
+    import junifer
+
+    pkg_path = Path(junifer.__path__[0])  # type: ignore
+    fsl_wrappers_path = pkg_path / "api" / "res" / "fsl"
+    msg = f"""
+    Installation instructions for FSL-Docker wrappers:
+
+    1. Install Docker: https://docs.docker.com/get-docker/
+
+    2. Get the FSL-Docker image by running this on the command line:
+
+        docker pull brainlife/fsl
+
+    3. Add this line to the ~/.bashrc or ~/.zshrc file:
+
+    export PATH="$PATH:{fsl_wrappers_path}"
+    """
+    click.secho(msg, fg="blue")

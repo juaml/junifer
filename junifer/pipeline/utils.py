@@ -32,6 +32,9 @@ def check_ext_dependencies(name: str, optional: bool, **kwargs: Any) -> bool:
     # Check for afni
     if name == "afni":
         found = _check_afni(**kwargs)
+    # Check for fsl
+    elif name == "fsl":
+        found = _check_fsl(**kwargs)
     # Went off the rails
     else:
         raise_error(
@@ -106,3 +109,63 @@ def _check_afni(commands: Optional[List[str]] = None) -> bool:
                 f"{commands_found_results}"
             )
     return afni_found
+
+
+def _check_fsl(commands: Optional[List[str]] = None) -> bool:
+    """Check if fsl is present in the system.
+
+    Parameters
+    ----------
+    commands : list of str, optional
+        The commands to specifically check for from fsl. If None, only
+        the basic fsl flirt version would be looked up, else, would also
+        check for specific commands (default None).
+
+    Returns
+    -------
+    bool
+        Whether fsl is found or not.
+
+    """
+    completed_process = subprocess.run(
+        "flirt -v",
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.STDOUT,
+        shell=True,  # is unsafe but kept for resolution via PATH
+        check=False,
+    )
+    fsl_found = completed_process.returncode == 0
+
+    # Check for specific commands
+    if fsl_found and commands is not None:
+        if not isinstance(commands, list):
+            commands = [commands]
+        # Store command found results
+        commands_found_results = {}
+        # Set all commands found flag to True
+        all_commands_found = True
+        # Check commands' existence
+        for command in commands:
+            command_process = subprocess.run(
+                [command],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.STDOUT,
+                shell=True,  # is unsafe but kept for resolution via PATH
+                check=False,
+            )
+            command_found = command_process.returncode == 0
+            commands_found_results[command] = (
+                "found" if command_found else "not found"
+            )
+            # Set flag to trigger warning
+            all_commands_found = all_commands_found and command_found
+        # One or more commands were missing
+        if not all_commands_found:
+            warn_with_log(
+                "FSL is installed but some of the required commands "
+                "were not found. These are the results: "
+                f"{commands_found_results}"
+            )
+    return fsl_found
