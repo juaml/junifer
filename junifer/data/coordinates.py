@@ -1,11 +1,12 @@
 """Provide functions for list of coordinates."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 import typing
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd
@@ -57,7 +58,7 @@ def register_coordinates(
     voi_names: List[str],
     overwrite: Optional[bool] = False,
 ) -> None:
-    """Register coordinates.
+    """Register a custom user coordinates.
 
     Parameters
     ----------
@@ -73,6 +74,18 @@ def register_coordinates(
     overwrite : bool, optional
         If True, overwrite an existing list of coordinates with the same name.
         Does not apply to built-in coordinates (default False).
+
+    Raises
+    ------
+    ValueError
+        If the coordinates name is already registered and overwrite is set to
+        False or if the coordinates name is a built-in coordinates or if the
+        ``coordinates`` is not a 2D array or if coordinate value does not have
+        3 components or if the ``voi_names`` shape does not match the
+        ``coordinates`` shape.
+    TypeError
+        If ``coordinates`` is not a ``numpy.ndarray``.
+
     """
     if name in _available_coordinates:
         if isinstance(_available_coordinates[name], Path):
@@ -90,7 +103,8 @@ def register_coordinates(
 
     if not isinstance(coordinates, np.ndarray):
         raise_error(
-            f"Coordinates must be a numpy.ndarray, not {type(coordinates)}."
+            f"Coordinates must be a `numpy.ndarray`, not {type(coordinates)}.",
+            klass=TypeError,
         )
     if coordinates.ndim != 2:
         raise_error(
@@ -102,8 +116,8 @@ def register_coordinates(
         )
     if len(voi_names) != coordinates.shape[0]:
         raise_error(
-            f"Length of voi_names ({len(voi_names)}) does not match the "
-            f"number of coordinates ({coordinates.shape[0]})."
+            f"Length of `voi_names` ({len(voi_names)}) does not match the "
+            f"number of `coordinates` ({coordinates.shape[0]})."
         )
     _available_coordinates[name] = {
         "coords": coordinates,
@@ -112,14 +126,53 @@ def register_coordinates(
 
 
 def list_coordinates() -> List[str]:
-    """List all the available coordinates lists (VOIs).
+    """List all the available coordinates (VOIs).
 
     Returns
     -------
     list of str
         A list with all available coordinates names.
+
     """
     return sorted(_available_coordinates.keys())
+
+
+def get_coordinates(
+    coords: str,
+    target_data: Dict[str, Any],
+    extra_input: Optional[Dict[str, Any]] = None,
+) -> Tuple[ArrayLike, List[str]]:
+    """Get coordinates, tailored for the target image.
+
+    Parameters
+    ----------
+    coords : str
+        The name of the coordinates.
+    target_data : dict
+        The corresponding item of the data object to which the coordinates
+        will be applied.
+    extra_input : dict, optional
+        The other fields in the data object. Useful for accessing other data
+        kinds that needs to be used in the computation of coordinates
+        (default None).
+
+    Returns
+    -------
+    numpy.ndarray
+        The coordinates.
+    list of str
+        The names of the VOIs.
+
+    Raises
+    ------
+    ValueError
+        If ``extra_input`` is None when ``target_data``'s space is not MNI.
+
+    """
+    # Load the coordinates
+    seeds, labels = load_coordinates(name=coords)
+
+    return seeds, labels
 
 
 def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
@@ -137,14 +190,23 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
     list of str
         The names of the VOIs.
 
+    Raises
+    ------
+    ValueError
+        If ``name`` is invalid.
+
     Warns
     -----
     DeprecationWarning
         If ``Power`` is provided as the ``name``.
 
     """
+    # Check for valid coordinates name
     if name not in _available_coordinates:
-        raise_error(f"Coordinates {name} not found.")
+        raise_error(
+            f"Coordinates {name} not found. "
+            f"Valid options are: {list_coordinates()}"
+        )
 
     # Put up deprecation notice
     if name == "Power":
@@ -157,8 +219,10 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
             category=DeprecationWarning,
         )
 
+    # Load coordinates
     t_coord = _available_coordinates[name]
     if isinstance(t_coord, Path):
+        # Load via pandas
         df_coords = pd.read_csv(t_coord, sep="\t", header=None)
         coords = df_coords.iloc[:, [0, 1, 2]].to_numpy()
         names = list(df_coords.iloc[:, [3]].values[:, 0])
@@ -167,4 +231,5 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         coords = typing.cast(ArrayLike, coords)
         names = t_coord["voi_names"]
         names = typing.cast(List[str], names)
+
     return coords, names

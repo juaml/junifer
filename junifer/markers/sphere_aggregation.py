@@ -7,7 +7,7 @@
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 from ..api.decorators import register_marker
-from ..data import get_mask, load_coordinates
+from ..data import get_coordinates, get_mask
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
 from ..utils import logger, raise_error, warn_with_log
@@ -54,6 +54,12 @@ class SphereAggregation(BaseMarker):
     name : str, optional
         The name of the marker. By default, it will use KIND_SphereAggregation
         where KIND is the kind of data it was applied to (default None).
+
+    Raises
+    ------
+    ValueError
+        If ``time_method`` is specified for non-BOLD data or if
+        ``time_method_params`` is not None when ``time_method`` is None.
 
     """
 
@@ -118,6 +124,11 @@ class SphereAggregation(BaseMarker):
         str
             The storage type output by the marker.
 
+        Raises
+        ------
+        ValueError
+            If the ``input_type`` is invalid.
+
         """
 
         if input_type in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
@@ -125,7 +136,7 @@ class SphereAggregation(BaseMarker):
         elif input_type == "BOLD":
             return "timeseries"
         else:
-            raise ValueError(f"Unknown input kind for {input_type}")
+            raise_error(f"Unknown input kind for {input_type}")
 
     def compute(
         self,
@@ -155,6 +166,11 @@ class SphereAggregation(BaseMarker):
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``col_names`` : the column labels for the computed values as list
 
+        Warns
+        -----
+        RuntimeWarning
+            If time aggregation is required but only time point is available.
+
         """
         t_input_img = input["data"]
         logger.debug(f"Sphere aggregation using {self.method}")
@@ -162,15 +178,25 @@ class SphereAggregation(BaseMarker):
         agg_func = get_aggfunc_by_name(
             self.method, func_params=self.method_params
         )
+
+        # Get seeds and labels tailored to target image
+        coords, labels = get_coordinates(
+            coords=self.coords,
+            target_data=input,
+            extra_input=extra_input,
+        )
+
         # Load mask
         mask_img = None
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
+            # Get tailored mask
             mask_img = get_mask(
                 masks=self.masks, target_data=input, extra_input=extra_input
             )
-        # Get seeds and labels
-        coords, out_labels = load_coordinates(name=self.coords)
+
+        # Initialize masker
+        logger.debug("Masking")
         masker = JuniferNiftiSpheresMasker(
             seeds=coords,
             radius=self.radius,
@@ -180,6 +206,8 @@ class SphereAggregation(BaseMarker):
         )
         # Fit and transform the marker on the data
         out_values = masker.fit_transform(t_input_img)
+
+        # Apply time dimension aggregation if required
         if self.time_method is not None:
             if out_values.shape[0] > 1:
                 logger.debug("Aggregating time dimension")
@@ -193,5 +221,5 @@ class SphereAggregation(BaseMarker):
                     "available."
                 )
         # Format the output
-        out = {"data": out_values, "col_names": out_labels}
+        out = {"data": out_values, "col_names": labels}
         return out
