@@ -170,7 +170,7 @@ def get_coordinates(
 
     """
     # Load the coordinates
-    seeds, labels, _ = load_coordinates(name=coords)
+    seeds, labels = load_coordinates(name=coords)
 
     return seeds, labels
 
