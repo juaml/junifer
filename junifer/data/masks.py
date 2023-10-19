@@ -80,8 +80,11 @@ def _fetch_icbm152_brain_gm_mask(
 # Callable masks should be functions that take at least one parameter:
 # * `target_img`: the image to which the mask will be applied.
 _available_masks: Dict[str, Dict[str, Any]] = {
-    "GM_prob0.2": {"family": "Vickery-Patil", "space": "MNI"},
-    "GM_prob0.2_cortex": {"family": "Vickery-Patil", "space": "MNI"},
+    "GM_prob0.2": {"family": "Vickery-Patil", "space": "MNI152Lin6Asym"},
+    "GM_prob0.2_cortex": {
+        "family": "Vickery-Patil",
+        "space": "MNI152Lin6Asym",
+    },
     "compute_brain_mask": {
         "family": "Callable",
         "func": compute_brain_mask,
