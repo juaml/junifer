@@ -30,7 +30,9 @@ def test_EdgeCentricFCParcels(tmp_path: Path) -> None:
         parcellation="TianxS1x3TxMNInonlinear2009cAsym",
         cor_method_params={"empirical": True},
     )
-    all_out = efc.fit_transform({"BOLD": {"data": fmri_img, "meta": {}}})
+    all_out = efc.fit_transform(
+        {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
+    )
 
     out = all_out["BOLD"]
 
@@ -51,7 +53,7 @@ def test_EdgeCentricFCParcels(tmp_path: Path) -> None:
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {"element": {"subject": "test"}, "dependencies": {"numpy"}}
-    input = {"BOLD": {"data": fmri_img, "meta": meta}}
+    input = {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
     all_out = efc.fit_transform(input, storage=storage)
 
     features = storage.list_features()
