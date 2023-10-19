@@ -247,6 +247,7 @@ Available
    * - Name
      - Options
      - Keys
+     - Spaces
      - Version added
      - Publication
    * - Schaefer
@@ -255,6 +256,7 @@ Available
        | ``Schaefer200x17``, ``Schaefer300x17``, ``Schaefer400x17``,
        | ``Schaefer500x17``, ``Schaefer600x17``, ``Schaefer700x17``,
        | ``Schaefer800x17``, ``Schaefer900x17``, ``Schaefer1000x17``
+     - ``MNI152NLin6Asym``
      - 0.0.1
      - | Schaefer, A., Kong, R., Gordon, E.M. et al.
        | Local-Global Parcellation of the Human Cerebral Cortex from
@@ -264,6 +266,7 @@ Available
    * - SUIT
      - ``space``
      - ``SUITxMNI``, ``SUITxSUIT``
+     - ``SUIT``, ``MNI152Lin6Asym``
      - 0.0.1
      - | Diedrichsen, J.
        | A spatially unbiased atlas template of the human cerebellum.
@@ -279,6 +282,7 @@ Available
        | ``TianxS2x3TxMNInonlinear2009cAsym``,
        | ``TianxS3x3TxMNInonlinear2009cAsym``,
        | ``TianxS4x3TxMNInonlinear2009cAsym``
+     - ``MNI152NLin6Asym``, ``MNI152NLin2009cAsym``
      - 0.0.1
      - | Tian, Y., Margulies, D.S., Breakspear, M. et al.
        | Topographic organization of the human subcortex
@@ -288,6 +292,7 @@ Available
    * - AICHA
      - ``version``
      - ``AICHA_v1``, ``AICHA_v2``
+     - ``MNI152Lin6Asym``
      - 0.0.3
      - | Joliot, M., Jobard, G., Naveau, M. et al.
        | AICHA: An atlas of intrinsic connectivity of homotopic areas.
@@ -297,6 +302,7 @@ Available
      - ``year``, ``n_rois``
      - | ``Shen_2013_50``, ``Shen_2013_100``, ``Shen_2013_150``,
        | ``Shen_2015_268``, ``Shen_2019_368``
+     - ``MNI152NLin2009cAsym``
      - 0.0.3
      - | Shen, X., Tokoglu, F., Papademetris, X., Constable, R.T.
        | Groupwise whole-brain parcellation from resting-state fMRI data
@@ -322,6 +328,7 @@ Available
        | ``Yan400xKong17``, ``Yan500xKong17``, ``Yan600xKong17``,
        | ``Yan700xKong17``, ``Yan800xKong17``, ``Yan900xKong17``,
        | ``Yan1000xKong17``
+     - ``MNI152NLin6Asym``
      - 0.0.3
      - | Yan, X., Kong, R., Xue, A., et al.
        | Homotopic local-global parcellation of the human cerebral cortex from
@@ -590,28 +597,33 @@ Available
 
    * - Name
      - Keys
+     - Spaces
      - Version added
      - Description - Publication
    * - Vickery-Patil (Gray Matter)
      - | ``GM_prob0.2``
+     - ``MNI152Lin6Asym``
      - 0.0.1
      - | Vickery, Sam, & Patil, Kaustubh. (2022).
        | Chimpanzee and Human Gray Matter Masks [Data set]. Zenodo.
        | https://doi.org/10.5281/zenodo.6463123
    * - Vickery-Patil (Cortex + Basal Ganglia)
      - | ``GM_prob0.2_cortex``
+     - ``MNI152Lin6Asym``
      - 0.0.1
      - | Vickery, Sam, & Patil, Kaustubh. (2022).
        | Chimpanzee and Human Gray Matter Masks [Data set]. Zenodo.
        | https://doi.org/10.5281/zenodo.6463123
    * - Nilearn's MNI152 1mm-resolution mask
      - | ``compute_brain_mask``
+     - Adapts to the target data
      - 0.0.2
      - | Compute the whole-brain mask. This mask is calculated using
        | MNI152 1mm-resolution template mask onto the target image.
        | See :func:`nilearn.masking.compute_brain_mask`
    * - Nilearn's mask computed from FMRI data
      - | ``compute_epi_mask``
+     - Adapts to the target data
      - 0.0.2
      - | Compute a brain mask from fMRI data. This is based on an heuristic
        | proposed by T.Nichols: find the least dense point of the histogram,
@@ -619,6 +631,7 @@ Available
        | image histogram. See :func:`nilearn.masking.compute_epi_mask`
    * - Nilearn's background mask
      - | ``compute_background_mask``
+     - Adapts to the target data
      - 0.0.2
      - | Compute a brain mask for the images by guessing the value of the
        | background from the border of the image.
@@ -626,6 +639,7 @@ Available
 
    * - Nilearn's ICBM152 template gray-matter mask
      - | ``fetch_icbm152_brain_gm_mask``
+     - ``MNI152NLin2009aAsym``
      - 0.0.2
      - | Compute a gray-matter mask from the asymmetrical ICBM152 2009 template,
        | release a.
