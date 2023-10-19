@@ -213,7 +213,7 @@ def test_ParcelAggregation_3D_mask() -> None:
     parcellation = datasets.fetch_atlas_schaefer_2018(n_rois=100)
 
     # Get one mask
-    mask_img, _ = load_mask("GM_prob0.2")
+    mask_img, _, _ = load_mask("GM_prob0.2")
 
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
