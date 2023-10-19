@@ -45,7 +45,7 @@ if TYPE_CHECKING:
 # TODO: have separate dictionary for built-in
 _available_parcellations: Dict[str, Dict[Any, Any]] = {
     "SUITxSUIT": {"family": "SUIT", "space": "SUIT"},
-    "SUITxMNI": {"family": "SUIT", "space": "MNI"},
+    "SUITxMNI": {"family": "SUIT", "space": "MNI152Lin6Asym"},
 }
 
 # Add Schaefer parcellation info
@@ -56,7 +56,7 @@ for n_rois in range(100, 1001, 100):
             "family": "Schaefer",
             "n_rois": n_rois,
             "yeo_networks": t_net,
-            "space": "MNI",
+            "space": "MNI152NLin6Asym",
         }
 # Add Tian parcellation info
 for scale in range(1, 5):
@@ -65,28 +65,28 @@ for scale in range(1, 5):
         "family": "Tian",
         "scale": scale,
         "magneticfield": "7T",
-        "space": "MNI6thgeneration",
+        "space": "MNI152NLin6Asym",
     }
     t_name = f"TianxS{scale}x3TxMNI6thgeneration"
     _available_parcellations[t_name] = {
         "family": "Tian",
         "scale": scale,
         "magneticfield": "3T",
-        "space": "MNI6thgeneration",
+        "space": "MNI152NLin6Asym",
     }
     t_name = f"TianxS{scale}x3TxMNInonlinear2009cAsym"
     _available_parcellations[t_name] = {
         "family": "Tian",
         "scale": scale,
         "magneticfield": "3T",
-        "space": "MNInonlinear2009cAsym",
+        "space": "MNI152NLin2009cAsym",
     }
 # Add AICHA parcellation info
 for version in (1, 2):
     _available_parcellations[f"AICHA_v{version}"] = {
         "family": "AICHA",
         "version": version,
-        "space": "MNI",
+        "space": "MNI152Lin6Asym",
     }
 # Add Shen parcellation info
 for year in (2013, 2015, 2019):
@@ -96,21 +96,21 @@ for year in (2013, 2015, 2019):
                 "family": "Shen",
                 "year": 2013,
                 "n_rois": n_rois,
-                "space": "MNI",
+                "space": "MNI152NLin2009cAsym",
             }
     elif year == 2015:
         _available_parcellations["Shen_2015_268"] = {
             "family": "Shen",
             "year": 2015,
             "n_rois": 268,
-            "space": "MNI",
+            "space": "MNI152NLin2009cAsym",
         }
     elif year == 2019:
         _available_parcellations["Shen_2019_368"] = {
             "family": "Shen",
             "year": 2019,
             "n_rois": 368,
-            "space": "MNI",
+            "space": "MNI152NLin2009cAsym",
         }
 # Add Yan parcellation info
 for n_rois in range(100, 1001, 100):
@@ -120,14 +120,14 @@ for n_rois in range(100, 1001, 100):
             "family": "Yan",
             "n_rois": n_rois,
             "yeo_networks": yeo_network,
-            "space": "MNI",
+            "space": "MNI152NLin6Asym",
         }
     # Add Kong networks
     _available_parcellations[f"Yan{n_rois}xKong17"] = {
         "family": "Yan",
         "n_rois": n_rois,
         "kong_networks": 17,
-        "space": "MNI",
+        "space": "MNI152NLin6Asym",
     }
 
 
