@@ -140,7 +140,7 @@ def test_SphereAggregation_3D_mask() -> None:
     coordinates, _, _ = load_coordinates(COORDS)
 
     # Get one mask
-    mask_img, _ = load_mask("GM_prob0.2")
+    mask_img, _, _ = load_mask("GM_prob0.2")
 
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
