@@ -39,7 +39,14 @@ def test_reho_parcels_computation(tmp_path: Path) -> None:
         reho_parcels_marker = ReHoParcels(parcellation=PARCELLATION)
         # Fit transform marker on data
         reho_parcels_output = reho_parcels_marker.fit_transform(
-            {"BOLD": {"path": "/tmp", "data": fmri_img, "meta": {}}}
+            {
+                "BOLD": {
+                    "path": "/tmp",
+                    "data": fmri_img,
+                    "meta": {},
+                    "space": "MNI",
+                }
+            }
         )
         # Get BOLD output
         reho_parcels_output_bold = reho_parcels_output["BOLD"]
@@ -82,7 +89,14 @@ def test_reho_parcels_computation_comparison(tmp_path: Path) -> None:
         )
         # Fit transform marker on data
         reho_parcels_output_python = reho_parcels_marker_python.fit_transform(
-            {"BOLD": {"path": "/tmp", "data": fmri_img, "meta": {}}}
+            {
+                "BOLD": {
+                    "path": "/tmp",
+                    "data": fmri_img,
+                    "meta": {},
+                    "space": "MNI",
+                }
+            }
         )
         # Get BOLD output
         reho_parcels_output_bold_python = reho_parcels_output_python["BOLD"]
@@ -93,7 +107,14 @@ def test_reho_parcels_computation_comparison(tmp_path: Path) -> None:
         )
         # Fit transform marker on data
         reho_parcels_output_afni = reho_parcels_marker_afni.fit_transform(
-            {"BOLD": {"path": "/tmp", "data": fmri_img, "meta": {}}}
+            {
+                "BOLD": {
+                    "path": "/tmp",
+                    "data": fmri_img,
+                    "meta": {},
+                    "space": "MNI",
+                }
+            }
         )
         # Get BOLD output
         reho_parcels_output_bold_afni = reho_parcels_output_afni["BOLD"]
@@ -134,6 +155,13 @@ def test_reho_parcels_storage(tmp_path: Path) -> None:
         }  # only requires element key for storing
         # Fit transform marker on data with storage
         reho_parcels_marker.fit_transform(
-            input={"BOLD": {"path": "/tmp", "data": fmri_img, "meta": meta}},
+            input={
+                "BOLD": {
+                    "path": "/tmp",
+                    "data": fmri_img,
+                    "meta": meta,
+                    "space": "MNI",
+                }
+            },
             storage=reho_parcels_storage,
         )
