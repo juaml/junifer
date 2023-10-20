@@ -311,7 +311,7 @@ def test_schaefer(
     assert img is not None
     assert img_path.name == parcellation_file
     assert len(label) == n_rois
-    assert space == "MNI"
+    assert space == "MNI152NLin6Asym"
     assert_array_equal(
         img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
     )
@@ -354,29 +354,31 @@ def test_retrieve_schaefer_incorrect_yeo_networks(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
-    "space",
-    ["SUIT", "MNI"],
+    "space_key, space",
+    [("SUIT", "SUIT"), ("MNI", "MNI152Lin6Asym")],
 )
-def test_suit(tmp_path: Path, space: str) -> None:
+def test_suit(tmp_path: Path, space_key: str, space: str) -> None:
     """Test SUIT parcellation.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    space_key : str
+        The parametrized space values for the key.
     space : str
         The parametrized space values.
 
     """
     parcellations = list_parcellations()
-    assert f"SUITx{space}" in parcellations
+    assert f"SUITx{space_key}" in parcellations
     # Load parcellation
     img, label, img_path, parcellation_space = load_parcellation(
-        name=f"SUITx{space}",
+        name=f"SUITx{space_key}",
         parcellations_dir=tmp_path,
     )
     assert img is not None
-    assert img_path.name == f"SUIT_{space}Space_1mm.nii"
+    assert img_path.name == f"SUIT_{space_key}Space_1mm.nii"
     assert parcellation_space == space
     assert len(label) == 34
     assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
@@ -427,7 +429,7 @@ def test_tian_3T_6thgeneration(
     fname1 = f"Tian_Subcortex_S{scale}_3T_1mm.nii.gz"
     assert img is not None
     assert fname.name == fname1
-    assert parcellation_space_1 == "MNI6thgeneration"
+    assert parcellation_space_1 == "MNI152NLin6Asym"
     assert len(lbl) == n_label
     assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
     # Load parcellation
@@ -439,7 +441,7 @@ def test_tian_3T_6thgeneration(
     fname1 = f"Tian_Subcortex_S{scale}_3T.nii.gz"
     assert img is not None
     assert fname.name == fname1
-    assert parcellation_space_2 == "MNI6thgeneration"
+    assert parcellation_space_2 == "MNI152NLin6Asym"
     assert len(lbl) == n_label
     assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
 
@@ -475,7 +477,7 @@ def test_tian_3T_nonlinear2009cAsym(
     fname1 = f"Tian_Subcortex_S{scale}_3T_2009cAsym.nii.gz"
     assert img is not None
     assert fname.name == fname1
-    assert space == "MNInonlinear2009cAsym"
+    assert space == "MNI152NLin2009cAsym"
     assert len(lbl) == n_label
     assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
 
@@ -510,7 +512,7 @@ def test_tian_7T_6thgeneration(
     fname1 = f"Tian_Subcortex_S{scale}_7T.nii.gz"
     assert img is not None
     assert fname.name == fname1
-    assert space == "MNI6thgeneration"
+    assert space == "MNI152NLin6Asym"
     assert len(lbl) == n_label
     assert_array_almost_equal(
         img.header["pixdim"][1:4], [1.6, 1.6, 1.6]  # type: ignore
@@ -531,13 +533,13 @@ def test_retrieve_tian_incorrect_space(tmp_path: Path) -> None:
             parcellations_dir=tmp_path, resolution=1, scale=1, space="wrong"
         )
 
-    with pytest.raises(ValueError, match=r"MNI6thgeneration"):
+    with pytest.raises(ValueError, match=r"MNI152NLin6Asym"):
         _retrieve_tian(
             parcellations_dir=tmp_path,
             resolution=1,
             scale=1,
             magneticfield="7T",
-            space="MNInonlinear2009cAsym",
+            space="MNI152NLin2009cAsym",
         )
 
 
@@ -573,7 +575,7 @@ def test_retrieve_tian_incorrect_scale(tmp_path: Path) -> None:
             parcellations_dir=tmp_path,
             resolution=1,
             scale=5,
-            space="MNI6thgeneration",
+            space="MNI152NLin6Asym",
         )
 
 
@@ -597,7 +599,7 @@ def test_aicha(tmp_path: Path, version: int) -> None:
     )
     assert img is not None
     assert img_path.name == "AICHA.nii"
-    assert space == "MNI"
+    assert space == "MNI152Lin6Asym"
     assert len(label) == 384
     assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
 
@@ -668,7 +670,7 @@ def test_shen(
     )
     assert img is not None
     assert img_name in img_path.name
-    assert space == "MNI"
+    assert space == "MNI152NLin2009cAsym"
     assert len(label) == n_labels
     assert_array_equal(
         img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
@@ -864,7 +866,7 @@ def test_yan(
     )
     assert img is not None
     assert img_path.name == parcellation_file  # type: ignore
-    assert space == "MNI"
+    assert space == "MNI152NLin6Asym"
     assert len(label) == n_rois
     assert_array_equal(
         img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
