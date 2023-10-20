@@ -202,7 +202,7 @@ def test_vickery_patil(
     assert_array_almost_equal(
         mask.header["pixdim"][1:4], pixdim  # type: ignore
     )
-    assert space == "MNI"
+    assert space == "MNI152Lin6Asym"
     assert mask_fname is not None
     assert mask_fname.name == fname
 
