@@ -487,13 +487,13 @@ def _retrieve_parcellation(
     * Tian :
         ``scale`` : {1, 2, 3, 4}
             Scale of parcellation (defines granularity).
-        ``space`` : {"MNI6thgeneration", "MNInonlinear2009cAsym"}, optional
-            Space of parcellation (default "MNI6thgeneration"). (For more
+        ``space`` : {"MNI152NLin6Asym", "MNI152NLin2009cAsym"}, optional
+            Space of parcellation (default "MNI152NLin6Asym"). (For more
             information see https://github.com/yetianmed/subcortex)
         ``magneticfield`` : {"3T", "7T"}, optional
             Magnetic field (default "3T").
     * SUIT :
-        ``space`` : {"MNI", "SUIT"}, optional
+        ``space`` : {"MNI152Lin6Asym", "SUIT"}, optional
             Space of parcellation (default "MNI"). (For more information
             see http://www.diedrichsenlab.org/imaging/suit.htm).
     * AICHA :
@@ -691,7 +691,7 @@ def _retrieve_tian(
     parcellations_dir: Path,
     resolution: Optional[float] = None,
     scale: Optional[int] = None,
-    space: str = "MNI6thgeneration",
+    space: str = "MNI152NLin6Asym",
     magneticfield: str = "3T",
 ) -> Tuple[Path, List[str]]:
     """Retrieve Tian parcellation.
@@ -708,8 +708,8 @@ def _retrieve_tian(
         parcellation depend on the space and magnetic field.
     scale : {1, 2, 3, 4}, optional
         Scale of parcellation (defines granularity) (default None).
-    space : {"MNI6thgeneration", "MNInonlinear2009cAsym"}, optional
-        Space of parcellation (default "MNI6thgeneration"). (For more
+    space : {"MNI152NLin6Asym", "MNI152NLin2009cAsym"}, optional
+        Space of parcellation (default "MNI152NLin6Asym"). (For more
         information see https://github.com/yetianmed/subcortex)
     magneticfield : {"3T", "7T"}, optional
         Magnetic field (default "3T").
@@ -745,10 +745,10 @@ def _retrieve_tian(
 
     _valid_resolutions = []  # avoid pylance error
     if magneticfield == "3T":
-        _valid_spaces = ["MNI6thgeneration", "MNInonlinear2009cAsym"]
-        if space == "MNI6thgeneration":
+        _valid_spaces = ["MNI152NLin6Asym", "MNI152NLin2009cAsym"]
+        if space == "MNI152NLin6Asym":
             _valid_resolutions = [1, 2]
-        elif space == "MNInonlinear2009cAsym":
+        elif space == "MNI152NLin2009cAsym":
             _valid_resolutions = [2]
         else:
             raise_error(
@@ -757,10 +757,10 @@ def _retrieve_tian(
             )
     elif magneticfield == "7T":
         _valid_resolutions = [1.6]
-        if space != "MNI6thgeneration":
+        if space != "MNI152NLin6Asym":
             raise_error(
                 f"The parameter `space` ({space}) for 7T needs to be "
-                f"MNI6thgeneration"
+                f"MNI152NLin6Asym"
             )
     else:
         raise_error(
@@ -778,7 +778,7 @@ def _retrieve_tian(
         parcellation_lname = parcellation_fname_base_3T / (
             f"Tian_Subcortex_S{scale}_3T_label.txt"
         )
-        if space == "MNI6thgeneration":
+        if space == "MNI152NLin6Asym":
             parcellation_fname = parcellation_fname_base_3T / (
                 f"Tian_Subcortex_S{scale}_{magneticfield}.nii.gz"
             )
@@ -787,7 +787,7 @@ def _retrieve_tian(
                     parcellation_fname_base_3T
                     / f"Tian_Subcortex_S{scale}_{magneticfield}_1mm.nii.gz"
                 )
-        elif space == "MNInonlinear2009cAsym":
+        elif space == "MNI152NLin2009cAsym":
             space = "2009cAsym"
             parcellation_fname = parcellation_fname_base_3T / (
                 f"Tian_Subcortex_S{scale}_{magneticfield}_{space}.nii.gz"
@@ -857,7 +857,9 @@ def _retrieve_tian(
 
 
 def _retrieve_suit(
-    parcellations_dir: Path, resolution: Optional[float], space: str = "MNI"
+    parcellations_dir: Path,
+    resolution: Optional[float],
+    space: str = "MNI152Lin6Asym",
 ) -> Tuple[Path, List[str]]:
     """Retrieve SUIT parcellation.
 
@@ -871,8 +873,8 @@ def _retrieve_suit(
         resolution higher than the desired one. By default, will load the
         highest one (default None). Available resolutions for this parcellation
         are 1mm and 2mm.
-    space : {"MNI", "SUIT"}, optional
-        Space of parcellation (default "MNI"). (For more information
+    space : {"MNI152Lin6Asym", "SUIT"}, optional
+        Space of parcellation (default "MNI152Lin6Asym"). (For more information
         see http://www.diedrichsenlab.org/imaging/suit.htm).
 
     Returns
@@ -893,7 +895,7 @@ def _retrieve_suit(
     logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tspace: {space}")
 
-    _valid_spaces = ["MNI", "SUIT"]
+    _valid_spaces = ["MNI152Lin6Asym", "SUIT"]
 
     # check validity of parameters
     if space not in _valid_spaces:
@@ -908,6 +910,9 @@ def _retrieve_suit(
     resolution = closest_resolution(resolution, _valid_resolutions)
 
     # define file names
+    # Format space if MNI; required for the file name
+    if space.startswith("MNI"):
+        space = "MNI"
     parcellation_fname = (
         parcellations_dir / "SUIT" / (f"SUIT_{space}Space_{resolution}mm.nii")
     )
