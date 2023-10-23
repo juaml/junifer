@@ -310,9 +310,7 @@ def get_mask(  # noqa: C901
     # Multiple masks, need intersection / union
     if len(all_masks) > 1:
         # Intersect / union of masks only if all masks are in the same space
-        if len(set(all_spaces)) == 1 or all(
-            x.startswith("MNI") for x in all_spaces
-        ):
+        if len(set(all_spaces)) == 1:
             mask_img = intersect_masks(all_masks, **intersect_params)
         else:
             # Check for inherited masks with target image in MNI space
