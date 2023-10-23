@@ -267,9 +267,7 @@ def get_parcellation(
     else:
         # Merge the parcellations only if all parcellations are in the same
         # space
-        if len(set(all_spaces)) == 1 or all(
-            x.startswith("MNI") for x in all_spaces
-        ):
+        if len(set(all_spaces)) == 1:
             resampled_parcellation_img, labels = merge_parcellations(
                 parcellations_list=all_parcellations,
                 parcellations_names=parcellation,
