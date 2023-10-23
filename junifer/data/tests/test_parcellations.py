@@ -1144,7 +1144,7 @@ def test_get_parcellation_multi_same_space() -> None:
         tailored_parcellation, tailored_labels = get_parcellation(
             parcellation=[
                 "Schaefer100x7",
-                "TianxS2x3TxMNInonlinear2009cAsym",
+                "TianxS2x3TxMNI6thgeneration",
             ],
             target_data=vbm_gm,
         )
@@ -1156,7 +1156,7 @@ def test_get_parcellation_multi_same_space() -> None:
         raw_labels = []
         parcellations_names = [
             "Schaefer100x7",
-            "TianxS2x3TxMNInonlinear2009cAsym",
+            "TianxS2x3TxMNI6thgeneration",
         ]
         for name in parcellations_names:
             img, labels, _, _ = load_parcellation(name=name, resolution=1.5)
