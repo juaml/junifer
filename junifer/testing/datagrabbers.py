@@ -246,7 +246,6 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         out["BOLD_confounds"] = {
             "path": Path(self._dataset["confounds"][i_sub]),
             "format": "fmriprep",
-            "space": "MNI",
         }
 
         return out
