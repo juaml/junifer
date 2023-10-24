@@ -266,8 +266,8 @@
         <article role="main">
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">#</a></h1>
-<section id="junifer-0-0-4-dev108-2023-10-17">
-<h2><span class="section-number">14.1. </span>Junifer 0.0.4.dev108 (2023-10-17)<a class="headerlink" href="#junifer-0-0-4-dev108-2023-10-17" title="Link to this heading">#</a></h2>
+<section id="junifer-0-0-4-dev153-2023-10-24">
+<h2><span class="section-number">14.1. </span>Junifer 0.0.4.dev153 (2023-10-24)<a class="headerlink" href="#junifer-0-0-4-dev153-2023-10-24" title="Link to this heading">#</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">#</a></h3>
 <ul class="simple">
@@ -282,6 +282,9 @@
 (<a class="reference external" href="https://github.com/juaml/junifer/issues/245">#245</a>)</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">feature_md5</span></code> argument to <a class="reference internal" href="api/onthefly.html#junifer.onthefly.read_transform" title="junifer.onthefly.read_transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_transform()</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/248">#248</a>)</p></li>
+<li><p>Modify <code class="docutils literal notranslate"><span class="pre">preprocessor</span></code> to <code class="docutils literal notranslate"><span class="pre">preprocessors</span></code> in <a class="reference internal" href="api/api.html#junifer.api.run" title="junifer.api.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> and
+<code class="docutils literal notranslate"><span class="pre">preprocessing</span></code> to <code class="docutils literal notranslate"><span class="pre">preprocessors</span></code> in <a class="reference internal" href="api/markers.html#junifer.markers.MarkerCollection" title="junifer.markers.MarkerCollection"><code class="xref py py-class docutils literal notranslate"><span class="pre">MarkerCollection</span></code></a> to
+accept multiple preprocessors by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/263">#263</a>)</p></li>
 </ul>
 </section>
 <section id="improved-documentation">
@@ -315,6 +318,10 @@ Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer
 <li><p>Introduce <a class="reference internal" href="api/pipeline.html#junifer.pipeline.WorkDirManager" title="junifer.pipeline.WorkDirManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.pipeline.WorkDirManager</span></code></a> singleton class to manage
 working and temporary directories across pipeline by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
 (<a class="reference external" href="https://github.com/juaml/junifer/issues/254">#254</a>)</p></li>
+<li><p>Introduce <a class="reference internal" href="api/data.html#junifer.data.parcellations.get_parcellation" title="junifer.data.parcellations.get_parcellation"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_parcellation()</span></code></a> to fetch parcellation tailored for the
+data by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/264">#264</a>)</p></li>
+<li><p>Introduce <a class="reference internal" href="api/data.html#junifer.data.coordinates.get_coordinates" title="junifer.data.coordinates.get_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_coordinates()</span></code></a> to fetch coordinates tailored for the data
+by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/265">#265</a>)</p></li>
 <li><p>Introduce <code class="docutils literal notranslate"><span class="pre">junifer.preprocess.fsl.apply_warper._ApplyWarper</span></code> to wrap FSL’s
 <code class="docutils literal notranslate"><span class="pre">applywarp</span></code> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/266">#266</a>)</p></li>
 </ul>
@@ -323,6 +330,10 @@ working and temporary directories across pipeline by <a class="reference externa
 <h3><span class="section-number">14.1.6. </span>Misc<a class="headerlink" href="#misc" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>Update dependencies requirements by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/253">#253</a>)</p></li>
+<li><p>Pin <code class="docutils literal notranslate"><span class="pre">ruff</span></code> to <code class="docutils literal notranslate"><span class="pre">0.1.0</span></code> as the lowest version and update <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>
+config by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/261">#261</a>)</p></li>
+<li><p>Add support for accessing FSL via Docker wrapper along with <code class="docutils literal notranslate"><span class="pre">flirt</span></code>,
+<code class="docutils literal notranslate"><span class="pre">applywarp</span></code>  and <code class="docutils literal notranslate"><span class="pre">std2imgcoord</span></code> commands by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/262">#262</a>)</p></li>
 </ul>
 </section>
 </section>
@@ -711,7 +722,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-0-0-4-dev108-2023-10-17">14.1. Junifer 0.0.4.dev108 (2023-10-17)</a><ul>
+<li><a class="reference internal" href="#junifer-0-0-4-dev153-2023-10-24">14.1. Junifer 0.0.4.dev153 (2023-10-24)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
