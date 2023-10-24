@@ -75,17 +75,9 @@ Follow the `detailed contribution guidelines <contribution.rst>`_.
 Installing external dependencies
 ================================
 
-Some preprocessors and markers will require optional external dependencies to
-be installed. In this section you will find a list of all external dependencies
-that are required for specific markers.
-
-.. important::
-
-   The Docker container wrappers add the commands required by junifer. Using
-   these commands have some limitations, mostly related to handling files and
-   paths. Junifer knows about this and uses these commands in the proper way.
-   Keep this in mind if you try to use the Docker wrappers outside of
-   junifer. These caveats and limitations are not documented.
+Some markers will require optional external dependencies to be installed. In
+this section you will find a list of all external dependencies that are required
+for specific markers.
 
 AFNI
 ----
@@ -95,16 +87,24 @@ To install AFNI, you can always follow the `AFNI official instructions
 Additionally, you can also follow the following steps to install and configure
 the AFNI Docker container in your local system.
 
+.. important::
+
+   The AFNI Docker container wrappers add the commands required by junifer. Using
+   these commands have some limitations, mostly related to handling files and
+   paths. Junifer knows about this and uses these commands in the proper way.
+   Keep this in mind if you try to use the AFNI Docker wrappers outside of
+   junifer. These caveats and limitations are not documented.
+
 1. Install Docker. You can follow the
    `Docker official instructions <https://docs.docker.com/get-docker/>`_.
 2. Pull the AFNI Docker image from
-   `Docker Hub AFNI <https://hub.docker.com/r/afni/afni>`_:
+   `Docker Hub <https://hub.docker.com/r/afni/afni>`_:
 
 .. code-block:: bash
 
   docker pull afni/afni_make_build
 
-3. Add the Junifer AFNI scripts to your PATH environment variable. Run the
+3. Add the Junifer AFNI scripts to your PATH environmental variable. Run the
    following command:
 
 .. code-block:: bash
@@ -119,36 +119,3 @@ Or, alternatively, you can execute this command which will update the
 .. code-block:: bash
 
   junifer setup afni-docker | grep "PATH=" | xargs | >> ~/.bashrc
-
-FSL
----
-
-To install FSL, you can always follow the `FSL official instructions
-<https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation>`_.
-Additionally, you can also follow the following steps to install and configure
-the FSL Docker container in your local system.
-
-1. Install Docker. You can follow the
-   `Docker official instructions <https://docs.docker.com/get-docker/>`_.
-2. Pull the FSL Docker image from
-   `Docker Hub FSL <https://hub.docker.com/r/brainlife/fsl>`_:
-
-.. code-block:: bash
-
-  docker pull brainlife/fsl
-
-3. Add the Junifer FSL scripts to your PATH environment variable. Run the
-   following command:
-
-.. code-block:: bash
-
-  junifer setup fsl-docker
-
-Take the last line and copy it to your ``.bashrc`` or ``.zshrc`` file.
-
-Or, alternatively, you can execute this command which will update the
-``~/.bashrc`` for you:
-
-.. code-block:: bash
-
-  junifer setup fsl-docker | grep "PATH=" | xargs | >> ~/.bashrc
