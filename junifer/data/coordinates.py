@@ -224,14 +224,14 @@ def get_coordinates(
     Raises
     ------
     ValueError
-        If ``extra_input`` is None when ``target_data``'s space is not MNI.
+        If ``extra_input`` is None when ``target_data``'s space is native.
 
     """
     # Load the coordinates
     seeds, labels, _ = load_coordinates(name=coords)
 
-    # Transform coordinate if not in MNI space
-    if not target_data["space"].startswith("MNI"):
+    # Transform coordinate if target data is native
+    if target_data["space"] == "native":
         # Check for extra inputs
         if extra_input is None:
             raise_error(
