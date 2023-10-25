@@ -209,7 +209,7 @@ def get_mask(  # noqa: C901
         if multiple masks are provided and their spaces do not match or
         if parameters are passed to :func:`nilearn.masking.intersect_masks`
         when there is only one mask or
-        if ``extra_input`` is None when ``target_data``'s space is not MNI.
+        if ``extra_input`` is None when ``target_data``'s space is native.
 
     """
     # Get the min of the voxels sizes and use it as the resolution
@@ -334,8 +334,8 @@ def get_mask(  # noqa: C901
             )
         mask_img = all_masks[0]
 
-    # Warp mask if not in MNI space
-    if not target_data["space"].startswith("MNI"):
+    # Warp mask if target data is native
+    if target_data["space"] == "native":
         # Check for extra inputs
         if extra_input is None:
             raise_error(
