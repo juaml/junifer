@@ -484,11 +484,13 @@ def test_get_mask_multiple_incorrect_space() -> None:
     with SPMAuditoryTestingDataGrabber() as dg:
         input = dg["sub001"]
         input = reader.fit_transform(input)
-        # Edit BOLD space to trigger error
-        input["BOLD"]["space"] = "SUIT"
 
         with pytest.raises(RuntimeError, match="unable to merge."):
             get_mask(
-                masks=["GM_prob0.2", "compute_brain_mask"],
+                masks=[
+                    "GM_prob0.2",
+                    "compute_brain_mask",
+                    "fetch_icbm152_brain_gm_mask",
+                ],
                 target_data=input["BOLD"],
             )
