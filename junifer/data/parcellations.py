@@ -233,7 +233,7 @@ def get_parcellation(
     RuntimeError
         If parcellations are in different spaces and they need to be merged.
     ValueError
-        If ``extra_input`` is None when ``target_data``'s space is not MNI.
+        If ``extra_input`` is None when ``target_data``'s space is native.
 
     """
     # Get the min of the voxels sizes and use it as the resolution
@@ -279,8 +279,8 @@ def get_parcellation(
                 klass=RuntimeError,
             )
 
-    # Warp parcellation if not in MNI space
-    if not target_data["space"].startswith("MNI"):
+    # Warp parcellation if target data is native
+    if target_data["space"] == "native":
         # Check for extra inputs
         if extra_input is None:
             raise_error(
