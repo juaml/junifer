@@ -202,11 +202,13 @@ def get_mask(  # noqa: C901
         unionized.
     ValueError
         If extra key is provided in addition to mask name in ``masks`` or
-        if no mask is provided or if ``masks = "inherit"`` but ``extra_input``
-        is None or ``mask_item`` is None or ``mask_items``'s value is not in
-        ``extra_input`` or if callable parameters are passed to non-callable
-        mask or if parameters are passed to
-        :func:`nilearn.masking.intersect_masks` when there is only one mask or
+        if no mask is provided or
+        if ``masks = "inherit"`` but ``extra_input`` is None or ``mask_item``
+        is None or ``mask_items``'s value is not in ``extra_input`` or
+        if callable parameters are passed to non-callable mask or
+        if multiple masks are provided and their spaces do not match or
+        if parameters are passed to :func:`nilearn.masking.intersect_masks`
+        when there is only one mask or
         if ``extra_input`` is None when ``target_data``'s space is not MNI.
 
     """
@@ -309,20 +311,19 @@ def get_mask(  # noqa: C901
 
     # Multiple masks, need intersection / union
     if len(all_masks) > 1:
+        # Filter out "inherit" and make a set for spaces
+        filtered_spaces = set(filter(lambda x: x != "inherit", all_spaces))
         # Intersect / union of masks only if all masks are in the same space
-        if len(set(all_spaces)) == 1:
+        if len(filtered_spaces) == 1:
             mask_img = intersect_masks(all_masks, **intersect_params)
         else:
-            # Check for inherited masks with target image in MNI space
-            if "inherit" in all_spaces and target_data["space"].startswith(
-                "MNI"
-            ):
-                mask_img = intersect_masks(all_masks, **intersect_params)
-            else:
-                raise_error(
-                    msg="Masks are in different spaces, unable to merge.",
-                    klass=RuntimeError,
-                )
+            raise_error(
+                msg=(
+                    f"Masks are in different spaces: {filtered_spaces}, "
+                    "unable to merge."
+                ),
+                klass=RuntimeError,
+            )
     # Single mask
     else:
         if len(intersect_params) > 0:
