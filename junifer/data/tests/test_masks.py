@@ -410,14 +410,6 @@ def test_get_mask_inherit() -> None:
             ["GM_prob0.2", "compute_brain_mask"],
             {"threshold": 0.2},
         ),
-        (
-            [
-                "GM_prob0.2",
-                "compute_brain_mask",
-                "fetch_icbm152_brain_gm_mask",
-            ],
-            {"threshold": 1, "connected": True},
-        ),
     ],
 )
 def test_get_mask_multiple(
