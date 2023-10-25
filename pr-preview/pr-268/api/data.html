@@ -297,7 +297,7 @@ kinds that needs to be used in the computation of parcellations
 <dd class="field-odd"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If parcellations are in different spaces and they need to be merged.</p>
 </dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is not MNI.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
 </dd>
 </dl>
 </dd>
@@ -454,7 +454,7 @@ kinds that needs to be used in the computation of coordinates
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is not MNI.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
 </dd>
 </dl>
 </dd>
@@ -583,12 +583,14 @@ kinds that needs to be used in the computation of masks (default None).</p>
 unionized.</p>
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If extra key is provided in addition to mask name in <code class="docutils literal notranslate"><span class="pre">masks</span></code> or
-if no mask is provided or if <code class="docutils literal notranslate"><span class="pre">masks</span> <span class="pre">=</span> <span class="pre">&quot;inherit&quot;</span></code> but <code class="docutils literal notranslate"><span class="pre">extra_input</span></code>
-is None or <code class="docutils literal notranslate"><span class="pre">mask_item</span></code> is None or <code class="docutils literal notranslate"><span class="pre">mask_items</span></code>’s value is not in
-<code class="docutils literal notranslate"><span class="pre">extra_input</span></code> or if callable parameters are passed to non-callable
-mask or if parameters are passed to
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.masking.intersect_masks.html#nilearn.masking.intersect_masks" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.intersect_masks()</span></code></a> when there is only one mask or
-if <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is not MNI.</p>
+if no mask is provided or
+if <code class="docutils literal notranslate"><span class="pre">masks</span> <span class="pre">=</span> <span class="pre">&quot;inherit&quot;</span></code> but <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None or <code class="docutils literal notranslate"><span class="pre">mask_item</span></code>
+is None or <code class="docutils literal notranslate"><span class="pre">mask_items</span></code>’s value is not in <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> or
+if callable parameters are passed to non-callable mask or
+if multiple masks are provided and their spaces do not match or
+if parameters are passed to <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.masking.intersect_masks.html#nilearn.masking.intersect_masks" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.intersect_masks()</span></code></a>
+when there is only one mask or
+if <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
 </dd>
 </dl>
 </dd>
