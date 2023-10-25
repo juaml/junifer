@@ -275,9 +275,9 @@ suit your needs, and you have found that they don’t, you can come back here to
 learn how to use your own masks.</p>
 <p>The principle is fairly simple and quite similar to <a class="reference internal" href="parcellations.html#adding-parcellations"><span class="std std-ref">Adding Parcellations</span></a>
 and <a class="reference internal" href="coordinates.html#adding-coordinates"><span class="std std-ref">Adding Coordinates</span></a>. junifer provides a <a class="reference internal" href="../api/data.html#junifer.data.masks.register_mask" title="junifer.data.masks.register_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_mask()</span></code></a>
-function that lets you register your own custom masks. It consists of three
-positional arguments (<code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">mask_path</span></code> and <code class="docutils literal notranslate"><span class="pre">space</span></code>) and one optional
-keyword argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
+function that lets you register your own custom masks. It consists of two
+positional arguments (<code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">mask_path</span></code>) and one optional keyword
+argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">name</span></code> argument is a string indicating the name of the mask. This name
 is used to refer to that mask in junifer internally in order to obtain the
 actual mask data and perform operations on it. For example, using the name you
@@ -286,8 +286,6 @@ can load a mask after registration using the
 <p>The <code class="docutils literal notranslate"><span class="pre">mask_path</span></code> should contain the path to a valid NIfTI image with binary
 voxel values (i.e. 0 or 1). This data can then be used by junifer to mask other
 MR images.</p>
-<p>Lastly, we specify the <code class="docutils literal notranslate"><span class="pre">space</span></code> that the coordinates are in, for example,
-<code class="docutils literal notranslate"><span class="pre">&quot;MNI&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Native&quot;</span></code> (scanner-native space).</p>
 <section id="step-1-prepare-code-to-register-a-mask">
 <h2><span class="section-number">7.6.1. </span>Step 1: Prepare code to register a mask<a class="headerlink" href="#step-1-prepare-code-to-register-a-mask" title="Link to this heading">#</a></h2>
 <p>A simple script called <code class="docutils literal notranslate"><span class="pre">register_custom_mask.py</span></code> to register a mask could
@@ -301,7 +299,7 @@ look as follows:</p>
 <span class="c1"># on your system:</span>
 <span class="n">mask_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;..&quot;</span> <span class="o">/</span> <span class="s2">&quot;my_custom_mask.nii.gz&quot;</span>
 
-<span class="n">register_mask</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_custom_mask&quot;</span><span class="p">,</span> <span class="n">mask_path</span><span class="o">=</span><span class="n">mask_path</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s2">&quot;Native&quot;</span><span class="p">)</span>
+<span class="n">register_mask</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_custom_mask&quot;</span><span class="p">,</span> <span class="n">mask_path</span><span class="o">=</span><span class="n">mask_path</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Simple, right? Now we just have to configure a YAML file to register this mask

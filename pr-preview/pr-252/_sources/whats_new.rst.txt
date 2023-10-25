@@ -8,7 +8,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.4.dev190 (2023-10-17)
+Junifer 0.0.4.dev169 (2023-10-25)
 ---------------------------------
 
 Bugfixes
@@ -32,6 +32,9 @@ API Changes
   accept multiple preprocessors; modify ``preprocessing`` parameter to
   ``preprocessors`` in :class:`.MarkerCollection` by `Synchon Mandal`_ and
   `Fede Raimondo`_ (:gh:`252`)
+- Modify ``preprocessor`` to ``preprocessors`` in :func:`.run` and
+  ``preprocessing`` to ``preprocessors`` in :class:`.MarkerCollection` to
+  accept multiple preprocessors by `Synchon Mandal`_ (:gh:`263`)
 
 
 Improved Documentation
@@ -59,6 +62,8 @@ Enhancements
 - Improve element directory cleanup via
   ``junifer.pipeline.WorkDirManager.cleanup_elementdir`` method by `Synchon
   Mandal`_ (:gh:`259`)
+- Improve :class:`.BasePreprocessor` for easy subclassing and adapt
+  :class:`.fMRIPrepConfoundRemover` to it by `Synchon Mandal`_ (:gh:`260`)
 
 
 Features
@@ -73,12 +78,24 @@ Features
 - Introduce :class:`junifer.pipeline.WorkDirManager` singleton class to manage
   working and temporary directories across pipeline by `Synchon Mandal`_
   (:gh:`254`)
+- Introduce :func:`.get_parcellation` to fetch parcellation tailored for the
+  data by `Synchon Mandal`_ (:gh:`264`)
+- Introduce :func:`.get_coordinates` to fetch coordinates tailored for the data
+  by `Synchon Mandal`_ (:gh:`265`)
+- Introduce ``junifer.preprocess.fsl.apply_warper._ApplyWarper`` to wrap FSL's
+  ``applywarp`` by `Synchon Mandal`_ (:gh:`266`)
+- Introduce :class:`.BOLDWarper` for warping BOLD data via FSL's ``applywarp``
+  by `Synchon Mandal`_ (:gh:`267`)
 
 
 Misc
 ^^^^
 
 - Update dependencies requirements by `Fede Raimondo`_ (:gh:`253`)
+- Pin ``ruff`` to ``0.1.0`` as the lowest version and update ``pre-commit``
+  config by `Synchon Mandal`_ (:gh:`261`)
+- Add support for accessing FSL via Docker wrapper along with ``flirt``,
+  ``applywarp``  and ``std2imgcoord`` commands by `Synchon Mandal`_ (:gh:`262`)
 
 
 Junifer 0.0.3 (2023-07-21)
