@@ -45,7 +45,7 @@ if TYPE_CHECKING:
 # TODO: have separate dictionary for built-in
 _available_parcellations: Dict[str, Dict[Any, Any]] = {
     "SUITxSUIT": {"family": "SUIT", "space": "SUIT"},
-    "SUITxMNI": {"family": "SUIT", "space": "MNI152Lin6Asym"},
+    "SUITxMNI": {"family": "SUIT", "space": "MNI152NLin6Asym"},
 }
 
 # Add Schaefer parcellation info
@@ -491,7 +491,7 @@ def _retrieve_parcellation(
         ``magneticfield`` : {"3T", "7T"}, optional
             Magnetic field (default "3T").
     * SUIT :
-        ``space`` : {"MNI152Lin6Asym", "SUIT"}, optional
+        ``space`` : {"MNI152NLin6Asym", "SUIT"}, optional
             Space of parcellation (default "MNI"). (For more information
             see http://www.diedrichsenlab.org/imaging/suit.htm).
     * AICHA :
@@ -857,7 +857,7 @@ def _retrieve_tian(
 def _retrieve_suit(
     parcellations_dir: Path,
     resolution: Optional[float],
-    space: str = "MNI152Lin6Asym",
+    space: str = "MNI152NLin6Asym",
 ) -> Tuple[Path, List[str]]:
     """Retrieve SUIT parcellation.
 
@@ -871,9 +871,9 @@ def _retrieve_suit(
         resolution higher than the desired one. By default, will load the
         highest one (default None). Available resolutions for this parcellation
         are 1mm and 2mm.
-    space : {"MNI152Lin6Asym", "SUIT"}, optional
-        Space of parcellation (default "MNI152Lin6Asym"). (For more information
-        see http://www.diedrichsenlab.org/imaging/suit.htm).
+    space : {"MNI152NLin6Asym", "SUIT"}, optional
+        Space of parcellation (default "MNI152NLin6Asym"). (For more
+        information see http://www.diedrichsenlab.org/imaging/suit.htm).
 
     Returns
     -------
@@ -893,7 +893,7 @@ def _retrieve_suit(
     logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tspace: {space}")
 
-    _valid_spaces = ["MNI152Lin6Asym", "SUIT"]
+    _valid_spaces = ["MNI152NLin6Asym", "SUIT"]
 
     # check validity of parameters
     if space not in _valid_spaces:
@@ -907,10 +907,11 @@ def _retrieve_suit(
 
     resolution = closest_resolution(resolution, _valid_resolutions)
 
-    # define file names
     # Format space if MNI; required for the file name
-    if space.startswith("MNI"):
+    if space == "MNI152NLin6Asym":
         space = "MNI"
+
+    # Define parcellation and label file names
     parcellation_fname = (
         parcellations_dir / "SUIT" / (f"SUIT_{space}Space_{resolution}mm.nii")
     )
@@ -918,7 +919,7 @@ def _retrieve_suit(
         parcellations_dir / "SUIT" / (f"SUIT_{space}Space_{resolution}mm.tsv")
     )
 
-    # check existence of parcellation
+    # Check existence of parcellation
     if not (parcellation_fname.exists() and parcellation_lname.exists()):
         parcellation_fname.parent.mkdir(exist_ok=True, parents=True)
         logger.info(
@@ -933,6 +934,7 @@ def _retrieve_suit(
         url_SUIT = url_basis + "atl-Anatom_space-SUIT_dseg.nii"
         url_labels = url_basis + "atl-Anatom.tsv"
 
+        # TODO: improve HTTP request / response handling
         if space == "MNI":
             logger.info(f"Downloading {url_MNI}")
             parcellation_download = requests.get(url_MNI)
