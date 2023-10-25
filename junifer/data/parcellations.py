@@ -86,7 +86,7 @@ for version in (1, 2):
     _available_parcellations[f"AICHA_v{version}"] = {
         "family": "AICHA",
         "version": version,
-        "space": "MNI152Lin6Asym",
+        "space": "IXI549Space",
     }
 # Add Shen parcellation info
 for year in (2013, 2015, 2019):
@@ -997,12 +997,23 @@ def _retrieve_aicha(
         If invalid value is provided for ``version`` or if there is a problem
         fetching the parcellation.
 
+    Warns
+    -----
+    RuntimeWarning
+        Until the authors confirm the space, the warning will be issued.
+
     Notes
     -----
     The resolution of the parcellation is 2mm and although v2 provides
     1mm, it is only for display purpose as noted in the release document.
 
     """
+    # Issue warning until space is confirmed by authors
+    warn_with_log(
+        "The current space for AICHA parcellations are IXI549Space, but are "
+        "not confirmed by authors, until that this warning will be issued."
+    )
+
     # show parameters to user
     logger.info("Parcellation parameters:")
     logger.info(f"\tresolution: {resolution}")
