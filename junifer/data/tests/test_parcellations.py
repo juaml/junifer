@@ -355,7 +355,7 @@ def test_retrieve_schaefer_incorrect_yeo_networks(tmp_path: Path) -> None:
 
 @pytest.mark.parametrize(
     "space_key, space",
-    [("SUIT", "SUIT"), ("MNI", "MNI152Lin6Asym")],
+    [("SUIT", "SUIT"), ("MNI", "MNI152NLin6Asym")],
 )
 def test_suit(tmp_path: Path, space_key: str, space: str) -> None:
     """Test SUIT parcellation.
