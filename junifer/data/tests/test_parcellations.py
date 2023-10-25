@@ -599,7 +599,7 @@ def test_aicha(tmp_path: Path, version: int) -> None:
     )
     assert img is not None
     assert img_path.name == "AICHA.nii"
-    assert space == "MNI152Lin6Asym"
+    assert space == "IXI549Space"
     assert len(label) == 384
     assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
 
