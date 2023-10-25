@@ -1,1 +1,1 @@
-Add support for subject-native space computation; introduce :func:`.get_coordinates` and :func:`.get_parcellation` for coordinates and parcellation respectively tailored for the data; introduce ``_ApplyWarper`` to wrap FSL's ``applywarp`` and :class:`.BOLDWarper` to specifically warp BOLD data by `Synchon Mandal`_ and `Fede Raimondo`_
+Add support for subject-native space by `Synchon Mandal`_ and `Fede Raimondo`_
