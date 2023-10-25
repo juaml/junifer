@@ -57,7 +57,7 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
         i_sub = int(subject.split("-")[1]) - 1
         out["VBM_GM"] = {
             "path": Path(self._dataset.gray_matter_maps[i_sub]),
-            "space": "MNI152Lin6Asym",
+            "space": "MNI152Lin",
         }
 
         return out
@@ -144,7 +144,7 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         anat_fname = self.datadir / f"{subject}_T1w.nii.gz"
         nib.save(fmri_img, fmri_fname)
         nib.save(anat_img, anat_fname)
-        out["BOLD"] = {"path": fmri_fname, "space": "MNI152Lin6Asym"}
+        out["BOLD"] = {"path": fmri_fname, "space": "MNI152Lin"}
         out["T1w"] = {"path": anat_fname, "space": "native"}
         return out
 
