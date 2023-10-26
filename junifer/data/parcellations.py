@@ -7,6 +7,7 @@
 
 import io
 import shutil
+import subprocess
 import tarfile
 import tempfile
 import typing
@@ -21,6 +22,7 @@ import requests
 from nilearn import datasets, image
 from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 
+from ..pipeline import WorkDirManager
 from ..utils.logging import logger, raise_error, warn_with_log
 from .utils import closest_resolution
 
@@ -34,6 +36,7 @@ if TYPE_CHECKING:
 
 # Each entry is a dictionary that must contain at least the following keys:
 # * 'family': the parcellation's family name (e.g. 'Schaefer', 'SUIT')
+# * 'space': the parcellation's space (e.g., 'MNI', 'SUIT')
 
 # Optional keys:
 # * 'valid_resolutions': a list of valid resolutions for the parcellation
@@ -42,7 +45,7 @@ if TYPE_CHECKING:
 # TODO: have separate dictionary for built-in
 _available_parcellations: Dict[str, Dict[Any, Any]] = {
     "SUITxSUIT": {"family": "SUIT", "space": "SUIT"},
-    "SUITxMNI": {"family": "SUIT", "space": "MNI"},
+    "SUITxMNI": {"family": "SUIT", "space": "MNI152NLin6Asym"},
 }
 
 # Add Schaefer parcellation info
@@ -53,6 +56,7 @@ for n_rois in range(100, 1001, 100):
             "family": "Schaefer",
             "n_rois": n_rois,
             "yeo_networks": t_net,
+            "space": "MNI152NLin6Asym",
         }
 # Add Tian parcellation info
 for scale in range(1, 5):
@@ -61,27 +65,28 @@ for scale in range(1, 5):
         "family": "Tian",
         "scale": scale,
         "magneticfield": "7T",
-        "space": "MNI6thgeneration",
+        "space": "MNI152NLin6Asym",
     }
     t_name = f"TianxS{scale}x3TxMNI6thgeneration"
     _available_parcellations[t_name] = {
         "family": "Tian",
         "scale": scale,
         "magneticfield": "3T",
-        "space": "MNI6thgeneration",
+        "space": "MNI152NLin6Asym",
     }
     t_name = f"TianxS{scale}x3TxMNInonlinear2009cAsym"
     _available_parcellations[t_name] = {
         "family": "Tian",
         "scale": scale,
         "magneticfield": "3T",
-        "space": "MNInonlinear2009cAsym",
+        "space": "MNI152NLin2009cAsym",
     }
 # Add AICHA parcellation info
 for version in (1, 2):
     _available_parcellations[f"AICHA_v{version}"] = {
         "family": "AICHA",
         "version": version,
+        "space": "IXI549Space",
     }
 # Add Shen parcellation info
 for year in (2013, 2015, 2019):
@@ -91,18 +96,21 @@ for year in (2013, 2015, 2019):
                 "family": "Shen",
                 "year": 2013,
                 "n_rois": n_rois,
+                "space": "MNI152NLin2009cAsym",
             }
     elif year == 2015:
         _available_parcellations["Shen_2015_268"] = {
             "family": "Shen",
             "year": 2015,
             "n_rois": 268,
+            "space": "MNI152NLin2009cAsym",
         }
     elif year == 2019:
         _available_parcellations["Shen_2019_368"] = {
             "family": "Shen",
             "year": 2019,
             "n_rois": 368,
+            "space": "MNI152NLin2009cAsym",
         }
 # Add Yan parcellation info
 for n_rois in range(100, 1001, 100):
@@ -112,12 +120,14 @@ for n_rois in range(100, 1001, 100):
             "family": "Yan",
             "n_rois": n_rois,
             "yeo_networks": yeo_network,
+            "space": "MNI152NLin6Asym",
         }
     # Add Kong networks
     _available_parcellations[f"Yan{n_rois}xKong17"] = {
         "family": "Yan",
         "n_rois": n_rois,
         "kong_networks": 17,
+        "space": "MNI152NLin6Asym",
     }
 
 
@@ -125,6 +135,7 @@ def register_parcellation(
     name: str,
     parcellation_path: Union[str, Path],
     parcels_labels: List[str],
+    space: str,
     overwrite: bool = False,
 ) -> None:
     """Register a custom user parcellation.
@@ -137,6 +148,8 @@ def register_parcellation(
         The path to the parcellation file.
     parcels_labels : list of str
         The list of labels for the parcellation.
+    space : str
+        The space of the parcellation.
     overwrite : bool, optional
         If True, overwrite an existing parcellation with the same name.
         Does not apply to built-in parcellations (default False).
@@ -173,6 +186,7 @@ def register_parcellation(
         "path": str(parcellation_path.absolute()),
         "labels": parcels_labels,
         "family": "CustomUserParcellation",
+        "space": space,
     }
 
 
@@ -214,6 +228,13 @@ def get_parcellation(
     list of str
         Parcellation labels.
 
+    Raises
+    ------
+    RuntimeError
+        If parcellations are in different spaces and they need to be merged.
+    ValueError
+        If ``extra_input`` is None when ``target_data``'s space is native.
+
     """
     # Get the min of the voxels sizes and use it as the resolution
     target_img = target_data["data"]
@@ -222,8 +243,9 @@ def get_parcellation(
     # Load the parcellations
     all_parcellations = []
     all_labels = []
+    all_spaces = []
     for name in parcellation:
-        img, labels, _ = load_parcellation(
+        img, labels, _, space = load_parcellation(
             name=name,
             resolution=resolution,
         )
@@ -236,17 +258,89 @@ def get_parcellation(
         )
         all_parcellations.append(resampled_img)
         all_labels.append(labels)
+        all_spaces.append(space)
 
     # Avoid merging if there is only one parcellation
     if len(all_parcellations) == 1:
         resampled_parcellation_img = all_parcellations[0]
         labels = all_labels[0]
     else:
-        # Merge the parcellations
-        resampled_parcellation_img, labels = merge_parcellations(
-            parcellations_list=all_parcellations,
-            parcellations_names=parcellation,
-            labels_lists=all_labels,
+        # Merge the parcellations only if all parcellations are in the same
+        # space
+        if len(set(all_spaces)) == 1:
+            resampled_parcellation_img, labels = merge_parcellations(
+                parcellations_list=all_parcellations,
+                parcellations_names=parcellation,
+                labels_lists=all_labels,
+            )
+        else:
+            raise_error(
+                msg="Parcellations are in different spaces, unable to merge.",
+                klass=RuntimeError,
+            )
+
+    # Warp parcellation if target data is native
+    if target_data["space"] == "native":
+        # Check for extra inputs
+        if extra_input is None:
+            raise_error(
+                "No extra input provided, requires `Warp` and `T1w` "
+                "data types in particular for transformation to "
+                f"{target_data['space']} space for further computation."
+            )
+
+        # Create tempdir
+        tempdir = WorkDirManager().get_tempdir(prefix="parcellations")
+
+        # Save parcellation image
+        prewarp_parcellation_path = tempdir / "prewarp_parcellation.nii.gz"
+        nib.save(resampled_parcellation_img, prewarp_parcellation_path)
+
+        # Create a tempfile for warped output
+        applywarp_out_path = tempdir / "parcellation_warped.nii.gz"
+        # Set applywarp command
+        applywarp_cmd = [
+            "applywarp",
+            "--interp=spline",
+            f"-i {prewarp_parcellation_path.resolve()}",
+            # use resampled reference
+            f"-r {target_data['reference_path'].resolve()}",
+            f"-w {extra_input['Warp']['path'].resolve()}",
+            f"-o {applywarp_out_path.resolve()}",
+        ]
+        # Call applywarp
+        applywarp_cmd_str = " ".join(applywarp_cmd)
+        logger.info(f"applywarp command to be executed: {applywarp_cmd_str}")
+        applywarp_process = subprocess.run(
+            applywarp_cmd_str,  # string needed with shell=True
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=True,  # needed for respecting $PATH
+            check=False,
+        )
+        # Check for success or failure
+        if applywarp_process.returncode == 0:
+            logger.info(
+                "applywarp succeeded with the following output: "
+                f"{applywarp_process.stdout}"
+            )
+        else:
+            raise_error(
+                msg="applywarp failed with the following error: "
+                f"{applywarp_process.stdout}",
+                klass=RuntimeError,
+            )
+
+        # Load nifti
+        resampled_parcellation_img = nib.load(applywarp_out_path)
+
+        # Delete tempdir
+        WorkDirManager().delete_tempdir(tempdir)
+
+        # Stupid casting
+        resampled_parcellation_img = typing.cast(
+            "Nifti1Image", resampled_parcellation_img
         )
 
     return resampled_parcellation_img, labels
@@ -257,7 +351,7 @@ def load_parcellation(
     parcellations_dir: Union[str, Path, None] = None,
     resolution: Optional[float] = None,
     path_only: bool = False,
-) -> Tuple[Optional["Nifti1Image"], List[str], Path]:
+) -> Tuple[Optional["Nifti1Image"], List[str], Path, str]:
     """Load a brain parcellation (including a label file).
 
     If it is a built-in parcellation and the file is not present in the
@@ -287,6 +381,8 @@ def load_parcellation(
         Parcellation labels.
     pathlib.Path
         File path to the parcellation image.
+    str
+        The space of the parcellation.
 
     Raises
     ------
@@ -305,6 +401,11 @@ def load_parcellation(
     # Copy parcellation definition to avoid edits in original object
     parcellation_definition = _available_parcellations[name].copy()
     t_family = parcellation_definition.pop("family")
+    # Remove space conditionally
+    if t_family not in ["SUIT", "Tian"]:
+        space = parcellation_definition.pop("space")
+    else:
+        space = parcellation_definition["space"]
 
     # Check if the parcellation family is custom or built-in
     if t_family == "CustomUserParcellation":
@@ -343,7 +444,7 @@ def load_parcellation(
 
     # Type-cast to remove errors
     parcellation_img = typing.cast("Nifti1Image", parcellation_img)
-    return parcellation_img, parcellation_labels, parcellation_fname
+    return parcellation_img, parcellation_labels, parcellation_fname, space
 
 
 def _retrieve_parcellation(
@@ -384,13 +485,13 @@ def _retrieve_parcellation(
     * Tian :
         ``scale`` : {1, 2, 3, 4}
             Scale of parcellation (defines granularity).
-        ``space`` : {"MNI6thgeneration", "MNInonlinear2009cAsym"}, optional
-            Space of parcellation (default "MNI6thgeneration"). (For more
+        ``space`` : {"MNI152NLin6Asym", "MNI152NLin2009cAsym"}, optional
+            Space of parcellation (default "MNI152NLin6Asym"). (For more
             information see https://github.com/yetianmed/subcortex)
         ``magneticfield`` : {"3T", "7T"}, optional
             Magnetic field (default "3T").
     * SUIT :
-        ``space`` : {"MNI", "SUIT"}, optional
+        ``space`` : {"MNI152NLin6Asym", "SUIT"}, optional
             Space of parcellation (default "MNI"). (For more information
             see http://www.diedrichsenlab.org/imaging/suit.htm).
     * AICHA :
@@ -588,7 +689,7 @@ def _retrieve_tian(
     parcellations_dir: Path,
     resolution: Optional[float] = None,
     scale: Optional[int] = None,
-    space: str = "MNI6thgeneration",
+    space: str = "MNI152NLin6Asym",
     magneticfield: str = "3T",
 ) -> Tuple[Path, List[str]]:
     """Retrieve Tian parcellation.
@@ -605,8 +706,8 @@ def _retrieve_tian(
         parcellation depend on the space and magnetic field.
     scale : {1, 2, 3, 4}, optional
         Scale of parcellation (defines granularity) (default None).
-    space : {"MNI6thgeneration", "MNInonlinear2009cAsym"}, optional
-        Space of parcellation (default "MNI6thgeneration"). (For more
+    space : {"MNI152NLin6Asym", "MNI152NLin2009cAsym"}, optional
+        Space of parcellation (default "MNI152NLin6Asym"). (For more
         information see https://github.com/yetianmed/subcortex)
     magneticfield : {"3T", "7T"}, optional
         Magnetic field (default "3T").
@@ -642,10 +743,10 @@ def _retrieve_tian(
 
     _valid_resolutions = []  # avoid pylance error
     if magneticfield == "3T":
-        _valid_spaces = ["MNI6thgeneration", "MNInonlinear2009cAsym"]
-        if space == "MNI6thgeneration":
+        _valid_spaces = ["MNI152NLin6Asym", "MNI152NLin2009cAsym"]
+        if space == "MNI152NLin6Asym":
             _valid_resolutions = [1, 2]
-        elif space == "MNInonlinear2009cAsym":
+        elif space == "MNI152NLin2009cAsym":
             _valid_resolutions = [2]
         else:
             raise_error(
@@ -654,10 +755,10 @@ def _retrieve_tian(
             )
     elif magneticfield == "7T":
         _valid_resolutions = [1.6]
-        if space != "MNI6thgeneration":
+        if space != "MNI152NLin6Asym":
             raise_error(
                 f"The parameter `space` ({space}) for 7T needs to be "
-                f"MNI6thgeneration"
+                f"MNI152NLin6Asym"
             )
     else:
         raise_error(
@@ -675,7 +776,7 @@ def _retrieve_tian(
         parcellation_lname = parcellation_fname_base_3T / (
             f"Tian_Subcortex_S{scale}_3T_label.txt"
         )
-        if space == "MNI6thgeneration":
+        if space == "MNI152NLin6Asym":
             parcellation_fname = parcellation_fname_base_3T / (
                 f"Tian_Subcortex_S{scale}_{magneticfield}.nii.gz"
             )
@@ -684,7 +785,7 @@ def _retrieve_tian(
                     parcellation_fname_base_3T
                     / f"Tian_Subcortex_S{scale}_{magneticfield}_1mm.nii.gz"
                 )
-        elif space == "MNInonlinear2009cAsym":
+        elif space == "MNI152NLin2009cAsym":
             space = "2009cAsym"
             parcellation_fname = parcellation_fname_base_3T / (
                 f"Tian_Subcortex_S{scale}_{magneticfield}_{space}.nii.gz"
@@ -754,7 +855,9 @@ def _retrieve_tian(
 
 
 def _retrieve_suit(
-    parcellations_dir: Path, resolution: Optional[float], space: str = "MNI"
+    parcellations_dir: Path,
+    resolution: Optional[float],
+    space: str = "MNI152NLin6Asym",
 ) -> Tuple[Path, List[str]]:
     """Retrieve SUIT parcellation.
 
@@ -768,9 +871,9 @@ def _retrieve_suit(
         resolution higher than the desired one. By default, will load the
         highest one (default None). Available resolutions for this parcellation
         are 1mm and 2mm.
-    space : {"MNI", "SUIT"}, optional
-        Space of parcellation (default "MNI"). (For more information
-        see http://www.diedrichsenlab.org/imaging/suit.htm).
+    space : {"MNI152NLin6Asym", "SUIT"}, optional
+        Space of parcellation (default "MNI152NLin6Asym"). (For more
+        information see http://www.diedrichsenlab.org/imaging/suit.htm).
 
     Returns
     -------
@@ -790,7 +893,7 @@ def _retrieve_suit(
     logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tspace: {space}")
 
-    _valid_spaces = ["MNI", "SUIT"]
+    _valid_spaces = ["MNI152NLin6Asym", "SUIT"]
 
     # check validity of parameters
     if space not in _valid_spaces:
@@ -804,7 +907,11 @@ def _retrieve_suit(
 
     resolution = closest_resolution(resolution, _valid_resolutions)
 
-    # define file names
+    # Format space if MNI; required for the file name
+    if space == "MNI152NLin6Asym":
+        space = "MNI"
+
+    # Define parcellation and label file names
     parcellation_fname = (
         parcellations_dir / "SUIT" / (f"SUIT_{space}Space_{resolution}mm.nii")
     )
@@ -812,7 +919,7 @@ def _retrieve_suit(
         parcellations_dir / "SUIT" / (f"SUIT_{space}Space_{resolution}mm.tsv")
     )
 
-    # check existence of parcellation
+    # Check existence of parcellation
     if not (parcellation_fname.exists() and parcellation_lname.exists()):
         parcellation_fname.parent.mkdir(exist_ok=True, parents=True)
         logger.info(
@@ -827,6 +934,7 @@ def _retrieve_suit(
         url_SUIT = url_basis + "atl-Anatom_space-SUIT_dseg.nii"
         url_labels = url_basis + "atl-Anatom.tsv"
 
+        # TODO: improve HTTP request / response handling
         if space == "MNI":
             logger.info(f"Downloading {url_MNI}")
             parcellation_download = requests.get(url_MNI)
@@ -891,12 +999,23 @@ def _retrieve_aicha(
         If invalid value is provided for ``version`` or if there is a problem
         fetching the parcellation.
 
+    Warns
+    -----
+    RuntimeWarning
+        Until the authors confirm the space, the warning will be issued.
+
     Notes
     -----
     The resolution of the parcellation is 2mm and although v2 provides
     1mm, it is only for display purpose as noted in the release document.
 
     """
+    # Issue warning until space is confirmed by authors
+    warn_with_log(
+        "The current space for AICHA parcellations are IXI549Space, but are "
+        "not confirmed by authors, until that this warning will be issued."
+    )
+
     # show parameters to user
     logger.info("Parcellation parameters:")
     logger.info(f"\tresolution: {resolution}")

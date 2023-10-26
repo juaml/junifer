@@ -74,12 +74,16 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
 
         """
         logger.info(f"Getting element {element}")
+        # Convert element to tuple if not already
         if not isinstance(element, tuple):
             element = (element,)
-        named_element = dict(zip(self.get_element_keys(), element))
+        # Zip through element keys and actual values to construct element
+        # access dictionary
+        named_element: Dict = dict(zip(self.get_element_keys(), element))
         logger.debug(f"Named element: {named_element}")
+        # Fetch element
         out = self.get_item(**named_element)
-
+        # Update metadata
         for _, t_val in out.items():
             self.update_meta(t_val, "datagrabber")
             t_val["meta"]["element"] = named_element

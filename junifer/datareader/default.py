@@ -91,42 +91,65 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
             The processed output as dictionary. The "data" key is added to
             each data type dictionary.
 
+        Warns
+        -----
+        RuntimeWarning
+            If input data type has no key called ``"path"``.
+
         """
-        # For each type of data, try to read it
+        # Copy input to not modify the original
         out = input.copy()
+        # Set default extra parameters
         if params is None:
             params = {}
+        # For each type of data, try to read it
         for type_ in input.keys():
+            # Check for malformed datagrabber specification
             if "path" not in input[type_]:
                 warn_with_log(
                     f"Input type {type_} does not provide a path. Skipping."
                 )
                 continue
+
+            # Retrieve actual path
             t_path = input[type_]["path"]
+            # Retrieve loading params for the data type
             t_params = params.get(type_, {})
 
-            # Convert to Path if datareader is not well done
+            # Convert str to Path
             if not isinstance(t_path, Path):
                 t_path = Path(t_path)
                 out[type_]["path"] = t_path
-            logger.info(f"Reading {type_} from {t_path.as_posix()}")
-            fread = None
 
+            logger.info(f"Reading {type_} from {t_path.as_posix()}")
+            # Initialize variable for file data
+            fread = None
+            # Lowercase path
             fname = t_path.name.lower()
+            # Loop through extensions to find the correct one
             for ext, ftype in _extensions.items():
                 if fname.endswith(ext):
                     logger.info(f"{type_} is type {ftype}")
+                    # Retrieve reader function
                     reader_func = _readers[ftype]["func"]
+                    # Retrieve reader function params
                     reader_params = _readers[ftype]["params"]
+                    # Update reader function params
                     if reader_params is not None:
                         t_params.update(reader_params)
                     logger.debug(f"Calling {reader_func} with {t_params}")
+                    # Read data
                     fread = reader_func(t_path, **t_params)
                     break
+            # If no file data is found due to unknown extension
             if fread is None:
                 logger.info(
                     f"Unknown file type {t_path.as_posix()}, skipping reading"
                 )
+
+            # Set file data for output
             out[type_]["data"] = fread
+            # Update metadata for step
             self.update_meta(out[type_], "datareader")
+
         return out

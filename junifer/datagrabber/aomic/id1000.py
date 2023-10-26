@@ -121,6 +121,10 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         out = super().get_item(subject=subject)
         if out.get("BOLD"):
             out["BOLD"]["mask_item"] = "BOLD_mask"
+            # Add space information
+            out["BOLD"].update({"space": "MNI152NLin2009cAsym"})
         if out.get("T1w"):
             out["T1w"]["mask_item"] = "T1w_mask"
+            # Add space information
+            out["T1w"].update({"space": "native"})
         return out

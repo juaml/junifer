@@ -29,6 +29,7 @@ def test_compute() -> None:
                 "data": niimg,
                 "path": out["BOLD"]["path"],
                 "meta": {"element": "sub001"},
+                "space": "MNI",
             }
         }
 

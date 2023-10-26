@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional
 
 from ..datareader.default import DefaultDataReader
 from ..markers.base import BaseMarker
-from ..pipeline import PipelineStepMixin
+from ..pipeline import PipelineStepMixin, WorkDirManager
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger
@@ -97,6 +97,9 @@ class MarkerCollection:
             if self._storage is None:
                 out[marker.name] = m_value
         logger.info("Marker collection fitting done")
+
+        # Cleanup element directory
+        WorkDirManager().cleanup_elementdir()
 
         return None if self._storage else out
 

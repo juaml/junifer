@@ -6,7 +6,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Callable, Dict, List, Union
+from typing import Callable, Dict, List, Optional, Union
 
 import numpy as np
 import pytest
@@ -41,6 +41,7 @@ def test_register_mask_built_in_check() -> None:
         register_mask(
             name="GM_prob0.2",
             mask_path="testmask.nii.gz",
+            space="MNI",
             overwrite=True,
         )
 
@@ -57,6 +58,7 @@ def test_register_mask_already_registered() -> None:
     register_mask(
         name="testmask",
         mask_path="testmask.nii.gz",
+        space="MNI",
     )
     out = load_mask("testmask", path_only=True)
     assert out[1] is not None
@@ -67,10 +69,12 @@ def test_register_mask_already_registered() -> None:
         register_mask(
             name="testmask",
             mask_path="testmask.nii.gz",
+            space="MNI",
         )
     register_mask(
         name="testmask",
         mask_path="testmask2.nii.gz",
+        space="MNI",
         overwrite=True,
     )
 
@@ -80,16 +84,17 @@ def test_register_mask_already_registered() -> None:
 
 
 @pytest.mark.parametrize(
-    "name, mask_path, overwrite",
+    "name, mask_path, space, overwrite",
     [
-        ("testmask_1", "testmask_1.nii.gz", True),
-        ("testmask_2", "testmask_2.nii.gz", True),
-        ("testmask_3", Path("testmask_3.nii.gz"), True),
+        ("testmask_1", "testmask_1.nii.gz", "MNI", True),
+        ("testmask_2", "testmask_2.nii.gz", "MNI", True),
+        ("testmask_3", Path("testmask_3.nii.gz"), "MNI", True),
     ],
 )
 def test_register_mask(
     name: str,
     mask_path: str,
+    space: str,
     overwrite: bool,
 ) -> None:
     """Test mask registration.
@@ -100,6 +105,8 @@ def test_register_mask(
         The parametrized mask name.
     mask_path : str or pathlib.Path
         The parametrized mask path.
+    space : str
+        The parametrized mask space.
     overwrite : bool
         The parametrized mask overwrite value.
 
@@ -108,16 +115,18 @@ def test_register_mask(
     register_mask(
         name=name,
         mask_path=mask_path,
+        space=space,
         overwrite=overwrite,
     )
     # List available mask and check registration
     masks = list_masks()
     assert name in masks
     # Load registered mask
-    _, fname = load_mask(name=name, path_only=True)
+    _, fname, mask_space = load_mask(name=name, path_only=True)
     # Check values for registered mask
     assert fname is not None
     assert fname.name == f"{name}.nii.gz"
+    assert space == mask_space
 
 
 @pytest.mark.parametrize(
@@ -146,36 +155,62 @@ def test_load_mask_incorrect() -> None:
         load_mask("wrongmask")
 
 
-def test_vickery_patil() -> None:
-    """Test Vickery-Patil mask."""
-    mask, fname = load_mask("GM_prob0.2")
+@pytest.mark.parametrize(
+    "name, resolution, pixdim, fname",
+    [
+        (
+            "GM_prob0.2",
+            None,
+            [1.5, 1.5, 1.5],
+            "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean.nii.gz",
+        ),
+        (
+            "GM_prob0.2",
+            3.0,
+            [3.0, 3.0, 3.0],
+            "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean_3mm.nii.gz",
+        ),
+        (
+            "GM_prob0.2_cortex",
+            None,
+            [3.0, 3.0, 3.0],
+            "GMprob0.2_cortex_3mm_NA_rm.nii.gz",
+        ),
+    ],
+)
+def test_vickery_patil(
+    name: str,
+    resolution: Optional[float],
+    pixdim: List[float],
+    fname: str,
+) -> None:
+    """Test Vickery-Patil mask.
+
+    Parameters
+    ----------
+    name : str
+        The parametrized name of the mask.
+    resolution : float or None
+        The parametrized resolution of the mask.
+    pixdim : list of float
+        The parametrized pixel dimensions of the mask.
+    fname : str
+        The parametrized name of the mask file.
+
+    """
+    mask, mask_fname, space = load_mask(name, resolution=resolution)
     assert_array_almost_equal(
-        mask.header["pixdim"][1:4], [1.5, 1.5, 1.5]  # type: ignore
+        mask.header["pixdim"][1:4], pixdim  # type: ignore
     )
+    assert space == "IXI549Space"
+    assert mask_fname is not None
+    assert mask_fname.name == fname
 
-    assert fname is not None
-    assert fname.name == "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean.nii.gz"
 
-    mask, fname = load_mask("GM_prob0.2", resolution=3)
-    assert_array_almost_equal(
-        mask.header["pixdim"][1:4], [3.0, 3.0, 3.0]  # type: ignore
-    )
-
-    assert fname is not None
-    assert (
-        fname.name == "CAT12_IXI555_MNI152_TMP_GS_GMprob0.2_clean_3mm.nii.gz"
-    )
-
-    mask, fname = load_mask("GM_prob0.2_cortex")
-    assert_array_almost_equal(
-        mask.header["pixdim"][1:4], [3.0, 3.0, 3.0]  # type: ignore
-    )
-
-    assert fname is not None
-    assert fname.name == "GMprob0.2_cortex_3mm_NA_rm.nii.gz"
-
+def test_vickery_patil_error() -> None:
+    """Test error for Vickery-Patil mask."""
     with pytest.raises(ValueError, match=r"find a Vickery-Patil mask "):
-        _load_vickery_patil_mask("wrong", resolution=2)
+        _load_vickery_patil_mask(name="wrong", resolution=2.0)
 
 
 def test_get_mask() -> None:
@@ -191,7 +226,7 @@ def test_get_mask() -> None:
         assert mask.shape == vbm_gm_img.shape
         assert_array_equal(mask.affine, vbm_gm_img.affine)
 
-        raw_mask_img, _ = load_mask("GM_prob0.2", resolution=1.5)
+        raw_mask_img, _, _ = load_mask("GM_prob0.2", resolution=1.5)
         res_mask_img = resample_to_img(
             raw_mask_img,
             vbm_gm_img,
@@ -207,7 +242,11 @@ def test_mask_callable() -> None:
     def ident(x):
         return x
 
-    _available_masks["identity"] = {"family": "Callable", "func": ident}
+    _available_masks["identity"] = {
+        "family": "Callable",
+        "func": ident,
+        "space": "MNI",
+    }
     reader = DefaultDataReader()
     with OasisVBMTestingDataGrabber() as dg:
         input = dg["sub-01"]
@@ -371,14 +410,6 @@ def test_get_mask_inherit() -> None:
             ["GM_prob0.2", "compute_brain_mask"],
             {"threshold": 0.2},
         ),
-        (
-            [
-                "GM_prob0.2",
-                "compute_brain_mask",
-                "fetch_icbm152_brain_gm_mask",
-            ],
-            {"threshold": 1, "connected": True},
-        ),
     ],
 )
 def test_get_mask_multiple(
@@ -445,3 +476,21 @@ def test_get_mask_multiple(
 
         expected = intersect_masks(mask_imgs, **params)
         assert_array_equal(computed.get_fdata(), expected.get_fdata())
+
+
+def test_get_mask_multiple_incorrect_space() -> None:
+    """Test incorrect space error for getting multiple masks."""
+    reader = DefaultDataReader()
+    with SPMAuditoryTestingDataGrabber() as dg:
+        input = dg["sub001"]
+        input = reader.fit_transform(input)
+
+        with pytest.raises(RuntimeError, match="unable to merge."):
+            get_mask(
+                masks=[
+                    "GM_prob0.2",
+                    "compute_brain_mask",
+                    "fetch_icbm152_brain_gm_mask",
+                ],
+                target_data=input["BOLD"],
+            )

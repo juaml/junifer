@@ -28,7 +28,9 @@ def test_EdgeCentricFCSpheres(tmp_path: Path) -> None:
     efc = EdgeCentricFCSpheres(
         coords="DMNBuckner", radius=5.0, cor_method="correlation"
     )
-    all_out = efc.fit_transform({"BOLD": {"data": fmri_img, "meta": {}}})
+    all_out = efc.fit_transform(
+        {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
+    )
 
     out = all_out["BOLD"]
 
@@ -58,13 +60,15 @@ def test_EdgeCentricFCSpheres(tmp_path: Path) -> None:
         "element": {"subject": "sub001"},
         "dependencies": {"nilearn"},
     }
-    all_out = efc.fit_transform({"BOLD": {"data": fmri_img, "meta": meta}})
+    all_out = efc.fit_transform(
+        {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
+    )
 
     uri = tmp_path / "test_fc_parcellation.sqlite"
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {"element": {"subject": "test"}, "dependencies": {"numpy"}}
-    input = {"BOLD": {"data": fmri_img, "meta": meta}}
+    input = {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
     all_out = efc.fit_transform(input, storage=storage)
 
     features = storage.list_features()

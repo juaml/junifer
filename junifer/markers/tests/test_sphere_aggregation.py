@@ -37,7 +37,7 @@ def test_SphereAggregation_input_output() -> None:
 def test_SphereAggregation_3D() -> None:
     """Test SphereAggregation object on 3D images."""
     # Get the testing coordinates (for nilearn)
-    coordinates, labels = load_coordinates(COORDS)
+    coordinates, _, _ = load_coordinates(COORDS)
 
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
@@ -52,7 +52,7 @@ def test_SphereAggregation_3D() -> None:
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values4d.ndim == 2
@@ -63,7 +63,7 @@ def test_SphereAggregation_3D() -> None:
 def test_SphereAggregation_4D() -> None:
     """Test SphereAggregation object on 4D images."""
     # Get the testing coordinates (for nilearn)
-    coordinates, _ = load_coordinates(COORDS)
+    coordinates, _, _ = load_coordinates(COORDS)
 
     # Get the SPM auditory data
     subject_data = datasets.fetch_spm_auditory()
@@ -75,7 +75,7 @@ def test_SphereAggregation_4D() -> None:
 
     # Create SphereAggregation object
     marker = SphereAggregation(coords=COORDS, method="mean", radius=RADIUS)
-    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    input = {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
     assert jun_values4d.ndim == 2
@@ -103,7 +103,7 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
         "element": {"subject": "sub-01", "session": "ses-01"},
         "dependencies": {"nilearn", "nibabel"},
     }
-    input = {"VBM_GM": {"data": img, "meta": meta}}
+    input = {"VBM_GM": {"data": img, "meta": meta, "space": "MNI"}}
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
     )
@@ -122,7 +122,7 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     # Get the SPM auditory data
     subject_data = datasets.fetch_spm_auditory()
     fmri_img = concat_imgs(subject_data.func)  # type: ignore
-    input = {"BOLD": {"data": fmri_img, "meta": meta}}
+    input = {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, on="BOLD"
     )
@@ -137,10 +137,10 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
 def test_SphereAggregation_3D_mask() -> None:
     """Test SphereAggregation object on 3D images using mask."""
     # Get the testing coordinates (for nilearn)
-    coordinates, _ = load_coordinates(COORDS)
+    coordinates, _, _ = load_coordinates(COORDS)
 
     # Get one mask
-    mask_img, _ = load_mask("GM_prob0.2")
+    mask_img, _, _ = load_mask("GM_prob0.2")
 
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
@@ -161,7 +161,7 @@ def test_SphereAggregation_3D_mask() -> None:
         on="VBM_GM",
         masks="GM_prob0.2",
     )
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     jun_values4d = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values4d.ndim == 2
@@ -172,7 +172,7 @@ def test_SphereAggregation_3D_mask() -> None:
 def test_SphereAggregation_4D_agg_time() -> None:
     """Test SphereAggregation object on 4D images, aggregating time."""
     # Get the testing coordinates (for nilearn)
-    coordinates, _ = load_coordinates(COORDS)
+    coordinates, _, _ = load_coordinates(COORDS)
 
     # Get the SPM auditory data
     subject_data = datasets.fetch_spm_auditory()
@@ -187,7 +187,7 @@ def test_SphereAggregation_4D_agg_time() -> None:
     marker = SphereAggregation(
         coords=COORDS, method="mean", radius=RADIUS, time_method="mean"
     )
-    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    input = {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
     assert jun_values4d.ndim == 1
@@ -203,7 +203,7 @@ def test_SphereAggregation_4D_agg_time() -> None:
         time_method_params={"pick": [0]},
     )
 
-    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    input = {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
     assert jun_values4d.ndim == 2
@@ -232,5 +232,11 @@ def test_SphereAggregation_4D_agg_time() -> None:
         )
 
     with pytest.warns(RuntimeWarning, match="No time dimension to aggregate"):
-        input = {"BOLD": {"data": fmri_img.slicer[..., 0:1], "meta": {}}}
+        input = {
+            "BOLD": {
+                "data": fmri_img.slicer[..., 0:1],
+                "meta": {},
+                "space": "MNI",
+            }
+        }
         marker.fit_transform(input)

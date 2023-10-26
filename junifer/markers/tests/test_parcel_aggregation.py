@@ -82,7 +82,7 @@ def test_ParcelAggregation_3D() -> None:
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     jun_values3d_mean = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values3d_mean.ndim == 2
@@ -98,7 +98,7 @@ def test_ParcelAggregation_3D() -> None:
 
     # Use the ParcelAggregation object
     marker = ParcelAggregation(parcellation="Schaefer100x7", method="std")
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     jun_values3d_std = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values3d_std.ndim == 2
@@ -122,7 +122,7 @@ def test_ParcelAggregation_3D() -> None:
         method="trim_mean",
         method_params={"proportiontocut": 0.1},
     )
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     jun_values3d_tm = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values3d_tm.ndim == 2
@@ -147,7 +147,7 @@ def test_ParcelAggregation_4D():
 
     # Create ParcelAggregation object
     marker = ParcelAggregation(parcellation="Schaefer100x7", method="mean")
-    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    input = {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
     assert jun_values4d.ndim == 2
@@ -175,7 +175,7 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
         "element": {"subject": "sub-01", "session": "ses-01"},
         "dependencies": {"nilearn", "nibabel"},
     }
-    input = {"VBM_GM": {"data": img, "meta": meta}}
+    input = {"VBM_GM": {"data": img, "meta": meta, "space": "MNI"}}
     marker = ParcelAggregation(
         parcellation="Schaefer100x7", method="mean", on="VBM_GM"
     )
@@ -194,7 +194,7 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
     # Get the SPM auditory data
     subject_data = datasets.fetch_spm_auditory()
     fmri_img = concat_imgs(subject_data.func)  # type: ignore
-    input = {"BOLD": {"data": fmri_img, "meta": meta}}
+    input = {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
     marker = ParcelAggregation(
         parcellation="Schaefer100x7", method="mean", on="BOLD"
     )
@@ -213,7 +213,7 @@ def test_ParcelAggregation_3D_mask() -> None:
     parcellation = datasets.fetch_atlas_schaefer_2018(n_rois=100)
 
     # Get one mask
-    mask_img, _ = load_mask("GM_prob0.2")
+    mask_img, _, _ = load_mask("GM_prob0.2")
 
     # Get the oasis VBM data
     oasis_dataset = datasets.fetch_oasis_vbm(n_subjects=1)
@@ -234,7 +234,7 @@ def test_ParcelAggregation_3D_mask() -> None:
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     jun_values3d_mean = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values3d_mean.ndim == 2
@@ -279,7 +279,7 @@ def test_ParcelAggregation_3D_mask_computed() -> None:
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     jun_values3d_mean = marker.fit_transform(input)["VBM_GM"]["data"]
 
     assert jun_values3d_mean.ndim == 2
@@ -301,7 +301,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
     """
 
     # Get the testing parcellation
-    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+    parcellation, labels, _, _ = load_parcellation("Schaefer100x7")
 
     assert parcellation is not None
 
@@ -330,10 +330,18 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
     nib.save(parcellation2_img, parcellation2_path)
 
     register_parcellation(
-        "Schaefer100x7_low", parcellation1_path, labels1, overwrite=True
+        name="Schaefer100x7_low",
+        parcellation_path=parcellation1_path,
+        parcels_labels=labels1,
+        space="MNI",
+        overwrite=True,
     )
     register_parcellation(
-        "Schaefer100x7_high", parcellation2_path, labels2, overwrite=True
+        name="Schaefer100x7_high",
+        parcellation_path=parcellation2_path,
+        parcels_labels=labels2,
+        space="MNI",
+        overwrite=True,
     )
 
     # Use the ParcelAggregation object on the original parcellation
@@ -343,7 +351,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     orig_mean = marker_original.fit_transform(input)["VBM_GM"]
 
     orig_mean_data = orig_mean["data"]
@@ -359,7 +367,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
 
     # No warnings should be raised
     with warnings.catch_warnings():
@@ -387,7 +395,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
     """
 
     # Get the testing parcellation
-    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+    parcellation, labels, _, _ = load_parcellation("Schaefer100x7")
 
     assert parcellation is not None
 
@@ -418,10 +426,18 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
     nib.save(parcellation2_img, parcellation2_path)
 
     register_parcellation(
-        "Schaefer100x7_low2", parcellation1_path, labels1, overwrite=True
+        name="Schaefer100x7_low2",
+        parcellation_path=parcellation1_path,
+        parcels_labels=labels1,
+        space="MNI",
+        overwrite=True,
     )
     register_parcellation(
-        "Schaefer100x7_high2", parcellation2_path, labels2, overwrite=True
+        name="Schaefer100x7_high2",
+        parcellation_path=parcellation2_path,
+        parcels_labels=labels2,
+        space="MNI",
+        overwrite=True,
     )
 
     # Use the ParcelAggregation object on the original parcellation
@@ -431,7 +447,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     orig_mean = marker_original.fit_transform(input)["VBM_GM"]
 
     orig_mean_data = orig_mean["data"]
@@ -447,7 +463,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     with pytest.warns(RuntimeWarning, match="overlapping voxels"):
         split_mean = marker_split.fit_transform(input)["VBM_GM"]
     split_mean_data = split_mean["data"]
@@ -481,7 +497,7 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
     """
 
     # Get the testing parcellation
-    parcellation, labels, _ = load_parcellation("Schaefer100x7")
+    parcellation, labels, _, _ = load_parcellation("Schaefer100x7")
 
     assert parcellation is not None
 
@@ -510,10 +526,18 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
     nib.save(parcellation2_img, parcellation2_path)
 
     register_parcellation(
-        "Schaefer100x7_low", parcellation1_path, labels1, overwrite=True
+        name="Schaefer100x7_low",
+        parcellation_path=parcellation1_path,
+        parcels_labels=labels1,
+        space="MNI",
+        overwrite=True,
     )
     register_parcellation(
-        "Schaefer100x7_high", parcellation2_path, labels2, overwrite=True
+        name="Schaefer100x7_high",
+        parcellation_path=parcellation2_path,
+        parcels_labels=labels2,
+        space="MNI",
+        overwrite=True,
     )
 
     # Use the ParcelAggregation object on the original parcellation
@@ -523,7 +547,7 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
     orig_mean = marker_original.fit_transform(input)["VBM_GM"]
 
     orig_mean_data = orig_mean["data"]
@@ -539,7 +563,7 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
         name="gmd_schaefer100x7_mean",
         on="VBM_GM",
     )  # Test passing "on" as a keyword argument
-    input = {"VBM_GM": {"data": img, "meta": {}}}
+    input = {"VBM_GM": {"data": img, "meta": {}, "space": "MNI"}}
 
     with pytest.warns(RuntimeWarning, match="duplicated labels."):
         split_mean = marker_split.fit_transform(input)["VBM_GM"]
@@ -578,7 +602,7 @@ def test_ParcelAggregation_4D_agg_time():
     marker = ParcelAggregation(
         parcellation="Schaefer100x7", method="mean", time_method="mean"
     )
-    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    input = {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
     assert jun_values4d.ndim == 1
@@ -593,7 +617,7 @@ def test_ParcelAggregation_4D_agg_time():
         time_method_params={"pick": [0]},
     )
 
-    input = {"BOLD": {"data": fmri_img, "meta": {}}}
+    input = {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
     jun_values4d = marker.fit_transform(input)["BOLD"]["data"]
 
     assert jun_values4d.ndim == 2
@@ -620,5 +644,11 @@ def test_ParcelAggregation_4D_agg_time():
         )
 
     with pytest.warns(RuntimeWarning, match="No time dimension to aggregate"):
-        input = {"BOLD": {"data": fmri_img.slicer[..., 0:1], "meta": {}}}
+        input = {
+            "BOLD": {
+                "data": fmri_img.slicer[..., 0:1],
+                "meta": {},
+                "space": "MNI",
+            }
+        }
         marker.fit_transform(input)

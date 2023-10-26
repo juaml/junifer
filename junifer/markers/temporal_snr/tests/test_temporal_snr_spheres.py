@@ -27,7 +27,7 @@ def test_TemporalSNRSpheres(tmp_path: Path) -> None:
 
     tsnr_spheres = TemporalSNRSpheres(coords="DMNBuckner", radius=5.0)
     all_out = tsnr_spheres.fit_transform(
-        {"BOLD": {"data": fmri_img, "meta": {}}}
+        {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
     )
 
     out = all_out["BOLD"]
@@ -48,7 +48,7 @@ def test_TemporalSNRSpheres(tmp_path: Path) -> None:
         "element": {"subject": "test"},
         "dependencies": {"numpy", "nilearn"},
     }
-    input = {"BOLD": {"data": fmri_img, "meta": meta}}
+    input = {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
     all_out = tsnr_spheres.fit_transform(input, storage=storage)
 
     features = storage.list_features()

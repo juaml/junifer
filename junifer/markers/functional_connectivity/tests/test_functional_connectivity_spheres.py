@@ -36,7 +36,9 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
     fc = FunctionalConnectivitySpheres(
         coords="DMNBuckner", radius=5.0, cor_method="correlation"
     )
-    all_out = fc.fit_transform({"BOLD": {"data": fmri_img, "meta": {}}})
+    all_out = fc.fit_transform(
+        {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
+    )
 
     out = all_out["BOLD"]
 
@@ -52,7 +54,7 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
     sa = SphereAggregation(
         coords="DMNBuckner", radius=5.0, method="mean", on="BOLD"
     )
-    ts = sa.compute({"data": fmri_img, "meta": {}})
+    ts = sa.compute({"data": fmri_img, "meta": {}, "space": "MNI"})
 
     # Check that FC are almost equal when using nileran
     cm = ConnectivityMeasure(kind="correlation")
@@ -69,7 +71,7 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
         "element": {"subject": "test"},
         "dependencies": {"numpy", "nilearn"},
     }
-    input = {"BOLD": {"data": fmri_img, "meta": meta}}
+    input = {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
     all_out = fc.fit_transform(input, storage=storage)
 
     features = storage.list_features()
@@ -99,7 +101,9 @@ def test_FunctionalConnectivitySpheres_empirical(tmp_path: Path) -> None:
         cor_method="correlation",
         cor_method_params={"empirical": True},
     )
-    all_out = fc.fit_transform({"BOLD": {"data": fmri_img, "meta": {}}})
+    all_out = fc.fit_transform(
+        {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
+    )
 
     out = all_out["BOLD"]
 
@@ -115,7 +119,7 @@ def test_FunctionalConnectivitySpheres_empirical(tmp_path: Path) -> None:
     sa = SphereAggregation(
         coords="DMNBuckner", radius=5.0, method="mean", on="BOLD"
     )
-    ts = sa.compute({"data": fmri_img})
+    ts = sa.compute({"data": fmri_img, "space": "MNI"})
 
     # Check that FC are almost equal when using nileran
     cm = ConnectivityMeasure(

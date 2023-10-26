@@ -29,13 +29,17 @@ def test_compute() -> None:
         # Load BOLD image
         niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
         # Create input data
-        input_dict = {"data": niimg, "path": out["BOLD"]["path"]}
+        input_dict = {
+            "data": niimg,
+            "path": out["BOLD"]["path"],
+            "space": "MNI",
+        }
         # Compute the RSSETSMarker
         ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
         new_out = ets_rss_marker.compute(input_dict)
 
         # Load parcellation
-        test_parcellation, _, _ = load_parcellation(PARCELLATION)
+        test_parcellation, _, _, _ = load_parcellation(PARCELLATION)
         # Compute the NiftiLabelsMasker
         test_masker = NiftiLabelsMasker(test_parcellation)
         test_ts = test_masker.fit_transform(niimg)

@@ -26,7 +26,7 @@ def test_TemporalSNRParcels(tmp_path: Path) -> None:
 
     tsnr_parcels = TemporalSNRParcels(parcellation="Schaefer100x7")
     all_out = tsnr_parcels.fit_transform(
-        {"BOLD": {"data": fmri_img, "meta": {}}}
+        {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
     )
 
     out = all_out["BOLD"]
@@ -45,7 +45,7 @@ def test_TemporalSNRParcels(tmp_path: Path) -> None:
     # Single storage, must be the uri
     storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
     meta = {"element": {"subject": "test"}, "dependencies": {"numpy"}}
-    input = {"BOLD": {"data": fmri_img, "meta": meta}}
+    input = {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
     all_out = tsnr_parcels.fit_transform(input, storage=storage)
 
     features = storage.list_features()

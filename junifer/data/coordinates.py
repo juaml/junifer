@@ -4,6 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import subprocess
 import typing
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -12,6 +13,7 @@ import numpy as np
 import pandas as pd
 from numpy.typing import ArrayLike
 
+from ..pipeline import WorkDirManager
 from ..utils.logging import logger, raise_error, warn_with_log
 
 
@@ -24,31 +26,83 @@ _vois_meta_path = _vois_path / "meta"
 # A dictionary containing all supported coordinates and their respective file
 # or data.
 
+# Each entry is a dictionary that must contain at least the following keys:
+# * 'space': the coordinates' space (e.g., 'MNI')
+
 # The built-in coordinates are files that are shipped with the package in the
 # data/VOIs directory. The user can also register their own coordinates, which
 # will be stored as numpy arrays in the dictionary.
 _available_coordinates: Dict[
-    str, Union[Path, Dict[str, Union[ArrayLike, List[str]]]]
+    str, Dict[str, Union[Path, ArrayLike, List[str]]]
 ] = {
-    "CogAC": _vois_meta_path / "CogAC_VOIs.txt",
-    "CogAR": _vois_meta_path / "CogAR_VOIs.txt",
-    "DMNBuckner": _vois_meta_path / "DMNBuckner_VOIs.txt",
-    "eMDN": _vois_meta_path / "eMDN_VOIs.txt",
-    "Empathy": _vois_meta_path / "Empathy_VOIs.txt",
-    "eSAD": _vois_meta_path / "eSAD_VOIs.txt",
-    "extDMN": _vois_meta_path / "extDMN_VOIs.txt",
-    "Motor": _vois_meta_path / "Motor_VOIs.txt",
-    "MultiTask": _vois_meta_path / "MultiTask_VOIs.txt",
-    "PhysioStress": _vois_meta_path / "PhysioStress_VOIs.txt",
-    "Rew": _vois_meta_path / "Rew_VOIs.txt",
-    "Somatosensory": _vois_meta_path / "Somatosensory_VOIs.txt",
-    "ToM": _vois_meta_path / "ToM_VOIs.txt",
-    "VigAtt": _vois_meta_path / "VigAtt_VOIs.txt",
-    "WM": _vois_meta_path / "WM_VOIs.txt",
-    "Power": _vois_meta_path / "Power2011_MNI_VOIs.txt",
-    "Power2011": _vois_meta_path / "Power2011_MNI_VOIs.txt",
-    "Dosenbach": _vois_meta_path / "Dosenbach2010_MNI_VOIs.txt",
-    "Power2013": _vois_meta_path / "Power2013_MNI_VOIs.tsv",
+    "CogAC": {
+        "path": _vois_meta_path / "CogAC_VOIs.txt",
+        "space": "MNI",
+    },
+    "CogAR": {
+        "path": _vois_meta_path / "CogAR_VOIs.txt",
+        "space": "MNI",
+    },
+    "DMNBuckner": {
+        "path": _vois_meta_path / "DMNBuckner_VOIs.txt",
+        "space": "MNI",
+    },
+    "eMDN": {
+        "path": _vois_meta_path / "eMDN_VOIs.txt",
+        "space": "MNI",
+    },
+    "Empathy": {
+        "path": _vois_meta_path / "Empathy_VOIs.txt",
+        "space": "MNI",
+    },
+    "eSAD": {
+        "path": _vois_meta_path / "eSAD_VOIs.txt",
+        "space": "MNI",
+    },
+    "extDMN": {
+        "path": _vois_meta_path / "extDMN_VOIs.txt",
+        "space": "MNI",
+    },
+    "Motor": {
+        "path": _vois_meta_path / "Motor_VOIs.txt",
+        "space": "MNI",
+    },
+    "MultiTask": {
+        "path": _vois_meta_path / "MultiTask_VOIs.txt",
+        "space": "MNI",
+    },
+    "PhysioStress": {
+        "path": _vois_meta_path / "PhysioStress_VOIs.txt",
+        "space": "MNI",
+    },
+    "Rew": {
+        "path": _vois_meta_path / "Rew_VOIs.txt",
+        "space": "MNI",
+    },
+    "Somatosensory": {
+        "path": _vois_meta_path / "Somatosensory_VOIs.txt",
+        "space": "MNI",
+    },
+    "ToM": {
+        "path": _vois_meta_path / "ToM_VOIs.txt",
+        "space": "MNI",
+    },
+    "VigAtt": {
+        "path": _vois_meta_path / "VigAtt_VOIs.txt",
+        "space": "MNI",
+    },
+    "WM": {
+        "path": _vois_meta_path / "WM_VOIs.txt",
+        "space": "MNI",
+    },
+    "Power": {
+        "path": _vois_meta_path / "Power2011_MNI_VOIs.txt",
+        "space": "MNI",
+    },
+    "Dosenbach": {
+        "path": _vois_meta_path / "Dosenbach2010_MNI_VOIs.txt",
+        "space": "MNI",
+    },
 }
 
 
@@ -56,6 +110,7 @@ def register_coordinates(
     name: str,
     coordinates: ArrayLike,
     voi_names: List[str],
+    space: str,
     overwrite: Optional[bool] = False,
 ) -> None:
     """Register a custom user coordinates.
@@ -71,6 +126,8 @@ def register_coordinates(
         z-coordinates).
     voi_names : list of str
         The names of the VOIs.
+    space : str
+        The space of the coordinates.
     overwrite : bool, optional
         If True, overwrite an existing list of coordinates with the same name.
         Does not apply to built-in coordinates (default False).
@@ -88,7 +145,7 @@ def register_coordinates(
 
     """
     if name in _available_coordinates:
-        if isinstance(_available_coordinates[name], Path):
+        if isinstance(_available_coordinates[name].get("path"), Path):
             raise_error(
                 f"Coordinates {name} already registered as built-in "
                 "coordinates."
@@ -122,6 +179,7 @@ def register_coordinates(
     _available_coordinates[name] = {
         "coords": coordinates,
         "voi_names": voi_names,
+        "space": space,
     }
 
 
@@ -166,16 +224,79 @@ def get_coordinates(
     Raises
     ------
     ValueError
-        If ``extra_input`` is None when ``target_data``'s space is not MNI.
+        If ``extra_input`` is None when ``target_data``'s space is native.
 
     """
     # Load the coordinates
-    seeds, labels = load_coordinates(name=coords)
+    seeds, labels, _ = load_coordinates(name=coords)
+
+    # Transform coordinate if target data is native
+    if target_data["space"] == "native":
+        # Check for extra inputs
+        if extra_input is None:
+            raise_error(
+                "No extra input provided, requires `Warp` and `T1w` "
+                "data types in particular for transformation to "
+                f"{target_data['space']} space for further computation."
+            )
+
+        # Create tempdir
+        tempdir = WorkDirManager().get_tempdir(prefix="coordinates")
+
+        # Save existing coordinates
+        pretransform_coordinates_path = (
+            tempdir / "pretransform_coordinates.txt"
+        )
+        np.savetxt(pretransform_coordinates_path, seeds)
+
+        # Create a tempfile for transformed coordinates output
+        std2imgcoord_out_path = tempdir / "coordinates_transformed.txt"
+        # Set std2imgcoord command
+        std2imgcoord_cmd = [
+            "std2imgcoord",
+            f"-img {target_data['reference_path'].resolve()}",
+            f"-warp {extra_input['Warp']['path'].resolve()}",
+            f"{pretransform_coordinates_path}",
+            f"> {std2imgcoord_out_path}",
+        ]
+        # Call std2imgcoord
+        std2imgcoord_cmd_str = " ".join(std2imgcoord_cmd)
+        logger.info(
+            f"std2imgcoord command to be executed: {std2imgcoord_cmd_str}"
+        )
+        std2imgcoord_process = subprocess.run(
+            std2imgcoord_cmd_str,  # string needed with shell=True
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=True,  # needed for respecting $PATH
+            check=False,
+        )
+        # Delete saved coordinates file
+        pretransform_coordinates_path.unlink()
+        # Check for success or failure
+        if std2imgcoord_process.returncode == 0:
+            logger.info(
+                "std2imgcoord succeeded with the following output: "
+                f"{std2imgcoord_process.stdout}"
+            )
+        else:
+            raise_error(
+                msg="std2imgcoord failed with the following error: "
+                f"{std2imgcoord_process.stdout}",
+                klass=RuntimeError,
+            )
+
+        # Load coordinates
+        seeds = np.loadtxt(std2imgcoord_out_path)
+
+        # Delete tempdir
+        WorkDirManager().delete_tempdir(tempdir)
 
     return seeds, labels
 
 
-def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
+def load_coordinates(name: str) -> Tuple[ArrayLike, List[str], str]:
     """Load coordinates.
 
     Parameters
@@ -189,6 +310,8 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         The coordinates.
     list of str
         The names of the VOIs.
+    str
+        The space of the coordinates.
 
     Raises
     ------
@@ -221,9 +344,9 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
 
     # Load coordinates
     t_coord = _available_coordinates[name]
-    if isinstance(t_coord, Path):
+    if isinstance(t_coord.get("path"), Path):
         # Load via pandas
-        df_coords = pd.read_csv(t_coord, sep="\t", header=None)
+        df_coords = pd.read_csv(t_coord["path"], sep="\t", header=None)
         coords = df_coords.iloc[:, [0, 1, 2]].to_numpy()
         names = list(df_coords.iloc[:, [3]].values[:, 0])
     else:
@@ -232,4 +355,4 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str]]:
         names = t_coord["voi_names"]
         names = typing.cast(List[str], names)
 
-    return coords, names
+    return coords, names, t_coord["space"]

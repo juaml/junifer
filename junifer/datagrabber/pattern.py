@@ -42,6 +42,11 @@ class PatternDataGrabber(BaseDataGrabber):
     confounds_format : {"fmriprep", "adhoc"} or None, optional
         The format of the confounds for the dataset (default None).
 
+    Raises
+    ------
+    ValueError
+        If ``confounds_format`` is invalid.
+
     """
 
     def __init__(
@@ -55,6 +60,7 @@ class PatternDataGrabber(BaseDataGrabber):
         # Validate patterns
         validate_patterns(types=types, patterns=patterns)
 
+        # Convert replacements to list if not already
         if not isinstance(replacements, list):
             replacements = [replacements]
         # Validate replacements

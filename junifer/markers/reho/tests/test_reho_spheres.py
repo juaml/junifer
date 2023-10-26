@@ -39,7 +39,14 @@ def test_reho_spheres_computation(tmp_path: Path) -> None:
         reho_spheres_marker = ReHoSpheres(coords=COORDINATES, radius=10.0)
         # Fit transform marker on data
         reho_spheres_output = reho_spheres_marker.fit_transform(
-            {"BOLD": {"path": "/tmp", "data": fmri_img, "meta": {}}}
+            {
+                "BOLD": {
+                    "path": "/tmp",
+                    "data": fmri_img,
+                    "meta": {},
+                    "space": "MNI",
+                }
+            }
         )
         # Get BOLD output
         reho_spheres_output_bold = reho_spheres_output["BOLD"]
@@ -82,7 +89,14 @@ def test_reho_spheres_computation_comparison(tmp_path: Path) -> None:
         )
         # Fit transform marker on data
         reho_spheres_output_python = reho_spheres_marker_python.fit_transform(
-            {"BOLD": {"path": "/tmp", "data": fmri_img, "meta": {}}}
+            {
+                "BOLD": {
+                    "path": "/tmp",
+                    "data": fmri_img,
+                    "meta": {},
+                    "space": "MNI",
+                }
+            }
         )
         # Get BOLD output
         reho_spheres_output_bold_python = reho_spheres_output_python["BOLD"]
@@ -93,7 +107,14 @@ def test_reho_spheres_computation_comparison(tmp_path: Path) -> None:
         )
         # Fit transform marker on data
         reho_spheres_output_afni = reho_spheres_marker_afni.fit_transform(
-            {"BOLD": {"path": "/tmp", "data": fmri_img, "meta": {}}}
+            {
+                "BOLD": {
+                    "path": "/tmp",
+                    "data": fmri_img,
+                    "meta": {},
+                    "space": "MNI",
+                }
+            }
         )
         # Get BOLD output
         reho_spheres_output_bold_afni = reho_spheres_output_afni["BOLD"]
@@ -134,6 +155,13 @@ def test_reho_spheres_storage(tmp_path: Path) -> None:
         }  # only requires element key for storing
         # Fit transform marker on data with storage
         reho_spheres_marker.fit_transform(
-            input={"BOLD": {"path": "/tmp", "data": fmri_img, "meta": meta}},
+            input={
+                "BOLD": {
+                    "path": "/tmp",
+                    "data": fmri_img,
+                    "meta": meta,
+                    "space": "MNI",
+                }
+            },
             storage=reho_spheres_storage,
         )
