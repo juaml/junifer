@@ -169,7 +169,9 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             ),
         }
         # Use native T1w assets
+        self.native_t1w = False
         if native_t1w:
+            self.native_t1w = True
             patterns.update(
                 {
                     "T1w": (
@@ -251,8 +253,15 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         )
         if out.get("BOLD"):
             out["BOLD"]["mask_item"] = "BOLD_mask"
+            # Add space information
+            out["BOLD"].update({"space": "MNI152NLin2009cAsym"})
         if out.get("T1w"):
             out["T1w"]["mask_item"] = "T1w_mask"
+            # Add space information
+            if self.native_t1w:
+                out["T1w"].update({"space": "native"})
+            else:
+                out["T1w"].update({"space": "MNI152NLin2009cAsym"})
         return out
 
     def get_elements(self) -> List:
