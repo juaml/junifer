@@ -151,7 +151,7 @@ class HCP1200(PatternDataGrabber):
         )
         # Add space for BOLD data type
         if "BOLD" in out:
-            out["BOLD"].update({"space": "MNI"})
+            out["BOLD"].update({"space": "MNI152NLin6Asym"})
         # Add space for T1w data type
         if "T1w" in out:
             out["T1w"].update({"space": "native"})
