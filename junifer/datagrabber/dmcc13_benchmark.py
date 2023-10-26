@@ -174,7 +174,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                 {
                     "T1w": (
                         "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                        "sub-{subject}_desc-prepoc_T1w.nii.gz"
+                        "sub-{subject}_desc-preproc_T1w.nii.gz"
                     ),
                     "T1w_mask": (
                         "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
