@@ -15,9 +15,9 @@ learn how to use your own masks.
 
 The principle is fairly simple and quite similar to :ref:`adding_parcellations`
 and :ref:`adding_coordinates`. junifer provides a :func:`.register_mask`
-function that lets you register your own custom masks. It consists of two
-positional arguments (``name`` and ``mask_path``) and one optional keyword
-argument (``overwrite``).
+function that lets you register your own custom masks. It consists of three
+positional arguments (``name``, ``mask_path`` and ``space``) and one optional
+keyword argument (``overwrite``).
 
 The ``name`` argument is a string indicating the name of the mask. This name
 is used to refer to that mask in junifer internally in order to obtain the
@@ -28,6 +28,9 @@ can load a mask after registration using the
 The ``mask_path`` should contain the path to a valid NIfTI image with binary
 voxel values (i.e. 0 or 1). This data can then be used by junifer to mask other
 MR images.
+
+Lastly, we specify the ``space`` that the coordinates are in, for example,
+``"MNI"`` or ``"Native"`` (scanner-native space).
 
 Step 1: Prepare code to register a mask
 ---------------------------------------
@@ -46,7 +49,7 @@ look as follows:
   # on your system:
   mask_path = Path("..") / ".." / "my_custom_mask.nii.gz"
 
-  register_mask(name="my_custom_mask", mask_path=mask_path)
+  register_mask(name="my_custom_mask", mask_path=mask_path, space="Native")
 
 Simple, right? Now we just have to configure a YAML file to register this mask
 so we can use it for :ref:`codeless configuration of junifer <codeless>`.

@@ -199,8 +199,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_run_gmd_mean.html">8.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="auto_examples/run_compute_parcel_mean.html">8.4. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_ets_rss_marker.html">8.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="auto_examples/run_junifer_julearn.html">8.7. Run junifer and julearn.</a></li>
@@ -266,8 +266,8 @@
         <article role="main">
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">#</a></h1>
-<section id="junifer-0-0-4-dev171-2023-10-25">
-<h2><span class="section-number">14.1. </span>Junifer 0.0.4.dev171 (2023-10-25)<a class="headerlink" href="#junifer-0-0-4-dev171-2023-10-25" title="Link to this heading">#</a></h2>
+<section id="junifer-0-0-4-dev263-2023-10-26">
+<h2><span class="section-number">14.1. </span>Junifer 0.0.4.dev263 (2023-10-26)<a class="headerlink" href="#junifer-0-0-4-dev263-2023-10-26" title="Link to this heading">#</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">#</a></h3>
 <ul class="simple">
@@ -282,9 +282,16 @@
 (<a class="reference external" href="https://github.com/juaml/junifer/issues/245">#245</a>)</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">feature_md5</span></code> argument to <a class="reference internal" href="api/onthefly.html#junifer.onthefly.read_transform" title="junifer.onthefly.read_transform"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_transform()</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/248">#248</a>)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">native_t1w</span></code> parameter to <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICID1000" title="junifer.datagrabber.DataladAOMICID1000"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a>,
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a>, <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a>, enabling fetching
+of T1w data in subject-native space by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/252">#252</a>)</p></li>
 <li><p>Modify <code class="docutils literal notranslate"><span class="pre">preprocessor</span></code> to <code class="docutils literal notranslate"><span class="pre">preprocessors</span></code> in <a class="reference internal" href="api/api.html#junifer.api.run" title="junifer.api.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> and
 <code class="docutils literal notranslate"><span class="pre">preprocessing</span></code> to <code class="docutils literal notranslate"><span class="pre">preprocessors</span></code> in <a class="reference internal" href="api/markers.html#junifer.markers.MarkerCollection" title="junifer.markers.MarkerCollection"><code class="xref py py-class docutils literal notranslate"><span class="pre">MarkerCollection</span></code></a> to
 accept multiple preprocessors by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/263">#263</a>)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">space</span></code> parameter to <a class="reference internal" href="api/data.html#junifer.data.coordinates.register_coordinates" title="junifer.data.coordinates.register_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_coordinates()</span></code></a>,
+<a class="reference internal" href="api/data.html#junifer.data.parcellations.register_parcellation" title="junifer.data.parcellations.register_parcellation"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_parcellation()</span></code></a> and <a class="reference internal" href="api/data.html#junifer.data.masks.register_mask" title="junifer.data.masks.register_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_mask()</span></code></a> and return space
+from <a class="reference internal" href="api/data.html#junifer.data.coordinates.load_coordinates" title="junifer.data.coordinates.load_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_coordinates()</span></code></a>, <a class="reference internal" href="api/data.html#junifer.data.parcellations.load_parcellation" title="junifer.data.parcellations.load_parcellation"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_parcellation()</span></code></a> and
+<a class="reference internal" href="api/data.html#junifer.data.masks.load_mask" title="junifer.data.masks.load_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_mask()</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> and <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/268">#268</a>)</p></li>
 </ul>
 </section>
 <section id="improved-documentation">
@@ -309,6 +316,8 @@ listing for <code class="docutils literal notranslate"><span class="pre">eMDN</s
 Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/259">#259</a>)</p></li>
 <li><p>Improve <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.BasePreprocessor" title="junifer.preprocess.BasePreprocessor"><code class="xref py py-class docutils literal notranslate"><span class="pre">BasePreprocessor</span></code></a> for easy subclassing and adapt
 <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover</span></code></a> to it by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/260">#260</a>)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">space</span></code> information to existing datagrabbers, masks, parcellations and
+coordinates by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> and <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/268">#268</a>)</p></li>
 </ul>
 </section>
 <section id="features">
@@ -726,7 +735,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-0-0-4-dev171-2023-10-25">14.1. Junifer 0.0.4.dev171 (2023-10-25)</a><ul>
+<li><a class="reference internal" href="#junifer-0-0-4-dev263-2023-10-26">14.1. Junifer 0.0.4.dev263 (2023-10-26)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>

@@ -21,22 +21,25 @@
 Computer Parcel Aggregation.
 ============================
 
-This example uses a ParcelAggregation marker to compute the mean of each parcel
-using the Schaefer parcellations (100 rois, 7 Yeo networks) for both a 3D and
-4D nifti
+This example uses the ``ParcelAggregation`` marker to compute the mean of each
+parcel using the Schaefer parcellations (100 rois, 7 Yeo networks) for both 3D
+and 4D NIfTI.
 
-Authors: Federico Raimondo
+Authors: Federico Raimondo, Synchon Mandal
 
 License: BSD 3 clause
 
-.. GENERATED FROM PYTHON SOURCE LINES 13-20
+.. GENERATED FROM PYTHON SOURCE LINES 13-23
 
 .. code-block:: default
 
 
-    import nilearn
-
-    from junifer.markers.parcel_aggregation import ParcelAggregation
+    from junifer.testing.datagrabbers import (
+        OasisVBMTestingDataGrabber,
+        SPMAuditoryTestingDataGrabber,
+    )
+    from junifer.datareader import DefaultDataReader
+    from junifer.markers import ParcelAggregation
     from junifer.utils import configure_logging
 
 
@@ -47,11 +50,11 @@ License: BSD 3 clause
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 21-22
+.. GENERATED FROM PYTHON SOURCE LINES 24-25
 
 Set the logging level to info to see extra information
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-25
+.. GENERATED FROM PYTHON SOURCE LINES 25-27
 
 .. code-block:: default
 
@@ -61,35 +64,42 @@ Set the logging level to info to see extra information
 
 
 
-
 .. rst-class:: sphx-glr-script-out
 
  .. code-block:: none
 
-    2023-10-25 16:19:15,238 - JUNIFER - INFO - ===== Lib Versions =====
-    2023-10-25 16:19:15,238 - JUNIFER - INFO - numpy: 1.25.2
-    2023-10-25 16:19:15,239 - JUNIFER - INFO - scipy: 1.11.3
-    2023-10-25 16:19:15,239 - JUNIFER - INFO - pandas: 2.0.3
-    2023-10-25 16:19:15,239 - JUNIFER - INFO - nilearn: 0.10.2
-    2023-10-25 16:19:15,239 - JUNIFER - INFO - nibabel: 5.1.0
-    2023-10-25 16:19:15,239 - JUNIFER - INFO - junifer: 0.0.4.dev171
-    2023-10-25 16:19:15,239 - JUNIFER - INFO - ========================
+    2023-10-26 13:47:28,756 - JUNIFER - INFO - ===== Lib Versions =====
+    2023-10-26 13:47:28,756 - JUNIFER - INFO - numpy: 1.25.2
+    2023-10-26 13:47:28,756 - JUNIFER - INFO - scipy: 1.11.3
+    2023-10-26 13:47:28,756 - JUNIFER - INFO - pandas: 2.0.3
+    2023-10-26 13:47:28,756 - JUNIFER - INFO - nilearn: 0.10.2
+    2023-10-26 13:47:28,756 - JUNIFER - INFO - nibabel: 5.1.0
+    2023-10-26 13:47:28,756 - JUNIFER - INFO - junifer: 0.0.4.dev263
+    2023-10-26 13:47:28,756 - JUNIFER - INFO - ========================
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-28
+.. GENERATED FROM PYTHON SOURCE LINES 28-29
 
-Load the VBM GM data (3d):
-- Fetch the Oasis dataset
+Perform parcel aggregation on VBM GM data (3D) from OASIS dataset
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-32
+.. GENERATED FROM PYTHON SOURCE LINES 29-42
 
 .. code-block:: default
 
-    oasis_dataset = nilearn.datasets.fetch_oasis_vbm(n_subjects=1)
-    vbm_fname = oasis_dataset.gray_matter_maps[0]
-    vbm_img = nilearn.image.load_img(vbm_fname)
+    with OasisVBMTestingDataGrabber() as dg:
+        # Get the first element
+        element = dg.get_elements()[0]
+        # Read the element
+        element_data = DefaultDataReader().fit_transform(dg[element])
+        # Initialize marker
+        marker = ParcelAggregation(parcellation="Schaefer100x7", method="mean")
+        # Compute feature
+        feature = marker.fit_transform(element_data)
+        # Print the output
+        print(feature.keys())
+        print(feature["VBM_GM"]["data"].shape)  # Shape is (1 x parcels)
 
 
 
@@ -99,31 +109,52 @@ Load the VBM GM data (3d):
 
  .. code-block:: none
 
-
-    Dataset created in /home/runner/nilearn_data/oasis1
-
-    Downloading data from https://www.nitrc.org/frs/download.php/6364/archive_dartel.tgz ...
-    Downloaded 53477376 of 905208634 bytes (5.9%,   15.9s remaining)    Downloaded 130727936 of 905208634 bytes (14.4%,   11.8s remaining)    Downloaded 201424896 of 905208634 bytes (22.3%,   10.5s remaining)    Downloaded 259260416 of 905208634 bytes (28.6%,   10.0s remaining)    Downloaded 329629696 of 905208634 bytes (36.4%,    8.8s remaining)    Downloaded 408821760 of 905208634 bytes (45.2%,    7.3s remaining)    Downloaded 484712448 of 905208634 bytes (53.5%,    6.1s remaining)    Downloaded 560316416 of 905208634 bytes (61.9%,    4.9s remaining)    Downloaded 638943232 of 905208634 bytes (70.6%,    3.8s remaining)    Downloaded 717209600 of 905208634 bytes (79.2%,    2.6s remaining)    Downloaded 792150016 of 905208634 bytes (87.5%,    1.6s remaining)    Downloaded 868335616 of 905208634 bytes (95.9%,    0.5s remaining) ...done. (13 seconds, 0 min)
-    Extracting data from /home/runner/nilearn_data/oasis1/6d19418bccb98b1333309bd8baa05152/archive_dartel.tgz..... done.
     /opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/nilearn/datasets/struct.py:852: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
       warnings.warn(_LEGACY_FORMAT_MSG)
+    2023-10-26 13:47:28,767 - JUNIFER - INFO - Getting element sub-01
+    2023-10-26 13:47:28,767 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2023-10-26 13:47:28,767 - JUNIFER - INFO - VBM_GM is type NIFTI
+    2023-10-26 13:47:28,769 - JUNIFER - INFO - Computing VBM_GM
+    2023-10-26 13:47:28,769 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+    2023-10-26 13:47:28,769 - JUNIFER - INFO - Parcellation parameters:
+    2023-10-26 13:47:28,769 - JUNIFER - INFO -      resolution: 2.0
+    2023-10-26 13:47:28,769 - JUNIFER - INFO -      n_rois: 100
+    2023-10-26 13:47:28,769 - JUNIFER - INFO -      yeo_networks: 7
+    2023-10-26 13:47:28,769 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+    Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order.txt ...
+     ...done. (0 seconds, 0 min)
+    Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
+     ...done. (0 seconds, 0 min)
+    2023-10-26 13:47:29,051 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+    2023-10-26 13:47:30,031 - JUNIFER - INFO - No storage specified, returning dictionary
+    dict_keys(['VBM_GM'])
+    (1, 100)
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-36
+.. GENERATED FROM PYTHON SOURCE LINES 43-44
 
-Load the functional data (4d):
-- Fetch the SPM auditory dataset
-- Concatenate the functional data into one 4D image
+Perform parcel aggregation on BOLD data (4D) from SPM Auditory dataset
 
-.. GENERATED FROM PYTHON SOURCE LINES 36-39
+.. GENERATED FROM PYTHON SOURCE LINES 44-58
 
 .. code-block:: default
 
-    s_func_data = nilearn.datasets.fetch_spm_auditory()
-    fmri_img = nilearn.image.concat_imgs(s_func_data.func)
-
+    with SPMAuditoryTestingDataGrabber() as dg:
+        # Get the first element
+        element = dg.get_elements()[0]
+        # Read the element
+        element_data = DefaultDataReader().fit_transform(dg[element])
+        # Initialize marker
+        marker = ParcelAggregation(
+            parcellation="Schaefer100x7", method="mean", on="BOLD"
+        )
+        # Compute feature
+        feature = marker.fit_transform(element_data)
+        # Print the output
+        print(feature.keys())
+        print(feature["BOLD"]["data"].shape)  # Shape is (timepoints x parcels)
 
 
 
@@ -132,125 +163,27 @@ Load the functional data (4d):
 
  .. code-block:: none
 
+    2023-10-26 13:47:30,032 - JUNIFER - INFO - Getting element sub001
 
     Dataset created in /home/runner/nilearn_data/spm_auditory
 
     Data absent, downloading...
     Downloading data from https://www.fil.ion.ucl.ac.uk/spm/download/data/MoAEpilot/MoAEpilot.zip ...
-    Downloaded 2211840 of 34212021 bytes (6.5%,   14.6s remaining)    Downloaded 5971968 of 34212021 bytes (17.5%,    9.5s remaining)    Downloaded 9584640 of 34212021 bytes (28.0%,    7.7s remaining)    Downloaded 13385728 of 34212021 bytes (39.1%,    6.2s remaining)    Downloaded 17113088 of 34212021 bytes (50.0%,    5.0s remaining)    Downloaded 20758528 of 34212021 bytes (60.7%,    3.9s remaining)    Downloaded 24576000 of 34212021 bytes (71.8%,    2.8s remaining)    Downloaded 28450816 of 34212021 bytes (83.2%,    1.6s remaining)    Downloaded 32342016 of 34212021 bytes (94.5%,    0.5s remaining) ...done. (10 seconds, 0 min)
+    Downloaded 3268608 of 34212021 bytes (9.6%,    9.6s remaining)    Downloaded 6135808 of 34212021 bytes (17.9%,    9.3s remaining)    Downloaded 9273344 of 34212021 bytes (27.1%,    8.1s remaining)    Downloaded 12525568 of 34212021 bytes (36.6%,    7.0s remaining)    Downloaded 15835136 of 34212021 bytes (46.3%,    5.8s remaining)    Downloaded 19243008 of 34212021 bytes (56.2%,    4.7s remaining)    Downloaded 22683648 of 34212021 bytes (66.3%,    3.6s remaining)    Downloaded 26091520 of 34212021 bytes (76.3%,    2.5s remaining)    Downloaded 29638656 of 34212021 bytes (86.6%,    1.4s remaining)    Downloaded 33554432 of 34212021 bytes (98.1%,    0.2s remaining) ...done. (11 seconds, 0 min)
     Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip..... done.
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 40-41
-
-Define the marker
-
-.. GENERATED FROM PYTHON SOURCE LINES 41-43
-
-.. code-block:: default
-
-    marker = ParcelAggregation(parcellation="Schaefer100x7", method="mean")
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 44-45
-
-Prepare the input
-
-.. GENERATED FROM PYTHON SOURCE LINES 45-50
-
-.. code-block:: default
-
-    input = {
-        "BOLD": {"data": fmri_img, "meta": {"element": "subject1"}},
-        "VBM_GM": {"data": vbm_img, "meta": {"element": "subject1"}},
-    }
-
-
-
-
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 51-52
-
-Fit transform the data
-
-.. GENERATED FROM PYTHON SOURCE LINES 52-54
-
-.. code-block:: default
-
-    out = marker.fit_transform(input)
-
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    2023-10-25 16:19:49,217 - JUNIFER - INFO - Computing BOLD
-    2023-10-25 16:19:49,218 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2023-10-25 16:19:49,218 - JUNIFER - INFO - Parcellation parameters:
-    2023-10-25 16:19:49,218 - JUNIFER - INFO -      resolution: 3.0
-    2023-10-25 16:19:49,218 - JUNIFER - INFO -      n_rois: 100
-    2023-10-25 16:19:49,218 - JUNIFER - INFO -      yeo_networks: 7
-    2023-10-25 16:19:49,218 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
-
-    Dataset created in /home/runner/junifer/data/parcellations/schaefer_2018
-
-    Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order.txt ...
-     ...done. (0 seconds, 0 min)
-    Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
-     ...done. (0 seconds, 0 min)
-    2023-10-25 16:19:49,377 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-    2023-10-25 16:19:51,139 - JUNIFER - INFO - No storage specified, returning dictionary
-    2023-10-25 16:19:51,139 - JUNIFER - INFO - Computing VBM_GM
-    2023-10-25 16:19:51,139 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2023-10-25 16:19:51,139 - JUNIFER - INFO - Parcellation parameters:
-    2023-10-25 16:19:51,139 - JUNIFER - INFO -      resolution: 2.0
-    2023-10-25 16:19:51,139 - JUNIFER - INFO -      n_rois: 100
-    2023-10-25 16:19:51,139 - JUNIFER - INFO -      yeo_networks: 7
-    2023-10-25 16:19:51,142 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-    2023-10-25 16:19:51,999 - JUNIFER - INFO - No storage specified, returning dictionary
-
-
-
-
-.. GENERATED FROM PYTHON SOURCE LINES 55-56
-
-Check the results
-
-.. GENERATED FROM PYTHON SOURCE LINES 56-62
-
-.. code-block:: default
-
-
-    print(out.keys())
-    print(out["VBM_GM"]["data"].shape)  # Shape is (1 x parcels)
-
-    print(out.keys())
-    print(out["BOLD"]["data"].shape)  # Shape is (timepoints x parcels)
-
-
-
-
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    dict_keys(['BOLD', 'VBM_GM'])
-    (1, 100)
-    dict_keys(['BOLD', 'VBM_GM'])
+    2023-10-26 13:47:45,894 - JUNIFER - INFO - Reading BOLD from /tmp/tmpl3ycs4ih/sub001_bold.nii.gz
+    2023-10-26 13:47:45,894 - JUNIFER - INFO - BOLD is type NIFTI
+    2023-10-26 13:47:45,895 - JUNIFER - INFO - Reading T1w from /tmp/tmpl3ycs4ih/sub001_T1w.nii.gz
+    2023-10-26 13:47:45,896 - JUNIFER - INFO - T1w is type NIFTI
+    2023-10-26 13:47:45,897 - JUNIFER - INFO - Computing BOLD
+    2023-10-26 13:47:45,897 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+    2023-10-26 13:47:45,897 - JUNIFER - INFO - Parcellation parameters:
+    2023-10-26 13:47:45,897 - JUNIFER - INFO -      resolution: 3.0
+    2023-10-26 13:47:45,898 - JUNIFER - INFO -      n_rois: 100
+    2023-10-26 13:47:45,898 - JUNIFER - INFO -      yeo_networks: 7
+    2023-10-26 13:47:45,901 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+    2023-10-26 13:47:49,554 - JUNIFER - INFO - No storage specified, returning dictionary
+    dict_keys(['BOLD'])
     (96, 100)
 
 
@@ -259,7 +192,7 @@ Check the results
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 36.771 seconds)
+   **Total running time of the script:** (0 minutes 20.807 seconds)
 
 
 .. _sphx_glr_download_auto_examples_run_compute_parcel_mean.py:

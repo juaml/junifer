@@ -8,7 +8,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.4.dev171 (2023-10-25)
+Junifer 0.0.4.dev263 (2023-10-26)
 ---------------------------------
 
 Bugfixes
@@ -25,9 +25,16 @@ API Changes
   (:gh:`245`)
 - Add ``feature_md5`` argument to :func:`.read_transform()` by `Synchon
   Mandal`_ (:gh:`248`)
+- Add ``native_t1w`` parameter to :class:`.DataladAOMICID1000`,
+  :class:`.DataladAOMICPIOP1`, :class:`.DataladAOMICPIOP2`, enabling fetching
+  of T1w data in subject-native space by `Synchon Mandal`_ (:gh:`252`)
 - Modify ``preprocessor`` to ``preprocessors`` in :func:`.run` and
   ``preprocessing`` to ``preprocessors`` in :class:`.MarkerCollection` to
   accept multiple preprocessors by `Synchon Mandal`_ (:gh:`263`)
+- Add ``space`` parameter to :func:`.register_coordinates`,
+  :func:`.register_parcellation` and :func:`.register_mask` and return space
+  from :func:`.load_coordinates`, :func:`.load_parcellation` and
+  :func:`.load_mask` by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
 
 
 Improved Documentation
@@ -52,6 +59,8 @@ Enhancements
   Mandal`_ (:gh:`259`)
 - Improve :class:`.BasePreprocessor` for easy subclassing and adapt
   :class:`.fMRIPrepConfoundRemover` to it by `Synchon Mandal`_ (:gh:`260`)
+- Add ``space`` information to existing datagrabbers, masks, parcellations and
+  coordinates by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
 
 
 Features

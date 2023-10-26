@@ -199,8 +199,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.4. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">8.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_junifer_julearn.html">8.7. Run junifer and julearn.</a></li>
@@ -293,6 +293,14 @@ kinds that needs to be used in the computation of parcellations
 </dd>
 </dl>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If parcellations are in different spaces and they need to be merged.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </dd></dl>
 
@@ -342,6 +350,8 @@ highest one (default None).</p>
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></dt><dd><p>File path to the parcellation image.</p>
 </dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The space of the parcellation.</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -384,7 +394,7 @@ parcellations.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.parcellations.register_parcellation">
-<span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">register_parcellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellation_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcels_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.register_parcellation" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">register_parcellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellation_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcels_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.register_parcellation" title="Link to this definition">#</a></dt>
 <dd><p>Register a custom user parcellation.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -394,6 +404,8 @@ parcellations.</p>
 <dt><strong>parcellation_path</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The path to the parcellation file.</p>
 </dd>
 <dt><strong>parcels_labels</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The list of labels for the parcellation.</p>
+</dd>
+<dt><strong>space</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The space of the parcellation.</p>
 </dd>
 <dt><strong>overwrite</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, overwrite an existing parcellation with the same name.
 Does not apply to built-in parcellations (default False).</p>
@@ -442,7 +454,7 @@ kinds that needs to be used in the computation of coordinates
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is not MNI.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
 </dd>
 </dl>
 </dd>
@@ -480,6 +492,8 @@ kinds that needs to be used in the computation of coordinates
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The names of the VOIs.</p>
 </dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The space of the coordinates.</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
@@ -499,7 +513,7 @@ kinds that needs to be used in the computation of coordinates
 
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.coordinates.register_coordinates">
-<span class="sig-prename descclassname"><span class="pre">junifer.data.coordinates.</span></span><span class="sig-name descname"><span class="pre">register_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voi_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.coordinates.register_coordinates" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">junifer.data.coordinates.</span></span><span class="sig-name descname"><span class="pre">register_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voi_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.coordinates.register_coordinates" title="Link to this definition">#</a></dt>
 <dd><p>Register a custom user coordinates.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -512,6 +526,8 @@ column corresponds to a spatial dimension (i.e. x, y, and
 z-coordinates).</p>
 </dd>
 <dt><strong>voi_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The names of the VOIs.</p>
+</dd>
+<dt><strong>space</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The space of the coordinates.</p>
 </dd>
 <dt><strong>overwrite</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, overwrite an existing list of coordinates with the same name.
 Does not apply to built-in coordinates (default False).</p>
@@ -561,6 +577,23 @@ kinds that needs to be used in the computation of masks (default None).</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If masks are in different spaces and they need to be intersected /
+unionized.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If extra key is provided in addition to mask name in <code class="docutils literal notranslate"><span class="pre">masks</span></code> or
+if no mask is provided or
+if <code class="docutils literal notranslate"><span class="pre">masks</span> <span class="pre">=</span> <span class="pre">&quot;inherit&quot;</span></code> but <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None or <code class="docutils literal notranslate"><span class="pre">mask_item</span></code>
+is None or <code class="docutils literal notranslate"><span class="pre">mask_items</span></code>’s value is not in <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> or
+if callable parameters are passed to non-callable mask or
+if multiple masks are provided and their spaces do not match or
+if parameters are passed to <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.masking.intersect_masks.html#nilearn.masking.intersect_masks" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.masking.intersect_masks()</span></code></a>
+when there is only one mask or
+if <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </dd></dl>
 
@@ -581,11 +614,12 @@ kinds that needs to be used in the computation of masks (default None).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.masks.load_mask">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">load_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.load_mask" title="Link to this definition">#</a></dt>
-<dd><p>Load mask.</p>
+<dd><p>Load a mask.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the mask.</p>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the mask. Check valid options by calling
+<a class="reference internal" href="#junifer.data.masks.list_masks" title="junifer.data.masks.list_masks"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_masks()</span></code></a>.</p>
 </dd>
 <dt><strong>resolution</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The desired resolution of the mask to load. If it is not
 available, the closest resolution will be loaded. Preferably, use a
@@ -602,6 +636,14 @@ highest one (default None).</p>
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>File path to the mask image.</p>
 </dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The space of the mask.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">name</span></code> is invalid of if the mask family is invalid.</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -609,7 +651,7 @@ highest one (default None).</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.masks.register_mask">
-<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">register_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.register_mask" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">register_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.register_mask" title="Link to this definition">#</a></dt>
 <dd><p>Register a custom user mask.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -617,6 +659,8 @@ highest one (default None).</p>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the mask.</p>
 </dd>
 <dt><strong>mask_path</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The path to the mask file.</p>
+</dd>
+<dt><strong>space</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The space of the mask.</p>
 </dd>
 <dt><strong>overwrite</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, overwrite an existing mask with the same name.
 Does not apply to built-in mask (default False).</p>

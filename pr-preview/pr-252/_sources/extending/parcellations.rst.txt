@@ -20,9 +20,9 @@ the easy-to-use :func:`.register_parcellation` function to do just that. Let's
 try to understand the API reference and then use this function to register our
 own parcellation.
 
-From the API reference, we can see that it has 3 positional arguments
-(``name``, ``parcellation_path``, and ``parcels_labels``) as well as one
-optional keyword argument (``overwrite``).
+From the API reference, we can see that it has 4 positional arguments
+(``name``, ``parcellation_path``, ``parcels_labels`` and ``space``) as well as
+one optional keyword argument (``overwrite``).
 
 The ``name`` of the parcellation is up to you and will be the name that junifer
 will use to refer to this particular parcellation. You can think of this as
@@ -40,7 +40,7 @@ this parcellation should be indicated by 0, and the labels of ROIs should go
 from 1 to N (where N is the total number of ROIs in your parcellation). Now,
 we nearly have everything we need.
 
-Lastly, we also want to make sure that we can associate each integer label with
+We also want to make sure that we can associate each integer label with
 a human readable name (i.e. the name for each ROI). This serves naming the
 features that parcellation-based markers produce in an unambiguous way, such
 that a user can easily identify which ROIs were used to produce a specific
@@ -50,6 +50,9 @@ junifer with a list of strings, that contains the names for each ROI. In this
 list, the label at the i-th position indicates the i-th integer label (i.e. the
 first label in this list corresponds to the first integer label in the
 parcellation and so on).
+
+Lastly, we specify the ``space`` that the parcellation is in, for example,
+``"MNI"`` or ``"Native"`` (scanner-native space).
 
 Step 1: Prepare code to register a parcellation
 -----------------------------------------------
@@ -78,7 +81,8 @@ a simple example could look like this:
   register_parcellation(
       name="my_custom_parcellation",
       parcellation_path=path_to_parcellation,
-      parcels_labels=my_labels
+      parcels_labels=my_labels,
+      space="MNI"
   )
 
 We can run this code and it seems to work, however, how can we actually
