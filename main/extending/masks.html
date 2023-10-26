@@ -199,8 +199,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.4. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">8.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_junifer_julearn.html">8.7. Run junifer and julearn.</a></li>
@@ -297,9 +297,9 @@ suit your needs, and you have found that they don’t, you can come back here to
 learn how to use your own masks.</p>
 <p>The principle is fairly simple and quite similar to <a class="reference internal" href="parcellations.html#adding-parcellations"><span class="std std-ref">Adding Parcellations</span></a>
 and <a class="reference internal" href="coordinates.html#adding-coordinates"><span class="std std-ref">Adding Coordinates</span></a>. junifer provides a <a class="reference internal" href="../api/data.html#junifer.data.masks.register_mask" title="junifer.data.masks.register_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_mask()</span></code></a>
-function that lets you register your own custom masks. It consists of two
-positional arguments (<code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">mask_path</span></code>) and one optional keyword
-argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
+function that lets you register your own custom masks. It consists of three
+positional arguments (<code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">mask_path</span></code> and <code class="docutils literal notranslate"><span class="pre">space</span></code>) and one optional
+keyword argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">name</span></code> argument is a string indicating the name of the mask. This name
 is used to refer to that mask in junifer internally in order to obtain the
 actual mask data and perform operations on it. For example, using the name you
@@ -308,6 +308,8 @@ can load a mask after registration using the
 <p>The <code class="docutils literal notranslate"><span class="pre">mask_path</span></code> should contain the path to a valid NIfTI image with binary
 voxel values (i.e. 0 or 1). This data can then be used by junifer to mask other
 MR images.</p>
+<p>Lastly, we specify the <code class="docutils literal notranslate"><span class="pre">space</span></code> that the coordinates are in, for example,
+<code class="docutils literal notranslate"><span class="pre">&quot;MNI&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Native&quot;</span></code> (scanner-native space).</p>
 <section id="step-1-prepare-code-to-register-a-mask">
 <h2><span class="section-number">7.6.1. </span>Step 1: Prepare code to register a mask<a class="headerlink" href="#step-1-prepare-code-to-register-a-mask" title="Link to this heading">#</a></h2>
 <p>A simple script called <code class="docutils literal notranslate"><span class="pre">register_custom_mask.py</span></code> to register a mask could
@@ -321,7 +323,7 @@ look as follows:</p>
 <span class="c1"># on your system:</span>
 <span class="n">mask_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;..&quot;</span> <span class="o">/</span> <span class="s2">&quot;my_custom_mask.nii.gz&quot;</span>
 
-<span class="n">register_mask</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_custom_mask&quot;</span><span class="p">,</span> <span class="n">mask_path</span><span class="o">=</span><span class="n">mask_path</span><span class="p">)</span>
+<span class="n">register_mask</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_custom_mask&quot;</span><span class="p">,</span> <span class="n">mask_path</span><span class="o">=</span><span class="n">mask_path</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s2">&quot;Native&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Simple, right? Now we just have to configure a YAML file to register this mask

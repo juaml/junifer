@@ -199,8 +199,8 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.3. Computer Parcel Aggregation.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.4. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.4. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">8.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_junifer_julearn.html">8.7. Run junifer and julearn.</a></li>
@@ -301,8 +301,8 @@ provides them already.</p>
 example if you came up with your own set of coordinates), then junifer provides
 an easy way for you to register them using the <a class="reference internal" href="../api/data.html#junifer.data.coordinates.register_coordinates" title="junifer.data.coordinates.register_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_coordinates()</span></code></a>
 function, so you can use your own set of coordinates within a junifer pipeline.</p>
-<p>From the API reference, we can see that it has 3 positional arguments
-(<code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">coordinates</span></code>, and <code class="docutils literal notranslate"><span class="pre">voi_names</span></code>) as well as one
+<p>From the API reference, we can see that it has 4 positional arguments
+(<code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">coordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">voi_names</span></code> and <code class="docutils literal notranslate"><span class="pre">space</span></code>) as well as one
 optional keyword argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">name</span></code> argument takes a string indicating the name you want to give to
 this set of coordinates. This <code class="docutils literal notranslate"><span class="pre">name</span></code> can be used to obtain and operate on a
@@ -318,11 +318,13 @@ The number of rows in the array correspond to the number of coordinates that
 belong to this set. Note, that junifer (as of yet) only works in MNI space, and
 so therefore these coordinates should always be real-world coordinates of the
 MNI space.</p>
-<p>Lastly, the <code class="docutils literal notranslate"><span class="pre">voi_names</span></code> argument takes a list of strings
+<p>The <code class="docutils literal notranslate"><span class="pre">voi_names</span></code> argument takes a list of strings
 indicating the names of each coordinate (i.e. volume-of-interest) in the
 <code class="docutils literal notranslate"><span class="pre">coordinates</span></code> array. Therefore, the length of this list should correspond to
 the number of rows in the coordinates array. Now, we know everything we need to
 know to register a set of coordinates.</p>
+<p>Lastly, we specify the <code class="docutils literal notranslate"><span class="pre">space</span></code> that the coordinates are in, for example,
+<code class="docutils literal notranslate"><span class="pre">&quot;MNI&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;Native&quot;</span></code> (scanner-native space).</p>
 <section id="step-1-prepare-code-to-register-a-set-of-coordinates">
 <h2><span class="section-number">7.5.1. </span>Step 1: Prepare code to register a set of coordinates<a class="headerlink" href="#step-1-prepare-code-to-register-a-set-of-coordinates" title="Link to this heading">#</a></h2>
 <p>Let’s make a simple script to register our coordinates. We could simply call it
@@ -359,7 +361,8 @@ simply use this to register our coordinates:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">register_coordinates</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;DMNCustom&quot;</span><span class="p">,</span>
     <span class="n">coordinates</span><span class="o">=</span><span class="n">dmn_coords</span><span class="p">,</span>
-    <span class="n">voi_names</span><span class="o">=</span><span class="n">voi_names</span>
+    <span class="n">voi_names</span><span class="o">=</span><span class="n">voi_names</span><span class="p">,</span>
+    <span class="n">space</span><span class="o">=</span><span class="s2">&quot;MNI&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
