@@ -27,6 +27,11 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         The name of the marker. By default, it will use the class name as the
         name of the marker (default None).
 
+    Raises
+    ------
+    ValueError
+        If required input data type(s) is(are) not found.
+
     """
 
     def __init__(
@@ -45,7 +50,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         # Check if required inputs are found
         if any(x not in self.get_valid_inputs() for x in on):
             wrong_on = [x for x in on if x not in self.get_valid_inputs()]
-            raise ValueError(f"{self.name} cannot be computed on {wrong_on}")
+            raise_error(f"{self.name} cannot be computed on {wrong_on}")
         self._on = on
 
     @abstractmethod
