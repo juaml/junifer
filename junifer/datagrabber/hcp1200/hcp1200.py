@@ -34,8 +34,6 @@ class HCP1200(PatternDataGrabber):
         Whether to retrieve data that was processed with ICA+FIX.
         Only "REST1" and "REST2" tasks are available with ICA+FIX (default
         False).
-    **kwargs
-        Keyword arguments passed to superclass.
 
     """
 
@@ -45,7 +43,6 @@ class HCP1200(PatternDataGrabber):
         tasks: Union[str, List[str], None] = None,
         phase_encodings: Union[str, List[str], None] = None,
         ica_fix: bool = False,
-        **kwargs,
     ) -> None:
         # All tasks
         all_tasks = [
@@ -74,6 +71,7 @@ class HCP1200(PatternDataGrabber):
                         f"Valid task values can be any or all of {all_tasks}."
                     )
             self.tasks: List[str] = tasks
+
         # All phase encodings
         all_phase_encodings = ["LR", "RL"]
         # Set phase encodings
@@ -90,6 +88,7 @@ class HCP1200(PatternDataGrabber):
                     "Valid phase encoding can be any or all of "
                     f"{all_phase_encodings}."
                 )
+        self.phase_encodings = phase_encodings
 
         if ica_fix:
             if not all(task in ["REST1", "REST2"] for task in self.tasks):
@@ -97,6 +96,7 @@ class HCP1200(PatternDataGrabber):
                     "ICA+FIX is only available for 'REST1' and 'REST2' tasks."
                 )
         suffix = "_hp2000_clean" if ica_fix else ""
+
         # The types of data
         types = ["BOLD", "T1w", "Warp"]
         # The patterns
@@ -118,7 +118,6 @@ class HCP1200(PatternDataGrabber):
             patterns=patterns,
             replacements=replacements,
         )
-        self.phase_encodings = phase_encodings
 
     def get_item(self, subject: str, task: str, phase_encoding: str) -> Dict:
         """Implement single element indexing in the database.
