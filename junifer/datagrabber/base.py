@@ -37,15 +37,16 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
     def __init__(self, types: List[str], datadir: Union[str, Path]) -> None:
         # Validate types
         validate_types(types)
+        self.types = types
+
         # Convert str to Path
         if not isinstance(datadir, Path):
             datadir = Path(datadir)
+        self._datadir = datadir
 
         logger.debug("Initializing BaseDataGrabber")
         logger.debug(f"\t_datadir = {datadir}")
         logger.debug(f"\ttypes = {types}")
-        self._datadir = datadir
-        self.types = types
 
     def __iter__(self) -> Iterator:
         """Enable iterable support.
