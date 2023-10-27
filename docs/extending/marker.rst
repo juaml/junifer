@@ -56,7 +56,7 @@ we can define the output as:
 
 .. _extending_markers_init:
 
-Step 2: Initialise the marker
+Step 2: Initialize the marker
 -----------------------------
 
 In this step we need to define the parameters of the marker the user can provide
