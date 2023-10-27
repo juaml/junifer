@@ -44,8 +44,10 @@ class BaseFeatureStorage(ABC):
         single_output: bool = True,
     ) -> None:
         self.uri = uri
+        # Convert storage_types to list
         if not isinstance(storage_types, list):
             storage_types = [storage_types]
+        # Check if required inputs are found
         if any(x not in self.get_valid_inputs() for x in storage_types):
             wrong_storage_types = [
                 x for x in storage_types if x not in self.get_valid_inputs()
