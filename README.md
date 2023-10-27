@@ -54,6 +54,20 @@ You can also install via `conda`, like so:
 conda install -c conda-forge junifer
 ```
 
+### Optional dependencies
+
+`junifer` supports a few optional dependencies to enable certain features. You can
+install them by specifying a comma separated list within square brackets, like so:
+
+```
+pip install "junifer[bct,dev]"
+```
+
+* `bct` installs [bctpy](https://github.com/aestrivex/bctpy) to enable use of `onthefly` module.
+* `all` includes all of the above.
+* `dev` installs packages needed for development.
+* `docs` installs packages needed for building documentation.
+
 ## Citation
 
 If you use `junifer` in a scientific publication, we would appreciate if you cite our work. Currently, we do not have a publication, so feel free to use the project's [Zenodo URL](https://doi.org/10.5281/zenodo.8176569).
