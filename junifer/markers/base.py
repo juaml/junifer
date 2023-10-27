@@ -53,20 +53,6 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             raise_error(f"{self.name} cannot be computed on {wrong_on}")
         self._on = on
 
-    @abstractmethod
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker.
-        """
-        raise_error(
-            msg="Concrete classes need to implement get_valid_inputs().",
-            klass=NotImplementedError,
-        )
-
     def validate_input(self, input: List[str]) -> List[str]:
         """Validate input.
 
@@ -95,6 +81,21 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
                 f"\t Required (any of): {self._on}"
             )
         return [x for x in self._on if x in input]
+
+    @abstractmethod
+    def get_valid_inputs(self) -> List[str]:
+        """Get valid data types for input.
+
+        Returns
+        -------
+        list of str
+            The list of data types that can be used as input for this marker.
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement get_valid_inputs().",
+            klass=NotImplementedError,
+        )
 
     @abstractmethod
     def get_output_type(self, input_type: str) -> str:
