@@ -32,9 +32,9 @@ def test_ALFFSpheres_python(tmp_path: Path) -> None:
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-01"]
+        input_ = dg["sub-01"]
 
-    input = DefaultDataReader().fit_transform(input)
+    input_ = DefaultDataReader().fit_transform(input_)
 
     WorkDirManager().workdir = tmp_path
     marker = ALFFSpheres(
@@ -44,7 +44,7 @@ def test_ALFFSpheres_python(tmp_path: Path) -> None:
         use_afni=False,
         fractional=False,
     )
-    python_values = marker.fit_transform(input)["BOLD"]["data"]
+    python_values = marker.fit_transform(input_)["BOLD"]["data"]
 
     assert marker.use_afni is False
     assert python_values.ndim == 2
@@ -116,9 +116,9 @@ def test_ALFFSpheres_python_vs_afni(
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-01"]
+        input_ = dg["sub-01"]
 
-    input = DefaultDataReader().fit_transform(input)
+    input_ = DefaultDataReader().fit_transform(input_)
 
     WorkDirManager().workdir = tmp_path
     marker_python = ALFFSpheres(
@@ -128,7 +128,7 @@ def test_ALFFSpheres_python_vs_afni(
         use_afni=False,
         fractional=fractional,
     )
-    python_values = marker_python.fit_transform(input)["BOLD"]["data"]
+    python_values = marker_python.fit_transform(input_)["BOLD"]["data"]
 
     assert marker_python.use_afni is False
     assert python_values.ndim == 2
@@ -141,7 +141,7 @@ def test_ALFFSpheres_python_vs_afni(
         use_afni=True,
         fractional=fractional,
     )
-    afni_values = marker_afni.fit_transform(input)["BOLD"]["data"]
+    afni_values = marker_afni.fit_transform(input_)["BOLD"]["data"]
 
     assert marker_afni.use_afni is True
     assert afni_values.ndim == 2
@@ -165,8 +165,8 @@ def test_ALFFSpheres_storage(
     """
     with PartlyCloudyTestingDataGrabber() as dg:
         # Use first subject
-        input = dg["sub-01"]
-        input = DefaultDataReader().fit_transform(input)
+        input_ = dg["sub-01"]
+        input_ = DefaultDataReader().fit_transform(input_)
         WorkDirManager().workdir = tmp_path
         marker = ALFFSpheres(
             coords=_COORDINATES,
@@ -179,6 +179,6 @@ def test_ALFFSpheres_storage(
 
         # Fit transform marker on data with storage
         marker.fit_transform(
-            input=input,
+            input=input_,
             storage=storage,
         )

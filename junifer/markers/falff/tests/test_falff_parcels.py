@@ -32,9 +32,9 @@ def test_ALFFParcels_python(tmp_path: Path) -> None:
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-01"]
+        input_ = dg["sub-01"]
 
-    input = DefaultDataReader().fit_transform(input)
+    input_ = DefaultDataReader().fit_transform(input_)
     WorkDirManager().workdir = tmp_path
     marker = ALFFParcels(
         parcellation=_PARCELLATION,
@@ -42,7 +42,7 @@ def test_ALFFParcels_python(tmp_path: Path) -> None:
         use_afni=False,
         fractional=False,
     )
-    python_values = marker.fit_transform(input)["BOLD"]["data"]
+    python_values = marker.fit_transform(input_)["BOLD"]["data"]
 
     assert marker.use_afni is False
     assert python_values.ndim == 2
@@ -62,9 +62,9 @@ def test_ALFFParcels_afni(tmp_path: Path) -> None:
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-01"]
+        input_ = dg["sub-01"]
 
-    input = DefaultDataReader().fit_transform(input)
+    input_ = DefaultDataReader().fit_transform(input_)
     WorkDirManager().workdir = tmp_path
     marker = ALFFParcels(
         parcellation=_PARCELLATION,
@@ -73,7 +73,7 @@ def test_ALFFParcels_afni(tmp_path: Path) -> None:
         fractional=False,
     )
     assert marker.use_afni is True
-    afni_values = marker.fit_transform(input)["BOLD"]["data"]
+    afni_values = marker.fit_transform(input_)["BOLD"]["data"]
 
     assert afni_values.ndim == 2
     assert afni_values.shape == (1, 100)
@@ -83,7 +83,7 @@ def test_ALFFParcels_afni(tmp_path: Path) -> None:
         parcellation=_PARCELLATION, method="mean", fractional=False
     )
     assert marker.use_afni is None
-    afni_values2 = marker.fit_transform(input)["BOLD"]["data"]
+    afni_values2 = marker.fit_transform(input_)["BOLD"]["data"]
     assert marker.use_afni is True
     assert_array_equal(afni_values, afni_values2)
 
@@ -108,11 +108,10 @@ def test_ALFFParcels_python_vs_afni(
         Whether to compute fractional ALFF or not.
 
     """
-
     with PartlyCloudyTestingDataGrabber() as dg:
-        input = dg["sub-01"]
+        input_ = dg["sub-01"]
 
-    input = DefaultDataReader().fit_transform(input)
+    input_ = DefaultDataReader().fit_transform(input_)
     WorkDirManager().workdir = tmp_path
     marker_python = ALFFParcels(
         parcellation=_PARCELLATION,
@@ -120,7 +119,7 @@ def test_ALFFParcels_python_vs_afni(
         use_afni=False,
         fractional=fractional,
     )
-    python_values = marker_python.fit_transform(input)["BOLD"]["data"]
+    python_values = marker_python.fit_transform(input_)["BOLD"]["data"]
 
     assert marker_python.use_afni is False
     assert python_values.ndim == 2
@@ -132,7 +131,7 @@ def test_ALFFParcels_python_vs_afni(
         use_afni=True,
         fractional=fractional,
     )
-    afni_values = marker_afni.fit_transform(input)["BOLD"]["data"]
+    afni_values = marker_afni.fit_transform(input_)["BOLD"]["data"]
 
     assert marker_afni.use_afni is True
     assert afni_values.ndim == 2
@@ -156,8 +155,8 @@ def test_ALFFParcels_storage(
     """
     with PartlyCloudyTestingDataGrabber() as dg:
         # Use first subject
-        input = dg["sub-01"]
-        input = DefaultDataReader().fit_transform(input)
+        input_ = dg["sub-01"]
+        input_ = DefaultDataReader().fit_transform(input_)
         WorkDirManager().workdir = tmp_path
         marker = ALFFParcels(
             parcellation=_PARCELLATION,
@@ -169,6 +168,6 @@ def test_ALFFParcels_storage(
 
         # Fit transform marker on data with storage
         marker.fit_transform(
-            input=input,
+            input=input_,
             storage=storage,
         )
