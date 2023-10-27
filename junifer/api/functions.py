@@ -423,7 +423,7 @@ def _queue_condor(
         executable = "junifer"
         arguments = ""
     else:
-        raise ValueError(f'Unknown env kind: {env["kind"]}')
+        raise_error(f'Unknown env kind: {env["kind"]}')
 
     logger.info("Writing pre_run.sh to jobdir")
     pre_run_fname = jobdir / "pre_run.sh"
