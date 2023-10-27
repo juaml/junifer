@@ -91,7 +91,7 @@ class RangeEntropy(ComplexityBase):
                Self-Similarity.
                Entropy, vol. 20, no. 12, p. 962, 2018.
 
-        See also
+        See Also
         --------
         neurokit2.entropy_range
 
@@ -112,7 +112,6 @@ class RangeEntropy(ComplexityBase):
         range_en_roi = np.zeros((n_roi, 1))
 
         for idx_roi in range(n_roi):
-
             sig = extracted_bold_values[:, idx_roi]
             tmp = nk.entropy_range(
                 sig,

@@ -91,7 +91,7 @@ class MultiscaleEntropyAUC(ComplexityBase):
                Multiscale entropy analysis of complex physiologic time series.
                Physical review letters, 89(6), 068102, 2002.
 
-        See also
+        See Also
         --------
         neurokit2.entropy_multiscale
 
@@ -125,11 +125,9 @@ class MultiscaleEntropyAUC(ComplexityBase):
 
         if np.isnan(np.sum(MSEn_auc_roi)):
             warn_with_log(
-                (
-                    "There is NaN in the entropy values, likely due "
-                    "to too short data length. A possible solution "
-                    "may be to choose a smaller value for 'scale'."
-                )
+                "There is NaN in the entropy values, likely due "
+                "to too short data length. A possible solution "
+                "may be to choose a smaller value for 'scale'."
             )
 
         return MSEn_auc_roi.T  # 1 X n_roi

@@ -4,7 +4,16 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Dict,
+    List,
+    Optional,
+    Set,
+    Union,
+)
 
 from ...utils import raise_error
 from ..base import BaseMarker
@@ -39,7 +48,7 @@ class ComplexityBase(BaseMarker):
 
     """
 
-    _DEPENDENCIES = {"nilearn", "neurokit2"}
+    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "neurokit2"}
 
     def __init__(
         self,
@@ -101,21 +110,22 @@ class ComplexityBase(BaseMarker):
         """Compute.
 
         Parameters
-         ----------
-         input : dict
-             A single input from the pipeline data object in which to compute
-             the marker.
-         extra_input : dict, optional
-             The other fields in the pipeline data object. Useful for accessing
-             other data kind that needs to be used in the computation.
-         Returns
-         -------
-         dict
-             The computed result as dictionary. The following keys will be
-             included in the dictionary:
+        ----------
+        input : dict
+            A single input from the pipeline data object in which to compute
+            the marker.
+        extra_input : dict, optional
+            The other fields in the pipeline data object. Useful for accessing
+            other data kind that needs to be used in the computation.
 
-            * ``data`` : ROI-wise complexity measures as ``numpy.ndarray``
-            * ``col_names`` : ROI labels for the complexity measures as list
+        Returns
+        -------
+        dict
+            The computed result as dictionary. The following keys will be
+            included in the dictionary:
+
+           * ``data`` : ROI-wise complexity measures as ``numpy.ndarray``
+           * ``col_names`` : ROI labels for the complexity measures as list
 
         """
         # Initialize a ParcelAggregation

@@ -92,7 +92,7 @@ class SampleEntropy(ComplexityBase):
                Am. J. Physiol. Heart Circ. Physiol., 278 (6) (2000),
                pp. H2039-2049
 
-        See also
+        See Also
         --------
         neurokit2.entropy_sample
 

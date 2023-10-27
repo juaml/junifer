@@ -92,7 +92,7 @@ class WeightedPermEntropy(ComplexityBase):
                time series incorporating amplitude information.
                Physical Review E, 87(2), 022911.
 
-        See also
+        See Also
         --------
         neurokit2.entropy_permutation
 

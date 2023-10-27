@@ -89,9 +89,9 @@ class HurstExponent(ComplexityBase):
         .. [1] Peng, C.; Havlin, S.; Stanley, H.E.; Goldberger, A.L.
                Quantification of scaling exponents and crossover phenomena in
                nonstationary heartbeat time series.
-               Chaos Interdiscip. J. Nonlinear Sci., 5, 82–87, 1995.
+               Chaos Interdiscip. J. Nonlinear Sci., 5, 82-87, 1995.
 
-        See also
+        See Also
         --------
         neurokit2.fractal_dfa
 

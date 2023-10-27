@@ -92,7 +92,7 @@ class RangeEntropyAUC(ComplexityBase):
                Self-Similarity.
                Entropy, vol. 20, no. 12, p. 962, 2018.
 
-        See also
+        See Also
         --------
         neurokit2.entropy_range
 
@@ -112,13 +112,11 @@ class RangeEntropyAUC(ComplexityBase):
         range_en_auc_roi = np.zeros((n_roi, 1))
 
         for idx_roi in range(n_roi):
-
             sig = extracted_bold_values[:, idx_roi]
 
-            range_ent_vec = np.zeros((n_r))
+            range_ent_vec = np.zeros(n_r)
             idx_r = 0
             for tolerance in r_span:
-
                 range_en_auc_roi_tmp = nk.entropy_range(
                     sig,
                     dimension=emb_dim,

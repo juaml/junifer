@@ -91,7 +91,7 @@ class PermEntropy(ComplexityBase):
                series.
                Physical review letters, 88(17), 174102.
 
-        See also
+        See Also
         --------
         neurokit2.entropy_permutation
 
