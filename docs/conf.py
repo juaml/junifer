@@ -19,6 +19,7 @@
 import sys
 from pathlib import Path
 
+
 # Check if sphinx-multiversion is installed
 use_multiversion = False
 try:
@@ -45,7 +46,7 @@ extensions = [
     "sphinx.ext.autodoc",  # include documentation from docstrings
     "sphinx.ext.autosummary",  # generate autodoc summaries
     "sphinx.ext.doctest",  # test snippets in the documentation
-    "sphinx.ext.intersphinx",  # link to other projects’ documentation
+    "sphinx.ext.intersphinx",  # link to other projects` documentation
     "sphinx.ext.mathjax",  # math support for HTML outputs in Sphinx
     "sphinx_gallery.gen_gallery",  # HTML gallery of examples
     "numpydoc",  # support for NumPy style docstrings
