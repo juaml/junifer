@@ -112,9 +112,9 @@ class MarkerCollection:
         """Validate the pipeline.
 
         Without doing any computation, check if the marker collection can
-        be fit without problems. That is, the data required for each marker is
+        be fitted without problems i.e., the data required for each marker is
         present and streamed down the steps. Also, if a storage is configured,
-        check that the storage can handle the markers output.
+        check that the storage can handle the markers' output.
 
         Parameters
         ----------
