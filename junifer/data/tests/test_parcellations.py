@@ -93,6 +93,7 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+
     """
     schaefer, labels, schaefer_path, _ = load_parcellation("Schaefer100x7")
     assert schaefer is not None
