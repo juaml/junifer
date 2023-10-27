@@ -28,6 +28,8 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
            "probseg_WM", "DWI"} or a list of the options, optional
         AOMIC data types. If None, all available data types are selected.
         (default None).
+    native_t1w : bool, optional
+        Whether to use T1w in native space (default False).
 
     """
 
@@ -35,6 +37,7 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         self,
         datadir: Union[str, Path, None] = None,
         types: Union[str, List[str], None] = None,
+        native_t1w: bool = False,
     ) -> None:
         # The patterns
         patterns = {
@@ -84,6 +87,27 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                 "sub-{subject}_desc-preproc_dwi.nii.gz"
             ),
         }
+        # Use native T1w assets
+        self.native_t1w = False
+        if native_t1w:
+            self.native_t1w = True
+            patterns.update(
+                {
+                    "T1w": (
+                        "derivatives/fmriprep/sub-{subject}/anat/"
+                        "sub-{subject}_desc-preproc_T1w.nii.gz"
+                    ),
+                    "T1w_mask": (
+                        "derivatives/fmriprep/sub-{subject}/anat/"
+                        "sub-{subject}_desc-brain_mask.nii.gz"
+                    ),
+                    "Warp": (
+                        "derivatives/fmriprep/sub-{subject}/anat/"
+                        "sub-{subject}_from-MNI152NLin2009cAsym_to-T1w_"
+                        "mode-image_xfm.h5"
+                    ),
+                }
+            )
         # Set default types
         if types is None:
             types = list(patterns.keys())
@@ -126,5 +150,8 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         if out.get("T1w"):
             out["T1w"]["mask_item"] = "T1w_mask"
             # Add space information
-            out["T1w"].update({"space": "native"})
+            if self.native_t1w:
+                out["T1w"].update({"space": "native"})
+            else:
+                out["T1w"].update({"space": "MNI152NLin2009cAsym"})
         return out
