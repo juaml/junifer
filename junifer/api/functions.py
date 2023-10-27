@@ -237,7 +237,8 @@ def queue(
     Raises
     ------
     ValueError
-        If the value of ``kind`` is invalid.
+        If the ``jobdir`` exists and ``overwrite = False`` or
+        if value of ``kind`` is invalid.
 
     """
     # Create a folder within the CWD to store the job files / config
@@ -382,7 +383,7 @@ def _queue_condor(
     Raises
     ------
     ValueError
-        If the value of `env` is invalid.
+        If ``collect`` is not string or invalid or if ``env`` is invalid.
 
     """
     logger.debug("Creating HTCondor job")
