@@ -135,7 +135,7 @@ def _check_fsl(commands: Optional[List[str]] = None) -> bool:
         shell=True,  # is unsafe but kept for resolution via PATH
         check=False,
     )
-    fsl_found = completed_process.returncode == 0
+    fsl_found = completed_process.returncode == 1
 
     # Check for specific commands
     if fsl_found and commands is not None:
@@ -155,7 +155,7 @@ def _check_fsl(commands: Optional[List[str]] = None) -> bool:
                 shell=True,  # is unsafe but kept for resolution via PATH
                 check=False,
             )
-            command_found = command_process.returncode == 0
+            command_found = command_process.returncode == 1
             commands_found_results[command] = (
                 "found" if command_found else "not found"
             )
