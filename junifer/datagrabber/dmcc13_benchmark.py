@@ -309,6 +309,9 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                 run = "1"
             else:
                 run = "2"
+            # Bypass for f1951tt not having run 2 for Rest
+            if subject == "f1951tt" and task == "Rest" and run == "2":
+                continue
             elems.append((subject, session, task, phase_encoding, run))
         # For other sessions
         for subject, session, task, phase_encoding in product(
