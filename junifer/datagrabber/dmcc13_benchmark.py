@@ -25,15 +25,15 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    types : {"BOLD", "BOLD_confounds", "T1w", "probseg_CSF", "probseg_GM", \
+    types: {"BOLD", "BOLD_confounds", "T1w", "probseg_CSF", "probseg_GM", \
            "probseg_WM"} or a list of the options, optional
         DMCC data types. If None, all available data types are selected.
         (default None).
-    sessions : {"wave1bas", "wave1pro", "wave1rea"} or list of the options, \
+    sessions: {"wave1bas", "wave1pro", "wave1rea"} or list of the options, \
                optional
         DMCC sessions. If None, all available sessions are selected
         (default None).
-    tasks : {"Rest", "Axcpt", "Cuedts", "Stern", "Stroop"} or \
+    tasks: {"Rest", "Axcpt", "Cuedts", "Stern", "Stroop"} or \
             list of the options, optional
         DMCC task sessions. If None, all available task sessions are selected
         (default None).
@@ -44,6 +44,15 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         DMCC runs. If None, all available runs are selected (default None).
     native_t1w : bool, optional
         Whether to use T1w in native space (default False).
+
+    Raises
+    ------
+    ValueError
+        If invalid value is passed for:
+         * ``sessions``
+         * ``tasks``
+         * ``phase_encodings``
+         * ``runs``
 
     """
 
