@@ -283,14 +283,14 @@ store in a datalad remote sibling.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-10-31 11:48:30,862 - JUNIFER - INFO - ===== Lib Versions =====
-2023-10-31 11:48:30,862 - JUNIFER - INFO - numpy: 1.25.2
-2023-10-31 11:48:30,862 - JUNIFER - INFO - scipy: 1.11.3
-2023-10-31 11:48:30,862 - JUNIFER - INFO - pandas: 2.0.3
-2023-10-31 11:48:30,862 - JUNIFER - INFO - nilearn: 0.10.2
-2023-10-31 11:48:30,863 - JUNIFER - INFO - nibabel: 5.1.0
-2023-10-31 11:48:30,863 - JUNIFER - INFO - junifer: 0.0.4.dev272
-2023-10-31 11:48:30,863 - JUNIFER - INFO - ========================
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-10-31 14:19:57,550 - JUNIFER - INFO - ===== Lib Versions =====
+2023-10-31 14:19:57,550 - JUNIFER - INFO - numpy: 1.25.2
+2023-10-31 14:19:57,550 - JUNIFER - INFO - scipy: 1.11.3
+2023-10-31 14:19:57,550 - JUNIFER - INFO - pandas: 2.0.3
+2023-10-31 14:19:57,550 - JUNIFER - INFO - nilearn: 0.10.2
+2023-10-31 14:19:57,550 - JUNIFER - INFO - nibabel: 5.1.0
+2023-10-31 14:19:57,550 - JUNIFER - INFO - junifer: 0.0.4.dev273
+2023-10-31 14:19:57,550 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>The BIDS DataGrabber requires three parameters: the types of data we want,
@@ -324,17 +324,17 @@ In this case, each element of the DataGrabber is one session.</p>
         <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">elem</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-10-31 11:48:30,863 - JUNIFER - INFO - `datadir` is None, creating a temporary directory
-2023-10-31 11:48:30,864 - JUNIFER - INFO - `datadir` set to /tmp/tmpcdwkafb_/datadir
-sub-04
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-10-31 14:19:57,551 - JUNIFER - INFO - `datadir` is None, creating a temporary directory
+2023-10-31 14:19:57,552 - JUNIFER - INFO - `datadir` set to /tmp/tmpyvit9p3e/datadir
 sub-02
-sub-06
-sub-03
 sub-08
-sub-07
+sub-03
 sub-05
-sub-01
+sub-06
+sub-04
 sub-09
+sub-07
+sub-01
 </pre></div>
 </div>
 <p>Another feature of the DataGrabber is the ability to get a specific
@@ -351,13 +351,13 @@ paths for the two types of data we want (T1w and BOLD).</p>
     <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sub01</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-10-31 11:48:34,143 - JUNIFER - INFO - `datadir` is None, creating a temporary directory
-2023-10-31 11:48:34,143 - JUNIFER - INFO - `datadir` set to /tmp/tmpql0phin7/datadir
-2023-10-31 11:48:37,466 - JUNIFER - INFO - Getting element sub-01
-{&#39;T1w&#39;: {&#39;path&#39;: PosixPath(&#39;/tmp/tmpql0phin7/datadir/example_bids/sub-01/anat/sub-01_T1w.nii.gz&#39;), &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;confounds_format&#39;: None, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;BOLD&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;}, &#39;replacements&#39;: [&#39;subject&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_dirty&#39;: False, &#39;datalad_commit_id&#39;: &#39;522dfb203afcd2cd55799bf347f9b211919a7338&#39;, &#39;datalad_id&#39;: &#39;fec92475-d9c0-4409-92ba-f041b6a12c40&#39;}, &#39;dependencies&#39;: set(), &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}, &#39;BOLD&#39;: {&#39;path&#39;: PosixPath(&#39;/tmp/tmpql0phin7/datadir/example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz&#39;), &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;confounds_format&#39;: None, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;BOLD&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;}, &#39;replacements&#39;: [&#39;subject&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_dirty&#39;: False, &#39;datalad_commit_id&#39;: &#39;522dfb203afcd2cd55799bf347f9b211919a7338&#39;, &#39;datalad_id&#39;: &#39;fec92475-d9c0-4409-92ba-f041b6a12c40&#39;}, &#39;dependencies&#39;: set(), &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2023-10-31 14:20:00,487 - JUNIFER - INFO - `datadir` is None, creating a temporary directory
+2023-10-31 14:20:00,487 - JUNIFER - INFO - `datadir` set to /tmp/tmpiwnlgb2z/datadir
+2023-10-31 14:20:04,365 - JUNIFER - INFO - Getting element sub-01
+{&#39;T1w&#39;: {&#39;path&#39;: PosixPath(&#39;/tmp/tmpiwnlgb2z/datadir/example_bids/sub-01/anat/sub-01_T1w.nii.gz&#39;), &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;confounds_format&#39;: None, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;BOLD&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;}, &#39;replacements&#39;: [&#39;subject&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_dirty&#39;: False, &#39;datalad_commit_id&#39;: &#39;522dfb203afcd2cd55799bf347f9b211919a7338&#39;, &#39;datalad_id&#39;: &#39;fec92475-d9c0-4409-92ba-f041b6a12c40&#39;}, &#39;dependencies&#39;: set(), &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}, &#39;BOLD&#39;: {&#39;path&#39;: PosixPath(&#39;/tmp/tmpiwnlgb2z/datadir/example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz&#39;), &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;confounds_format&#39;: None, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;BOLD&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;}, &#39;replacements&#39;: [&#39;subject&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_dirty&#39;: False, &#39;datalad_commit_id&#39;: &#39;522dfb203afcd2cd55799bf347f9b211919a7338&#39;, &#39;datalad_id&#39;: &#39;fec92475-d9c0-4409-92ba-f041b6a12c40&#39;}, &#39;dependencies&#39;: set(), &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}}
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.359 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 8.394 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-datagrabber-bids-datalad-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/7bdf714a1446ae07ef3fa9d23e9b27c3/run_datagrabber_bids_datalad.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_datagrabber_bids_datalad.py</span></code></a></p>
