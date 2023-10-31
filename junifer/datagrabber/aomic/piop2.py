@@ -37,6 +37,11 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
     native_t1w : bool, optional
         Whether to use T1w in native space (default False).
 
+    Raises
+    ------
+    ValueError
+        If invalid value is passed for ``tasks``.
+
     """
 
     def __init__(
