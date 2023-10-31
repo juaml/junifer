@@ -35,6 +35,11 @@ class HCP1200(PatternDataGrabber):
         Only "REST1" and "REST2" tasks are available with ICA+FIX (default
         False).
 
+    Raises
+    ------
+    ValueError
+        If invalid value is passed for ``tasks`` or ``phase_encodings``.
+
     """
 
     def __init__(
