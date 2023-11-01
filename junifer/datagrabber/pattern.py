@@ -59,12 +59,14 @@ class PatternDataGrabber(BaseDataGrabber):
     ) -> None:
         # Validate patterns
         validate_patterns(types=types, patterns=patterns)
+        self.patterns = patterns
 
         # Convert replacements to list if not already
         if not isinstance(replacements, list):
             replacements = [replacements]
         # Validate replacements
         validate_replacements(replacements=replacements, patterns=patterns)
+        self.replacements = replacements
 
         # Validate confounds format
         if confounds_format and confounds_format not in _CONFOUNDS_FORMATS:
@@ -78,8 +80,7 @@ class PatternDataGrabber(BaseDataGrabber):
         logger.debug("Initializing PatternDataGrabber")
         logger.debug(f"\tpatterns = {patterns}")
         logger.debug(f"\treplacements = {replacements}")
-        self.patterns = patterns
-        self.replacements = replacements
+        logger.debug(f"\tconfounds_format = {confounds_format}")
 
     @property
     def skip_file_check(self) -> bool:

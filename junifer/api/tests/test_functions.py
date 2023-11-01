@@ -65,7 +65,7 @@ def test_run_single_element(tmp_path: Path) -> None:
     workdir = tmp_path / "workdir_single"
     workdir.mkdir()
     # Create output directory
-    outdir = tmp_path / "out"
+    outdir = workdir / "out"
     outdir.mkdir()
     # Create storage
     uri = outdir / "test.sqlite"
@@ -96,7 +96,7 @@ def test_run_single_element_with_preprocessing(tmp_path: Path) -> None:
     workdir = tmp_path / "workdir_single_with_preprocess"
     workdir.mkdir()
     # Create output directory
-    outdir = tmp_path / "out"
+    outdir = workdir / "out"
     outdir.mkdir()
     # Create storage
     uri = outdir / "test.sqlite"
@@ -142,7 +142,7 @@ def test_run_multi_element(tmp_path: Path) -> None:
     workdir = tmp_path / "workdir_multi"
     workdir.mkdir()
     # Create output directory
-    outdir = tmp_path / "out"
+    outdir = workdir / "out"
     outdir.mkdir()
     # Create storage
     uri = outdir / "test.sqlite"
@@ -174,7 +174,7 @@ def test_run_multi_element_single_output(tmp_path: Path) -> None:
     workdir = tmp_path / "workdir_multi"
     workdir.mkdir()
     # Create output directory
-    outdir = tmp_path / "out"
+    outdir = workdir / "out"
     outdir.mkdir()
     # Create storage
     uri = outdir / "test.sqlite"
@@ -207,7 +207,7 @@ def test_run_and_collect(tmp_path: Path) -> None:
     workdir = tmp_path / "workdir"
     workdir.mkdir()
     # Create output directory
-    outdir = tmp_path / "out"
+    outdir = workdir / "out"
     outdir.mkdir()
     # Create storage
     uri = outdir / "test.sqlite"

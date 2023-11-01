@@ -294,7 +294,7 @@ def test_PatternDataGrabber_confounds_format_error_on_fetch(
     (tmpdir / "func" / "confounds").mkdir(exist_ok=True, parents=True)
     # Create test confound file
     (tmpdir / "func" / "confounds" / "sub-001.nii").touch()
-    # Initialise datagrabber
+    # Initialize datagrabber
     datagrabber = PatternDataGrabber(
         types=["BOLD_confounds"],
         patterns={"BOLD_confounds": "func/confounds/{subject}.nii"},

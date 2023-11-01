@@ -38,7 +38,7 @@ The documentation is available at [https://juaml.github.io/junifer](https://juam
   * `preprocess`: Preprocessing module.
   * `storage`: Storage module.
   * `testing`: Testing components module.
-  * `utils`: Utilities module (e.g. logging)
+  * `utils`: Utilities module (e.g. logging).
 
 ## Installation
 
@@ -53,6 +53,20 @@ You can also install via `conda`, like so:
 ```
 conda install -c conda-forge junifer
 ```
+
+### Optional dependencies
+
+`junifer` supports a few optional dependencies to enable certain features. You can
+install them by specifying a comma separated list within square brackets, like so:
+
+```
+pip install "junifer[bct,dev]"
+```
+
+* `bct` installs [bctpy](https://github.com/aestrivex/bctpy) to enable use of `onthefly` module.
+* `all` includes all of the above.
+* `dev` installs packages needed for development.
+* `docs` installs packages needed for building documentation.
 
 ## Citation
 

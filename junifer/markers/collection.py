@@ -12,7 +12,7 @@ from ..markers.base import BaseMarker
 from ..pipeline import PipelineStepMixin, WorkDirManager
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
-from ..utils import logger
+from ..utils import logger, raise_error
 
 
 if TYPE_CHECKING:
@@ -33,6 +33,11 @@ class MarkerCollection:
     storage : storage-like, optional
         The storage to use (default None).
 
+    Raises
+    ------
+    ValueError
+        If ``markers`` have same names.
+
     """
 
     def __init__(
@@ -46,7 +51,7 @@ class MarkerCollection:
         marker_names = [m.name for m in markers]
         if len(set(marker_names)) != len(marker_names):
             counts = Counter(marker_names)
-            raise ValueError(
+            raise_error(
                 "Markers must have different names. "
                 f"Current names are: {counts}"
             )
@@ -107,9 +112,9 @@ class MarkerCollection:
         """Validate the pipeline.
 
         Without doing any computation, check if the marker collection can
-        be fit without problems. That is, the data required for each marker is
+        be fitted without problems i.e., the data required for each marker is
         present and streamed down the steps. Also, if a storage is configured,
-        check that the storage can handle the markers output.
+        check that the storage can handle the markers' output.
 
         Parameters
         ----------

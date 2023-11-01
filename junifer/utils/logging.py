@@ -60,9 +60,16 @@ def _get_git_head(path: Path) -> str:
         Empty string if timeout expired for subprocess command execution else
         git HEAD information.
 
+    Raises
+    ------
+    FileNotFoundError
+        If ``path`` is invalid.
+
     """
     if not path.exists():
-        raise ValueError(f"This path does not exist: {path}")
+        raise_error(
+            msg=f"This path does not exist: {path}", klass=FileNotFoundError
+        )
     command = f"cd {path}; git rev-parse --verify HEAD"
     process = Popen(
         args=command,

@@ -17,6 +17,11 @@ def validate_types(types: List[str]) -> None:
     types : list of str
         The object to validate.
 
+    Raises
+    ------
+    TypeError
+        If ``types`` is not a list or if the values are not string.
+
     """
     if not isinstance(types, list):
         raise_error(msg="`types` must be a list", klass=TypeError)
@@ -35,6 +40,15 @@ def validate_replacements(
         The object to validate.
     patterns : dict
         The patterns to validate against.
+
+    Raises
+    ------
+    TypeError
+        If ``replacements`` is not a list or if the values are not string or
+        if ``patterns`` is not a dictionary.
+    ValueError
+        If a value in ``replacements`` is not in ``pattern`` or if no value in
+        ``patterns`` contain all values in ``replacements``.
 
     """
     if not isinstance(replacements, list):
@@ -70,6 +84,15 @@ def validate_patterns(types: List[str], patterns: Dict[str, str]) -> None:
         The types list.
     patterns : dict
         The object to validate.
+
+    Raises
+    ------
+    TypeError
+        If ``patterns`` is not a dictionary.
+    ValueError
+        If length of ``types`` and ``patterns`` are different or
+        if ``patterns`` is missing entries from ``types`` or
+        if ``patterns`` contain '*' as value.
 
     """
     # Validate the types
