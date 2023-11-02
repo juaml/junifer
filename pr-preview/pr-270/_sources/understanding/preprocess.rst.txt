@@ -122,7 +122,7 @@ parameters:
      - deactivated
    * - ``t_r``
      - Repetition time, in second (sampling period).
-     - from nifti header
+     - from NIfTI header
    * - ``mask``
      - | If provided, signal is only cleaned from voxels inside the mask.
        | If not, a mask is computed using
