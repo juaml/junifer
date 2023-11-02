@@ -155,7 +155,9 @@ def _check_fsl(commands: Optional[List[str]] = None) -> bool:
                 shell=True,  # is unsafe but kept for resolution via PATH
                 check=False,
             )
-            command_found = command_process.returncode == 1
+            # FSL commands are incoherent with respect to status code hence a
+            # blanket to only look for no command found
+            command_found = command_process.returncode != 127
             commands_found_results[command] = (
                 "found" if command_found else "not found"
             )
