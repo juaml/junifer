@@ -128,7 +128,7 @@ def _check_fsl(commands: Optional[List[str]] = None) -> bool:
 
     """
     completed_process = subprocess.run(
-        "flirt -v",
+        "flirt",
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.STDOUT,
