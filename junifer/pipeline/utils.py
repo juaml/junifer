@@ -128,14 +128,14 @@ def _check_fsl(commands: Optional[List[str]] = None) -> bool:
 
     """
     completed_process = subprocess.run(
-        "flirt -v",
+        "flirt",
         stdin=subprocess.DEVNULL,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.STDOUT,
         shell=True,  # is unsafe but kept for resolution via PATH
         check=False,
     )
-    fsl_found = completed_process.returncode == 0
+    fsl_found = completed_process.returncode == 1
 
     # Check for specific commands
     if fsl_found and commands is not None:
@@ -155,7 +155,9 @@ def _check_fsl(commands: Optional[List[str]] = None) -> bool:
                 shell=True,  # is unsafe but kept for resolution via PATH
                 check=False,
             )
-            command_found = command_process.returncode == 0
+            # FSL commands are incoherent with respect to status code hence a
+            # blanket to only look for no command found
+            command_found = command_process.returncode != 127
             commands_found_results[command] = (
                 "found" if command_found else "not found"
             )
