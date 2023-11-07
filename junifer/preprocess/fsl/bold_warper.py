@@ -35,7 +35,7 @@ class BOLDWarper(BasePreprocessor):
     ] = [
         {
             "name": "fsl",
-            "optional": True,
+            "optional": False,
             "commands": ["applywarp"],
         },
     ]

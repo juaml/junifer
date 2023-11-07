@@ -289,15 +289,22 @@ def get_parcellation(
                 f"{target_data['space']} space for further computation."
             )
 
-        # Create tempdir
+        # Create component-scoped tempdir
         tempdir = WorkDirManager().get_tempdir(prefix="parcellations")
 
-        # Save parcellation image
+        # Save parcellation image to a component-scoped tempfile
         prewarp_parcellation_path = tempdir / "prewarp_parcellation.nii.gz"
         nib.save(resampled_parcellation_img, prewarp_parcellation_path)
 
-        # Create a tempfile for warped output
-        applywarp_out_path = tempdir / "parcellation_warped.nii.gz"
+        # Create element-scoped tempdir so that warped parcellation is
+        # available later as nibabel stores file path reference for
+        # loading on computation
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="parcellations"
+        )
+
+        # Create an element-scoped tempfile for warped output
+        applywarp_out_path = element_tempdir / "parcellation_warped.nii.gz"
         # Set applywarp command
         applywarp_cmd = [
             "applywarp",

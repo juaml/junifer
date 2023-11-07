@@ -240,24 +240,31 @@ def get_coordinates(
                 f"{target_data['space']} space for further computation."
             )
 
-        # Create tempdir
+        # Create component-scoped tempdir
         tempdir = WorkDirManager().get_tempdir(prefix="coordinates")
 
-        # Save existing coordinates
+        # Save existing coordinates to a component-scoped tempfile
         pretransform_coordinates_path = (
             tempdir / "pretransform_coordinates.txt"
         )
         np.savetxt(pretransform_coordinates_path, seeds)
 
-        # Create a tempfile for transformed coordinates output
-        std2imgcoord_out_path = tempdir / "coordinates_transformed.txt"
+        # Create element-scoped tempdir so that transformed coordinates is
+        # available later as numpy stores file path reference for
+        # loading on computation
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="coordinates"
+        )
+
+        # Create an element-scoped tempfile for transformed coordinates output
+        std2imgcoord_out_path = element_tempdir / "coordinates_transformed.txt"
         # Set std2imgcoord command
         std2imgcoord_cmd = [
             "std2imgcoord",
             f"-img {target_data['reference_path'].resolve()}",
             f"-warp {extra_input['Warp']['path'].resolve()}",
-            f"{pretransform_coordinates_path}",
-            f"> {std2imgcoord_out_path}",
+            f"{pretransform_coordinates_path.resolve()}",
+            f"> {std2imgcoord_out_path.resolve()}",
         ]
         # Call std2imgcoord
         std2imgcoord_cmd_str = " ".join(std2imgcoord_cmd)
@@ -272,8 +279,6 @@ def get_coordinates(
             shell=True,  # needed for respecting $PATH
             check=False,
         )
-        # Delete saved coordinates file
-        pretransform_coordinates_path.unlink()
         # Check for success or failure
         if std2imgcoord_process.returncode == 0:
             logger.info(
