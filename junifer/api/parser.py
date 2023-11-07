@@ -50,6 +50,8 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
         # Convert load modules to list
         if not isinstance(to_load, list):
             to_load = [to_load]
+        # Initialize list to have absolute paths for custom modules
+        final_to_load = []
         for t_module in to_load:
             if t_module.endswith(".py"):
                 logger.debug(f"Importing file: {t_module}")
@@ -65,9 +67,18 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
                 module = importlib.util.module_from_spec(spec)  # type: ignore
                 sys.modules[t_module] = module
                 spec.loader.exec_module(module)  # type: ignore
+                # Add absolute path to final list
+                final_to_load.append(str(file_path.resolve()))
             else:
                 logger.info(f"Importing module: {t_module}")
                 importlib.import_module(t_module)
+                # Add module to final list
+                final_to_load.append(t_module)
+
+        # Replace modules to be loaded so that custom modules will take the
+        # absolute path. This was not the case as found in #224. Similar thing
+        # is done with the storage URI below.
+        contents["with"] = final_to_load
 
     # Compute path for the URI parameter in storage files that are relative
     # This is a tricky thing that appeared in #127. The problem is that
