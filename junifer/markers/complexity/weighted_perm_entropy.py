@@ -43,6 +43,13 @@ class WeightedPermEntropy(ComplexityBase):
         The name of the marker. If None, it will use the class name
         (default None).
 
+    Warnings
+    --------
+    This class is not automatically imported by junifer and requires you to
+    import it explicitly. You can do it programmatically by
+    ``from junifer.markers.complexity import WeightedPermEntropy`` or in the
+    YAML by ``with: junifer.markers.complexity``.
+
     """
 
     def __init__(
