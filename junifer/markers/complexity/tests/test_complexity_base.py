@@ -5,7 +5,12 @@
 
 import pytest
 
-from junifer.markers.complexity.complexity_base import ComplexityBase
+
+pytest.importorskip("neurokit2")
+
+from junifer.markers.complexity.complexity_base import (  # noqa: E402
+    ComplexityBase,
+)
 
 
 def test_base_complexity_marker_abstractness() -> None:
