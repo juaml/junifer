@@ -39,7 +39,7 @@ jobs:
         $SUDO apt-get update -qq
         $SUDO apt-get install git-annex-standalone
         python -m pip install --upgrade pip setuptools wheel
-        python -m pip install -e .[docs]
+        python -m pip install -e ".[docs,neurokit2]"
     - name: Configure git for datalad
       run: |
         git config --global user.email "runner@github.com"
