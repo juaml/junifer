@@ -34,7 +34,7 @@ jobs:
         $SUDO apt-get update -qq
         $SUDO apt-get install git-annex-standalone
         python -m pip install --upgrade pip setuptools wheel
-        python -m pip install -e .[docs]
+        python -m pip install -e ".[docs,neurokit2]"
         python -m pip install git+https://github.com/dls-controls/sphinx-multiversion@only-arg
     - name: Configure git for datalad
       run: |
