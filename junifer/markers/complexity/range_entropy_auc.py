@@ -1,4 +1,4 @@
-"""Provide class for range entropy of a time series."""
+"""Provide class for the AUC of range entropy of a time series."""
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
