@@ -210,6 +210,36 @@ Available
        | coordinates
      - Done
      - 0.0.2
+   * - :class:`.HurstExponent`
+     - | Calculate Hurst exponent of a time series as found in
+       | `Peng et al. (1995) <https://doi.org/10.1063/1.166141>`_
+     - Done
+     - 0.0.4
+   * - :class:`.MultiscaleEntropyAUC`
+     - | Calculate AUC of multiscale entropy of a time series as found in
+       | `Costa et al. (2002) <https://doi.org/10.1103/PhysRevLett.89.068102>`_
+     - Done
+     - 0.0.4
+   * - :class:`.PermEntropy`
+     - | Calculate permutation entropy of a time series as found in
+       | `Bandt at al. (2002) <https://doi.org/10.1103/PhysRevLett.88.174102>`_
+     - Done
+     - 0.0.4
+   * - :class:`.RangeEntropy`
+     - | Calculate range entropy of a time series as found in
+       | `Omidvarnia et al. (2018) <https://doi.org/10.3390/e20120962>`_
+     - Done
+     - 0.0.4
+   * - :class:`.RangeEntropyAUC`
+     - | Calculate AUC of range entropy of a time series as found in
+       | `Omidvarnia et al. (2018) <https://doi.org/10.3390/e20120962>`_
+     - Done
+     - 0.0.4
+   * - :class:`.SampleEntropy`
+     - | Calculate sample entropy of a time series as found in
+       | `Richman et al. (2000) <https://doi.org/10.1152/ajpheart.2000.278.6.H2039>`_
+     - Done
+     - 0.0.4
 
 Planned
 ~~~~~~~
