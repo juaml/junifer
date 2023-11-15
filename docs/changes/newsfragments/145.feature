@@ -1,1 +1,1 @@
-Introduce complexity markers: ``junifer.markers.complexity.HurstExponent``, ``junifer.markers.complexity.MultiscaleEntropyAUC``, ``junifer.markers.complexity.PermEntropy``, ``junifer.markers.complexity.RangeEntropy``, ``junifer.markers.complexity.RangeEntropyAUC`` and ``junifer.markers.complexity.SampleEntropy`` by `Amir Omidvarnia`_
+Introduce complexity markers: :class:`.HurstExponent`, :class:`.MultiscaleEntropyAUC`, :class:`.PermEntropy`, :class:`.RangeEntropy`, :class:`.RangeEntropyAUC` and :class:`.SampleEntropy` by `Amir Omidvarnia`_
