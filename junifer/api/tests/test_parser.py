@@ -53,7 +53,7 @@ def test_parse_yaml_success_with_module_autoload(tmp_path: Path) -> None:
     assert "foo" in contents
     assert contents["foo"] == "bar"
     assert "with" in contents
-    assert contents["with"] == "numpy"
+    assert contents["with"] == ["numpy"]
     assert "numpy" in sys.modules
     assert "junifer.configs.wrong_config" not in sys.modules
 
