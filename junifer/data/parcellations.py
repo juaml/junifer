@@ -308,7 +308,7 @@ def get_parcellation(
         # Set applywarp command
         applywarp_cmd = [
             "applywarp",
-            "--interp=spline",
+            "--interp=nn",
             f"-i {prewarp_parcellation_path.resolve()}",
             # use resampled reference
             f"-r {target_data['reference_path'].resolve()}",
