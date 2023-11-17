@@ -361,7 +361,7 @@ def get_mask(  # noqa: C901
         # Set applywarp command
         applywarp_cmd = [
             "applywarp",
-            "--interp=spline",
+            "--interp=nn",
             f"-i {prewarp_mask_path.resolve()}",
             # use resampled reference
             f"-r {target_data['reference_path'].resolve()}",
