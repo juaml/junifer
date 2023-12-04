@@ -463,3 +463,26 @@ def fsl_docker() -> None:  # pragma: no cover
     export PATH="$PATH:{fsl_wrappers_path}"
     """
     click.secho(msg, fg="blue")
+
+
+@setup.command("ants-docker")
+def ants_docker() -> None:  # pragma: no cover
+    """Configure ANTs-Docker wrappers."""
+    import junifer
+
+    pkg_path = Path(junifer.__path__[0])  # type: ignore
+    ants_wrappers_path = pkg_path / "api" / "res" / "ants"
+    msg = f"""
+    Installation instructions for ANTs-Docker wrappers:
+
+    1. Install Docker: https://docs.docker.com/get-docker/
+
+    2. Get the ANTs-Docker image by running this on the command line:
+
+        docker pull antsx/ants
+
+    3. Add this line to the ~/.bashrc or ~/.zshrc file:
+
+    export PATH="$PATH:{ants_wrappers_path}"
+    """
+    click.secho(msg, fg="blue")
