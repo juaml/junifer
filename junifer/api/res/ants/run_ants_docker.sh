@@ -6,7 +6,7 @@ mounts=0
 for var in "$@"
 do
 if [ -d "${var}" ]; then
-        echo "$var is a directory"
+        echo "$var is a directory" >&2
         var=$(realpath "${var}")
         host_dir=$(dirname "${var}")
         ((mounts+=1))
@@ -15,10 +15,10 @@ if [ -d "${var}" ]; then
         var=${container_dir}
     elif [ -f "${var}" ] || [[ "${var}" == /* ]]; then
         if [ -f "${var}" ]; then
-            echo "$var is a file"
+            echo "$var is a file" >&2
             var=$(realpath "${var}")
         else
-            echo "$var is a prefix"
+            echo "$var is a prefix" >&2
         fi
         fname=$(basename "${var}")
         host_dir=$(dirname "${var}")
@@ -30,10 +30,10 @@ if [ -d "${var}" ]; then
     corrected_args+=("${var}")
 done
 
-echo "Docker args: ${docker_args[*]}"
-echo "Corrected args for fsl: ${corrected_args[*]}"
+echo "Docker args: ${docker_args[*]}" >&2
+echo "Corrected args for fsl: ${corrected_args[*]}" >&2
 
 cwd=$(pwd)
 cmd="docker run --rm ${docker_args[*]} -v ${cwd}:${cwd} -w ${cwd} antsx/ants ${corrected_args[*]}"
-echo "Running command: ${cmd}"
+echo "Running command: ${cmd}" >&2
 ${cmd}
