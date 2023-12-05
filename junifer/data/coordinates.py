@@ -260,11 +260,12 @@ def get_coordinates(
         std2imgcoord_out_path = element_tempdir / "coordinates_transformed.txt"
         # Set std2imgcoord command
         std2imgcoord_cmd = [
-            "std2imgcoord",
+            "cat",
+            f"{pretransform_coordinates_path.resolve()}",
+            "| std2imgcoord",
             f"-img {target_data['reference_path'].resolve()}",
             f"-warp {extra_input['Warp']['path'].resolve()}",
-            f"{pretransform_coordinates_path.resolve()}",
-            f"> {std2imgcoord_out_path.resolve()}",
+            f"- > {std2imgcoord_out_path.resolve()}",
         ]
         # Call std2imgcoord
         std2imgcoord_cmd_str = " ".join(std2imgcoord_cmd)
