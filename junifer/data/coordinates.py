@@ -257,24 +257,25 @@ def get_coordinates(
         )
 
         # Create an element-scoped tempfile for transformed coordinates output
-        std2imgcoord_out_path = element_tempdir / "coordinates_transformed.txt"
-        # Set std2imgcoord command
-        std2imgcoord_cmd = [
+        img2imgcoord_out_path = element_tempdir / "coordinates_transformed.txt"
+        # Set img2imgcoord command
+        img2imgcoord_cmd = [
             "cat",
             f"{pretransform_coordinates_path.resolve()}",
-            "| std2imgcoord -mm",
-            f"-img {target_data['reference_path'].resolve()}",
-            f"-std {target_data['path'].resolve()}",
+            "| img2imgcoord -mm",
+            f"-src {target_data['path'].resolve()}",
+            f"-dest {target_data['reference_path'].resolve()}",
             f"-warp {extra_input['Warp']['path'].resolve()}",
-            f"- > {std2imgcoord_out_path.resolve()}",
+            f"> {img2imgcoord_out_path.resolve()};",
+            f"sed -i 1d {img2imgcoord_out_path.resolve()}",
         ]
-        # Call std2imgcoord
-        std2imgcoord_cmd_str = " ".join(std2imgcoord_cmd)
+        # Call img2imgcoord
+        img2imgcoord_cmd_str = " ".join(img2imgcoord_cmd)
         logger.info(
-            f"std2imgcoord command to be executed: {std2imgcoord_cmd_str}"
+            f"img2imgcoord command to be executed: {img2imgcoord_cmd_str}"
         )
-        std2imgcoord_process = subprocess.run(
-            std2imgcoord_cmd_str,  # string needed with shell=True
+        img2imgcoord_process = subprocess.run(
+            img2imgcoord_cmd_str,  # string needed with shell=True
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
@@ -282,20 +283,20 @@ def get_coordinates(
             check=False,
         )
         # Check for success or failure
-        if std2imgcoord_process.returncode == 0:
+        if img2imgcoord_process.returncode == 0:
             logger.info(
-                "std2imgcoord succeeded with the following output: "
-                f"{std2imgcoord_process.stdout}"
+                "img2imgcoord succeeded with the following output: "
+                f"{img2imgcoord_process.stdout}"
             )
         else:
             raise_error(
-                msg="std2imgcoord failed with the following error: "
-                f"{std2imgcoord_process.stdout}",
+                msg="img2imgcoord failed with the following error: "
+                f"{img2imgcoord_process.stdout}",
                 klass=RuntimeError,
             )
 
         # Load coordinates
-        seeds = np.loadtxt(std2imgcoord_out_path)
+        seeds = np.loadtxt(img2imgcoord_out_path)
 
         # Delete tempdir
         WorkDirManager().delete_tempdir(tempdir)
