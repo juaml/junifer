@@ -9,7 +9,8 @@ import hashlib
 import subprocess
 from functools import lru_cache
 from itertools import product
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, cast
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, cast
 
 import nibabel as nib
 import numpy as np
@@ -68,7 +69,7 @@ class ReHoEstimator:
         box_x: Optional[int] = None,
         box_y: Optional[int] = None,
         box_z: Optional[int] = None,
-    ) -> "Nifti1Image":
+    ) -> Tuple["Nifti1Image", Path]:
         """Compute ReHo map via afni's 3dReHo.
 
         Parameters
@@ -107,6 +108,9 @@ class ReHoEstimator:
         Returns
         -------
         Niimg-like object
+            The ReHo map as NIfTI.
+        pathlib.Path
+            The path to the ReHo map as NIfTI.
 
         Raises
         ------
@@ -194,9 +198,16 @@ class ReHoEstimator:
 
         # SHA256 for bypassing memmap
         sha256_params = hashlib.sha256(bytes(reho_cmd_str, "utf-8"))
+        # Create element-scoped tempdir so that the ReHo map is
+        # available later as get_coordinates and the like need it
+        # in ReHoSpheres and the like to transform to other template
+        # spaces
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="reho_afni"
+        )
         # Convert afni to nifti
         reho_afni_to_nifti_out_path = (
-            self.temp_dir_path
+            element_tempdir
             / f"output_{sha256_params.hexdigest()}.nii"  # type: ignore
         )
         convert_cmd: List[str] = [
@@ -235,13 +246,13 @@ class ReHoEstimator:
         output_data = nib.load(reho_afni_to_nifti_out_path)
         # Stupid casting
         output_data = cast("Nifti1Image", output_data)
-        return output_data
+        return output_data, reho_afni_to_nifti_out_path
 
     def _compute_reho_python(
         self,
         data: "Nifti1Image",
         nneigh: int = 27,
-    ) -> "Nifti1Image":
+    ) -> Tuple["Nifti1Image", Path]:
         """Compute ReHo map.
 
         Parameters
@@ -261,6 +272,9 @@ class ReHoEstimator:
         Returns
         -------
         Niimg-like object
+            The ReHo map as NIfTI.
+        pathlib.Path
+            The path to the ReHo map as NIfTI.
 
         Raises
         ------
@@ -408,7 +422,16 @@ class ReHoEstimator:
             )
 
         output = nimg.new_img_like(data, reho_map, copy_header=False)
-        return output  # type: ignore
+        # Create element-scoped tempdir so that the ReHo map is
+        # available later as get_coordinates and the like need it
+        # in ReHoSpheres and the like to transform to other template
+        # spaces
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="reho_python"
+        )
+        output_path = element_tempdir / "reho_map_python.nii.gz"
+        nib.save(output, output_path)
+        return output, output_path  # type: ignore
 
     @lru_cache(maxsize=None, typed=True)
     def _compute(
@@ -416,7 +439,7 @@ class ReHoEstimator:
         use_afni: bool,
         data: "Nifti1Image",
         **reho_params: Any,
-    ) -> "Nifti1Image":
+    ) -> Tuple["Nifti1Image", Path]:
         """Compute the ReHo map with memoization.
 
         Parameters
@@ -431,22 +454,27 @@ class ReHoEstimator:
         Returns
         -------
         Niimg-like object
+            The ReHo map as NIfTI.
+        pathlib.Path
+            The path to the ReHo map as NIfTI.
 
         """
         if use_afni:
             # Create new temporary directory before using AFNI
             self.temp_dir_path = WorkDirManager().get_tempdir(prefix="reho")
-            output = self._compute_reho_afni(data, **reho_params)
+            output, output_path = self._compute_reho_afni(data, **reho_params)
         else:
-            output = self._compute_reho_python(data, **reho_params)
-        return output
+            output, output_path = self._compute_reho_python(
+                data, **reho_params
+            )
+        return output, output_path
 
     def fit_transform(
         self,
         use_afni: bool,
         input_data: Dict[str, Any],
         **reho_params: Any,
-    ) -> "Nifti1Image":
+    ) -> Tuple["Nifti1Image", Path]:
         """Fit and transform for the estimator.
 
         Parameters
@@ -461,6 +489,9 @@ class ReHoEstimator:
         Returns
         -------
         Niimg-like object
+            The ReHo map as NIfTI.
+        pathlib.Path
+            The path to the ReHo map as NIfTI.
 
         """
         bold_path = input_data["path"]
