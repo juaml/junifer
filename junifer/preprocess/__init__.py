@@ -7,4 +7,4 @@
 
 from .base import BasePreprocessor
 from .confounds import fMRIPrepConfoundRemover
-from .fsl import BOLDWarper
+from .bold_warper import BOLDWarper

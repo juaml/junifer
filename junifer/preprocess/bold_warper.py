@@ -1,4 +1,4 @@
-"""Provide class for warping BOLD via FSL FLIRT."""
+"""Provide class for warping BOLD to other template spaces."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
@@ -13,15 +13,15 @@ from typing import (
     Union,
 )
 
-from ...api.decorators import register_preprocessor
-from ...utils import logger, raise_error
-from ..base import BasePreprocessor
-from .apply_warper import _ApplyWarper
+from ..api.decorators import register_preprocessor
+from ..utils import logger, raise_error
+from .base import BasePreprocessor
+from .fsl.apply_warper import _ApplyWarper
 
 
 @register_preprocessor
 class BOLDWarper(BasePreprocessor):
-    """Class for warping BOLD NIfTI images via FSL FLIRT.
+    """Class for warping BOLD NIfTI images.
 
     Parameters
     ----------

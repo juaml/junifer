@@ -9,7 +9,7 @@ import pytest
 
 # from junifer.datareader import DefaultDataReader
 # from junifer.pipeline.utils import _check_fsl
-from junifer.preprocess.fsl import BOLDWarper
+from junifer.preprocess import BOLDWarper
 
 
 def test_BOLDWarper_init() -> None:
