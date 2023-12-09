@@ -13,9 +13,10 @@ from typing import Dict, NoReturn, Optional, Type, Union
 from warnings import warn
 
 import datalad
+import structlog
 
 
-logger = logging.getLogger("JUNIFER")
+logger = structlog.getLogger("JUNIFER")
 
 # Set up datalad logger level to warning by default
 datalad.log.lgr.setLevel(logging.WARNING)
