@@ -7,7 +7,8 @@
 import subprocess
 import typing
 from functools import lru_cache
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union, cast
 
 import nibabel as nib
 import numpy as np
@@ -95,7 +96,7 @@ class ALFFEstimator:
         highpass: float,
         lowpass: float,
         tr: Optional[float],
-    ) -> Tuple["Nifti1Image", "Nifti1Image"]:
+    ) -> Tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute ALFF map via afni's commands.
 
         Parameters
@@ -111,30 +112,43 @@ class ALFFEstimator:
 
         Returns
         -------
-        alff: Niimg-like object
+        Niimg-like object
             ALFF map.
-        falff: Niimg-like object
+        Niimg-like object
             fALFF map.
+        pathlib.Path
+            The path to the ALFF map as NIfTI.
+        pathlib.Path
+            The path to the fALFF map as NIfTI.
 
         Raises
         ------
         RuntimeError
-            If the AFNI commands fails due to some issues
+            If the AFNI commands fails due to some issues.
 
         """
         # Note: self.temp_dir_path is sure to exist before proceeding, so
         #       types checks are ignored further on.
 
         # Save niimg to nii.gz
-        nifti_in_file_path = self.temp_dir_path / "input.nii"
+        nifti_in_file_path = self.temp_dir_path / "input.nii"  # type: ignore
         nib.save(data, nifti_in_file_path)
 
         params_suffix = f"_{highpass}_{lowpass}_{tr}"
-        alff_fname = self.temp_dir_path / f"alff{params_suffix}.nii"
-        falff_fname = self.temp_dir_path / f"falff{params_suffix}.nii"
+        # Create element-scoped tempdir so that the ALFF and fALFF maps are
+        # available later as get_coordinates and the like need it
+        # in fALFFSpheres and the like to transform to other template
+        # spaces
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="alff_falff_afni"
+        )
+        alff_fname = element_tempdir / f"alff{params_suffix}.nii"
+        falff_fname = element_tempdir / f"falff{params_suffix}.nii"
 
         # Use afni's 3dRSFC to compute ALFF and fALFF
-        falff_afni_out_path_prefix = self.temp_dir_path / "temp_falff"
+        falff_afni_out_path_prefix = (
+            self.temp_dir_path / "temp_falff"  # type: ignore
+        )
 
         bp_cmd = (
             "3dRSFC "
@@ -169,8 +183,10 @@ class ALFFEstimator:
         # Load niftis
         alff_img = nib.load(alff_fname)
         falff_img = nib.load(falff_fname)
-
-        return alff_img, falff_img
+        # Cast image type
+        alff_img = cast("Nifti1Image", alff_img)
+        falff_img = cast("Nifti1Image", falff_img)
+        return alff_img, falff_img, alff_fname, falff_fname
 
     def _compute_alff_python(
         self,
@@ -178,7 +194,7 @@ class ALFFEstimator:
         highpass: float,
         lowpass: float,
         tr: Optional[float],
-    ) -> Tuple["Nifti1Image", "Nifti1Image"]:
+    ) -> Tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute (f)ALFF map.
 
         Parameters
@@ -194,10 +210,15 @@ class ALFFEstimator:
 
         Returns
         -------
-        alff: Niimg-like object
+        Niimg-like object
             ALFF map.
-        falff: Niimg-like object
+        Niimg-like object
             fALFF map.
+        pathlib.Path
+            The path to the ALFF map as NIfTI.
+        pathlib.Path
+            The path to the fALFF map as NIfTI.
+
         """
         timeseries = data.get_fdata().copy()
         if tr is None:
@@ -235,7 +256,18 @@ class ALFFEstimator:
         python_alff = numerator / np.sqrt(timeseries.shape[-1])
         alff_img = nimg.new_img_like(data, python_alff)
         falff_img = nimg.new_img_like(data, python_falff)
-        return alff_img, falff_img
+        # Create element-scoped tempdir so that the ALFF and fALFF maps are
+        # available later as get_coordinates and the like need it
+        # in fALFFSpheres and the like to transform to other template
+        # spaces
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="alff_falff_python"
+        )
+        alff_output_path = element_tempdir / "alff_map_python.nii.gz"
+        falff_output_path = element_tempdir / "falff_map_python.nii.gz"
+        nib.save(alff_img, alff_output_path)
+        nib.save(falff_img, falff_output_path)
+        return alff_img, falff_img, alff_output_path, falff_output_path  # type: ignore
 
     @lru_cache(maxsize=None, typed=True)
     def _compute(
@@ -245,7 +277,7 @@ class ALFFEstimator:
         highpass: float,
         lowpass: float,
         tr: Optional[float],
-    ) -> Tuple["Nifti1Image", "Nifti1Image"]:
+    ) -> Tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute the ALFF map with memorization.
 
         Parameters
@@ -263,10 +295,15 @@ class ALFFEstimator:
 
         Returns
         -------
-        alff: Niimg-like object
+        Niimg-like object
             ALFF map.
-        falff: Niimg-like object
+        Niimg-like object
             fALFF map.
+        pathlib.Path
+            The path to the ALFF map as NIfTI.
+        pathlib.Path
+            The path to the fALFF map as NIfTI.
+
         """
         if use_afni:
             # Create new temporary directory before using AFNI
@@ -290,7 +327,7 @@ class ALFFEstimator:
         highpass: float,
         lowpass: float,
         tr: Optional[float],
-    ) -> Tuple["Nifti1Image", "Nifti1Image"]:
+    ) -> Tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Fit and transform for the estimator.
 
         Parameters
@@ -308,10 +345,15 @@ class ALFFEstimator:
 
         Returns
         -------
-        alff: Niimg-like object
+        Niimg-like object
             ALFF map.
-        falff: Niimg-like object
+        Niimg-like object
             fALFF map.
+        pathlib.Path
+            The path to the ALFF map as NIfTI.
+        pathlib.Path
+            The path to the fALFF map as NIfTI.
+
         """
         bold_path = input_data["path"]
         bold_data = input_data["data"]
