@@ -148,7 +148,7 @@ class ALFFBase(BaseMarker):
 
         estimator = ALFFEstimator()
 
-        alff, falff = estimator.fit_transform(
+        alff, falff, alff_path, falff_path = estimator.fit_transform(
             use_afni=self.use_afni,
             input_data=input,
             highpass=self.highpass,
@@ -156,10 +156,11 @@ class ALFFBase(BaseMarker):
             tr=self.tr,
         )
         post_data = falff if self.fractional else alff
+        post_path = falff_path if self.fractional else alff_path
 
         post_input = dict(input.items())
         post_input["data"] = post_data
-        post_input["path"] = None
+        post_input["path"] = post_path
 
         out = self._postprocess(post_input, extra_input=extra_input)
 
