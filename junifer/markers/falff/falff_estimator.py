@@ -34,11 +34,6 @@ class ALFFEstimator:
     .. warning:: This class can only be used via :class:`.ALFFBase` as it
     serves a specific purpose.
 
-    Parameters
-    ----------
-    use_afni : bool
-        Whether to use afni for computation. If False, will use python.
-
     Attributes
     ----------
     temp_dir_path : pathlib.Path
@@ -71,6 +66,7 @@ class ALFFEstimator:
         ------
         RuntimeError
             If AFNI command fails.
+
         """
         logger.info(f"AFNI command to be executed: {cmd}")
         process = subprocess.run(
