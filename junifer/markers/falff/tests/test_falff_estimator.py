@@ -55,7 +55,7 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
 
     # Compute again with cache, should be faster
     start_time = time.time()
-    alff, falff, alff_path, falff_path = estimator.fit_transform(
+    alff, falff, _, _ = estimator.fit_transform(
         use_afni=False,
         input_data=subject_data["BOLD"],
         highpass=0.01,
@@ -68,7 +68,7 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
 
     # Change a parameter and compute again without cache
     start_time = time.time()
-    alff, falff, alff_path, falff_path = estimator.fit_transform(
+    alff, falff, _, _ = estimator.fit_transform(
         use_afni=False,
         input_data=subject_data["BOLD"],
         highpass=0.01,
@@ -81,7 +81,7 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
 
     # Compute again with cache, should be faster
     start_time = time.time()
-    alff, falff, alff_path, falff_path = estimator.fit_transform(
+    alff, falff, _, _ = estimator.fit_transform(
         use_afni=False,
         input_data=subject_data["BOLD"],
         highpass=0.01,
@@ -99,7 +99,7 @@ def test_ALFFEstimator_cache_python(tmp_path: Path) -> None:
     subject_data = DefaultDataReader().fit_transform(subject)
 
     start_time = time.time()
-    alff, falff, alff_path, falff_path = estimator.fit_transform(
+    alff, falff, _, _ = estimator.fit_transform(
         use_afni=False,
         input_data=subject_data["BOLD"],
         highpass=0.01,
@@ -135,7 +135,7 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
 
     # Compute with cache
     start_time = time.time()
-    alff, falff = estimator.fit_transform(
+    alff, falff, alff_path, falff_path = estimator.fit_transform(
         use_afni=True,
         input_data=subject_data["BOLD"],
         highpass=0.01,
@@ -146,12 +146,14 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     logger.info(f"ALFF Estimator First time: {first_time}")
     assert isinstance(alff, Nifti1Image)
     assert isinstance(falff, Nifti1Image)
+    assert isinstance(alff_path, Path)
+    assert isinstance(falff_path, Path)
     n_files = len(list(estimator.temp_dir_path.glob("*")))
     assert n_files == 3  # input + alff + falff
 
     # Compute again with cache, should be faster
     start_time = time.time()
-    alff, falff, alff_path, falff_path = estimator.fit_transform(
+    alff, falff, _, _ = estimator.fit_transform(
         use_afni=True,
         input_data=subject_data["BOLD"],
         highpass=0.01,
@@ -166,7 +168,7 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
 
     # Change a parameter and compute again without cache
     start_time = time.time()
-    alff, falff, alff_path, falff_path = estimator.fit_transform(
+    alff, falff, _, _ = estimator.fit_transform(
         use_afni=True,
         input_data=subject_data["BOLD"],
         highpass=0.01,
@@ -181,7 +183,7 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
 
     # Compute with cache, should be faster
     start_time = time.time()
-    alff, falff, alff_path, falff_path = estimator.fit_transform(
+    alff, falff, _, _ = estimator.fit_transform(
         use_afni=True,
         input_data=subject_data["BOLD"],
         highpass=0.01,
@@ -201,7 +203,7 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     subject_data = DefaultDataReader().fit_transform(subject)
 
     start_time = time.time()
-    alff, falff, alff_path, falff_path = estimator.fit_transform(
+    alff, falff, _, _ = estimator.fit_transform(
         use_afni=True,
         input_data=subject_data["BOLD"],
         highpass=0.01,
