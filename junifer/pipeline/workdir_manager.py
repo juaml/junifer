@@ -42,7 +42,7 @@ class WorkDirManager:
 
     def __init__(self, workdir: Optional[Union[str, Path]] = None) -> None:
         """Initialize the class."""
-        self._workdir = workdir
+        self._workdir = Path(workdir) if isinstance(workdir, str) else workdir
         self._elementdir = None
         self._root_tempdir = None
 
