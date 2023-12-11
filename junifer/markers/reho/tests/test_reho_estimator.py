@@ -177,7 +177,7 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     assert isinstance(reho_map_without_cache_path, Path)
     # Count intermediate files
     n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 2  # input + reho
+    assert n_files == 1  # only input file
 
     # Compute again with cache, should be faster
     second_tic = time.time()
@@ -198,7 +198,7 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     assert (second_toc - second_tic) < ((first_toc - first_tic) / 1000)
     # Count intermediate files
     n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 2  # input + reho
+    assert n_files == 1  # only input file
 
     # Change a parameter and compute again without cache
     third_tic = time.time()
@@ -220,7 +220,7 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     assert (third_toc - third_tic) > ((first_toc - first_tic) / 10)
     # Count intermediate files
     n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 2  # input + reho
+    assert n_files == 1  # only input file
 
     # Compute with cache, should be faster
     fourth_tic = time.time()
@@ -241,7 +241,7 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     # Should require less time
     assert (fourth_toc - fourth_tic) < ((first_toc - first_tic) / 1000)
     n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 2  # input + reho
+    assert n_files == 1  # only input file
 
     # Change the data and it should clear the cache
     with PartlyCloudyTestingDataGrabber() as dg:
@@ -268,7 +268,7 @@ def test_reho_estimator_cache_afni(tmp_path: Path) -> None:
     assert (fifth_toc - fifth_tic) > ((first_toc - first_tic) / 10)
     # Count intermediate files
     n_files = len(list(reho_estimator.temp_dir_path.glob("*")))
-    assert n_files == 2  # input + reho
+    assert n_files == 1  # only input file
 
 
 @pytest.mark.skipif(
