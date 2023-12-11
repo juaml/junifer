@@ -149,7 +149,7 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     assert isinstance(alff_path, Path)
     assert isinstance(falff_path, Path)
     n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 3  # input + alff + falff
+    assert n_files == 1  # only input file
 
     # Compute again with cache, should be faster
     start_time = time.time()
@@ -164,7 +164,7 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     logger.info(f"ALFF Estimator Second time: {second_time}")
     assert second_time < (first_time / 1000)
     n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 3  # input + alff + falff
+    assert n_files == 1  # only input file
 
     # Change a parameter and compute again without cache
     start_time = time.time()
@@ -179,7 +179,7 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     logger.info(f"ALFF Estimator Third time: {third_time}")
     assert third_time > (first_time / 10)
     n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 3  # input + alff + falff
+    assert n_files == 1  # only input file
 
     # Compute with cache, should be faster
     start_time = time.time()
@@ -194,7 +194,7 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     logger.info(f"ALFF Estimator Fourth time: {fourth}")
     assert fourth < (first_time / 1000)
     n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 3  # input + alff + falff
+    assert n_files == 1  # only input file
 
     # Change the data and it should clear the cache
     with PartlyCloudyTestingDataGrabber() as dg:
@@ -214,7 +214,7 @@ def test_ALFFEstimator_cache_afni(tmp_path: Path) -> None:
     logger.info(f"ALFF Estimator Fifth time: {fifth}")
     assert fifth > (first_time / 10)
     n_files = len(list(estimator.temp_dir_path.glob("*")))
-    assert n_files == 3  # input + alff + falff
+    assert n_files == 1  # only input file
 
 
 @pytest.mark.skipif(
