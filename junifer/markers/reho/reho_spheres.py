@@ -140,9 +140,11 @@ class ReHoSpheres(ReHoBase):
         logger.info("Calculating ReHo for spheres.")
         # Calculate reho map
         if self.reho_params is not None:
-            reho_map = self.compute_reho_map(input=input, **self.reho_params)
+            reho_map, reho_file_path = self.compute_reho_map(
+                input=input, **self.reho_params
+            )
         else:
-            reho_map = self.compute_reho_map(input=input)
+            reho_map, reho_file_path = self.compute_reho_map(input=input)
         # Initialize sphere aggregation
         sphere_aggregation = SphereAggregation(
             coords=self.coords,
@@ -156,7 +158,7 @@ class ReHoSpheres(ReHoBase):
         # Perform aggregation on reho map
         sphere_aggregation_input = dict(input.items())
         sphere_aggregation_input["data"] = reho_map
-        sphere_aggregation_input["path"] = None
+        sphere_aggregation_input["path"] = reho_file_path
         output = sphere_aggregation.compute(
             input=sphere_aggregation_input, extra_input=extra_input
         )

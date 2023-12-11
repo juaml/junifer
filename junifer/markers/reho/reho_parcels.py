@@ -128,9 +128,11 @@ class ReHoParcels(ReHoBase):
         logger.info("Calculating ReHo for parcels.")
         # Calculate reho map
         if self.reho_params is not None:
-            reho_map = self.compute_reho_map(input=input, **self.reho_params)
+            reho_map, reho_file_path = self.compute_reho_map(
+                input=input, **self.reho_params
+            )
         else:
-            reho_map = self.compute_reho_map(input=input)
+            reho_map, reho_file_path = self.compute_reho_map(input=input)
         # Initialize parcel aggregation
         parcel_aggregation = ParcelAggregation(
             parcellation=self.parcellation,
@@ -142,7 +144,7 @@ class ReHoParcels(ReHoBase):
         # Perform aggregation on reho map
         parcel_aggregation_input = dict(input.items())
         parcel_aggregation_input["data"] = reho_map
-        parcel_aggregation_input["path"] = None
+        parcel_aggregation_input["path"] = reho_file_path
 
         output = parcel_aggregation.compute(
             input=parcel_aggregation_input,

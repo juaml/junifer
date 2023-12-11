@@ -4,7 +4,17 @@
 # License: AGPL
 
 
-from typing import TYPE_CHECKING, Any, ClassVar, Dict, List, Optional, Union
+from pathlib import Path
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Dict,
+    List,
+    Optional,
+    Tuple,
+    Union,
+)
 
 from ...utils import logger, raise_error
 from ..base import BaseMarker
@@ -78,7 +88,7 @@ class ReHoBase(BaseMarker):
         self,
         input: Dict[str, Any],
         **reho_params: Any,
-    ) -> "Nifti1Image":
+    ) -> Tuple["Nifti1Image", Path]:
         """Compute.
 
         Calculates Kendall's W per voxel using neighborhood voxels.
@@ -98,6 +108,9 @@ class ReHoBase(BaseMarker):
         Returns
         -------
         Niimg-like object
+            The ReHo map as NIfTI.
+        pathlib.Path
+            The path to the ReHo map as NIfTI.
 
         References
         ----------
@@ -120,9 +133,8 @@ class ReHoBase(BaseMarker):
         # Initialize reho estimator
         reho_estimator = ReHoEstimator()
         # Fit-transform reho estimator
-        reho_map = reho_estimator.fit_transform(
+        return reho_estimator.fit_transform(
             use_afni=self.use_afni,
             input_data=input,
             **reho_params,
         )
-        return reho_map
