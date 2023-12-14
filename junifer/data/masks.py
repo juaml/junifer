@@ -280,6 +280,7 @@ def get_mask(  # noqa: C901
                     f"because the item ({inherited_mask_item}) does not exist."
                 )
             mask_img = extra_input[inherited_mask_item]["data"]
+            mask_space = extra_input[inherited_mask_item]["space"]
         # Starting with new mask
         else:
             # Load mask
@@ -306,7 +307,7 @@ def get_mask(  # noqa: C901
                     interpolation="nearest",
                     copy=True,
                 )
-            all_spaces.append(mask_space)
+        all_spaces.append(mask_space)
         all_masks.append(mask_img)
 
     # Multiple masks, need intersection / union
@@ -316,6 +317,8 @@ def get_mask(  # noqa: C901
         # Intersect / union of masks only if all masks are in the same space
         if len(filtered_spaces) == 1:
             mask_img = intersect_masks(all_masks, **intersect_params)
+            # Store the mask space for further checks
+            mask_space = next(iter(filtered_spaces))
         else:
             raise_error(
                 msg=(
@@ -333,9 +336,10 @@ def get_mask(  # noqa: C901
                 "when there is only one mask."
             )
         mask_img = all_masks[0]
+        mask_space = all_spaces[0]
 
-    # Warp mask if target data is native
-    if target_data["space"] == "native":
+    # Warp mask if target data is native and mask space is not native
+    if target_data["space"] == "native" and target_data["space"] != mask_space:
         # Check for extra inputs
         if extra_input is None:
             raise_error(
