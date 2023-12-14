@@ -23,12 +23,12 @@ from junifer.storage.utils import (
     "dependency, max_version",
     [
         ("click", "8.2"),
-        ("numpy", "1.26"),
-        ("datalad", "0.19"),
-        ("pandas", "1.6"),
-        ("nibabel", "4.1"),
-        ("nilearn", "0.10.0"),
-        ("sqlalchemy", "1.5.0"),
+        ("numpy", "1.27"),
+        ("datalad", "0.20"),
+        ("pandas", "2.2"),
+        ("nibabel", "5.11"),
+        ("nilearn", "0.11.0"),
+        ("sqlalchemy", "2.1.0"),
         ("ruamel.yaml", "0.18.0"),
     ],
 )
