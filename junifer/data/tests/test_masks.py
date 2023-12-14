@@ -392,7 +392,9 @@ def test_get_mask_inherit() -> None:
 
         # Now get the mask using the inherit functionality, passing the
         # computed mask as extra data
-        extra_input = {"BOLD_MASK": {"data": gm_mask}}
+        extra_input = {
+            "BOLD_MASK": {"data": gm_mask, "space": input["BOLD"]["space"]}
+        }
         input["BOLD"]["mask_item"] = "BOLD_MASK"
         mask2 = get_mask(
             masks="inherit", target_data=input["BOLD"], extra_input=extra_input
