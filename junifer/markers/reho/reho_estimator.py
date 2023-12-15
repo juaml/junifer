@@ -462,12 +462,9 @@ class ReHoEstimator:
         if use_afni:
             # Create new temporary directory before using AFNI
             self.temp_dir_path = WorkDirManager().get_tempdir(prefix="reho")
-            output, output_path = self._compute_reho_afni(data, **reho_params)
-        else:
-            output, output_path = self._compute_reho_python(
-                data, **reho_params
-            )
-        return output, output_path
+            return self._compute_reho_afni(data, **reho_params)
+
+        return self._compute_reho_python(data, **reho_params)
 
     def fit_transform(
         self,

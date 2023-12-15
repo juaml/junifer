@@ -308,17 +308,16 @@ class ALFFEstimator:
         if use_afni:
             # Create new temporary directory before using AFNI
             self.temp_dir_path = WorkDirManager().get_tempdir(prefix="falff")
-            output = self._compute_alff_afni(
+            return self._compute_alff_afni(
                 data=data,
                 highpass=highpass,
                 lowpass=lowpass,
                 tr=tr,
             )
-        else:
-            output = self._compute_alff_python(
-                data, highpass=highpass, lowpass=lowpass, tr=tr
-            )
-        return output
+
+        return self._compute_alff_python(
+            data, highpass=highpass, lowpass=lowpass, tr=tr
+        )
 
     def fit_transform(
         self,
