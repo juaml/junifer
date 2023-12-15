@@ -360,7 +360,7 @@ class ALFFEstimator:
         bold_data = input_data["data"]
         # Clear cache if file path is different from when caching was done
         if self._file_path != bold_path:
-            logger.info(f"Removing fALFF map cache at {self._file_path}.")
+            logger.info(f"Removing fALFF map cache for {self._file_path}.")
             # Clear the cache
             self._compute.cache_clear()
             # Clear temporary directory files
@@ -369,7 +369,7 @@ class ALFFEstimator:
             # Set the new file path
             self._file_path = bold_path
         else:
-            logger.info(f"Using fALFF map cache at {self._file_path}.")
+            logger.info(f"Using fALFF map cache for {self._file_path}.")
         # Compute
         alff_map, falff_map, alff_map_path, falff_map_path = self._compute(
             use_afni=use_afni,
