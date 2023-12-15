@@ -349,9 +349,11 @@ class ALFFEstimator:
         Niimg-like object
             fALFF map.
         pathlib.Path
-            The path to the ALFF map as NIfTI.
+            The path to the ALFF map as NIfTI or the input data path if the
+            input data space is "native".
         pathlib.Path
-            The path to the fALFF map as NIfTI.
+            The path to the fALFF map as NIfTI or the input data path if the
+            input data space is "native".
 
         """
         bold_path = input_data["path"]
@@ -369,10 +371,18 @@ class ALFFEstimator:
         else:
             logger.info(f"Using fALFF map cache at {self._file_path}.")
         # Compute
-        return self._compute(
+        alff_map, falff_map, alff_map_path, falff_map_path = self._compute(
             use_afni=use_afni,
             data=bold_data,
             highpass=highpass,
             lowpass=lowpass,
             tr=tr,
         )
+        # If the input data space is native already, the original path should
+        # be propagated down as it might be required for transforming
+        # coordinates to native space via get_coordinates(), else the alff
+        # / falff map path should be passed for use later if required.
+        if input_data["space"] == "native":
+            return alff_map, falff_map, input_data["path"], input_data["path"]
+
+        return alff_map, falff_map, alff_map_path, falff_map_path
