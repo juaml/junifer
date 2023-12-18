@@ -99,8 +99,16 @@ _available_coordinates: Dict[
         "path": _vois_meta_path / "Power2011_MNI_VOIs.txt",
         "space": "MNI",
     },
+    "Power2011": {
+        "path": _vois_meta_path / "Power2011_MNI_VOIs.txt",
+        "space": "MNI",
+    },
     "Dosenbach": {
         "path": _vois_meta_path / "Dosenbach2010_MNI_VOIs.txt",
+        "space": "MNI",
+    },
+    "Power2013": {
+        "path": _vois_meta_path / "Power2013_MNI_VOIs.tsv",
         "space": "MNI",
     },
 }
