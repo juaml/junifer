@@ -45,6 +45,7 @@ def test_BOLDWarper_get_output_type(input_: List[str]) -> None:
     assert bold_warper.get_output_type(input_) == input_
 
 
+# TODO(synchon): should be tested with both FSL and ANTs
 @pytest.mark.skip(reason="requires testing dataset")
 # @pytest.mark.skipif(
 #     _check_fsl() is False, reason="requires fsl to be in PATH"
