@@ -15,6 +15,7 @@ from typing import (
 
 from ..api.decorators import register_preprocessor
 from ..utils import logger, raise_error
+from .ants.ants_apply_transforms_warper import _AntsApplyTransformsWarper
 from .base import BasePreprocessor
 from .fsl.apply_warper import _ApplyWarper
 
@@ -35,8 +36,13 @@ class BOLDWarper(BasePreprocessor):
     ] = [
         {
             "name": "fsl",
-            "optional": False,
-            "commands": ["applywarp"],
+            "optional": True,
+            "commands": ["flirt", "applywarp"],
+        },
+        {
+            "name": "ants",
+            "optional": True,
+            "commands": ["ResampleImage", "antsApplyTransforms"],
         },
     ]
 
@@ -104,7 +110,8 @@ class BOLDWarper(BasePreprocessor):
         Raises
         ------
         ValueError
-            If ``extra_input`` is None.
+            If ``extra_input`` is None or
+            if warp / transformation file extension is not ".mat" or ".h5".
 
         """
         logger.debug("Warping BOLD using BOLDWarper")
@@ -114,11 +121,33 @@ class BOLDWarper(BasePreprocessor):
                 f"No extra input provided, requires `Warp` and `{self.ref}` "
                 "data types in particular."
             )
-        # Initialize ApplyWarper for computation
-        apply_warper = _ApplyWarper(reference=self.ref, on="BOLD")
-        # Replace original BOLD data with warped BOLD data
-        _, input = apply_warper.preprocess(
-            input=input,
-            extra_input=extra_input,
-        )
+        # Check for warp file type to use correct tool
+        warp_file_ext = extra_input["Warp"]["path"].suffix()
+        if warp_file_ext == ".mat":
+            logger.debug("Using FSL with BOLDWarper")
+            # Initialize ApplyWarper for computation
+            apply_warper = _ApplyWarper(reference=self.ref, on="BOLD")
+            # Replace original BOLD data with warped BOLD data
+            _, input = apply_warper.preprocess(
+                input=input,
+                extra_input=extra_input,
+            )
+        elif warp_file_ext == ".h5":
+            logger.debug("Using ANTs with BOLDWarper")
+            # Initialize AntsApplyTransformsWarper for computation
+            ants_apply_transforms_warper = _AntsApplyTransformsWarper(
+                reference=self.ref, on="BOLD"
+            )
+            # Replace original BOLD data with warped BOLD data
+            _, input = ants_apply_transforms_warper.preprocess(
+                input=input,
+                extra_input=extra_input,
+            )
+        else:
+            raise_error(
+                msg=(
+                    "Unknown warp / transformation file extension: "
+                    f"{warp_file_ext}"
+                )
+            )
         return "BOLD", input
