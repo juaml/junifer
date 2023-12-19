@@ -54,7 +54,7 @@ class _ApplyWarper(BasePreprocessor):
         {
             "name": "fsl",
             "optional": False,
-            "commands": ["applywarp"],
+            "commands": ["flirt", "applywarp"],
         },
     ]
 
