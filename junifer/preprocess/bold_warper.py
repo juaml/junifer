@@ -122,7 +122,7 @@ class BOLDWarper(BasePreprocessor):
                 "data types in particular."
             )
         # Check for warp file type to use correct tool
-        warp_file_ext = extra_input["Warp"]["path"].suffix()
+        warp_file_ext = extra_input["Warp"]["path"].suffix
         if warp_file_ext == ".mat":
             logger.debug("Using FSL with BOLDWarper")
             # Initialize ApplyWarper for computation
