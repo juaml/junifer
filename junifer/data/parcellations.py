@@ -355,7 +355,7 @@ def get_parcellation(
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
-                "-n NearestNeighbor",
+                "-n 'GenericLabel[NearestNeighbor]'",
                 f"-i {prewarp_parcellation_path.resolve()}",
                 # use resampled reference
                 f"-r {target_data['reference_path'].resolve()}",
