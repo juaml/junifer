@@ -185,6 +185,7 @@ class _AntsApplyTransformsWarper(BasePreprocessor):
             "-d 3",
             "-e 3",
             "-n LanczosWindowedSinc",
+            f"-i {input_data['path'].resolve()}",
             # use resampled reference
             f"-r {resample_image_out_path.resolve()}",
             f"-t {warp_path.resolve()}",
