@@ -110,8 +110,9 @@ class BOLDWarper(BasePreprocessor):
         Raises
         ------
         ValueError
-            If ``extra_input`` is None or
-            if warp / transformation file extension is not ".mat" or ".h5".
+            If ``extra_input`` is None.
+        RuntimeError
+            If warp / transformation file extension is not ".mat" or ".h5".
 
         """
         logger.debug("Warping BOLD using BOLDWarper")
@@ -148,6 +149,7 @@ class BOLDWarper(BasePreprocessor):
                 msg=(
                     "Unknown warp / transformation file extension: "
                     f"{warp_file_ext}"
-                )
+                ),
+                klass=RuntimeError,
             )
         return "BOLD", input
