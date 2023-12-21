@@ -9,3 +9,4 @@
 .. _Sami Hamdan: https://github.com/samihamdan
 .. _Nicolas Nieto: https://github.com/N-Nieto
 .. _Felix Hoffstaedter: https://github.com/FeHoff
+.. _Tobias Muganga: https://github.com/tomug
