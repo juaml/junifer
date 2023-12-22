@@ -148,6 +148,9 @@ class ALFFBase(BaseMarker):
 
         estimator = ALFFEstimator()
 
+        # If the input data space is "native", then alff_path and falff_path
+        # both point to the input data path as it might be required to use
+        # in get_corrdinates() for transforming coordinates to native space.
         alff, falff, alff_path, falff_path = estimator.fit_transform(
             use_afni=self.use_afni,
             input_data=input,

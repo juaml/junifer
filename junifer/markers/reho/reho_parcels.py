@@ -127,6 +127,9 @@ class ReHoParcels(ReHoBase):
         """
         logger.info("Calculating ReHo for parcels.")
         # Calculate reho map
+        # If the input data space is "native", then reho_file_path points to
+        # the input data path as it might be required to use in
+        # get_coordinates() for transforming coordinates to native space.
         if self.reho_params is not None:
             reho_map, reho_file_path = self.compute_reho_map(
                 input=input, **self.reho_params

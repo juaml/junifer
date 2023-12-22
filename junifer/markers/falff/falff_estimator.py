@@ -308,17 +308,16 @@ class ALFFEstimator:
         if use_afni:
             # Create new temporary directory before using AFNI
             self.temp_dir_path = WorkDirManager().get_tempdir(prefix="falff")
-            output = self._compute_alff_afni(
+            return self._compute_alff_afni(
                 data=data,
                 highpass=highpass,
                 lowpass=lowpass,
                 tr=tr,
             )
-        else:
-            output = self._compute_alff_python(
-                data, highpass=highpass, lowpass=lowpass, tr=tr
-            )
-        return output
+
+        return self._compute_alff_python(
+            data, highpass=highpass, lowpass=lowpass, tr=tr
+        )
 
     def fit_transform(
         self,
@@ -350,16 +349,18 @@ class ALFFEstimator:
         Niimg-like object
             fALFF map.
         pathlib.Path
-            The path to the ALFF map as NIfTI.
+            The path to the ALFF map as NIfTI or the input data path if the
+            input data space is "native".
         pathlib.Path
-            The path to the fALFF map as NIfTI.
+            The path to the fALFF map as NIfTI or the input data path if the
+            input data space is "native".
 
         """
         bold_path = input_data["path"]
         bold_data = input_data["data"]
         # Clear cache if file path is different from when caching was done
         if self._file_path != bold_path:
-            logger.info(f"Removing fALFF map cache at {self._file_path}.")
+            logger.info(f"Removing fALFF map cache for {self._file_path}.")
             # Clear the cache
             self._compute.cache_clear()
             # Clear temporary directory files
@@ -368,12 +369,20 @@ class ALFFEstimator:
             # Set the new file path
             self._file_path = bold_path
         else:
-            logger.info(f"Using fALFF map cache at {self._file_path}.")
+            logger.info(f"Using fALFF map cache for {self._file_path}.")
         # Compute
-        return self._compute(
+        alff_map, falff_map, alff_map_path, falff_map_path = self._compute(
             use_afni=use_afni,
             data=bold_data,
             highpass=highpass,
             lowpass=lowpass,
             tr=tr,
         )
+        # If the input data space is native already, the original path should
+        # be propagated down as it might be required for transforming
+        # coordinates to native space via get_coordinates(), else the alff
+        # / falff map path should be passed for use later if required.
+        if input_data["space"] == "native":
+            return alff_map, falff_map, input_data["path"], input_data["path"]
+
+        return alff_map, falff_map, alff_map_path, falff_map_path

@@ -110,7 +110,8 @@ class ReHoBase(BaseMarker):
         Niimg-like object
             The ReHo map as NIfTI.
         pathlib.Path
-            The path to the ReHo map as NIfTI.
+            The path to the ReHo map as NIfTI or the input data path if the
+            input data space is "native".
 
         References
         ----------
