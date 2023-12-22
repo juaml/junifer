@@ -122,7 +122,7 @@ class _ApplyWarper(BasePreprocessor):
         -------
         Niimg-like object
             The warped input image.
-         pathlib.Path
+        pathlib.Path
             The path to the resampled reference image.
 
         Raises
