@@ -42,7 +42,7 @@ look as follows:
 
   from pathlib import Path
 
-  from junifer.data import register_custom_mask
+  from junifer.data import register_mask
 
 
   # this path is only an example, of course use the correct path
