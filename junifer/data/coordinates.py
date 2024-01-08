@@ -263,48 +263,108 @@ def get_coordinates(
         element_tempdir = WorkDirManager().get_element_tempdir(
             prefix="coordinates"
         )
-
         # Create an element-scoped tempfile for transformed coordinates output
-        img2imgcoord_out_path = element_tempdir / "coordinates_transformed.txt"
-        # Set img2imgcoord command
-        img2imgcoord_cmd = [
-            "cat",
-            f"{pretransform_coordinates_path.resolve()}",
-            "| img2imgcoord -mm",
-            f"-src {target_data['path'].resolve()}",
-            f"-dest {target_data['reference_path'].resolve()}",
-            f"-warp {extra_input['Warp']['path'].resolve()}",
-            f"> {img2imgcoord_out_path.resolve()};",
-            f"sed -i 1d {img2imgcoord_out_path.resolve()}",
-        ]
-        # Call img2imgcoord
-        img2imgcoord_cmd_str = " ".join(img2imgcoord_cmd)
-        logger.info(
-            f"img2imgcoord command to be executed: {img2imgcoord_cmd_str}"
+        transformed_coords_path = (
+            element_tempdir / "coordinates_transformed.txt"
         )
-        img2imgcoord_process = subprocess.run(
-            img2imgcoord_cmd_str,  # string needed with shell=True
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=True,  # needed for respecting $PATH
-            check=False,
-        )
-        # Check for success or failure
-        if img2imgcoord_process.returncode == 0:
+
+        # Check for warp file type to use correct tool
+        warp_file_ext = extra_input["Warp"]["path"].suffix
+        if warp_file_ext == ".mat":
+            logger.debug("Using FSL for coordinates transformation")
+            # Set img2imgcoord command
+            img2imgcoord_cmd = [
+                "cat",
+                f"{pretransform_coordinates_path.resolve()}",
+                "| img2imgcoord -mm",
+                f"-src {target_data['path'].resolve()}",
+                f"-dest {target_data['reference_path'].resolve()}",
+                f"-warp {extra_input['Warp']['path'].resolve()}",
+                f"> {transformed_coords_path.resolve()};",
+                f"sed -i 1d {transformed_coords_path.resolve()}",
+            ]
+            # Call img2imgcoord
+            img2imgcoord_cmd_str = " ".join(img2imgcoord_cmd)
             logger.info(
-                "img2imgcoord succeeded with the following output: "
-                f"{img2imgcoord_process.stdout}"
+                f"img2imgcoord command to be executed: {img2imgcoord_cmd_str}"
             )
+            img2imgcoord_process = subprocess.run(
+                img2imgcoord_cmd_str,  # string needed with shell=True
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                shell=True,  # needed for respecting $PATH
+                check=False,
+            )
+            # Check for success or failure
+            if img2imgcoord_process.returncode == 0:
+                logger.info(
+                    "img2imgcoord succeeded with the following output: "
+                    f"{img2imgcoord_process.stdout}"
+                )
+            else:
+                raise_error(
+                    msg="img2imgcoord failed with the following error: "
+                    f"{img2imgcoord_process.stdout}",
+                    klass=RuntimeError,
+                )
+        elif warp_file_ext == ".h5":
+            logger.debug("Using ANTs for coordinates transformation")
+            # Set antsApplyTransformsToPoints command
+            apply_transforms_to_points_cmd = [
+                # add header for ANTs to work
+                "sed -i '1i x,y,z'",
+                f"{pretransform_coordinates_path.resolve()};",
+                "antsApplyTransformsToPoints",
+                "-d 3",
+                "-p 1",
+                "-f 0",
+                f"-i {pretransform_coordinates_path.resolve()}",
+                f"-o {transformed_coords_path.resolve()}",
+                f"-t {extra_input['Warp']['path'].resolve()}",
+            ]
+            # Call antsApplyTransformsToPoints
+            apply_transforms_to_points_cmd_str = " ".join(
+                apply_transforms_to_points_cmd
+            )
+            logger.info(
+                "antsApplyTransformsToPoints command to be executed: "
+                f"{apply_transforms_to_points_cmd_str}"
+            )
+            apply_transforms_to_points_process = subprocess.run(
+                # string needed with shell=True
+                apply_transforms_to_points_cmd_str,
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                shell=True,  # needed for respecting $PATH
+                check=False,
+            )
+            if apply_transforms_to_points_process.returncode == 0:
+                logger.info(
+                    "antsApplyTransformsToPoints succeeded with the following "
+                    f"output: {apply_transforms_to_points_process.stdout}"
+                )
+            else:
+                raise_error(
+                    msg=(
+                        "antsApplyTransformsToPoints failed with the "
+                        "following error: "
+                        f"{apply_transforms_to_points_process.stdout}"
+                    ),
+                    klass=RuntimeError,
+                )
         else:
             raise_error(
-                msg="img2imgcoord failed with the following error: "
-                f"{img2imgcoord_process.stdout}",
+                msg=(
+                    "Unknown warp / transformation file extension: "
+                    f"{warp_file_ext}"
+                ),
                 klass=RuntimeError,
             )
 
         # Load coordinates
-        seeds = np.loadtxt(img2imgcoord_out_path)
+        seeds = np.loadtxt(transformed_coords_path)
 
         # Delete tempdir
         WorkDirManager().delete_tempdir(tempdir)
