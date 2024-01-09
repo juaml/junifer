@@ -310,12 +310,22 @@ def get_coordinates(
                     f"{img2imgcoord_process.stdout}",
                     klass=RuntimeError,
                 )
+
+            # Load coordinates
+            seeds = np.loadtxt(transformed_coords_path)
+
         elif warp_file_ext == ".h5":
             # Save existing coordinates to a component-scoped tempfile
             pretransform_coordinates_path = (
                 tempdir / "pretransform_coordinates.csv"
             )
-            np.savetxt(pretransform_coordinates_path, seeds, delimiter=",")
+            np.savetxt(
+                pretransform_coordinates_path,
+                seeds,
+                delimiter=",",
+                # Add header while saving to make ANTs work
+                header="x,y,z",
+            )
 
             # Create an element-scoped tempfile for transformed coordinates
             # output
@@ -326,9 +336,6 @@ def get_coordinates(
             logger.debug("Using ANTs for coordinates transformation")
             # Set antsApplyTransformsToPoints command
             apply_transforms_to_points_cmd = [
-                # add header for ANTs to work
-                "sed -i '1i x,y,z'",
-                f"{pretransform_coordinates_path.resolve()};",
                 "antsApplyTransformsToPoints",
                 "-d 3",
                 "-p 1",
@@ -336,8 +343,6 @@ def get_coordinates(
                 f"-i {pretransform_coordinates_path.resolve()}",
                 f"-o {transformed_coords_path.resolve()}",
                 f"-t {extra_input['Warp']['path'].resolve()};",
-                # delete header for reading later
-                f"sed -i 1d {transformed_coords_path.resolve()}",
             ]
             # Call antsApplyTransformsToPoints
             apply_transforms_to_points_cmd_str = " ".join(
@@ -370,6 +375,15 @@ def get_coordinates(
                     ),
                     klass=RuntimeError,
                 )
+
+            # Load coordinates
+            seeds = np.loadtxt(
+                # Skip header when reading
+                transformed_coords_path,
+                delimiter=",",
+                skiprows=1,
+            )
+
         else:
             raise_error(
                 msg=(
@@ -378,9 +392,6 @@ def get_coordinates(
                 ),
                 klass=RuntimeError,
             )
-
-        # Load coordinates
-        seeds = np.loadtxt(transformed_coords_path)
 
         # Delete tempdir
         WorkDirManager().delete_tempdir(tempdir)
