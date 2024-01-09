@@ -251,26 +251,28 @@ def get_coordinates(
         # Create component-scoped tempdir
         tempdir = WorkDirManager().get_tempdir(prefix="coordinates")
 
-        # Save existing coordinates to a component-scoped tempfile
-        pretransform_coordinates_path = (
-            tempdir / "pretransform_coordinates.txt"
-        )
-        np.savetxt(pretransform_coordinates_path, seeds)
-
         # Create element-scoped tempdir so that transformed coordinates is
         # available later as numpy stores file path reference for
         # loading on computation
         element_tempdir = WorkDirManager().get_element_tempdir(
             prefix="coordinates"
         )
-        # Create an element-scoped tempfile for transformed coordinates output
-        transformed_coords_path = (
-            element_tempdir / "coordinates_transformed.txt"
-        )
 
         # Check for warp file type to use correct tool
         warp_file_ext = extra_input["Warp"]["path"].suffix
         if warp_file_ext == ".mat":
+            # Save existing coordinates to a component-scoped tempfile
+            pretransform_coordinates_path = (
+                tempdir / "pretransform_coordinates.txt"
+            )
+            np.savetxt(pretransform_coordinates_path, seeds)
+
+            # Create an element-scoped tempfile for transformed coordinates
+            # output
+            transformed_coords_path = (
+                element_tempdir / "coordinates_transformed.txt"
+            )
+
             logger.debug("Using FSL for coordinates transformation")
             # Set img2imgcoord command
             img2imgcoord_cmd = [
@@ -309,6 +311,18 @@ def get_coordinates(
                     klass=RuntimeError,
                 )
         elif warp_file_ext == ".h5":
+            # Save existing coordinates to a component-scoped tempfile
+            pretransform_coordinates_path = (
+                tempdir / "pretransform_coordinates.csv"
+            )
+            np.savetxt(pretransform_coordinates_path, seeds, delimiter=",")
+
+            # Create an element-scoped tempfile for transformed coordinates
+            # output
+            transformed_coords_path = (
+                element_tempdir / "coordinates_transformed.csv"
+            )
+
             logger.debug("Using ANTs for coordinates transformation")
             # Set antsApplyTransformsToPoints command
             apply_transforms_to_points_cmd = [
