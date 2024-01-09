@@ -224,7 +224,7 @@ class _AntsApplyTransformsWarper(BasePreprocessor):
 
         # Stupid casting
         output_img = cast("Nifti1Image", output_img)
-        return output_img, apply_transforms_out_path
+        return output_img, resample_image_out_path
 
     def preprocess(
         self,
