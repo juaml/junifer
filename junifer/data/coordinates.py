@@ -335,7 +335,9 @@ def get_coordinates(
                 "-f 0",
                 f"-i {pretransform_coordinates_path.resolve()}",
                 f"-o {transformed_coords_path.resolve()}",
-                f"-t {extra_input['Warp']['path'].resolve()}",
+                f"-t {extra_input['Warp']['path'].resolve()};",
+                # delete header for reading later
+                f"sed -i 1d {transformed_coords_path.resolve()}",
             ]
             # Call antsApplyTransformsToPoints
             apply_transforms_to_points_cmd_str = " ".join(
