@@ -24,10 +24,11 @@ def get_aggfunc_by_name(
         Name to identify the function. Currently supported names and
         corresponding functions are:
 
-        * ``winsorized_mean`` -> :func:`scipy.stats.mstats.winsorize`
         * ``mean`` -> :func:`numpy.mean`
-        * ``std`` -> :func:`numpy.std`
+        * ``winsorized_mean`` -> :func:`scipy.stats.mstats.winsorize`
         * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
+        * ``mode`` -> :func:`scipy.stats.mode`
+        * ``std`` -> :func:`numpy.std`
         * ``count`` -> :func:`.count`
         * ``select`` -> :func:`.select`
 
@@ -40,6 +41,7 @@ def get_aggfunc_by_name(
     -------
     function
         Respective function with ``func_params`` parameter set.
+
     """
     from functools import partial  # local import to avoid sphinx error
 
