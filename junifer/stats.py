@@ -187,6 +187,13 @@ def select(
     numpy.ndarray
         Subset of the inputted data with the select settings
         applied as specified in ``select_params``.
+
+    Raises
+    ------
+    ValueError
+        If both ``pick`` and ``drop`` are None or
+        if both ``pick`` and ``drop`` are not None.
+
     """
 
     if pick is None and drop is None:
