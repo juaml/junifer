@@ -60,11 +60,11 @@ def test_AntsApplyTransformsWarper_get_output_type(input_: List[str]) -> None:
 
 
 @pytest.mark.skipif(
-    socket.gethostname() != "juseless",
-    reason="only for juseless",
+    _check_ants() is False, reason="requires ANTs to be in PATH"
 )
 @pytest.mark.skipif(
-    _check_ants() is False, reason="requires ANTs to be in PATH"
+    socket.gethostname() != "juseless",
+    reason="only for juseless",
 )
 def test_AntsApplyTransformsWarper__run_apply_transform() -> None:
     """Test AntsApplyTransformsWarper _run_apply_transform."""
@@ -93,11 +93,11 @@ def test_AntsApplyTransformsWarper__run_apply_transform() -> None:
 
 
 @pytest.mark.skipif(
-    socket.gethostname() != "juseless",
-    reason="only for juseless",
+    _check_ants() is False, reason="requires ANTs to be in PATH"
 )
 @pytest.mark.skipif(
-    _check_ants() is False, reason="requires ANTs to be in PATH"
+    socket.gethostname() != "juseless",
+    reason="only for juseless",
 )
 def test_AntsApplyTransformsWarper_preprocess() -> None:
     """Test AntsApplyTransformsWarper preprocess."""
