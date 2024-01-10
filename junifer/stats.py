@@ -7,7 +7,7 @@
 from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
-from scipy.stats import trim_mean
+from scipy.stats import mode, trim_mean
 from scipy.stats.mstats import winsorize
 
 from .utils import logger, raise_error
@@ -51,6 +51,7 @@ def get_aggfunc_by_name(
         "trim_mean",
         "count",
         "select",
+        "mode",
     }
     if func_params is None:
         func_params = {}
@@ -93,6 +94,8 @@ def get_aggfunc_by_name(
         elif pick is not None and drop is not None:
             raise_error("Either pick or drop must be specified, not both.")
         func = partial(select, **func_params)
+    elif name == "mode":
+        func = partial(mode, **func_params)
     else:
         raise_error(
             f"Function {name} unknown. Please provide any of "

@@ -21,6 +21,8 @@ from junifer.stats import count, get_aggfunc_by_name, select, winsorized_mean
         ("count", None),
         ("trim_mean", None),
         ("trim_mean", {"proportiontocut": 0.1}),
+        ("mode", None),
+        ("mode", {"keepdims": True}),
     ],
 )
 def test_get_aggfunc_by_name(name: str, params: Optional[Dict]) -> None:
