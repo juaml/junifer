@@ -120,6 +120,7 @@ def count(data: np.ndarray, axis: int = 0) -> np.ndarray:
     -------
     numpy.ndarray
         Number of elements along the given axis.
+
     """
     ax_size = data.shape[axis]
     if axis < 0:
@@ -142,7 +143,7 @@ def winsorized_mean(
         The axis to calculate winsorized mean on (default None).
     **win_params : dict
         Dictionary containing the keyword arguments for the winsorize function.
-        E.g. ``{'limits': [0.1, 0.1]}``.
+        E.g., ``{'limits': [0.1, 0.1]}``.
 
     Returns
     -------
@@ -154,6 +155,7 @@ def winsorized_mean(
     --------
     scipy.stats.mstats.winsorize :
         The winsorize function used in this function.
+
     """
     win_dat = winsorize(data, axis=axis, **win_params)
     win_mean = win_dat.mean(axis=axis)
