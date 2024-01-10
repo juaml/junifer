@@ -387,6 +387,34 @@ following command:</p></li>
 </pre></div>
 </div>
 </section>
+<section id="ants">
+<h2><span class="section-number">2.3. </span>ANTs<a class="headerlink" href="#ants" title="Link to this heading">#</a></h2>
+<p>To install ANTs, you can always follow the <a class="reference external" href="https://github.com/ANTsX/ANTs">ANTs official instructions</a>. Additionally, you can also follow the
+following steps to install and configure the ANTs Docker container in your
+local system.</p>
+<ol class="arabic simple">
+<li><p>Install Docker. You can follow the
+<a class="reference external" href="https://docs.docker.com/get-docker/">Docker official instructions</a>.</p></li>
+<li><p>Pull the ANTs Docker image from
+<a class="reference external" href="https://hub.docker.com/r/antsx/ants">Docker Hub ANTs</a>:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>pull<span class="w"> </span>antsx/ants
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Add the Junifer ANTs scripts to your PATH environment variable. Run the
+following command:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>setup<span class="w"> </span>ants-docker
+</pre></div>
+</div>
+<p>Take the last line and copy it to your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> file.</p>
+<p>Or, alternatively, you can execute this command which will update the
+<code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> for you:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>setup<span class="w"> </span>ants-docker<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;PATH=&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span><span class="p">|</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+</pre></div>
+</div>
+</section>
 </section>
 
         </article>
@@ -456,6 +484,7 @@ following command:</p></li>
 <li><a class="reference internal" href="#installing-external-dependencies">2. Installing external dependencies</a><ul>
 <li><a class="reference internal" href="#afni">2.1. AFNI</a></li>
 <li><a class="reference internal" href="#fsl">2.2. FSL</a></li>
+<li><a class="reference internal" href="#ants">2.3. ANTs</a></li>
 </ul>
 </li>
 </ul>

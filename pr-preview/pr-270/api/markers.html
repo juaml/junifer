@@ -313,7 +313,7 @@ extracted from the NIFTI without any issue. However, it has been
 reported that some preprocessed data might not have the correct TR in
 the NIFTI header.</p>
 <p>ALFF/fALFF are computed using a bandpass butterworth filter. See
-<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.11.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.11.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.11.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.11.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
 details.</p>
 </dd></dl>
 
@@ -370,7 +370,7 @@ extracted from the NIFTI without any issue. However, it has been
 reported that some preprocessed data might not have the correct TR in
 the NIFTI header.</p>
 <p>ALFF/fALFF are computed using a bandpass butterworth filter. See
-<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.11.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.11.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.butter.html#scipy.signal.butter" title="(in SciPy v1.11.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.butter()</span></code></a> and <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.filtfilt.html#scipy.signal.filtfilt" title="(in SciPy v1.11.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.signal.filtfilt()</span></code></a> for more
 details.</p>
 </dd></dl>
 
@@ -520,7 +520,7 @@ pipeline step.</p>
 <dt><strong>aggregation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method (default “mean”).</p>
 </dd>
 <dt><strong>correlation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Any method that can be passed to
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.2.0.dev0+514.g6493d2a4bc)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v2.3.0.dev0+68.g5fc2ed2703)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
 </dd>
 <dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
 signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
@@ -1724,6 +1724,593 @@ with this as a parameter. The dictionary has the following keys:</p>
 
 </dd></dl>
 
+<section id="module-junifer.markers.complexity">
+<span id="complexity"></span><h2>Complexity<a class="headerlink" href="#module-junifer.markers.complexity" title="Link to this heading">#</a></h2>
+<p>Provide imports for complexity sub-package.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.markers.complexity.HurstExponent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">HurstExponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.HurstExponent" title="Link to this definition">#</a></dt>
+<dd><p>Class for Hurst exponent of a time series.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
+</dd>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
+</dd>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default None).</p>
+</dd>
+<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
+signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
+If None, will not apply any mask (default None).</p>
+</dd>
+<dt><strong>params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the Hurst exponent calculation function. For more
+information, check out <code class="docutils literal notranslate"><span class="pre">junifer.markers.utils._hurst_exponent</span></code>.
+If None, value is set to {“method”: “dfa”} (default None).</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, it will use the class name
+(default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This class is not automatically imported by junifer and requires you to
+import it explicitly. You can do it programmatically by
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">junifer.markers.complexity</span> <span class="pre">import</span> <span class="pre">HurstExponent</span></code> or in the YAML by
+<code class="docutils literal notranslate"><span class="pre">with:</span> <span class="pre">junifer.markers.complexity</span></code>.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.markers.complexity.HurstExponent.compute_complexity">
+<span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.HurstExponent.compute_complexity" title="Link to this definition">#</a></dt>
+<dd><p>Compute complexity measure.</p>
+<p>Take a timeseries of brain areas, and calculate Hurst exponent using
+the detrended fluctuation analysis method assuming the data is
+monofractal [1].</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>extracted_bold_values</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The BOLD values extracted via parcel aggregation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>The values after computing complexity measure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.fractal_dfa</span></code></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r83df1f1dd723-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Peng, C.; Havlin, S.; Stanley, H.E.; Goldberger, A.L.
+Quantification of scaling exponents and crossover phenomena in
+nonstationary heartbeat time series.
+Chaos Interdiscip. J. Nonlinear Sci., 5, 82-87, 1995.</p>
+</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.markers.complexity.MultiscaleEntropyAUC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">MultiscaleEntropyAUC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.MultiscaleEntropyAUC" title="Link to this definition">#</a></dt>
+<dd><p>Class for AUC of multiscale entropy of a time series.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
+</dd>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
+</dd>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default None).</p>
+</dd>
+<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
+signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
+If None, will not apply any mask (default None).</p>
+</dd>
+<dt><strong>params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the AUC of multiscale entropy calculation
+function. For more information, check out
+<code class="docutils literal notranslate"><span class="pre">junifer.markers.utils._multiscale_entropy_auc</span></code>. If None, value
+is set to {“m”: 2, “tol”: 0.5, “scale”: 10} (default None).</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, it will use the class name
+(default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This class is not automatically imported by junifer and requires you to
+import it explicitly. You can do it programmatically by
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">junifer.markers.complexity</span> <span class="pre">import</span> <span class="pre">MultiscaleEntropyAUC</span></code> or in the
+YAML by <code class="docutils literal notranslate"><span class="pre">with:</span> <span class="pre">junifer.markers.complexity</span></code>.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.markers.complexity.MultiscaleEntropyAUC.compute_complexity">
+<span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.MultiscaleEntropyAUC.compute_complexity" title="Link to this definition">#</a></dt>
+<dd><p>Compute complexity measure.</p>
+<p>Take a timeseries of brain areas, calculate multiscale entropy for each
+region and calculate the AUC of the entropy curves leading to a
+region-wise map of the brain [1].</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>extracted_bold_values</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The BOLD values extracted via parcel aggregation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>The values after computing complexity measure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_multiscale</span></code></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rf2b13f0caa7e-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Costa, M., Goldberger, A. L., &amp; Peng, C. K.
+Multiscale entropy analysis of complex physiologic time series.
+Physical review letters, 89(6), 068102, 2002.</p>
+</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.markers.complexity.PermEntropy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">PermEntropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.PermEntropy" title="Link to this definition">#</a></dt>
+<dd><p>Class for permutation entropy of a time series.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
+</dd>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
+</dd>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default None).</p>
+</dd>
+<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
+signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
+If None, will not apply any mask (default None).</p>
+</dd>
+<dt><strong>params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the permutation entropy calculation function.
+For more information, check out
+<code class="docutils literal notranslate"><span class="pre">junifer.markers.utils._perm_entropy</span></code>. If None, value is set to
+{“m”: 2, “delay”: 1} (default None).</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, it will use the class name
+(default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This class is not automatically imported by junifer and requires you to
+import it explicitly. You can do it programmatically by
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">junifer.markers.complexity</span> <span class="pre">import</span> <span class="pre">PermEntropy</span></code> or in the YAML by
+<code class="docutils literal notranslate"><span class="pre">with:</span> <span class="pre">junifer.markers.complexity</span></code>.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.markers.complexity.PermEntropy.compute_complexity">
+<span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.PermEntropy.compute_complexity" title="Link to this definition">#</a></dt>
+<dd><p>Compute complexity measure.</p>
+<p>Take a timeseries of brain areas, and calculate permutation entropy
+according to the method outlined in [1].</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>extracted_bold_values</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The BOLD values extracted via parcel aggregation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>The values after computing complexity measure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_permutation</span></code></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r2505e57878de-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Bandt, C., &amp; Pompe, B. (2002)
+Permutation entropy: a natural complexity measure for time
+series.
+Physical review letters, 88(17), 174102.</p>
+</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.markers.complexity.RangeEntropy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">RangeEntropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.RangeEntropy" title="Link to this definition">#</a></dt>
+<dd><p>Class for range entropy of a time series.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
+</dd>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
+</dd>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default None).</p>
+</dd>
+<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
+signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
+If None, will not apply any mask (default None).</p>
+</dd>
+<dt><strong>params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the range entropy calculation function. For more
+information, check out <code class="docutils literal notranslate"><span class="pre">junifer.markers.utils._range_entropy</span></code>.
+If None, value is set to {“m”: 2, “tol”: 0.5, “delay”: 1}
+(default None).</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, it will use the class name
+(default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This class is not automatically imported by junifer and requires you to
+import it explicitly. You can do it programmatically by
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">junifer.markers.complexity</span> <span class="pre">import</span> <span class="pre">RangeEntropy</span></code> or in the YAML by
+<code class="docutils literal notranslate"><span class="pre">with:</span> <span class="pre">junifer.markers.complexity</span></code>.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.markers.complexity.RangeEntropy.compute_complexity">
+<span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.RangeEntropy.compute_complexity" title="Link to this definition">#</a></dt>
+<dd><p>Compute complexity measure.</p>
+<p>Take a timeseries of brain areas, and calculate
+range entropy according to the method outlined in [1].</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>extracted_bold_values</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The BOLD values extracted via parcel aggregation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>The values after computing complexity measure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_range</span></code></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r9006377e3144-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>A. Omidvarnia et al. (2018)
+Range Entropy: A Bridge between Signal Complexity and
+Self-Similarity.
+Entropy, vol. 20, no. 12, p. 962, 2018.</p>
+</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.markers.complexity.RangeEntropyAUC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">RangeEntropyAUC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.RangeEntropyAUC" title="Link to this definition">#</a></dt>
+<dd><p>Class for AUC of range entropy values of a time series over r = 0 to 1.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
+</dd>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
+</dd>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default None).</p>
+</dd>
+<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
+signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
+If None, will not apply any mask (default None).</p>
+</dd>
+<dt><strong>params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the range entropy calculation function. For more
+information, check out <code class="docutils literal notranslate"><span class="pre">junifer.markers.utils._range_entropy</span></code>.
+If None, value is set to {“m”: 2, “delay”: 1, “n_r”: 10}
+(default None).</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, it will use the class name
+(default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This class is not automatically imported by junifer and requires you to
+import it explicitly. You can do it programmatically by
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">junifer.markers.complexity</span> <span class="pre">import</span> <span class="pre">RangeEntropyAUC</span></code> or in the YAML
+by <code class="docutils literal notranslate"><span class="pre">with:</span> <span class="pre">junifer.markers.complexity</span></code>.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.markers.complexity.RangeEntropyAUC.compute_complexity">
+<span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.RangeEntropyAUC.compute_complexity" title="Link to this definition">#</a></dt>
+<dd><p>Compute complexity measure.</p>
+<p>Take a timeseries of brain areas, calculate range entropy according to
+the method outlined in [1] across the range of tolerance value r from 0
+to 1, and compute its area under the curve.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>extracted_bold_values</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The BOLD values extracted via parcel aggregation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>The values after computing complexity measure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_range</span></code></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r3d74d60238bb-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>A. Omidvarnia et al. (2018)
+Range Entropy: A Bridge between Signal Complexity and
+Self-Similarity.
+Entropy, vol. 20, no. 12, p. 962, 2018.</p>
+</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.markers.complexity.SampleEntropy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">SampleEntropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.SampleEntropy" title="Link to this definition">#</a></dt>
+<dd><p>Class for sample entropy of a time series.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
+</dd>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
+</dd>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default None).</p>
+</dd>
+<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
+signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
+If None, will not apply any mask (default None).</p>
+</dd>
+<dt><strong>params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the sample entropy calculation function.
+For more information, check out
+<code class="docutils literal notranslate"><span class="pre">junifer.markers.utils._sample_entropy</span></code>.
+If None, value is set to
+{“m”: 2, “delay”: 1, “tol”: 0.5} (default None).</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, it will use the class name
+(default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This class is not automatically imported by junifer and requires you to
+import it explicitly. You can do it programmatically by
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">junifer.markers.complexity</span> <span class="pre">import</span> <span class="pre">SampleEntropy</span></code> or in the YAML by
+<code class="docutils literal notranslate"><span class="pre">with:</span> <span class="pre">junifer.markers.complexity</span></code>.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.markers.complexity.SampleEntropy.compute_complexity">
+<span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.SampleEntropy.compute_complexity" title="Link to this definition">#</a></dt>
+<dd><p>Compute complexity measure.</p>
+<p>Take a timeseries of brain areas, and calculate sample entropy [1].</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>extracted_bold_values</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The BOLD values extracted via parcel aggregation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>The values after computing complexity measure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_sample</span></code></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r344f9ae5d0e9-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Richman, J., Moorman, J.
+Physiological time-series analysis using approximate entropy and
+sample entropy.
+Am. J. Physiol. Heart Circ. Physiol., 278 (6) (2000),
+pp. H2039-2049</p>
+</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.markers.complexity.WeightedPermEntropy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">WeightedPermEntropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.WeightedPermEntropy" title="Link to this definition">#</a></dt>
+<dd><p>Class for weighted permutation entropy of a time series.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
+<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.data.parcellations.list_parcellations()</span></code></a>.</p>
+</dd>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
+</dd>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
+<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.stats.get_aggfunc_by_name()</span></code></a> (default None).</p>
+</dd>
+<dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
+signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
+If None, will not apply any mask (default None).</p>
+</dd>
+<dt><strong>params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the weighted permutation entropy calculation
+function.
+For more information, check out
+<code class="docutils literal notranslate"><span class="pre">junifer.markers.utils._weighted_perm_entropy</span></code>. If None, value
+is set to {“m”: 2, “delay”: 1} (default None).</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, it will use the class name
+(default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This class is not automatically imported by junifer and requires you to
+import it explicitly. You can do it programmatically by
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">junifer.markers.complexity</span> <span class="pre">import</span> <span class="pre">WeightedPermEntropy</span></code> or in the
+YAML by <code class="docutils literal notranslate"><span class="pre">with:</span> <span class="pre">junifer.markers.complexity</span></code>.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.markers.complexity.WeightedPermEntropy.compute_complexity">
+<span class="sig-name descname"><span class="pre">compute_complexity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">extracted_bold_values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.WeightedPermEntropy.compute_complexity" title="Link to this definition">#</a></dt>
+<dd><p>Compute complexity measure.</p>
+<p>Take a timeseries of brain areas, and calculate weighted permutation
+entropy according to the method outlined in [1].</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>extracted_bold_values</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The BOLD values extracted via parcel aggregation.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></dt><dd><p>The values after computing complexity measure.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><code class="xref py py-obj docutils literal notranslate"><span class="pre">neurokit2.entropy_permutation</span></code></dt><dd></dd>
+</dl>
+</div>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r93709931421c-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<p>Fadlallah, B., Chen, B., Keil, A., &amp; Principe, J. (2013)
+Weighted-permutation entropy: A complexity measure for
+time series incorporating amplitude information.
+Physical Review E, 87(2), 022911.</p>
+</div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.markers.complexity.find_spec">
+<span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">find_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.find_spec" title="Link to this definition">#</a></dt>
+<dd><p>Return the spec for the specified module.</p>
+<p>First, sys.modules is checked to see if the module was already imported. If
+so, then sys.modules[name].__spec__ is returned. If that happens to be
+set to None, then ValueError is raised. If the module is not in
+sys.modules, then sys.meta_path is searched for a suitable spec with the
+value of ‘path’ given to the finders. None is returned if no spec could
+be found.</p>
+<p>If the name is for submodule (contains a dot), the parent module is
+automatically imported.</p>
+<p>The name and package arguments work the same as importlib.import_module().
+In other words, relative module names (with leading dots) work.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.markers.complexity.raise_error">
+<span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">raise_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass=&lt;class</span> <span class="pre">'ValueError'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.raise_error" title="Link to this definition">#</a></dt>
+<dd><p>Raise error, but first log it.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>msg</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The message for the exception.</p>
+</dd>
+<dt><strong>klass</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subclass</span></code> of <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></a>, optional</span></dt><dd><p>The subclass of Exception to raise using (default ValueError).</p>
+</dd>
+<dt><strong>exception</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></a>, optional</span></dt><dd><p>The original exception to follow up on (default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 
         </article>
@@ -1851,6 +2438,39 @@ with this as a parameter. The dictionary has the following keys:</p>
 </li>
 <li><a class="reference internal" href="#junifer.markers.TemporalSNRSpheres"><code class="docutils literal notranslate"><span class="pre">TemporalSNRSpheres</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.markers.TemporalSNRSpheres.aggregate"><code class="docutils literal notranslate"><span class="pre">TemporalSNRSpheres.aggregate()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-junifer.markers.complexity">Complexity</a><ul>
+<li><a class="reference internal" href="#junifer.markers.complexity.HurstExponent"><code class="docutils literal notranslate"><span class="pre">HurstExponent</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.complexity.HurstExponent.compute_complexity"><code class="docutils literal notranslate"><span class="pre">HurstExponent.compute_complexity()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.markers.complexity.MultiscaleEntropyAUC"><code class="docutils literal notranslate"><span class="pre">MultiscaleEntropyAUC</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.complexity.MultiscaleEntropyAUC.compute_complexity"><code class="docutils literal notranslate"><span class="pre">MultiscaleEntropyAUC.compute_complexity()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.markers.complexity.PermEntropy"><code class="docutils literal notranslate"><span class="pre">PermEntropy</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.complexity.PermEntropy.compute_complexity"><code class="docutils literal notranslate"><span class="pre">PermEntropy.compute_complexity()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.markers.complexity.RangeEntropy"><code class="docutils literal notranslate"><span class="pre">RangeEntropy</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.complexity.RangeEntropy.compute_complexity"><code class="docutils literal notranslate"><span class="pre">RangeEntropy.compute_complexity()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.markers.complexity.RangeEntropyAUC"><code class="docutils literal notranslate"><span class="pre">RangeEntropyAUC</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.complexity.RangeEntropyAUC.compute_complexity"><code class="docutils literal notranslate"><span class="pre">RangeEntropyAUC.compute_complexity()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.markers.complexity.SampleEntropy"><code class="docutils literal notranslate"><span class="pre">SampleEntropy</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.complexity.SampleEntropy.compute_complexity"><code class="docutils literal notranslate"><span class="pre">SampleEntropy.compute_complexity()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.markers.complexity.WeightedPermEntropy"><code class="docutils literal notranslate"><span class="pre">WeightedPermEntropy</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.markers.complexity.WeightedPermEntropy.compute_complexity"><code class="docutils literal notranslate"><span class="pre">WeightedPermEntropy.compute_complexity()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.markers.complexity.find_spec"><code class="docutils literal notranslate"><span class="pre">find_spec()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.markers.complexity.raise_error"><code class="docutils literal notranslate"><span class="pre">raise_error()</span></code></a></li>
 </ul>
 </li>
 </ul>
