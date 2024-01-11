@@ -35,6 +35,7 @@ def test_get_dependency_information_short() -> None:
     assert list(dependency_information.keys()) == [
         "click",
         "numpy",
+        "scipy",
         "datalad",
         "pandas",
         "nibabel",
@@ -51,6 +52,7 @@ def test_get_dependency_information_long() -> None:
     for key in [
         "click",
         "numpy",
+        "scipy",
         "datalad",
         "pandas",
         "nibabel",
