@@ -1,9 +1,5 @@
 [build-system]
-requires = [
-  "setuptools >= 61.0.0",
-  "wheel",
-  "setuptools_scm[toml] >= 6.2"
-]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -45,9 +41,9 @@ dependencies = [
     "pandas>=1.4.0,<2.2",
     "nibabel>=3.2.0,<5.11",
     "nilearn>=0.9.0,<=0.11.0",
-    "sqlalchemy>=1.4.27,<= 2.1.0",
+    "sqlalchemy>=1.4.27,<=2.1.0",
     "ruamel.yaml>=0.17,<0.18",
-    "importlib_metadata; python_version < '3.10'",
+    "importlib_metadata; python_version<'3.10'",
     "h5py>=3.8.0,<3.10",
 ]
 dynamic = ["version"]
@@ -153,7 +149,7 @@ extend-exclude = [
     "examples",
     "tools",
 ]
-extend-ignore = [
+ignore = [
     # Use of `functools.lru_cache` or `functools.cache` on methods can lead to
     # memory leaks. The cache may retain instance references, preventing garbage
     # collection.
@@ -187,6 +183,8 @@ known-third-party =[
     "nilearn",
     "sqlalchemy",
     "yaml",
+    "bct",
+    "neurokit2",
     "pytest",
 ]
 
