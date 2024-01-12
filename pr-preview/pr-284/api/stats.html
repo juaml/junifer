@@ -299,10 +299,11 @@
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name to identify the function. Currently supported names and
 corresponding functions are:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">winsorized_mean</span></code> -&gt; <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mstats.winsorize.html#scipy.stats.mstats.winsorize" title="(in SciPy v1.11.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.winsorize()</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mean</span></code> -&gt; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.mean.html#numpy.mean" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.mean()</span></code></a></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">std</span></code> -&gt; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.std.html#numpy.std" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.std()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">winsorized_mean</span></code> -&gt; <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mstats.winsorize.html#scipy.stats.mstats.winsorize" title="(in SciPy v1.11.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mstats.winsorize()</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">trim_mean</span></code> -&gt; <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.trim_mean.html#scipy.stats.trim_mean" title="(in SciPy v1.11.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.trim_mean()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mode</span></code> -&gt; <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.mode.html#scipy.stats.mode" title="(in SciPy v1.11.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.mode()</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">std</span></code> -&gt; <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.std.html#numpy.std" title="(in NumPy v1.26)"><code class="xref py py-func docutils literal notranslate"><span class="pre">numpy.std()</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">count</span></code> -&gt; <a class="reference internal" href="#junifer.stats.count" title="junifer.stats.count"><code class="xref py py-func docutils literal notranslate"><span class="pre">count()</span></code></a></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">select</span></code> -&gt; <a class="reference internal" href="#junifer.stats.select" title="junifer.stats.select"><code class="xref py py-func docutils literal notranslate"><span class="pre">select()</span></code></a></p></li>
 </ul>
@@ -346,6 +347,13 @@ applied as specified in <code class="docutils literal notranslate"><span class="
 </dd>
 </dl>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If both <code class="docutils literal notranslate"><span class="pre">pick</span></code> and <code class="docutils literal notranslate"><span class="pre">drop</span></code> are None or
+if both <code class="docutils literal notranslate"><span class="pre">pick</span></code> and <code class="docutils literal notranslate"><span class="pre">drop</span></code> are not None.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </dd></dl>
 
@@ -361,7 +369,7 @@ applied as specified in <code class="docutils literal notranslate"><span class="
 <dt><strong>axis</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The axis to calculate winsorized mean on (default None).</p>
 </dd>
 <dt><strong>**win_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Dictionary containing the keyword arguments for the winsorize function.
-E.g. <code class="docutils literal notranslate"><span class="pre">{'limits':</span> <span class="pre">[0.1,</span> <span class="pre">0.1]}</span></code>.</p>
+E.g., <code class="docutils literal notranslate"><span class="pre">{'limits':</span> <span class="pre">[0.1,</span> <span class="pre">0.1]}</span></code>.</p>
 </dd>
 </dl>
 </dd>
