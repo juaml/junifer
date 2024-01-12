@@ -7,7 +7,7 @@
 from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
-from scipy.stats import trim_mean
+from scipy.stats import mode, trim_mean
 from scipy.stats.mstats import winsorize
 
 from .utils import logger, raise_error
@@ -24,10 +24,11 @@ def get_aggfunc_by_name(
         Name to identify the function. Currently supported names and
         corresponding functions are:
 
-        * ``winsorized_mean`` -> :func:`scipy.stats.mstats.winsorize`
         * ``mean`` -> :func:`numpy.mean`
-        * ``std`` -> :func:`numpy.std`
+        * ``winsorized_mean`` -> :func:`scipy.stats.mstats.winsorize`
         * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
+        * ``mode`` -> :func:`scipy.stats.mode`
+        * ``std`` -> :func:`numpy.std`
         * ``count`` -> :func:`.count`
         * ``select`` -> :func:`.select`
 
@@ -40,6 +41,7 @@ def get_aggfunc_by_name(
     -------
     function
         Respective function with ``func_params`` parameter set.
+
     """
     from functools import partial  # local import to avoid sphinx error
 
@@ -51,6 +53,7 @@ def get_aggfunc_by_name(
         "trim_mean",
         "count",
         "select",
+        "mode",
     }
     if func_params is None:
         func_params = {}
@@ -93,6 +96,8 @@ def get_aggfunc_by_name(
         elif pick is not None and drop is not None:
             raise_error("Either pick or drop must be specified, not both.")
         func = partial(select, **func_params)
+    elif name == "mode":
+        func = partial(mode, **func_params)
     else:
         raise_error(
             f"Function {name} unknown. Please provide any of "
@@ -115,6 +120,7 @@ def count(data: np.ndarray, axis: int = 0) -> np.ndarray:
     -------
     numpy.ndarray
         Number of elements along the given axis.
+
     """
     ax_size = data.shape[axis]
     if axis < 0:
@@ -137,7 +143,7 @@ def winsorized_mean(
         The axis to calculate winsorized mean on (default None).
     **win_params : dict
         Dictionary containing the keyword arguments for the winsorize function.
-        E.g. ``{'limits': [0.1, 0.1]}``.
+        E.g., ``{'limits': [0.1, 0.1]}``.
 
     Returns
     -------
@@ -149,6 +155,7 @@ def winsorized_mean(
     --------
     scipy.stats.mstats.winsorize :
         The winsorize function used in this function.
+
     """
     win_dat = winsorize(data, axis=axis, **win_params)
     win_mean = win_dat.mean(axis=axis)
@@ -180,6 +187,13 @@ def select(
     numpy.ndarray
         Subset of the inputted data with the select settings
         applied as specified in ``select_params``.
+
+    Raises
+    ------
+    ValueError
+        If both ``pick`` and ``drop`` are None or
+        if both ``pick`` and ``drop`` are not None.
+
     """
 
     if pick is None and drop is None:
