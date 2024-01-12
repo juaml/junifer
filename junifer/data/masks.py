@@ -280,13 +280,16 @@ def get_mask(  # noqa: C901
                     f"because the item ({inherited_mask_item}) does not exist."
                 )
             mask_img = extra_input[inherited_mask_item]["data"]
-            mask_space = extra_input[inherited_mask_item]["space"]
+            mask_space = target_data["space"]
         # Starting with new mask
         else:
             # Load mask
             mask_object, _, mask_space = load_mask(
                 mask_name, path_only=False, resolution=resolution
             )
+            # Replace mask space with target space if mask's space is inherit
+            if mask_space == "inherit":
+                mask_space = target_data["space"]
             # If mask is callable like from nilearn
             if callable(mask_object):
                 if mask_params is None:
@@ -312,17 +315,17 @@ def get_mask(  # noqa: C901
 
     # Multiple masks, need intersection / union
     if len(all_masks) > 1:
-        # Filter out "inherit" and make a set for spaces
-        filtered_spaces = set(filter(lambda x: x != "inherit", all_spaces))
+        # Make a set of unique spaces
+        unique_spaces = set(all_spaces)
         # Intersect / union of masks only if all masks are in the same space
-        if len(filtered_spaces) == 1:
+        if len(unique_spaces) == 1:
             mask_img = intersect_masks(all_masks, **intersect_params)
             # Store the mask space for further checks
-            mask_space = next(iter(filtered_spaces))
+            mask_space = next(iter(unique_spaces))
         else:
             raise_error(
                 msg=(
-                    f"Masks are in different spaces: {filtered_spaces}, "
+                    f"Masks are in different spaces: {unique_spaces}, "
                     "unable to merge."
                 ),
                 klass=RuntimeError,
