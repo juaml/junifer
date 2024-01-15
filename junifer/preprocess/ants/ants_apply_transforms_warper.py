@@ -3,7 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import subprocess
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -14,14 +13,13 @@ from typing import (
     Optional,
     Tuple,
     Union,
-    cast,
 )
 
 import nibabel as nib
 import numpy as np
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, raise_error
+from ...utils import logger, raise_error, run_ext_cmd
 from ..base import BasePreprocessor
 
 
@@ -125,11 +123,6 @@ class _AntsApplyTransformsWarper(BasePreprocessor):
         pathlib.Path
             The path to the resampled reference image.
 
-        Raises
-        ------
-        RuntimeError
-            If ANTs command fails.
-
         """
         # Get the min of the voxel sizes from input and use it as the
         # resolution
@@ -153,29 +146,7 @@ class _AntsApplyTransformsWarper(BasePreprocessor):
             "3 3",  # Lanczos windowed sinc
         ]
         # Call ResampleImage
-        resample_image_cmd_str = " ".join(resample_image_cmd)
-        logger.info(
-            f"ResampleImage command to be executed: {resample_image_cmd_str}"
-        )
-        resample_image_process = subprocess.run(
-            resample_image_cmd_str,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=True,  # needed for respecting $PATH
-            check=False,
-        )
-        if resample_image_process.returncode == 0:
-            logger.info(
-                "ResampleImage succeeded with the following output: "
-                f"{resample_image_process.stdout}"
-            )
-        else:
-            raise_error(
-                msg="ResampleImage failed with the following error: "
-                f"{resample_image_process.stdout}",
-                klass=RuntimeError,
-            )
+        run_ext_cmd(name="ResampleImage", cmd=resample_image_cmd)
 
         # Create a tempfile for warped output
         apply_transforms_out_path = tempdir / "input_warped.nii.gz"
@@ -192,39 +163,12 @@ class _AntsApplyTransformsWarper(BasePreprocessor):
             f"-o {apply_transforms_out_path.resolve()}",
         ]
         # Call antsApplyTransforms
-        apply_transforms_cmd_str = " ".join(apply_transforms_cmd)
-        logger.info(
-            "antsApplyTransforms command to be executed: "
-            f"{apply_transforms_cmd_str}"
-        )
-        apply_transforms_process = subprocess.run(
-            apply_transforms_cmd_str,  # string needed with shell=True
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=True,  # needed for respecting $PATH
-            check=False,
-        )
-        if apply_transforms_process.returncode == 0:
-            logger.info(
-                "antsApplyTransforms succeeded with the following output: "
-                f"{apply_transforms_process.stdout}"
-            )
-        else:
-            raise_error(
-                msg=(
-                    "antsApplyTransforms failed with the following error: "
-                    f"{apply_transforms_process.stdout}"
-                ),
-                klass=RuntimeError,
-            )
+        run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
 
         # Load nifti
         output_img = nib.load(apply_transforms_out_path)
 
-        # Stupid casting
-        output_img = cast("Nifti1Image", output_img)
-        return output_img, resample_image_out_path
+        return output_img, resample_image_out_path  # type: ignore
 
     def preprocess(
         self,
