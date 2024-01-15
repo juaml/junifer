@@ -1,4 +1,4 @@
-"""Provide class for warping via FSL FLIRT."""
+"""Provide class for warping via ANTs antsApplyTransforms."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
@@ -29,10 +29,10 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
-class _ApplyWarper(BasePreprocessor):
-    """Class for warping NIfTI images via FSL FLIRT.
+class _AntsApplyTransformsWarper(BasePreprocessor):
+    """Class for warping NIfTI images via ANTs antsApplyTransforms.
 
-    Wraps FSL FLIRT ``applywarp``.
+    Warps ANTs ``antsApplyTransforms``.
 
     Parameters
     ----------
@@ -52,9 +52,9 @@ class _ApplyWarper(BasePreprocessor):
         List[Dict[str, Union[str, bool, List[str]]]]
     ] = [
         {
-            "name": "fsl",
+            "name": "ants",
             "optional": False,
-            "commands": ["flirt", "applywarp"],
+            "commands": ["ResampleImage", "antsApplyTransforms"],
         },
     ]
 
@@ -101,13 +101,13 @@ class _ApplyWarper(BasePreprocessor):
         # Does not add any new keys
         return input
 
-    def _run_applywarp(
+    def _run_apply_transforms(
         self,
         input_data: Dict,
         ref_path: Path,
         warp_path: Path,
     ) -> Tuple["Nifti1Image", Path]:
-        """Run ``applywarp``.
+        """Run ``antsApplyTransforms``.
 
         Parameters
         ----------
@@ -128,7 +128,7 @@ class _ApplyWarper(BasePreprocessor):
         Raises
         ------
         RuntimeError
-            If FSL commands fail.
+            If ANTs command fails.
 
         """
         # Get the min of the voxel sizes from input and use it as the
@@ -136,84 +136,95 @@ class _ApplyWarper(BasePreprocessor):
         resolution = np.min(input_data["data"].header.get_zooms()[:3])
 
         # Create element-specific tempdir for storing post-warping assets
-        tempdir = WorkDirManager().get_element_tempdir(prefix="applywarp")
+        tempdir = WorkDirManager().get_element_tempdir(
+            prefix="applytransforms"
+        )
 
         # Create a tempfile for resampled reference output
-        flirt_out_path = tempdir / "reference_resampled.nii.gz"
-        # Set flirt command
-        flirt_cmd = [
-            "flirt",
-            "-interp spline",
-            f"-in {ref_path.resolve()}",
-            f"-ref {ref_path.resolve()}",
-            f"-applyisoxfm {resolution}",
-            f"-out {flirt_out_path.resolve()}",
+        resample_image_out_path = tempdir / "reference_resampled.nii.gz"
+        # Set ResampleImage command
+        resample_image_cmd = [
+            "ResampleImage",
+            "3",  # image dimension
+            f"{ref_path.resolve()}",
+            f"{resample_image_out_path.resolve()}",
+            f"{resolution}x{resolution}x{resolution}",
+            "0",  # option for spacing and not size
+            "3 3",  # Lanczos windowed sinc
         ]
-        # Call flirt
-        flirt_cmd_str = " ".join(flirt_cmd)
-        logger.info(f"flirt command to be executed: {flirt_cmd_str}")
-        flirt_process = subprocess.run(
-            flirt_cmd_str,
+        # Call ResampleImage
+        resample_image_cmd_str = " ".join(resample_image_cmd)
+        logger.info(
+            f"ResampleImage command to be executed: {resample_image_cmd_str}"
+        )
+        resample_image_process = subprocess.run(
+            resample_image_cmd_str,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             shell=True,  # needed for respecting $PATH
             check=False,
         )
-        if flirt_process.returncode == 0:
+        if resample_image_process.returncode == 0:
             logger.info(
-                "flirt succeeded with the following output: "
-                f"{flirt_process.stdout}"
+                "ResampleImage succeeded with the following output: "
+                f"{resample_image_process.stdout}"
             )
         else:
             raise_error(
-                msg="flirt failed with the following error: "
-                f"{flirt_process.stdout}",
+                msg="ResampleImage failed with the following error: "
+                f"{resample_image_process.stdout}",
                 klass=RuntimeError,
             )
 
-        # TODO(synchon): Modify reference or not?
-
         # Create a tempfile for warped output
-        applywarp_out_path = tempdir / "input_warped.nii.gz"
-        # Set applywarp command
-        applywarp_cmd = [
-            "applywarp",
-            "--interp=spline",
+        apply_transforms_out_path = tempdir / "input_warped.nii.gz"
+        # Set antsApplyTransforms command
+        apply_transforms_cmd = [
+            "antsApplyTransforms",
+            "-d 3",
+            "-e 3",
+            "-n LanczosWindowedSinc",
             f"-i {input_data['path'].resolve()}",
-            f"-r {flirt_out_path.resolve()}",  # use resampled reference
-            f"-w {warp_path.resolve()}",
-            f"-o {applywarp_out_path.resolve()}",
+            # use resampled reference
+            f"-r {resample_image_out_path.resolve()}",
+            f"-t {warp_path.resolve()}",
+            f"-o {apply_transforms_out_path.resolve()}",
         ]
-        # Call applywarp
-        applywarp_cmd_str = " ".join(applywarp_cmd)
-        logger.info(f"applywarp command to be executed: {applywarp_cmd_str}")
-        applywarp_process = subprocess.run(
-            applywarp_cmd_str,  # string needed with shell=True
+        # Call antsApplyTransforms
+        apply_transforms_cmd_str = " ".join(apply_transforms_cmd)
+        logger.info(
+            "antsApplyTransforms command to be executed: "
+            f"{apply_transforms_cmd_str}"
+        )
+        apply_transforms_process = subprocess.run(
+            apply_transforms_cmd_str,  # string needed with shell=True
             stdin=subprocess.DEVNULL,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             shell=True,  # needed for respecting $PATH
             check=False,
         )
-        if applywarp_process.returncode == 0:
+        if apply_transforms_process.returncode == 0:
             logger.info(
-                "applywarp succeeded with the following output: "
-                f"{applywarp_process.stdout}"
+                "antsApplyTransforms succeeded with the following output: "
+                f"{apply_transforms_process.stdout}"
             )
         else:
             raise_error(
-                msg="applywarp failed with the following error: "
-                f"{applywarp_process.stdout}",
+                msg=(
+                    "antsApplyTransforms failed with the following error: "
+                    f"{apply_transforms_process.stdout}"
+                ),
                 klass=RuntimeError,
             )
 
         # Load nifti
-        output_img = nib.load(applywarp_out_path)
+        output_img = nib.load(apply_transforms_out_path)
 
         # Stupid casting
         output_img = cast("Nifti1Image", output_img)
-        return output_img, flirt_out_path
+        return output_img, resample_image_out_path
 
     def preprocess(
         self,
@@ -244,7 +255,7 @@ class _ApplyWarper(BasePreprocessor):
             If ``extra_input`` is None.
 
         """
-        logger.debug("Warping via FSL using ApplyWarper")
+        logger.debug("Warping via ANTs using antsApplyTransforms")
         # Check for extra inputs
         if extra_input is None:
             raise_error(
@@ -259,7 +270,7 @@ class _ApplyWarper(BasePreprocessor):
         warp = extra_input["Warp"]
         # Replace original data with warped data and add resampled reference
         # path
-        input["data"], input["reference_path"] = self._run_applywarp(
+        input["data"], input["reference_path"] = self._run_apply_transforms(
             input_data=to_warp_input,
             ref_path=ref_input["path"],
             warp_path=warp["path"],

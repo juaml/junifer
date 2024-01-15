@@ -231,7 +231,9 @@ def get_parcellation(
     Raises
     ------
     RuntimeError
-        If parcellations are in different spaces and they need to be merged.
+        If parcellations are in different spaces and they need to be merged or
+        if warp / transformation file extension is not ".mat" or ".h5" or
+        if external tool execution failed.
     ValueError
         If ``extra_input`` is None when ``target_data``'s space is native.
 
@@ -302,55 +304,107 @@ def get_parcellation(
         element_tempdir = WorkDirManager().get_element_tempdir(
             prefix="parcellations"
         )
-
         # Create an element-scoped tempfile for warped output
-        applywarp_out_path = element_tempdir / "parcellation_warped.nii.gz"
-        # Set applywarp command
-        applywarp_cmd = [
-            "applywarp",
-            "--interp=nn",
-            f"-i {prewarp_parcellation_path.resolve()}",
-            # use resampled reference
-            f"-r {target_data['reference_path'].resolve()}",
-            f"-w {extra_input['Warp']['path'].resolve()}",
-            f"-o {applywarp_out_path.resolve()}",
-        ]
-        # Call applywarp
-        applywarp_cmd_str = " ".join(applywarp_cmd)
-        logger.info(f"applywarp command to be executed: {applywarp_cmd_str}")
-        applywarp_process = subprocess.run(
-            applywarp_cmd_str,  # string needed with shell=True
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=True,  # needed for respecting $PATH
-            check=False,
+        warped_parcellation_path = (
+            element_tempdir / "parcellation_warped.nii.gz"
         )
-        # Check for success or failure
-        if applywarp_process.returncode == 0:
+
+        # Check for warp file type to use correct tool
+        warp_file_ext = extra_input["Warp"]["path"].suffix
+        if warp_file_ext == ".mat":
+            logger.debug("Using FSL for parcellation warping")
+            # Set applywarp command
+            applywarp_cmd = [
+                "applywarp",
+                "--interp=nn",
+                f"-i {prewarp_parcellation_path.resolve()}",
+                # use resampled reference
+                f"-r {target_data['reference_path'].resolve()}",
+                f"-w {extra_input['Warp']['path'].resolve()}",
+                f"-o {warped_parcellation_path.resolve()}",
+            ]
+            # Call applywarp
+            applywarp_cmd_str = " ".join(applywarp_cmd)
             logger.info(
-                "applywarp succeeded with the following output: "
-                f"{applywarp_process.stdout}"
+                f"applywarp command to be executed: {applywarp_cmd_str}"
             )
+            applywarp_process = subprocess.run(
+                applywarp_cmd_str,  # string needed with shell=True
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                shell=True,  # needed for respecting $PATH
+                check=False,
+            )
+            # Check for success or failure
+            if applywarp_process.returncode == 0:
+                logger.info(
+                    "applywarp succeeded with the following output: "
+                    f"{applywarp_process.stdout}"
+                )
+            else:
+                raise_error(
+                    msg="applywarp failed with the following error: "
+                    f"{applywarp_process.stdout}",
+                    klass=RuntimeError,
+                )
+        elif warp_file_ext == ".h5":
+            logger.debug("Using ANTs for parcellation warping")
+            # Set antsApplyTransforms command
+            apply_transforms_cmd = [
+                "antsApplyTransforms",
+                "-d 3",
+                "-e 3",
+                "-n 'GenericLabel[NearestNeighbor]'",
+                f"-i {prewarp_parcellation_path.resolve()}",
+                # use resampled reference
+                f"-r {target_data['reference_path'].resolve()}",
+                f"-t {extra_input['Warp']['path'].resolve()}",
+                f"-o {warped_parcellation_path.resolve()}",
+            ]
+            # Call antsApplyTransforms
+            apply_transforms_cmd_str = " ".join(apply_transforms_cmd)
+            logger.info(
+                "antsApplyTransforms command to be executed: "
+                f"{apply_transforms_cmd_str}"
+            )
+            apply_transforms_process = subprocess.run(
+                apply_transforms_cmd_str,  # string needed with shell=True
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                shell=True,  # needed for respecting $PATH
+                check=False,
+            )
+            if apply_transforms_process.returncode == 0:
+                logger.info(
+                    "antsApplyTransforms succeeded with the following output: "
+                    f"{apply_transforms_process.stdout}"
+                )
+            else:
+                raise_error(
+                    msg=(
+                        "antsApplyTransforms failed with the following error: "
+                        f"{apply_transforms_process.stdout}"
+                    ),
+                    klass=RuntimeError,
+                )
         else:
             raise_error(
-                msg="applywarp failed with the following error: "
-                f"{applywarp_process.stdout}",
+                msg=(
+                    "Unknown warp / transformation file extension: "
+                    f"{warp_file_ext}"
+                ),
                 klass=RuntimeError,
             )
 
         # Load nifti
-        resampled_parcellation_img = nib.load(applywarp_out_path)
+        resampled_parcellation_img = nib.load(warped_parcellation_path)
 
         # Delete tempdir
         WorkDirManager().delete_tempdir(tempdir)
 
-        # Stupid casting
-        resampled_parcellation_img = typing.cast(
-            "Nifti1Image", resampled_parcellation_img
-        )
-
-    return resampled_parcellation_img, labels
+    return resampled_parcellation_img, labels  # type: ignore
 
 
 def load_parcellation(
