@@ -392,7 +392,9 @@ def test_get_mask_inherit() -> None:
 
         # Now get the mask using the inherit functionality, passing the
         # computed mask as extra data
-        extra_input = {"BOLD_MASK": {"data": gm_mask}}
+        extra_input = {
+            "BOLD_MASK": {"data": gm_mask, "space": input["BOLD"]["space"]}
+        }
         input["BOLD"]["mask_item"] = "BOLD_MASK"
         mask2 = get_mask(
             masks="inherit", target_data=input["BOLD"], extra_input=extra_input
@@ -405,11 +407,9 @@ def test_get_mask_inherit() -> None:
 @pytest.mark.parametrize(
     "masks,params",
     [
-        (["GM_prob0.2", "compute_brain_mask"], {}),
-        (
-            ["GM_prob0.2", "compute_brain_mask"],
-            {"threshold": 0.2},
-        ),
+        (["GM_prob0.2", "GM_prob0.2_cortex"], {}),
+        (["compute_brain_mask", "compute_background_mask"], {}),
+        (["compute_brain_mask", "compute_epi_mask"], {}),
     ],
 )
 def test_get_mask_multiple(

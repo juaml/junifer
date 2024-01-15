@@ -574,7 +574,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             # this allows to use "inherit" down the pipeline
             if extra_input is not None:
                 logger.debug("Setting mask_item")
-                extra_input["BOLD_mask"] = {"data": mask_img}
+                extra_input["BOLD_mask"] = {
+                    "data": mask_img,
+                    "space": input["space"],
+                }
                 input["mask_item"] = "BOLD_mask"
 
         logger.info("Cleaning image")
