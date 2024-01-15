@@ -4,7 +4,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import subprocess
 import typing
 from pathlib import Path
 from typing import (
@@ -30,7 +29,7 @@ from nilearn.masking import (
 )
 
 from ..pipeline import WorkDirManager
-from ..utils.logging import logger, raise_error
+from ..utils import logger, raise_error, run_ext_cmd
 from .utils import closest_resolution
 
 
@@ -201,8 +200,7 @@ def get_mask(  # noqa: C901
     RuntimeError
         If masks are in different spaces and they need to be intersected /
         unionized or
-        if warp / transformation file extension is not ".mat" or ".h5" or
-        if external tool execution failed.
+        if warp / transformation file extension is not ".mat" or ".h5".
     ValueError
         If extra key is provided in addition to mask name in ``masks`` or
         if no mask is provided or
@@ -384,30 +382,8 @@ def get_mask(  # noqa: C901
                 f"-o {warped_mask_path.resolve()}",
             ]
             # Call applywarp
-            applywarp_cmd_str = " ".join(applywarp_cmd)
-            logger.info(
-                f"applywarp command to be executed: {applywarp_cmd_str}"
-            )
-            applywarp_process = subprocess.run(
-                applywarp_cmd_str,  # string needed with shell=True
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                shell=True,  # needed for respecting $PATH
-                check=False,
-            )
-            # Check for success or failure
-            if applywarp_process.returncode == 0:
-                logger.info(
-                    "applywarp succeeded with the following output: "
-                    f"{applywarp_process.stdout}"
-                )
-            else:
-                raise_error(
-                    msg="applywarp failed with the following error: "
-                    f"{applywarp_process.stdout}",
-                    klass=RuntimeError,
-                )
+            run_ext_cmd(name="applywarp", cmd=applywarp_cmd)
+
         elif warp_file_ext == ".h5":
             logger.debug("Using ANTs for mask warping")
             # Set antsApplyTransforms command
@@ -423,32 +399,8 @@ def get_mask(  # noqa: C901
                 f"-o {warped_mask_path.resolve()}",
             ]
             # Call antsApplyTransforms
-            apply_transforms_cmd_str = " ".join(apply_transforms_cmd)
-            logger.info(
-                "antsApplyTransforms command to be executed: "
-                f"{apply_transforms_cmd_str}"
-            )
-            apply_transforms_process = subprocess.run(
-                apply_transforms_cmd_str,  # string needed with shell=True
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                shell=True,  # needed for respecting $PATH
-                check=False,
-            )
-            if apply_transforms_process.returncode == 0:
-                logger.info(
-                    "antsApplyTransforms succeeded with the following output: "
-                    f"{apply_transforms_process.stdout}"
-                )
-            else:
-                raise_error(
-                    msg=(
-                        "antsApplyTransforms failed with the following error: "
-                        f"{apply_transforms_process.stdout}"
-                    ),
-                    klass=RuntimeError,
-                )
+            run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
+
         else:
             raise_error(
                 msg=(
