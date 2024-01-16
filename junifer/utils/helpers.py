@@ -30,7 +30,7 @@ def run_ext_cmd(name: str, cmd: List[str]) -> None:
     logger.info(f"{name} command to be executed:\n{cmd_str}")
     # Run command via subprocess
     process = subprocess.run(
-        cmd,  # string needed with shell=True
+        cmd_str,  # string needed with shell=True
         stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
