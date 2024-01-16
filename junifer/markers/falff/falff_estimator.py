@@ -4,10 +4,11 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+import subprocess
 import typing
 from functools import lru_cache
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Tuple, Union, cast
 
 import nibabel as nib
 import numpy as np
@@ -16,7 +17,7 @@ from scipy.fft import fft, fftfreq
 
 from ...pipeline import WorkDirManager
 from ...pipeline.singleton import singleton
-from ...utils import logger, run_ext_cmd
+from ...utils import logger, raise_error
 
 
 if TYPE_CHECKING:
@@ -53,6 +54,42 @@ class ALFFEstimator:
         if self.temp_dir_path is not None:
             WorkDirManager().delete_tempdir(self.temp_dir_path)
 
+    @staticmethod
+    def _run_afni_cmd(cmd: str) -> None:
+        """Run AFNI command.
+
+        Parameters
+        ----------
+        cmd : str
+            AFNI command to be executed.
+
+        Raises
+        ------
+        RuntimeError
+            If AFNI command fails.
+
+        """
+        logger.info(f"AFNI command to be executed: {cmd}")
+        process = subprocess.run(
+            cmd,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            shell=True,
+            check=False,
+        )
+        if process.returncode == 0:
+            logger.info(
+                "AFNI command succeeded with the following output: "
+                f"{process.stdout}"
+            )
+        else:
+            raise_error(
+                msg="AFNI command failed with the following error: "
+                f"{process.stdout}",
+                klass=RuntimeError,
+            )
+
     def _compute_alff_afni(
         self,
         data: Union["Nifti1Image", "Nifti2Image"],
@@ -84,6 +121,11 @@ class ALFFEstimator:
         pathlib.Path
             The path to the fALFF map as NIfTI.
 
+        Raises
+        ------
+        RuntimeError
+            If the AFNI commands fails due to some issues.
+
         """
         # Note: self.temp_dir_path is sure to exist before proceeding, so
         #       types checks are ignored further on.
@@ -108,36 +150,31 @@ class ALFFEstimator:
             self.temp_dir_path / "temp_falff"  # type: ignore
         )
 
-        # Set 3dRSFC command
-        bp_cmd = [
-            "3dRSFC",
-            f"-prefix {falff_afni_out_path_prefix.resolve()}",
-            f"-input {nifti_in_file_path.resolve()}",
-            f"-band {highpass} {lowpass}",
-            "-no_rsfa -nosat -nodetrend",
-        ]
+        bp_cmd = (
+            "3dRSFC "
+            f"-prefix {falff_afni_out_path_prefix.resolve()} "
+            f"-input {nifti_in_file_path.resolve()} "
+            f"-band {highpass} {lowpass} "
+            "-no_rsfa -nosat -nodetrend "
+        )
         if tr is not None:
-            bp_cmd.append(f"-dt {tr}")
-        # Call 3dRSFC
-        run_ext_cmd(name="3dRSFC", cmd=bp_cmd)
+            bp_cmd += f"-dt {tr} "
+        self._run_afni_cmd(bp_cmd)
 
-        # Convert alff output to nifti
-        convert_alff_cmd = [
-            "3dAFNItoNIFTI",
-            f"-prefix {alff_fname.resolve()}",
-            f"{falff_afni_out_path_prefix}_ALFF+tlrc.BRIK",
-        ]
-        # Call 3dAFNItoNIFTI
-        run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_alff_cmd)
+        # Convert afni's output to nifti
+        convert_cmd = (
+            "3dAFNItoNIFTI "
+            f"-prefix {alff_fname.resolve()} "
+            f"{falff_afni_out_path_prefix}_ALFF+tlrc.BRIK "
+        )
+        self._run_afni_cmd(convert_cmd)
 
-        # Convert falff output to nifti
-        convert_falff_cmd = [
-            "3dAFNItoNIFTI",
-            f"-prefix {falff_fname.resolve()}",
-            f"{falff_afni_out_path_prefix}_fALFF+tlrc.BRIK",
-        ]
-        # Call 3dAFNItoNIFTI
-        run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_falff_cmd)
+        convert_cmd = (
+            "3dAFNItoNIFTI "
+            f"-prefix {falff_fname.resolve()} "
+            f"{falff_afni_out_path_prefix}_fALFF+tlrc.BRIK "
+        )
+        self._run_afni_cmd(convert_cmd)
 
         # Cleanup intermediate files
         for fname in self.temp_dir_path.glob("temp_*"):  # type: ignore
@@ -146,8 +183,10 @@ class ALFFEstimator:
         # Load niftis
         alff_img = nib.load(alff_fname)
         falff_img = nib.load(falff_fname)
-
-        return alff_img, falff_img, alff_fname, falff_fname  # type: ignore
+        # Cast image type
+        alff_img = cast("Nifti1Image", alff_img)
+        falff_img = cast("Nifti1Image", falff_img)
+        return alff_img, falff_img, alff_fname, falff_fname
 
     def _compute_alff_python(
         self,
