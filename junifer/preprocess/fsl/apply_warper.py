@@ -3,7 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import subprocess
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -14,14 +13,13 @@ from typing import (
     Optional,
     Tuple,
     Union,
-    cast,
 )
 
 import nibabel as nib
 import numpy as np
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, raise_error
+from ...utils import logger, raise_error, run_ext_cmd
 from ..base import BasePreprocessor
 
 
@@ -125,11 +123,6 @@ class _ApplyWarper(BasePreprocessor):
         pathlib.Path
             The path to the resampled reference image.
 
-        Raises
-        ------
-        RuntimeError
-            If FSL commands fail.
-
         """
         # Get the min of the voxel sizes from input and use it as the
         # resolution
@@ -150,29 +143,7 @@ class _ApplyWarper(BasePreprocessor):
             f"-out {flirt_out_path.resolve()}",
         ]
         # Call flirt
-        flirt_cmd_str = " ".join(flirt_cmd)
-        logger.info(f"flirt command to be executed: {flirt_cmd_str}")
-        flirt_process = subprocess.run(
-            flirt_cmd_str,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=True,  # needed for respecting $PATH
-            check=False,
-        )
-        if flirt_process.returncode == 0:
-            logger.info(
-                "flirt succeeded with the following output: "
-                f"{flirt_process.stdout}"
-            )
-        else:
-            raise_error(
-                msg="flirt failed with the following error: "
-                f"{flirt_process.stdout}",
-                klass=RuntimeError,
-            )
-
-        # TODO(synchon): Modify reference or not?
+        run_ext_cmd(name="flirt", cmd=flirt_cmd)
 
         # Create a tempfile for warped output
         applywarp_out_path = tempdir / "input_warped.nii.gz"
@@ -186,34 +157,12 @@ class _ApplyWarper(BasePreprocessor):
             f"-o {applywarp_out_path.resolve()}",
         ]
         # Call applywarp
-        applywarp_cmd_str = " ".join(applywarp_cmd)
-        logger.info(f"applywarp command to be executed: {applywarp_cmd_str}")
-        applywarp_process = subprocess.run(
-            applywarp_cmd_str,  # string needed with shell=True
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=True,  # needed for respecting $PATH
-            check=False,
-        )
-        if applywarp_process.returncode == 0:
-            logger.info(
-                "applywarp succeeded with the following output: "
-                f"{applywarp_process.stdout}"
-            )
-        else:
-            raise_error(
-                msg="applywarp failed with the following error: "
-                f"{applywarp_process.stdout}",
-                klass=RuntimeError,
-            )
+        run_ext_cmd(name="applywarp", cmd=applywarp_cmd)
 
         # Load nifti
         output_img = nib.load(applywarp_out_path)
 
-        # Stupid casting
-        output_img = cast("Nifti1Image", output_img)
-        return output_img, flirt_out_path
+        return output_img, flirt_out_path  # type: ignore
 
     def preprocess(
         self,

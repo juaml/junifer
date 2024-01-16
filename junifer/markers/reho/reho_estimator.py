@@ -6,11 +6,10 @@
 
 
 import hashlib
-import subprocess
 from functools import lru_cache
 from itertools import product
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, cast
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 import nibabel as nib
 import numpy as np
@@ -20,7 +19,7 @@ from scipy.stats import rankdata
 
 from ...pipeline import WorkDirManager
 from ...pipeline.singleton import singleton
-from ...utils import logger, raise_error
+from ...utils import logger, raise_error, run_ext_cmd
 
 
 if TYPE_CHECKING:
@@ -112,11 +111,6 @@ class ReHoEstimator:
         pathlib.Path
             The path to the ReHo map as NIfTI.
 
-        Raises
-        ------
-        RuntimeError
-            If the 3dReHo command fails due to some issue.
-
         Notes
         -----
         For more information on the publication, please check [1]_ , and for
@@ -174,30 +168,10 @@ class ReHoEstimator:
         else:
             reho_cmd.append(f"-nneigh {nneigh}")
         # Call 3dReHo
-        reho_cmd_str = " ".join(reho_cmd)
-        logger.info(f"3dReHo command to be executed: {reho_cmd_str}")
-        reho_process = subprocess.run(
-            reho_cmd_str,  # string needed with shell=True
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=True,  # needed for respecting $PATH
-            check=False,
-        )
-        if reho_process.returncode == 0:
-            logger.info(
-                "3dReHo succeeded with the following output: "
-                f"{reho_process.stdout}"
-            )
-        else:
-            raise_error(
-                msg="3dReHo failed with the following error: "
-                f"{reho_process.stdout}",
-                klass=RuntimeError,
-            )
+        run_ext_cmd(name="3dReHo", cmd=reho_cmd)
 
         # SHA256 for bypassing memmap
-        sha256_params = hashlib.sha256(bytes(reho_cmd_str, "utf-8"))
+        sha256_params = hashlib.sha256(bytes(" ".join(reho_cmd), "utf-8"))
         # Create element-scoped tempdir so that the ReHo map is
         # available later as get_coordinates and the like need it
         # in ReHoSpheres and the like to transform to other template
@@ -216,27 +190,7 @@ class ReHoEstimator:
             f"{reho_afni_out_path_prefix}+tlrc.BRIK",
         ]
         # Call 3dAFNItoNIFTI
-        convert_cmd_str = " ".join(convert_cmd)
-        logger.info(f"3dAFNItoNIFTI command to be executed: {convert_cmd_str}")
-        convert_process = subprocess.run(
-            convert_cmd_str,  # string needed with shell=True
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=True,  # needed for respecting $PATH
-            check=False,
-        )
-        if convert_process.returncode == 0:
-            logger.info(
-                "3dAFNItoNIFTI succeeded with the following output: "
-                f"{convert_process.stdout}"
-            )
-        else:
-            raise_error(
-                msg="3dAFNItoNIFTI failed with the following error: "
-                f"{convert_process.stdout}",
-                klass=RuntimeError,
-            )
+        run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_cmd)
 
         # Cleanup intermediate files
         for fname in self.temp_dir_path.glob("reho*"):  # type: ignore
@@ -244,9 +198,8 @@ class ReHoEstimator:
 
         # Load nifti
         output_data = nib.load(reho_afni_to_nifti_out_path)
-        # Stupid casting
-        output_data = cast("Nifti1Image", output_data)
-        return output_data, reho_afni_to_nifti_out_path
+
+        return output_data, reho_afni_to_nifti_out_path  # type: ignore
 
     def _compute_reho_python(
         self,

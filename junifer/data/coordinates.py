@@ -4,7 +4,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import subprocess
 import typing
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -14,7 +13,7 @@ import pandas as pd
 from numpy.typing import ArrayLike
 
 from ..pipeline import WorkDirManager
-from ..utils.logging import logger, raise_error, warn_with_log
+from ..utils import logger, raise_error, run_ext_cmd, warn_with_log
 
 
 # Path to the VOIs
@@ -231,6 +230,8 @@ def get_coordinates(
 
     Raises
     ------
+    RuntimeError
+        If warp / transformation file extension is not ".mat" or ".h5".
     ValueError
         If ``extra_input`` is None when ``target_data``'s space is native.
 
@@ -286,30 +287,7 @@ def get_coordinates(
                 f"sed -i 1d {transformed_coords_path.resolve()}",
             ]
             # Call img2imgcoord
-            img2imgcoord_cmd_str = " ".join(img2imgcoord_cmd)
-            logger.info(
-                f"img2imgcoord command to be executed: {img2imgcoord_cmd_str}"
-            )
-            img2imgcoord_process = subprocess.run(
-                img2imgcoord_cmd_str,  # string needed with shell=True
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                shell=True,  # needed for respecting $PATH
-                check=False,
-            )
-            # Check for success or failure
-            if img2imgcoord_process.returncode == 0:
-                logger.info(
-                    "img2imgcoord succeeded with the following output: "
-                    f"{img2imgcoord_process.stdout}"
-                )
-            else:
-                raise_error(
-                    msg="img2imgcoord failed with the following error: "
-                    f"{img2imgcoord_process.stdout}",
-                    klass=RuntimeError,
-                )
+            run_ext_cmd(name="img2imgcoord", cmd=img2imgcoord_cmd)
 
             # Load coordinates
             seeds = np.loadtxt(transformed_coords_path)
@@ -345,36 +323,10 @@ def get_coordinates(
                 f"-t {extra_input['Warp']['path'].resolve()};",
             ]
             # Call antsApplyTransformsToPoints
-            apply_transforms_to_points_cmd_str = " ".join(
-                apply_transforms_to_points_cmd
+            run_ext_cmd(
+                name="antsApplyTransformsToPoints",
+                cmd=apply_transforms_to_points_cmd,
             )
-            logger.info(
-                "antsApplyTransformsToPoints command to be executed: "
-                f"{apply_transforms_to_points_cmd_str}"
-            )
-            apply_transforms_to_points_process = subprocess.run(
-                # string needed with shell=True
-                apply_transforms_to_points_cmd_str,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                shell=True,  # needed for respecting $PATH
-                check=False,
-            )
-            if apply_transforms_to_points_process.returncode == 0:
-                logger.info(
-                    "antsApplyTransformsToPoints succeeded with the following "
-                    f"output: {apply_transforms_to_points_process.stdout}"
-                )
-            else:
-                raise_error(
-                    msg=(
-                        "antsApplyTransformsToPoints failed with the "
-                        "following error: "
-                        f"{apply_transforms_to_points_process.stdout}"
-                    ),
-                    klass=RuntimeError,
-                )
 
             # Load coordinates
             seeds = np.loadtxt(
