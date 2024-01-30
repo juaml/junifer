@@ -500,9 +500,7 @@ def _kendall_w_reho(
     numerator = (12 * np.sum(np.square(np.sum(timeseries_ranks, axis=0)))) - (
         3 * m**2 * n * (n + 1) ** 2
     )
-    denominator = (m**2 * n * (n**2 - 1)) - (
-        m * np.sum(tied_rank_corrections)
-    )
+    denominator = (m**2 * n * (n**2 - 1)) - (m * np.sum(tied_rank_corrections))
 
     if denominator == 0:
         kcc = 1.0

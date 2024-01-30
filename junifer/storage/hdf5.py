@@ -679,9 +679,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         elif isinstance(data, list):
             if self.force_float32:
                 data = [
-                    x.astype(dtype=np.dtype("float32"), casting="same_kind")
-                    if x.dtype == np.dtype("float64")
-                    else x
+                    (
+                        x.astype(
+                            dtype=np.dtype("float32"), casting="same_kind"
+                        )
+                        if x.dtype == np.dtype("float64")
+                        else x
+                    )
                     for x in data
                 ]
         # Handle cases for existing and new entry
