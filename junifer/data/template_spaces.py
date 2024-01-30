@@ -13,7 +13,7 @@ from ..utils import logger, raise_error
 
 def get_xfm(
     src: str, dst: str, xfms_dir: Union[str, Path, None] = None
-) -> Path:
+) -> Path:  # pragma: no cover
     """Fetch warp files to convert from ``src`` to ``dst``.
 
     Parameters
