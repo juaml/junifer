@@ -575,6 +575,7 @@ def _queue_slurm(
         (default None).
     config : dict
         The configuration to be used for queueing the job.
+
     """
     pass
     # logger.debug("Creating SLURM job")

@@ -18,6 +18,7 @@ def get_testing_data(fname: str) -> Path:
     -------
     pathlib.Path
         The absolute path to the file.
+
     """
     t_path = Path(__file__).parent / "data" / fname
     if not t_path.exists():

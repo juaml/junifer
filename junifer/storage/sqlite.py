@@ -366,6 +366,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The element as a dictionary.
         meta : dict
             The metadata as a dictionary.
+
         """
         # Get sqlalchemy engine
         engine = self.get_engine(element=element)

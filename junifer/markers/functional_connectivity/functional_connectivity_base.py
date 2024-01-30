@@ -84,6 +84,7 @@ class FunctionalConnectivityBase(BaseMarker):
         -------
         list of str
             The list of data types that can be used as input for this marker.
+
         """
         return ["BOLD"]
 

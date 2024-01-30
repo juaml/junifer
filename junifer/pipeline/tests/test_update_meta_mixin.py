@@ -38,6 +38,7 @@ def test_UpdateMetaMixin(
         The dependencies of the pipeline step.
     expected : set
         The expected dependencies.
+
     """
 
     class TestUpdateMetaMixin(UpdateMetaMixin):

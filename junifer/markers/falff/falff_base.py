@@ -184,6 +184,7 @@ class ALFFBase(BaseMarker):
             other data kind that needs to be used in the computation. For
             example, the functional connectivity markers can make use of the
             confounds if available (default None).
+
         """
         raise_error(
             "_postprocess must be implemented", klass=NotImplementedError

@@ -141,6 +141,7 @@ def _validate_verbose(
     -------
     str or int
         The validated value.
+
     """
     if isinstance(value, int):
         return value

@@ -131,6 +131,7 @@ def element_to_prefix(element: Dict) -> str:
     -------
     str
         The element converted to prefix.
+
     """
     logger.debug(f"Converting element {element} to prefix.")
     prefix = "element"

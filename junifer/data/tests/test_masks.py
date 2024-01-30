@@ -343,6 +343,7 @@ def test_nilearn_compute_masks(
         Parameters to pass to the function.
     resample : bool
         Whether to resample the mask to the target data.
+
     """
     reader = DefaultDataReader()
     with SPMAuditoryTestingDataGrabber() as dg:
@@ -423,6 +424,7 @@ def test_get_mask_multiple(
         Masks to get, junifer style.
     params : dict
         Parameters to pass to the intersect_masks function.
+
     """
     reader = DefaultDataReader()
     with SPMAuditoryTestingDataGrabber() as dg:

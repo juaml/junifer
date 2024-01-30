@@ -37,6 +37,7 @@ class CrossParcellationFC(BaseMarker):
     name : str, optional
         The name of the marker. If None, will use the class name
         (default None).
+
     """
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}

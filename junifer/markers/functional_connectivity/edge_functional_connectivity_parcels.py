@@ -97,6 +97,7 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
 
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``col_names`` : the column labels for the computed values as list
+
         """
         parcel_aggregation = ParcelAggregation(
             parcellation=self.parcellation,

@@ -57,6 +57,7 @@ def _create_chunk(
     ------
     ValueError
         If `kind` is not one of ['vector', 'matrix', 'timeseries'].
+
     """
     if kind in ["vector", "matrix"]:
         features_data = np.concatenate(chunk_data, axis=-1)
