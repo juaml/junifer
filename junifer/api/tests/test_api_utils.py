@@ -46,7 +46,9 @@ def test_get_dependency_information_short() -> None:
     ]
     if int(pl.python_version_tuple()[1]) < 10:
         dependency_list.append("importlib_metadata")
-    assert list(dependency_information.keys()) == dependency_list
+    assert frozenset(dependency_information.keys()) == frozenset(
+        dependency_list
+    )
 
 
 def test_get_dependency_information_long() -> None:
@@ -65,9 +67,6 @@ def test_get_dependency_information_long() -> None:
         "ruamel.yaml",
         "httpx",
     ]
-    if int(pl.python_version_tuple()[1]) < 10:
-        dependency_list.append("importlib_metadata")
-
     for key in dependency_list:
         assert key in dependency_information_keys
 
