@@ -66,7 +66,7 @@ def get_xfm(
 
     # Set URL
     url = (
-        "https://gin.g-node.org/synchon/human-template-xfms/raw/main/xfms/"
+        "https://gin.g-node.org/juaml/human-template-xfms/raw/main/xfms/"
         f"{xfm_file_prefix}/{xfm_file}"
     )
     # Create the file before proceeding
