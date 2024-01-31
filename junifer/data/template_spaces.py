@@ -4,9 +4,12 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union
+from typing import Any, Dict, Optional, Union
 
 import httpx
+import nibabel as nib
+import numpy as np
+from templateflow import api as tflow
 
 from ..utils import logger, raise_error
 
@@ -89,3 +92,62 @@ def get_xfm(
                     f.write(chunk)
 
     return xfm_file_path
+
+
+def get_template(
+    space: str,
+    target_data: Dict[str, Any],
+    extra_input: Optional[Dict[str, Any]] = None,
+) -> nib.Nifti1Image:
+    """Get template for the space, tailored for the target image.
+
+    Parameters
+    ----------
+    space : str
+        The name of the template space.
+    target_data : dict
+        The corresponding item of the data object for which the template space
+        will be loaded.
+    extra_input : dict, optional
+        The other fields in the data object. Useful for accessing other data
+        types (default None).
+
+    Returns
+    -------
+    Nifti1Image
+        The template image.
+
+    Raises
+    ------
+    ValueError
+        If ``space`` is invalid.
+    RuntimeError
+        If template in the required resolution is not found.
+
+    """
+    # Check for invalid space; early check to raise proper error
+    if space not in tflow.templates():
+        raise_error(f"Unknown template space: {space}")
+
+    # Get the min of the voxels sizes and use it as the resolution
+    target_img = target_data["data"]
+    resolution = np.min(target_img.header.get_zooms()[:3]).astype(int)
+
+    # Retrieve template
+    try:
+        template_path = tflow.get(
+            space,
+            raise_empty=True,
+            resolution=resolution,
+            suffix="T1w",
+            desc=None,
+            extension="nii.gz",
+        )
+    except Exception:  # noqa: BLE001
+        raise_error(
+            f"Template {space} not found in the required resolution "
+            f"{resolution}",
+            klass=RuntimeError,
+        )
+    else:
+        return nib.load(template_path)  # type: ignore

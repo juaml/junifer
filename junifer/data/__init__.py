@@ -25,6 +25,6 @@ from .masks import (
     get_mask,
 )
 
-from .template_spaces import get_xfm
+from .template_spaces import get_template, get_xfm
 
 from . import utils
