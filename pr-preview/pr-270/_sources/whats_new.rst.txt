@@ -8,7 +8,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.4.dev480 (2024-01-11)
+Junifer 0.0.4.dev553 (2024-02-01)
 ---------------------------------
 
 Bugfixes
@@ -35,6 +35,9 @@ Bugfixes
   spaces when required by `Synchon Mandal`_ (:gh:`282`)
 - Allow :class:`junifer.pipeline.WorkDirManager` to accept str via the
   ``workdir`` parameter by `Synchon Mandal`_ (:gh:`283`)
+- Avoid warping mask preprocessed with :class:`.fMRIPrepConfoundRemover` and
+  used by markers with ``mask="inherit"`` in subject-native template space by
+  `Fede Raimondo`_ and `Synchon Mandal`_ (:gh:`284`)
 - Pass down input path if input space is "native" for ``ReHoEstimator`` and
   ``ALFFEstimator``, else use respective compute maps by `Fede Raimondo`_ and
   `Synchon Mandal`_ (:gh:`286`)
@@ -85,6 +88,10 @@ Enhancements
   :class:`.fMRIPrepConfoundRemover` to it by `Synchon Mandal`_ (:gh:`260`)
 - Add ``space`` information to existing datagrabbers, masks, parcellations and
   coordinates by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
+- Add ``mode`` as an aggregation function option in
+  :func:`.get_aggfunc_by_name` by `Synchon Mandal`_ (:gh:`287`)
+- Adapt :class:`.BOLDWarper` to use FSL or ANTs depending on warp file
+  extension by `Synchon Mandal`_ (:gh:`293`)
 
 
 Features
@@ -111,6 +118,14 @@ Features
 - Introduce :class:`.DMCC13Benchmark` to access `DMCC13benchmark dataset
   <https://openneuro.org/datasets/ds003452/versions/1.0.1>`_ by `Synchon
   Mandal`_ (:gh:`271`)
+- Introduce
+  ``junifer.preprocess.ants.ants_apply_transforms_warper._AntsApplyTransformsWarper``
+  to wrap ANTs' ``antsApplyTransforms`` by `Synchon Mandal`_ (:gh:`293`)
+- Introduce :func:`.run_ext_cmd` to take care of the boilerplate code for
+  running external commands from FSL, ANTs and others by `Synchon Mandal`_
+  (:gh:`295`)
+- Introduce :func:`.get_xfm` to fetch transformation files for moving between
+  template spaces by `Synchon Mandal`_ (:gh:`297`)
 
 
 Misc
@@ -135,6 +150,10 @@ Misc
 - Make :class:`.BOLDWarper` tool-agnostic by moving it from
   ``junifer.preprocess.fsl`` to :mod:`junifer.preprocess` by `Synchon Mandal`_
   (:gh:`288`)
+- Add support for accessing ANTs' ``ResampleImage`` via Docker wrapper by
+  `Synchon Mandal`_ (:gh:`293`)
+- Update ``pyproject.toml`` and add FAIR shield in ``README.md`` by `Synchon
+  Mandal`_ (:gh:`294`)
 
 
 Junifer 0.0.3 (2023-07-21)

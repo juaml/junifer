@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="9.2.4. Stats" href="stats.html" /><link rel="prev" title="9.1.5. Storage" href="storage.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="9.2.5. Stats" href="stats.html" /><link rel="prev" title="9.1.5. Storage" href="storage.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>9.2.1. Parcellations - junifer documentation</title>
@@ -215,13 +215,14 @@
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">9.2.1. Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-junifer.data.coordinates">9.2.2. Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-junifer.data.masks">9.2.3. Masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stats.html">9.2.4. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline.html">9.2.5. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline.html#module-junifer.pipeline.registry">9.2.6. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">9.2.7. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">9.2.8. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html">9.2.9. Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="onthefly.html">9.2.10. On-the-fly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-junifer.data.template_spaces">9.2.4. Template Spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html">9.2.5. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline.html">9.2.6. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline.html#module-junifer.pipeline.registry">9.2.7. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">9.2.8. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">9.2.9. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">9.2.10. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="onthefly.html">9.2.11. On-the-fly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configs.html">9.3.1. Configs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="nilearn.html">9.4.1. Nilearn</a></li>
 </ul>
@@ -295,7 +296,8 @@ kinds that needs to be used in the computation of parcellations
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If parcellations are in different spaces and they need to be merged.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If parcellations are in different spaces and they need to be merged or
+if warp / transformation file extension is not “.mat” or “.h5”.</p>
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
 </dd>
@@ -454,6 +456,8 @@ kinds that needs to be used in the computation of coordinates
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If warp / transformation file extension is not “.mat” or “.h5”.</p>
+</dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
 </dd>
 </dl>
@@ -580,7 +584,8 @@ kinds that needs to be used in the computation of masks (default None).</p>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If masks are in different spaces and they need to be intersected /
-unionized.</p>
+unionized or
+if warp / transformation file extension is not “.mat” or “.h5”.</p>
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If extra key is provided in addition to mask name in <code class="docutils literal notranslate"><span class="pre">masks</span></code> or
 if no mask is provided or
@@ -678,6 +683,41 @@ False or if the mask name is a built-in mask.</p>
 </dd></dl>
 
 </section>
+<section id="module-junifer.data.template_spaces">
+<span id="template-spaces"></span><h1><span class="section-number">9.2.4. </span>Template Spaces<a class="headerlink" href="#module-junifer.data.template_spaces" title="Link to this heading">#</a></h1>
+<p>Provide functions for template spaces.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.template_spaces.get_xfm">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.template_spaces.</span></span><span class="sig-name descname"><span class="pre">get_xfm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xfms_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.template_spaces.get_xfm" title="Link to this definition">#</a></dt>
+<dd><p>Fetch warp files to convert from <code class="docutils literal notranslate"><span class="pre">src</span></code> to <code class="docutils literal notranslate"><span class="pre">dst</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>src</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The template space to transform from.</p>
+</dd>
+<dt><strong>dst</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The template space to transform to.</p>
+</dd>
+<dt><strong>xfms_dir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>Path where the retrieved transformation files are stored.
+The default location is “$HOME/junifer/data/xfms” (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></dt><dd><p>The path to the transformation file.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If there is a problem fetching files.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 
         </article>
       </div>
@@ -689,7 +729,7 @@ False or if the mask name is a built-in mask.</p>
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">9.2.4. </span>Stats</div>
+                <div class="title"><span class="section-number">9.2.5. </span>Stats</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -754,6 +794,10 @@ False or if the mask name is a built-in mask.</p>
 <li><a class="reference internal" href="#junifer.data.masks.list_masks"><code class="docutils literal notranslate"><span class="pre">list_masks()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.masks.load_mask"><code class="docutils literal notranslate"><span class="pre">load_mask()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.masks.register_mask"><code class="docutils literal notranslate"><span class="pre">register_mask()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-junifer.data.template_spaces">9.2.4. Template Spaces</a><ul>
+<li><a class="reference internal" href="#junifer.data.template_spaces.get_xfm"><code class="docutils literal notranslate"><span class="pre">get_xfm()</span></code></a></li>
 </ul>
 </li>
 </ul>
