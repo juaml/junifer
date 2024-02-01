@@ -30,6 +30,7 @@ from nilearn.masking import (
 
 from ..pipeline import WorkDirManager
 from ..utils import logger, raise_error, run_ext_cmd
+from .template_spaces import get_template, get_xfm
 from .utils import closest_resolution
 
 
@@ -198,30 +199,43 @@ def get_mask(  # noqa: C901
     Raises
     ------
     RuntimeError
-        If masks are in different spaces and they need to be intersected /
-        unionized or
-        if warp / transformation file extension is not ".mat" or ".h5".
+        If warp / transformation file extension is not ".mat" or ".h5".
     ValueError
         If extra key is provided in addition to mask name in ``masks`` or
         if no mask is provided or
         if ``masks = "inherit"`` but ``extra_input`` is None or ``mask_item``
         is None or ``mask_items``'s value is not in ``extra_input`` or
         if callable parameters are passed to non-callable mask or
-        if multiple masks are provided and their spaces do not match or
         if parameters are passed to :func:`nilearn.masking.intersect_masks`
         when there is only one mask or
         if ``extra_input`` is None when ``target_data``'s space is native.
 
     """
+    # Check pre-requirements for space manipulation
+    target_space = target_data["space"]
+    # Set target standard space to target space
+    target_std_space = target_space
+    # Extra data type requirement check if target space is native
+    if target_space == "native":
+        # Check for extra inputs
+        if extra_input is None:
+            raise_error(
+                "No extra input provided, requires `Warp` and `T1w` "
+                "data types in particular for transformation to "
+                f"{target_data['space']} space for further computation."
+            )
+        # Set target standard space to warp file space source
+        target_std_space = extra_input["Warp"]["src"]
+
     # Get the min of the voxels sizes and use it as the resolution
     target_img = target_data["data"]
-    inherited_mask_item = target_data.get("mask_item", None)
     resolution = np.min(target_img.header.get_zooms()[:3])
 
+    # Convert masks to list if not already
     if not isinstance(masks, list):
         masks = [masks]
 
-    # Check that dicts have only one key
+    # Check that masks passed as dicts have only one key
     invalid_elements = [
         x for x in masks if isinstance(x, dict) and len(x) != 1
     ]
@@ -248,9 +262,15 @@ def get_mask(  # noqa: C901
 
     if len(true_masks) == 0:
         raise_error("No mask was passed. At least one mask is required.")
+
+    # Get the data type for the input data type's mask
+    inherited_mask_item = target_data.get("mask_item", None)
+
+    # Create component-scoped tempdir
+    tempdir = WorkDirManager().get_tempdir(prefix="masks")
+
     # Get all the masks
     all_masks = []
-    all_spaces = []
     for t_mask in true_masks:
         if isinstance(t_mask, dict):
             mask_name = next(iter(t_mask.keys()))
@@ -281,7 +301,6 @@ def get_mask(  # noqa: C901
                     f"because the item ({inherited_mask_item}) does not exist."
                 )
             mask_img = extra_input[inherited_mask_item]["data"]
-            mask_space = target_data["space"]
         # Starting with new mask
         else:
             # Load mask
@@ -290,7 +309,7 @@ def get_mask(  # noqa: C901
             )
             # Replace mask space with target space if mask's space is inherit
             if mask_space == "inherit":
-                mask_space = target_data["space"]
+                mask_space = target_std_space
             # If mask is callable like from nilearn
             if callable(mask_object):
                 if mask_params is None:
@@ -306,31 +325,72 @@ def get_mask(  # noqa: C901
                     )
                 # Resample mask to target image
                 mask_img = resample_to_img(
-                    mask_object,
-                    target_img,
+                    source_img=mask_object,
+                    target_img=target_img,
                     interpolation="nearest",
                     copy=True,
                 )
-        all_spaces.append(mask_space)
+            # Convert mask space if required
+            if mask_space != target_std_space:
+                # Get xfm file
+                xfm_file_path = get_xfm(src=mask_space, dst=target_std_space)
+                # Get target standard space template
+                target_std_space_template_img = get_template(
+                    space=target_std_space,
+                    target_data=target_data,
+                    extra_input=extra_input,
+                )
+
+                # Save resampled mask image to a component-scoped tempfile
+                resampled_mask_path = (
+                    tempdir / f"{mask_name}_resampled_to_{resolution}.nii.gz"
+                )
+                nib.save(mask_img, resampled_mask_path)
+
+                # Save template
+                target_std_space_template_path = (
+                    tempdir / f"{target_std_space}_T1w_{resolution}.nii.gz"
+                )
+                nib.save(
+                    target_std_space_template_img,
+                    target_std_space_template_path,
+                )
+
+                # Set warped mask path
+                warped_resampled_mask_path = tempdir / (
+                    f"{mask_name}_resampled_to_{resolution}_warped_to_"
+                    f"{target_std_space}.nii.gz"
+                )
+
+                logger.debug(
+                    f"Using ANTs to warp {mask_name} "
+                    f"(resolution={resolution}) from {mask_space} to "
+                    f"{target_std_space}"
+                )
+                # Set antsApplyTransforms command
+                apply_transforms_cmd = [
+                    "antsApplyTransforms",
+                    "-d 3",
+                    "-e 2",
+                    "-n 'GenericLabel[NearestNeighbor]'",
+                    f"-i {resampled_mask_path.resolve()}",
+                    f"-r {target_std_space_template_path.resolve()}",
+                    f"-t {xfm_file_path}",
+                    f"-o {warped_resampled_mask_path}",
+                ]
+                # Call antsApplyTransforms
+                run_ext_cmd(
+                    name="antsApplyTransforms", cmd=apply_transforms_cmd
+                )
+
+                mask_img = nib.load(warped_resampled_mask_path)
+
         all_masks.append(mask_img)
 
     # Multiple masks, need intersection / union
     if len(all_masks) > 1:
-        # Make a set of unique spaces
-        unique_spaces = set(all_spaces)
-        # Intersect / union of masks only if all masks are in the same space
-        if len(unique_spaces) == 1:
-            mask_img = intersect_masks(all_masks, **intersect_params)
-            # Store the mask space for further checks
-            mask_space = next(iter(unique_spaces))
-        else:
-            raise_error(
-                msg=(
-                    f"Masks are in different spaces: {unique_spaces}, "
-                    "unable to merge."
-                ),
-                klass=RuntimeError,
-            )
+        # Intersect / union of masks
+        mask_img = intersect_masks(all_masks, **intersect_params)
     # Single mask
     else:
         if len(intersect_params) > 0:
@@ -340,21 +400,9 @@ def get_mask(  # noqa: C901
                 "when there is only one mask."
             )
         mask_img = all_masks[0]
-        mask_space = all_spaces[0]
 
-    # Warp mask if target data is native and mask space is not native
-    if target_data["space"] == "native" and target_data["space"] != mask_space:
-        # Check for extra inputs
-        if extra_input is None:
-            raise_error(
-                "No extra input provided, requires `Warp` and `T1w` "
-                "data types in particular for transformation to "
-                f"{target_data['space']} space for further computation."
-            )
-
-        # Create component-scoped tempdir
-        tempdir = WorkDirManager().get_tempdir(prefix="masks")
-
+    # Warp mask if target data is native
+    if target_space == "native":
         # Save mask image to a component-scoped tempfile
         prewarp_mask_path = tempdir / "prewarp_mask.nii.gz"
         nib.save(mask_img, prewarp_mask_path)
@@ -413,8 +461,8 @@ def get_mask(  # noqa: C901
         # Load nifti
         mask_img = nib.load(warped_mask_path)
 
-        # Delete tempdir
-        WorkDirManager().delete_tempdir(tempdir)
+    # Delete tempdir
+    WorkDirManager().delete_tempdir(tempdir)
 
     return mask_img  # type: ignore
 
