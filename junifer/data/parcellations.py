@@ -22,6 +22,7 @@ from nilearn import datasets, image
 
 from ..pipeline import WorkDirManager
 from ..utils import logger, raise_error, run_ext_cmd, warn_with_log
+from .template_spaces import get_template, get_xfm
 from .utils import closest_resolution
 
 
@@ -242,9 +243,28 @@ def get_parcellation(
         If ``extra_input`` is None when ``target_data``'s space is native.
 
     """
+    # Check pre-requirements for space manipulation
+    target_space = target_data["space"]
+    # Set target standard space to target space
+    target_std_space = target_space
+    # Extra data type requirement check if target space is native
+    if target_space == "native":
+        # Check for extra inputs
+        if extra_input is None:
+            raise_error(
+                "No extra input provided, requires `Warp` and `T1w` "
+                "data types in particular for transformation to "
+                f"{target_data['space']} space for further computation."
+            )
+        # Set target standard space to warp file space source
+        target_std_space = extra_input["Warp"]["src"]
+
     # Get the min of the voxels sizes and use it as the resolution
     target_img = target_data["data"]
     resolution = np.min(target_img.header.get_zooms()[:3])
+
+    # Create tempdir
+    tempdir = WorkDirManager().get_tempdir(prefix="parcellations")
 
     # Load the parcellations
     all_parcellations = []
@@ -255,14 +275,65 @@ def get_parcellation(
             name=name,
             resolution=resolution,
         )
-        # Resample all of them to the image
-        resampled_img = image.resample_to_img(
+        # Resample loaded parcellation to target image
+        img_to_merge = image.resample_to_img(
             source_img=img,
             target_img=target_img,
             interpolation="nearest",
             copy=True,
         )
-        all_parcellations.append(resampled_img)
+        # Convert parcellation spaces if required
+        if space != target_std_space:
+            # Get xfm file
+            xfm_file_path = get_xfm(src=space, dst=target_std_space)
+            # Get target standard space template
+            target_std_space_template_img = get_template(
+                space=target_std_space,
+                target_data=target_data,
+                extra_input=extra_input,
+            )
+
+            # Save resampled parcellation image to a component-scoped tempfile
+            resampled_parcellation_path = (
+                tempdir / f"{name}_resampled_to_{resolution}.nii.gz"
+            )
+            nib.save(img_to_merge, resampled_parcellation_path)
+
+            # Save template
+            target_std_space_template_path = (
+                tempdir / f"{target_std_space}_T1w_{resolution}.nii.gz"
+            )
+            nib.save(
+                target_std_space_template_img, target_std_space_template_path
+            )
+
+            # Set warped parcellation path
+            warped_resampled_parcellation_path = tempdir / (
+                f"{name}_resampled_to_{resolution}_warped_to_"
+                f"{target_std_space}.nii.gz"
+            )
+
+            logger.debug(
+                f"Using ANTs to warp {name} (resolution={resolution}) "
+                f"from {space} to {target_std_space}"
+            )
+            # Set antsApplyTransforms command
+            apply_transforms_cmd = [
+                "antsApplyTransforms",
+                "-d 3",
+                "-e 2",
+                "-n 'GenericLabel[NearestNeighbor]'",
+                f"-i {resampled_parcellation_path.resolve()}",
+                f"-r {target_std_space_template_path.resolve()}",
+                f"-t {xfm_file_path}",
+                f"-o {warped_resampled_parcellation_path}",
+            ]
+            # Call antsApplyTransforms
+            run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
+
+            img_to_merge = nib.load(warped_resampled_parcellation_path)
+
+        all_parcellations.append(img_to_merge)
         all_labels.append(labels)
         all_spaces.append(space)
 
@@ -285,19 +356,8 @@ def get_parcellation(
                 klass=RuntimeError,
             )
 
-    # Warp parcellation if target data is native
-    if target_data["space"] == "native":
-        # Check for extra inputs
-        if extra_input is None:
-            raise_error(
-                "No extra input provided, requires `Warp` and `T1w` "
-                "data types in particular for transformation to "
-                f"{target_data['space']} space for further computation."
-            )
-
-        # Create component-scoped tempdir
-        tempdir = WorkDirManager().get_tempdir(prefix="parcellations")
-
+    # Warp parcellation if target space is native
+    if target_space == "native":
         # Save parcellation image to a component-scoped tempfile
         prewarp_parcellation_path = tempdir / "prewarp_parcellation.nii.gz"
         nib.save(resampled_parcellation_img, prewarp_parcellation_path)
@@ -359,8 +419,8 @@ def get_parcellation(
         # Load nifti
         resampled_parcellation_img = nib.load(warped_parcellation_path)
 
-        # Delete tempdir
-        WorkDirManager().delete_tempdir(tempdir)
+    # Delete tempdir
+    WorkDirManager().delete_tempdir(tempdir)
 
     return resampled_parcellation_img, labels  # type: ignore
 
