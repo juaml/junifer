@@ -57,6 +57,7 @@ def _create_chunk(
     ------
     ValueError
         If `kind` is not one of ['vector', 'matrix', 'timeseries'].
+
     """
     if kind in ["vector", "matrix"]:
         features_data = np.concatenate(chunk_data, axis=-1)
@@ -678,9 +679,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         elif isinstance(data, list):
             if self.force_float32:
                 data = [
-                    x.astype(dtype=np.dtype("float32"), casting="same_kind")
-                    if x.dtype == np.dtype("float64")
-                    else x
+                    (
+                        x.astype(
+                            dtype=np.dtype("float32"), casting="same_kind"
+                        )
+                        if x.dtype == np.dtype("float64")
+                        else x
+                    )
                     for x in data
                 ]
         # Handle cases for existing and new entry

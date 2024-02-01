@@ -32,7 +32,7 @@ def test_get_python_information() -> None:
 def test_get_dependency_information_short() -> None:
     """Test short version of _get_dependency_information()."""
     dependency_information = _get_dependency_information(long_=False)
-    assert list(dependency_information.keys()) == [
+    dependency_list = [
         "click",
         "numpy",
         "scipy",
@@ -42,14 +42,20 @@ def test_get_dependency_information_short() -> None:
         "nilearn",
         "sqlalchemy",
         "ruamel.yaml",
+        "httpx",
     ]
+    if int(pl.python_version_tuple()[1]) < 10:
+        dependency_list.append("importlib_metadata")
+    assert frozenset(dependency_information.keys()) == frozenset(
+        dependency_list
+    )
 
 
 def test_get_dependency_information_long() -> None:
     """Test long version of _get_dependency_information()."""
     dependency_information = _get_dependency_information(long_=True)
     dependency_information_keys = list(dependency_information.keys())
-    for key in [
+    dependency_list = [
         "click",
         "numpy",
         "scipy",
@@ -59,7 +65,9 @@ def test_get_dependency_information_long() -> None:
         "nilearn",
         "sqlalchemy",
         "ruamel.yaml",
-    ]:
+        "httpx",
+    ]
+    for key in dependency_list:
         assert key in dependency_information_keys
 
 

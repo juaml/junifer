@@ -66,6 +66,7 @@ class ALFFSpheres(ALFFBase):
     ALFF/fALFF are computed using a bandpass butterworth filter. See
     :func:`scipy.signal.butter` and :func:`scipy.signal.filtfilt` for more
     details.
+
     """
 
     def __init__(

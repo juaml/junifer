@@ -36,6 +36,7 @@ def test_closest_resolution(
         The valid resolutions.
     expected: float
         The expected result.
+
     """
     assert closest_resolution(resolution, valid_resolutions) == expected
     assert (

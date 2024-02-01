@@ -1,4 +1,5 @@
 """Provide utilities for data module."""
+
 from typing import List, Optional, Union
 
 import numpy as np
@@ -24,6 +25,7 @@ def closest_resolution(
     -------
     float or int
         The closest valid resolution.
+
     """
     # Convert list of int to numpy.ndarray
     if not isinstance(valid_resolution, np.ndarray):

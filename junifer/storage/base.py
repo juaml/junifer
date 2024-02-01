@@ -177,6 +177,7 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         meta : dict
             The metadata as a dictionary.
+
         """
         raise_error(
             msg="Concrete classes need to implement store_metadata().",

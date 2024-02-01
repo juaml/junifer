@@ -98,6 +98,7 @@ def _apply_mask_and_get_affinity(
     A : scipy.sparse.lil_matrix
         Contains the boolean indices for each sphere.
         shape: (number of seeds, number of voxels)
+
     """
     seeds = list(seeds)
 
@@ -204,6 +205,7 @@ def _iter_signals_from_spheres(
     mask_img : Niimg-like object, optional
         See :ref:`extracting_data`.
         Mask to apply to regions before extracting signals.
+
     """
     X, A = _apply_mask_and_get_affinity(
         seeds, niimg, radius, allow_overlap, mask_img=mask_img
