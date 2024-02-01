@@ -215,13 +215,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/data.html">9.2.1. Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">9.2.2. Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.masks">9.2.3. Masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">9.2.4. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">9.2.5. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">9.2.6. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api.html">9.2.7. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">9.2.8. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">9.2.9. Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/onthefly.html">9.2.10. On-the-fly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.template_spaces">9.2.4. Template Spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">9.2.5. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">9.2.6. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">9.2.7. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">9.2.8. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">9.2.9. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">9.2.10. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/onthefly.html">9.2.11. On-the-fly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/configs.html">9.3.1. Configs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/nilearn.html">9.4.1. Nilearn</a></li>
 </ul>
@@ -311,14 +312,14 @@ and 4D NIfTI.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-01-16 11:19:18,796 - JUNIFER - INFO - ===== Lib Versions =====
-2024-01-16 11:19:18,796 - JUNIFER - INFO - numpy: 1.25.2
-2024-01-16 11:19:18,796 - JUNIFER - INFO - scipy: 1.11.4
-2024-01-16 11:19:18,796 - JUNIFER - INFO - pandas: 2.0.3
-2024-01-16 11:19:18,796 - JUNIFER - INFO - nilearn: 0.10.2
-2024-01-16 11:19:18,796 - JUNIFER - INFO - nibabel: 5.2.0
-2024-01-16 11:19:18,796 - JUNIFER - INFO - junifer: 0.0.4.dev530
-2024-01-16 11:19:18,796 - JUNIFER - INFO - ========================
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-02-01 08:38:44,716 - JUNIFER - INFO - ===== Lib Versions =====
+2024-02-01 08:38:44,716 - JUNIFER - INFO - numpy: 1.26.3
+2024-02-01 08:38:44,716 - JUNIFER - INFO - scipy: 1.11.4
+2024-02-01 08:38:44,716 - JUNIFER - INFO - pandas: 2.1.4
+2024-02-01 08:38:44,716 - JUNIFER - INFO - nilearn: 0.10.2
+2024-02-01 08:38:44,717 - JUNIFER - INFO - nibabel: 5.2.0
+2024-02-01 08:38:44,717 - JUNIFER - INFO - junifer: 0.0.4.dev545
+2024-02-01 08:38:44,717 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>Perform parcel aggregation on VBM GM data (3D) from OASIS dataset</p>
@@ -338,22 +339,22 @@ and 4D NIfTI.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.10.13/x64/lib/python3.10/site-packages/nilearn/datasets/struct.py:852: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
   warnings.warn(_LEGACY_FORMAT_MSG)
-2024-01-16 11:19:18,802 - JUNIFER - INFO - Getting element sub-01
-2024-01-16 11:19:18,803 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2024-01-16 11:19:18,803 - JUNIFER - INFO - VBM_GM is type NIFTI
-2024-01-16 11:19:18,804 - JUNIFER - INFO - Computing VBM_GM
-2024-01-16 11:19:18,804 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2024-01-16 11:19:18,804 - JUNIFER - INFO - Parcellation parameters:
-2024-01-16 11:19:18,804 - JUNIFER - INFO -      resolution: 2.0
-2024-01-16 11:19:18,804 - JUNIFER - INFO -      n_rois: 100
-2024-01-16 11:19:18,804 - JUNIFER - INFO -      yeo_networks: 7
-2024-01-16 11:19:18,804 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+2024-02-01 08:38:44,723 - JUNIFER - INFO - Getting element sub-01
+2024-02-01 08:38:44,723 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-02-01 08:38:44,723 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-02-01 08:38:44,724 - JUNIFER - INFO - Computing VBM_GM
+2024-02-01 08:38:44,724 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-02-01 08:38:44,724 - JUNIFER - INFO - Parcellation parameters:
+2024-02-01 08:38:44,724 - JUNIFER - INFO -      resolution: 2.0
+2024-02-01 08:38:44,724 - JUNIFER - INFO -      n_rois: 100
+2024-02-01 08:38:44,724 - JUNIFER - INFO -      yeo_networks: 7
+2024-02-01 08:38:44,724 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order.txt ...
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2024-01-16 11:19:18,873 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2024-01-16 11:19:19,554 - JUNIFER - INFO - No storage specified, returning dictionary
+2024-02-01 08:38:44,780 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-02-01 08:38:45,487 - JUNIFER - INFO - No storage specified, returning dictionary
 dict_keys([&#39;VBM_GM&#39;])
 (1, 100)
 </pre></div>
@@ -375,38 +376,61 @@ dict_keys([&#39;VBM_GM&#39;])
     <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a><span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (timepoints x parcels)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-01-16 11:19:19,555 - JUNIFER - INFO - Getting element sub001
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-02-01 08:38:45,488 - JUNIFER - INFO - Getting element sub001
 
 Dataset created in /home/runner/nilearn_data/spm_auditory
 
 Data absent, downloading...
 Downloading data from https://www.fil.ion.ucl.ac.uk/spm/download/data/MoAEpilot/MoAEpilot.zip ...
 
-Downloaded 1499136 of 34212021 bytes (4.4%,   22.8s remaining)
-Downloaded 8331264 of 34212021 bytes (24.4%,    6.6s remaining)
-Downloaded 13312000 of 34212021 bytes (38.9%,    5.0s remaining)
-Downloaded 18620416 of 34212021 bytes (54.4%,    3.5s remaining)
-Downloaded 23674880 of 34212021 bytes (69.2%,    2.4s remaining)
-Downloaded 28172288 of 34212021 bytes (82.3%,    1.4s remaining)
-Downloaded 32423936 of 34212021 bytes (94.8%,    0.4s remaining) ...done. (9 seconds, 0 min)
+Downloaded 2637824 of 34212021 bytes (7.7%,   12.6s remaining)
+Downloaded 3825664 of 34212021 bytes (11.2%,   16.9s remaining)
+Downloaded 4136960 of 34212021 bytes (12.1%,   23.4s remaining)
+Downloaded 4415488 of 34212021 bytes (12.9%,   28.6s remaining)
+Downloaded 4718592 of 34212021 bytes (13.8%,   32.8s remaining)
+Downloaded 5087232 of 34212021 bytes (14.9%,   35.8s remaining)
+Downloaded 5521408 of 34212021 bytes (16.1%,   37.8s remaining)
+Downloaded 6037504 of 34212021 bytes (17.6%,   38.6s remaining)
+Downloaded 6602752 of 34212021 bytes (19.3%,   38.8s remaining)
+Downloaded 7290880 of 34212021 bytes (21.3%,   38.0s remaining)
+Downloaded 8331264 of 34212021 bytes (24.4%,   35.1s remaining)
+Downloaded 9887744 of 34212021 bytes (28.9%,   30.3s remaining)
+Downloaded 11812864 of 34212021 bytes (34.5%,   25.3s remaining)
+Downloaded 13729792 of 34212021 bytes (40.1%,   21.4s remaining)
+Downloaded 15540224 of 34212021 bytes (45.4%,   18.4s remaining)
+Downloaded 17080320 of 34212021 bytes (49.9%,   16.4s remaining)
+Downloaded 18382848 of 34212021 bytes (53.7%,   15.0s remaining)
+Downloaded 19791872 of 34212021 bytes (57.9%,   13.4s remaining)
+Downloaded 21159936 of 34212021 bytes (61.8%,   12.0s remaining)
+Downloaded 22323200 of 34212021 bytes (65.2%,   10.9s remaining)
+Downloaded 23494656 of 34212021 bytes (68.7%,    9.8s remaining)
+Downloaded 24305664 of 34212021 bytes (71.0%,    9.1s remaining)
+Downloaded 25092096 of 34212021 bytes (73.3%,    8.5s remaining)
+Downloaded 25935872 of 34212021 bytes (75.8%,    7.8s remaining)
+Downloaded 26812416 of 34212021 bytes (78.4%,    7.0s remaining)
+Downloaded 27779072 of 34212021 bytes (81.2%,    6.1s remaining)
+Downloaded 28803072 of 34212021 bytes (84.2%,    5.2s remaining)
+Downloaded 29908992 of 34212021 bytes (87.4%,    4.1s remaining)
+Downloaded 31145984 of 34212021 bytes (91.0%,    2.9s remaining)
+Downloaded 32759808 of 34212021 bytes (95.8%,    1.4s remaining) ...done. (32 seconds, 0 min)
 Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip..... done.
-2024-01-16 11:19:32,212 - JUNIFER - INFO - Reading BOLD from /tmp/tmp_obh3fzd/sub001_bold.nii.gz
-2024-01-16 11:19:32,212 - JUNIFER - INFO - BOLD is type NIFTI
-2024-01-16 11:19:32,213 - JUNIFER - INFO - Reading T1w from /tmp/tmp_obh3fzd/sub001_T1w.nii.gz
-2024-01-16 11:19:32,213 - JUNIFER - INFO - T1w is type NIFTI
-2024-01-16 11:19:32,214 - JUNIFER - INFO - Computing BOLD
-2024-01-16 11:19:32,214 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2024-01-16 11:19:32,214 - JUNIFER - INFO - Parcellation parameters:
-2024-01-16 11:19:32,214 - JUNIFER - INFO -      resolution: 3.0
-2024-01-16 11:19:32,214 - JUNIFER - INFO -      n_rois: 100
-2024-01-16 11:19:32,215 - JUNIFER - INFO -      yeo_networks: 7
-2024-01-16 11:19:32,216 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-2024-01-16 11:19:34,938 - JUNIFER - INFO - No storage specified, returning dictionary
+2024-02-01 08:39:21,303 - JUNIFER - INFO - Reading BOLD from /tmp/tmp2ha7m5bh/sub001_bold.nii.gz
+2024-02-01 08:39:21,303 - JUNIFER - INFO - BOLD is type NIFTI
+2024-02-01 08:39:21,304 - JUNIFER - INFO - Reading T1w from /tmp/tmp2ha7m5bh/sub001_T1w.nii.gz
+2024-02-01 08:39:21,304 - JUNIFER - INFO - T1w is type NIFTI
+2024-02-01 08:39:21,305 - JUNIFER - INFO - Computing BOLD
+2024-02-01 08:39:21,305 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-02-01 08:39:21,305 - JUNIFER - INFO - Parcellation parameters:
+2024-02-01 08:39:21,305 - JUNIFER - INFO -      resolution: 3.0
+2024-02-01 08:39:21,306 - JUNIFER - INFO -      n_rois: 100
+2024-02-01 08:39:21,306 - JUNIFER - INFO -      yeo_networks: 7
+2024-02-01 08:39:21,307 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-02-01 08:39:23,850 - JUNIFER - INFO - No storage specified, returning dictionary
 dict_keys([&#39;BOLD&#39;])
 (96, 100)
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 16.148 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 39.140 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-compute-parcel-mean-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/c1da12f6e22b8ea8de3cd5add55a3fa8/run_compute_parcel_mean.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_compute_parcel_mean.py</span></code></a></p>

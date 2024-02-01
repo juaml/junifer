@@ -215,13 +215,14 @@
 <li class="toctree-l2"><a class="reference internal" href="data.html">9.2.1. Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html#module-junifer.data.coordinates">9.2.2. Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html#module-junifer.data.masks">9.2.3. Masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stats.html">9.2.4. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline.html">9.2.5. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline.html#module-junifer.pipeline.registry">9.2.6. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html">9.2.7. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html">9.2.8. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="testing.html">9.2.9. Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="onthefly.html">9.2.10. On-the-fly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#module-junifer.data.template_spaces">9.2.4. Template Spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stats.html">9.2.5. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline.html">9.2.6. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline.html#module-junifer.pipeline.registry">9.2.7. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html">9.2.8. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html">9.2.9. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="testing.html">9.2.10. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="onthefly.html">9.2.11. On-the-fly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configs.html">9.3.1. Configs</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">9.4.1. Nilearn</a></li>
 </ul>
@@ -357,8 +358,8 @@ shape: (mask_img, number of scans).</p>
 <span class="sig-name descname"><span class="pre">set_inverse_transform_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_signals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.external.nilearn.JuniferNiftiSpheresMasker.set_inverse_transform_request" title="Link to this definition">#</a></dt>
 <dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code> method.</p>
 <p>Note that this method is only relevant if
-<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.set_config.html#sklearn.set_config" title="(in scikit-learn v1.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code></a>).
-Please see <a class="reference external" href="https://scikit-learn.org/stable/metadata_routing.html#metadata-routing" title="(in scikit-learn v1.3)"><span class="xref std std-ref">User Guide</span></a> on how the routing
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.set_config.html#sklearn.set_config" title="(in scikit-learn v1.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code></a>).
+Please see <a class="reference external" href="https://scikit-learn.org/stable/metadata_routing.html#metadata-routing" title="(in scikit-learn v1.4)"><span class="xref std std-ref">User Guide</span></a> on how the routing
 mechanism works.</p>
 <p>The options for each parameter are:</p>
 <ul class="simple">
@@ -377,7 +378,7 @@ parameters and not others.</p>
 <p class="admonition-title">Note</p>
 <p>This method is only relevant if this estimator is used as a
 sub-estimator of a meta-estimator, e.g. used inside a
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>. Otherwise it has no effect.</p>
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>. Otherwise it has no effect.</p>
 </div>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -400,8 +401,8 @@ sub-estimator of a meta-estimator, e.g. used inside a
 <span class="sig-name descname"><span class="pre">set_transform_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imgs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.external.nilearn.JuniferNiftiSpheresMasker.set_transform_request" title="Link to this definition">#</a></dt>
 <dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">transform</span></code> method.</p>
 <p>Note that this method is only relevant if
-<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.set_config.html#sklearn.set_config" title="(in scikit-learn v1.3)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code></a>).
-Please see <a class="reference external" href="https://scikit-learn.org/stable/metadata_routing.html#metadata-routing" title="(in scikit-learn v1.3)"><span class="xref std std-ref">User Guide</span></a> on how the routing
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.set_config.html#sklearn.set_config" title="(in scikit-learn v1.4)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code></a>).
+Please see <a class="reference external" href="https://scikit-learn.org/stable/metadata_routing.html#metadata-routing" title="(in scikit-learn v1.4)"><span class="xref std std-ref">User Guide</span></a> on how the routing
 mechanism works.</p>
 <p>The options for each parameter are:</p>
 <ul class="simple">
@@ -420,7 +421,7 @@ parameters and not others.</p>
 <p class="admonition-title">Note</p>
 <p>This method is only relevant if this estimator is used as a
 sub-estimator of a meta-estimator, e.g. used inside a
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.3)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>. Otherwise it has no effect.</p>
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>. Otherwise it has no effect.</p>
 </div>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -453,7 +454,7 @@ sub-estimator of a meta-estimator, e.g. used inside a
 If a 3D niimg is provided, a singleton dimension will be added to
 the output to represent the single scan in the niimg.</p>
 </dd>
-<dt><strong>confounds</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+115.ge379692928)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>, optional</span></dt><dd><p>This parameter is passed to <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.signal.clean.html#nilearn.signal.clean" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.signal.clean()</span></code></a>.
+<dt><strong>confounds</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+210.gc3014abb3b)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>, optional</span></dt><dd><p>This parameter is passed to <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.signal.clean.html#nilearn.signal.clean" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.signal.clean()</span></code></a>.
 Please see the related documentation for details.
 shape: (number of scans, number of confounds)</p>
 </dd>
