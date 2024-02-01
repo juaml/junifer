@@ -237,8 +237,7 @@ def get_parcellation(
     Raises
     ------
     RuntimeError
-        If parcellations are in different spaces and they need to be merged or
-        if warp / transformation file extension is not ".mat" or ".h5".
+        If warp / transformation file extension is not ".mat" or ".h5".
     ValueError
         If ``extra_input`` is None when ``target_data``'s space is native.
 
@@ -269,7 +268,6 @@ def get_parcellation(
     # Load the parcellations
     all_parcellations = []
     all_labels = []
-    all_spaces = []
     for name in parcellation:
         img, labels, _, space = load_parcellation(
             name=name,
@@ -335,26 +333,18 @@ def get_parcellation(
 
         all_parcellations.append(img_to_merge)
         all_labels.append(labels)
-        all_spaces.append(space)
 
     # Avoid merging if there is only one parcellation
     if len(all_parcellations) == 1:
         resampled_parcellation_img = all_parcellations[0]
         labels = all_labels[0]
+    # Parcellations are already transformed to target standard space
     else:
-        # Merge the parcellations only if all parcellations are in the same
-        # space
-        if len(set(all_spaces)) == 1:
-            resampled_parcellation_img, labels = merge_parcellations(
-                parcellations_list=all_parcellations,
-                parcellations_names=parcellation,
-                labels_lists=all_labels,
-            )
-        else:
-            raise_error(
-                msg="Parcellations are in different spaces, unable to merge.",
-                klass=RuntimeError,
-            )
+        resampled_parcellation_img, labels = merge_parcellations(
+            parcellations_list=all_parcellations,
+            parcellations_names=parcellation,
+            labels_lists=all_labels,
+        )
 
     # Warp parcellation if target space is native
     if target_space == "native":
