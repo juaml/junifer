@@ -262,7 +262,7 @@ def get_parcellation(
     target_img = target_data["data"]
     resolution = np.min(target_img.header.get_zooms()[:3])
 
-    # Create tempdir
+    # Create component-scoped tempdir
     tempdir = WorkDirManager().get_tempdir(prefix="parcellations")
 
     # Load the parcellations
