@@ -345,11 +345,9 @@ def get_mask(  # noqa: C901
                     extra_input=extra_input,
                 )
 
-                # Save resampled mask image to a component-scoped tempfile
-                resampled_mask_path = (
-                    tempdir / f"{mask_name}_resampled_to_{resolution}.nii.gz"
-                )
-                nib.save(mask_img, resampled_mask_path)
+                # Save mask image to a component-scoped tempfile
+                mask_path = tempdir / f"{mask_name}.nii.gz"
+                nib.save(mask_img, mask_path)
 
                 # Save template
                 target_std_space_template_path = (
@@ -361,33 +359,32 @@ def get_mask(  # noqa: C901
                 )
 
                 # Set warped mask path
-                warped_resampled_mask_path = element_tempdir / (
-                    f"{mask_name}_resampled_to_{resolution}_warped_to_"
+                warped_mask_path = element_tempdir / (
+                    f"{mask_name}_warped_from_{mask_space}_to_"
                     f"{target_std_space}.nii.gz"
                 )
 
                 logger.debug(
                     f"Using ANTs to warp {mask_name} "
-                    f"(resolution={resolution}) from {mask_space} to "
-                    f"{target_std_space}"
+                    f"from {mask_space} to {target_std_space}"
                 )
                 # Set antsApplyTransforms command
                 apply_transforms_cmd = [
                     "antsApplyTransforms",
                     "-d 3",
-                    "-e 2",
+                    "-e 3",
                     "-n 'GenericLabel[NearestNeighbor]'",
-                    f"-i {resampled_mask_path.resolve()}",
+                    f"-i {mask_path.resolve()}",
                     f"-r {target_std_space_template_path.resolve()}",
                     f"-t {xfm_file_path.resolve()}",
-                    f"-o {warped_resampled_mask_path.resolve()}",
+                    f"-o {warped_mask_path.resolve()}",
                 ]
                 # Call antsApplyTransforms
                 run_ext_cmd(
                     name="antsApplyTransforms", cmd=apply_transforms_cmd
                 )
 
-                mask_img = nib.load(warped_resampled_mask_path)
+                mask_img = nib.load(warped_mask_path)
 
         all_masks.append(mask_img)
 
