@@ -133,6 +133,7 @@ def get_template(
     target_img = target_data["data"]
     resolution = np.min(target_img.header.get_zooms()[:3]).astype(int)
 
+    logger.info(f"Downloading template {space} in resolution {resolution}")
     # Retrieve template
     try:
         template_path = tflow.get(
