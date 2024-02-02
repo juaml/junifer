@@ -268,6 +268,10 @@ def get_mask(  # noqa: C901
 
     # Create component-scoped tempdir
     tempdir = WorkDirManager().get_tempdir(prefix="masks")
+    # Create element-scoped tempdir so that warped mask is
+    # available later as nibabel stores file path reference for
+    # loading on computation
+    element_tempdir = WorkDirManager().get_element_tempdir(prefix="masks")
 
     # Get all the masks
     all_masks = []
@@ -357,7 +361,7 @@ def get_mask(  # noqa: C901
                 )
 
                 # Set warped mask path
-                warped_resampled_mask_path = tempdir / (
+                warped_resampled_mask_path = element_tempdir / (
                     f"{mask_name}_resampled_to_{resolution}_warped_to_"
                     f"{target_std_space}.nii.gz"
                 )
@@ -406,11 +410,6 @@ def get_mask(  # noqa: C901
         # Save mask image to a component-scoped tempfile
         prewarp_mask_path = tempdir / "prewarp_mask.nii.gz"
         nib.save(mask_img, prewarp_mask_path)
-
-        # Create element-scoped tempdir so that warped mask is
-        # available later as nibabel stores file path reference for
-        # loading on computation
-        element_tempdir = WorkDirManager().get_element_tempdir(prefix="masks")
 
         # Create an element-scoped tempfile for warped output
         warped_mask_path = element_tempdir / "mask_warped.nii.gz"
