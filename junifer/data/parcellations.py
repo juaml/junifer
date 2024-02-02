@@ -279,13 +279,7 @@ def get_parcellation(
             name=name,
             resolution=resolution,
         )
-        # Resample loaded parcellation to target image
-        img_to_merge = image.resample_to_img(
-            source_img=img,
-            target_img=target_img,
-            interpolation="nearest",
-            copy=True,
-        )
+
         # Convert parcellation spaces if required
         if space != target_std_space:
             # Get xfm file
@@ -297,11 +291,9 @@ def get_parcellation(
                 extra_input=extra_input,
             )
 
-            # Save resampled parcellation image to a component-scoped tempfile
-            resampled_parcellation_path = (
-                tempdir / f"{name}_resampled_to_{resolution}.nii.gz"
-            )
-            nib.save(img_to_merge, resampled_parcellation_path)
+            # Save parcellation image to a component-scoped tempfile
+            parcellation_path = tempdir / f"{name}.nii.gz"
+            nib.save(img, parcellation_path)
 
             # Save template
             target_std_space_template_path = (
@@ -312,30 +304,37 @@ def get_parcellation(
             )
 
             # Set warped parcellation path
-            warped_resampled_parcellation_path = element_tempdir / (
-                f"{name}_resampled_to_{resolution}_warped_to_"
-                f"{target_std_space}.nii.gz"
+            warped_parcellation_path = element_tempdir / (
+                f"{name}_warped_from_{space}_to_" f"{target_std_space}.nii.gz"
             )
 
             logger.debug(
-                f"Using ANTs to warp {name} (resolution={resolution}) "
+                f"Using ANTs to warp {name} "
                 f"from {space} to {target_std_space}"
             )
             # Set antsApplyTransforms command
             apply_transforms_cmd = [
                 "antsApplyTransforms",
                 "-d 3",
-                "-e 2",
+                "-e 3",
                 "-n 'GenericLabel[NearestNeighbor]'",
-                f"-i {resampled_parcellation_path.resolve()}",
+                f"-i {parcellation_path.resolve()}",
                 f"-r {target_std_space_template_path.resolve()}",
                 f"-t {xfm_file_path.resolve()}",
-                f"-o {warped_resampled_parcellation_path.resolve()}",
+                f"-o {warped_parcellation_path.resolve()}",
             ]
             # Call antsApplyTransforms
             run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
 
-            img_to_merge = nib.load(warped_resampled_parcellation_path)
+            img = nib.load(warped_parcellation_path)
+
+        # Resample parcellation to target image
+        img_to_merge = image.resample_to_img(
+            source_img=img,
+            target_img=target_img,
+            interpolation="nearest",
+            copy=True,
+        )
 
         all_parcellations.append(img_to_merge)
         all_labels.append(labels)
