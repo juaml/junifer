@@ -329,8 +329,8 @@ def get_parcellation(
                 "-n 'GenericLabel[NearestNeighbor]'",
                 f"-i {resampled_parcellation_path.resolve()}",
                 f"-r {target_std_space_template_path.resolve()}",
-                f"-t {xfm_file_path}",
-                f"-o {warped_resampled_parcellation_path}",
+                f"-t {xfm_file_path.resolve()}",
+                f"-o {warped_resampled_parcellation_path.resolve()}",
             ]
             # Call antsApplyTransforms
             run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
