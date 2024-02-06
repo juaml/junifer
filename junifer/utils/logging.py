@@ -95,7 +95,7 @@ def get_versions() -> Dict:
 
     """
     module_versions = {}
-    for name, module in sys.modules.items():
+    for name, module in sys.modules.copy().items():
         # Bypassing sub-modules of packages and
         # allowing ruamel.yaml
         if "." in name and name != "ruamel.yaml":
