@@ -43,6 +43,7 @@ def test_get_dependency_information_short() -> None:
         "sqlalchemy",
         "ruamel.yaml",
         "httpx",
+        "tqdm",
     ]
     if int(pl.python_version_tuple()[1]) < 10:
         dependency_list.append("importlib_metadata")
@@ -66,6 +67,7 @@ def test_get_dependency_information_long() -> None:
         "sqlalchemy",
         "ruamel.yaml",
         "httpx",
+        "tqdm",
     ]
     for key in dependency_list:
         assert key in dependency_information_keys
