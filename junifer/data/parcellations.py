@@ -14,12 +14,11 @@ import zipfile
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
+import httpx
 import nibabel as nib
 import numpy as np
 import pandas as pd
-import requests
 from nilearn import datasets, image
-from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 
 from ..pipeline import WorkDirManager
 from ..utils import logger, raise_error, run_ext_cmd, warn_with_log
@@ -734,6 +733,8 @@ def _retrieve_tian(
 
     Raises
     ------
+    RuntimeError
+        If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``scale`` or ``magneticfield`` or
         ``space`` or if there is a problem fetching the parcellation.
@@ -838,29 +839,36 @@ def _retrieve_tian(
         logger.info(
             "At least one of the parcellation files are missing, fetching."
         )
-
-        url_basis = (
+        # Set URL
+        url = (
             "https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip"
         )
 
-        logger.info(f"Downloading TIAN from {url_basis}")
+        logger.info(f"Downloading TIAN from {url}")
+        # Store initial download in a tempdir
         with tempfile.TemporaryDirectory() as tmpdir:
-            parcellation_download = requests.get(url_basis)
-            parcellation_zip_fname = Path(tmpdir) / "Tian2020MSA_v1.1.zip"
-            with open(parcellation_zip_fname, "wb") as f:
-                f.write(parcellation_download.content)
-            with zipfile.ZipFile(parcellation_zip_fname, "r") as zip_ref:
-                zip_ref.extractall(parcellations_dir.as_posix())
-            # clean after unzipping
-            if (parcellations_dir / "__MACOSX").exists():
-                shutil.rmtree((parcellations_dir / "__MACOSX").as_posix())
-
-        labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[
-            0
-        ].to_list()
-
-        if not (parcellation_fname.exists() and parcellation_lname.exists()):
-            raise_error("There was a problem fetching the parcellations.")
+            # Make HTTP request
+            try:
+                resp = httpx.get(url)
+                resp.raise_for_status()
+            except httpx.HTTPError as exc:
+                raise_error(
+                    f"Error response {exc.response.status_code} while "
+                    f"requesting {exc.request.url!r}",
+                    klass=RuntimeError,
+                )
+            else:
+                # Set tempfile for storing initial content and unzipping
+                zip_fname = Path(tmpdir) / "Tian2020MSA_v1.1.zip"
+                # Open tempfile and write content
+                with open(zip_fname, "wb") as f:
+                    f.write(resp.content)
+                # Unzip tempfile
+                with zipfile.ZipFile(zip_fname, "r") as zip_ref:
+                    zip_ref.extractall(parcellations_dir.as_posix())
+                # Clean after unzipping
+                if (parcellations_dir / "__MACOSX").exists():
+                    shutil.rmtree((parcellations_dir / "__MACOSX").as_posix())
 
     labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[0].to_list()
 
@@ -897,6 +905,8 @@ def _retrieve_suit(
 
     Raises
     ------
+    RuntimeError
+        If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``space`` or if there is a problem
         fetching the parcellation.
@@ -939,38 +949,52 @@ def _retrieve_suit(
             "At least one of the parcellation files is missing, fetching."
         )
 
+        # Set URL
         url_basis = (
             "https://github.com/DiedrichsenLab/cerebellar_atlases/raw"
-            "/master/Diedrichsen_2009/"
+            "/master/Diedrichsen_2009"
         )
-        url_MNI = url_basis + "atl-Anatom_space-MNI_dseg.nii"
-        url_SUIT = url_basis + "atl-Anatom_space-SUIT_dseg.nii"
-        url_labels = url_basis + "atl-Anatom.tsv"
-
-        # TODO: improve HTTP request / response handling
         if space == "MNI":
-            logger.info(f"Downloading {url_MNI}")
-            parcellation_download = requests.get(url_MNI)
-            with open(parcellation_fname, "wb") as f:
-                f.write(parcellation_download.content)
+            url = f"{url_basis}/atl-Anatom_space-MNI_dseg.nii"
         else:  # if not MNI, then SUIT
-            logger.info(f"Downloading {url_SUIT}")
-            parcellation_download = requests.get(url_SUIT)
-            with open(parcellation_fname, "wb") as f:
-                f.write(parcellation_download.content)
+            url = f"{url_basis}/atl-Anatom_space-SUIT_dseg.nii"
+        url_labels = f"{url_basis}/atl-Anatom.tsv"
 
-        labels_download = requests.get(url_labels)
-        labels = pd.read_csv(
-            io.StringIO(labels_download.content.decode("utf-8")),
-            sep="\t",
-            usecols=["name"],
-        )
-
-        labels.to_csv(parcellation_lname, sep="\t", index=False)
-        if (
-            not parcellation_fname.exists() and parcellation_lname.exists()
-        ):  # pragma: no cover
-            raise_error("There was a problem fetching the parcellations.")
+        # Make HTTP requests
+        with httpx.Client(follow_redirects=True) as client:
+            # Download parcellation file
+            logger.info(f"Downloading SUIT parcellation from {url}")
+            try:
+                img_resp = client.get(url)
+                img_resp.raise_for_status()
+            except httpx.HTTPError as exc:
+                raise_error(
+                    f"Error response {exc.response.status_code} while "
+                    f"requesting {exc.request.url!r}",
+                    klass=RuntimeError,
+                )
+            else:
+                with open(parcellation_fname, "wb") as f:
+                    f.write(img_resp.content)
+            # Download label file
+            logger.info(f"Downloading SUIT labels from {url_labels}")
+            try:
+                label_resp = client.get(url_labels)
+                label_resp.raise_for_status()
+            except httpx.HTTPError as exc:
+                raise_error(
+                    f"Error response {exc.response.status_code} while "
+                    f"requesting {exc.request.url!r}",
+                    klass=RuntimeError,
+                )
+            else:
+                # Load labels
+                labels = pd.read_csv(
+                    io.StringIO(label_resp.content.decode("utf-8")),
+                    sep="\t",
+                    usecols=["name"],
+                )
+                labels.to_csv(parcellation_lname, sep="\t", index=False)
 
     labels = pd.read_csv(parcellation_lname, sep="\t", usecols=["name"])[
         "name"
@@ -1008,6 +1032,8 @@ def _retrieve_aicha(
 
     Raises
     ------
+    RuntimeError
+        If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``version`` or if there is a problem
         fetching the parcellation.
@@ -1085,40 +1111,46 @@ def _retrieve_aicha(
         with tempfile.TemporaryDirectory() as tmpdir:
             # Make HTTP request
             try:
-                resp = requests.get(url)
+                resp = httpx.get(url, follow_redirects=True)
                 resp.raise_for_status()
-            except (ConnectionError, ReadTimeout, HTTPError) as err:
+            except httpx.HTTPError as exc:
                 raise_error(
-                    f"Failed to download AICHA v{version} due to: {err}"
+                    f"Error response {exc.response.status_code} while "
+                    f"requesting {exc.request.url!r}",
+                    klass=RuntimeError,
                 )
             else:
+                # Set tempfile for storing initial content and unzipping
                 parcellation_zip_path = Path(tmpdir) / server_filename
+                # Open tempfile and write content
                 with open(parcellation_zip_path, "wb") as f:
                     f.write(resp.content)
-
-            # Extract zipfile
-            with zipfile.ZipFile(parcellation_zip_path, "r") as zip_ref:
-                if version == 1:
-                    zip_ref.extractall(
-                        (parcellations_dir / "AICHA_v1").as_posix()
-                    )
-                elif version == 2:
-                    zip_ref.extractall(Path(tmpdir).as_posix())
-                    # Extract tarfile for v2
-                    with tarfile.TarFile(
-                        Path(tmpdir) / "aicha_v2.tar", "r"
-                    ) as tar_ref:
-                        tar_ref.extractall(
-                            (parcellations_dir / "AICHA_v2").as_posix()
+                # Unzip tempfile
+                with zipfile.ZipFile(parcellation_zip_path, "r") as zip_ref:
+                    if version == 1:
+                        zip_ref.extractall(
+                            (parcellations_dir / "AICHA_v1").as_posix()
                         )
-
-            # Cleanup after unzipping
-            if (parcellations_dir / f"AICHA_v{version}" / "__MACOSX").exists():
-                shutil.rmtree(
-                    (
-                        parcellations_dir / f"AICHA_v{version}" / "__MACOSX"
-                    ).as_posix()
-                )
+                    elif version == 2:
+                        zip_ref.extractall(Path(tmpdir).as_posix())
+                        # Extract tarfile for v2
+                        with tarfile.TarFile(
+                            Path(tmpdir) / "aicha_v2.tar", "r"
+                        ) as tar_ref:
+                            tar_ref.extractall(
+                                (parcellations_dir / "AICHA_v2").as_posix()
+                            )
+                # Cleanup after unzipping
+                if (
+                    parcellations_dir / f"AICHA_v{version}" / "__MACOSX"
+                ).exists():
+                    shutil.rmtree(
+                        (
+                            parcellations_dir
+                            / f"AICHA_v{version}"
+                            / "__MACOSX"
+                        ).as_posix()
+                    )
 
     # Load labels
     labels = pd.read_csv(
@@ -1163,6 +1195,8 @@ def _retrieve_shen(  # noqa: C901
 
     Raises
     ------
+    RuntimeError
+        If there is a problem fetching files.
     ValueError
         If invalid value or combination is provided for ``year`` and ``n_rois``
         or if there is a problem fetching the parcellation.
@@ -1266,10 +1300,14 @@ def _retrieve_shen(  # noqa: C901
         with tempfile.TemporaryDirectory() as tmpdir:
             # Make HTTP request
             try:
-                resp = requests.get(url)
+                resp = httpx.get(url)
                 resp.raise_for_status()
-            except (ConnectionError, ReadTimeout, HTTPError) as err:
-                raise_error(f"Failed to download Shen {year} due to {err}")
+            except httpx.HTTPError as exc:
+                raise_error(
+                    f"Error response {exc.response.status_code} while "
+                    f"requesting {exc.request.url!r}",
+                    klass=RuntimeError,
+                )
             else:
                 if year in (2013, 2019):
                     parcellation_zip_path = Path(tmpdir) / f"Shen{year}.zip"
@@ -1360,6 +1398,8 @@ def _retrieve_yan(
 
     Raises
     ------
+    RuntimeError
+        If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``n_rois``, ``yeo_networks`` or
         ``kong_networks`` or if there is a problem fetching the parcellation.
@@ -1471,35 +1511,46 @@ def _retrieve_yan(
                 "Kong2022_17Networks_LUT.txt"
             )
 
-        # Initiate a session and make HTTP requests
-        session = requests.Session()
-        # Download parcellation file
-        logger.info(f"Downloading Yan 2023 parcellation from {img_url}")
-        try:
-            img_resp = session.get(img_url)
-            img_resp.raise_for_status()
-        except (ConnectionError, ReadTimeout, HTTPError) as err:
-            raise_error(
-                f"Failed to download Yan 2023 parcellation due to: {err}"
-            )
-        else:
-            parcellation_img_path = Path(parcellation_fname)
-            parcellation_img_path.parent.mkdir(parents=True, exist_ok=True)
-            parcellation_img_path.touch(exist_ok=True)
-            with open(parcellation_img_path, "wb") as f:
-                f.write(img_resp.content)
-        # Download label file
-        logger.info(f"Downloading Yan 2023 labels from {label_url}")
-        try:
-            label_resp = session.get(label_url)
-            label_resp.raise_for_status()
-        except (ConnectionError, ReadTimeout, HTTPError) as err:
-            raise_error(f"Failed to download Yan 2023 labels due to: {err}")
-        else:
-            parcellation_labels_path = Path(parcellation_lname)
-            parcellation_labels_path.touch(exist_ok=True)
-            with open(parcellation_labels_path, "wb") as f:
-                f.write(label_resp.content)
+        # Make HTTP requests
+        with httpx.Client() as client:
+            # Download parcellation file
+            logger.info(f"Downloading Yan 2023 parcellation from {img_url}")
+            try:
+                img_resp = client.get(img_url)
+                img_resp.raise_for_status()
+            except httpx.HTTPError as exc:
+                raise_error(
+                    f"Error response {exc.response.status_code} while "
+                    f"requesting {exc.request.url!r}",
+                    klass=RuntimeError,
+                )
+            else:
+                parcellation_img_path = Path(parcellation_fname)
+                # Create local directory if not present
+                parcellation_img_path.parent.mkdir(parents=True, exist_ok=True)
+                # Create local file if not present
+                parcellation_img_path.touch(exist_ok=True)
+                # Open file and write content
+                with open(parcellation_img_path, "wb") as f:
+                    f.write(img_resp.content)
+            # Download label file
+            logger.info(f"Downloading Yan 2023 labels from {label_url}")
+            try:
+                label_resp = client.get(label_url)
+                label_resp.raise_for_status()
+            except httpx.HTTPError as exc:
+                raise_error(
+                    f"Error response {exc.response.status_code} while "
+                    f"requesting {exc.request.url!r}",
+                    klass=RuntimeError,
+                )
+            else:
+                parcellation_labels_path = Path(parcellation_lname)
+                # Create local file if not present
+                parcellation_labels_path.touch(exist_ok=True)
+                # Open file and write content
+                with open(parcellation_labels_path, "wb") as f:
+                    f.write(label_resp.content)
 
     # Load label file
     labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[1].to_list()
