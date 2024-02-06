@@ -70,6 +70,19 @@ jobs:
       run: |
         echo "Using AFNI : $(afni --version)"
       if: matrix.python-version == 3.10
+    - name: Install ANTs
+      run: |
+        sudo apt-get install -y -qq unzip
+        curl -fsSL -o ants.zip https://github.com/ANTsX/ANTs/releases/download/v2.5.1/ants-2.5.1-ubuntu-22.04-X64-gcc.zip
+        unzip ants.zip -d /opt
+        mv /opt/ants-2.5.1/bin/* /opt/ants-2.5.1
+        rm ants.zip
+        echo "/opt/ants-2.5.1" >> $GITHUB_PATH
+      if: matrix.python-version == 3.10
+    - name: Check ANTs
+      run: |
+        echo "Using ANTs : $(antsRegistration --version)"
+      if: matrix.python-version == 3.10
     - name: Test with tox
       run: |
         tox
