@@ -636,24 +636,27 @@ def _retrieve_schaefer(
     logger.info(f"\tn_rois: {n_rois}")
     logger.info(f"\tyeo_networks: {yeo_networks}")
 
+    # Check n_rois value
     _valid_n_rois = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
-    _valid_networks = [7, 17]
-    _valid_resolutions = [1, 2]
-
     if n_rois not in _valid_n_rois:
         raise_error(
             f"The parameter `n_rois` ({n_rois}) needs to be one of the "
             f"following: {_valid_n_rois}"
         )
+
+    # Check networks
+    _valid_networks = [7, 17]
     if yeo_networks not in _valid_networks:
         raise_error(
             f"The parameter `yeo_networks` ({yeo_networks}) needs to be one "
             f"of the following: {_valid_networks}"
         )
 
+    # Check resolution
+    _valid_resolutions = [1, 2]
     resolution = closest_resolution(resolution, _valid_resolutions)
 
-    # define file names
+    # Define parcellation and label file names
     parcellation_fname = (
         parcellations_dir
         / "schaefer_2018"
@@ -668,7 +671,7 @@ def _retrieve_schaefer(
         / (f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order.txt")
     )
 
-    # check existence of parcellation
+    # Check existence of parcellation
     if not (parcellation_fname.exists() and parcellation_lname.exists()):
         logger.info(
             "At least one of the parcellation files are missing. "
@@ -678,13 +681,8 @@ def _retrieve_schaefer(
             n_rois=n_rois,
             yeo_networks=yeo_networks,
             resolution_mm=resolution,  # type: ignore we know it's 1 or 2
-            data_dir=str(parcellations_dir.absolute()),
+            data_dir=parcellations_dir.resolve(),
         )
-
-        if not (
-            parcellation_fname.exists() and parcellation_lname.exists()
-        ):  # pragma: no cover
-            raise_error("There was a problem fetching the parcellations.")
 
     # Load labels
     labels = [
@@ -737,17 +735,16 @@ def _retrieve_tian(
         If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``scale`` or ``magneticfield`` or
-        ``space`` or if there is a problem fetching the parcellation.
+        ``space``.
 
     """
-    # show parameters to user
     logger.info("Parcellation parameters:")
     logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tscale: {scale}")
     logger.info(f"\tspace: {space}")
     logger.info(f"\tmagneticfield: {magneticfield}")
 
-    # check validity of parameters
+    # Check scale
     _valid_scales = [1, 2, 3, 4]
     if scale not in _valid_scales:
         raise_error(
@@ -755,6 +752,7 @@ def _retrieve_tian(
             f"following: {_valid_scales}"
         )
 
+    # Check resolution
     _valid_resolutions = []  # avoid pylance error
     if magneticfield == "3T":
         _valid_spaces = ["MNI152NLin6Asym", "MNI152NLin2009cAsym"]
@@ -779,10 +777,9 @@ def _retrieve_tian(
             f"The parameter `magneticfield` ({magneticfield}) needs to be "
             f"one of the following: 3T or 7T"
         )
-
     resolution = closest_resolution(resolution, _valid_resolutions)
 
-    # define file names
+    # Define parcellation and label file names
     if magneticfield == "3T":
         parcellation_fname_base_3T = (
             parcellations_dir / "Tian2020MSA_v1.1" / "3T" / "Subcortex-Only"
@@ -831,10 +828,8 @@ def _retrieve_tian(
             "parcellation. A simple numbering scheme for distinction was "
             "therefore used."
         )
-    else:  # pragma: no cover
-        raise_error("This should not happen. Please report this error.")
 
-    # check existence of parcellation
+    # Check existence of parcellation
     if not (parcellation_fname.exists() and parcellation_lname.exists()):
         logger.info(
             "At least one of the parcellation files are missing, fetching."
@@ -870,6 +865,7 @@ def _retrieve_tian(
                 if (parcellations_dir / "__MACOSX").exists():
                     shutil.rmtree((parcellations_dir / "__MACOSX").as_posix())
 
+    # Load labels
     labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[0].to_list()
 
     return parcellation_fname, labels
@@ -908,26 +904,23 @@ def _retrieve_suit(
     RuntimeError
         If there is a problem fetching files.
     ValueError
-        If invalid value is provided for ``space`` or if there is a problem
-        fetching the parcellation.
+        If invalid value is provided for ``space``.
 
     """
     logger.info("Parcellation parameters:")
     logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tspace: {space}")
 
+    # Check space
     _valid_spaces = ["MNI152NLin6Asym", "SUIT"]
-
-    # check validity of parameters
     if space not in _valid_spaces:
         raise_error(
             f"The parameter `space` ({space}) needs to be one of the "
             f"following: {_valid_spaces}"
         )
 
-    # TODO: Validate this with Vera
+    # Check resolution
     _valid_resolutions = [1]
-
     resolution = closest_resolution(resolution, _valid_resolutions)
 
     # Format space if MNI; required for the file name
@@ -944,11 +937,11 @@ def _retrieve_suit(
 
     # Check existence of parcellation
     if not (parcellation_fname.exists() and parcellation_lname.exists()):
-        parcellation_fname.parent.mkdir(exist_ok=True, parents=True)
         logger.info(
             "At least one of the parcellation files is missing, fetching."
         )
-
+        # Create local directory if not present
+        parcellation_fname.parent.mkdir(exist_ok=True, parents=True)
         # Set URL
         url_basis = (
             "https://github.com/DiedrichsenLab/cerebellar_atlases/raw"
@@ -996,6 +989,7 @@ def _retrieve_suit(
                 )
                 labels.to_csv(parcellation_lname, sep="\t", index=False)
 
+    # Load labels
     labels = pd.read_csv(parcellation_lname, sep="\t", usecols=["name"])[
         "name"
     ].to_list()
@@ -1035,8 +1029,7 @@ def _retrieve_aicha(
     RuntimeError
         If there is a problem fetching files.
     ValueError
-        If invalid value is provided for ``version`` or if there is a problem
-        fetching the parcellation.
+        If invalid value is provided for ``version``.
 
     Warns
     -----
@@ -1055,28 +1048,27 @@ def _retrieve_aicha(
         "not confirmed by authors, until that this warning will be issued."
     )
 
-    # show parameters to user
     logger.info("Parcellation parameters:")
     logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tversion: {version}")
 
-    # Check version value
-    _valid_version = (1, 2)
+    # Check version
+    _valid_version = [1, 2]
     if version not in _valid_version:
         raise_error(
             f"The parameter `version` ({version}) needs to be one of the "
             f"following: {_valid_version}"
         )
 
+    # Check resolution
     _valid_resolutions = [1]
     resolution = closest_resolution(resolution, _valid_resolutions)
 
-    # Define image file
+    # Define parcellation and label file names
     parcellation_fname = (
         parcellations_dir / f"AICHA_v{version}" / "AICHA" / "AICHA.nii"
     )
-
-    # Define label file name according to version
+    parcellation_lname = Path()
     if version == 1:
         parcellation_lname = (
             parcellations_dir
@@ -1097,17 +1089,17 @@ def _retrieve_aicha(
         logger.info(
             "At least one of the parcellation files are missing, fetching."
         )
-
         # Set file name on server according to version
+        server_filename = ""
         if version == 1:
             server_filename = "aicha_v1.zip"
         elif version == 2:
             server_filename = "AICHA_v2.tar.zip"
-
         # Set URL
         url = f"http://www.gin.cnrs.fr/wp-content/uploads/{server_filename}"
 
         logger.info(f"Downloading AICHA v{version} from {url}")
+        # Store initial download in a tempdir
         with tempfile.TemporaryDirectory() as tmpdir:
             # Make HTTP request
             try:
@@ -1198,11 +1190,10 @@ def _retrieve_shen(  # noqa: C901
     RuntimeError
         If there is a problem fetching files.
     ValueError
-        If invalid value or combination is provided for ``year`` and ``n_rois``
-        or if there is a problem fetching the parcellation.
+        If invalid value or combination is provided for ``year`` and
+        ``n_rois``.
 
     """
-    # show parameters to user
     logger.info("Parcellation parameters:")
     logger.info(f"\tresolution: {resolution}")
     logger.info(f"\tyear: {year}")
@@ -1250,7 +1241,7 @@ def _retrieve_shen(  # noqa: C901
             f"`year = {year}` is invalid"
         )
 
-    # Define image file according to constraints
+    # Define parcellation and label file names
     if year == 2013:
         parcellation_fname = (
             parcellations_dir
@@ -1297,6 +1288,7 @@ def _retrieve_shen(  # noqa: C901
             url = "https://www.nitrc.org/frs/download.php/11629/shen_368.zip"
 
         logger.info(f"Downloading Shen {year} from {url}")
+        # Store initial download in a tempdir
         with tempfile.TemporaryDirectory() as tmpdir:
             # Make HTTP request
             try:
@@ -1311,17 +1303,16 @@ def _retrieve_shen(  # noqa: C901
             else:
                 if year in (2013, 2019):
                     parcellation_zip_path = Path(tmpdir) / f"Shen{year}.zip"
+                    # Open tempfile and write content
                     with open(parcellation_zip_path, "wb") as f:
                         f.write(resp.content)
-
-                    # Extract zipfile
+                    # Unzip tempfile
                     with zipfile.ZipFile(
                         parcellation_zip_path, "r"
                     ) as zip_ref:
                         zip_ref.extractall(
                             (parcellations_dir / f"Shen_{year}").as_posix()
                         )
-
                     # Cleanup after unzipping
                     if (
                         parcellations_dir / f"Shen_{year}" / "__MACOSX"
@@ -1331,16 +1322,18 @@ def _retrieve_shen(  # noqa: C901
                                 parcellations_dir / f"Shen_{year}" / "__MACOSX"
                             ).as_posix()
                         )
-
                 elif year == 2015:
                     img_dir_path = parcellations_dir / "Shen_2015"
+                    # Create local directory if not present
                     img_dir_path.mkdir(parents=True, exist_ok=True)
                     img_path = (
                         img_dir_path
                         / f"shen_{resolution}mm_268_parcellation.nii.gz"
                     )
+                    # Create local file if not present
                     img_path.touch(exist_ok=True)
-                    with open(img_path.as_posix(), "wb") as f:
+                    # Open tempfile and write content
+                    with open(img_path, "wb") as f:
                         f.write(resp.content)
 
     # Load labels based on year
@@ -1402,7 +1395,7 @@ def _retrieve_yan(
         If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``n_rois``, ``yeo_networks`` or
-        ``kong_networks`` or if there is a problem fetching the parcellation.
+        ``kong_networks``.
 
     """
     logger.info("Parcellation parameters:")
@@ -1432,6 +1425,8 @@ def _retrieve_yan(
             f"following: {_valid_n_rois}"
         )
 
+    parcellation_fname = Path()
+    parcellation_lname = Path()
     if yeo_networks:
         # Check yeo_networks value
         _valid_yeo_networks = [7, 17]
@@ -1484,6 +1479,8 @@ def _retrieve_yan(
         )
 
         # Set URL based on network
+        img_url = ""
+        label_url = ""
         if yeo_networks:
             img_url = (
                 "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/"
