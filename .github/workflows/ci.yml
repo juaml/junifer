@@ -83,6 +83,24 @@ jobs:
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
       if: matrix.python-version == 3.10
+    - name: Install FSL
+      run: |
+        sudo apt-get install -y -qq python3
+        curl -fsSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | python3 - -d /opt/fsl-6.0.6.4 -V 6.0.6.4
+        FSLOUTPUTTYPE="NIFTI_GZ"
+        FSLMULTIFILEQUIT="TRUE"
+        FSLTCLSH="/opt/fsl-6.0.6.4/bin/fsltclsh"
+        FSLWISH="/opt/fsl-6.0.6.4/bin/fslwish"
+        FSLLOCKDIR=""
+        FSLMACHINELIST=""
+        FSLREMOTECALL=""
+        FSLGECUDAQ="cuda.q"
+        echo "/opt/fsl-6.0.6.4" >> $GITHUB_PATH
+      if: matrix.python-version == 3.10
+    - name: Check FSL
+      run: |
+        echo "Using FSL : $(flirt -version)"
+      if: matrix.python-version == 3.10
     - name: Test with tox
       run: |
         tox
