@@ -228,7 +228,7 @@ class BOLDWarper(BasePreprocessor):
                     "antsApplyTransforms",
                     "-d 3",
                     "-e 3",
-                    "-n 'GenericLabel[NearestNeighbor]'",
+                    "-n LanczosWindowedSinc",
                     f"-i {input['path'].resolve()}",
                     f"-r {template_space_img_path.resolve()}",
                     f"-t {xfm_file_path.resolve()}",
