@@ -109,8 +109,7 @@ def test_BOLDWarper_preprocess_to_native(
 
 
 @pytest.mark.parametrize(
-    "datagrabber, element",
-    "space",
+    "datagrabber, element, space",
     [
         [
             DMCC13Benchmark(
