@@ -8,14 +8,14 @@ from ..utils.logging import logger
 
 
 def closest_resolution(
-    resolution: Optional[float],
+    resolution: Optional[Union[float, int]],
     valid_resolution: Union[List[float], List[int], np.ndarray],
 ) -> Union[float, int]:
     """Find the closest resolution.
 
     Parameters
     ----------
-    resolution : float, optional
+    resolution : float or int, optional
         The given resolution. If None, will return the highest resolution
         (default None).
     valid_resolution : list of float or int, or np.ndarray
