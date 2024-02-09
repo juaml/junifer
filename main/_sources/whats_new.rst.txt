@@ -76,8 +76,8 @@ Features
   transform operations on stored data by `Synchon Mandal`_ (:gh:`237`)
 
 
-Misc
-^^^^
+Miscellaneous
+^^^^^^^^^^^^^
 
 - Consistent docstrings for pytest fixtures used in the test suite by `Synchon
   Mandal`_ (:gh:`228`)
@@ -373,7 +373,7 @@ Features
   `Fede Raimondo`_ (:gh:`35`)
 
 
-Misc
-^^^^
+Miscellaneous
+^^^^^^^^^^^^^
 
 - Create the repository based on the mockup by `Fede Raimondo`_
