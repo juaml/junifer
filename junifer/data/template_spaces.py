@@ -12,6 +12,7 @@ import numpy as np
 from templateflow import api as tflow
 
 from ..utils import logger, raise_error
+from .utils import closest_resolution
 
 
 def get_xfm(
@@ -132,6 +133,14 @@ def get_template(
     # Get the min of the voxels sizes and use it as the resolution
     target_img = target_data["data"]
     resolution = np.min(target_img.header.get_zooms()[:3]).astype(int)
+
+    # Fetch available resolutions for the template
+    available_resolutions = [
+        int(min(val["zooms"]))
+        for val in tflow.get_metadata(space)["res"].values()
+    ]
+    # Use the closest resolution if desired resolution is not found
+    resolution = closest_resolution(resolution, available_resolutions)
 
     logger.info(f"Downloading template {space} in resolution {resolution}")
     # Retrieve template
