@@ -709,6 +709,40 @@ False or if the mask name is a built-in mask.</p>
 <span id="template-spaces"></span><h1><span class="section-number">9.2.4. </span>Template Spaces<a class="headerlink" href="#module-junifer.data.template_spaces" title="Link to this heading">#</a></h1>
 <p>Provide functions for template spaces.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.template_spaces.get_template">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.template_spaces.</span></span><span class="sig-name descname"><span class="pre">get_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.template_spaces.get_template" title="Link to this definition">#</a></dt>
+<dd><p>Get template for the space, tailored for the target image.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>space</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the template space.</p>
+</dd>
+<dt><strong>target_data</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The corresponding item of the data object for which the template space
+will be loaded.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other data
+types (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v5.3.0.dev5+g773e3c40)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a></dt><dd><p>The template image.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">space</span></code> is invalid.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If template in the required resolution is not found.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.template_spaces.get_xfm">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.template_spaces.</span></span><span class="sig-name descname"><span class="pre">get_xfm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xfms_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.template_spaces.get_xfm" title="Link to this definition">#</a></dt>
 <dd><p>Fetch warp files to convert from <code class="docutils literal notranslate"><span class="pre">src</span></code> to <code class="docutils literal notranslate"><span class="pre">dst</span></code>.</p>
@@ -819,6 +853,7 @@ The default location is “$HOME/junifer/data/xfms” (default None).</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-junifer.data.template_spaces">9.2.4. Template Spaces</a><ul>
+<li><a class="reference internal" href="#junifer.data.template_spaces.get_template"><code class="docutils literal notranslate"><span class="pre">get_template()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.template_spaces.get_xfm"><code class="docutils literal notranslate"><span class="pre">get_xfm()</span></code></a></li>
 </ul>
 </li>
