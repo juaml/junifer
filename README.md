@@ -65,6 +65,7 @@ pip install "junifer[bct,dev]"
 ```
 
 * `bct` installs [bctpy](https://github.com/aestrivex/bctpy) to enable use of `onthefly` module.
+* `neurokit2` installs [neurokit2](https://github.com/neuropsychology/NeuroKit) to enable use of [complexity markers](https://juaml.github.io/junifer/main/api/markers.html#module-junifer.markers.complexity).
 * `all` includes all of the above.
 * `dev` installs packages needed for development.
 * `docs` installs packages needed for building documentation.
