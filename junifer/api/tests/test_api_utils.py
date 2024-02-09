@@ -44,6 +44,7 @@ def test_get_dependency_information_short() -> None:
         "ruamel.yaml",
         "httpx",
         "tqdm",
+        "templateflow",
     ]
     if int(pl.python_version_tuple()[1]) < 10:
         dependency_list.append("importlib_metadata")
@@ -68,6 +69,7 @@ def test_get_dependency_information_long() -> None:
         "ruamel.yaml",
         "httpx",
         "tqdm",
+        "templateflow",
     ]
     for key in dependency_list:
         assert key in dependency_information_keys
