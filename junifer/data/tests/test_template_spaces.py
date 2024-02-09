@@ -57,16 +57,13 @@ def test_get_template_invalid_space() -> None:
             _ = get_template(space="andromeda", target_data=vbm_gm)
 
 
-def test_get_template_invalid_resolution() -> None:
-    """Test invalid resolution check for template fetch."""
+def test_get_template_closest_resolution() -> None:
+    """Test closest resolution check for template fetch."""
     with OasisVBMTestingDataGrabber() as dg:
         element = dg["sub-01"]
         element_data = DefaultDataReader().fit_transform(element)
         vbm_gm = element_data["VBM_GM"]
-        # Change header resolution to raise error
+        # Change header resolution to fetch closest resolution
         element_data["VBM_GM"]["data"].header.set_zooms((3, 3, 3))
-        # Get tailored parcellation
-        with pytest.raises(
-            RuntimeError, match="not found in the required resolution"
-        ):
-            _ = get_template(space=vbm_gm["space"], target_data=vbm_gm)
+        template = get_template(space=vbm_gm["space"], target_data=vbm_gm)
+        assert isinstance(template, nib.Nifti1Image)
