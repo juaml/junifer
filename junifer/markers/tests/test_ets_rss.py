@@ -8,52 +8,47 @@
 
 from pathlib import Path
 
-from nilearn import image
 from nilearn.maskers import NiftiLabelsMasker
 
-from junifer.data import load_parcellation
+from junifer.data import get_parcellation
+from junifer.datareader import DefaultDataReader
 from junifer.markers.ets_rss import RSSETSMarker
 from junifer.storage import SQLiteFeatureStorage
-from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
+from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
 # Set parcellation
-PARCELLATION = "Schaefer100x17"
+PARCELLATION = "TianxS1x3TxMNInonlinear2009cAsym"
 
 
 def test_compute() -> None:
     """Test RSS ETS compute()."""
-    with SPMAuditoryTestingDataGrabber() as dg:
-        # Fetch element
-        out = dg["sub001"]
-        # Load BOLD image
-        niimg = image.load_img(str(out["BOLD"]["path"].absolute()))
-        # Create input data
-        input_dict = {
-            "data": niimg,
-            "path": out["BOLD"]["path"],
-            "space": "MNI",
-        }
+    with PartlyCloudyTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Compute the RSSETSMarker
-        ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
-        new_out = ets_rss_marker.compute(input_dict)
+        marker = RSSETSMarker(parcellation=PARCELLATION)
+        rss_ets = marker.compute(element_data["BOLD"])
 
-        # Load parcellation
-        test_parcellation, _, _, _ = load_parcellation(PARCELLATION)
-        # Compute the NiftiLabelsMasker
-        test_masker = NiftiLabelsMasker(test_parcellation)
-        test_ts = test_masker.fit_transform(niimg)
+        # Compare with nilearn
+        # Load testing parcellation
+        test_parcellation, _ = get_parcellation(
+            parcellation=[PARCELLATION],
+            target_data=element_data["BOLD"],
+        )
+        # Extract timeseries
+        nifti_labels_masker = NiftiLabelsMasker(labels_img=test_parcellation)
+        extacted_timeseries = nifti_labels_masker.fit_transform(
+            element_data["BOLD"]["data"]
+        )
         # Assert the dimension of timeseries
-        n_time, _ = test_ts.shape
-        assert n_time == len(new_out["data"])
+        assert extacted_timeseries.shape[0] == len(rss_ets["data"])
 
 
 def test_get_output_type() -> None:
     """Test RSS ETS get_output_type()."""
-    ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
-    input_ = "BOLD"
-    output = ets_rss_marker.get_output_type(input_)
-    assert output == "timeseries"
+    assert "timeseries" == RSSETSMarker(
+        parcellation=PARCELLATION
+    ).get_output_type("BOLD")
 
 
 def test_store(tmp_path: Path) -> None:
@@ -65,20 +60,13 @@ def test_store(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
-        # Fetch element
-        elem = dg["sub001"]
-        # Load BOLD image
-        niimg = image.load_img(str(elem["BOLD"]["path"].absolute()))
-        elem["BOLD"]["data"] = niimg
+    with PartlyCloudyTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Compute the RSSETSMarker
-        ets_rss_marker = RSSETSMarker(parcellation=PARCELLATION)
+        marker = RSSETSMarker(parcellation=PARCELLATION)
         # Create storage
-        storage = SQLiteFeatureStorage(
-            uri=str((tmp_path / "test.sqlite").absolute())
-        )
+        storage = SQLiteFeatureStorage(tmp_path / "test_rss_ets.sqlite")
         # Store
-        ets_rss_marker.fit_transform(input=elem, storage=storage)
-
+        marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(x["name"] == "BOLD_RSSETSMarker" for x in features.values())
