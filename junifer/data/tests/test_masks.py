@@ -29,6 +29,7 @@ from junifer.data.masks import (
     register_mask,
 )
 from junifer.datareader import DefaultDataReader
+from junifer.pipeline.utils import _check_ants
 from junifer.testing.datagrabbers import (
     OasisVBMTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
@@ -215,18 +216,19 @@ def test_vickery_patil_error() -> None:
 
 def test_get_mask() -> None:
     """Test the get_mask function."""
-    reader = DefaultDataReader()
     with OasisVBMTestingDataGrabber() as dg:
-        input = dg["sub-01"]
-        input = reader.fit_transform(input)
-        vbm_gm = input["VBM_GM"]
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        vbm_gm = element_data["VBM_GM"]
         vbm_gm_img = vbm_gm["data"]
-        mask = get_mask(masks="GM_prob0.2", target_data=vbm_gm)
+        mask = get_mask(masks="compute_brain_mask", target_data=vbm_gm)
 
         assert mask.shape == vbm_gm_img.shape
         assert_array_equal(mask.affine, vbm_gm_img.affine)
 
-        raw_mask_img, _, _ = load_mask("GM_prob0.2", resolution=1.5)
+        raw_mask_callable, _, _ = load_mask(
+            "compute_brain_mask", resolution=1.5
+        )
+        raw_mask_img = raw_mask_callable(vbm_gm_img)  # type: ignore
         res_mask_img = resample_to_img(
             raw_mask_img,
             vbm_gm_img,
@@ -245,13 +247,11 @@ def test_mask_callable() -> None:
     _available_masks["identity"] = {
         "family": "Callable",
         "func": ident,
-        "space": "MNI",
+        "space": "MNI152Lin",
     }
-    reader = DefaultDataReader()
     with OasisVBMTestingDataGrabber() as dg:
-        input = dg["sub-01"]
-        input = reader.fit_transform(input)
-        vbm_gm = input["VBM_GM"]
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        vbm_gm = element_data["VBM_GM"]
         vbm_gm_img = vbm_gm["data"]
         mask = get_mask(masks="identity", target_data=vbm_gm)
 
@@ -262,11 +262,9 @@ def test_mask_callable() -> None:
 
 def test_get_mask_errors() -> None:
     """Test passing wrong parameters to get_mask."""
-    reader = DefaultDataReader()
     with OasisVBMTestingDataGrabber() as dg:
-        input = dg["sub-01"]
-        input = reader.fit_transform(input)
-        vbm_gm = input["VBM_GM"]
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        vbm_gm = element_data["VBM_GM"]
         # Test wrong masks definitions (more than one key per dict)
         with pytest.raises(ValueError, match=r"only one key"):
             get_mask(masks={"GM_prob0.2": {}, "Other": {}}, target_data=vbm_gm)
@@ -286,7 +284,8 @@ def test_get_mask_errors() -> None:
             ValueError, match=r"parameters to the intersection"
         ):
             get_mask(
-                masks=["GM_prob0.2", {"threshold": 1}], target_data=vbm_gm
+                masks=["compute_brain_mask", {"threshold": 1}],
+                target_data=vbm_gm,
             )
 
         # Test "inherited" masks errors
@@ -317,12 +316,6 @@ def test_get_mask_errors() -> None:
         ("compute_brain_mask", compute_brain_mask, {"threshold": 0.2}, False),
         ("compute_background_mask", compute_background_mask, None, False),
         ("compute_epi_mask", compute_epi_mask, None, False),
-        (
-            "fetch_icbm152_brain_gm_mask",
-            fetch_icbm152_brain_gm_mask,
-            None,
-            True,
-        ),
     ],
 )
 def test_nilearn_compute_masks(
@@ -345,11 +338,9 @@ def test_nilearn_compute_masks(
         Whether to resample the mask to the target data.
 
     """
-    reader = DefaultDataReader()
     with SPMAuditoryTestingDataGrabber() as dg:
-        input = dg["sub001"]
-        input = reader.fit_transform(input)
-        bold = input["BOLD"]
+        element_data = DefaultDataReader().fit_transform(dg["sub001"])
+        bold = element_data["BOLD"]
         bold_img = bold["data"]
 
         if params is None:
@@ -376,29 +367,59 @@ def test_nilearn_compute_masks(
         assert_array_equal(mask.get_fdata(), ni_mask.get_fdata())
 
 
+@pytest.mark.skipif(
+    _check_ants() is False, reason="requires ANTs to be in PATH"
+)
+def test_nilearn_compute_masks_with_space_transformation() -> None:
+    """Test nilearn compute mask function with space transformation."""
+    with SPMAuditoryTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub001"])
+        bold = element_data["BOLD"]
+        bold_img = bold["data"]
+
+        # Get mask
+        mask = get_mask(masks="fetch_icbm152_brain_gm_mask", target_data=bold)
+        # Check affine matrices are almost equal
+        assert_array_equal(mask.affine, bold_img.affine)
+
+        # Mask needs resampling
+        ni_mask = resample_to_img(
+            fetch_icbm152_brain_gm_mask(),
+            bold_img,
+            interpolation="nearest",
+            copy=True,
+        )
+        assert_array_equal(mask.get_fdata(), ni_mask.get_fdata())
+
+
 def test_get_mask_inherit() -> None:
     """Test using the inherit mask functionality."""
-    reader = DefaultDataReader()
     with SPMAuditoryTestingDataGrabber() as dg:
-        input = dg["sub001"]
-        input = reader.fit_transform(input)
+        element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Compute brain mask using nilearn
-        gm_mask = compute_brain_mask(input["BOLD"]["data"], threshold=0.2)
+        gm_mask = compute_brain_mask(
+            element_data["BOLD"]["data"], threshold=0.2
+        )
 
         # Get mask using the compute_brain_mask function
         mask1 = get_mask(
             masks={"compute_brain_mask": {"threshold": 0.2}},
-            target_data=input["BOLD"],
+            target_data=element_data["BOLD"],
         )
 
         # Now get the mask using the inherit functionality, passing the
         # computed mask as extra data
         extra_input = {
-            "BOLD_MASK": {"data": gm_mask, "space": input["BOLD"]["space"]}
+            "BOLD_MASK": {
+                "data": gm_mask,
+                "space": element_data["BOLD"]["space"],
+            }
         }
-        input["BOLD"]["mask_item"] = "BOLD_MASK"
+        element_data["BOLD"]["mask_item"] = "BOLD_MASK"
         mask2 = get_mask(
-            masks="inherit", target_data=input["BOLD"], extra_input=extra_input
+            masks="inherit",
+            target_data=element_data["BOLD"],
+            extra_input=extra_input,
         )
 
         # Both masks should be equal
@@ -408,7 +429,6 @@ def test_get_mask_inherit() -> None:
 @pytest.mark.parametrize(
     "masks,params",
     [
-        (["GM_prob0.2", "GM_prob0.2_cortex"], {}),
         (["compute_brain_mask", "compute_background_mask"], {}),
         (["compute_brain_mask", "compute_epi_mask"], {}),
     ],
@@ -426,10 +446,8 @@ def test_get_mask_multiple(
         Parameters to pass to the intersect_masks function.
 
     """
-    reader = DefaultDataReader()
     with SPMAuditoryTestingDataGrabber() as dg:
-        input = dg["sub001"]
-        input = reader.fit_transform(input)
+        element_data = DefaultDataReader().fit_transform(dg["sub001"])
         if not isinstance(masks, list):
             junifer_masks = [masks]
         else:
@@ -438,10 +456,12 @@ def test_get_mask_multiple(
             # Convert params to junifer style (one dict per param)
             junifer_params = [{k: params[k]} for k in params.keys()]
             junifer_masks.extend(junifer_params)
-        target_img = input["BOLD"]["data"]
+        target_img = element_data["BOLD"]["data"]
         resolution = np.min(target_img.header.get_zooms()[:3])
 
-        computed = get_mask(masks=junifer_masks, target_data=input["BOLD"])
+        computed = get_mask(
+            masks=junifer_masks, target_data=element_data["BOLD"]
+        )
 
         masks_names = [
             next(iter(x.keys())) if isinstance(x, dict) else x for x in masks
@@ -480,19 +500,18 @@ def test_get_mask_multiple(
         assert_array_equal(computed.get_fdata(), expected.get_fdata())
 
 
-def test_get_mask_multiple_incorrect_space() -> None:
-    """Test incorrect space error for getting multiple masks."""
-    reader = DefaultDataReader()
+@pytest.mark.skipif(
+    _check_ants() is False, reason="requires ANTs to be in PATH"
+)
+def test_get_mask_multiple_different_space() -> None:
+    """Test tailored multiple mask fetch in different space."""
     with SPMAuditoryTestingDataGrabber() as dg:
-        input = dg["sub001"]
-        input = reader.fit_transform(input)
-
-        with pytest.raises(RuntimeError, match="unable to merge."):
-            get_mask(
-                masks=[
-                    "GM_prob0.2",
-                    "compute_brain_mask",
-                    "fetch_icbm152_brain_gm_mask",
-                ],
-                target_data=input["BOLD"],
-            )
+        element_data = DefaultDataReader().fit_transform(dg["sub001"])
+        # Get tailored mask
+        get_mask(
+            masks=[
+                "compute_brain_mask",
+                "fetch_icbm152_brain_gm_mask",
+            ],
+            target_data=element_data["BOLD"],
+        )
