@@ -82,14 +82,14 @@ def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
     "fractional", [True, False], ids=["fractional", "non-fractional"]
 )
 def test_ALFFSpheres_comparison(tmp_path: Path, fractional: bool) -> None:
-    """Test ALFFSpheres using afni.
+    """Test ALFFSpheres implementation comparison.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
-         The path to the test directory.
+        The path to the test directory.
     fractional : bool
-         Whether to compute fractional ALFF or not.
+        Whether to compute fractional ALFF or not.
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
