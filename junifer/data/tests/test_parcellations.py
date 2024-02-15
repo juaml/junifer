@@ -30,7 +30,11 @@ from junifer.data.parcellations import (
     register_parcellation,
 )
 from junifer.datareader import DefaultDataReader
-from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
+from junifer.pipeline.utils import _check_ants
+from junifer.testing.datagrabbers import (
+    OasisVBMTestingDataGrabber,
+    PartlyCloudyTestingDataGrabber,
+)
 
 
 def test_register_parcellation_built_in_check() -> None:
@@ -58,7 +62,7 @@ def test_register_parcellation_already_registered() -> None:
         name="testparc",
         parcellation_path="testparc.nii.gz",
         parcels_labels=["1", "2", "3"],
-        space="MNI",
+        space="MNI152Lin",
     )
     assert (
         load_parcellation("testparc", path_only=True)[2].name
@@ -71,13 +75,13 @@ def test_register_parcellation_already_registered() -> None:
             name="testparc",
             parcellation_path="testparc.nii.gz",
             parcels_labels=["1", "2", "3"],
-            space="MNI",
+            space="MNI152Lin",
         )
     register_parcellation(
         name="testparc",
         parcellation_path="testparc2.nii.gz",
         parcels_labels=["1", "2", "3"],
-        space="MNI",
+        space="MNI152Lin",
         overwrite=True,
     )
 
@@ -100,14 +104,16 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
     assert schaefer is not None
 
     # Test wrong number of labels
-    register_parcellation("WrongLabels", schaefer_path, labels[:10], "MNI")
+    register_parcellation(
+        "WrongLabels", schaefer_path, labels[:10], "MNI152Lin"
+    )
 
     with pytest.raises(ValueError, match=r"has 100 parcels but 10"):
         load_parcellation("WrongLabels")
 
     # Test wrong number of labels
     register_parcellation(
-        "WrongLabels2", schaefer_path, [*labels, "wrong"], "MNI"
+        "WrongLabels2", schaefer_path, [*labels, "wrong"], "MNI152Lin"
     )
 
     with pytest.raises(ValueError, match=r"has 100 parcels but 101"):
@@ -119,7 +125,9 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
     new_schaefer_img = new_img_like(schaefer, schaefer_data)
     nib.save(new_schaefer_img, new_schaefer_path)
 
-    register_parcellation("WrongValues", new_schaefer_path, labels[:-1], "MNI")
+    register_parcellation(
+        "WrongValues", new_schaefer_path, labels[:-1], "MNI152Lin"
+    )
     with pytest.raises(ValueError, match=r"the range [0, 99]"):
         load_parcellation("WrongValues")
 
@@ -129,7 +137,9 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
     new_schaefer_img = new_img_like(schaefer, schaefer_data)
     nib.save(new_schaefer_img, new_schaefer_path)
 
-    register_parcellation("WrongValues2", new_schaefer_path, labels, "MNI")
+    register_parcellation(
+        "WrongValues2", new_schaefer_path, labels, "MNI152Lin"
+    )
     with pytest.raises(ValueError, match=r"the range [0, 100]"):
         load_parcellation("WrongValues2")
 
@@ -137,13 +147,25 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
 @pytest.mark.parametrize(
     "name, parcellation_path, parcels_labels, space, overwrite",
     [
-        ("testparc_1", "testparc_1.nii.gz", ["1", "2", "3"], "MNI", True),
-        ("testparc_2", "testparc_2.nii.gz", ["1", "2", "6"], "MNI", True),
+        (
+            "testparc_1",
+            "testparc_1.nii.gz",
+            ["1", "2", "3"],
+            "MNI152Lin",
+            True,
+        ),
+        (
+            "testparc_2",
+            "testparc_2.nii.gz",
+            ["1", "2", "6"],
+            "MNI152Lin",
+            True,
+        ),
         (
             "testparc_3",
             Path("testparc_3.nii.gz"),
             ["1", "2", "6"],
-            "MNI",
+            "MNI152Lin",
             True,
         ),
     ],
@@ -1172,28 +1194,26 @@ def test_merge_parcellations_3D_multiple_duplicated_labels() -> None:
 
 def test_get_parcellation_single() -> None:
     """Test tailored single parcellation fetch."""
-    reader = DefaultDataReader()
-    with OasisVBMTestingDataGrabber() as dg:
-        element = dg["sub-01"]
-        element_data = reader.fit_transform(element)
-        vbm_gm = element_data["VBM_GM"]
-        vbm_gm_img = vbm_gm["data"]
+    with PartlyCloudyTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        bold = element_data["BOLD"]
+        bold_img = bold["data"]
         # Get tailored parcellation
         tailored_parcellation, tailored_labels = get_parcellation(
-            parcellation=["Schaefer100x7"],
-            target_data=vbm_gm,
+            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            target_data=bold,
         )
         # Check shape and affine with original element data
-        assert tailored_parcellation.shape == vbm_gm_img.shape
-        assert_array_equal(tailored_parcellation.affine, vbm_gm_img.affine)
+        assert tailored_parcellation.shape == bold_img.shape[:3]
+        assert_array_equal(tailored_parcellation.affine, bold_img.affine)
         # Get raw parcellation
         raw_parcellation, raw_labels, _, _ = load_parcellation(
-            "Schaefer100x7",
+            "TianxS1x3TxMNInonlinear2009cAsym",
             resolution=1.5,
         )
         resampled_raw_parcellation = resample_to_img(
             source_img=raw_parcellation,
-            target_img=vbm_gm_img,
+            target_img=bold_img,
             interpolation="nearest",
             copy=True,
         )
@@ -1207,36 +1227,34 @@ def test_get_parcellation_single() -> None:
 
 def test_get_parcellation_multi_same_space() -> None:
     """Test tailored multi parcellation fetch in same space."""
-    reader = DefaultDataReader()
-    with OasisVBMTestingDataGrabber() as dg:
-        element = dg["sub-01"]
-        element_data = reader.fit_transform(element)
-        vbm_gm = element_data["VBM_GM"]
-        vbm_gm_img = vbm_gm["data"]
+    with PartlyCloudyTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        bold = element_data["BOLD"]
+        bold_img = bold["data"]
         # Get tailored parcellation
         tailored_parcellation, tailored_labels = get_parcellation(
             parcellation=[
-                "Schaefer100x7",
-                "TianxS2x3TxMNI6thgeneration",
+                "Shen_2015_268",
+                "TianxS1x3TxMNInonlinear2009cAsym",
             ],
-            target_data=vbm_gm,
+            target_data=bold,
         )
         # Check shape and affine with original element data
-        assert tailored_parcellation.shape == vbm_gm_img.shape
-        assert_array_equal(tailored_parcellation.affine, vbm_gm_img.affine)
+        assert tailored_parcellation.shape == bold_img.shape[:3]
+        assert_array_equal(tailored_parcellation.affine, bold_img.affine)
         # Get raw parcellations
         raw_parcellations = []
         raw_labels = []
         parcellations_names = [
-            "Schaefer100x7",
-            "TianxS2x3TxMNI6thgeneration",
+            "Shen_2015_268",
+            "TianxS1x3TxMNInonlinear2009cAsym",
         ]
         for name in parcellations_names:
             img, labels, _, _ = load_parcellation(name=name, resolution=1.5)
             # Resample raw parcellations
             resampled_img = resample_to_img(
                 source_img=img,
-                target_img=vbm_gm_img,
+                target_img=bold_img,
                 interpolation="nearest",
                 copy=True,
             )
@@ -1256,19 +1274,18 @@ def test_get_parcellation_multi_same_space() -> None:
         assert tailored_labels == merged_labels
 
 
+@pytest.mark.skipif(
+    _check_ants() is False, reason="requires ANTs to be in PATH"
+)
 def test_get_parcellation_multi_different_space() -> None:
     """Test tailored multi parcellation fetch in different space."""
-    reader = DefaultDataReader()
     with OasisVBMTestingDataGrabber() as dg:
-        element = dg["sub-01"]
-        element_data = reader.fit_transform(element)
-        vbm_gm = element_data["VBM_GM"]
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Get tailored parcellation
-        with pytest.raises(RuntimeError, match="unable to merge."):
-            get_parcellation(
-                parcellation=[
-                    "Schaefer100x7",
-                    "SUITxSUIT",
-                ],
-                target_data=vbm_gm,
-            )
+        get_parcellation(
+            parcellation=[
+                "Schaefer100x7",
+                "TianxS1x3TxMNInonlinear2009cAsym",
+            ],
+            target_data=element_data["VBM_GM"],
+        )
