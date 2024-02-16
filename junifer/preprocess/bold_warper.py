@@ -14,6 +14,7 @@ from typing import (
 )
 
 import nibabel as nib
+from templateflow import api as tflow
 
 from ..api.decorators import register_preprocessor
 from ..data import get_template, get_xfm
@@ -64,17 +65,7 @@ class BOLDWarper(BasePreprocessor):
             super().__init__(
                 on="BOLD", required_data_types=["BOLD", self.ref, "Warp"]
             )
-        elif self.ref in [
-            "MNI152Lin",
-            "MNI152NLin6Sym",
-            "MNI152NLin6Asym",
-            "MNI152NLin2009aSym",
-            "MNI152NLin2009aAsym",
-            "MNI152NLin2009bSym",
-            "MNI152NLin2009bAsym",
-            "MNI152NLin2009cAsym",
-            "MNI152NLin2009cAsym",
-        ]:
+        elif self.ref in tflow.templates():
             super().__init__(on="BOLD", required_data_types=["BOLD"])
         else:
             raise_error(f"Unknown reference: {self.ref}")
