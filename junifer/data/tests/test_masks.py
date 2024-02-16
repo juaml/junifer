@@ -5,16 +5,17 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import socket
 from pathlib import Path
 from typing import Callable, Dict, List, Optional, Union
 
+import nibabel as nib
 import numpy as np
 import pytest
 from nilearn.datasets import fetch_icbm152_brain_gm_mask
 from nilearn.image import resample_to_img
 from nilearn.masking import (
     compute_background_mask,
-    compute_brain_mask,
     compute_epi_mask,
     intersect_masks,
 )
@@ -23,17 +24,95 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 from junifer.data.masks import (
     _available_masks,
     _load_vickery_patil_mask,
+    compute_brain_mask,
     get_mask,
     list_masks,
     load_mask,
     register_mask,
 )
+from junifer.datagrabber import DMCC13Benchmark
 from junifer.datareader import DefaultDataReader
 from junifer.pipeline.utils import _check_ants
 from junifer.testing.datagrabbers import (
     OasisVBMTestingDataGrabber,
+    PartlyCloudyTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
 )
+
+
+@pytest.mark.parametrize(
+    "mask_type, threshold",
+    [
+        ("whole", 0.2),
+        ("whole", 0.5),
+        ("whole", 0.8),
+        ("gm", 0.2),
+        ("gm", 0.5),
+        ("gm", 0.8),
+        ("wm", 0.2),
+        ("wm", 0.5),
+        ("wm", 0.8),
+    ],
+)
+def test_compute_brain_mask(mask_type: str, threshold: float) -> None:
+    """Test compute_brain_mask().
+
+    Parameters
+    ----------
+    mask_type : str
+        The parametrized mask type.
+    threshold : float
+        The parametrized threshold.
+
+    """
+    with PartlyCloudyTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        mask = compute_brain_mask(
+            target_data=element_data["BOLD"],
+            extra_input=None,
+            mask_type=mask_type,
+        )
+        assert isinstance(mask, nib.Nifti1Image)
+
+
+@pytest.mark.skipif(
+    socket.gethostname() != "juseless",
+    reason="only for juseless",
+)
+@pytest.mark.parametrize(
+    "mask_type",
+    [
+        "whole",
+        "gm",
+        "wm",
+    ],
+)
+def test_compute_brain_mask_for_native(mask_type: str) -> None:
+    """Test compute_brain_mask().
+
+    Parameters
+    ----------
+    mask_type : str
+        The parametrized mask type.
+
+    """
+    with DMCC13Benchmark(
+        types=["BOLD"],
+        sessions=["wave1bas"],
+        tasks=["Rest"],
+        phase_encodings=["AP"],
+        runs=["1"],
+        native_t1w=True,
+    ) as dg:
+        element_data = DefaultDataReader().fit_transform(
+            dg[("f1031ax", "wave1bas", "Rest", "AP", "1")]
+        )
+        mask = compute_brain_mask(
+            target_data=element_data["BOLD"],
+            extra_input=None,
+            mask_type=mask_type,
+        )
+        assert isinstance(mask, nib.Nifti1Image)
 
 
 def test_register_mask_built_in_check() -> None:
@@ -228,7 +307,7 @@ def test_get_mask() -> None:
         raw_mask_callable, _, _ = load_mask(
             "compute_brain_mask", resolution=1.5
         )
-        raw_mask_img = raw_mask_callable(vbm_gm_img)  # type: ignore
+        raw_mask_img = raw_mask_callable(vbm_gm)  # type: ignore
         res_mask_img = resample_to_img(
             raw_mask_img,
             vbm_gm_img,
@@ -313,7 +392,6 @@ def test_get_mask_errors() -> None:
 @pytest.mark.parametrize(
     "mask_name,function,params,resample",
     [
-        ("compute_brain_mask", compute_brain_mask, {"threshold": 0.2}, False),
         ("compute_background_mask", compute_background_mask, None, False),
         ("compute_epi_mask", compute_epi_mask, None, False),
     ],
@@ -397,9 +475,7 @@ def test_get_mask_inherit() -> None:
     with SPMAuditoryTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Compute brain mask using nilearn
-        gm_mask = compute_brain_mask(
-            element_data["BOLD"]["data"], threshold=0.2
-        )
+        gm_mask = compute_brain_mask(element_data["BOLD"], threshold=0.2)
 
         # Get mask using the compute_brain_mask function
         mask1 = get_mask(
@@ -484,7 +560,13 @@ def test_get_mask_multiple(
         ]
 
         for t_func in mask_funcs:
-            mask_imgs.append(_available_masks[t_func]["func"](target_img))
+            # Bypass for custom mask
+            if t_func == "compute_brain_mask":
+                mask_imgs.append(
+                    _available_masks[t_func]["func"](element_data["BOLD"])
+                )
+            else:
+                mask_imgs.append(_available_masks[t_func]["func"](target_img))
 
         mask_imgs = [
             resample_to_img(
