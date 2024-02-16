@@ -557,6 +557,49 @@ False or if the coordinates name is a built-in coordinates or if the
 <span id="masks"></span><h1><span class="section-number">9.2.3. </span>Masks<a class="headerlink" href="#module-junifer.data.masks" title="Link to this heading">#</a></h1>
 <p>Provide functions for masks.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="junifer.data.masks.compute_brain_mask">
+<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">compute_brain_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'whole'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.compute_brain_mask" title="Link to this definition">#</a></dt>
+<dd><p>Compute the whole-brain, grey-matter or white-matter mask.</p>
+<p>This mask is calculated using the template space and resolution as found
+in the <code class="docutils literal notranslate"><span class="pre">target_data</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>target_data</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The corresponding item of the data object for which mask will be
+loaded.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other data
+types (default None).</p>
+</dd>
+<dt><strong>mask_type</strong><span class="classifier">{“whole”, “gm”, “wm”}, optional</span></dt><dd><p>Type of mask to be computed:</p>
+<ul class="simple">
+<li><p>“whole” : whole-brain mask</p></li>
+<li><p>“gm” : grey-matter mask</p></li>
+<li><p>“wm” : white-matter mask</p></li>
+</ul>
+<p>(default “whole”).</p>
+</dd>
+<dt><strong>threshold</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The value under which the template is cut off (default 0.5).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v5.3.0.dev5+g773e3c40)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a></dt><dd><p>The mask (3D image).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">mask_type</span></code> is invalid or
+if <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.masks.get_mask">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">get_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">masks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.get_mask" title="Link to this definition">#</a></dt>
 <dd><p>Get mask, tailored for the target image.</p>
@@ -582,7 +625,9 @@ kinds that needs to be used in the computation of masks (default None).</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If warp / transformation file extension is not “.mat” or “.h5”.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If warp / transformation file extension is not “.mat” or “.h5” or
+if fetch_icbm152_brain_gm_mask is used and requires warping to
+other template space.</p>
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If extra key is provided in addition to mask name in <code class="docutils literal notranslate"><span class="pre">masks</span></code> or
 if no mask is provided or
@@ -684,7 +729,7 @@ False or if the mask name is a built-in mask.</p>
 <p>Provide functions for template spaces.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.template_spaces.get_template">
-<span class="sig-prename descclassname"><span class="pre">junifer.data.template_spaces.</span></span><span class="sig-name descname"><span class="pre">get_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.template_spaces.get_template" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">junifer.data.template_spaces.</span></span><span class="sig-name descname"><span class="pre">get_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T1w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.template_spaces.get_template" title="Link to this definition">#</a></dt>
 <dd><p>Get template for the space, tailored for the target image.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -697,6 +742,8 @@ will be loaded.</p>
 <dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other data
 types (default None).</p>
 </dd>
+<dt><strong>template_type</strong><span class="classifier">{“T1w”, “whole”, “gm”, “wm”, “csf”}, optional</span></dt><dd><p>The template type to retrieve (default “T1w”).</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -707,9 +754,9 @@ types (default None).</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">space</span></code> is invalid.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">space</span></code> or <code class="docutils literal notranslate"><span class="pre">template_type</span></code> is invalid.</p>
 </dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If template in the required resolution is not found.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If required template is not found.</p>
 </dd>
 </dl>
 </dd>
@@ -820,6 +867,7 @@ The default location is “$HOME/junifer/data/xfms” (default None).</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-junifer.data.masks">9.2.3. Masks</a><ul>
+<li><a class="reference internal" href="#junifer.data.masks.compute_brain_mask"><code class="docutils literal notranslate"><span class="pre">compute_brain_mask()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.masks.get_mask"><code class="docutils literal notranslate"><span class="pre">get_mask()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.masks.list_masks"><code class="docutils literal notranslate"><span class="pre">list_masks()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.masks.load_mask"><code class="docutils literal notranslate"><span class="pre">load_mask()</span></code></a></li>
