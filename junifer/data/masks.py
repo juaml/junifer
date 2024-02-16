@@ -20,10 +20,9 @@ from typing import (
 import nibabel as nib
 import numpy as np
 from nilearn.datasets import fetch_icbm152_brain_gm_mask
-from nilearn.image import resample_to_img
+from nilearn.image import get_data, new_img_like, resample_to_img
 from nilearn.masking import (
     compute_background_mask,
-    compute_brain_mask,
     compute_epi_mask,
     intersect_masks,
 )
@@ -39,6 +38,87 @@ if TYPE_CHECKING:
 
 # Path to the masks
 _masks_path = Path(__file__).parent / "masks"
+
+
+def compute_brain_mask(
+    target_data: Dict[str, Any],
+    extra_input: Optional[Dict[str, Any]] = None,
+    mask_type: str = "whole",
+    threshold: float = 0.5,
+) -> "Nifti1Image":
+    """Compute the whole-brain, grey-matter or white-matter mask.
+
+    This mask is calculated using the template space and resolution as found
+    in the ``target_data``.
+
+    Parameters
+    ----------
+    target_data : dict
+        The corresponding item of the data object for which mask will be
+        loaded.
+    extra_input : dict, optional
+        The other fields in the data object. Useful for accessing other data
+        types (default None).
+    mask_type : {"whole", "gm", "wm"}, optional
+        Type of mask to be computed:
+
+        * "whole" : whole-brain mask
+        * "gm" : grey-matter mask
+        * "wm" : white-matter mask
+
+        (default "whole").
+    threshold : float, optional
+        The value under which the template is cut off (default 0.5).
+
+    Returns
+    -------
+    Nifti1Image
+        The mask (3D image).
+
+    Raises
+    ------
+    ValueError
+        If ``mask_type`` is invalid or
+        if ``extra_input`` is None when ``target_data``'s space is native.
+
+    """
+    logger.debug(f"Computing {mask_type} mask")
+
+    if mask_type not in ["whole", "gm", "wm"]:
+        raise_error(f"Unknown mask type: {mask_type}")
+
+    # Check pre-requirements for space manipulation
+    target_space = target_data["space"]
+    # Set target standard space to target space
+    target_std_space = target_space
+    # Extra data type requirement check if target space is native
+    if target_space == "native":
+        # Check for extra inputs
+        if extra_input is None:
+            raise_error(
+                "No extra input provided, requires `Warp` "
+                "data type to infer target template space."
+            )
+        # Set target standard space to warp file space source
+        target_std_space = extra_input["Warp"]["src"]
+
+    # Fetch template in closest resolution
+    template = get_template(
+        space=target_std_space,
+        target_data=target_data,
+        extra_input=extra_input,
+        template_type=mask_type if mask_type in ["gm", "wm"] else "T1w",
+    )
+    # Resample template to target image
+    target_img = target_data["data"]
+    resampled_template = resample_to_img(
+        source_img=template, target_img=target_img
+    )
+
+    # Threshold and get mask
+    mask = (get_data(resampled_template) >= threshold).astype("int8")
+
+    return new_img_like(target_img, mask)  # type: ignore
 
 
 def _fetch_icbm152_brain_gm_mask(
@@ -318,7 +398,12 @@ def get_mask(  # noqa: C901
             if callable(mask_object):
                 if mask_params is None:
                     mask_params = {}
-                mask_img = mask_object(target_img, **mask_params)
+                # From nilearn
+                if mask_name != "compute_brain_mask":
+                    mask_img = mask_object(target_img, **mask_params)
+                # Not from nilearn
+                else:
+                    mask_img = mask_object(target_data, **mask_params)
             # Mask is a Nifti1Image
             else:
                 # Mask params provided
