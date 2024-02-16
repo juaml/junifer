@@ -259,6 +259,9 @@ def test_queue_correct_yaml_config(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
 ) -> None:
     """Test proper YAML config generation for queueing.
 
@@ -270,6 +273,12 @@ def test_queue_correct_yaml_config(
         The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
         The pytest.LogCaptureFixture object.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
 
     """
     with monkeypatch.context() as m:
@@ -281,7 +290,7 @@ def test_queue_correct_yaml_config(
                     "workdir": str(tmp_path.resolve()),
                     "datagrabber": datagrabber,
                     "markers": markers,
-                    "storage": {"kind": "SQLiteFeatureStorage"},
+                    "storage": storage,
                     "env": {
                         "kind": "conda",
                         "name": "junifer",
@@ -499,6 +508,7 @@ def test_queue_without_elements(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
+    datagrabber: Dict[str, str],
 ) -> None:
     """Test queue without elements.
 
@@ -510,6 +520,8 @@ def test_queue_without_elements(
         The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
         The pytest.LogCaptureFixture object.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
 
     """
     with monkeypatch.context() as m:
