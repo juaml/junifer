@@ -141,7 +141,9 @@ class BOLDWarper(BasePreprocessor):
             i.e., using "T1w" as reference.
         RuntimeError
             If warp / transformation file extension is not ".mat" or ".h5"
-            when transforming to native space.
+            when transforming to native space or
+            if the BOLD data is in the correct space and does not require
+            warping.
 
         """
         logger.info(f"Warping BOLD to {self.ref} space using BOLDWarper")
@@ -187,8 +189,13 @@ class BOLDWarper(BasePreprocessor):
         else:
             # Check pre-requirements for space manipulation
             if self.ref == input["space"]:
-                logger.info(
-                    f"Skipped warping as the BOLD data is in {self.ref} space"
+                raise_error(
+                    (
+                        f"Skipped warping as the BOLD data is in {self.ref} "
+                        "space which would mean that you can remove the "
+                        "BOLDWarper from the preprocess step."
+                    ),
+                    klass=RuntimeError,
                 )
             else:
                 # Get xfm file
