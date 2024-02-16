@@ -12,7 +12,6 @@ from typing import Callable, Dict, List, Optional, Union
 import nibabel as nib
 import numpy as np
 import pytest
-from nilearn.datasets import fetch_icbm152_brain_gm_mask
 from nilearn.image import resample_to_img
 from nilearn.masking import (
     compute_background_mask,
@@ -32,7 +31,6 @@ from junifer.data.masks import (
 )
 from junifer.datagrabber import DMCC13Benchmark
 from junifer.datareader import DefaultDataReader
-from junifer.pipeline.utils import _check_ants
 from junifer.testing.datagrabbers import (
     OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
@@ -388,6 +386,14 @@ def test_get_mask_errors() -> None:
                 masks="inherit", target_data=vbm_gm, extra_input=extra_input
             )
 
+        # Block fetch_icbm152_brain_gm_mask space transformation
+        with pytest.raises(RuntimeError, match="prohibited"):
+            get_mask(
+                masks="fetch_icbm152_brain_gm_mask",
+                target_data=vbm_gm,
+                extra_input=extra_input,
+            )
+
 
 @pytest.mark.parametrize(
     "mask_name,function,params,resample",
@@ -442,31 +448,6 @@ def test_nilearn_compute_masks(
                 interpolation="nearest",
                 copy=True,
             )
-        assert_array_equal(mask.get_fdata(), ni_mask.get_fdata())
-
-
-@pytest.mark.skipif(
-    _check_ants() is False, reason="requires ANTs to be in PATH"
-)
-def test_nilearn_compute_masks_with_space_transformation() -> None:
-    """Test nilearn compute mask function with space transformation."""
-    with SPMAuditoryTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub001"])
-        bold = element_data["BOLD"]
-        bold_img = bold["data"]
-
-        # Get mask
-        mask = get_mask(masks="fetch_icbm152_brain_gm_mask", target_data=bold)
-        # Check affine matrices are almost equal
-        assert_array_equal(mask.affine, bold_img.affine)
-
-        # Mask needs resampling
-        ni_mask = resample_to_img(
-            fetch_icbm152_brain_gm_mask(),
-            bold_img,
-            interpolation="nearest",
-            copy=True,
-        )
         assert_array_equal(mask.get_fdata(), ni_mask.get_fdata())
 
 
@@ -580,20 +561,3 @@ def test_get_mask_multiple(
 
         expected = intersect_masks(mask_imgs, **params)
         assert_array_equal(computed.get_fdata(), expected.get_fdata())
-
-
-@pytest.mark.skipif(
-    _check_ants() is False, reason="requires ANTs to be in PATH"
-)
-def test_get_mask_multiple_different_space() -> None:
-    """Test tailored multiple mask fetch in different space."""
-    with SPMAuditoryTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub001"])
-        # Get tailored mask
-        get_mask(
-            masks=[
-                "compute_brain_mask",
-                "fetch_icbm152_brain_gm_mask",
-            ],
-            target_data=element_data["BOLD"],
-        )
