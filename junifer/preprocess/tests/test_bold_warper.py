@@ -7,6 +7,7 @@ import socket
 from typing import TYPE_CHECKING, List, Tuple
 
 import pytest
+from numpy.testing import assert_array_equal, assert_raises
 
 from junifer.datagrabber import DataladHCP1200, DMCC13Benchmark
 from junifer.datareader import DefaultDataReader
@@ -83,7 +84,7 @@ def test_BOLDWarper_get_output_type(input_: List[str]) -> None:
     socket.gethostname() != "juseless",
     reason="only for juseless",
 )
-def test_BOLDWarper_preprocess(
+def test_BOLDWarper_preprocess_to_native(
     datagrabber: "BaseDataGrabber", element: Tuple[str, ...]
 ) -> None:
     """Test BOLDWarper preprocess.
@@ -106,3 +107,70 @@ def test_BOLDWarper_preprocess(
         )
         assert data_type == "BOLD"
         assert isinstance(data, dict)
+
+
+@pytest.mark.parametrize(
+    "datagrabber, element, space",
+    [
+        [
+            DMCC13Benchmark(
+                types=["BOLD"],
+                sessions=["wave1bas"],
+                tasks=["Rest"],
+                phase_encodings=["AP"],
+                runs=["1"],
+                native_t1w=False,
+            ),
+            ("f9057kp", "wave1bas", "Rest", "AP", "1"),
+            "MNI152NLin2009aAsym",
+        ],
+        [
+            DMCC13Benchmark(
+                types=["BOLD"],
+                sessions=["wave1bas"],
+                tasks=["Rest"],
+                phase_encodings=["AP"],
+                runs=["1"],
+                native_t1w=False,
+            ),
+            ("f9057kp", "wave1bas", "Rest", "AP", "1"),
+            "MNI152NLin6Asym",
+        ],
+    ],
+)
+@pytest.mark.skipif(
+    _check_ants() is False, reason="requires ANTs to be in PATH"
+)
+@pytest.mark.skipif(
+    socket.gethostname() != "juseless",
+    reason="only for juseless",
+)
+def test_BOLDWarper_preprocess_to_multi_mni(
+    datagrabber: "BaseDataGrabber", element: Tuple[str, ...], space: str
+) -> None:
+    """Test BOLDWarper preprocess.
+
+    Parameters
+    ----------
+    datagrabber : DataGrabber-like object
+        The parametrized DataGrabber objects.
+    element : tuple of str
+        The parametrized elements.
+    space : str
+        The parametrized template space to transform to.
+
+    """
+    with datagrabber as dg:
+        # Read data
+        element_data = DefaultDataReader().fit_transform(dg[element])
+        pre_xfm_data = element_data["BOLD"]["data"].get_fdata().copy()
+        # Preprocess data
+        data_type, data = BOLDWarper(reference=space).preprocess(
+            input=element_data["BOLD"],
+            extra_input=element_data,
+        )
+        assert data_type == "BOLD"
+        assert isinstance(data, dict)
+        assert data["space"] == space
+        with assert_raises(AssertionError):
+            assert_array_equal(pre_xfm_data, data["data"])
