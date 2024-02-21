@@ -141,6 +141,10 @@ def test_BOLDWarper_preprocess_to_native(
 @pytest.mark.skipif(
     _check_ants() is False, reason="requires ANTs to be in PATH"
 )
+@pytest.mark.skipif(
+    socket.gethostname() != "juseless",
+    reason="only for juseless",
+)
 def test_BOLDWarper_preprocess_to_multi_mni(
     datagrabber: "BaseDataGrabber", element: Tuple[str, ...], space: str
 ) -> None:
