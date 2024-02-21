@@ -5,14 +5,15 @@
 Queueing Jobs (HPC, HTC)
 ========================
 
-Yet another interesting feature of junifer is the ability to queue jobs on
+Yet another interesting feature of ``junifer`` is the ability to queue jobs on
 computational clusters. This is done by adding the ``queue`` section in the
 :ref:`codeless` file and executing the  ``junifer queue`` command.
 
 While junifer is meant to support `HTCondor`_, `SLURM`_ and local queueing
 using `GNU Parallel`_, only HTCondor is currently supported. This will be
-implemented in future releases of junifer. If you are in immediate need of any of
-these schedulers, please create an issue on the `junifer github`_ repository.
+implemented in future releases of ``junifer``. If you are in immediate need of
+any of these schedulers, please create an issue on the `junifer github`_
+repository.
 
 The ``queue`` section of the :ref:`codeless` must start by defining the
 following general parameters:
@@ -24,7 +25,7 @@ following general parameters:
 * ``kind``: The kind of scheduler to be used. Currently, only ``HTCondor`` is
   supported.
 
-Example:
+Example in YAML:
 
 .. code-block:: yaml
 
@@ -40,7 +41,7 @@ The rest of the parameters depend on the scheduler you are using.
 HTCondor
 --------
 
-When using HTCondor, junifer will use a DAG to queue one job per element
+When using HTCondor, ``junifer`` will use a DAG to queue one job per element
 (``junifer run``). As an option, the DAG can include a final job
 (``junifer collect``) to collect the results once all of the individual element
 jobs are finished.
@@ -61,12 +62,13 @@ The following parameters are available for HTCondor:
     If relative path is used then it should be relative to the YAML.
 
 * ``mem``: Memory to be used by the job. It must be provided as a string with
-  the units (e.g. ``2GB``).
-* ``cpus``: Number of CPUs to be used by the job. It must be provided as an int.
+  the units (e.g., ``"2GB"``).
+* ``cpus``: Number of CPUs to be used by the job. It must be provided as an
+  integer (e.g., ``1``).
 * ``disk``: Disk space to be used by the job. It must be provided as a string
-  with the units (e.g. ``2GB``). Keep in mind that junifer uses a local working
-  directory for each job, and datalad datasets might be cloned in this temporary
-  directory.
+  with the units (e.g., ``"2GB"``). Keep in mind that ``junifer`` uses a local
+  working directory for each job, and datalad datasets might be cloned in this
+  temporary directory.
 * ``extra_preamble``: Extra lines to be added to the HTCondor submit file. This
   can be used to add extra parameters to the job, such as ``requirements``.
 * ``collect``: This parameter allows to include a collect to the DAG to collect
@@ -81,7 +83,7 @@ The following parameters are available for HTCondor:
   * ``no``: Do not include a collect job to the DAG.
 
 
-Example:
+Example in YAML:
 
 .. code-block:: yaml
 
