@@ -9,9 +9,9 @@ Description
 -----------
 
 The ``DataGrabber`` is an object that can provide an interface to datasets you
-want to work with in junifer. Every concrete implementation of a DataGrabber is
-aware of a particular dataset's structure and thus allows you to fetch specific
-elements of interest from the dataset. It adds the ``path`` key to each
+want to work with in ``junifer``. Every concrete implementation of a DataGrabber
+is aware of a particular dataset's structure and thus allows you to fetch
+specific elements of interest from the dataset. It adds the ``path`` key to each
 :ref:`data type <data_types>` in the :ref:`Data object <data_object>`.
 
 DataGrabbers are intended to be used as context managers. When used within a
@@ -20,18 +20,18 @@ the dataset, for example, downloading and cleaning up. As the interface
 is consistent, you always use the same procedure to interact with the DataGrabber.
 
 For example, a concrete implementation of :class:`.DataladDataGrabber` can
-provide junifer with data from a Datalad dataset. Of course, DataGrabbers are not
-only meant to work with Datalad datasets but any dataset.
+provide ``junifer`` with data from a Datalad dataset. Of course, DataGrabbers are
+not only meant to work with Datalad datasets but any dataset.
 
 If you are interested in using already provided DataGrabbers, please go to
 :doc:`../builtin`. And, if you want to implement your own DataGrabber, you need
-to provide concrete implementations of base classes already provided.
+to provide concrete implementations of abstract base classes already provided.
 
 Base Classes
 ------------
 
-In this section, we showcase different abstract base classes you might want to
-use to implement your own DataGrabber.
+In this section, we showcase different abstract and concrete base classes you
+might want to use to implement your own DataGrabber.
 
 .. list-table::
    :widths: auto

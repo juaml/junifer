@@ -2,8 +2,8 @@
 
 .. _pipeline:
 
-The junifer Pipeline
-====================
+The ``junifer`` Pipeline
+========================
 
 The junifer pipeline is the main execution path of junifer. It consists of five
 steps:
@@ -11,10 +11,10 @@ steps:
 1. :ref:`Data Grabber <datagrabber>`: Interpret the dataset and provide a list
    of files.
 2. :ref:`Data Reader <datareader>`: Read the files.
-3. :ref:`Pre-processing <preprocess>`: Prepare the images for marker
+3. :ref:`Preprocess <preprocess>`: Prepare the files' data for marker
    computation.
-4. :ref:`Marker Computation <marker>`: Compute the marker.
-5. :ref:`Storage <storage>`: Store the marker values.
+4. :ref:`Marker Computation <marker>`: Compute the marker(s).
+5. :ref:`Storage <storage>`: Store the marker(s) values.
 
 The element that is passed across the pipeline is called the
 :ref:`Data Object<data_object>`.
@@ -26,7 +26,7 @@ The following is a graphical representation of the pipeline:
    flowchart LR
      dg[Data Grabber]
      dr[Data Reader]
-     pp[Pre-processing]
+     pp[Preprocess]
      mc[Marker Computation]
      st[Storage]
      dg --> dr
@@ -45,7 +45,7 @@ on multiple markers:
    flowchart LR
      dg[Data Grabber]
      dr[Data Reader]
-     pp[Pre-processing]
+     pp[Preprocess]
      mc1[Marker Computation]
      mc2[Marker Computation]
      mc3[Marker Computation]
