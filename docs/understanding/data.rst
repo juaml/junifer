@@ -105,7 +105,7 @@ Data Types
      - Preprocessed or Raw T1w image
    * - ``BOLD``
      - BOLD image (4D)
-     - Preprocessed/Denoised BOLD image (fmriprep output)
+     - Preprocessed or Denoised BOLD image (fMRIPrep output)
    * - ``BOLD_confounds``
      - BOLD image confounds (CSV/TSV file)
      - Confounds that can be applied to the BOLD image.
