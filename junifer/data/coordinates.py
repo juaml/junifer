@@ -138,7 +138,7 @@ def register_coordinates(
     voi_names : list of str
         The names of the VOIs.
     space : str
-        The space of the coordinates.
+        The space of the coordinates, for e.g., "MNI".
     overwrite : bool, optional
         If True, overwrite an existing list of coordinates with the same name.
         Does not apply to built-in coordinates (default False).
