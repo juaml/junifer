@@ -217,7 +217,7 @@ def register_mask(
     mask_path : str or pathlib.Path
         The path to the mask file.
     space : str
-        The space of the mask.
+        The space of the mask, for e.g., "MNI152NLin6Asym".
     overwrite : bool, optional
         If True, overwrite an existing mask with the same name.
         Does not apply to built-in mask (default False).
