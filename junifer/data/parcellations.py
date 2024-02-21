@@ -155,7 +155,7 @@ def register_parcellation(
     parcels_labels : list of str
         The list of labels for the parcellation.
     space : str
-        The space of the parcellation.
+        The template space of the parcellation, for e.g., "MNI152NLin6Asym".
     overwrite : bool, optional
         If True, overwrite an existing parcellation with the same name.
         Does not apply to built-in parcellations (default False).
