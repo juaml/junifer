@@ -275,7 +275,14 @@
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>reference</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type to use as reference for warping.</p>
+<dt><strong>reference</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type to use as reference for warping, can be either a data
+type like “T1w” or a template space like “MNI152NLin2009cAsym”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">reference</span></code> is invalid.</p>
 </dd>
 </dl>
 </dd>
@@ -328,7 +335,8 @@ preprocessor.</p>
 <dt><strong>input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The BOLD input from the Junifer Data object.</p>
 </dd>
 <dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the Junifer Data object. Must include the
-<code class="docutils literal notranslate"><span class="pre">Warp</span></code> and <code class="docutils literal notranslate"><span class="pre">ref</span></code> value’s keys.</p>
+<code class="docutils literal notranslate"><span class="pre">Warp</span></code> and <code class="docutils literal notranslate"><span class="pre">ref</span></code> value’s keys if native space transformation is
+needed.</p>
 </dd>
 </dl>
 </dd>
@@ -343,9 +351,13 @@ Junifer Data object under the key <code class="docutils literal notranslate"><sp
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when transforming to native space
+i.e., using “T1w” as reference.</p>
 </dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If warp / transformation file extension is not “.mat” or “.h5”.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If warp / transformation file extension is not “.mat” or “.h5”
+when transforming to native space or
+if the BOLD data is in the correct space and does not require
+warping.</p>
 </dd>
 </dl>
 </dd>
