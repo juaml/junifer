@@ -110,6 +110,10 @@ _available_coordinates: Dict[
         "path": _vois_meta_path / "Power2013_MNI_VOIs.tsv",
         "space": "MNI",
     },
+    "AutobiographicalMemory": {
+        "path": _vois_meta_path / "AutobiographicalMemory_VOIs.txt",
+        "space": "MNI",
+    },
 }
 
 
