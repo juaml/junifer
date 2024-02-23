@@ -127,6 +127,13 @@ for n_rois in range(100, 1001, 100):
         "kong_networks": 17,
         "space": "MNI152NLin6Asym",
     }
+# Add Brainnetome parcellation info
+for threshold in [0, 25, 50]:
+    _available_parcellations[f"Brainnetome_thr{threshold}"] = {
+        "family": "Brainnetome",
+        "threshold": threshold,
+        "space": "MNI152NLin6Asym",
+    }
 
 
 def register_parcellation(
@@ -523,6 +530,9 @@ def _retrieve_parcellation(
             Number of Yeo networks to use (default None).
         ``kong_networks`` : {17}, optional
             Number of Kong networks to use (default None).
+    * Brainnetome :
+        ``threshold`` : {0, 25, 50}
+            Threshold for the probabilistic maps of subregion.
 
     Returns
     -------
@@ -582,6 +592,12 @@ def _retrieve_parcellation(
         )
     elif family == "Yan":
         parcellation_fname, parcellation_labels = _retrieve_yan(
+            parcellations_dir=parcellations_dir,
+            resolution=resolution,
+            **kwargs,
+        )
+    elif family == "Brainnetome":
+        parcellation_fname, parcellation_labels = _retrieve_brainnetome(
             parcellations_dir=parcellations_dir,
             resolution=resolution,
             **kwargs,
@@ -1551,6 +1567,122 @@ def _retrieve_yan(
 
     # Load label file
     labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[1].to_list()
+
+    return parcellation_fname, labels
+
+
+def _retrieve_brainnetome(
+    parcellations_dir: Path,
+    resolution: Optional[float] = None,
+    threshold: Optional[int] = None,
+) -> Tuple[Path, List[str]]:
+    """Retrieve Brainnetome parcellation.
+
+    Parameters
+    ----------
+    parcellations_dir : pathlib.Path
+        The path to the parcellation data directory.
+    resolution : {1.0, 1.25, 2.0}, optional
+        The desired resolution of the parcellation to load. If it is not
+        available, the closest resolution will be loaded. Preferably, use a
+        resolution higher than the desired one. By default, will load the
+        highest one (default None). Available resolutions for this
+        parcellation are 1mm, 1.25mm and 2mm.
+    threshold : {0, 25, 50}, optional
+        The threshold for the probabilistic maps of subregion (default None).
+
+    Returns
+    -------
+    pathlib.Path
+        File path to the parcellation image.
+    list of str
+        Parcellation labels.
+
+    Raises
+    ------
+    RuntimeError
+        If there is a problem fetching files.
+    ValueError
+        If invalid value is provided for ``threshold``.
+
+    """
+    logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
+    logger.info(f"\tthreshold: {threshold}")
+
+    # Check resolution
+    _valid_resolutions = [1.0, 1.25, 2.0]
+    resolution = closest_resolution(resolution, _valid_resolutions)
+
+    # Check threshold value
+    _valid_threshold = [0, 25, 50]
+    if threshold not in _valid_threshold:
+        raise_error(
+            f"The parameter `threshold` ({threshold}) needs to be one of the "
+            f"following: {_valid_threshold}"
+        )
+    # Correct resolution for further stuff
+    if resolution in [1.0, 2.0]:
+        resolution = int(resolution)
+
+    parcellation_fname = (
+        parcellations_dir
+        / "BNA246"
+        / f"BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz"
+    )
+
+    # Check for existence of parcellation
+    if not parcellation_fname.exists():
+        # Set URL
+        url = f"http://neurovault.org/media/images/1625/BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz"
+
+        logger.info(f"Downloading Brainnetome from {url}")
+        # Make HTTP request
+        try:
+            resp = httpx.get(url, follow_redirects=True)
+            resp.raise_for_status()
+        except httpx.HTTPError as exc:
+            raise_error(
+                f"Error response {exc.response.status_code} while "
+                f"requesting {exc.request.url!r}",
+                klass=RuntimeError,
+            )
+        else:
+            # Create local directory if not present
+            parcellation_fname.parent.mkdir(parents=True, exist_ok=True)
+            # Create file if not present
+            parcellation_fname.touch(exist_ok=True)
+            # Open file and write bytes
+            parcellation_fname.write_bytes(resp.content)
+
+    # Load labels
+    labels = (
+        sorted([f"SFG_L(R)_7_{i}" for i in range(1, 8)] * 2)
+        + sorted([f"MFG_L(R)_7_{i}" for i in range(1, 8)] * 2)
+        + sorted([f"IFG_L(R)_6_{i}" for i in range(1, 7)] * 2)
+        + sorted([f"OrG_L(R)_6_{i}" for i in range(1, 7)] * 2)
+        + sorted([f"PrG_L(R)_6_{i}" for i in range(1, 7)] * 2)
+        + sorted([f"PCL_L(R)_2_{i}" for i in range(1, 3)] * 2)
+        + sorted([f"STG_L(R)_6_{i}" for i in range(1, 7)] * 2)
+        + sorted([f"MTG_L(R)_4_{i}" for i in range(1, 5)] * 2)
+        + sorted([f"ITG_L(R)_7_{i}" for i in range(1, 8)] * 2)
+        + sorted([f"FuG_L(R)_3_{i}" for i in range(1, 4)] * 2)
+        + sorted([f"PhG_L(R)_6_{i}" for i in range(1, 7)] * 2)
+        + sorted([f"pSTS_L(R)_2_{i}" for i in range(1, 3)] * 2)
+        + sorted([f"SPL_L(R)_5_{i}" for i in range(1, 6)] * 2)
+        + sorted([f"IPL_L(R)_6_{i}" for i in range(1, 7)] * 2)
+        + sorted([f"PCun_L(R)_4_{i}" for i in range(1, 5)] * 2)
+        + sorted([f"PoG_L(R)_4_{i}" for i in range(1, 5)] * 2)
+        + sorted([f"INS_L(R)_6_{i}" for i in range(1, 7)] * 2)
+        + sorted([f"CG_L(R)_7_{i}" for i in range(1, 8)] * 2)
+        + sorted([f"MVOcC _L(R)_5_{i}" for i in range(1, 6)] * 2)
+        + sorted([f"LOcC_L(R)_4_{i}" for i in range(1, 5)] * 2)
+        + sorted([f"LOcC_L(R)_2_{i}" for i in range(1, 3)] * 2)
+        + sorted([f"Amyg_L(R)_2_{i}" for i in range(1, 3)] * 2)
+        + sorted([f"Hipp_L(R)_2_{i}" for i in range(1, 3)] * 2)
+        + sorted([f"BG_L(R)_6_{i}" for i in range(1, 7)] * 2)
+        + sorted([f"Tha_L(R)_8_{i}" for i in range(1, 9)] * 2)
+    )
 
     return parcellation_fname, labels
 
