@@ -365,6 +365,16 @@ Available
        | resting-state functional connectivity.
        | NeuroImage, Volume 273 (2023).
        | https://doi.org/10.1016/j.neuroimage.2023.120010
+   * - Brainnetome
+     - ``threshold``
+     - ``Brainnetome_thr0``, ``Brainnetome_thr25``, ``Brainnetome_thr50``
+     - ``MNI152NLin6Asym``
+     - 0.0.4
+     - | Fan, L., Li, H., Zhuo, J., et al.
+       | The Human Brainnetome Atlas: A New Brain Atlas Based on Connectional
+       | Architecture
+       | Cerebral Cortex, Volume 26(8), Pages 3508–3526 (2016).
+       | https://doi.org/10.1093/cercor/bhw157
 
 
 Planned
