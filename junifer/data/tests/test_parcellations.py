@@ -16,6 +16,7 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 from junifer.data.parcellations import (
     _retrieve_aicha,
+    _retrieve_brainnetome,
     _retrieve_parcellation,
     _retrieve_schaefer,
     _retrieve_shen,
@@ -952,6 +953,77 @@ def test_retrieve_yan_incorrect_kong_networks(tmp_path: Path) -> None:
             parcellations_dir=tmp_path,
             n_rois=100,
             kong_networks=27,
+        )
+
+
+@pytest.mark.parametrize(
+    "resolution, threshold",
+    [
+        (1.0, 0),
+        (1.0, 25),
+        (1.0, 50),
+        (1.25, 0),
+        (1.25, 25),
+        (1.25, 50),
+        (2, 0),
+        (2, 25),
+        (2, 50),
+    ],
+)
+def test_brainnetome(
+    tmp_path: Path,
+    resolution: float,
+    threshold: int,
+) -> None:
+    """Test Brainnetome parcellation.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    resolution : float
+        The parametrized resolution values.
+    threshold : int
+        The parametrized threshold values.
+
+    """
+    parcellations = list_parcellations()
+    parcellation_name = f"Brainnetome_thr{threshold}"
+    assert parcellation_name in parcellations
+
+    # Fix resolution
+    if resolution in [1.0, 2.0]:
+        resolution = int(resolution)
+
+    parcellation_file = f"BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz"
+    # Load parcellation
+    img, label, img_path, space = load_parcellation(
+        name=parcellation_name,
+        parcellations_dir=tmp_path,
+        resolution=resolution,
+    )
+    assert img is not None
+    assert img_path.name == parcellation_file
+    assert space == "MNI152NLin6Asym"
+    assert len(label) == 246
+    assert_array_equal(
+        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+    )
+
+
+def test_retrieve_brainnetome_incorrect_threshold(tmp_path: Path) -> None:
+    """Test retrieve Brainnetome with incorrect threshold.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    with pytest.raises(ValueError, match="The parameter `threshold`"):
+        _retrieve_brainnetome(
+            parcellations_dir=tmp_path,
+            threshold=100,
         )
 
 
