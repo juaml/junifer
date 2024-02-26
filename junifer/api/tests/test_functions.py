@@ -14,7 +14,7 @@ import pytest
 from ruamel.yaml import YAML
 
 import junifer.testing.registry  # noqa: F401
-from junifer.api.functions import collect, queue, run
+from junifer.api.functions import collect, queue, reset, run
 from junifer.datagrabber.base import BaseDataGrabber
 from junifer.pipeline.registry import build
 
@@ -867,3 +867,86 @@ def test_queue_condor_submission_fail(
 def test_queue_slurm() -> None:
     """Test job queueing in SLURM."""
     pass
+
+
+def test_reset_run(tmp_path: Path) -> None:
+    """Test reset function for run.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Create storage
+    storage["uri"] = tmp_path / "test_reset_run.sqlite"  # type: ignore
+    # Run operation to generate files
+    run(
+        workdir=tmp_path,
+        datagrabber=datagrabber,
+        markers=markers,
+        storage=storage,
+        elements=["sub-01"],
+    )
+    # Reset operation
+    reset(config={"storage": storage})
+
+    assert not Path(storage["uri"]).exists()
+
+
+@pytest.mark.parametrize(
+    "job_name",
+    (
+        "job",
+        None,
+    ),
+)
+def test_reset_queue(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, job_name: str
+) -> None:
+    """Test reset function for queue.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    job_name : str
+        The parametrized job name.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        # Create storage
+        storage["uri"] = "test_reset_queue.sqlite"
+        # Set job name
+        if job_name is None:
+            job_name = "junifer_job"
+        # Queue operation to generate files
+        queue(
+            config={
+                "with": "junifer.testing.registry",
+                "workdir": str(tmp_path.resolve()),
+                "datagrabber": datagrabber,
+                "markers": markers,
+                "storage": storage,
+                "env": {
+                    "kind": "conda",
+                    "name": "junifer",
+                },
+                "mem": "8G",
+            },
+            kind="HTCondor",
+            jobname=job_name,
+        )
+        # Reset operation
+        reset(
+            config={
+                "storage": storage,
+                "queue": {"jobname": job_name},
+            }
+        )
+
+        assert not Path(storage["uri"]).exists()
+        assert not (tmp_path / "junifer_jobs" / job_name).exists()
