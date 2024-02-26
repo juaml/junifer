@@ -11,7 +11,14 @@ import pytest
 from click.testing import CliRunner
 from ruamel.yaml import YAML
 
-from junifer.api.cli import _parse_elements_file, collect, run, selftest, wtf
+from junifer.api.cli import (
+    _parse_elements_file,
+    collect,
+    queue,
+    run,
+    selftest,
+    wtf,
+)
 
 
 # Configure YAML class
@@ -179,6 +186,42 @@ def test_multi_element_access(
     read_elements = _parse_elements_file(test_file_path)
     # Check
     assert read_elements == expected_list
+
+
+def test_queue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test queue command.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        # Get test config
+        infile = Path(__file__).parent / "data" / "gmd_mean_htcondor.yaml"
+        # Read test config
+        contents = yaml.load(infile)
+        # Working directory
+        contents["workdir"] = str(tmp_path.resolve())
+        # Storage
+        contents["storage"]["uri"] = str((tmp_path / "out.sqlite").resolve())
+        # Write new test config
+        outfile = tmp_path / "in.yaml"
+        yaml.dump(contents, stream=outfile)
+        # Queue command arguments
+        queue_args = [
+            str(outfile.resolve()),
+            "--verbose",
+            "debug",
+        ]
+        # Invoke queue command
+        queue_result = runner.invoke(queue, queue_args)
+        # Check
+        assert queue_result.exit_code == 0
 
 
 def test_wtf_short() -> None:
