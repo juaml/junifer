@@ -709,3 +709,40 @@ def _queue_slurm(
     #     logger.info(
     #         f"SLURM job files created, to submit the job, run `{cmd}`"
     #     )
+
+
+def reset(config: Dict) -> None:
+    """Reset the storage and jobs directory.
+
+    Parameters
+    ----------
+    config : dict
+        The configuration to be used for resetting.
+
+    """
+    # Fetch storage
+    storage = config["storage"]
+    storage_uri = Path(storage["uri"])
+    logger.info(f"Deleting {storage_uri.resolve()!s}")
+    # Delete storage; will be str
+    if storage_uri.exists():
+        # Delete files in the directory
+        for file in storage_uri.iterdir():
+            file.unlink(missing_ok=True)
+        # Remove directory
+        storage_uri.parent.rmdir()
+
+    # Fetch job name (if present)
+    if config.get("queue") is not None:
+        queue = config["queue"]
+        job_dir = (
+            Path.cwd()
+            / "junifer_jobs"
+            / (queue.get("jobname") or "junifer_job")
+        )
+        logger.info(f"Deleting job directory at {job_dir.resolve()!s}")
+        if job_dir.exists():
+            # Remove files and directories
+            shutil.rmtree(job_dir)
+            # Remove directory
+            job_dir.parent.rmdir()
