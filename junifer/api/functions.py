@@ -418,7 +418,10 @@ def _queue_condor(
         env_name = env["name"]
         executable = "run_venv.sh"
         arguments = f"{env_name} junifer"
-        # TODO: Copy run_venv.sh to jobdir
+        exec_path = jobdir / executable
+        logger.info(f"Copying {executable} to {exec_path.absolute()!s}")
+        shutil.copy(Path(__file__).parent / "res" / executable, exec_path)
+        make_executable(exec_path)
     elif env["kind"] == "local":
         executable = "junifer"
         arguments = ""
