@@ -1,16 +1,16 @@
 #!/bin/bash
 
 if [ $# -lt 2 ]; then
-    echo "This script is meant to run a command within a python environment"
+    echo "This script is meant to run a command within a Python virtual environment."
     echo "It needs at least 2 parameters."
-    echo "The first one must be the environment name."
-    echo "The rest will be the command"
+    echo "The first one must be the virtualenv path."
+    echo "The rest will be the command."
     exit 255
 fi
 
-env_name=$1
-echo "Activating ${env_name}"
-source "${env_name}"/bin/activate
+env_path=$1
+echo "Activating ${env_path}"
+source "${env_path}"/bin/activate
 shift 1
 
 if [ -f "pre_run.sh" ]; then
@@ -18,5 +18,5 @@ if [ -f "pre_run.sh" ]; then
     . ./pre_run.sh
 fi
 
-echo "Running ${*} in virtual environment"
+echo "Running ${*} in Python virtual environment"
 "$@"
