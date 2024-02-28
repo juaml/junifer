@@ -99,4 +99,17 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
                 contents["storage"]["uri"] = str(
                     (filepath.parent / uri_path).resolve()
                 )
+
+    # Allow relative path if queue env kind is venv; same motivation as above
+    if "queue" in contents:
+        if "env" in contents["queue"]:
+            if "venv" == contents["queue"]["env"]["kind"]:
+                # Check if the env name is relative
+                venv_path = Path(contents["queue"]["env"]["name"])
+                if not venv_path.is_absolute():
+                    # Compute the absolute path
+                    contents["queue"]["env"]["name"] = str(
+                        (filepath.parent / venv_path).resolve()
+                    )
+
     return contents
