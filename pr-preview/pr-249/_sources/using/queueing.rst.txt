@@ -57,7 +57,8 @@ The following parameters are available for HTCondor:
 
   * ``name``: This is the name of the environment to use in case a virtual
     environment is used. It should be the name when ``conda`` is used and
-    the absolute path to the virtualenv when ``venv`` is used.
+    the absolute or relative path to the virtualenv when ``venv`` is used.
+    If relative path is used then it should be relative to the YAML.
 
 * ``mem``: Memory to be used by the job. It must be provided as a string with
   the units (e.g. ``2GB``).
