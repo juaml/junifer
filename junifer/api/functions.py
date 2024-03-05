@@ -6,8 +6,6 @@
 # License: AGPL
 
 import shutil
-import subprocess
-import textwrap
 import typing
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
@@ -20,7 +18,7 @@ from ..pipeline.registry import build
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger, raise_error
-from ..utils.fs import make_executable
+from .queue import HTCondorAdapter
 from .utils import yaml
 
 
@@ -303,260 +301,19 @@ def queue(
     if not isinstance(elements, list):
         elements: List[Union[str, Tuple]] = [elements]
 
+    # Check job queueing system
+    adapter = None
     if kind == "HTCondor":
-        _queue_condor(
-            jobname=jobname,
-            jobdir=jobdir,
-            yaml_config=yaml_config,
-            elements=elements,  # type: ignore
-            config=config,
-            **kwargs,
-        )
-    elif kind == "SLURM":
-        _queue_slurm(
-            jobname=jobname,
-            jobdir=jobdir,
-            yaml_config=yaml_config,
-            elements=elements,  # type: ignore
-            config=config,
-            **kwargs,
+        adapter = HTCondorAdapter(
+            job_name=jobname,
+            job_dir=jobdir,
+            yaml_config_path=yaml_config,
+            elements=elements,
+            **kwargs,  # type: ignore
         )
 
+    adapter.prepare()  # type: ignore
     logger.info("Queue done")
-
-
-def _queue_condor(
-    jobname: str,
-    jobdir: Path,
-    yaml_config: Path,
-    elements: List[Union[str, Tuple]],
-    config: Dict,
-    env: Optional[Dict[str, str]] = None,
-    mem: str = "8G",
-    cpus: int = 1,
-    disk: str = "1G",
-    extra_preamble: str = "",
-    pre_run: Optional[str] = None,
-    verbose: str = "info",
-    collect: str = "yes",
-    submit: bool = False,
-) -> None:
-    """Submit job to HTCondor.
-
-    Parameters
-    ----------
-    jobname : str
-        The name of the job.
-    jobdir : pathlib.Path
-        The path to the job directory.
-    yaml_config : pathlib.Path
-        The path to the YAML config file.
-    elements : list of str or tuple
-        Element(s) to process. Will be used to index the DataGrabber.
-    config : dict
-        The configuration to be used for queueing the job.
-    env : dict, optional
-        The environment variables passed as dictionary (default None).
-    mem : str, optional
-        The size of memory (RAM) to use (default "8G").
-    cpus : int, optional
-        The number of CPU cores to use (default 1).
-    disk : str, optional
-        The size of disk (HDD or SSD) to use (default "1G").
-    extra_preamble : str, optional
-        Extra commands to pass to HTCondor (default "").
-    pre_run : str, optional
-        Extra bash commands to source before the job (default None).
-    verbose : str, optional
-        The level of verbosity (default "info").
-    collect : str, optional
-        Whether to submit "collect" task for junifer (default "yes").
-        Valid options are:
-
-            * "yes": Submit "collect" task and run even if some of the jobs
-                fail.
-            * "on_success_only": Submit "collect" task and run only if all jobs
-                succeed.
-            * "no": Do not submit "collect" task.
-
-    submit : bool, optional
-        Whether to submit the jobs. In any case, .dag files will be created
-        for submission (default False).
-
-    Raises
-    ------
-    ValueError
-        If ``collect`` is not string or invalid or if ``env`` is invalid.
-
-    """
-    logger.debug("Creating HTCondor job")
-    run_junifer_args = (
-        f"run {yaml_config.absolute()!s} "
-        f"--verbose {verbose} --element $(element)"
-    )
-    collect_junifer_args = (
-        f"collect {yaml_config.absolute()!s} --verbose {verbose} "
-    )
-
-    if not isinstance(collect, str):
-        raise_error("collect must be a string")
-
-    collect = collect.lower()
-    if collect not in ["yes", "no", "on_success_only"]:
-        raise_error(f"Invalid value for collect: {collect}")
-
-    # Set up the env_name, executable and arguments according to the
-    # environment type
-    if env is None:
-        env = {"kind": "local"}
-    if env["kind"] == "conda":
-        env_name = env["name"]
-        executable = "run_conda.sh"
-        arguments = f"{env_name} junifer"
-        exec_path = jobdir / executable
-        logger.info(f"Copying {executable} to {exec_path.absolute()!s}")
-        shutil.copy(Path(__file__).parent / "res" / executable, exec_path)
-        make_executable(exec_path)
-    elif env["kind"] == "venv":
-        env_name = env["name"]
-        executable = "run_venv.sh"
-        arguments = f"{env_name} junifer"
-        exec_path = jobdir / executable
-        logger.info(f"Copying {executable} to {exec_path.absolute()!s}")
-        shutil.copy(Path(__file__).parent / "res" / executable, exec_path)
-        make_executable(exec_path)
-    elif env["kind"] == "local":
-        executable = "junifer"
-        arguments = ""
-    else:
-        raise_error(f'Unknown env kind: {env["kind"]}')
-
-    logger.info("Writing pre_run.sh to jobdir")
-    pre_run_fname = jobdir / "pre_run.sh"
-    with open(pre_run_fname, "w") as f:
-        f.write("#!/bin/bash\n\n")
-        f.write("# Force datalad to run in non-interactive mode\n")
-        f.write("DATALAD_UI_INTERACTIVE=false\n\n")
-        if pre_run is not None:
-            f.write(pre_run)
-    make_executable(pre_run_fname)
-
-    # Create log directory
-    log_dir = jobdir / "logs"
-    log_dir.mkdir(exist_ok=True, parents=True)
-
-    # Add preamble data
-    run_preamble = f"""
-        # The environment
-        universe = vanilla
-        getenv = True
-
-        # Resources
-        request_cpus = {cpus}
-        request_memory = {mem}
-        request_disk = {disk}
-
-        # Executable
-        initial_dir = {jobdir.absolute()!s}
-        executable = $(initial_dir)/{executable}
-        transfer_executable = False
-
-        arguments = {arguments} {run_junifer_args}
-
-        {extra_preamble}
-
-        # Logs
-        log = {log_dir.absolute()!s}/junifer_run_$(log_element).log
-        output = {log_dir.absolute()!s}/junifer_run_$(log_element).out
-        error = {log_dir.absolute()!s}/junifer_run_$(log_element).err
-        """
-
-    submit_run_fname = jobdir / f"run_{jobname}.submit"
-    submit_collect_fname = jobdir / f"collect_{jobname}.submit"
-    dag_fname = jobdir / f"{jobname}.dag"
-
-    # Write to run submit files
-    with open(submit_run_fname, "w") as submit_file:
-        submit_file.write(textwrap.dedent(run_preamble))
-        submit_file.write("queue\n")
-
-    collect_preamble = f"""
-        # The environment
-        universe = vanilla
-        getenv = True
-
-        # Resources
-        request_cpus = {cpus}
-        request_memory = {mem}
-        request_disk = {disk}
-
-        # Executable
-        initial_dir = {jobdir.absolute()!s}
-        executable = $(initial_dir)/{executable}
-        transfer_executable = False
-
-        arguments = {arguments} {collect_junifer_args}
-
-        {extra_preamble}
-
-        # Logs
-        log = {log_dir.absolute()!s}/junifer_collect.log
-        output = {log_dir.absolute()!s}/junifer_collect.out
-        error = {log_dir.absolute()!s}/junifer_collect.err
-        """
-
-    # Now create the collect submit file
-    with open(submit_collect_fname, "w") as submit_file:
-        submit_file.write(textwrap.dedent(collect_preamble))
-        submit_file.write("queue\n")
-
-    with open(dag_fname, "w") as dag_file:
-        # Get all subject and session names from file list
-        for i_job, t_elem in enumerate(elements):
-            str_elem = (
-                ",".join(t_elem) if isinstance(t_elem, tuple) else t_elem
-            )
-            log_elem = (
-                "_".join(t_elem) if isinstance(t_elem, tuple) else t_elem
-            )
-            dag_file.write(f"JOB run{i_job} {submit_run_fname}\n")
-            dag_file.write(
-                f'VARS run{i_job} element="{str_elem}" '
-                f'log_element="{log_elem}"\n\n'
-            )
-        if collect == "yes":
-            dag_file.write(f"FINAL collect {submit_collect_fname}\n")
-            collect_pre_fname = jobdir / "collect_pre.sh"
-            dag_file.write(
-                f"SCRIPT PRE collect {collect_pre_fname.as_posix()} "
-                "$DAG_STATUS\n"
-            )
-            with open(collect_pre_fname, "w") as pre_file:
-                pre_file.write("#!/bin/bash\n\n")
-                pre_file.write('if [ "${1}" == "4" ]; then\n')
-                pre_file.write("    exit 1\n")
-                pre_file.write("fi\n")
-
-            make_executable(collect_pre_fname)
-        elif collect == "on_success_only":
-            dag_file.write(f"JOB collect {submit_collect_fname}\n")
-            dag_file.write("PARENT ")
-            for i_job, _ in enumerate(elements):
-                dag_file.write(f"run{i_job} ")
-            dag_file.write("CHILD collect\n\n")
-
-    # Submit job(s)
-    if submit is True:
-        logger.info("Submitting HTCondor job")
-        subprocess.run(
-            ["condor_submit_dag", "-include_env", "HOME", dag_fname]
-        )
-        logger.info("HTCondor job submitted")
-    else:
-        cmd = f"condor_submit_dag -include_env 'HOME' {dag_fname.absolute()!s}"
-        logger.info(
-            f"HTCondor job files created, to submit the job, run `{cmd}`"
-        )
 
 
 def reset(config: Dict) -> None:
