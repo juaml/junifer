@@ -4,3 +4,4 @@
 # License: AGPL
 
 from .queue_context_adapter import QueueContextAdapter
+from .htcondor_adapter import HTCondorAdapter
