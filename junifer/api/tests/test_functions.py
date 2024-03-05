@@ -272,7 +272,7 @@ def test_queue_correct_yaml_config(
                 kind="HTCondor",
                 jobname="yaml_config_gen_check",
             )
-            assert "Creating job in" in caplog.text
+            assert "Creating job directory at" in caplog.text
             assert "Writing YAML config to" in caplog.text
             assert "Queue done" in caplog.text
 
@@ -310,7 +310,7 @@ def test_queue_invalid_job_queue(
         The pytest.MonkeyPatch object.
 
     """
-    with pytest.raises(ValueError, match="Unknown queue kind"):
+    with pytest.raises(ValueError, match="Invalid value for `kind`"):
         with monkeypatch.context() as m:
             m.chdir(tmp_path)
             queue(
@@ -861,12 +861,6 @@ def test_queue_condor_submission_fail(
                 )
             # Check submit log
             assert "Submitting HTCondor job" in caplog.text
-
-
-@pytest.mark.skip(reason="SLURM not installed on system.")
-def test_queue_slurm() -> None:
-    """Test job queueing in SLURM."""
-    pass
 
 
 def test_reset_run(tmp_path: Path) -> None:

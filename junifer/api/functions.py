@@ -222,7 +222,7 @@ def queue(
     ----------
     config : dict
         The configuration to be used for queueing the job.
-    kind : {"HTCondor", "SLURM"}
+    kind : {"HTCondor"}
         The kind of job queue system to use.
     jobname : str, optional
         The name of the job (default "junifer_job").
@@ -237,14 +237,20 @@ def queue(
     Raises
     ------
     ValueError
-        If the ``jobdir`` exists and ``overwrite = False`` or
-        if value of ``kind`` is invalid.
+        If ``kind`` is invalid or
+        if the ``jobdir`` exists and ``overwrite = False``.
 
     """
+    valid_kind = ["HTCondor"]
+    if kind not in valid_kind:
+        raise_error(
+            f"Invalid value for `kind`: {kind}, "
+            f"must be one of {valid_kind}"
+        )
+
     # Create a folder within the CWD to store the job files / config
-    cwd = Path.cwd()
-    jobdir = cwd / "junifer_jobs" / jobname
-    logger.info(f"Creating job in {jobdir.absolute()!s}")
+    jobdir = Path.cwd() / "junifer_jobs" / jobname
+    logger.info(f"Creating job directory at {jobdir.resolve()!s}")
     if jobdir.exists():
         if not overwrite:
             raise_error(
@@ -252,15 +258,16 @@ def queue(
                 "This error is raised to prevent overwriting job files "
                 "that might be scheduled but not yet executed. "
                 f"Either delete the directory {jobdir.absolute()!s} "
-                "or set overwrite=True."
+                "or set `overwrite=True.`"
             )
         else:
             logger.info(
-                f"Deleting existing job directory at {jobdir.absolute()!s}"
+                f"Deleting existing job directory at {jobdir.resolve()!s}"
             )
             shutil.rmtree(jobdir)
     jobdir.mkdir(exist_ok=True, parents=True)
 
+    # Load modules
     if "with" in config:
         to_load = config["with"]
         # If there is a list of files to load, copy and remove the path
@@ -270,15 +277,16 @@ def queue(
             to_load = [to_load]
         for item in to_load:
             if item.endswith(".py"):
-                logger.debug(f"Copying {item} to jobdir ({jobdir.absolute()})")
-                shutil.copy(item, jobdir)
+                logger.debug(f"Copying {item} to ({jobdir.resolve()!s})")
+                shutil.copy(src=item, dst=jobdir)
                 fixed_load.append(Path(item).name)
             else:
                 fixed_load.append(item)
         config["with"] = fixed_load
 
+    # Save YAML
     yaml_config = jobdir / "config.yaml"
-    logger.info(f"Writing YAML config to {yaml_config.absolute()!s}")
+    logger.info(f"Writing YAML config to {yaml_config.resolve()!s}")
     yaml.dump(config, stream=yaml_config)
 
     # Get list of elements
@@ -291,12 +299,9 @@ def queue(
             datagrabber = _get_datagrabber(config["datagrabber"])
             with datagrabber as dg:
                 elements = dg.get_elements()
-
-    # TODO: Fix typing of elements
+    # Listify elements
     if not isinstance(elements, list):
-        elements = [elements]  # type: ignore
-
-    typing.cast(List[Union[str, Tuple]], elements)
+        elements: List[Union[str, Tuple]] = [elements]
 
     if kind == "HTCondor":
         _queue_condor(
@@ -316,8 +321,6 @@ def queue(
             config=config,
             **kwargs,
         )
-    else:
-        raise_error(f"Unknown queue kind: {kind}")
 
     logger.info("Queue done")
 
@@ -554,161 +557,6 @@ def _queue_condor(
         logger.info(
             f"HTCondor job files created, to submit the job, run `{cmd}`"
         )
-
-
-def _queue_slurm(
-    jobname: str,
-    jobdir: Path,
-    yaml_config: Path,
-    elements: List[Union[str, Tuple]],
-    config: Dict,
-) -> None:
-    """Submit job to SLURM.
-
-    Parameters
-    ----------
-    jobname : str
-        The name of the job.
-    jobdir : pathlib.Path
-        The path to the job directory.
-    yaml_config : pathlib.Path
-        The path to the YAML config file.
-    elements : str or tuple or list[str or tuple], optional
-        Element(s) to process. Will be used to index the DataGrabber
-        (default None).
-    config : dict
-        The configuration to be used for queueing the job.
-
-    """
-    pass
-    # logger.debug("Creating SLURM job")
-    # run_junifer_args = (
-    #     f"run {str(yaml_config.absolute())} "
-    #     f"--verbose {verbose} --element $(element)"
-    # )
-    # collect_junifer_args = \
-    #     f"collect {str(yaml_config.absolute())} --verbose {verbose} "
-
-    # # Set up the env_name, executable and arguments according to the
-    # # environment type
-    # if env is None:
-    #     env = {
-    #         "kind": "local",
-    #     }
-    # if env["kind"] == "conda":
-    #     env_name = env["name"]
-    #     executable = "run_conda.sh"
-    #     arguments = f"{env_name} junifer"
-    #     # TODO: Copy run_conda.sh to jobdir
-    #     exec_path = jobdir / executable
-    #     shutil.copy(Path(__file__).parent / "res" / executable, exec_path)
-    #     make_executable(exec_path)
-    # elif env["kind"] == "venv":
-    #     env_name = env["name"]
-    #     executable = "run_venv.sh"
-    #     arguments = f"{env_name} junifer"
-    #     # TODO: Copy run_venv.sh to jobdir
-    # elif env["kind"] == "local":
-    #     executable = "junifer"
-    #     arguments = ""
-    # else:
-    #     raise ValueError(f"Unknown env kind: {env['kind']}")
-
-    # # Create log directory
-    # log_dir = jobdir / 'logs'
-    # log_dir.mkdir(exist_ok=True, parents=True)
-
-    # # Add preamble data
-    # run_preamble = f"""
-    #     #!/bin/bash
-
-    #     #SBATCH --job-name={}
-    #     #SBATCH --account={}
-    #     #SBATCH --partition={}
-    #     #SBATCH --time={}
-    #     #SBATCH --ntasks={}
-    #     #SBATCH --cpus-per-task={cpus}
-    #     #SBATCH --mem-per-cpu={mem}
-    #     #SBATCH --mail-type={}
-    #     #SBATCH --mail-user={}
-    #     #SBATCH --output={}
-    #     #SBATCH --error={}
-
-    #     # Executable
-    #     initial_dir = {str(jobdir.absolute())}
-    #     executable = $(initial_dir)/{executable}
-    #     transfer_executable = False
-
-    #     arguments = {arguments} {run_junifer_args}
-
-    #     {extra_preamble}
-
-    #     # Logs
-    #     log = {str(log_dir.absolute())}/junifer_run_$(element).log
-    #     output = {str(log_dir.absolute())}/junifer_run_$(element).out
-    #     error = {str(log_dir.absolute())}/junifer_run_$(element).err
-    #     """
-
-    # submit_run_fname = jobdir / f'run_{jobname}.sh'
-    # submit_collect_fname = jobdir / f'collect_{jobname}.sh'
-
-    # # Write to run submit files
-    # with open(submit_run_fname, 'w') as submit_file:
-    #     submit_file.write(run_preamble)
-    #     submit_file.write('queue\n')
-
-    # collect_preamble = f"""
-    #     # The environment
-    #     universe = vanilla
-    #     getenv = True
-
-    #     # Resources
-    #     request_cpus = {cpus}
-    #     request_memory = {mem}
-    #     request_disk = {disk}
-
-    #     # Executable
-    #     initial_dir = {str(jobdir.absolute())}
-    #     executable = $(initial_dir)/{executable}
-    #     transfer_executable = False
-
-    #     arguments = {arguments} {collect_junifer_args}
-
-    #     {extra_preamble}
-
-    #     # Logs
-    #     log = {str(log_dir.absolute())}/junifer_collect.log
-    #     output = {str(log_dir.absolute())}/junifer_collect.out
-    #     error = {str(log_dir.absolute())}/junifer_collect.err
-    #     """
-
-    # # Now create the collect submit file
-    # with open(submit_collect_fname, 'w') as submit_file:
-    #     submit_file.write(collect_preamble)  # Eval preamble here
-    #     submit_file.write('queue\n')
-
-    # with open(dag_fname, 'w') as dag_file:
-    #     # Get all subject and session names from file list
-    #     for i_job, t_elem in enumerate(elements):
-    #         dag_file.write(f'JOB run{i_job} {submit_run_fname}\n')
-    #         dag_file.write(f'VARS run{i_job} element="{t_elem}"\n\n')
-    #     if collect is True:
-    #         dag_file.write(f'JOB collect {submit_collect_fname}\n')
-    #         dag_file.write('PARENT ')
-    #         for i_job, _t_elem in enumerate(elements):
-    #             dag_file.write(f'run{i_job} ')
-    #         dag_file.write('CHILD collect\n\n')
-
-    # # Submit job(s)
-    # if submit is True:
-    #     logger.info('Submitting SLURM job')
-    #     subprocess.run(['condor_submit_dag', dag_fname])
-    #     logger.info('HTCondor SLURM submitted')
-    # else:
-    #     cmd = f"condor_submit_dag {str(dag_fname.absolute())}"
-    #     logger.info(
-    #         f"SLURM job files created, to submit the job, run `{cmd}`"
-    #     )
 
 
 def reset(config: Dict) -> None:
