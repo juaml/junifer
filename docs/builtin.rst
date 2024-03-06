@@ -585,6 +585,15 @@ Available
        | Evidence for hubs in human functional brain networks.
        | Neuron, Volume 79(4), Pages 798–813 (2013).
        | https://doi.org/10.1016/j.neuron.2013.07.035
+   * - Autobiographical Memory from Spreng et al. (2009)
+     - ``AutobiographicalMemory``
+     - 0.0.4
+     - | Spreng, R. N., Mar, R. A., Kim, A. S. N.
+       | The Common Neural Basis of Autobiographical Memory, Prospection,
+       | Navigation, Theory of Mind, and the Default Mode: A Quantitative
+       | Meta-analysis.
+       | Journal of Cognitive Neuroscience, Volume 21(3), Pages 489–510 (2009).
+       | https://doi.org/10.1162/jocn.2008.21029
 
 
 Planned
