@@ -97,15 +97,17 @@ jobs:
         FSLGECUDAQ="cuda.q"
         echo "/opt/fsl-6.0.6.4" >> $GITHUB_PATH
       if: matrix.python-version == 3.10
+      # Bypass FSL installation failure
+      continue-on-error: true
     - name: Check FSL
       run: |
         echo "Using FSL : $(flirt -version)"
       if: matrix.python-version == 3.10
+      # Bypass FSL installation failure
+      continue-on-error: true
     - name: Test with tox
       run: |
         tox
-      # Bypass FSL installation failure
-      if: success() || failure()
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
