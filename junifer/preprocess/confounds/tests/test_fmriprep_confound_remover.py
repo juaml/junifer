@@ -492,22 +492,20 @@ def test_fMRIPrepConfoundRemover__remove_confounds() -> None:
 
 def test_fMRIPrepConfoundRemover_preprocess() -> None:
     """Test fMRIPrepConfoundRemover with all confounds present."""
-
-    # need reader for the data
-    reader = DefaultDataReader()
     # All strategies full, no spike
     confound_remover = fMRIPrepConfoundRemover()
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
-        input = dg["sub-01"]
-        input = reader.fit_transform(input)
-        orig_bold = input["BOLD"]["data"].get_fdata().copy()
-        pre_input = input["BOLD"]
-        pre_extra_input = {"BOLD_confounds": input["BOLD_confounds"]}
-        key, output = confound_remover.preprocess(pre_input, pre_extra_input)
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        orig_bold = element_data["BOLD"]["data"].get_fdata().copy()
+        pre_input = element_data["BOLD"]
+        pre_extra_input = {"BOLD_confounds": element_data["BOLD_confounds"]}
+        output = confound_remover.preprocess(pre_input, pre_extra_input)
         trans_bold = output["data"].get_fdata()
         # Transformation is in place
-        assert_array_equal(trans_bold, input["BOLD"]["data"].get_fdata())
+        assert_array_equal(
+            trans_bold, element_data["BOLD"]["data"].get_fdata()
+        )
 
         # Data should have the same shape
         assert orig_bold.shape == trans_bold.shape
@@ -516,25 +514,22 @@ def test_fMRIPrepConfoundRemover_preprocess() -> None:
         assert_raises(
             AssertionError, assert_array_equal, orig_bold, trans_bold
         )
-        assert key == "BOLD"
 
 
 def test_fMRIPrepConfoundRemover_fit_transform() -> None:
     """Test fMRIPrepConfoundRemover with all confounds present."""
-
-    # need reader for the data
-    reader = DefaultDataReader()
     # All strategies full, no spike
     confound_remover = fMRIPrepConfoundRemover()
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
-        input = dg["sub-01"]
-        input = reader.fit_transform(input)
-        orig_bold = input["BOLD"]["data"].get_fdata().copy()
-        output = confound_remover.fit_transform(input)
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        orig_bold = element_data["BOLD"]["data"].get_fdata().copy()
+        output = confound_remover.fit_transform(element_data)
         trans_bold = output["BOLD"]["data"].get_fdata()
         # Transformation is in place
-        assert_array_equal(trans_bold, input["BOLD"]["data"].get_fdata())
+        assert_array_equal(
+            trans_bold, element_data["BOLD"]["data"].get_fdata()
+        )
 
         # Data should have the same shape
         assert orig_bold.shape == trans_bold.shape
@@ -565,22 +560,20 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
 
 def test_fMRIPrepConfoundRemover_fit_transform_masks() -> None:
     """Test fMRIPrepConfoundRemover with all confounds present."""
-
-    # need reader for the data
-    reader = DefaultDataReader()
     # All strategies full, no spike
     confound_remover = fMRIPrepConfoundRemover(
         masks={"compute_brain_mask": {"threshold": 0.2}}
     )
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
-        input = dg["sub-01"]
-        input = reader.fit_transform(input)
-        orig_bold = input["BOLD"]["data"].get_fdata().copy()
-        output = confound_remover.fit_transform(input)
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        orig_bold = element_data["BOLD"]["data"].get_fdata().copy()
+        output = confound_remover.fit_transform(element_data)
         trans_bold = output["BOLD"]["data"].get_fdata()
         # Transformation is in place
-        assert_array_equal(trans_bold, input["BOLD"]["data"].get_fdata())
+        assert_array_equal(
+            trans_bold, element_data["BOLD"]["data"].get_fdata()
+        )
 
         # Data should have the same shape
         assert orig_bold.shape == trans_bold.shape

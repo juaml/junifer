@@ -600,7 +600,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         self,
         input: Dict[str, Any],
         extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[str, Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Preprocess.
 
         Parameters
@@ -613,13 +613,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         Returns
         -------
-        str
-            The key to store the output in the Junifer Data object.
         dict
-            The computed result as dictionary. This will be stored in the
-            Junifer Data object under the key ``data`` of the data type.
+            The computed result as dictionary.
 
         """
         self._validate_data(input, extra_input)
         input["data"] = self._remove_confounds(input, extra_input=extra_input)
-        return "BOLD", input
+        return input
