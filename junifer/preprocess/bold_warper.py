@@ -9,7 +9,6 @@ from typing import (
     Dict,
     List,
     Optional,
-    Tuple,
     Union,
 )
 
@@ -103,7 +102,7 @@ class BOLDWarper(BasePreprocessor):
         self,
         input: Dict[str, Any],
         extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[str, Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         """Preprocess.
 
         Parameters
@@ -117,11 +116,8 @@ class BOLDWarper(BasePreprocessor):
 
         Returns
         -------
-        str
-            The key to store the output in the Junifer Data object.
         dict
-            The computed result as dictionary. This will be stored in the
-            Junifer Data object under the key ``data`` of the data type.
+            The computed result as dictionary.
 
         Raises
         ------
@@ -239,4 +235,4 @@ class BOLDWarper(BasePreprocessor):
                 input["data"] = nib.load(warped_bold_path)
                 input["space"] = self.ref
 
-        return "BOLD", input
+        return input

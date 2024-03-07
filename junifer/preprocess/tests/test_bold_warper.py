@@ -86,11 +86,10 @@ def test_BOLDWarper_preprocess_to_native(
         # Read data
         element_data = DefaultDataReader().fit_transform(dg[element])
         # Preprocess data
-        data_type, data = BOLDWarper(reference="T1w").preprocess(
+        data = BOLDWarper(reference="T1w").preprocess(
             input=element_data["BOLD"],
             extra_input=element_data,
         )
-        assert data_type == "BOLD"
         assert isinstance(data, dict)
 
 
@@ -150,11 +149,10 @@ def test_BOLDWarper_preprocess_to_multi_mni(
         element_data = DefaultDataReader().fit_transform(dg[element])
         pre_xfm_data = element_data["BOLD"]["data"].get_fdata().copy()
         # Preprocess data
-        data_type, data = BOLDWarper(reference=space).preprocess(
+        data = BOLDWarper(reference=space).preprocess(
             input=element_data["BOLD"],
             extra_input=element_data,
         )
-        assert data_type == "BOLD"
         assert isinstance(data, dict)
         assert data["space"] == space
         with assert_raises(AssertionError):
