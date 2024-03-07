@@ -104,6 +104,8 @@ jobs:
     - name: Test with tox
       run: |
         tox
+      # Bypass FSL installation failure
+      if: success() || failure()
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
