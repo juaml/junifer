@@ -5,13 +5,21 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import List, Tuple
+from typing import Callable, List, Tuple
 
 import pytest
 from click.testing import CliRunner
 from ruamel.yaml import YAML
 
-from junifer.api.cli import _parse_elements_file, collect, run, selftest, wtf
+from junifer.api.cli import (
+    _parse_elements_file,
+    collect,
+    queue,
+    reset,
+    run,
+    selftest,
+    wtf,
+)
 
 
 # Configure YAML class
@@ -179,6 +187,105 @@ def test_multi_element_access(
     read_elements = _parse_elements_file(test_file_path)
     # Check
     assert read_elements == expected_list
+
+
+def test_queue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test queue command.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        # Get test config
+        infile = Path(__file__).parent / "data" / "gmd_mean_htcondor.yaml"
+        # Read test config
+        contents = yaml.load(infile)
+        # Working directory
+        contents["workdir"] = str(tmp_path.resolve())
+        # Storage
+        contents["storage"]["uri"] = str((tmp_path / "out.sqlite").resolve())
+        # Write new test config
+        outfile = tmp_path / "in.yaml"
+        yaml.dump(contents, stream=outfile)
+        # Queue command arguments
+        queue_args = [
+            str(outfile.resolve()),
+            "--verbose",
+            "debug",
+        ]
+        # Invoke queue command
+        queue_result = runner.invoke(queue, queue_args)
+        # Check
+        assert queue_result.exit_code == 0
+
+
+@pytest.mark.parametrize(
+    "action, action_file",
+    [
+        (run, "gmd_mean.yaml"),
+        (queue, "gmd_mean_htcondor.yaml"),
+    ],
+)
+def test_reset(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    action: Callable,
+    action_file: str,
+) -> None:
+    """Test reset command.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    action : callable
+        The parametrized action to perform.
+    action_file : str
+        The parametrized file for the action.
+
+    """
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        # Get test config
+        infile = Path(__file__).parent / "data" / action_file
+        # Read test config
+        contents = yaml.load(infile)
+        # Working directory
+        contents["workdir"] = str(tmp_path.resolve())
+        # Storage
+        contents["storage"]["uri"] = str((tmp_path / "out.sqlite").resolve())
+        # Write new test config
+        outfile = tmp_path / "in.yaml"
+        yaml.dump(contents, stream=outfile)
+        # Command arguments
+        action_args = [
+            str(outfile.resolve()),
+            "--verbose",
+            "debug",
+        ]
+        # Invoke command
+        result = runner.invoke(action, action_args)
+        # Check
+        assert result.exit_code == 0
+
+        # Reset arguments
+        reset_args = [
+            str(outfile.resolve()),
+            "--verbose",
+            "debug",
+        ]
+        # Run reset
+        reset_result = runner.invoke(reset, reset_args)
+        # Check
+        assert reset_result.exit_code == 0
 
 
 def test_wtf_short() -> None:

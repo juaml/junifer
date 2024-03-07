@@ -41,6 +41,11 @@ def register(step: str, name: str, klass: type) -> None:
     klass : class
         Class to be registered.
 
+    Raises
+    ------
+    ValueError
+        If the ``step`` is invalid.
+
     """
     # Verify step
     if step not in _VALID_STEPS:
@@ -62,6 +67,11 @@ def get_step_names(step: str) -> List[str]:
     -------
     list
         List of registered function names.
+
+    Raises
+    ------
+    ValueError
+        If the ``step`` is invalid.
 
     """
     # Verify step
@@ -85,6 +95,11 @@ def get_class(step: str, name: str) -> type:
     -------
     class
         Registered function class.
+
+    Raises
+    ------
+    ValueError
+        If the ``step`` or ``name`` is invalid.
 
     """
     # Verify step
@@ -123,6 +138,8 @@ def build(
 
     Raises
     ------
+    RuntimeError
+        If there is a problem creating the instance.
     ValueError
         If the created object with the given name is not an instance of the
         base class.

@@ -81,7 +81,6 @@ def test_DMCC13Benchmark(
     dg.uri = URI
 
     with dg:
-        # breakpoint()
         # Get all elements
         all_elements = dg.get_elements()
         # Get test element

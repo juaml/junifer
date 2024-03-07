@@ -21,6 +21,7 @@ from ..utils.logging import (
 )
 from .functions import collect as api_collect
 from .functions import queue as api_queue
+from .functions import reset as api_reset
 from .functions import run as api_run
 from .parser import parse_yaml
 from .utils import (
@@ -412,6 +413,43 @@ def selftest(subpkg: str) -> None:
         click.secho("Successful.", fg="green")
     else:
         click.secho("Failure.", fg="red")
+
+
+@cli.command()
+@click.argument(
+    "filepath",
+    type=click.Path(
+        exists=True, readable=True, dir_okay=False, path_type=pathlib.Path
+    ),
+)
+@click.option(
+    "-v",
+    "--verbose",
+    type=click.UNPROCESSED,
+    callback=_validate_verbose,
+    default="info",
+)
+def reset(
+    filepath: click.Path,
+    verbose: Union[str, int],
+) -> None:
+    """Reset command for CLI.
+
+    \f
+
+    Parameters
+    ----------
+    filepath : click.Path
+        The filepath to the configuration file.
+    verbose : click.Choice
+        The verbosity level: warning, info or debug (default "info").
+
+    """
+    configure_logging(level=verbose)
+    # Parse YAML
+    config = parse_yaml(filepath)
+    # Perform operation
+    api_reset(config)
 
 
 @cli.group()
