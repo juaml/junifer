@@ -1,4 +1,4 @@
-"""Provide imports for queue sub-package."""
+"""Provide imports for queue context sub-package."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL

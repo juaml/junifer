@@ -18,7 +18,7 @@ from ..pipeline.registry import build
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger, raise_error
-from .queue import HTCondorAdapter
+from .queue_context import HTCondorAdapter
 from .utils import yaml
 
 

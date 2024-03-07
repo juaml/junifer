@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import pytest
 
-from junifer.api.queue import HTCondorAdapter
+from junifer.api.queue_context import HTCondorAdapter
 
 
 def test_HTCondorAdapter_env_error() -> None:
