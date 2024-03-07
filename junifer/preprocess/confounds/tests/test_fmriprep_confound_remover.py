@@ -91,26 +91,11 @@ def test_fMRIPrepConfoundRemover_get_valid_inputs() -> None:
     assert confound_remover.get_valid_inputs() == ["BOLD"]
 
 
-@pytest.mark.parametrize(
-    "input_",
-    [
-        ["BOLD", "T1w", "BOLD_confounds"],
-        ["BOLD", "VBM_GM", "BOLD_confounds"],
-        ["BOLD", "BOLD_confounds"],
-    ],
-)
-def test_fMRIPrepConfoundRemover_get_output_type(input_: List[str]) -> None:
-    """Test fMRIPrepConfoundRemover get_output_type.
-
-    Parameters
-    ----------
-    input_ : list of str
-        The input data types.
-
-    """
+def test_fMRIPrepConfoundRemover_get_output_type() -> None:
+    """Test fMRIPrepConfoundRemover get_output_type."""
     confound_remover = fMRIPrepConfoundRemover()
     # Confound remover works in place
-    assert confound_remover.get_output_type(input_) == input_
+    assert confound_remover.get_output_type("BOLD") == "BOLD"
 
 
 def test_fMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:

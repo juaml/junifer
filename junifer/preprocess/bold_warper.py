@@ -82,24 +82,22 @@ class BOLDWarper(BasePreprocessor):
         """
         return ["BOLD"]
 
-    def get_output_type(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the preprocessor. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the preprocessor.
 
         Returns
         -------
-        list of str
-            The updated list of available Junifer Data object keys after
-            the pipeline step.
+        str
+            The data type output by the preprocessor.
 
         """
         # Does not add any new keys
-        return input
+        return input_type
 
     def preprocess(
         self,

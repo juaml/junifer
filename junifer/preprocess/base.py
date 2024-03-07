@@ -12,15 +12,18 @@ from ..utils import logger, raise_error
 
 
 class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
-    """Provide abstract base class for all preprocessors.
+    """Abstract base class for all preprocessors.
+
+    For every interface that is required, one needs to provide a concrete
+    implementation of this abstract class.
 
     Parameters
     ----------
-    on : str or list of str, optional
-        The kind of data to apply the preprocessor to. If None,
-        will work on all available data (default None).
+    on : str or list of str or None, optional
+        The data type to apply the preprocessor on. If None,
+        will work on all available data types (default None).
     required_data_types : str or list of str, optional
-        The kind of data types needed for computation. If None,
+        The data types needed for computation. If None,
         will be equal to ``on`` (default None).
 
     Raises
@@ -100,20 +103,18 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         )
 
     @abstractmethod
-    def get_output_type(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the preprocessor. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the preprocessor.
 
         Returns
         -------
-        list of str
-            The updated list of available Junifer Data object keys after
-            the pipeline step.
+        str
+            The data type output by the preprocessor.
 
         """
         raise_error(

@@ -4,7 +4,7 @@
 # License: AGPL
 
 import socket
-from typing import TYPE_CHECKING, List, Tuple
+from typing import TYPE_CHECKING, Tuple
 
 import pytest
 from numpy.testing import assert_array_equal, assert_raises
@@ -31,25 +31,10 @@ def test_BOLDWarper_get_valid_inputs() -> None:
     assert bold_warper.get_valid_inputs() == ["BOLD"]
 
 
-@pytest.mark.parametrize(
-    "input_",
-    [
-        ["BOLD", "T1w", "Warp"],
-        ["BOLD", "T1w"],
-        ["BOLD"],
-    ],
-)
-def test_BOLDWarper_get_output_type(input_: List[str]) -> None:
-    """Test BOLDWarper get_output_type.
-
-    Parameters
-    ----------
-    input_ : list of str
-        The input data types.
-
-    """
+def test_BOLDWarper_get_output_type() -> None:
+    """Test BOLDWarper get_output_type."""
     bold_warper = BOLDWarper(reference="T1w")
-    assert bold_warper.get_output_type(input_) == input_
+    assert bold_warper.get_output_type("BOLD") == "BOLD"
 
 
 @pytest.mark.parametrize(
