@@ -8,7 +8,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.4.dev629 (2024-03-08)
+Junifer 0.0.4.dev630 (2024-03-08)
 ---------------------------------
 
 Bugfixes
@@ -60,6 +60,9 @@ API Changes
   :func:`.register_parcellation` and :func:`.register_mask` and return space
   from :func:`.load_coordinates`, :func:`.load_parcellation` and
   :func:`.load_mask` by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
+- Change :meth:`.BasePreprocessor.preprocess` return values to preprocessed
+  target data and "helper" data types as a dictionary by `Synchon Mandal`_
+  (:gh:`310`)
 
 
 Improved Documentation
@@ -98,6 +101,10 @@ Enhancements
   Mandal`_ (:gh:`300`)
 - Allow :class:`.BOLDWarper` to warp BOLD data to other MNI spaces by `Synchon
   Mandal`_ (:gh:`302`)
+- Improve :class:`.BasePreprocessor` by revamping
+  :meth:`.BasePreprocessor.preprocess` and ``BasePreprocessor._fit_transform``
+  to handle "helper" data types better and make the pipeline explicit where
+  data is being altered by `Synchon Mandal`_ (:gh:`310`)
 
 
 Features
