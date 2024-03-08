@@ -5,7 +5,7 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
@@ -127,7 +127,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         self,
         input: Dict[str, Any],
         extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Dict[str, Any]]]]:
         """Preprocess.
 
         Parameters
@@ -144,6 +144,10 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         -------
         dict
             The computed result as dictionary.
+        dict or None
+            Extra "helper" data types as dictionary to add to the Junifer Data
+            object. For example, computed BOLD mask can be passed via this.
+            If no new "helper" data types is created, None is to be passed.
 
         """
         raise_error(
@@ -168,7 +172,8 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             The processed output as a dictionary.
 
         """
-        out = input
+        # Copy input to not modify the original
+        out = input.copy()
         # For each data type, run preprocessing
         for type_ in self._on:
             # Check if data type is available
@@ -177,18 +182,26 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
                 # Get data dict for data type
                 t_input = input[type_]
                 # Pass the other data types as extra input, removing
-                # the current type; input is not copied so as to allow
-                # propagation of extra types like masks
-                extra_input = input
+                # the current type
+                extra_input = input.copy()
                 extra_input.pop(type_)
                 logger.debug(
                     f"Extra data type for preprocess: {extra_input.keys()}"
                 )
                 # Preprocess data
-                t_out = self.preprocess(input=t_input, extra_input=extra_input)
+                t_out, t_extra_input = self.preprocess(
+                    input=t_input, extra_input=extra_input
+                )
                 # Set output to the Junifer Data object
                 logger.debug(f"Adding {type_} to output")
                 out[type_] = t_out
+                # Check if helper data types are to be added
+                if t_extra_input is not None:
+                    logger.debug(
+                        f"Adding helper data types: {t_extra_input.keys()} "
+                        "to output"
+                    )
+                    out.update(t_extra_input)
                 # Update metadata for step
                 self.update_meta(out[type_], "preprocess")
         return out
