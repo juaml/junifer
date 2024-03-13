@@ -6,7 +6,6 @@
 # License: AGPL
 
 from typing import (
-    TYPE_CHECKING,
     Any,
     ClassVar,
     Dict,
@@ -19,17 +18,13 @@ from typing import (
 
 import numpy as np
 import pandas as pd
+from nilearn import image as nimg
 from nilearn._utils.niimg_conversions import check_niimg_4d
-from nilearn.image import clean_img
 
 from ...api.decorators import register_preprocessor
 from ...data import get_mask
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
-
-
-if TYPE_CHECKING:
-    from nibabel import MGHImage, Nifti1Image, Nifti2Image
 
 
 FMRIPREP_BASICS = {
@@ -224,24 +219,22 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         """
         return ["BOLD"]
 
-    def get_output_type(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the preprocessor. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The input to the preprocessor.
 
         Returns
         -------
-        list of str
-            The updated list of available Junifer Data object keys after
-            the pipeline step.
+        str
+            The data type output by the preprocessor.
 
         """
         # Does not add any new keys
-        return input
+        return input_type
 
     def _map_adhoc_to_fmriprep(self, input: Dict[str, Any]) -> None:
         """Map the adhoc format to the fmpriprep format spec.
@@ -450,23 +443,21 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             not found or if invalid confounds format is found.
 
         """
-
-        # Bold must be 4D niimg
+        # BOLD must be 4D niimg
         check_niimg_4d(input["data"])
-
+        # Check for extra inputs
         if extra_input is None:
-            raise_error(msg="No extra input provided", klass=ValueError)
+            raise_error(
+                "No extra input provided, requires `BOLD_confounds` data type "
+                "in particular"
+            )
         if "BOLD_confounds" not in extra_input:
-            raise_error(msg="No BOLD_confounds provided", klass=ValueError)
+            raise_error("`BOLD_confounds` data type not provided")
         if "data" not in extra_input["BOLD_confounds"]:
-            raise_error(
-                msg="No BOLD_confounds data provided", klass=ValueError
-            )
-        # Confounds must be a dataframe
+            raise_error("`BOLD_confounds.data` not provided")
+        # Confounds must be a pandas.DataFrame
         if not isinstance(extra_input["BOLD_confounds"]["data"], pd.DataFrame):
-            raise_error(
-                "Confounds data must be a pandas dataframe", ValueError
-            )
+            raise_error("`BOLD_confounds.data` must be a `pandas.DataFrame`")
 
         confound_df = extra_input["BOLD_confounds"]["data"]
         bold_img = input["data"]
@@ -477,26 +468,20 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 f"\tConfounds: {len(confound_df)}"
             )
 
+        # Check format
         if "format" not in extra_input["BOLD_confounds"]:
-            raise_error(
-                "Confounds format must be specified in "
-                'input["BOLD_confounds"]'
-            )
-
+            raise_error("`BOLD_confounds.format` not provided")
         t_format = extra_input["BOLD_confounds"]["format"]
-
         if t_format == "adhoc":
             if "mappings" not in extra_input["BOLD_confounds"]:
                 raise_error(
-                    "When using adhoc format, you must specify "
-                    "the variables names mappings in "
-                    'input["BOLD_confounds"]["mappings"]'
+                    "`BOLD_confounds.mappings` need to be set when "
+                    "`BOLD_confounds.format == 'adhoc'`"
                 )
             if "fmriprep" not in extra_input["BOLD_confounds"]["mappings"]:
                 raise_error(
-                    "When using adhoc format, you must specify "
-                    "the variables names mappings to fmriprep format in "
-                    'input["BOLD_confounds"]["mappings"]["fmriprep"]'
+                    "`BOLD_confounds.mappings.fmriprep` need to be set when "
+                    "`BOLD_confounds.format == 'adhoc'`"
                 )
             fmriprep_mappings = extra_input["BOLD_confounds"]["mappings"][
                 "fmriprep"
@@ -508,7 +493,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             ]
             if len(wrong_names) > 0:
                 raise_error(
-                    "The following mapping values are not valid fmriprep "
+                    "The following mapping values are not valid fMRIPrep "
                     f"names: {wrong_names}"
                 )
             # Check that all the required columns are present
@@ -528,81 +513,11 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         elif t_format != "fmriprep":
             raise_error(f"Invalid confounds format {t_format}")
 
-    def _remove_confounds(
-        self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Union["Nifti1Image", "Nifti2Image", "MGHImage", List]:
-        """Remove confounds from the BOLD image.
-
-        Parameters
-        ----------
-        input : dict
-            Dictionary containing the ``BOLD`` value from the
-            Junifer Data object.
-        extra_input : dict, optional
-            Dictionary containing the rest of the Junifer Data object. Must
-            include the ``BOLD_confounds`` key.
-
-        Returns
-        -------
-        Niimg-like object
-            Input image with confounds removed.
-
-        """
-        assert extra_input is not None  # Not the case, data is validated
-        confounds_df = self._pick_confounds(extra_input["BOLD_confounds"])
-        confounds_array = confounds_df.values
-
-        bold_img = input["data"]
-        t_r = self.t_r
-        if t_r is None:
-            logger.info("No `t_r` specified, using t_r from nifti header")
-            zooms = bold_img.header.get_zooms()  # type: ignore
-            t_r = zooms[3]
-            logger.info(
-                f"Read t_r from nifti header: {t_r}",
-            )
-
-        mask_img = None
-        if self.masks is not None:
-            logger.debug(f"Masking with {self.masks}")
-            mask_img = get_mask(
-                masks=self.masks, target_data=input, extra_input=extra_input
-            )
-            # Save the mask in the extra input and link it to the bold data
-            # this allows to use "inherit" down the pipeline
-            if extra_input is not None:
-                logger.debug("Setting mask_item")
-                extra_input["BOLD_mask"] = {
-                    "data": mask_img,
-                    "space": input["space"],
-                }
-                input["mask_item"] = "BOLD_mask"
-
-        logger.info("Cleaning image")
-        logger.debug(f"\tdetrend: {self.detrend}")
-        logger.debug(f"\tstandardize: {self.standardize}")
-        logger.debug(f"\tlow_pass: {self.low_pass}")
-        logger.debug(f"\thigh_pass: {self.high_pass}")
-        clean_bold = clean_img(
-            imgs=bold_img,
-            detrend=self.detrend,
-            standardize=self.standardize,
-            confounds=confounds_array,
-            low_pass=self.low_pass,
-            high_pass=self.high_pass,
-            t_r=t_r,
-            mask_img=mask_img,
-        )
-
-        return clean_bold
-
     def preprocess(
         self,
         input: Dict[str, Any],
         extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[str, Dict[str, Any]]:
+    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Dict[str, Any]]]]:
         """Preprocess.
 
         Parameters
@@ -615,13 +530,61 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         Returns
         -------
-        str
-            The key to store the output in the Junifer Data object.
         dict
-            The computed result as dictionary. This will be stored in the
-            Junifer Data object under the key ``data`` of the data type.
+            The computed result as dictionary.
+        dict or None
+            If `self.masks` is not None, then the target data computed mask is
+            returned else None.
 
         """
+        # Validate data
         self._validate_data(input, extra_input)
-        input["data"] = self._remove_confounds(input, extra_input=extra_input)
-        return "BOLD", input
+        # Pick confounds
+        confounds_df = self._pick_confounds(extra_input["BOLD_confounds"])  # type: ignore
+        # Get BOLD data
+        bold_img = input["data"]
+        # Set t_r
+        t_r = self.t_r
+        if t_r is None:
+            logger.info("No `t_r` specified, using t_r from NIfTI header")
+            t_r = bold_img.header.get_zooms()[3]  # type: ignore
+            logger.info(
+                f"Read t_r from NIfTI header: {t_r}",
+            )
+        # Set mask data
+        mask_img = None
+        bold_mask_dict = None
+        if self.masks is not None:
+            logger.debug(f"Masking with {self.masks}")
+            mask_img = get_mask(
+                masks=self.masks, target_data=input, extra_input=extra_input
+            )
+            # Return the BOLD mask and link it to the BOLD data type dict;
+            # this allows to use "inherit" down the pipeline
+            if extra_input is not None:
+                logger.debug("Setting `BOLD.mask_item`")
+                input["mask_item"] = "BOLD_mask"
+                bold_mask_dict = {
+                    "BOLD_mask": {
+                        "data": mask_img,
+                        "space": input["space"],
+                    }
+                }
+        # Clean image
+        logger.info("Cleaning image using nilearn")
+        logger.debug(f"\tdetrend: {self.detrend}")
+        logger.debug(f"\tstandardize: {self.standardize}")
+        logger.debug(f"\tlow_pass: {self.low_pass}")
+        logger.debug(f"\thigh_pass: {self.high_pass}")
+        input["data"] = nimg.clean_img(
+            imgs=bold_img,
+            detrend=self.detrend,
+            standardize=self.standardize,
+            confounds=confounds_df.values,
+            low_pass=self.low_pass,
+            high_pass=self.high_pass,
+            t_r=t_r,
+            mask_img=mask_img,
+        )
+
+        return input, bold_mask_dict

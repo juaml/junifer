@@ -27,12 +27,12 @@ def test_base_preprocessor_subclassing() -> None:
         def get_valid_inputs(self):
             return ["BOLD", "T1w"]
 
-        def get_output_type(self, input):
-            return ["timeseries"]
+        def get_output_type(self, input_type):
+            return input_type
 
-        def preprocess(self, input, extra_input):
-            input["data"] = f"mofidied_{input['data']}"
-            return "BOLD", input
+        def preprocess(self, input, extra_input=None):
+            input["data"] = f"modified_{input['data']}"
+            return input, extra_input
 
     with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
         MyBasePreprocessor(on=["BOLD", "T2w"])
@@ -70,7 +70,7 @@ def test_base_preprocessor_subclassing() -> None:
     # Check output
     assert "BOLD" in output
     assert "data" in output["BOLD"]
-    assert output["BOLD"]["data"] == "mofidied_data"
+    assert output["BOLD"]["data"] == "modified_data"
     assert "path" in output["BOLD"]
     assert "meta" in output["BOLD"]
 

@@ -82,30 +82,28 @@ class BOLDWarper(BasePreprocessor):
         """
         return ["BOLD"]
 
-    def get_output_type(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the preprocessor. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the preprocessor.
 
         Returns
         -------
-        list of str
-            The updated list of available Junifer Data object keys after
-            the pipeline step.
+        str
+            The data type output by the preprocessor.
 
         """
         # Does not add any new keys
-        return input
+        return input_type
 
     def preprocess(
         self,
         input: Dict[str, Any],
         extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[str, Dict[str, Any]]:
+    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Dict[str, Any]]]]:
         """Preprocess.
 
         Parameters
@@ -119,11 +117,11 @@ class BOLDWarper(BasePreprocessor):
 
         Returns
         -------
-        str
-            The key to store the output in the Junifer Data object.
         dict
-            The computed result as dictionary. This will be stored in the
-            Junifer Data object under the key ``data`` of the data type.
+            The computed result as dictionary.
+        None
+            Extra "helper" data types as dictionary to add to the Junifer Data
+            object.
 
         Raises
         ------
@@ -241,4 +239,4 @@ class BOLDWarper(BasePreprocessor):
                 input["data"] = nib.load(warped_bold_path)
                 input["space"] = self.ref
 
-        return "BOLD", input
+        return input, None

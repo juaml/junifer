@@ -4,7 +4,7 @@
 # License: AGPL
 
 import socket
-from typing import TYPE_CHECKING, List, Tuple
+from typing import TYPE_CHECKING, Tuple
 
 import pytest
 from numpy.testing import assert_array_equal, assert_raises
@@ -31,25 +31,10 @@ def test_BOLDWarper_get_valid_inputs() -> None:
     assert bold_warper.get_valid_inputs() == ["BOLD"]
 
 
-@pytest.mark.parametrize(
-    "input_",
-    [
-        ["BOLD", "T1w", "Warp"],
-        ["BOLD", "T1w"],
-        ["BOLD"],
-    ],
-)
-def test_BOLDWarper_get_output_type(input_: List[str]) -> None:
-    """Test BOLDWarper get_output_type.
-
-    Parameters
-    ----------
-    input_ : list of str
-        The input data types.
-
-    """
+def test_BOLDWarper_get_output_type() -> None:
+    """Test BOLDWarper get_output_type."""
     bold_warper = BOLDWarper(reference="T1w")
-    assert bold_warper.get_output_type(input_) == input_
+    assert bold_warper.get_output_type("BOLD") == "BOLD"
 
 
 @pytest.mark.parametrize(
@@ -101,11 +86,10 @@ def test_BOLDWarper_preprocess_to_native(
         # Read data
         element_data = DefaultDataReader().fit_transform(dg[element])
         # Preprocess data
-        data_type, data = BOLDWarper(reference="T1w").preprocess(
+        data, _ = BOLDWarper(reference="T1w").preprocess(
             input=element_data["BOLD"],
             extra_input=element_data,
         )
-        assert data_type == "BOLD"
         assert isinstance(data, dict)
 
 
@@ -165,11 +149,10 @@ def test_BOLDWarper_preprocess_to_multi_mni(
         element_data = DefaultDataReader().fit_transform(dg[element])
         pre_xfm_data = element_data["BOLD"]["data"].get_fdata().copy()
         # Preprocess data
-        data_type, data = BOLDWarper(reference=space).preprocess(
+        data, _ = BOLDWarper(reference=space).preprocess(
             input=element_data["BOLD"],
             extra_input=element_data,
         )
-        assert data_type == "BOLD"
         assert isinstance(data, dict)
         assert data["space"] == space
         with assert_raises(AssertionError):
