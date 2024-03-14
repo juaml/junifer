@@ -84,7 +84,7 @@ class AFNIALFF:
         logger.debug("Creating cache for ALFF computation via AFNI")
 
         # Create component-scoped tempdir
-        tempdir = WorkDirManager.get_tempdir(prefix="afni_alff+falff")
+        tempdir = WorkDirManager().get_tempdir(prefix="afni_alff+falff")
 
         # Save target data to a component-scoped tempfile
         nifti_in_file_path = tempdir / "input.nii"  # needs to be .nii

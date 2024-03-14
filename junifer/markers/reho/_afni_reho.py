@@ -130,7 +130,7 @@ class AFNIReHo:
         logger.debug("Creating cache for ReHo computation via AFNI")
 
         # Create component-scoped tempdir
-        tempdir = WorkDirManager.get_tempdir(prefix="afni_reho")
+        tempdir = WorkDirManager().get_tempdir(prefix="afni_reho")
 
         # Save target data to a component-scoped tempfile
         nifti_in_file_path = tempdir / "input.nii"  # needs to be .nii
