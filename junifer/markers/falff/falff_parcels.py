@@ -1,20 +1,22 @@
-"""Provide class for computing fALFF on parcels."""
+"""Provide class for ALFF / fALFF on parcels."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
-from .. import ParcelAggregation
+from ...utils import logger
+from ..parcel_aggregation import ParcelAggregation
 from .falff_base import ALFFBase
 
 
 @register_marker
 class ALFFParcels(ALFFBase):
-    """Class for computing fALFF/ALFF on parcels.
+    """Class for ALFF / fALFF on parcels.
 
     Parameters
     ----------
@@ -23,6 +25,12 @@ class ALFFParcels(ALFFBase):
         :func:`.list_parcellations`.
     fractional : bool
         Whether to compute fractional ALFF.
+    using : {"junifer", "afni"}
+        Implementation to use for computing ALFF:
+
+        * "junifer" : Use ``junifer``'s own ALFF implementation
+        * "afni" : Use AFNI's ``3dRSFC``
+
     highpass : positive float, optional
         The highpass cutoff frequency for the bandpass filter. If 0,
         it will not apply a highpass filter (default 0.01).
@@ -30,20 +38,17 @@ class ALFFParcels(ALFFBase):
         The lowpass cutoff frequency for the bandpass filter (default 0.1).
     tr : positive float, optional
         The Repetition Time of the BOLD data. If None, will extract
-        the TR from NIFTI header (default None).
-    use_afni : bool, optional
-        Whether to use AFNI for computing. If None, will use AFNI only
-        if available (default None).
+        the TR from NIfTI header (default None).
+    agg_method : str, optional
+        The method to perform aggregation using. Check valid options in
+        :func:`.get_aggfunc_by_name` (default "mean").
+    agg_method_params : dict, optional
+        Parameters to pass to the aggregation function. Check valid options in
+        :func:`.get_aggfunc_by_name` (default None).
     masks : str, dict or list of dict or str, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    method : str, optional
-        The method to perform aggregation using. Check valid options in
-        :func:`.get_aggfunc_by_name` (default "mean").
-    method_params : dict, optional
-        Parameters to pass to the aggregation function. Check valid options in
-        :func:`.get_aggfunc_by_name`.
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
@@ -51,10 +56,10 @@ class ALFFParcels(ALFFBase):
     Notes
     -----
     The ``tr`` parameter is crucial for the correctness of fALFF/ALFF
-    computation. If a dataset is correctly preprocessed, the TR should be
-    extracted from the NIFTI without any issue. However, it has been
-    reported that some preprocessed data might not have the correct TR in
-    the NIFTI header.
+    computation. If a dataset is correctly preprocessed, the ``tr`` should be
+    extracted from the NIfTI without any issue. However, it has been
+    reported that some preprocessed data might not have the correct ``tr`` in
+    the NIfTI header.
 
     ALFF/fALFF are computed using a bandpass butterworth filter. See
     :func:`scipy.signal.butter` and :func:`scipy.signal.filtfilt` for more
@@ -66,63 +71,73 @@ class ALFFParcels(ALFFBase):
         self,
         parcellation: Union[str, List[str]],
         fractional: bool,
+        using: str,
         highpass: float = 0.01,
         lowpass: float = 0.1,
         tr: Optional[float] = None,
-        use_afni: Optional[bool] = None,
+        agg_method: str = "mean",
+        agg_method_params: Optional[Dict] = None,
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
-        method: str = "mean",
-        method_params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
-        self.parcellation = parcellation
-        self.masks = masks
-        self.method = method
-        self.method_params = method_params
+        # Superclass init first to validate `using` parameter
         super().__init__(
             fractional=fractional,
             highpass=highpass,
             lowpass=lowpass,
+            using=using,
             tr=tr,
             name=name,
-            use_afni=use_afni,
         )
+        self.parcellation = parcellation
+        self.agg_method = agg_method
+        self.agg_method_params = agg_method_params
+        self.masks = masks
 
-    def _postprocess(
-        self, input: Dict, extra_input: Optional[Dict] = None
-    ) -> Dict:
-        """Compute ALFF and fALFF.
+    def compute(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Compute.
 
         Parameters
         ----------
         input : dict
-            A single input from the pipeline data object in which to compute
-            the marker.
+            The BOLD data as dictionary.
         extra_input : dict, optional
-            The other fields in the pipeline data object. Useful for accessing
-            other data kind that needs to be used in the computation. For
-            example, the functional connectivity markers can make use of the
-            confounds if available (default None).
+            The other fields in the pipeline data object (default None).
 
         Returns
         -------
         dict
-            The computed ALFF as dictionary. The dictionary has the following
+            The computed result as dictionary. The dictionary has the following
             keys:
 
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``col_names`` : the column labels for the computed values as list
 
         """
-        pa = ParcelAggregation(
+        logger.info("Calculating ALFF / fALFF for parcels")
+
+        # Compute ALFF / fALFF
+        output_data, output_file_path = self._compute(input_data=input)
+
+        # Initialize parcel aggregation
+        parcel_aggregation = ParcelAggregation(
             parcellation=self.parcellation,
-            method=self.method,
-            method_params=self.method_params,
+            method=self.agg_method,
+            method_params=self.agg_method_params,
             masks=self.masks,
-            on="fALFF",
+            on="BOLD",
+        )
+        # Perform aggregation on ALFF / fALFF
+        parcel_aggregation_input = dict(input.items())
+        parcel_aggregation_input["data"] = output_data
+        parcel_aggregation_input["path"] = output_file_path
+        output = parcel_aggregation.compute(
+            input=parcel_aggregation_input,
+            extra_input=extra_input,
         )
 
-        # get the 2D timeseries after parcel aggregation
-        out = pa.compute(input, extra_input=extra_input)
-
-        return out
+        return output
