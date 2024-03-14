@@ -48,6 +48,14 @@ class BOLDWarper(BasePreprocessor):
         If ``using`` is invalid or
         if ``reference`` is invalid.
 
+    Notes
+    -----
+    If you are setting ``reference`` to a template space like
+    "MNI152NLin2009cAsym", make sure ANTs is available for the
+    transformation else it will fail during runtime. It is tricky to validate
+    this beforehand and difficult to enforce this as a requirement, hence the
+    heads-up.
+
     """
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
