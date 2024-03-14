@@ -44,7 +44,7 @@ class PipelineStepMixin:
         raise_error(
             msg="Concrete classes need to implement validate_input().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def get_output_type(self, input_type: str) -> str:
         """Get output type.
@@ -63,10 +63,11 @@ class PipelineStepMixin:
         raise_error(
             msg="Concrete classes need to implement get_output_type().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def _fit_transform(
-        self, input: Dict[str, Dict], **kwargs: Any
+        self,
+        input: Dict[str, Dict],
     ) -> Dict[str, Dict]:
         """Fit and transform.
 
@@ -74,8 +75,6 @@ class PipelineStepMixin:
         ----------
         input : dict
             The Junifer Data object.
-        **kwargs : dict
-            Extra keyword arguments.
 
         Returns
         -------
@@ -86,7 +85,7 @@ class PipelineStepMixin:
         raise_error(
             msg="Concrete classes need to implement _fit_transform().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def validate(self, input: List[str]) -> List[str]:
         """Validate the the pipeline step.
@@ -101,44 +100,109 @@ class PipelineStepMixin:
         list of str
             The output of the pipeline step.
 
-        Raises
-        ------
-        ValueError
-            If the pipeline step object is missing dependencies required for
-            its working or if the input does not have the required data.
-
         """
-        # Check if _DEPENDENCIES attribute is found;
-        # (markers and preprocessors will have them but not datareaders
-        # as of now)
-        dependencies_not_found = []
-        if hasattr(self, "_DEPENDENCIES"):
-            # Check if dependencies are importable
-            for dependency in self._DEPENDENCIES:  # type: ignore
-                # First perform an easy check
-                if find_spec(dependency) is None:
-                    # Then check mapped names
-                    if dependency not in list(
-                        chain.from_iterable(packages_distributions().values())
-                    ):
-                        dependencies_not_found.append(dependency)
-        # Raise error if any dependency is not found
-        if dependencies_not_found:
-            raise_error(
-                msg=f"{dependencies_not_found} are not installed but are "
-                "required for using {self.name}.",
-                klass=ImportError,
-            )
-        # Check if _EXT_DEPENDENCIES attribute is found;
-        # (some markers might have them like ReHo-family)
-        if hasattr(self, "_EXT_DEPENDENCIES"):
-            for dependency in self._EXT_DEPENDENCIES:  # type: ignore
-                out = check_ext_dependencies(**dependency)
-                if getattr(self, f"use_{dependency['name']}", None) is None:
-                    # Set attribute for using external tools
-                    setattr(self, f"use_{dependency['name']}", out)
 
+        def _check_dependencies(obj) -> None:
+            """Check obj._DEPENDENCIES.
+
+            Parameters
+            ----------
+            obj : object
+                Object to check _DEPENDENCIES of.
+
+            Raises
+            ------
+            ImportError
+                If the pipeline step object is missing dependencies required
+                for its working.
+
+            """
+            # Check if _DEPENDENCIES attribute is found;
+            # (markers and preprocessors will have them but not datareaders
+            # as of now)
+            dependencies_not_found = []
+            if hasattr(obj, "_DEPENDENCIES"):
+                # Check if dependencies are importable
+                for dependency in obj._DEPENDENCIES:
+                    # First perform an easy check
+                    if find_spec(dependency) is None:
+                        # Then check mapped names
+                        if dependency not in list(
+                            chain.from_iterable(
+                                packages_distributions().values()
+                            )
+                        ):
+                            dependencies_not_found.append(dependency)
+            # Raise error if any dependency is not found
+            if dependencies_not_found:
+                raise_error(
+                    msg=(
+                        f"{dependencies_not_found} are not installed but are "
+                        f"required for using {obj.__class__.__name__}."
+                    ),
+                    klass=ImportError,
+                )
+
+        def _check_ext_dependencies(obj) -> None:
+            """Check obj._EXT_DEPENDENCIES.
+
+            Parameters
+            ----------
+            obj : object
+                Object to check _EXT_DEPENDENCIES of.
+
+            """
+            # Check if _EXT_DEPENDENCIES attribute is found;
+            # (some markers and preprocessors might have them)
+            if hasattr(obj, "_EXT_DEPENDENCIES"):
+                for dependency in obj._EXT_DEPENDENCIES:
+                    check_ext_dependencies(**dependency)
+
+        def _check_conditional_dependencies(obj) -> None:
+            """Check obj._CONDITIONAL_DEPENDENCIES.
+
+            Parameters
+            ----------
+            obj : object
+                Object to check _CONDITIONAL_DEPENDENCIES of.
+
+            Raises
+            ------
+            AttributeError
+                If the pipeline step object does not have `using` as a
+                constructor parameter.
+
+            """
+            # Check if _CONDITIONAL_DEPENDENCIES attribute is found;
+            # (some markers and preprocessors might have them)
+            if hasattr(obj, "_CONDITIONAL_DEPENDENCIES"):
+                if not hasattr(obj, "using"):
+                    raise_error(
+                        msg=(
+                            f"The pipeline step: {obj.__class__.__name__} has "
+                            "`_CONDITIONAL_DEPENDENCIES` but does not have "
+                            "`using` as a constructor parameter"
+                        ),
+                        klass=AttributeError,
+                    )
+                else:
+                    for dependency in obj._CONDITIONAL_DEPENDENCIES:
+                        if dependency["using"] == obj.using:
+                            depends_on = dependency["depends_on"]
+                            # Check dependencies
+                            _check_dependencies(depends_on)
+                            # Check external dependencies
+                            _check_ext_dependencies(depends_on)
+
+        # Check dependencies
+        _check_dependencies(self)
+        # Check external dependencies
+        _check_ext_dependencies(self)
+        # Check conditional dependencies
+        _check_conditional_dependencies(self)
+        # Validate input
         fit_input = self.validate_input(input=input)
+        # Validate output type
         outputs = [self.get_output_type(t_input) for t_input in fit_input]
         return outputs
 

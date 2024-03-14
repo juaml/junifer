@@ -1,16 +1,32 @@
-"""Provide abstract class for computing fALFF."""
+"""Provide base class for ALFF / fALFF."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from abc import abstractmethod
-from typing import ClassVar, Dict, List, Optional, Union
+from pathlib import Path
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    ClassVar,
+    Dict,
+    List,
+    Optional,
+    Tuple,
+    Type,
+    Union,
+)
 
-from ...utils.logging import raise_error
+from ...utils.logging import logger, raise_error
 from ..base import BaseMarker
-from .falff_estimator import ALFFEstimator
+from ._afni_falff import AFNIALFF
+from ._junifer_falff import JuniferALFF
+
+
+if TYPE_CHECKING:
+    from nibabel import Nifti1Image
 
 
 class ALFFBase(BaseMarker):
@@ -24,33 +40,45 @@ class ALFFBase(BaseMarker):
         Highpass cutoff frequency.
     lowpass : positive float
         Lowpass cutoff frequency.
+    using : {"junifer", "afni"}
+        Implementation to use for computing ALFF:
+
+        * "junifer" : Use ``junifer``'s own ALFF implementation
+        * "afni" : Use AFNI's ``3dRSFC``
+
     tr : positive float, optional
         The Repetition Time of the BOLD data. If None, will extract
-        the TR from NIFTI header (default None).
-    use_afni : bool, optional
-        Whether to use AFNI for computing. If None, will use AFNI only
-        if available (default None).
+        the TR from NIfTI header (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
 
     Notes
     -----
-        The `tr` parameter is crucial for the correctness of fALFF/ALFF
-        computation. If a dataset is correctly preprocessed, the TR should be
-        extracted from the NIFTI without any issue. However, it has been
-        reported that some preprocessed data might not have the correct TR in
-        the NIFTI header.
+    The ``tr`` parameter is crucial for the correctness of fALFF/ALFF
+    computation. If a dataset is correctly preprocessed, the ``tr`` should be
+    extracted from the NIfTI without any issue. However, it has been
+    reported that some preprocessed data might not have the correct ``tr`` in
+    the NIfTI header.
+
+    Raises
+    ------
+    ValueError
+        If ``highpass`` is not positive or zero or
+        if ``lowpass`` is not positive or
+        if ``highpass`` is higher than ``lowpass`` or
+        if ``using`` is invalid.
 
     """
 
-    _EXT_DEPENDENCIES: ClassVar[
-        List[Dict[str, Union[str, bool, List[str]]]]
-    ] = [
+    _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
         {
-            "name": "afni",
-            "optional": True,
-            "commands": ["3dRSFC", "3dAFNItoNIFTI"],
+            "using": "afni",
+            "depends_on": AFNIALFF,
+        },
+        {
+            "using": "junifer",
+            "depends_on": JuniferALFF,
         },
     ]
 
@@ -59,8 +87,8 @@ class ALFFBase(BaseMarker):
         fractional: bool,
         highpass: float,
         lowpass: float,
+        using: str,
         tr: Optional[float] = None,
-        use_afni: Optional[bool] = None,
         name: Optional[str] = None,
     ) -> None:
         if highpass < 0:
@@ -71,8 +99,14 @@ class ALFFBase(BaseMarker):
             raise_error("Highpass must be lower than lowpass")
         self.highpass = highpass
         self.lowpass = lowpass
+        # Validate `using` parameter
+        valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]
+        if using not in valid_using:
+            raise_error(
+                f"Invalid value for `using`, should be one of: {valid_using}"
+            )
+        self.using = using
         self.tr = tr
-        self.use_afni = use_afni
         self.fractional = fractional
 
         # Create a name based on the class name if none is provided
@@ -108,84 +142,52 @@ class ALFFBase(BaseMarker):
         """
         return "vector"
 
-    def compute(
+    def _compute(
         self,
-        input: Dict[str, Dict],
-        extra_input: Optional[Dict] = None,
-    ) -> Dict:
-        """Compute.
+        input_data: Dict[str, Any],
+    ) -> Tuple["Nifti1Image", Path]:
+        """Compute ALFF and fALFF.
 
         Parameters
         ----------
-        input : dict
-            A single input from the pipeline data object in which to compute
-            the marker.
+        input_data : dict
+            The input to the marker.
         extra_input : dict, optional
-            The other fields in the pipeline data object. Useful for accessing
-            other data kind that needs to be used in the computation. For
-            example, the functional connectivity markers can make use of the
-            confounds if available (default None).
+            The other fields in the pipeline data object (default None).
 
         Returns
         -------
-        dict
-            The computed result as dictionary. This will be either returned
-            to the user or stored in the storage by calling the store method
-            with this as a parameter. The dictionary has the following keys:
-
-            * ``data`` : the actual computed values as a numpy.ndarray
-            * ``col_names`` : the column labels for the computed values as list
+        Niimg-like object
+            The ALFF / fALFF as NIfTI.
+        pathlib.Path
+            The path to the ALFF / fALFF as NIfTI.
 
         """
-        if self.use_afni is None:
-            raise_error(
-                "Parameter `use_afni` must be set to True or False in order "
-                "to compute this marker. It is currently set to None (default "
-                "behaviour). This is intended to be for auto-detection. In "
-                "order for that to happen, please call the `validate` method "
-                "before calling the `compute` method."
-            )
+        logger.debug("Calculating ALFF and fALFF")
 
-        estimator = ALFFEstimator()
-
-        # If the input data space is "native", then alff_path and falff_path
-        # both point to the input data path as it might be required to use
-        # in get_corrdinates() for transforming coordinates to native space.
-        alff, falff, alff_path, falff_path = estimator.fit_transform(
-            use_afni=self.use_afni,
-            input_data=input,
+        # Conditional estimator
+        if self.using == "afni":
+            estimator = AFNIALFF()
+        elif self.using == "junifer":
+            estimator = JuniferALFF()
+        # Compute ALFF + fALFF
+        alff, falff, alff_path, falff_path = estimator.compute(  # type: ignore
+            data=input_data["data"],
             highpass=self.highpass,
             lowpass=self.lowpass,
             tr=self.tr,
         )
-        post_data = falff if self.fractional else alff
-        post_path = falff_path if self.fractional else alff_path
 
-        post_input = dict(input.items())
-        post_input["data"] = post_data
-        post_input["path"] = post_path
-
-        out = self._postprocess(post_input, extra_input=extra_input)
-
-        return out
-
-    @abstractmethod
-    def _postprocess(
-        self, input: Dict, extra_input: Optional[Dict] = None
-    ) -> Dict:
-        """Postprocess the output of the estimator.
-
-        Parameters
-        ----------
-        input : dict
-            The output of the estimator. It must have the following
-        extra_input : dict, optional
-            The other fields in the pipeline data object. Useful for accessing
-            other data kind that needs to be used in the computation. For
-            example, the functional connectivity markers can make use of the
-            confounds if available (default None).
-
-        """
-        raise_error(
-            "_postprocess must be implemented", klass=NotImplementedError
-        )
+        # If the input data space is native already, the original path should
+        # be propagated down as it might be required for transforming
+        # parcellation / coordinates to native space, else the
+        # path should be passed for use later if required.
+        # TODO(synchon): will be taken care in #292
+        if input_data["space"] == "native" and self.fractional:
+            return falff, input_data["path"]
+        elif input_data["space"] == "native" and not self.fractional:
+            return alff, input_data["path"]
+        elif input_data["space"] != "native" and self.fractional:
+            return falff, falff_path
+        else:
+            return alff, alff_path

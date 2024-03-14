@@ -1,73 +1,82 @@
-"""Provide tests for ReHo on parcels."""
+"""Provide tests for ReHoParcels."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import logging
 from pathlib import Path
 
 import pytest
-from nilearn import image as nimg
-from scipy.stats import pearsonr
+import scipy as sp
 
-from junifer.markers.reho.reho_parcels import ReHoParcels
+from junifer.datareader import DefaultDataReader
+from junifer.markers import ReHoParcels
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
-from junifer.storage.sqlite import SQLiteFeatureStorage
+from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
 PARCELLATION = "Schaefer100x7"
 
 
-def test_reho_parcels_computation(tmp_path: Path) -> None:
-    """Test ReHoParcels fit-transform.
+def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
+    """Test ReHoParcels.
 
     Parameters
     ----------
+    caplog : pytest.LogCaptureFixture
+        The pytest.LogCaptureFixture object.
     tmp_path : pathlib.Path
         The path to the test directory.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
-        # Use first subject
-        subject_data = dg["sub001"]
-        # Load image to memory
-        fmri_img = nimg.load_img(subject_data["BOLD"]["path"])
-        # Update workdir to current test's tmp_path
-        WorkDirManager().workdir = tmp_path
-        # Initialize marker
-        reho_parcels_marker = ReHoParcels(parcellation=PARCELLATION)
-        # Fit transform marker on data
-        reho_parcels_output = reho_parcels_marker.fit_transform(
-            {
-                "BOLD": {
-                    "path": "/tmp",
-                    "data": fmri_img,
-                    "meta": {},
-                    "space": "MNI",
-                }
-            }
-        )
-        # Get BOLD output
-        reho_parcels_output_bold = reho_parcels_output["BOLD"]
-        # Assert BOLD output keys
-        assert "data" in reho_parcels_output_bold
-        assert "col_names" in reho_parcels_output_bold
+    with caplog.at_level(logging.DEBUG):
+        with SPMAuditoryTestingDataGrabber() as dg:
+            element_data = DefaultDataReader().fit_transform(dg["sub001"])
+            # Update workdir to current test's tmp_path
+            WorkDirManager().workdir = tmp_path
 
-        reho_parcels_output_bold_data = reho_parcels_output_bold["data"]
-        # Assert BOLD output data dimension
-        assert reho_parcels_output_bold_data.ndim == 2
-        # Assert BOLD output data is normalized
-        assert (reho_parcels_output_bold_data > 0).all() and (
-            reho_parcels_output_bold_data < 1
-        ).all()
+            # Initialize marker
+            marker = ReHoParcels(parcellation=PARCELLATION, using="junifer")
+            # Fit transform marker on data
+            output = marker.fit_transform(element_data)
+
+            assert "Creating cache" in caplog.text
+
+            # Get BOLD output
+            assert "BOLD" in output
+            output_bold = output["BOLD"]
+            # Assert BOLD output keys
+            assert "data" in output_bold
+            assert "col_names" in output_bold
+
+            output_bold_data = output_bold["data"]
+            # Assert BOLD output data dimension
+            assert output_bold_data.ndim == 2
+            # Assert BOLD output data is normalized
+            assert (output_bold_data > 0).all() and (
+                output_bold_data < 1
+            ).all()
+
+            # Reset log capture
+            caplog.clear()
+            # Initialize storage
+            storage = SQLiteFeatureStorage(tmp_path / "reho_parcels.sqlite")
+            # Fit transform marker on data with storage
+            marker.fit_transform(
+                input=element_data,
+                storage=storage,
+            )
+            # Cache working correctly
+            assert "Creating cache" not in caplog.text
 
 
 @pytest.mark.skipif(
-    _check_afni() is False, reason="requires afni to be in PATH"
+    _check_afni() is False, reason="requires AFNI to be in PATH"
 )
-def test_reho_parcels_computation_comparison(tmp_path: Path) -> None:
-    """Test ReHoParcels fit-transform implementation comparison.
+def test_ReHoParcels_comparison(tmp_path: Path) -> None:
+    """Test ReHoParcels implementation comparison.
 
     Parameters
     ----------
@@ -76,92 +85,29 @@ def test_reho_parcels_computation_comparison(tmp_path: Path) -> None:
 
     """
     with SPMAuditoryTestingDataGrabber() as dg:
-        # Use first subject
-        subject_data = dg["sub001"]
-        # Load image to memory
-        fmri_img = nimg.load_img(subject_data["BOLD"]["path"])
-
+        element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Update workdir to current test's tmp_path
         WorkDirManager().workdir = tmp_path
-        # Initialize marker with use_afni=False
-        reho_parcels_marker_python = ReHoParcels(
-            parcellation=PARCELLATION, use_afni=False
-        )
-        # Fit transform marker on data
-        reho_parcels_output_python = reho_parcels_marker_python.fit_transform(
-            {
-                "BOLD": {
-                    "path": "/tmp",
-                    "data": fmri_img,
-                    "meta": {},
-                    "space": "MNI",
-                }
-            }
-        )
-        # Get BOLD output
-        reho_parcels_output_bold_python = reho_parcels_output_python["BOLD"]
 
-        # Initialize marker with use_afni=True
-        reho_parcels_marker_afni = ReHoParcels(
-            parcellation=PARCELLATION, use_afni=True
+        # Initialize marker
+        junifer_marker = ReHoParcels(
+            parcellation=PARCELLATION, using="junifer"
         )
         # Fit transform marker on data
-        reho_parcels_output_afni = reho_parcels_marker_afni.fit_transform(
-            {
-                "BOLD": {
-                    "path": "/tmp",
-                    "data": fmri_img,
-                    "meta": {},
-                    "space": "MNI",
-                }
-            }
-        )
+        junifer_output = junifer_marker.fit_transform(element_data)
         # Get BOLD output
-        reho_parcels_output_bold_afni = reho_parcels_output_afni["BOLD"]
+        junifer_output_bold = junifer_output["BOLD"]
+
+        # Initialize marker
+        afni_marker = ReHoParcels(parcellation=PARCELLATION, using="afni")
+        # Fit transform marker on data
+        afni_output = afni_marker.fit_transform(element_data)
+        # Get BOLD output
+        afni_output_bold = afni_output["BOLD"]
 
         # Check for Pearson correlation coefficient
-        r, _ = pearsonr(
-            reho_parcels_output_bold_python["data"].flatten(),
-            reho_parcels_output_bold_afni["data"].flatten(),
+        r, _ = sp.stats.pearsonr(
+            junifer_output_bold["data"].flatten(),
+            afni_output_bold["data"].flatten(),
         )
         assert r >= 0.3  # this is very bad, but they differ...
-
-
-def test_reho_parcels_storage(tmp_path: Path) -> None:
-    """Test ReHoParcels storage.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
-    with SPMAuditoryTestingDataGrabber() as dg:
-        # Use first subject
-        subject_data = dg["sub001"]
-        # Load image to memory
-        fmri_img = nimg.load_img(subject_data["BOLD"]["path"])
-        # Update workdir to current test's tmp_path
-        WorkDirManager().workdir = tmp_path
-        # Initialize marker
-        reho_parcels_marker = ReHoParcels(parcellation=PARCELLATION)
-        # Initialize storage
-        reho_parcels_storage = SQLiteFeatureStorage(
-            tmp_path / "reho_parcels.sqlite"
-        )
-        # Generate meta
-        meta = {
-            "element": {"subject": "sub001"}
-        }  # only requires element key for storing
-        # Fit transform marker on data with storage
-        reho_parcels_marker.fit_transform(
-            input={
-                "BOLD": {
-                    "path": "/tmp",
-                    "data": fmri_img,
-                    "meta": meta,
-                    "space": "MNI",
-                }
-            },
-            storage=reho_parcels_storage,
-        )

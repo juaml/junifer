@@ -13,12 +13,14 @@ from typing import (
     List,
     Optional,
     Tuple,
+    Type,
     Union,
 )
 
 from ...utils import logger, raise_error
 from ..base import BaseMarker
-from .reho_estimator import ReHoEstimator
+from ._afni_reho import AFNIReHo
+from ._junifer_reho import JuniferReHo
 
 
 if TYPE_CHECKING:
@@ -30,32 +32,47 @@ class ReHoBase(BaseMarker):
 
     Parameters
     ----------
-    use_afni : bool, optional
-        Whether to use AFNI for computing. If None, will use AFNI only
-        if available (default None).
+    using : {"junifer", "afni"}
+        Implementation to use for computing ReHo:
+
+        * "junifer" : Use ``junifer``'s own ReHo implementation
+        * "afni" : Use AFNI's ``3dReHo``
+
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
 
+    Raises
+    ------
+    ValueError
+        If ``using`` is invalid.
+
     """
 
-    _EXT_DEPENDENCIES: ClassVar[
-        List[Dict[str, Union[str, bool, List[str]]]]
-    ] = [
+    _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
         {
-            "name": "afni",
-            "optional": True,
-            "commands": ["3dReHo", "3dAFNItoNIFTI"],
+            "using": "afni",
+            "depends_on": AFNIReHo,
+        },
+        {
+            "using": "junifer",
+            "depends_on": JuniferReHo,
         },
     ]
 
     def __init__(
         self,
-        use_afni: Optional[bool] = None,
+        using: str,
         name: Optional[str] = None,
     ) -> None:
+        # Validate `using` parameter
+        valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]
+        if using not in valid_using:
+            raise_error(
+                f"Invalid value for `using`, should be one of: {valid_using}"
+            )
+        self.using = using
         super().__init__(on="BOLD", name=name)
-        self.use_afni = use_afni
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
@@ -84,12 +101,12 @@ class ReHoBase(BaseMarker):
         """
         return "vector"
 
-    def compute_reho_map(
+    def _compute(
         self,
-        input: Dict[str, Any],
+        input_data: Dict[str, Any],
         **reho_params: Any,
     ) -> Tuple["Nifti1Image", Path]:
-        """Compute.
+        """Compute voxel-wise ReHo.
 
         Calculates Kendall's W per voxel using neighborhood voxels.
         Instead of the time series values themselves, Kendall's W uses the
@@ -100,7 +117,7 @@ class ReHoBase(BaseMarker):
 
         Parameters
         ----------
-        input : dict
+        input_data : dict
             The BOLD data as dictionary.
         **reho_params : dict
             Extra keyword arguments for ReHo.
@@ -122,20 +139,25 @@ class ReHoBase(BaseMarker):
                https://doi.org/10.1177/1073858415595004
 
         """
-        if self.use_afni is None:
-            raise_error(
-                "Parameter `use_afni` must be set to True or False in order "
-                "to compute this marker. It is currently set to None (default "
-                "behaviour). This is intended to be for auto-detection. In "
-                "order for that to happen, please call the `validate` method "
-                "before calling the `compute` method."
-            )
-        logger.info("Calculating ReHO map.")
-        # Initialize reho estimator
-        reho_estimator = ReHoEstimator()
-        # Fit-transform reho estimator
-        return reho_estimator.fit_transform(
-            use_afni=self.use_afni,
-            input_data=input,
+        logger.debug("Calculating voxel-wise ReHo")
+
+        # Conditional estimator
+        if self.using == "afni":
+            estimator = AFNIReHo()
+        elif self.using == "junifer":
+            estimator = JuniferReHo()
+        # Compute reho
+        reho_map, reho_map_path = estimator.compute(  # type: ignore
+            data=input_data["data"],
             **reho_params,
         )
+
+        # If the input data space is native already, the original path should
+        # be propagated down as it might be required for transforming
+        # parcellation / coordinates to native space, else the reho map
+        # path should be passed for use later if required.
+        # TODO(synchon): will be taken care in #292
+        if input_data["space"] == "native":
+            return reho_map, input_data["path"]
+
+        return reho_map, reho_map_path

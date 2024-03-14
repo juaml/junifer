@@ -1,14 +1,14 @@
-"""Provide test for parcel-aggregated (f)ALFF."""
+"""Provide tests for ALFFParcels."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import logging
 from pathlib import Path
 
 import pytest
-from numpy.testing import assert_array_equal
-from scipy.stats import pearsonr
+import scipy as sp
 
 from junifer.datareader import DefaultDataReader
 from junifer.markers.falff import ALFFParcels
@@ -16,89 +16,72 @@ from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
-from junifer.utils import logger
 
 
-_PARCELLATION = "Schaefer100x7"
+PARCELLATION = "Schaefer100x7"
 
 
-def test_ALFFParcels_python(tmp_path: Path) -> None:
-    """Test ALFFParcels using python.
+def test_ALFFParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
+    """Test ALFFParcels.
 
     Parameters
     ----------
+    caplog : pytest.LogCaptureFixture
+        The pytest.LogCaptureFixture object.
     tmp_path : pathlib.Path
         The path to the test directory.
 
     """
-    with PartlyCloudyTestingDataGrabber() as dg:
-        input_ = dg["sub-01"]
+    with caplog.at_level(logging.DEBUG):
+        with PartlyCloudyTestingDataGrabber() as dg:
+            element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+            # Update workdir to current test's tmp_path
+            WorkDirManager().workdir = tmp_path
 
-    input_ = DefaultDataReader().fit_transform(input_)
-    WorkDirManager().workdir = tmp_path
-    marker = ALFFParcels(
-        parcellation=_PARCELLATION,
-        method="mean",
-        use_afni=False,
-        fractional=False,
-    )
-    python_values = marker.fit_transform(input_)["BOLD"]["data"]
+            # Initialize marker
+            marker = ALFFParcels(
+                parcellation=PARCELLATION,
+                fractional=False,
+                using="junifer",
+            )
+            # Fit transform marker on data
+            output = marker.fit_transform(element_data)
 
-    assert marker.use_afni is False
-    assert python_values.ndim == 2
-    assert python_values.shape == (1, 100)
+            assert "Creating cache" in caplog.text
 
+            # Get BOLD output
+            assert "BOLD" in output
+            output_bold = output["BOLD"]
+            # Assert BOLD output keys
+            assert "data" in output_bold
+            assert "col_names" in output_bold
 
-@pytest.mark.skipif(
-    _check_afni() is False, reason="requires afni to be in PATH"
-)
-def test_ALFFParcels_afni(tmp_path: Path) -> None:
-    """Test ALFFParcels using afni.
+            output_bold_data = output_bold["data"]
+            # Assert BOLD output data dimension
+            assert output_bold_data.ndim == 2
+            assert output_bold_data.shape == (1, 100)
 
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
-    with PartlyCloudyTestingDataGrabber() as dg:
-        input_ = dg["sub-01"]
-
-    input_ = DefaultDataReader().fit_transform(input_)
-    WorkDirManager().workdir = tmp_path
-    marker = ALFFParcels(
-        parcellation=_PARCELLATION,
-        method="mean",
-        use_afni=True,
-        fractional=False,
-    )
-    assert marker.use_afni is True
-    afni_values = marker.fit_transform(input_)["BOLD"]["data"]
-
-    assert afni_values.ndim == 2
-    assert afni_values.shape == (1, 100)
-
-    # Again, should be blazing fast
-    marker = ALFFParcels(
-        parcellation=_PARCELLATION, method="mean", fractional=False
-    )
-    assert marker.use_afni is None
-    afni_values2 = marker.fit_transform(input_)["BOLD"]["data"]
-    assert marker.use_afni is True
-    assert_array_equal(afni_values, afni_values2)
+            # Reset log capture
+            caplog.clear()
+            # Initialize storage
+            storage = SQLiteFeatureStorage(tmp_path / "falff_parcels.sqlite")
+            # Fit transform marker on data with storage
+            marker.fit_transform(
+                input=element_data,
+                storage=storage,
+            )
+            # Cache working correctly
+            assert "Creating cache" not in caplog.text
 
 
 @pytest.mark.skipif(
-    _check_afni() is False, reason="requires afni to be in PATH"
+    _check_afni() is False, reason="requires AFNI to be in PATH"
 )
 @pytest.mark.parametrize(
     "fractional", [True, False], ids=["fractional", "non-fractional"]
 )
-def test_ALFFParcels_python_vs_afni(
-    tmp_path: Path,
-    fractional: bool,
-) -> None:
-    """Test ALFFParcels using python.
+def test_ALFFParcels_comparison(tmp_path: Path, fractional: bool) -> None:
+    """Test ALFFParcels implementation comparison.
 
     Parameters
     ----------
@@ -109,65 +92,35 @@ def test_ALFFParcels_python_vs_afni(
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
-        input_ = dg["sub-01"]
-
-    input_ = DefaultDataReader().fit_transform(input_)
-    WorkDirManager().workdir = tmp_path
-    marker_python = ALFFParcels(
-        parcellation=_PARCELLATION,
-        method="mean",
-        use_afni=False,
-        fractional=fractional,
-    )
-    python_values = marker_python.fit_transform(input_)["BOLD"]["data"]
-
-    assert marker_python.use_afni is False
-    assert python_values.ndim == 2
-    assert python_values.shape == (1, 100)
-
-    marker_afni = ALFFParcels(
-        parcellation=_PARCELLATION,
-        method="mean",
-        use_afni=True,
-        fractional=fractional,
-    )
-    afni_values = marker_afni.fit_transform(input_)["BOLD"]["data"]
-
-    assert marker_afni.use_afni is True
-    assert afni_values.ndim == 2
-    assert afni_values.shape == (1, 100)
-
-    r, p = pearsonr(python_values[0], afni_values[0])
-    logger.info(f"Correlation between python and afni: {r} (p={p})")
-    assert r > 0.99
-
-
-def test_ALFFParcels_storage(
-    tmp_path: Path,
-) -> None:
-    """Test ALFFParcels storage.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
-    with PartlyCloudyTestingDataGrabber() as dg:
-        # Use first subject
-        input_ = dg["sub-01"]
-        input_ = DefaultDataReader().fit_transform(input_)
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        # Update workdir to current test's tmp_path
         WorkDirManager().workdir = tmp_path
-        marker = ALFFParcels(
-            parcellation=_PARCELLATION,
-            method="mean",
-            use_afni=False,
-            fractional=True,
-        )
-        storage = SQLiteFeatureStorage(tmp_path / "alff_parcels.sqlite")
 
-        # Fit transform marker on data with storage
-        marker.fit_transform(
-            input=input_,
-            storage=storage,
+        # Initialize marker
+        junifer_marker = ALFFParcels(
+            parcellation=PARCELLATION,
+            fractional=fractional,
+            using="junifer",
         )
+        # Fit transform marker on data
+        junifer_output = junifer_marker.fit_transform(element_data)
+        # Get BOLD output
+        junifer_output_bold = junifer_output["BOLD"]
+
+        # Initialize marker
+        afni_marker = ALFFParcels(
+            parcellation=PARCELLATION,
+            fractional=fractional,
+            using="afni",
+        )
+        # Fit transform marker on data
+        afni_output = afni_marker.fit_transform(element_data)
+        # Get BOLD output
+        afni_output_bold = afni_output["BOLD"]
+
+        # Check for Pearson correlation coefficient
+        r, _ = sp.stats.pearsonr(
+            junifer_output_bold["data"][0],
+            afni_output_bold["data"][0],
+        )
+        assert r > 0.99

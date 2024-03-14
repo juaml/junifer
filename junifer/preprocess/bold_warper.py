@@ -10,6 +10,7 @@ from typing import (
     List,
     Optional,
     Tuple,
+    Type,
     Union,
 )
 
@@ -31,6 +32,12 @@ class BOLDWarper(BasePreprocessor):
 
     Parameters
     ----------
+    using : {"fsl", "ants"}
+        Implementation to use for warping:
+
+        * "fsl" : Use FSL's ``applywarp``
+        * "afni" : Use ANTs' ``antsApplyTransforms``
+
     reference : str
         The data type to use as reference for warping, can be either a data
         type like "T1w" or a template space like "MNI152NLin2009cAsym".
@@ -38,27 +45,39 @@ class BOLDWarper(BasePreprocessor):
     Raises
     ------
     ValueError
-        If ``reference`` is invalid.
+        If ``using`` is invalid or
+        if ``reference`` is invalid.
+
+    Notes
+    -----
+    If you are setting ``reference`` to a template space like
+    "MNI152NLin2009cAsym", make sure ANTs is available for the
+    transformation else it will fail during runtime. It is tricky to validate
+    this beforehand and difficult to enforce this as a requirement, hence the
+    heads-up.
 
     """
 
-    _EXT_DEPENDENCIES: ClassVar[
-        List[Dict[str, Union[str, bool, List[str]]]]
-    ] = [
+    _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
         {
-            "name": "fsl",
-            "optional": True,
-            "commands": ["flirt", "applywarp"],
+            "using": "fsl",
+            "depends_on": _ApplyWarper,
         },
         {
-            "name": "ants",
-            "optional": True,
-            "commands": ["ResampleImage", "antsApplyTransforms"],
+            "using": "ants",
+            "depends_on": _AntsApplyTransformsWarper,
         },
     ]
 
-    def __init__(self, reference: str) -> None:
+    def __init__(self, using: str, reference: str) -> None:
         """Initialize the class."""
+        # Validate `using` parameter
+        valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]
+        if using not in valid_using:
+            raise_error(
+                f"Invalid value for `using`, should be one of: {valid_using}"
+            )
+        self.using = using
         self.ref = reference
         # Initialize superclass based on reference
         if self.ref == "T1w":

@@ -23,6 +23,12 @@ class ReHoSpheres(ReHoBase):
     coords : str
         The name of the coordinates list to use. See
         :func:`.list_coordinates` for options.
+    using : {"junifer", "afni"}
+        Implementation to use for computing ReHo:
+
+        * "junifer" : Use ``junifer``'s own ReHo implementation
+        * "afni" : Use AFNI's ``3dReHo``
+
     radius : float, optional
         The radius of the sphere in millimeters. If None, the signal will be
         extracted from a single voxel. See
@@ -36,7 +42,7 @@ class ReHoSpheres(ReHoBase):
         if available (default None).
     reho_params : dict, optional
         Extra parameters for computing ReHo map as a dictionary (default None).
-        If ``use_afni = True``, then the valid keys are:
+        If ``using="afni"``, then the valid keys are:
 
         * ``nneigh`` : {7, 19, 27}, optional (default 27)
             Number of voxels in the neighbourhood, inclusive. Can be:
@@ -66,7 +72,7 @@ class ReHoSpheres(ReHoBase):
             The number of voxels for +/- z-axis of cuboidal volumes
             (default None).
 
-        else if ``use_afni = False``, then the valid keys are:
+        else if ``using="junifer"``, then the valid keys are:
 
         * ``nneigh`` : {7, 19, 27, 125}, optional (default 27)
             Number of voxels in the neighbourhood, inclusive. Can be:
@@ -95,15 +101,17 @@ class ReHoSpheres(ReHoBase):
     def __init__(
         self,
         coords: str,
+        using: str,
         radius: Optional[float] = None,
         allow_overlap: bool = False,
-        use_afni: Optional[bool] = None,
         reho_params: Optional[Dict] = None,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
+        # Superclass init first to validate `using` parameter
+        super().__init__(using=using, name=name)
         self.coords = coords
         self.radius = radius
         self.allow_overlap = allow_overlap
@@ -111,7 +119,6 @@ class ReHoSpheres(ReHoBase):
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
         self.masks = masks
-        super().__init__(use_afni=use_afni, name=name)
 
     def compute(
         self,
@@ -137,17 +144,19 @@ class ReHoSpheres(ReHoBase):
             * ``col_names`` : the column labels for the spheres as a list
 
         """
-        logger.info("Calculating ReHo for spheres.")
-        # Calculate reho map
+        logger.info("Calculating ReHo for spheres")
+
+        # Compute voxelwise reho
         # If the input data space is "native", then reho_file_path points to
-        # the input data path as it might be required to use in
-        # get_coordinates() for transforming coordinates to native space.
+        # the input data path as it might be required for coordinates
+        # transformation to native space.
         if self.reho_params is not None:
-            reho_map, reho_file_path = self.compute_reho_map(
-                input=input, **self.reho_params
+            reho_map, reho_file_path = self._compute(
+                input_data=input, **self.reho_params
             )
         else:
-            reho_map, reho_file_path = self.compute_reho_map(input=input)
+            reho_map, reho_file_path = self._compute(input_data=input)
+
         # Initialize sphere aggregation
         sphere_aggregation = SphereAggregation(
             coords=self.coords,

@@ -21,19 +21,19 @@ if TYPE_CHECKING:
 
 def test_BOLDWarper_init() -> None:
     """Test BOLDWarper init."""
-    bold_warper = BOLDWarper(reference="T1w")
+    bold_warper = BOLDWarper(using="ants", reference="T1w")
     assert bold_warper._on == ["BOLD"]
 
 
 def test_BOLDWarper_get_valid_inputs() -> None:
     """Test BOLDWarper get_valid_inputs."""
-    bold_warper = BOLDWarper(reference="T1w")
+    bold_warper = BOLDWarper(using="ants", reference="T1w")
     assert bold_warper.get_valid_inputs() == ["BOLD"]
 
 
 def test_BOLDWarper_get_output_type() -> None:
     """Test BOLDWarper get_output_type."""
-    bold_warper = BOLDWarper(reference="T1w")
+    bold_warper = BOLDWarper(using="ants", reference="T1w")
     assert bold_warper.get_output_type("BOLD") == "BOLD"
 
 

@@ -1,26 +1,36 @@
-"""Provide class for computing fALFF on spheres."""
+"""Provide class for ALFF / fALFF on spheres."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from ...api.decorators import register_marker
-from .. import SphereAggregation
+from ...utils import logger
+from ..sphere_aggregation import SphereAggregation
 from .falff_base import ALFFBase
 
 
 @register_marker
 class ALFFSpheres(ALFFBase):
-    """Class for computing fALFF/ALFF on spheres.
+    """Class for computing ALFF / fALFF on spheres.
 
     Parameters
     ----------
     coords : str
         The name of the coordinates list to use. See
         :func:`.list_coordinates` for options.
+    fractional : bool
+        Whether to compute fractional ALFF.
+    using : {"junifer", "afni"}
+        Implementation to use for computing ALFF:
+
+        * "junifer" : Use ``junifer``'s own ALFF implementation
+        * "afni" : Use AFNI's ``3dRSFC``
+
     radius : float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
@@ -28,8 +38,6 @@ class ALFFSpheres(ALFFBase):
     allow_overlap : bool, optional
         Whether to allow overlapping spheres. If False, an error is raised if
         the spheres overlap (default is False).
-    fractional : bool
-        Whether to compute fractional ALFF.
     highpass : positive float, optional
         The highpass cutoff frequency for the bandpass filter. If 0,
         it will not apply a highpass filter (default 0.01).
@@ -37,20 +45,17 @@ class ALFFSpheres(ALFFBase):
         The lowpass cutoff frequency for the bandpass filter (default 0.1).
     tr : positive float, optional
         The Repetition Time of the BOLD data. If None, will extract
-        the TR from NIFTI header (default None).
-    use_afni : bool, optional
-        Whether to use AFNI for computing. If None, will use AFNI only
-        if available (default None).
+        the TR from NIfTI header (default None).
+    agg_method : str, optional
+        The method to perform aggregation using. Check valid options in
+        :func:`.get_aggfunc_by_name` (default "mean").
+    agg_method_params : dict, optional
+        Parameters to pass to the aggregation function. Check valid options in
+        :func:`.get_aggfunc_by_name`.
     masks : str, dict or list of dict or str, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    method : str, optional
-        The method to perform aggregation using. Check valid options in
-        :func:`.get_aggfunc_by_name` (default "mean").
-    method_params : dict, optional
-        Parameters to pass to the aggregation function. Check valid options in
-        :func:`.get_aggfunc_by_name`.
     name : str, optional
         The name of the marker. If None, will use the class name (default
         None).
@@ -58,9 +63,9 @@ class ALFFSpheres(ALFFBase):
     Notes
     -----
     The ``tr`` parameter is crucial for the correctness of fALFF/ALFF
-    computation. If a dataset is correctly preprocessed, the TR should be
-    extracted from the NIFTI without any issue. However, it has been
-    reported that some preprocessed data might not have the correct TR in
+    computation. If a dataset is correctly preprocessed, the ``tr`` should be
+    extracted from the NIfTI without any issue. However, it has been
+    reported that some preprocessed data might not have the correct ``tr`` in
     the NIFTI header.
 
     ALFF/fALFF are computed using a bandpass butterworth filter. See
@@ -73,69 +78,79 @@ class ALFFSpheres(ALFFBase):
         self,
         coords: str,
         fractional: bool,
+        using: str,
         radius: Optional[float] = None,
         allow_overlap: bool = False,
         highpass: float = 0.01,
         lowpass: float = 0.1,
         tr: Optional[float] = None,
-        use_afni: Optional[bool] = None,
+        agg_method: str = "mean",
+        agg_method_params: Optional[Dict] = None,
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
-        method: str = "mean",
-        method_params: Optional[Dict] = None,
         name: Optional[str] = None,
     ) -> None:
-        self.coords = coords
-        self.radius = radius
-        self.allow_overlap = allow_overlap
-        self.masks = masks
-        self.method = method
-        self.method_params = method_params
+        # Superclass init first to validate `using` parameter
         super().__init__(
             fractional=fractional,
             highpass=highpass,
             lowpass=lowpass,
+            using=using,
             tr=tr,
             name=name,
-            use_afni=use_afni,
         )
+        self.coords = coords
+        self.radius = radius
+        self.allow_overlap = allow_overlap
+        self.agg_method = agg_method
+        self.agg_method_params = agg_method_params
+        self.masks = masks
 
-    def _postprocess(
-        self, input: Dict, extra_input: Optional[Dict] = None
-    ) -> Dict:
-        """Compute ALFF and fALFF.
+    def compute(
+        self,
+        input: Dict[str, Any],
+        extra_input: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Compute.
 
         Parameters
         ----------
         input : dict
-            A single input from the pipeline data object in which to compute
-            the marker.
+            The BOLD data as dictionary.
         extra_input : dict, optional
-            The other fields in the pipeline data object. Useful for accessing
-            other data kind that needs to be used in the computation. For
-            example, the functional connectivity markers can make use of the
-            confounds if available (default None).
+            The other fields in the pipeline data object (default None).
 
         Returns
         -------
         dict
-            The computed ALFF as dictionary. The dictionary has the following
+            The computed result as dictionary. The dictionary has the following
             keys:
 
             * ``data`` : the actual computed values as a numpy.ndarray
             * ``col_names`` : the column labels for the computed values as list
 
         """
-        pa = SphereAggregation(
+        logger.info("Calculating ALFF / fALFF for spheres")
+
+        # Compute ALFF / fALFF
+        output_data, output_file_path = self._compute(input_data=input)
+
+        # Initialize sphere aggregation
+        sphere_aggregation = SphereAggregation(
             coords=self.coords,
             radius=self.radius,
             allow_overlap=self.allow_overlap,
-            method=self.method,
-            method_params=self.method_params,
+            method=self.agg_method,
+            method_params=self.agg_method_params,
             masks=self.masks,
-            on="fALFF",
+            on="BOLD",
+        )
+        # Perform aggregation on ALFF / fALFF
+        sphere_aggregation_input = dict(input.items())
+        sphere_aggregation_input["data"] = output_data
+        sphere_aggregation_input["path"] = output_file_path
+        output = sphere_aggregation.compute(
+            input=sphere_aggregation_input,
+            extra_input=extra_input,
         )
 
-        # get the 2D timeseries after sphere aggregation
-        out = pa.compute(input, extra_input=extra_input)
-
-        return out
+        return output
