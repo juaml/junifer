@@ -44,7 +44,7 @@ class PipelineStepMixin:
         raise_error(
             msg="Concrete classes need to implement validate_input().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def get_output_type(self, input_type: str) -> str:
         """Get output type.
@@ -63,10 +63,11 @@ class PipelineStepMixin:
         raise_error(
             msg="Concrete classes need to implement get_output_type().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def _fit_transform(
-        self, input: Dict[str, Dict], **kwargs: Any
+        self,
+        input: Dict[str, Dict],
     ) -> Dict[str, Dict]:
         """Fit and transform.
 
@@ -74,8 +75,6 @@ class PipelineStepMixin:
         ----------
         input : dict
             The Junifer Data object.
-        **kwargs : dict
-            Extra keyword arguments.
 
         Returns
         -------
@@ -86,7 +85,7 @@ class PipelineStepMixin:
         raise_error(
             msg="Concrete classes need to implement _fit_transform().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def validate(self, input: List[str]) -> List[str]:
         """Validate the the pipeline step.

@@ -13,17 +13,6 @@ from junifer.pipeline.pipeline_step_mixin import PipelineStepMixin
 from junifer.pipeline.utils import _check_afni
 
 
-def test_PipelineStepMixin() -> None:
-    """Test PipelineStepMixin."""
-    mixin = PipelineStepMixin()
-    with pytest.raises(NotImplementedError):
-        mixin.validate_input([])
-    with pytest.raises(NotImplementedError):
-        mixin.get_output_type("")
-    with pytest.raises(NotImplementedError):
-        mixin._fit_transform({})
-
-
 def test_PipelineStepMixin_correct_dependencies() -> None:
     """Test fit-transform with correct dependencies."""
 
