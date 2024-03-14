@@ -45,12 +45,9 @@ class _ApplyWarper:
 
     """
 
-    _EXT_DEPENDENCIES: ClassVar[
-        List[Dict[str, Union[str, bool, List[str]]]]
-    ] = [
+    _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
         {
             "name": "fsl",
-            "optional": False,
             "commands": ["flirt", "applywarp"],
         },
     ]
