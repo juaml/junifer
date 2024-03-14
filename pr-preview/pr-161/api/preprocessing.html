@@ -270,11 +270,17 @@
 <p>Provide imports for preprocess sub-package.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.preprocess.BOLDWarper">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.preprocess.</span></span><span class="sig-name descname"><span class="pre">BOLDWarper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.BOLDWarper" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.preprocess.</span></span><span class="sig-name descname"><span class="pre">BOLDWarper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">using</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.BOLDWarper" title="Link to this definition">#</a></dt>
 <dd><p>Class for warping BOLD NIfTI images.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
+<dt><strong>using</strong><span class="classifier">{“fsl”, “ants”}</span></dt><dd><p>Implementation to use for warping:</p>
+<ul class="simple">
+<li><p>“fsl” : Use FSL’s <code class="docutils literal notranslate"><span class="pre">applywarp</span></code></p></li>
+<li><p>“afni” : Use ANTs’ <code class="docutils literal notranslate"><span class="pre">antsApplyTransforms</span></code></p></li>
+</ul>
+</dd>
 <dt><strong>reference</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type to use as reference for warping, can be either a data
 type like “T1w” or a template space like “MNI152NLin2009cAsym”.</p>
 </dd>
@@ -282,11 +288,18 @@ type like “T1w” or a template space like “MNI152NLin2009cAsym”.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">reference</span></code> is invalid.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">using</span></code> is invalid or
+if <code class="docutils literal notranslate"><span class="pre">reference</span></code> is invalid.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>If you are setting <code class="docutils literal notranslate"><span class="pre">reference</span></code> to a template space like
+“MNI152NLin2009cAsym”, make sure ANTs is available for the
+transformation else it will fail during runtime. It is tricky to validate
+this beforehand and difficult to enforce this as a requirement, hence the
+heads-up.</p>
 <p>Initialize the class.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.preprocess.BOLDWarper.get_output_type">
@@ -484,35 +497,83 @@ pipeline step.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="junifer.preprocess.NilearnSmoothing">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.preprocess.</span></span><span class="sig-name descname"><span class="pre">NilearnSmoothing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fwhm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.NilearnSmoothing" title="Link to this definition">#</a></dt>
-<dd><p>Class for smoothing via nilearn.</p>
+<dt class="sig sig-object py" id="junifer.preprocess.Smoothing">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.preprocess.</span></span><span class="sig-name descname"><span class="pre">Smoothing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">using</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smoothing_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.Smoothing" title="Link to this definition">#</a></dt>
+<dd><p>Class for smoothing.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>fwhm</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#arrays-scalars" title="(in NumPy v1.26)"><span class="xref std std-ref">scalar</span></a>, <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://numpy.org/doc/stable/reference/arrays.scalars.html#arrays-scalars" title="(in NumPy v1.26)"><span class="xref std std-ref">scalar</span></a>, “fast” or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></span></dt><dd><p>Smoothing strength, as a full-width at half maximum, in millimeters:</p>
+<dt><strong>using</strong><span class="classifier">{“nilearn”}</span></dt><dd><p>Implementation to use for smoothing:</p>
+<ul class="simple">
+<li><p>“nilearn” : Use :func`nilearn.image.smooth_img`</p></li>
+</ul>
+</dd>
+<dt><strong>on</strong><span class="classifier">{“T1w”, “T2w”, “BOLD”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options</span></dt><dd><p>The data type to apply smoothing to.</p>
+</dd>
+<dt><strong>smoothing_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Extra parameters for smoothing as a dictionary (default None).
+If <code class="docutils literal notranslate"><span class="pre">using=&quot;nilearn&quot;</span></code>, then the valid keys are:</p>
+<ul>
+<li><dl>
+<dt><code class="docutils literal notranslate"><span class="pre">fmhw</span></code><span class="classifier">scalar, <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>, tuple or list of scalar,                      “fast” or None</span></dt><dd><p>Smoothing strength, as a full-width at half maximum, in
+millimeters:</p>
 <ul class="simple">
 <li><p>If nonzero scalar, width is identical in all 3 directions.</p></li>
-<li><p>If <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>, tuple, or list, it must have 3 elements, giving
-the FWHM along each axis. If any of the elements is 0 or None,
-smoothing is not performed along that axis.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>, tuple, or list, it must have 3 elements,
+giving the FWHM along each axis. If any of the elements is 0 or
+None, smoothing is not performed along that axis.</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">&quot;fast&quot;</span></code>, a fast smoothing will be performed with a filter
-<code class="docutils literal notranslate"><span class="pre">[0.2,</span> <span class="pre">1,</span> <span class="pre">0.2]</span></code> in each direction and a normalisation to preserve
-the local average value.</p></li>
+<code class="docutils literal notranslate"><span class="pre">[0.2,</span> <span class="pre">1,</span> <span class="pre">0.2]</span></code> in each direction and a normalisation to
+preserve the local average value.</p></li>
 <li><p>If None, no filtering is performed (useful when just removal of
 non-finite values is needed).</p></li>
 </ul>
 </dd>
-<dt><strong>on</strong><span class="classifier">{“T1w”, “T2w”, “BOLD”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></span></dt><dd><p>The data type to apply smoothing to. If None, will apply to all
-available data types (default None).</p>
+</dl>
+</li>
+</ul>
 </dd>
 </dl>
 </dd>
 </dl>
 <p>Initialize the class.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.NilearnSmoothing.preprocess">
-<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.NilearnSmoothing.preprocess" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="junifer.preprocess.Smoothing.get_output_type">
+<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.Smoothing.get_output_type" title="Link to this definition">#</a></dt>
+<dd><p>Get output type.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the preprocessor.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The data type output by the preprocessor.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.preprocess.Smoothing.get_valid_inputs">
+<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.Smoothing.get_valid_inputs" title="Link to this definition">#</a></dt>
+<dd><p>Get valid data types for input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this
+preprocessor.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.preprocess.Smoothing.preprocess">
+<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.Smoothing.preprocess" title="Link to this definition">#</a></dt>
 <dd><p>Preprocess.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -725,8 +786,10 @@ returned else None.</p>
 <li><a class="reference internal" href="#junifer.preprocess.BasePreprocessor.validate_input"><code class="docutils literal notranslate"><span class="pre">BasePreprocessor.validate_input()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer.preprocess.NilearnSmoothing"><code class="docutils literal notranslate"><span class="pre">NilearnSmoothing</span></code></a><ul>
-<li><a class="reference internal" href="#junifer.preprocess.NilearnSmoothing.preprocess"><code class="docutils literal notranslate"><span class="pre">NilearnSmoothing.preprocess()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.preprocess.Smoothing"><code class="docutils literal notranslate"><span class="pre">Smoothing</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.preprocess.Smoothing.get_output_type"><code class="docutils literal notranslate"><span class="pre">Smoothing.get_output_type()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.preprocess.Smoothing.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">Smoothing.get_valid_inputs()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.preprocess.Smoothing.preprocess"><code class="docutils literal notranslate"><span class="pre">Smoothing.preprocess()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.preprocess.fMRIPrepConfoundRemover"><code class="docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover</span></code></a><ul>
