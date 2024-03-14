@@ -20,14 +20,13 @@ import numpy as np
 
 from ...pipeline import WorkDirManager
 from ...utils import logger, raise_error, run_ext_cmd
-from ..base import BasePreprocessor
 
 
 if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
-class _AntsApplyTransformsWarper(BasePreprocessor):
+class _AntsApplyTransformsWarper:
     """Class for warping NIfTI images via ANTs antsApplyTransforms.
 
     Warps ANTs ``antsApplyTransforms``.
@@ -62,42 +61,7 @@ class _AntsApplyTransformsWarper(BasePreprocessor):
         # Check only single data type is passed
         if isinstance(on, list):
             raise_error("Can only work on single data type, list was passed.")
-        self.on = on  # needed for the base validation to work
-        super().__init__(
-            on=self.on, required_data_types=[self.on, self.ref, "Warp"]
-        )
-
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this
-            preprocessor.
-
-        """
-        # Constructed dynamically
-        return [self.on]
-
-    def get_output_type(self, input: List[str]) -> List[str]:
-        """Get output type.
-
-        Parameters
-        ----------
-        input : list of str
-            The input to the preprocessor. The list must contain the
-            available Junifer Data dictionary keys.
-
-        Returns
-        -------
-        list of str
-            The updated list of available Junifer Data object keys after
-            the pipeline step.
-
-        """
-        # Does not add any new keys
-        return input
+        self.on = on
 
     def _run_apply_transforms(
         self,

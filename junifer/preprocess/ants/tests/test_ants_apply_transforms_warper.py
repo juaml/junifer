@@ -5,7 +5,6 @@
 
 import socket
 from pathlib import Path
-from typing import List
 
 import nibabel as nib
 import pytest
@@ -25,38 +24,6 @@ def test_AntsApplyTransformsWarper_init() -> None:
     )
     assert ants_apply_transforms_warper.ref == "T1w"
     assert ants_apply_transforms_warper.on == "BOLD"
-    assert ants_apply_transforms_warper._on == ["BOLD"]
-
-
-def test_AntsApplyTransformsWarper_get_valid_inputs() -> None:
-    """Test AntsApplyTransformsWarper get_valid_inputs."""
-    ants_apply_transforms_warper = _AntsApplyTransformsWarper(
-        reference="T1w", on="BOLD"
-    )
-    assert ants_apply_transforms_warper.get_valid_inputs() == ["BOLD"]
-
-
-@pytest.mark.parametrize(
-    "input_",
-    [
-        ["BOLD", "T1w", "Warp"],
-        ["BOLD", "T1w"],
-        ["BOLD"],
-    ],
-)
-def test_AntsApplyTransformsWarper_get_output_type(input_: List[str]) -> None:
-    """Test AntsApplyTransformsWarper get_output_type.
-
-    Parameters
-    ----------
-    input_ : list of str
-        The input data types.
-
-    """
-    ants_apply_transforms_warper = _AntsApplyTransformsWarper(
-        reference="T1w", on="BOLD"
-    )
-    assert ants_apply_transforms_warper.get_output_type(input_) == input_
 
 
 @pytest.mark.skipif(

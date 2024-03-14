@@ -5,7 +5,6 @@
 
 import socket
 from pathlib import Path
-from typing import List
 
 import nibabel as nib
 import pytest
@@ -21,34 +20,6 @@ def test_ApplyWarper_init() -> None:
     apply_warper = _ApplyWarper(reference="T1w", on="BOLD")
     assert apply_warper.ref == "T1w"
     assert apply_warper.on == "BOLD"
-    assert apply_warper._on == ["BOLD"]
-
-
-def test_ApplyWarper_get_valid_inputs() -> None:
-    """Test ApplyWarper get_valid_inputs."""
-    apply_warper = _ApplyWarper(reference="T1w", on="BOLD")
-    assert apply_warper.get_valid_inputs() == ["BOLD"]
-
-
-@pytest.mark.parametrize(
-    "input_",
-    [
-        ["BOLD", "T1w", "Warp"],
-        ["BOLD", "T1w"],
-        ["BOLD"],
-    ],
-)
-def test_ApplyWarper_get_output_type(input_: List[str]) -> None:
-    """Test ApplyWarper get_output_type.
-
-    Parameters
-    ----------
-    input_ : list of str
-        The input data types.
-
-    """
-    apply_warper = _ApplyWarper(reference="T1w", on="BOLD")
-    assert apply_warper.get_output_type(input_) == input_
 
 
 @pytest.mark.skipif(_check_fsl() is False, reason="requires FSL to be in PATH")
