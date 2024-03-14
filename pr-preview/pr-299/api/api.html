@@ -295,7 +295,7 @@ init function.</p>
 <dd class="field-odd"><dl>
 <dt><strong>config</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The configuration to be used for queueing the job.</p>
 </dd>
-<dt><strong>kind</strong><span class="classifier">{“HTCondor”, “SLURM”}</span></dt><dd><p>The kind of job queue system to use.</p>
+<dt><strong>kind</strong><span class="classifier">{“HTCondor”}</span></dt><dd><p>The kind of job queue system to use.</p>
 </dd>
 <dt><strong>jobname</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the job (default “junifer_job”).</p>
 </dd>
@@ -310,8 +310,8 @@ init function.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">jobdir</span></code> exists and <code class="docutils literal notranslate"><span class="pre">overwrite</span> <span class="pre">=</span> <span class="pre">False</span></code> or
-if value of <code class="docutils literal notranslate"><span class="pre">kind</span></code> is invalid.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">kind</span></code> is invalid or
+if the <code class="docutils literal notranslate"><span class="pre">jobdir</span></code> exists and <code class="docutils literal notranslate"><span class="pre">overwrite</span> <span class="pre">=</span> <span class="pre">False</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -369,6 +369,12 @@ are passed to the preprocessor init function (default None).</p>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the function.</p>
 </dd>
 <dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>Class to be registered.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is invalid.</p>
 </dd>
 </dl>
 </dd>
@@ -485,6 +491,178 @@ are passed to the preprocessor init function (default None).</p>
 </dd></dl>
 
 </section>
+<section id="module-junifer.api.queue_context">
+<span id="queue-context"></span><h2>Queue Context<a class="headerlink" href="#module-junifer.api.queue_context" title="Link to this heading">#</a></h2>
+<p>Provide imports for queue context sub-package.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.api.queue_context.HTCondorAdapter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.api.queue_context.</span></span><span class="sig-name descname"><span class="pre">HTCondorAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_collect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cpus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'8G'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disk</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'1G'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_preamble</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'yes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.HTCondorAdapter" title="Link to this definition">#</a></dt>
+<dd><p>Class for generating queueing scripts for HTCondor.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>job_name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The job name to be used by HTCondor.</p>
+</dd>
+<dt><strong>job_dir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The path to the job directory.</p>
+</dd>
+<dt><strong>yaml_config_path</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The path to the YAML config file.</p>
+</dd>
+<dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a></span></dt><dd><p>Element(s) to process. Will be used to index the DataGrabber.</p>
+</dd>
+<dt><strong>pre_run</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Extra bash commands to source before the run (default None).</p>
+</dd>
+<dt><strong>pre_collect</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Extra bash commands to source before the collect (default None).</p>
+</dd>
+<dt><strong>env</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The Python environment configuration. If None, will run without a
+virtual environment of any kind (default None).</p>
+</dd>
+<dt><strong>verbose</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The level of verbosity (default “info”).</p>
+</dd>
+<dt><strong>cpus</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The number of CPU cores to use (default 1).</p>
+</dd>
+<dt><strong>mem</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The size of memory (RAM) to use (default “8G”).</p>
+</dd>
+<dt><strong>disk</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The size of disk (HDD or SSD) to use (default “1G”).</p>
+</dd>
+<dt><strong>extra_preamble</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Extra commands to pass to HTCondor (default None).</p>
+</dd>
+<dt><strong>collect</strong><span class="classifier">{“yes”, “on_success_only”, “no”}, optional</span></dt><dd><p>Whether to submit “collect” task for junifer (default “yes”).
+Valid options are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>“yes”: Submit “collect” task and run even if some of the jobs</dt><dd><p>fail.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>“on_success_only”: Submit “collect” task and run only if all jobs</dt><dd><p>succeed.</p>
+</dd>
+</dl>
+</li>
+<li><p>“no”: Do not submit “collect” task.</p></li>
+</ul>
+</div></blockquote>
+</dd>
+<dt><strong>submit</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to submit the jobs. In any case, .dag files will be created
+for submission (default False).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">collect</span></code> is invalid or if <code class="docutils literal notranslate"><span class="pre">env</span></code> is invalid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter" title="junifer.api.queue_context.QueueContextAdapter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QueueContextAdapter</span></code></a></dt><dd><p>The base class for QueueContext.</p>
+</dd>
+</dl>
+</div>
+<p>Initialize the class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.HTCondorAdapter.collect">
+<span class="sig-name descname"><span class="pre">collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.HTCondorAdapter.collect" title="Link to this definition">#</a></dt>
+<dd><p>Return collect commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.HTCondorAdapter.dag">
+<span class="sig-name descname"><span class="pre">dag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.HTCondorAdapter.dag" title="Link to this definition">#</a></dt>
+<dd><p>Return HTCondor DAG commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.HTCondorAdapter.pre_collect">
+<span class="sig-name descname"><span class="pre">pre_collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.HTCondorAdapter.pre_collect" title="Link to this definition">#</a></dt>
+<dd><p>Return pre-collect commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.HTCondorAdapter.pre_run">
+<span class="sig-name descname"><span class="pre">pre_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.HTCondorAdapter.pre_run" title="Link to this definition">#</a></dt>
+<dd><p>Return pre-run commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.HTCondorAdapter.prepare">
+<span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.HTCondorAdapter.prepare" title="Link to this definition">#</a></dt>
+<dd><p>Prepare assets for submission.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.HTCondorAdapter.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.HTCondorAdapter.run" title="Link to this definition">#</a></dt>
+<dd><p>Return run commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.api.queue_context.QueueContextAdapter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.api.queue_context.</span></span><span class="sig-name descname"><span class="pre">QueueContextAdapter</span></span><a class="headerlink" href="#junifer.api.queue_context.QueueContextAdapter" title="Link to this definition">#</a></dt>
+<dd><p>Abstract base class for queue context adapter.</p>
+<p>For every interface that is required, one needs to provide a concrete
+implementation of this abstract class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.QueueContextAdapter.collect">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.QueueContextAdapter.collect" title="Link to this definition">#</a></dt>
+<dd><p>Return collect commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.QueueContextAdapter.pre_collect">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pre_collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.QueueContextAdapter.pre_collect" title="Link to this definition">#</a></dt>
+<dd><p>Return pre-collect commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.QueueContextAdapter.pre_run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pre_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.QueueContextAdapter.pre_run" title="Link to this definition">#</a></dt>
+<dd><p>Return pre-run commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.QueueContextAdapter.prepare">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.QueueContextAdapter.prepare" title="Link to this definition">#</a></dt>
+<dd><p>Prepare assets for submission.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.QueueContextAdapter.run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.QueueContextAdapter.run" title="Link to this definition">#</a></dt>
+<dd><p>Return run commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
         </article>
@@ -556,6 +734,26 @@ are passed to the preprocessor init function (default None).</p>
 <li><a class="reference internal" href="#junifer.api.decorators.register_marker"><code class="docutils literal notranslate"><span class="pre">register_marker()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.decorators.register_preprocessor"><code class="docutils literal notranslate"><span class="pre">register_preprocessor()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.decorators.register_storage"><code class="docutils literal notranslate"><span class="pre">register_storage()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-junifer.api.queue_context">Queue Context</a><ul>
+<li><a class="reference internal" href="#junifer.api.queue_context.HTCondorAdapter"><code class="docutils literal notranslate"><span class="pre">HTCondorAdapter</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.api.queue_context.HTCondorAdapter.collect"><code class="docutils literal notranslate"><span class="pre">HTCondorAdapter.collect()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.HTCondorAdapter.dag"><code class="docutils literal notranslate"><span class="pre">HTCondorAdapter.dag()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.HTCondorAdapter.pre_collect"><code class="docutils literal notranslate"><span class="pre">HTCondorAdapter.pre_collect()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.HTCondorAdapter.pre_run"><code class="docutils literal notranslate"><span class="pre">HTCondorAdapter.pre_run()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.HTCondorAdapter.prepare"><code class="docutils literal notranslate"><span class="pre">HTCondorAdapter.prepare()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.HTCondorAdapter.run"><code class="docutils literal notranslate"><span class="pre">HTCondorAdapter.run()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.collect"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.collect()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.pre_collect"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.pre_collect()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.pre_run"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.pre_run()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.prepare"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.prepare()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.run"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.run()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
