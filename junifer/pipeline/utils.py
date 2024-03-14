@@ -66,12 +66,12 @@ def check_ext_dependencies(
 
 
 def _check_afni(commands: Optional[List[str]] = None) -> bool:
-    """Check if afni is present in the system.
+    """Check if AFNI is present in the system.
 
     Parameters
     ----------
     commands : list of str, optional
-        The commands to specifically check for from afni. If None, only
+        The commands to specifically check for from AFNI. If None, only
         the basic afni version would be looked up, else, would also
         check for specific commands (default None).
 
@@ -126,19 +126,19 @@ def _check_afni(commands: Optional[List[str]] = None) -> bool:
 
 
 def _check_fsl(commands: Optional[List[str]] = None) -> bool:
-    """Check if fsl is present in the system.
+    """Check if FSL is present in the system.
 
     Parameters
     ----------
     commands : list of str, optional
-        The commands to specifically check for from fsl. If None, only
-        the basic fsl flirt version would be looked up, else, would also
+        The commands to specifically check for from FSL. If None, only
+        the basic FSL flirt version would be looked up, else, would also
         check for specific commands (default None).
 
     Returns
     -------
     bool
-        Whether fsl is found or not.
+        Whether FSL is found or not.
 
     """
     completed_process = subprocess.run(
