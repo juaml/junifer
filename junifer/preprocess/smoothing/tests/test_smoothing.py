@@ -13,7 +13,7 @@ from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 @pytest.mark.parametrize(
     "data_type",
-    ["T1w", "BOLD", None],
+    ["T1w", "BOLD"],
 )
 def test_Smoothing(data_type: str) -> None:
     """Test Smoothing.
@@ -28,10 +28,10 @@ def test_Smoothing(data_type: str) -> None:
         # Read data
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data
-        data, _ = Smoothing(
+        output = Smoothing(
             using="nilearn",
-            smoothing_params={"fwhm": "fast"},
             on=data_type,
+            smoothing_params={"fwhm": "fast"},
         ).fit_transform(element_data)
 
-        assert isinstance(data, dict)
+        assert isinstance(output, dict)

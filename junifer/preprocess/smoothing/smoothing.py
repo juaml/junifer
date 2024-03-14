@@ -25,6 +25,8 @@ class Smoothing(BasePreprocessor):
 
         * "nilearn" : Use :func`nilearn.image.smooth_img`
 
+    on : {"T1w", "T2w", "BOLD"} or list of the options
+        The data type to apply smoothing to.
     smoothing_params : dict, optional
         Extra parameters for smoothing as a dictionary (default None).
         If ``using="nilearn"``, then the valid keys are:
@@ -44,10 +46,6 @@ class Smoothing(BasePreprocessor):
             - If None, no filtering is performed (useful when just removal of
               non-finite values is needed).
 
-    on : {"T1w", "T2w", "BOLD"} or list of the options or None, optional
-        The data type to apply smoothing to. If None, will apply to all
-        available data types (default None).
-
     """
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
@@ -60,8 +58,8 @@ class Smoothing(BasePreprocessor):
     def __init__(
         self,
         using: str,
+        on: Union[List[str], str],
         smoothing_params: Optional[Dict] = None,
-        on: Optional[Union[List[str], str]] = None,
     ) -> None:
         """Initialize the class."""
         # Validate `using` parameter
@@ -74,7 +72,7 @@ class Smoothing(BasePreprocessor):
         self.smoothing_params = (
             smoothing_params if smoothing_params is not None else {}
         )
-        super().__init__(on=on, required_data_types=on)
+        super().__init__(on=on)
 
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
