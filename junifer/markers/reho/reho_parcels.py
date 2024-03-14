@@ -20,8 +20,8 @@ class ReHoParcels(ReHoBase):
 
     Parameters
     ----------
-    parcellation : str
-        The name of the parcellation. Check valid options by calling
+    parcellation : str or list of str
+        The name(s) of the parcellation(s). Check valid options by calling
         :func:`.list_parcellations`.
     using : {"junifer", "afni"}
         Implementation to use for computing ReHo:
@@ -89,7 +89,7 @@ class ReHoParcels(ReHoBase):
 
     def __init__(
         self,
-        parcellation: str,
+        parcellation: Union[str, List[str]],
         using: str,
         reho_params: Optional[Dict] = None,
         agg_method: str = "mean",
