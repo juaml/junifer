@@ -10,16 +10,17 @@ from typing import Any, List, Optional
 from junifer.utils.logging import raise_error, warn_with_log
 
 
-def check_ext_dependencies(name: str, optional: bool, **kwargs: Any) -> bool:
+def check_ext_dependencies(
+    name: str, optional: bool = False, **kwargs: Any
+) -> bool:
     """Check if external dependency `name` is found if mandatory.
 
     Parameters
     ----------
     name : str
         The name of the dependency.
-    optional : bool
-        Whether the dependency is optional. For external dependencies marked
-        as optional, there should be an implementation provided with junfier.
+    optional : bool, optional
+        Whether the dependency is optional (default False).
     **kwargs : dict
         Extra keyword arguments.
 
@@ -28,7 +29,20 @@ def check_ext_dependencies(name: str, optional: bool, **kwargs: Any) -> bool:
     bool
         Whether the external dependency was found.
 
+    Raises
+    ------
+    ValueError
+        If ``name`` is invalid.
+    RuntimeError
+        If ``name`` is mandatory and is not found.
+
     """
+    valid_ext_dependencies = ("afni", "fsl", "ants")
+    if name not in valid_ext_dependencies:
+        raise_error(
+            "Invalid value for `name`, should be one of: "
+            f"{valid_ext_dependencies}"
+        )
     # Check for afni
     if name == "afni":
         found = _check_afni(**kwargs)
@@ -38,18 +52,15 @@ def check_ext_dependencies(name: str, optional: bool, **kwargs: Any) -> bool:
     # Check for ants
     elif name == "ants":
         found = _check_ants(**kwargs)
-    # Went off the rails
-    else:
-        raise_error(
-            f"The external dependency {name} has no check. "
-            f"Either the name '{name}' is incorrect or you were too "
-            "adventurous. Raise an issue if it's the latter ;-)."
-        )
+
     # Check if the dependency is mandatory in case it's not found
     if not found and not optional:
         raise_error(
-            f"{name} is not installed but is "
-            "required by one of the pipeline steps."
+            msg=(
+                f"{name} is not installed but is "
+                "required by one of the pipeline steps"
+            ),
+            klass=RuntimeError,
         )
     return found
 
