@@ -34,7 +34,7 @@ class FSLWarper:
         },
     ]
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"numpy"}
+    _DEPENDENCIES: ClassVar[Set[str]] = {"numpy", "nibabel"}
 
     def preprocess(
         self,
