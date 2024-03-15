@@ -8,3 +8,4 @@
 from .base import BasePreprocessor
 from .confounds import fMRIPrepConfoundRemover
 from .bold_warper import BOLDWarper
+from .warping import SpaceWarper
