@@ -45,9 +45,13 @@ def test_get_dependency_information_short() -> None:
         "httpx",
         "tqdm",
         "templateflow",
+        "looseversion",
     ]
-    if int(pl.python_version_tuple()[1]) < 10:
+
+    python_minor_version = int(pl.python_version_tuple()[1])
+    if python_minor_version < 10:
         dependency_list.append("importlib_metadata")
+
     assert frozenset(dependency_information.keys()) == frozenset(
         dependency_list
     )

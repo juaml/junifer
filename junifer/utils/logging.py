@@ -4,9 +4,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+try:
+    from distutils.version import LooseVersion
+except ImportError:  # pragma: no cover
+    from looseversion import LooseVersion
+
 import logging
 import sys
-from distutils.version import LooseVersion
 from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Dict, NoReturn, Optional, Type, Union
