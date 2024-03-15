@@ -136,7 +136,7 @@ def test_SpaceWarper_multi_mni(
     with datagrabber as dg:
         # Read data
         element_data = DefaultDataReader().fit_transform(dg[element])
-        pre_xfm_data = element_data["BOLD"]["data"].get_fdata().copy()
+        pre_xfm_data = element_data["T1w"]["data"].get_fdata().copy()
         # Preprocess data
         output, _ = SpaceWarper(
             using="ants_template",
