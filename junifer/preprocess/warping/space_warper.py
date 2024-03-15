@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, ClassVar, Dict, List, Optional, Set, Tuple, Type, Union
 
 import nibabel as nib
 from templateflow import api as tflow
@@ -64,6 +64,8 @@ class SpaceWarper(BasePreprocessor):
             "depends_on": ANTsWarper,
         },
     ]
+
+    _DEPENDENCIES: ClassVar[Set[str]] = {"nibabel"}
 
     def __init__(
         self, using: str, reference: str, on: Union[List[str], str]
