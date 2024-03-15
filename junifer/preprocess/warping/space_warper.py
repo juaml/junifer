@@ -108,7 +108,7 @@ class SpaceWarper(BasePreprocessor):
             preprocessor.
 
         """
-        return ["T1w", "BOLD"]
+        return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
 
     def get_output_type(self, input_type: str) -> str:
         """Get output type.
