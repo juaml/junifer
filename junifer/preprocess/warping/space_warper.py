@@ -13,8 +13,8 @@ from ...data import get_template, get_xfm
 from ...pipeline import WorkDirManager
 from ...utils import logger, raise_error, run_ext_cmd
 from ..base import BasePreprocessor
-from ._ants_warper import ANTsWarper
-from ._fsl_warper import FSLWarper
+from ._ants_native_warper import ANTsNativeWarper
+from ._fsl_native_warper import FSLNativeWarper
 
 
 __all__ = ["SpaceWarper"]
@@ -29,8 +29,9 @@ class SpaceWarper(BasePreprocessor):
     using : {"fsl", "ants"}
         Implementation to use for warping:
 
-        * "fsl" : Use FSL's ``applywarp``
-        * "afni" : Use ANTs' ``antsApplyTransforms``
+        * "fsl_native" : Use FSL's ``applywarp`` for native space warping
+        * "ants_native" : Use ANTs' ``antsApplyTransforms`` for native space
+                          warping
 
     reference : str
         The data type to use as reference for warping, can be either a data
@@ -56,8 +57,12 @@ class SpaceWarper(BasePreprocessor):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
         {
-            "using": "fsl",
-            "depends_on": FSLWarper,
+            "using": "fsl_native",
+            "depends_on": FSLNativeWarper,
+        },
+        {
+            "using": "ants_native",
+            "depends_on": ANTsNativeWarper,
         },
         {
             "using": "ants",
@@ -169,13 +174,13 @@ class SpaceWarper(BasePreprocessor):
                     f"`{self.reference}` data types in particular."
                 )
             # Conditional preprocessor
-            if self.using == "fsl":
-                input = FSLWarper().preprocess(
+            if self.using == "fsl_native":
+                input = FSLNativeWarper().preprocess(
                     input=input,
                     extra_input=extra_input,
                 )
-            elif self.using == "ants":
-                input = ANTsWarper().preprocess(
+            elif self.using == "ants_natice":
+                input = ANTsNativeWarper().preprocess(
                     input=input,
                     extra_input=extra_input,
                 )

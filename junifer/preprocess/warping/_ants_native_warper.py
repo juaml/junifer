@@ -1,4 +1,4 @@
-"""Provide class for space warping via FSL FLIRT."""
+"""Provide class for native space warping via ANTs antsApplyTransforms."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
@@ -19,18 +19,18 @@ from ...pipeline import WorkDirManager
 from ...utils import logger, run_ext_cmd
 
 
-class FSLWarper:
-    """Class for space warping via FSL FLIRT.
+class ANTsNativeWarper:
+    """Class for native space warping via ANTs antsApplyTransforms.
 
-    This class uses FSL FLIRT's ``flirt`` for resampling and ``applywarp`` for
-    transformation.
+    This class uses ANTs' ``ResampleImage`` for resampling and
+    ``antsApplyTransforms`` for transformation.
 
     """
 
     _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
         {
-            "name": "fsl",
-            "commands": ["flirt", "applywarp"],
+            "name": "ants",
+            "commands": ["ResampleImage", "antsApplyTransforms"],
         },
     ]
 
@@ -41,7 +41,7 @@ class FSLWarper:
         input: Dict[str, Any],
         extra_input: Dict[str, Any],
     ) -> Dict[str, Any]:
-        """Preprocess using FSL.
+        """Preprocess using ANTs.
 
         Parameters
         ----------
@@ -59,7 +59,7 @@ class FSLWarper:
             reference file used for warping.
 
         """
-        logger.debug("Using FSL for warping")
+        logger.debug("Using ANTs for native space warping")
 
         # Get the min of the voxel sizes from input and use it as the
         # resolution
@@ -67,41 +67,47 @@ class FSLWarper:
 
         # Create element-specific tempdir for storing post-warping assets
         element_tempdir = WorkDirManager().get_element_tempdir(
-            prefix="fsl_warper"
+            prefix="ants_warper"
         )
 
         # Create a tempfile for resampled reference output
-        flirt_out_path = element_tempdir / "resampled_reference.nii.gz"
-        # Set flirt command
-        flirt_cmd = [
-            "flirt",
-            "-interp spline",
-            f"-in {extra_input['T1w']['path'].resolve()}",
-            f"-ref {extra_input['T1w']['path'].resolve()}",
-            f"-applyisoxfm {resolution}",
-            f"-out {flirt_out_path.resolve()}",
+        resample_image_out_path = (
+            element_tempdir / "resampled_reference.nii.gz"
+        )
+        # Set ResampleImage command
+        resample_image_cmd = [
+            "ResampleImage",
+            "3",  # image dimension
+            f"{extra_input['T1w']['path'].resolve()}",
+            f"{resample_image_out_path.resolve()}",
+            f"{resolution}x{resolution}x{resolution}",
+            "0",  # option for spacing and not size
+            "3 3",  # Lanczos windowed sinc
         ]
-        # Call flirt
-        run_ext_cmd(name="flirt", cmd=flirt_cmd)
+        # Call ResampleImage
+        run_ext_cmd(name="ResampleImage", cmd=resample_image_cmd)
 
         # Create a tempfile for warped output
-        applywarp_out_path = element_tempdir / "output.nii.gz"
-        # Set applywarp command
-        applywarp_cmd = [
-            "applywarp",
-            "--interp=spline",
+        apply_transforms_out_path = element_tempdir / "output.nii.gz"
+        # Set antsApplyTransforms command
+        apply_transforms_cmd = [
+            "antsApplyTransforms",
+            "-d 3",
+            "-e 3",
+            "-n LanczosWindowedSinc",
             f"-i {input['path'].resolve()}",
-            f"-r {flirt_out_path.resolve()}",  # use resampled reference
-            f"-w {extra_input['Warp']['path'].resolve()}",
-            f"-o {applywarp_out_path.resolve()}",
+            # use resampled reference
+            f"-r {resample_image_out_path.resolve()}",
+            f"-t {extra_input['Warp']['path'].resolve()}",
+            f"-o {apply_transforms_out_path.resolve()}",
         ]
-        # Call applywarp
-        run_ext_cmd(name="applywarp", cmd=applywarp_cmd)
+        # Call antsApplyTransforms
+        run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
 
         # Load nifti
-        input["data"] = nib.load(applywarp_out_path)
+        input["data"] = nib.load(apply_transforms_out_path)
         # Save resampled reference path
-        input["reference_path"] = flirt_out_path
+        input["reference_path"] = resample_image_out_path
 
         # Use reference input's space as warped input's space
         input["space"] = extra_input["T1w"]["space"]
