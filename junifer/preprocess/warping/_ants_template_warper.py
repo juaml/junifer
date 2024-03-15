@@ -101,6 +101,9 @@ class ANTsTemplateWarper:
         # Call antsApplyTransforms
         run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
 
+        # Delete tempdir
+        WorkDirManager().delete_tempdir(tempdir)
+
         # Modify target data
         input["data"] = nib.load(warped_output_path)
         input["space"] = dst
