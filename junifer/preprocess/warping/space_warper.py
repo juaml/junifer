@@ -172,7 +172,7 @@ class SpaceWarper(BasePreprocessor):
                     input=input,
                     extra_input=extra_input,
                 )
-            elif self.using == "ants_natice":
+            elif self.using == "ants_native":
                 input = ANTsNativeWarper().preprocess(
                     input=input,
                     extra_input=extra_input,
