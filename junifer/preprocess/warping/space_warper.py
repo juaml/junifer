@@ -155,9 +155,7 @@ class SpaceWarper(BasePreprocessor):
             If ``extra_input`` is None when transforming to native space
             i.e., using ``"T1w"`` as reference.
         RuntimeError
-            If warp / transformation file extension is not ".mat" or ".h5"
-            when transforming to native space or
-            if the data is in the correct space and does not require
+            If the data is in the correct space and does not require
             warping.
 
         """
@@ -170,25 +168,16 @@ class SpaceWarper(BasePreprocessor):
                     "No extra input provided, requires `Warp` and "
                     f"`{self.reference}` data types in particular."
                 )
-            # Check for warp file type to use correct tool
-            warp_file_ext = extra_input["Warp"]["path"].suffix
-            if warp_file_ext == ".mat":
+            # Conditional preprocessor
+            if self.using == "fsl":
                 input = FSLWarper().preprocess(
                     input=input,
                     extra_input=extra_input,
                 )
-            elif warp_file_ext == ".h5":
+            elif self.using == "ants":
                 input = ANTsWarper().preprocess(
                     input=input,
                     extra_input=extra_input,
-                )
-            else:
-                raise_error(
-                    msg=(
-                        "Unknown warp / transformation file extension: "
-                        f"{warp_file_ext}"
-                    ),
-                    klass=RuntimeError,
                 )
         # Transform to template space
         else:
