@@ -38,6 +38,8 @@ class SpaceWarper(BasePreprocessor):
         type like ``"T1w"`` or a template space like ``"MNI152NLin2009cAsym"``.
         Use ``"T1w"`` for native space warping and named templates for
         template space warping.
+    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or list \
+         of the options
         The data type to warp.
 
     Raises
