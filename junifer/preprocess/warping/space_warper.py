@@ -3,17 +3,15 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Set, Tuple, Type, Union
+from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type, Union
 
-import nibabel as nib
 from templateflow import api as tflow
 
 from ...api.decorators import register_preprocessor
-from ...data import get_template, get_xfm
-from ...pipeline import WorkDirManager
-from ...utils import logger, raise_error, run_ext_cmd
+from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 from ._ants_native_warper import ANTsNativeWarper
+from ._ants_template_warper import ANTsTemplateWarper
 from ._fsl_native_warper import FSLNativeWarper
 
 
@@ -26,17 +24,20 @@ class SpaceWarper(BasePreprocessor):
 
     Parameters
     ----------
-    using : {"fsl", "ants"}
+    using : {"fsl_native", "ants_native", "ants_template}
         Implementation to use for warping:
 
         * "fsl_native" : Use FSL's ``applywarp`` for native space warping
         * "ants_native" : Use ANTs' ``antsApplyTransforms`` for native space
                           warping
+        * "ants_template" : Use ANTs' ``antsApplyTransforms`` for template
+                            space warping
 
     reference : str
         The data type to use as reference for warping, can be either a data
         type like ``"T1w"`` or a template space like ``"MNI152NLin2009cAsym"``.
-    on : {"T1w", "BOLD"} or list of the options
+        Use ``"T1w"`` for native space warping and named templates for
+        template space warping.
         The data type to warp.
 
     Raises
@@ -44,14 +45,6 @@ class SpaceWarper(BasePreprocessor):
     ValueError
         If ``using`` is invalid or
         if ``reference`` is invalid.
-
-    Notes
-    -----
-    If you are setting ``reference`` to a template space like
-    "MNI152NLin2009cAsym", make sure ANTs is available for the
-    transformation else it will fail during runtime. It is tricky to validate
-    this beforehand and difficult to enforce this as a requirement, hence the
-    heads-up.
 
     """
 
@@ -65,12 +58,10 @@ class SpaceWarper(BasePreprocessor):
             "depends_on": ANTsNativeWarper,
         },
         {
-            "using": "ants",
-            "depends_on": ANTsWarper,
+            "using": "ants_template",
+            "depends_on": ANTsTemplateWarper,
         },
     ]
-
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nibabel"}
 
     def __init__(
         self, using: str, reference: str, on: Union[List[str], str]
@@ -197,58 +188,9 @@ class SpaceWarper(BasePreprocessor):
                     klass=RuntimeError,
                 )
             else:
-                # Get xfm file
-                xfm_file_path = get_xfm(src=input["space"], dst=self.reference)
-                # Get template space image
-                template_space_img = get_template(
-                    space=self.reference,
-                    target_data=input,
-                    extra_input=None,
+                input = ANTsTemplateWarper().preprocess(
+                    input=input,
+                    dst=self.reference,
                 )
-
-                # Create component-scoped tempdir
-                tempdir = WorkDirManager().get_tempdir(prefix="space_warper")
-                # Create element-scoped tempdir so that warped data is
-                # available later as nibabel stores file path reference for
-                # loading on computation
-                element_tempdir = WorkDirManager().get_element_tempdir(
-                    prefix="space_warper"
-                )
-
-                # Save template
-                template_space_img_path = (
-                    tempdir / f"{self.reference}_T1w.nii.gz"
-                )
-                nib.save(template_space_img, template_space_img_path)
-
-                # Create a tempfile for warped output
-                warped_output_path = element_tempdir / (
-                    f"data_warped_from_{input['space']}_to_"
-                    f"{self.reference}.nii.gz"
-                )
-
-                logger.debug(
-                    f"Using ANTs to warp data "
-                    f"from {input['space']} to {self.reference}"
-                )
-                # Set antsApplyTransforms command
-                apply_transforms_cmd = [
-                    "antsApplyTransforms",
-                    "-d 3",
-                    "-e 3",
-                    "-n LanczosWindowedSinc",
-                    f"-i {input['path'].resolve()}",
-                    f"-r {template_space_img_path.resolve()}",
-                    f"-t {xfm_file_path.resolve()}",
-                    f"-o {warped_output_path.resolve()}",
-                ]
-                # Call antsApplyTransforms
-                run_ext_cmd(
-                    name="antsApplyTransforms", cmd=apply_transforms_cmd
-                )
-
-                # Modify target data
-                input["data"] = nib.load(warped_output_path)
-                input["space"] = self.reference
 
         return input, None
