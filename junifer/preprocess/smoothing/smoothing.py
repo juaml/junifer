@@ -8,6 +8,7 @@ from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type, Union
 from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
+from ._afni_smoothing import AFNISmoothing
 from ._nilearn_smoothing import NilearnSmoothing
 
 
@@ -20,10 +21,11 @@ class Smoothing(BasePreprocessor):
 
     Parameters
     ----------
-    using : {"nilearn"}
+    using : {"nilearn", "afni"}
         Implementation to use for smoothing:
 
         * "nilearn" : Use :func:`nilearn.image.smooth_img`
+        * "afni" : Use AFNI's ``3dBlurToFWHM``
 
     on : {"T1w", "T2w", "BOLD"} or list of the options
         The data type to apply smoothing to.
@@ -46,12 +48,22 @@ class Smoothing(BasePreprocessor):
             - If None, no filtering is performed (useful when just removal of
               non-finite values is needed).
 
+        else if ``using="afni"``, then the valid keys are:
+
+        * ``fwhm`` : int or float
+            Smooth until the value. AFNI estimates the smoothing and then
+            applies smoothing to reach ``fwhm``.
+
     """
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
         {
             "using": "nilearn",
             "depends_on": NilearnSmoothing,
+        },
+        {
+            "using": "afni",
+            "depends_on": AFNISmoothing,
         },
     ]
 
@@ -131,6 +143,8 @@ class Smoothing(BasePreprocessor):
         # Conditional preprocessor
         if self.using == "nilearn":
             preprocessor = NilearnSmoothing()
+        elif self.using == "afni":
+            preprocessor = AFNISmoothing()
         # Smooth
         output = preprocessor.preprocess(  # type: ignore
             data=input["data"],
