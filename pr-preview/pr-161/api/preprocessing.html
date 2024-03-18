@@ -503,10 +503,11 @@ pipeline step.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>using</strong><span class="classifier">{“nilearn”, “afni”}</span></dt><dd><p>Implementation to use for smoothing:</p>
+<dt><strong>using</strong><span class="classifier">{“nilearn”, “afni”, “fsl”}</span></dt><dd><p>Implementation to use for smoothing:</p>
 <ul class="simple">
 <li><p>“nilearn” : Use <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.image.smooth_img.html#nilearn.image.smooth_img" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.image.smooth_img()</span></code></a></p></li>
 <li><p>“afni” : Use AFNI’s <code class="docutils literal notranslate"><span class="pre">3dBlurToFWHM</span></code></p></li>
+<li><p>“fsl” : Use FSL SUSAN’s <code class="docutils literal notranslate"><span class="pre">susan</span></code></p></li>
 </ul>
 </dd>
 <dt><strong>on</strong><span class="classifier">{“T1w”, “T2w”, “BOLD”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options</span></dt><dd><p>The data type to apply smoothing to.</p>
@@ -537,6 +538,21 @@ non-finite values is needed).</p></li>
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">fwhm</span></code><span class="classifier">int or float</span></dt><dd><p>Smooth until the value. AFNI estimates the smoothing and then
 applies smoothing to reach <code class="docutils literal notranslate"><span class="pre">fwhm</span></code>.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>else if <code class="docutils literal notranslate"><span class="pre">using=&quot;fsl&quot;</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">brightness_threshold</span></code><span class="classifier">float</span></dt><dd><p>Threshold to discriminate between noise and the underlying image.
+The value should be set greater than the noise level and less than
+the contrast of the underlying image.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">fwhm</span></code><span class="classifier">float</span></dt><dd><p>Spatial extent of smoothing.</p>
 </dd>
 </dl>
 </li>
