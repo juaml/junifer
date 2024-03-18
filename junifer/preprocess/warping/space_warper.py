@@ -159,7 +159,10 @@ class SpaceWarper(BasePreprocessor):
         """
         logger.info(f"Warping to {self.reference} space using SpaceWarper")
         # Transform to native space
-        if self.reference == "T1w":
+        if (
+            self.using in ["fsl_native", "ants_native"]
+            and self.reference == "T1w"
+        ):
             # Check for extra inputs
             if extra_input is None:
                 raise_error(
@@ -178,7 +181,7 @@ class SpaceWarper(BasePreprocessor):
                     extra_input=extra_input,
                 )
         # Transform to template space
-        else:
+        elif self.using == "ants_template" and self.reference != "T1w":
             # Check pre-requirements for space manipulation
             if self.reference == input["space"]:
                 raise_error(
@@ -189,7 +192,7 @@ class SpaceWarper(BasePreprocessor):
                     ),
                     klass=RuntimeError,
                 )
-            else:
+            if self.using == "ants_template":
                 input = ANTsTemplateWarper().preprocess(
                     input=input,
                     dst=self.reference,
