@@ -32,7 +32,7 @@ if TYPE_CHECKING:
                 native_t1w=True,
             ),
             ("f9057kp", "wave1bas", "Rest", "AP", "1"),
-            "ants_native",
+            "ants",
         ],
         [
             DataladHCP1200(
@@ -41,7 +41,7 @@ if TYPE_CHECKING:
                 ica_fix=True,
             ),
             ("100206", "REST1", "LR"),
-            "fsl_native",
+            "fsl",
         ],
     ],
 )
@@ -139,7 +139,7 @@ def test_SpaceWarper_multi_mni(
         pre_xfm_data = element_data["T1w"]["data"].get_fdata().copy()
         # Preprocess data
         output, _ = SpaceWarper(
-            using="ants_template",
+            using="ants",
             reference=space,
             on=["T1w"],
         ).preprocess(
