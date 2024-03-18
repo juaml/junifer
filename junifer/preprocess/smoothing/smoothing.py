@@ -23,7 +23,7 @@ class Smoothing(BasePreprocessor):
     using : {"nilearn"}
         Implementation to use for smoothing:
 
-        * "nilearn" : Use :func`nilearn.image.smooth_img`
+        * "nilearn" : Use :func:`nilearn.image.smooth_img`
 
     on : {"T1w", "T2w", "BOLD"} or list of the options
         The data type to apply smoothing to.
