@@ -10,9 +10,8 @@ from templateflow import api as tflow
 from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
-from ._ants_native_warper import ANTsNativeWarper
-from ._ants_template_warper import ANTsTemplateWarper
-from ._fsl_native_warper import FSLNativeWarper
+from ._ants_warper import ANTsWarper
+from ._fsl_warper import FSLWarper
 
 
 __all__ = ["SpaceWarper"]
@@ -24,14 +23,11 @@ class SpaceWarper(BasePreprocessor):
 
     Parameters
     ----------
-    using : {"fsl_native", "ants_native", "ants_template}
+    using : {"fsl", "ants"}
         Implementation to use for warping:
 
-        * "fsl_native" : Use FSL's ``applywarp`` for native space warping
-        * "ants_native" : Use ANTs' ``antsApplyTransforms`` for native space
-                          warping
-        * "ants_template" : Use ANTs' ``antsApplyTransforms`` for template
-                            space warping
+        * "fsl" : Use FSL's ``applywarp``
+        * "ants" : Use ANTs' ``antsApplyTransforms``
 
     reference : str
         The data type to use as reference for warping, can be either a data
@@ -52,16 +48,12 @@ class SpaceWarper(BasePreprocessor):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
         {
-            "using": "fsl_native",
-            "depends_on": FSLNativeWarper,
+            "using": "fsl",
+            "depends_on": FSLWarper,
         },
         {
-            "using": "ants_native",
-            "depends_on": ANTsNativeWarper,
-        },
-        {
-            "using": "ants_template",
-            "depends_on": ANTsTemplateWarper,
+            "using": "ants",
+            "depends_on": ANTsWarper,
         },
     ]
 
@@ -159,10 +151,7 @@ class SpaceWarper(BasePreprocessor):
         """
         logger.info(f"Warping to {self.reference} space using SpaceWarper")
         # Transform to native space
-        if (
-            self.using in ["fsl_native", "ants_native"]
-            and self.reference == "T1w"
-        ):
+        if self.using in ["fsl", "ants"] and self.reference == "T1w":
             # Check for extra inputs
             if extra_input is None:
                 raise_error(
@@ -170,18 +159,19 @@ class SpaceWarper(BasePreprocessor):
                     f"`{self.reference}` data types in particular."
                 )
             # Conditional preprocessor
-            if self.using == "fsl_native":
-                input = FSLNativeWarper().preprocess(
+            if self.using == "fsl":
+                input = FSLWarper().preprocess(
                     input=input,
                     extra_input=extra_input,
                 )
-            elif self.using == "ants_native":
-                input = ANTsNativeWarper().preprocess(
+            elif self.using == "ants":
+                input = ANTsWarper().preprocess(
                     input=input,
                     extra_input=extra_input,
+                    reference=self.reference,
                 )
         # Transform to template space
-        elif self.using == "ants_template" and self.reference != "T1w":
+        elif self.using == "ants" and self.reference != "T1w":
             # Check pre-requirements for space manipulation
             if self.reference == input["space"]:
                 raise_error(
@@ -192,10 +182,11 @@ class SpaceWarper(BasePreprocessor):
                     ),
                     klass=RuntimeError,
                 )
-            if self.using == "ants_template":
-                input = ANTsTemplateWarper().preprocess(
-                    input=input,
-                    dst=self.reference,
-                )
+
+            input = ANTsWarper().preprocess(
+                input=input,
+                extra_input={},
+                reference=self.reference,
+            )
 
         return input, None
