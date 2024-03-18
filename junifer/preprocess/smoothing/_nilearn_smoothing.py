@@ -61,8 +61,8 @@ class NilearnSmoothing:
 
         Returns
         -------
-            Niimg-like object
-                The preprocessed image(s).
+        Niimg-like object
+            The preprocessed image(s).
 
         """
         logger.info("Smoothing using nilearn")
