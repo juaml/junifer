@@ -9,6 +9,7 @@ from ...api.decorators import register_preprocessor
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 from ._afni_smoothing import AFNISmoothing
+from ._fsl_smoothing import FSLSmoothing
 from ._nilearn_smoothing import NilearnSmoothing
 
 
@@ -21,11 +22,12 @@ class Smoothing(BasePreprocessor):
 
     Parameters
     ----------
-    using : {"nilearn", "afni"}
+    using : {"nilearn", "afni", "fsl"}
         Implementation to use for smoothing:
 
         * "nilearn" : Use :func:`nilearn.image.smooth_img`
         * "afni" : Use AFNI's ``3dBlurToFWHM``
+        * "fsl" : Use FSL SUSAN's ``susan``
 
     on : {"T1w", "T2w", "BOLD"} or list of the options
         The data type to apply smoothing to.
@@ -54,6 +56,15 @@ class Smoothing(BasePreprocessor):
             Smooth until the value. AFNI estimates the smoothing and then
             applies smoothing to reach ``fwhm``.
 
+        else if ``using="fsl"``, then the valid keys are:
+
+        * ``brightness_threshold`` : float
+            Threshold to discriminate between noise and the underlying image.
+            The value should be set greater than the noise level and less than
+            the contrast of the underlying image.
+        * ``fwhm`` : float
+            Spatial extent of smoothing.
+
     """
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
@@ -64,6 +75,10 @@ class Smoothing(BasePreprocessor):
         {
             "using": "afni",
             "depends_on": AFNISmoothing,
+        },
+        {
+            "using": "fsl",
+            "depends_on": FSLSmoothing,
         },
     ]
 
@@ -145,6 +160,8 @@ class Smoothing(BasePreprocessor):
             preprocessor = NilearnSmoothing()
         elif self.using == "afni":
             preprocessor = AFNISmoothing()
+        elif self.using == "fsl":
+            preprocessor = FSLSmoothing()
         # Smooth
         output = preprocessor.preprocess(  # type: ignore
             data=input["data"],
