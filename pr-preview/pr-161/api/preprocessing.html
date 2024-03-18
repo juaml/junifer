@@ -503,9 +503,10 @@ pipeline step.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>using</strong><span class="classifier">{“nilearn”}</span></dt><dd><p>Implementation to use for smoothing:</p>
+<dt><strong>using</strong><span class="classifier">{“nilearn”, “afni”}</span></dt><dd><p>Implementation to use for smoothing:</p>
 <ul class="simple">
-<li><p>“nilearn” : Use :func`nilearn.image.smooth_img`</p></li>
+<li><p>“nilearn” : Use <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.image.smooth_img.html#nilearn.image.smooth_img" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.image.smooth_img()</span></code></a></p></li>
+<li><p>“afni” : Use AFNI’s <code class="docutils literal notranslate"><span class="pre">3dBlurToFWHM</span></code></p></li>
 </ul>
 </dd>
 <dt><strong>on</strong><span class="classifier">{“T1w”, “T2w”, “BOLD”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options</span></dt><dd><p>The data type to apply smoothing to.</p>
@@ -527,6 +528,15 @@ preserve the local average value.</p></li>
 <li><p>If None, no filtering is performed (useful when just removal of
 non-finite values is needed).</p></li>
 </ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>else if <code class="docutils literal notranslate"><span class="pre">using=&quot;afni&quot;</span></code>, then the valid keys are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">fwhm</span></code><span class="classifier">int or float</span></dt><dd><p>Smooth until the value. AFNI estimates the smoothing and then
+applies smoothing to reach <code class="docutils literal notranslate"><span class="pre">fwhm</span></code>.</p>
 </dd>
 </dl>
 </li>
