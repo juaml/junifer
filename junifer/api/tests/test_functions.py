@@ -534,13 +534,24 @@ def test_queue_without_elements(
             assert "Queue done" in caplog.text
 
 
-def test_reset_run(tmp_path: Path) -> None:
+def test_reset_run(
+    tmp_path: Path,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
+) -> None:
     """Test reset function for run.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
 
     """
     # Create storage
@@ -567,7 +578,12 @@ def test_reset_run(tmp_path: Path) -> None:
     ),
 )
 def test_reset_queue(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, job_name: str
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
+    job_name: str,
 ) -> None:
     """Test reset function for queue.
 
@@ -577,6 +593,12 @@ def test_reset_queue(
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
         The pytest.MonkeyPatch object.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
     job_name : str
         The parametrized job name.
 
