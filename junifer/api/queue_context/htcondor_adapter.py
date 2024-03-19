@@ -274,8 +274,8 @@ class HTCondorAdapter(QueueContextAdapter):
             )
             fixed += (
                 f"JOB run{idx} {self._submit_run_path}\n"
-                f"VARS run{idx} element='{str_element}' "
-                f"log_element='{log_element}'\n\n"
+                f'VARS run{idx} element="{str_element}" '  # needs to be
+                f'log_element="{log_element}"\n\n'  # double quoted
             )
         var = ""
         if self._collect == "yes":

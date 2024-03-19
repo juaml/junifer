@@ -139,13 +139,13 @@ def test_HTCondorAdapter_run_collect(
         (
             [("sub01", "ses01")],
             "yes",
-            "element='sub01,ses01' log_element='sub01-ses01'",
+            'element="sub01,ses01" log_element="sub01-ses01"',
         ),
         (["sub01"], "on_success_only", "JOB collect"),
         (
             [("sub01", "ses01")],
             "on_success_only",
-            "element='sub01,ses01' log_element='sub01-ses01'",
+            'element="sub01,ses01" log_element="sub01-ses01"',
         ),
     ],
 )
