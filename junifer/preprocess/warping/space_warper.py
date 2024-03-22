@@ -146,7 +146,8 @@ class SpaceWarper(BasePreprocessor):
             i.e., using ``"T1w"`` as reference.
         RuntimeError
             If the data is in the correct space and does not require
-            warping.
+            warping or
+            if FSL is used for template space warping.
 
         """
         logger.info(f"Warping to {self.reference} space using SpaceWarper")
@@ -170,7 +171,7 @@ class SpaceWarper(BasePreprocessor):
                     extra_input=extra_input,
                     reference=self.reference,
                 )
-        # Transform to template space
+        # Transform to template space with ANTs possible
         elif self.using == "ants" and self.reference != "T1w":
             # Check pre-requirements for space manipulation
             if self.reference == input["space"]:
@@ -187,6 +188,15 @@ class SpaceWarper(BasePreprocessor):
                 input=input,
                 extra_input={},
                 reference=self.reference,
+            )
+        # Transform to template space with FSL not possible
+        elif self.using == "fsl" and self.reference != "T1w":
+            raise_error(
+                (
+                    f"Warping to {self.reference} space not possible with "
+                    "FSL, use ANTs instead."
+                ),
+                klass=RuntimeError,
             )
 
         return input, None
