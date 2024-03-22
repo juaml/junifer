@@ -4,7 +4,7 @@
 # License: AGPL
 
 import socket
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING, Tuple, Type
 
 import pytest
 from numpy.testing import assert_array_equal, assert_raises
@@ -13,10 +13,55 @@ from junifer.datagrabber import DataladHCP1200, DMCC13Benchmark
 from junifer.datareader import DefaultDataReader
 from junifer.pipeline.utils import _check_ants, _check_fsl
 from junifer.preprocess import SpaceWarper
+from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
 if TYPE_CHECKING:
     from junifer.datagrabber import BaseDataGrabber
+
+
+@pytest.mark.parametrize(
+    "using, reference, error_type, error_msg",
+    [
+        ("jam", "T1w", ValueError, "`using`"),
+        ("ants", "juice", ValueError, "reference"),
+        ("ants", "MNI152NLin2009cAsym", RuntimeError, "remove"),
+        ("fsl", "MNI152NLin2009cAsym", RuntimeError, "ANTs"),
+    ],
+)
+def test_SpaceWarper_errors(
+    using: str,
+    reference: str,
+    error_type: Type[Exception],
+    error_msg: str,
+) -> None:
+    """Test SpaceWarper errors.
+
+    Parameters
+    ----------
+    using : str
+        The parametrized implementation method.
+    reference : str
+        The parametrized reference to use.
+    error_type : Exception-like object
+        The parametrized exception to check.
+    error_msg : str
+        The parametrized exception message to check.
+
+    """
+    with PartlyCloudyTestingDataGrabber() as dg:
+        # Read data
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        # Preprocess data
+        with pytest.raises(error_type, match=error_msg):
+            SpaceWarper(
+                using=using,
+                reference=reference,
+                on="BOLD",
+            ).preprocess(
+                input=element_data["BOLD"],
+                extra_input=element_data,
+            )
 
 
 @pytest.mark.parametrize(
