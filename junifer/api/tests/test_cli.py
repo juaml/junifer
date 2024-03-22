@@ -222,7 +222,7 @@ def test_queue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.mark.parametrize(
     "action, action_file",
     [
-        (run, "gmd_mean.yaml"),
+        (run, "partly_cloudy_agg_mean_tian.yml"),
         (queue, "gmd_mean_htcondor.yaml"),
     ],
 )
