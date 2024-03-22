@@ -267,8 +267,8 @@
         <article role="main">
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">#</a></h1>
-<section id="junifer-0-0-4-dev712-2024-03-21">
-<h2><span class="section-number">14.1. </span>Junifer 0.0.4.dev712 (2024-03-21)<a class="headerlink" href="#junifer-0-0-4-dev712-2024-03-21" title="Link to this heading">#</a></h2>
+<section id="junifer-0-0-4-dev735-2024-03-22">
+<h2><span class="section-number">14.1. </span>Junifer 0.0.4.dev735 (2024-03-22)<a class="headerlink" href="#junifer-0-0-4-dev735-2024-03-22" title="Link to this heading">#</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">#</a></h3>
 <ul class="simple">
@@ -424,6 +424,9 @@ target data by <a class="reference external" href="https://github.com/synchon">S
 <a class="reference internal" href="api/data.html#junifer.data.parcellations.get_parcellation" title="junifer.data.parcellations.get_parcellation"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_parcellation()</span></code></a> and <a class="reference internal" href="api/data.html#junifer.data.masks.get_mask" title="junifer.data.masks.get_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_mask()</span></code></a> to allow parcellation and
 mask in different template spaces to work with a <code class="docutils literal notranslate"><span class="pre">DataGrabber</span></code>’s data in a
 specified template space. (<a class="reference external" href="https://github.com/juaml/junifer/issues/299">#299</a>)</p></li>
+<li><p>Introduce <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a> for warping <code class="docutils literal notranslate"><span class="pre">T1w</span></code>, <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code>,
+<code class="docutils literal notranslate"><span class="pre">VBM_WM</span></code>, <code class="docutils literal notranslate"><span class="pre">fALFF</span></code>, <code class="docutils literal notranslate"><span class="pre">GCOR</span></code> and <code class="docutils literal notranslate"><span class="pre">LCOR</span></code> data to other spaces by <a class="reference external" href="https://github.com/synchon">Synchon
+Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/301">#301</a>)</p></li>
 <li><p>Introduce <a class="reference internal" href="api/api.html#junifer.api.queue_context.QueueContextAdapter" title="junifer.api.queue_context.QueueContextAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">QueueContextAdapter</span></code></a> as an abstract base class for job
 queueing and <a class="reference internal" href="api/api.html#junifer.api.queue_context.HTCondorAdapter" title="junifer.api.queue_context.HTCondorAdapter"><code class="xref py py-class docutils literal notranslate"><span class="pre">HTCondorAdapter</span></code></a> as its implementation for HTCondor by
 <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/309">#309</a>)</p></li>
@@ -459,6 +462,13 @@ Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer
 <code class="docutils literal notranslate"><span class="pre">.github/dependabot.yml</span></code> to auto-update GitHub Actions, add <code class="docutils literal notranslate"><span class="pre">ANTs</span></code> and
 <code class="docutils literal notranslate"><span class="pre">FSL</span></code> installation in CI and improve general code style by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/300">#300</a>)</p></li>
+</ul>
+</section>
+<section id="deprecations-and-removals">
+<h3><span class="section-number">14.1.7. </span>Deprecations and Removals<a class="headerlink" href="#deprecations-and-removals" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Deprecate <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.BOLDWarper" title="junifer.preprocess.BOLDWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">BOLDWarper</span></code></a> and mark for removal in v0.0.4 by <a class="reference external" href="https://github.com/synchon">Synchon
+Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/301">#301</a>)</p></li>
 </ul>
 </section>
 </section>
@@ -847,13 +857,14 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-0-0-4-dev712-2024-03-21">14.1. Junifer 0.0.4.dev712 (2024-03-21)</a><ul>
+<li><a class="reference internal" href="#junifer-0-0-4-dev735-2024-03-22">14.1. Junifer 0.0.4.dev735 (2024-03-22)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
 <li><a class="reference internal" href="#enhancements">14.1.4. Enhancements</a></li>
 <li><a class="reference internal" href="#features">14.1.5. Features</a></li>
 <li><a class="reference internal" href="#miscellaneous">14.1.6. Miscellaneous</a></li>
+<li><a class="reference internal" href="#deprecations-and-removals">14.1.7. Deprecations and Removals</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer-0-0-3-2023-07-21">14.2. Junifer 0.0.3 (2023-07-21)</a><ul>
