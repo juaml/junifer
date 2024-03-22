@@ -177,9 +177,10 @@ class SpaceWarper(BasePreprocessor):
             if self.reference == input["space"]:
                 raise_error(
                     (
-                        "Skipped warping as the data is in "
-                        f"{self.reference} space which would mean that you "
-                        "can remove the SpaceWarper from the preprocess step."
+                        f"The target data is in {self.reference} space "
+                        "and thus warping will not be performed, hence you "
+                        "should remove the SpaceWarper from the preprocess "
+                        "step."
                     ),
                     klass=RuntimeError,
                 )
