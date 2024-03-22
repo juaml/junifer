@@ -30,6 +30,10 @@ from .fsl.apply_warper import _ApplyWarper
 class BOLDWarper(BasePreprocessor):
     """Class for warping BOLD NIfTI images.
 
+    .. deprecated:: 0.0.3
+              `BOLDWarper` will be removed in v0.0.4, it is replaced by
+              `SpaceWarper` because the latter works also with T1w data.
+
     Parameters
     ----------
     using : {"fsl", "ants"}
