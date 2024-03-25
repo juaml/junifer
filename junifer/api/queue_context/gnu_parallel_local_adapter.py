@@ -159,7 +159,7 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
             logger.info(
                 "First the `junifer run` command as shown above will be run. "
                 "After successful completion of the previous step, run the "
-                "`junifer collect` command as shown above."
+                "`junifer collect` command as shown above. "
                 "If you need to retry any step, simply append "
                 "`--resume-failed` after `--joblog <value>` option."
             )
@@ -168,7 +168,7 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
             logger.info(
                 "First run the `junifer run` command as shown above. "
                 "After successful completion of the previous step, run the "
-                "`junifer collect` command as shown above."
+                "`junifer collect` command as shown above. "
                 "If you need to retry any step, simply append "
                 "`--resume-failed` after `--joblog <value>` option."
             )
