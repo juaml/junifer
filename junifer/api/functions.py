@@ -247,7 +247,7 @@ def queue(
         )
 
     # Create a folder within the CWD to store the job files / config
-    jobdir = Path.cwd() / "junifer_jobs" / jobname
+    jobdir = Path.cwd() / "junifer_jobs" / jobname / kind.lower()
     logger.info(f"Creating job directory at {jobdir.resolve()!s}")
     if jobdir.exists():
         if not overwrite:
@@ -352,6 +352,7 @@ def reset(config: Dict) -> None:
             Path.cwd()
             / "junifer_jobs"
             / (queue.get("jobname") or "junifer_job")
+            / queue["kind"].lower()
         )
         logger.info(f"Deleting job directory at {job_dir.resolve()!s}")
         if job_dir.exists():
