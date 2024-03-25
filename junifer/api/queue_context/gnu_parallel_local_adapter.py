@@ -110,7 +110,7 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
     def run(self) -> str:
         """Return run commands."""
         junifer_run_cmd = (
-            f"parallel --joblog {self._run_joblog_path} "
+            f"parallel --bar --joblog {self._run_joblog_path} "
             f"{self._job_dir.resolve()!s}/{self._executable} "
             f"{self._arguments} run "
             f"{self._yaml_config_path.resolve()!s} "
