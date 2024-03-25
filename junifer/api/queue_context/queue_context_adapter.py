@@ -20,26 +20,10 @@ class QueueContextAdapter(ABC):
     """
 
     @abstractmethod
-    def pre_run(self) -> str:
-        """Return pre-run commands."""
-        raise_error(
-            msg="Concrete classes need to implement pre_run()",
-            klass=NotImplementedError,
-        )
-
-    @abstractmethod
     def run(self) -> str:
         """Return run commands."""
         raise_error(
             msg="Concrete classes need to implement run()",
-            klass=NotImplementedError,
-        )
-
-    @abstractmethod
-    def pre_collect(self) -> str:
-        """Return pre-collect commands."""
-        raise_error(
-            msg="Concrete classes need to implement pre_collect()",
             klass=NotImplementedError,
         )
 
