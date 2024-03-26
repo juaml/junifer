@@ -293,7 +293,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             "f5004cr",
             "f5407sl",
             "f5416zj",
-            "F8113do",
+            "f8113do",
             "f8570ui",
             "f9057kp",
         ]
@@ -324,6 +324,9 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                 run = "1"
             else:
                 run = "2"
+            # Bypass for f5416zj for not having wave1rea session
+            if subject == "f5416zj" and session == "wave1rea":
+                continue
             elems.append((subject, session, task, phase_encoding, run))
 
         return elems
