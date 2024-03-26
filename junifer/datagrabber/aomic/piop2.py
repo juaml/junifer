@@ -204,4 +204,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
                 out["T1w"].update({"space": "native"})
             else:
                 out["T1w"].update({"space": "MNI152NLin2009cAsym"})
+        if out.get("Warp"):
+            # Add source space information
+            out["Warp"].update({"src": "MNI152NLin2009cAsym"})
         return out

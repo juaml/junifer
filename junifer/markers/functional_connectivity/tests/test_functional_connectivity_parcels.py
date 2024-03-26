@@ -2,20 +2,22 @@
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 from pathlib import Path
 
-from nilearn import datasets, image
 from nilearn.connectome import ConnectivityMeasure
 from nilearn.maskers import NiftiLabelsMasker
-from numpy.testing import assert_array_almost_equal, assert_array_equal
+from numpy.testing import assert_array_almost_equal
 
+from junifer.data import get_parcellation
+from junifer.datareader import DefaultDataReader
 from junifer.markers.functional_connectivity import (
     FunctionalConnectivityParcels,
 )
-from junifer.markers.parcel_aggregation import ParcelAggregation
 from junifer.storage import SQLiteFeatureStorage
+from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
 def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
@@ -27,74 +29,60 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    # get a dataset
-    ni_data = datasets.fetch_spm_auditory(subject_id="sub001")
-    fmri_img = image.concat_imgs(ni_data.func)  # type: ignore
+    with PartlyCloudyTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        marker = FunctionalConnectivityParcels(
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym"
+        )
+        # Check correct output
+        assert marker.get_output_type("BOLD") == "matrix"
 
-    fc = FunctionalConnectivityParcels(parcellation="Schaefer100x7")
-    all_out = fc.fit_transform(
-        {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
-    )
+        # Fit-transform the data
+        fc = marker.fit_transform(element_data)
+        fc_bold = fc["BOLD"]
 
-    out = all_out["BOLD"]
+        assert "data" in fc_bold
+        assert "row_names" in fc_bold
+        assert "col_names" in fc_bold
+        assert fc_bold["data"].shape == (16, 16)
+        assert len(set(fc_bold["row_names"])) == 16
+        assert len(set(fc_bold["col_names"])) == 16
 
-    assert "data" in out
-    assert "row_names" in out
-    assert "col_names" in out
-    assert out["data"].shape[0] == 100
-    assert out["data"].shape[1] == 100
-    assert len(set(out["row_names"])) == 100
-    assert len(set(out["col_names"])) == 100
+        # Compare with nilearn
+        # Load testing parcellation for the target data
+        testing_parcellation, _ = get_parcellation(
+            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            target_data=element_data["BOLD"],
+        )
+        # Extract timeseries
+        nifti_labels_masker = NiftiLabelsMasker(
+            labels_img=testing_parcellation, standardize=False
+        )
+        extracted_timeseries = nifti_labels_masker.fit_transform(
+            element_data["BOLD"]["data"]
+        )
+        # Compute the connectivity measure
+        connectivity_measure = ConnectivityMeasure(
+            kind="covariance"
+        ).fit_transform([extracted_timeseries])[0]
 
-    # get the timeseries using pa
-    pa = ParcelAggregation(
-        parcellation="Schaefer100x7", method="mean", on="BOLD"
-    )
-    meta = {
-        "element": {"subject": "sub001"},
-        "dependencies": {"nilearn"},
-    }
-    ts = pa.compute({"data": fmri_img, "meta": meta, "space": "MNI"})
+        # Check that FC are almost equal
+        assert_array_almost_equal(
+            connectivity_measure, fc_bold["data"], decimal=3
+        )
 
-    # compare with nilearn
-    # Get the testing parcellation (for nilearn)
-    parcellation = datasets.fetch_atlas_schaefer_2018(
-        n_rois=100, yeo_networks=7, resolution_mm=2
-    )
-    masker = NiftiLabelsMasker(
-        labels_img=parcellation["maps"], standardize=False
-    )
-    ts_ni = masker.fit_transform(fmri_img)
-
-    # check the TS are almost equal
-    assert_array_equal(ts_ni, ts["data"])
-
-    # Check that FC are almost equal
-    cm = ConnectivityMeasure(kind="covariance")
-    out_ni = cm.fit_transform([ts_ni])[0]
-    assert_array_almost_equal(out_ni, out["data"], decimal=3)
-
-    # check correct output
-    assert fc.get_output_type("BOLD") == "matrix"
-
-    # Check empirical correlation method parameters
-    fc = FunctionalConnectivityParcels(
-        parcellation="Schaefer100x7", cor_method_params={"empirical": True}
-    )
-
-    all_out = fc.fit_transform(
-        {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
-    )
-
-    uri = tmp_path / "test_fc_parcellation.sqlite"
-    # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
-    meta = {"element": {"subject": "test"}, "dependencies": {"numpy"}}
-    input = {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
-    all_out = fc.fit_transform(input, storage=storage)
-
-    features = storage.list_features()
-    assert any(
-        x["name"] == "BOLD_FunctionalConnectivityParcels"
-        for x in features.values()
-    )
+        # Check empirical correlation method parameters
+        marker = FunctionalConnectivityParcels(
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
+            cor_method_params={"empirical": True},
+        )
+        # Store
+        storage = SQLiteFeatureStorage(
+            uri=tmp_path / "test_fc_parcels.sqlite", upsert="ignore"
+        )
+        marker.fit_transform(input=element_data, storage=storage)
+        features = storage.list_features()
+        assert any(
+            x["name"] == "BOLD_FunctionalConnectivityParcels"
+            for x in features.values()
+        )

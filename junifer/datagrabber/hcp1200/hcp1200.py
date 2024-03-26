@@ -159,6 +159,9 @@ class HCP1200(PatternDataGrabber):
         # Add space for T1w data type
         if "T1w" in out:
             out["T1w"].update({"space": "native"})
+        # Add source space for Warp data type
+        if "Warp" in out:
+            out["Warp"].update({"src": "MNI152NLin6Asym"})
         return out
 
     def get_elements(self) -> List:

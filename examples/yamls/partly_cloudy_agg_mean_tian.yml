@@ -1,0 +1,16 @@
+workdir: /tmp
+
+with: junifer.testing.registry
+
+datagrabber:
+  kind: PartlyCloudyTestingDataGrabber
+
+markers:
+  - kind: ParcelAggregation
+    parcellation: TianxS1x3TxMNInonlinear2009cAsym
+    method: mean
+    name: tian-s1-3T_mean
+
+storage:
+  kind: HDF5FeatureStorage
+  uri: /tmp/partly_cloudy_agg_mean_tian.hdf5

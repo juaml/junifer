@@ -7,7 +7,7 @@
 
 import logging
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 import pytest
 from ruamel.yaml import YAML
@@ -24,97 +24,104 @@ yaml.default_flow_style = False
 yaml.allow_unicode = True
 yaml.indent(mapping=2, sequence=4, offset=2)
 
-# Define datagrabber
-datagrabber = {
-    "kind": "OasisVBMTestingDataGrabber",
-}
 
-# Define markers
-markers = [
-    {
-        "name": "Schaefer1000x7_Mean",
-        "kind": "ParcelAggregation",
-        "parcellation": "Schaefer1000x7",
-        "method": "mean",
-    },
-    {
-        "name": "Schaefer1000x7_Std",
-        "kind": "ParcelAggregation",
-        "parcellation": "Schaefer1000x7",
-        "method": "std",
-    },
-]
-
-# Define storage
-storage = {
-    "kind": "SQLiteFeatureStorage",
-}
+@pytest.fixture
+def datagrabber() -> Dict[str, str]:
+    """Return a datagrabber as a dictionary."""
+    return {
+        "kind": "PartlyCloudyTestingDataGrabber",
+    }
 
 
-def test_run_single_element(tmp_path: Path) -> None:
+@pytest.fixture
+def markers() -> List[Dict[str, str]]:
+    """Return markers as a list of dictionary."""
+    return [
+        {
+            "name": "tian-s1-3T_mean",
+            "kind": "ParcelAggregation",
+            "parcellation": "TianxS1x3TxMNInonlinear2009cAsym",
+            "method": "mean",
+        },
+        {
+            "name": "tian-s1-3T_std",
+            "kind": "ParcelAggregation",
+            "parcellation": "TianxS1x3TxMNInonlinear2009cAsym",
+            "method": "std",
+        },
+    ]
+
+
+@pytest.fixture
+def storage() -> Dict[str, str]:
+    """Return a storage as a dictionary."""
+    return {
+        "kind": "SQLiteFeatureStorage",
+    }
+
+
+def test_run_single_element(
+    tmp_path: Path,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
+) -> None:
     """Test run function with single element.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
 
     """
-    # Create working directory
-    workdir = tmp_path / "workdir_single"
-    workdir.mkdir()
-    # Create output directory
-    outdir = workdir / "out"
-    outdir.mkdir()
-    # Create storage
-    uri = outdir / "test.sqlite"
-    storage["uri"] = uri  # type: ignore
+    # Set storage
+    storage["uri"] = str((tmp_path / "out.sqlite").resolve())
     # Run operations
     run(
-        workdir=workdir,
+        workdir=tmp_path,
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
         elements=["sub-01"],
     )
     # Check files
-    files = list(outdir.glob("*.sqlite"))
+    files = list(tmp_path.glob("*.sqlite"))
     assert len(files) == 1
 
 
-def test_run_single_element_with_preprocessing(tmp_path: Path) -> None:
+def test_run_single_element_with_preprocessing(
+    tmp_path: Path,
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
+) -> None:
     """Test run function with single element and pre-processing.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
 
     """
-    # Create working directory
-    workdir = tmp_path / "workdir_single_with_preprocess"
-    workdir.mkdir()
-    # Create output directory
-    outdir = workdir / "out"
-    outdir.mkdir()
-    # Create storage
-    uri = outdir / "test.sqlite"
-    storage["uri"] = uri  # type: ignore
+    # Set storage
+    storage["uri"] = str((tmp_path / "out.sqlite").resolve())
     # Run operations
     run(
-        workdir=workdir,
+        workdir=tmp_path,
         datagrabber={
             "kind": "PartlyCloudyTestingDataGrabber",
             "reduce_confounds": False,
         },
-        markers=[
-            {
-                "name": "Schaefer100x17_mean_FC",
-                "kind": "FunctionalConnectivityParcels",
-                "parcellation": "Schaefer100x17",
-                "agg_method": "mean",
-            }
-        ],
+        markers=markers,
         storage=storage,
         preprocessors=[
             {
@@ -124,97 +131,110 @@ def test_run_single_element_with_preprocessing(tmp_path: Path) -> None:
         elements=["sub-01"],
     )
     # Check files
-    files = list(outdir.glob("*.sqlite"))
+    files = list(tmp_path.glob("*.sqlite"))
     assert len(files) == 1
 
 
-def test_run_multi_element(tmp_path: Path) -> None:
-    """Test run function with multi element.
+def test_run_multi_element_multi_output(
+    tmp_path: Path,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
+) -> None:
+    """Test run function with multi element and multi output.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
 
     """
-    # Create working directory
-    workdir = tmp_path / "workdir_multi"
-    workdir.mkdir()
-    # Create output directory
-    outdir = workdir / "out"
-    outdir.mkdir()
-    # Create storage
-    uri = outdir / "test.sqlite"
-    storage["uri"] = uri  # type: ignore
+    # Set storage
+    storage["uri"] = str((tmp_path / "out.sqlite").resolve())
     storage["single_output"] = False  # type: ignore
     # Run operations
     run(
-        workdir=workdir,
+        workdir=tmp_path,
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
         elements=["sub-01", "sub-03"],
     )
     # Check files
-    files = list(outdir.glob("*.sqlite"))
+    files = list(tmp_path.glob("*.sqlite"))
     assert len(files) == 2
 
 
-def test_run_multi_element_single_output(tmp_path: Path) -> None:
-    """Test run function with multi element.
+def test_run_multi_element_single_output(
+    tmp_path: Path,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
+) -> None:
+    """Test run function with multi element and single output.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
 
     """
-    # Create working directory
-    workdir = tmp_path / "workdir_multi"
-    workdir.mkdir()
-    # Create output directory
-    outdir = workdir / "out"
-    outdir.mkdir()
-    # Create storage
-    uri = outdir / "test.sqlite"
-    storage["uri"] = uri  # type: ignore
+    # Set storage
+    storage["uri"] = str((tmp_path / "out.sqlite").resolve())
     storage["single_output"] = True  # type: ignore
     # Run operations
     run(
-        workdir=workdir,
+        workdir=tmp_path,
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
         elements=["sub-01", "sub-03"],
     )
     # Check files
-    files = list(outdir.glob("*.sqlite"))
+    files = list(tmp_path.glob("*.sqlite"))
     assert len(files) == 1
-    assert files[0].name == "test.sqlite"
+    assert files[0].name == "out.sqlite"
 
 
-def test_run_and_collect(tmp_path: Path) -> None:
+def test_run_and_collect(
+    tmp_path: Path,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
+) -> None:
     """Test run and collect functions.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
 
     """
-    # Create working directory
-    workdir = tmp_path / "workdir"
-    workdir.mkdir()
-    # Create output directory
-    outdir = workdir / "out"
-    outdir.mkdir()
-    # Create storage
-    uri = outdir / "test.sqlite"
-    storage["uri"] = uri  # type: ignore
+    # Set storage
+    uri = tmp_path / "out.sqlite"
+    storage["uri"] = str(uri.resolve())
     storage["single_output"] = False  # type: ignore
     # Run operations
     run(
-        workdir=workdir,
+        workdir=tmp_path,
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
@@ -225,7 +245,7 @@ def test_run_and_collect(tmp_path: Path) -> None:
     )
     elements = dg.get_elements()  # type: ignore
     # This should create 10 files
-    files = list(outdir.glob("*.sqlite"))
+    files = list(tmp_path.glob("*.sqlite"))
     assert len(files) == len(elements)
     # But the test.sqlite file should not exist
     assert not uri.exists()
@@ -239,6 +259,9 @@ def test_queue_correct_yaml_config(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
 ) -> None:
     """Test proper YAML config generation for queueing.
 
@@ -250,6 +273,12 @@ def test_queue_correct_yaml_config(
         The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
         The pytest.LogCaptureFixture object.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
 
     """
     with monkeypatch.context() as m:
@@ -261,7 +290,7 @@ def test_queue_correct_yaml_config(
                     "workdir": str(tmp_path.resolve()),
                     "datagrabber": datagrabber,
                     "markers": markers,
-                    "storage": {"kind": "SQLiteFeatureStorage"},
+                    "storage": storage,
                     "env": {
                         "kind": "conda",
                         "name": "junifer",
@@ -479,6 +508,7 @@ def test_queue_without_elements(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
+    datagrabber: Dict[str, str],
 ) -> None:
     """Test queue without elements.
 
@@ -490,6 +520,8 @@ def test_queue_without_elements(
         The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
         The pytest.LogCaptureFixture object.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
 
     """
     with monkeypatch.context() as m:
@@ -502,13 +534,24 @@ def test_queue_without_elements(
             assert "Queue done" in caplog.text
 
 
-def test_reset_run(tmp_path: Path) -> None:
+def test_reset_run(
+    tmp_path: Path,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
+) -> None:
     """Test reset function for run.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
 
     """
     # Create storage
@@ -535,7 +578,12 @@ def test_reset_run(tmp_path: Path) -> None:
     ),
 )
 def test_reset_queue(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, job_name: str
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    datagrabber: Dict[str, str],
+    markers: List[Dict[str, str]],
+    storage: Dict[str, str],
+    job_name: str,
 ) -> None:
     """Test reset function for queue.
 
@@ -545,6 +593,12 @@ def test_reset_queue(
         The path to the test directory.
     monkeypatch : pytest.MonkeyPatch
         The pytest.MonkeyPatch object.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
     job_name : str
         The parametrized job name.
 
