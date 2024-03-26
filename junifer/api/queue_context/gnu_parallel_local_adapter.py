@@ -200,6 +200,13 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
                 dst=self._exec_path,
             )
             make_executable(self._exec_path)
+        # Create elements file
+        logger.info(
+            f"Writing {self._elements_file_path.name} to "
+            f"{self._elements_file_path.resolve()!s}"
+        )
+        self._elements_file_path.touch()
+        self._elements_file_path.write_text(textwrap.dedent(self.elements()))
         # Create pre run
         logger.info(
             f"Writing {self._pre_run_path.name} to "

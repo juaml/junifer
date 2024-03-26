@@ -185,6 +185,7 @@ def test_GnuParallelLocalAdapter_prepare(
             assert "Shell scripts created" in caplog.text
 
             assert adapter._exec_path.stat().st_size != 0
+            assert adapter._elements_file_path.stat().st_size != 0
             assert adapter._pre_run_path.stat().st_size != 0
             assert adapter._run_path.stat().st_size != 0
             assert adapter._pre_collect_path.stat().st_size != 0
