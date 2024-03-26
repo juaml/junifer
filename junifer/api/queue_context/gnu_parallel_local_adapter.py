@@ -154,8 +154,8 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
             "parallel --bar --resume --resume-failed "
             f"--joblog {self._run_joblog_path} "
             "--delay 60 "  # wait 1 min before next job is spawned
-            f"--results {self._log_dir}"
-            "--arg-file elements.txt "
+            f"--results {self._log_dir} "
+            f"--arg-file {self._elements_file_path.resolve()!s} "
             f"{self._job_dir.resolve()!s}/{self._executable} "
             f"{self._arguments} run "
             f"{self._yaml_config_path.resolve()!s} "
