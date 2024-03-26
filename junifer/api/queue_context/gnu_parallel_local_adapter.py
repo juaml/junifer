@@ -239,8 +239,8 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
         self._collect_path.write_text(textwrap.dedent(self.collect()))
         make_executable(self._collect_path)
         # Submit if required
-        run_cmd = [f"sh {self._run_path.resolve()!s}"]
-        collect_cmd = [f"sh {self._collect_path.resolve()!s}"]
+        run_cmd = f"sh {self._run_path.resolve()!s}"
+        collect_cmd = f"sh {self._collect_path.resolve()!s}"
         if self._submit:
             logger.info(
                 "Shell scripts created, the following will be run:\n"
@@ -248,7 +248,7 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
                 "After successful completion of the previous step, run:\n"
                 f"{collect_cmd}"
             )
-            run_ext_cmd(name=f"{self._run_path.resolve()!s}", cmd=run_cmd)
+            run_ext_cmd(name=f"{self._run_path.resolve()!s}", cmd=[run_cmd])
         else:
             logger.info(
                 "Shell scripts created, to start, run:\n"
