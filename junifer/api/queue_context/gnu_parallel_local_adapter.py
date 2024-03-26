@@ -68,9 +68,6 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
         self._submit = submit
 
         self._run_joblog_path = self._job_dir / f"{job_name}_run_joblog.txt"
-        self._collect_joblog_path = (
-            self._job_dir / f"{job_name}_collect_joblog.txt"
-        )
 
     def _check_env(self, env: Optional[Dict[str, str]]) -> None:
         """Check value of env parameter on init.
@@ -130,7 +127,6 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
     def collect(self) -> str:
         """Return collect commands."""
         return (
-            f"parallel --joblog {self._collect_joblog_path} "
             f"{self._job_dir.resolve()!s}/{self._executable} "
             f"{self._arguments} collect "
             f"{self._yaml_config_path.resolve()!s} "
