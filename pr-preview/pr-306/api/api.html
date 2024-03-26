@@ -496,7 +496,7 @@ are passed to the preprocessor init function (default None).</p>
 <p>Provide imports for queue context sub-package.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.api.queue_context.GnuParallelLocalAdapter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.api.queue_context.</span></span><span class="sig-name descname"><span class="pre">GnuParallelLocalAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.GnuParallelLocalAdapter" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.api.queue_context.</span></span><span class="sig-name descname"><span class="pre">GnuParallelLocalAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">job_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaml_config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_collect</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'info'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">submit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.GnuParallelLocalAdapter" title="Link to this definition">#</a></dt>
 <dd><p>Class for generating commands for GNU Parallel (local).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -508,6 +508,10 @@ are passed to the preprocessor init function (default None).</p>
 <dt><strong>yaml_config_path</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The path to the YAML config file.</p>
 </dd>
 <dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a></span></dt><dd><p>Element(s) to process. Will be used to index the DataGrabber.</p>
+</dd>
+<dt><strong>pre_run</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Extra shell commands to source before the run (default None).</p>
+</dd>
+<dt><strong>pre_collect</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Extra bash commands to source before the collect (default None).</p>
 </dd>
 <dt><strong>env</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The Python environment configuration. If None, will run without a
 virtual environment of any kind (default None).</p>
@@ -539,6 +543,30 @@ virtual environment of any kind (default None).</p>
 <dt class="sig sig-object py" id="junifer.api.queue_context.GnuParallelLocalAdapter.collect">
 <span class="sig-name descname"><span class="pre">collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.GnuParallelLocalAdapter.collect" title="Link to this definition">#</a></dt>
 <dd><p>Return collect commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.GnuParallelLocalAdapter.elements">
+<span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.GnuParallelLocalAdapter.elements" title="Link to this definition">#</a></dt>
+<dd><p>Return elements to run.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.GnuParallelLocalAdapter.pre_collect">
+<span class="sig-name descname"><span class="pre">pre_collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.GnuParallelLocalAdapter.pre_collect" title="Link to this definition">#</a></dt>
+<dd><p>Return pre-collect commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.GnuParallelLocalAdapter.pre_run">
+<span class="sig-name descname"><span class="pre">pre_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.GnuParallelLocalAdapter.pre_run" title="Link to this definition">#</a></dt>
+<dd><p>Return pre-run commands.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -698,6 +726,22 @@ implementation of this abstract class.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.QueueContextAdapter.pre_collect">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pre_collect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.QueueContextAdapter.pre_collect" title="Link to this definition">#</a></dt>
+<dd><p>Return pre-collect commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.api.queue_context.QueueContextAdapter.pre_run">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pre_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.QueueContextAdapter.pre_run" title="Link to this definition">#</a></dt>
+<dd><p>Return pre-run commands.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="junifer.api.queue_context.QueueContextAdapter.prepare">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.queue_context.QueueContextAdapter.prepare" title="Link to this definition">#</a></dt>
 <dd><p>Prepare assets for submission.</p>
@@ -792,6 +836,9 @@ implementation of this abstract class.</p>
 <li><a class="reference internal" href="#module-junifer.api.queue_context">Queue Context</a><ul>
 <li><a class="reference internal" href="#junifer.api.queue_context.GnuParallelLocalAdapter"><code class="docutils literal notranslate"><span class="pre">GnuParallelLocalAdapter</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.api.queue_context.GnuParallelLocalAdapter.collect"><code class="docutils literal notranslate"><span class="pre">GnuParallelLocalAdapter.collect()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.GnuParallelLocalAdapter.elements"><code class="docutils literal notranslate"><span class="pre">GnuParallelLocalAdapter.elements()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.GnuParallelLocalAdapter.pre_collect"><code class="docutils literal notranslate"><span class="pre">GnuParallelLocalAdapter.pre_collect()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.GnuParallelLocalAdapter.pre_run"><code class="docutils literal notranslate"><span class="pre">GnuParallelLocalAdapter.pre_run()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.queue_context.GnuParallelLocalAdapter.prepare"><code class="docutils literal notranslate"><span class="pre">GnuParallelLocalAdapter.prepare()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.queue_context.GnuParallelLocalAdapter.run"><code class="docutils literal notranslate"><span class="pre">GnuParallelLocalAdapter.run()</span></code></a></li>
 </ul>
@@ -807,6 +854,8 @@ implementation of this abstract class.</p>
 </li>
 <li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.collect"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.collect()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.pre_collect"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.pre_collect()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.pre_run"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.pre_run()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.prepare"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.prepare()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.queue_context.QueueContextAdapter.run"><code class="docutils literal notranslate"><span class="pre">QueueContextAdapter.run()</span></code></a></li>
 </ul>
