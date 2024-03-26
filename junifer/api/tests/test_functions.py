@@ -276,7 +276,11 @@ def test_queue_correct_yaml_config(
             assert "Queue done" in caplog.text
 
         generated_config_yaml_path = Path(
-            tmp_path / "junifer_jobs" / "yaml_config_gen_check" / "config.yaml"
+            tmp_path
+            / "junifer_jobs"
+            / "yaml_config_gen_check"
+            / "htcondor"
+            / "config.yaml"
         )
         yaml_config = yaml.load(generated_config_yaml_path)
         # Check for correct YAML config generation
@@ -429,7 +433,11 @@ def test_queue_with_imports(
 
         # Check that file is copied
         assert Path(
-            tmp_path / "junifer_jobs" / "with_import_check" / "a.py"
+            tmp_path
+            / "junifer_jobs"
+            / "with_import_check"
+            / "htcondor"
+            / "a.py"
         ).is_file()
 
 
@@ -577,9 +585,9 @@ def test_reset_queue(
         reset(
             config={
                 "storage": storage,
-                "queue": {"jobname": job_name},
+                "queue": {"kind": "HTCondor", "jobname": job_name},
             }
         )
 
         assert not Path(storage["uri"]).exists()
-        assert not (tmp_path / "junifer_jobs" / job_name).exists()
+        assert not (tmp_path / "junifer_jobs" / job_name / "htcondor").exists()
