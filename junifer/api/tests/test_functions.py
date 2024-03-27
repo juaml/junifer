@@ -570,14 +570,14 @@ def test_reset_queue(
                 },
                 "mem": "8G",
             },
-            kind="HTCondor",
+            kind="GNUParallelLocal",
             jobname=job_name,
         )
         # Reset operation
         reset(
             config={
                 "storage": storage,
-                "queue": {"jobname": job_name},
+                "queue": {"kind": "GNUParallelLocal", "jobname": job_name},
             }
         )
 

@@ -18,7 +18,7 @@ from ..pipeline.registry import build
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger, raise_error
-from .queue_context import HTCondorAdapter
+from .queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from .utils import yaml
 
 
@@ -220,7 +220,7 @@ def queue(
     ----------
     config : dict
         The configuration to be used for queueing the job.
-    kind : {"HTCondor"}
+    kind : {"HTCondor", "GNUParallelLocal"}
         The kind of job queue system to use.
     jobname : str, optional
         The name of the job (default "junifer_job").
@@ -239,7 +239,7 @@ def queue(
         if the ``jobdir`` exists and ``overwrite = False``.
 
     """
-    valid_kind = ["HTCondor"]
+    valid_kind = ["HTCondor", "GNUParallelLocal"]
     if kind not in valid_kind:
         raise_error(
             f"Invalid value for `kind`: {kind}, "
@@ -305,6 +305,14 @@ def queue(
     adapter = None
     if kind == "HTCondor":
         adapter = HTCondorAdapter(
+            job_name=jobname,
+            job_dir=jobdir,
+            yaml_config_path=yaml_config,
+            elements=elements,
+            **kwargs,  # type: ignore
+        )
+    elif kind == "GNUParallelLocal":
+        adapter = GnuParallelLocalAdapter(
             job_name=jobname,
             job_dir=jobdir,
             yaml_config_path=yaml_config,
