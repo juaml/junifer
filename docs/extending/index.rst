@@ -25,6 +25,7 @@ DataGrabbers, Preprocessors, Markers, etc.,  following the *junifer* way.
    extension
    datagrabber
    marker
+   preprocessor
    parcellations
    coordinates
    masks
