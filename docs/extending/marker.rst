@@ -17,7 +17,7 @@ Most of the functionality of a ``junifer`` Marker has been taken care by the
    Marker. This is used to check that the inputs provided by the user are
    valid. This method should return a list of strings, representing
    :ref:`data types <data_types>`.
-#. ``get_output_type``: The method to obtain the kind of output of the Marker.
+#. ``get_output_type``: The method to obtain the output type of the Marker.
    This is used to check that the output of the Marker is compatible with the
    storage. This method should return a string, representing
    :ref:`storage types <storage_types>`.
@@ -48,8 +48,8 @@ we can define the output as:
 
 .. code-block:: python
 
-    def get_output_type(self, input_kind: str) -> str:
-        if input_kind == "BOLD":
+    def get_output_type(self, input_type: str) -> str:
+        if input_type == "BOLD":
             return "timeseries"
         else:
             return "vector"
@@ -218,8 +218,8 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
         def get_valid_inputs(self) -> list[str]:
             return ["BOLD", "VBM_WM", "VBM_GM"]
 
-        def get_output_type(self, input_kind: str) -> str:
-            if input_kind == "BOLD":
+        def get_output_type(self, input_type: str) -> str:
+            if input_type == "BOLD":
                 return "timeseries"
             else:
                 return "vector"
@@ -279,8 +279,8 @@ Template for a custom Marker
             valid = []
             return valid
 
-        def get_output_type(self, input_kind):
-            # TODO: Return the valid output kind for each input kind
+        def get_output_type(self, input_type):
+            # TODO: Return the valid output type for each input type
             pass
 
         def compute(self, input, extra_input):
