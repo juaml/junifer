@@ -134,12 +134,13 @@ parameters:
 Warping or Transformation to other spaces
 -----------------------------------------
 
-``junifer`` can also warp or transform ``BOLD`` data (as of now) from the
-template space provided by the dataset (e.g., ``MNI152NLin6Asym``) to either
-the subject's :ref:`native space <preprocess_warping_native>` or to any other
+``junifer`` can also warp or transform any supported
+:ref:`data type <data_types>` from the template space provided by the dataset
+(e.g., ``MNI152NLin6Asym``) to either  the subject's
+:ref:`native space <preprocess_warping_native>` or to any other
 :ref:`template space <preprocess_warping_template>`
 (e.g., ``MNI152NLin2009cAsym``). This functionality is provided by
-:class:`.BOLDWarper` and depends on external tools like FSL and / or ANTs.
+:class:`.SpaceWarper` and depends on external tools like FSL and / or ANTs.
 
 .. _preprocess_warping_native:
 
@@ -148,20 +149,23 @@ Warping to subject's native space
 
 To warp to subject's native space, the dataset needs to provide ``T1w`` and
 ``Warp`` data types and the DataGrabber needs to at least have
-``["BOLD", "T1w", "Warp"]`` as the ``types`` parameter's value. The
-:class:`.BOLDWarper`'s only parameter ``reference`` needs to be set to ``T1w``,
-which means that the ``BOLD`` data will be transformed using the ``T1w`` as
-reference (it's resampled internally to match the resolution of the ``BOLD``).
-The ``Warp`` data type is new and it's only purpose is to provide the
-warp or transformation file (can be linear, non-linear or linear + non-linear
-transform) for the purpose.
+``["BOLD", "T1w", "Warp"]`` (if you are warping ``BOLD``) as the ``types``
+parameter's value. The :class:`.SpaceWarper`'s ``reference`` parameter needs
+to be set to ``T1w``, which means that the ``BOLD`` data will be transformed
+using the ``T1w`` as reference (it's resampled internally to match the
+resolution of the ``BOLD``). The ``Warp`` data type is new and it's only purpose
+is to provide the warp or transformation file (can be linear, non-linear or
+linear + non-linear transform) for the purpose. For ``using`` parameter, you can
+pass either ``"fsl"`` or ``"ants"`` depending on the warp or transformation file
+format.
 
 An example YAML might look like this:
 
 .. code-block:: yaml
 
       preprocess:
-         - kind: BOLDWarper
+         - kind: SpaceWarper
+           using: fsl
            reference: T1w
 
 .. _preprocess_warping_template:
@@ -169,11 +173,13 @@ An example YAML might look like this:
 Warping to other template space
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In a situation where your dataset might provide the ``BOLD`` data in
-``MNI152NLin6Asym`` template space but you would like to compute features in
-``MNI152NLin2009cAsym`` template space, you can also use the
-:class:`.BOLDWarper` by setting the ``reference`` parameter to the template
-space's name, in this case, ``reference="MNI152NLin2009cAsym"``.
+In a situation where your dataset might provide the ``BOLD`` data (or any other
+data type that you want to work on) in ``MNI152NLin6Asym`` template space but
+you would like to compute features in ``MNI152NLin2009cAsym`` template space,
+you can also use the :class:`.SpaceWarper` by setting the ``reference``
+parameter to the template space's name, in this case,
+``reference="MNI152NLin2009cAsym"``. The ``using`` parameter needs to be set
+to ``"ants"`` as we need it to warp the data.
 
 .. note::
 
@@ -185,5 +191,6 @@ For an YAML example:
 .. code-block:: yaml
 
       preprocess:
-         - kind: BOLDWarper
+         - kind: SpaceWarper
+           using: ants
            reference: MNI152NLin2009cAsym
