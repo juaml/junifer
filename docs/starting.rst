@@ -2,8 +2,8 @@
 
 .. _starting:
 
-First steps with junifer
-========================
+First steps with ``junifer``
+============================
 
 .. note::
 
@@ -13,7 +13,7 @@ First steps with junifer
 
    flowchart TD
      start((( Start )))
-     read_understanding(Read Understanding Junifer)
+     read_understanding(Read Understanding junifer)
      start --> read_understanding
      question_features{Can I compute\nthe features I want\nusing junifer?}
      read_understanding --> question_features
@@ -22,7 +22,7 @@ First steps with junifer
      question_features -->|No| question_feature_type
      read_using --> question_features
 
-     read_using(Read Using Junifer)
+     read_using(Read Using junifer)
 
      question_feature_type{"What am I missing\nfrom junifer"}
      question_feature_type --> missing_datagrabber
@@ -30,7 +30,7 @@ First steps with junifer
      question_feature_type --> missing_marker
      question_feature_type --> missing_other
      missing_datagrabber("A Dataset/DataGrabber")
-     missing_preprocessing("A Preprocessing")
+     missing_preprocessing("A Preprocessor")
      missing_marker("A Marker")
      missing_other("Something else")
 
@@ -38,7 +38,7 @@ First steps with junifer
      question_datagrabber_junifarm{Is the\ndataset/datagrabber\nin juni-farm?}
      question_datagrabber_junifarm -->|Yes| read_using_final
      question_datagrabber_junifarm -->|No| read_extending_datagrabber_start
-     read_extending_datagrabber_start(Read Creating a Junifer extension)
+     read_extending_datagrabber_start(Read Creating a junifer extension)
      read_extending_datagrabber_start --> read_extending_datagrabber
      read_extending_datagrabber(Read Creating Data Grabbers)
      read_extending_datagrabber --> question_datagrabber_kind
@@ -55,14 +55,14 @@ First steps with junifer
      question_contribute_datagrabber{Do you think\nyour DataGrabber\nis useful for other users?}
      question_contribute_datagrabber -->|Yes| contribute_datagrabber
      question_contribute_datagrabber -->|No| final_run
-     contribute_datagrabber(Create a\nDATASET REQUEST\nissue on Github)
+     contribute_datagrabber(Create a\nDATASET REQUEST\nissue on GitHub)
      contribute_datagrabber --> final_run
 
      missing_marker --> question_marker_junifarm
      question_marker_junifarm{Is the marker\nin juni-farm?}
      question_marker_junifarm -->|Yes| read_using_final
      question_marker_junifarm -->|No| read_extending_marker_start
-     read_extending_marker_start(Read Creating a Junifer extension)
+     read_extending_marker_start(Read Creating a junifer extension)
      read_extending_marker_start --> read_extending_marker
      read_extending_marker(Read Creating Markers)
      read_extending_marker --> question_marker_solved
@@ -72,7 +72,7 @@ First steps with junifer
      question_contribute_marker{Do you think\nyour Marker\nis useful for other users?}
      question_contribute_marker -->|Yes| contribute_marker
      question_contribute_marker -->|No| final_run
-     contribute_marker(Create a\nMARKER REQUEST\nissue on Github)
+     contribute_marker(Create a\nMARKER REQUEST\nissue on GitHub)
      contribute_marker --> final_run
 
      missing_preprocessing --> contact_help
@@ -87,22 +87,22 @@ First steps with junifer
      missing_other --> missing_other_other
      missing_other_other --> contact_help
 
-     contact_help(((Contact the\nJunifer team)))
+     contact_help(((Contact the\njunifer team)))
 
      missing_mask --> read_adding_mask_start
-     read_adding_mask_start("Read Creating a Junifer extension")
+     read_adding_mask_start("Read Creating a junifer extension")
      read_adding_mask_start --> read_adding_mask
      read_adding_mask("Read Adding Masks")
      read_adding_mask --> missing_other_solved
 
      missing_parcellation --> read_adding_parcellation_start
-     read_adding_parcellation_start("Read Creating a Junifer extension")
+     read_adding_parcellation_start("Read Creating a junifer extension")
      read_adding_parcellation_start --> read_adding_parcellation
      read_adding_parcellation("Read Adding Parcellations")
      read_adding_parcellation --> missing_other_solved
 
      missing_coordinates --> read_adding_coordinates_start
-     read_adding_coordinates_start("Read Creating a Junifer extension")
+     read_adding_coordinates_start("Read Creating a junifer extension")
      read_adding_coordinates_start --> read_adding_coordinates
      read_adding_coordinates("Read Adding Coordinates")
      read_adding_coordinates --> missing_other_solved
@@ -110,11 +110,11 @@ First steps with junifer
      missing_other_solved{Did you solve your issue?}
      missing_other_solved -->|Yes| read_using_final
      missing_other_solved -->|No| missing_other_contact
-     missing_other_contact(Contact the\nJunifer team)
+     missing_other_contact(Contact the\njunifer team)
      missing_other_contact --> missing_other_issue
-     missing_other_issue(((Submit a\nFEATURE REQUEST\nissue in Github)))
+     missing_other_issue(((Submit a\nFEATURE REQUEST\nissue in GitHub)))
 
-     read_using_final(Read Using Junifer)
+     read_using_final(Read Using junifer)
      read_using_final --> final_yaml
      final_yaml(Create/edit the YAML file)
      final_yaml --> final_run
@@ -125,9 +125,9 @@ First steps with junifer
      question_error_run{"Is it an issue\nwith my YAML file?"}
      question_error_run -->|Yes| final_yaml
      question_error_run -->|No| error_contact
-     error_contact(Contact the\nJunifer team)
+     error_contact(Contact the\njunifer team)
      error_contact --> error_issue
-     error_issue(((Submit a\nBUG REPORT issue\nin Github)))
+     error_issue(((Submit a\nBUG REPORT issue\nin GitHub)))
      question_final_run_worked -->|Yes| final_queue
      final_queue(Use junifer queue to compute your features)
      final_queue --> final_magic

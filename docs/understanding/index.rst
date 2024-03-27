@@ -2,14 +2,14 @@
 
 .. _understanding:
 
-Understanding junifer
-=====================
+Understanding ``junifer``
+=========================
 
-Before you start, you should understand how junifer works. Junifer is a
+Before you start, you should understand how ``junifer`` works. ``junifer`` is a
 tool conceived to extract features from neuroimaging data in an easy-to-use
 manner, with minimal coding and minimal user expertise in the internal aspects.
 
-Unlike other tools like FSL, SPM, AFNI, etc., junifer is not a toolbox to
+Unlike other tools like FSL, SPM, AFNI, etc., ``junifer`` is not a toolbox to
 pre-process data, but a toolbox to extract features from previously
 pre-processed data.
 
@@ -20,9 +20,9 @@ julearn_).
 
 .. important::
 
-   Junifer is not a toolbox to create pipelines, but a tool to configure the
-   junifer pipeline, which is intended to be fixed and not to be changed. If you
-   want to create a pipeline, you should use other tools like nipype_.
+   ``junifer`` is not a toolbox to create pipelines, but a tool to configure the
+   ``junifer`` pipeline, which is intended to be fixed and not to be changed. If
+   you want to create a pipeline, you should use other tools like nipype_.
 
 .. toctree::
    :maxdepth: 2
