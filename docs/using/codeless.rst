@@ -128,7 +128,7 @@ Preprocess
 ^^^^^^^^^^
 
 ``preprocess`` is also an optional step, as it might be the case that no
-pre-processing is needed. As we can preform multiple preprocessing steps, it's
+pre-processing is needed. As we can perform multiple preprocessing steps, it's
 passed as a list of Preprocessors. In the case that pre-processing is needed,
 each Preprocessord must be configured using the ``kind`` key to specify the
 Preprocessor to use, and additional keys to pass parameters to the Preprocessor.
