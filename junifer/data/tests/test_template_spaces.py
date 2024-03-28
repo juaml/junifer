@@ -40,7 +40,7 @@ def test_get_xfm(tmp_path: Path) -> None:
     "template_type",
     [
         "T1w",
-        "whole",
+        "brain",
         "gm",
         "wm",
         "csf",
