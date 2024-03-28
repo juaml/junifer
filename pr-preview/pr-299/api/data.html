@@ -558,7 +558,7 @@ False or if the coordinates name is a built-in coordinates or if the
 <p>Provide functions for masks.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.masks.compute_brain_mask">
-<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">compute_brain_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'whole'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.compute_brain_mask" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">compute_brain_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'brain'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.compute_brain_mask" title="Link to this definition">#</a></dt>
 <dd><p>Compute the whole-brain, grey-matter or white-matter mask.</p>
 <p>This mask is calculated using the template space and resolution as found
 in the <code class="docutils literal notranslate"><span class="pre">target_data</span></code>.</p>
@@ -571,13 +571,13 @@ loaded.</p>
 <dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other data
 types (default None).</p>
 </dd>
-<dt><strong>mask_type</strong><span class="classifier">{“whole”, “gm”, “wm”}, optional</span></dt><dd><p>Type of mask to be computed:</p>
+<dt><strong>mask_type</strong><span class="classifier">{“brain”, “gm”, “wm”}, optional</span></dt><dd><p>Type of mask to be computed:</p>
 <ul class="simple">
-<li><p>“whole” : whole-brain mask</p></li>
+<li><p>“brain” : whole-brain mask</p></li>
 <li><p>“gm” : grey-matter mask</p></li>
 <li><p>“wm” : white-matter mask</p></li>
 </ul>
-<p>(default “whole”).</p>
+<p>(default “brain”).</p>
 </dd>
 <dt><strong>threshold</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The value under which the template is cut off (default 0.5).</p>
 </dd>
@@ -742,7 +742,7 @@ will be loaded.</p>
 <dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other data
 types (default None).</p>
 </dd>
-<dt><strong>template_type</strong><span class="classifier">{“T1w”, “whole”, “gm”, “wm”, “csf”}, optional</span></dt><dd><p>The template type to retrieve (default “T1w”).</p>
+<dt><strong>template_type</strong><span class="classifier">{“T1w”, “brain”, “gm”, “wm”, “csf”}, optional</span></dt><dd><p>The template type to retrieve (default “T1w”).</p>
 </dd>
 </dl>
 </dd>
