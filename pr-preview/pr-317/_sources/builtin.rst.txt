@@ -321,8 +321,8 @@ Available
    * - Name
      - Options
      - Keys
-     - Template spaces
-     - Version added
+     - Template Spaces
+     - Version Added
      - Publication
    * - Schaefer
      - ``n_rois``, ``yeo_networks``
@@ -494,7 +494,7 @@ Available
 
    * - Name
      - Keys
-     - Version added
+     - Version Added
      - Publication
    * - Cognitive action control
      - ``CogAC``
@@ -690,8 +690,8 @@ Available
 
    * - Name
      - Keys
-     - Template space
-     - Version added
+     - Template Space
+     - Version Added
      - Description - Publication
    * - Vickery-Patil (Gray Matter)
      - | ``GM_prob0.2``
@@ -714,7 +714,7 @@ Available
      - | Compute the whole-brain, gray-matter or white-matter mask using
        | the template and the resolution from the target image. The
        | templates are obtained via ``templateflow``.
-   * - Nilearn's mask computed from fMRI data
+   * - ``nilearn``'s mask computed from fMRI data
      - | ``compute_epi_mask``
      - Adapts to the target data
      - 0.0.2
@@ -722,14 +722,14 @@ Available
        | proposed by T.Nichols: find the least dense point of the histogram,
        | between fractions ``lower_cutoff`` and ``upper_cutoff`` of the total
        | image histogram. See :func:`nilearn.masking.compute_epi_mask`
-   * - Nilearn's background mask
+   * - ``nilearn``'s background mask
      - | ``compute_background_mask``
      - Adapts to the target data
      - 0.0.2
      - | Compute a brain mask for the images by guessing the value of the
        | background from the border of the image.
        | See :func:`nilearn.masking.compute_background_mask`
-   * - Nilearn's ICBM152 template gray-matter mask
+   * - ``nilearn``'s ICBM152 template gray-matter mask
      - | ``fetch_icbm152_brain_gm_mask``
      - ``MNI152NLin2009aAsym``
      - 0.0.2

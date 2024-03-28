@@ -2,7 +2,7 @@
 
 .. _specifying_dependencies:
 
-Specifying dependencies
+Specifying Dependencies
 =======================
 
 This section describes how you can tackle different situations when writing
@@ -96,7 +96,7 @@ that it shows the problem a bit better and how we solve it:
 
 
 Here, you see a new class attribute ``_CONDITIONAL_DEPENDENCIES`` which is a
-list of dictionaries having two keys:
+list of dictionaries with two keys:
 
 * ``using`` (str) : lowercased name of the toolbox
 * ``depends_on`` (object) : a class which implements the particular tool's use
