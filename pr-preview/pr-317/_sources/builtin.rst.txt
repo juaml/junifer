@@ -122,6 +122,54 @@ Planned
      - :gh:`47`
 
 
+Preprocessor
+------------
+
+..
+    Provide a list of the Preprocessors that are implemented or planned.
+
+    State: this should indicate the state of the preprocessor. Valid options are
+    - Planned
+    - In Progress
+    - Done
+
+    Version added: If the status is "Done", the junifer version in which the
+    preprocessor was added. Else, a link to the Github issue or pull request
+    implementing the preprocessor. Links to github can be added by using the
+    following syntax: :gh:`<issue number>`
+
+Available
+~~~~~~~~~
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Class
+     - Description
+     - State
+     - Version Added
+   * - :class:`.fMRIPrepConfoundRemover`
+     - Remove confounds from ``fMRIPrep``-ed data
+     - Done
+     - 0.0.1
+   * - :class:`.SpaceWarper`
+     - | Warp / transform data from one space to another
+       | (subject-native or other template spaces)
+     - Done
+     - 0.0.4
+   * - ``Smoothing``
+     - | Apply smoothing to data, particularly useful when dealing with
+       | ``fMRIPrep``-ed data
+     - In Progress
+     - :gh:`161`
+
+
+..
+   Planned
+   ~~~~~~~
+
+
 Marker
 ------
 
