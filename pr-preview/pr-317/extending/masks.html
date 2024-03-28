@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="8. Examples" href="../auto_examples/index.html" /><link rel="prev" title="7.6. Adding Coordinates" href="coordinates.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="8. Examples" href="../auto_examples/index.html" /><link rel="prev" title="7.7. Adding Coordinates" href="coordinates.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
-        <title>7.7. Adding Masks - junifer documentation</title>
+        <title>7.8. Adding Masks - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -192,9 +192,10 @@
 <li class="toctree-l2"><a class="reference internal" href="datagrabber.html">7.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="marker.html">7.3. Creating Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="preprocessor.html">7.4. Creating Preprocessors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parcellations.html">7.5. Adding Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="coordinates.html">7.6. Adding Coordinates</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">7.7. Adding Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dependencies.html">7.5. Specifying dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parcellations.html">7.6. Adding Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinates.html">7.7. Adding Coordinates</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">7.8. Adding Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -267,7 +268,7 @@
         </div>
         <article role="main">
           <section id="adding-masks">
-<span id="id1"></span><h1><span class="section-number">7.7. </span>Adding Masks<a class="headerlink" href="#adding-masks" title="Link to this heading">#</a></h1>
+<span id="id1"></span><h1><span class="section-number">7.8. </span>Adding Masks<a class="headerlink" href="#adding-masks" title="Link to this heading">#</a></h1>
 <p>Many processing steps and Markers in <code class="docutils literal notranslate"><span class="pre">junifer</span></code> allow you to specify a binary
 mask to select voxels you want to include in the analysis. There are a number
 of masks <a class="reference internal" href="../builtin.html#builtin"><span class="std std-ref">in-built in junifer already</span></a>, so check if any of them
@@ -291,7 +292,7 @@ other MR images.</p>
 <p>Lastly, we specify the <code class="docutils literal notranslate"><span class="pre">space</span></code> that the coordinates are in, for example,
 <code class="docutils literal notranslate"><span class="pre">&quot;MNI152NLin6Asym&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;native&quot;</span></code> (scanner-native space).</p>
 <section id="step-1-prepare-code-to-register-a-mask">
-<h2><span class="section-number">7.7.1. </span>Step 1: Prepare code to register a mask<a class="headerlink" href="#step-1-prepare-code-to-register-a-mask" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.8.1. </span>Step 1: Prepare code to register a mask<a class="headerlink" href="#step-1-prepare-code-to-register-a-mask" title="Link to this heading">#</a></h2>
 <p>A simple script called <code class="docutils literal notranslate"><span class="pre">register_custom_mask.py</span></code> to register a mask could
 look as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -310,7 +311,7 @@ look as follows:</p>
 so we can use it for <a class="reference internal" href="../using/codeless.html#codeless"><span class="std std-ref">codeless configuration of junifer</span></a>.</p>
 </section>
 <section id="step-2-configure-a-yaml-file-for-registration-of-a-mask">
-<h2><span class="section-number">7.7.2. </span>Step 2: Configure a YAML file for registration of a mask<a class="headerlink" href="#step-2-configure-a-yaml-file-for-registration-of-a-mask" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.8.2. </span>Step 2: Configure a YAML file for registration of a mask<a class="headerlink" href="#step-2-configure-a-yaml-file-for-registration-of-a-mask" title="Link to this heading">#</a></h2>
 <p>In order to do this, we can use the <code class="docutils literal notranslate"><span class="pre">with</span></code> keyword provided by <code class="docutils literal notranslate"><span class="pre">junifer</span></code>:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">with</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">register_custom_mask.py</span>
@@ -362,7 +363,7 @@ paths are interpreted by <code class="docutils literal notranslate"><span class=
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">7.6. </span>Adding Coordinates</div>
+                <div class="title"><span class="section-number">7.7. </span>Adding Coordinates</div>
                 
               </div>
             </a>
@@ -396,9 +397,9 @@ paths are interpreted by <code class="docutils literal notranslate"><span class=
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">7.7. Adding Masks</a><ul>
-<li><a class="reference internal" href="#step-1-prepare-code-to-register-a-mask">7.7.1. Step 1: Prepare code to register a mask</a></li>
-<li><a class="reference internal" href="#step-2-configure-a-yaml-file-for-registration-of-a-mask">7.7.2. Step 2: Configure a YAML file for registration of a mask</a></li>
+<li><a class="reference internal" href="#">7.8. Adding Masks</a><ul>
+<li><a class="reference internal" href="#step-1-prepare-code-to-register-a-mask">7.8.1. Step 1: Prepare code to register a mask</a></li>
+<li><a class="reference internal" href="#step-2-configure-a-yaml-file-for-registration-of-a-mask">7.8.2. Step 2: Configure a YAML file for registration of a mask</a></li>
 </ul>
 </li>
 </ul>

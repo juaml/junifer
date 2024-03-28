@@ -192,9 +192,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">7.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">7.3. Creating Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/preprocessor.html">7.4. Creating Preprocessors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.5. Adding Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">7.6. Adding Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">7.7. Adding Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/dependencies.html">7.5. Specifying dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.6. Adding Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">7.7. Adding Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">7.8. Adding Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">8. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
@@ -290,14 +291,14 @@ of the edge-wise timeseries using the Schaefer parcellation
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-03-28 09:14:10,566 - JUNIFER - INFO - ===== Lib Versions =====
-2024-03-28 09:14:10,566 - JUNIFER - INFO - numpy: 1.26.4
-2024-03-28 09:14:10,566 - JUNIFER - INFO - scipy: 1.11.4
-2024-03-28 09:14:10,566 - JUNIFER - INFO - pandas: 2.1.4
-2024-03-28 09:14:10,566 - JUNIFER - INFO - nilearn: 0.10.2
-2024-03-28 09:14:10,566 - JUNIFER - INFO - nibabel: 5.2.1
-2024-03-28 09:14:10,566 - JUNIFER - INFO - junifer: 0.0.4.dev707
-2024-03-28 09:14:10,566 - JUNIFER - INFO - ========================
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-03-28 11:10:38,703 - JUNIFER - INFO - ===== Lib Versions =====
+2024-03-28 11:10:38,703 - JUNIFER - INFO - numpy: 1.26.4
+2024-03-28 11:10:38,703 - JUNIFER - INFO - scipy: 1.11.4
+2024-03-28 11:10:38,703 - JUNIFER - INFO - pandas: 2.1.4
+2024-03-28 11:10:38,703 - JUNIFER - INFO - nilearn: 0.10.2
+2024-03-28 11:10:38,703 - JUNIFER - INFO - nibabel: 5.2.1
+2024-03-28 11:10:38,703 - JUNIFER - INFO - junifer: 0.0.4.dev727
+2024-03-28 11:10:38,703 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>Define the DataGrabber interface</p>
@@ -348,51 +349,51 @@ At the end you can read the extracted data into a <code class="docutils literal 
     <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;BOLD_Schaefer100x17_RSSETS&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-03-28 09:14:10,567 - JUNIFER - INFO - Getting element sub001
-2024-03-28 09:14:12,981 - JUNIFER - INFO - Fitting pipeline
-2024-03-28 09:14:12,981 - JUNIFER - INFO - Reading BOLD from /tmp/tmp8ntgul8d/sub001_bold.nii.gz
-2024-03-28 09:14:12,981 - JUNIFER - INFO - BOLD is type NIFTI
-2024-03-28 09:14:12,982 - JUNIFER - INFO - Reading T1w from /tmp/tmp8ntgul8d/sub001_T1w.nii.gz
-2024-03-28 09:14:12,982 - JUNIFER - INFO - T1w is type NIFTI
-2024-03-28 09:14:12,982 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
-2024-03-28 09:14:12,983 - JUNIFER - INFO - Computing BOLD
-2024-03-28 09:14:12,983 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2024-03-28 09:14:12,983 - JUNIFER - INFO - Parcellation parameters:
-2024-03-28 09:14:12,983 - JUNIFER - INFO -      resolution: 3.0
-2024-03-28 09:14:12,983 - JUNIFER - INFO -      n_rois: 100
-2024-03-28 09:14:12,983 - JUNIFER - INFO -      yeo_networks: 17
-2024-03-28 09:14:12,983 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-03-28 11:10:38,704 - JUNIFER - INFO - Getting element sub001
+2024-03-28 11:10:41,129 - JUNIFER - INFO - Fitting pipeline
+2024-03-28 11:10:41,129 - JUNIFER - INFO - Reading BOLD from /tmp/tmpldf1rt4u/sub001_bold.nii.gz
+2024-03-28 11:10:41,129 - JUNIFER - INFO - BOLD is type NIFTI
+2024-03-28 11:10:41,130 - JUNIFER - INFO - Reading T1w from /tmp/tmpldf1rt4u/sub001_T1w.nii.gz
+2024-03-28 11:10:41,130 - JUNIFER - INFO - T1w is type NIFTI
+2024-03-28 11:10:41,130 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
+2024-03-28 11:10:41,130 - JUNIFER - INFO - Computing BOLD
+2024-03-28 11:10:41,131 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-03-28 11:10:41,131 - JUNIFER - INFO - Parcellation parameters:
+2024-03-28 11:10:41,131 - JUNIFER - INFO -      resolution: 3.0
+2024-03-28 11:10:41,131 - JUNIFER - INFO -      n_rois: 100
+2024-03-28 11:10:41,131 - JUNIFER - INFO -      yeo_networks: 17
+2024-03-28 11:10:41,131 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_17Networks_order.txt ...
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2024-03-28 09:14:13,239 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-2024-03-28 09:14:15,686 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpss7hj93r/test.sqlite (multiple output)&gt;
-2024-03-28 09:14:15,710 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
-2024-03-28 09:14:15,710 - JUNIFER - INFO - Computing BOLD
-2024-03-28 09:14:15,711 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2024-03-28 09:14:15,711 - JUNIFER - INFO - Parcellation parameters:
-2024-03-28 09:14:15,711 - JUNIFER - INFO -      resolution: 3.0
-2024-03-28 09:14:15,711 - JUNIFER - INFO -      n_rois: 200
-2024-03-28 09:14:15,711 - JUNIFER - INFO -      yeo_networks: 17
-2024-03-28 09:14:15,711 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+2024-03-28 11:10:41,363 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-03-28 11:10:43,916 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp2km97eh_/test.sqlite (multiple output)&gt;
+2024-03-28 11:10:43,934 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
+2024-03-28 11:10:43,934 - JUNIFER - INFO - Computing BOLD
+2024-03-28 11:10:43,935 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-03-28 11:10:43,935 - JUNIFER - INFO - Parcellation parameters:
+2024-03-28 11:10:43,935 - JUNIFER - INFO -      resolution: 3.0
+2024-03-28 11:10:43,935 - JUNIFER - INFO -      n_rois: 200
+2024-03-28 11:10:43,935 - JUNIFER - INFO -      yeo_networks: 17
+2024-03-28 11:10:43,935 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_200Parcels_17Networks_order.txt ...
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2024-03-28 09:14:16,075 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-2024-03-28 09:14:17,866 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpss7hj93r/test.sqlite (multiple output)&gt;
-2024-03-28 09:14:17,889 - JUNIFER - INFO - Marker collection fitting done
-2024-03-28 09:14:17,890 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
-2024-03-28 09:14:17,890 - JUNIFER - INFO - Collecting data from /tmp/tmpss7hj93r/*test.sqlite
+2024-03-28 11:10:44,231 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-03-28 11:10:46,143 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp2km97eh_/test.sqlite (multiple output)&gt;
+2024-03-28 11:10:46,165 - JUNIFER - INFO - Marker collection fitting done
+2024-03-28 11:10:46,166 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
+2024-03-28 11:10:46,166 - JUNIFER - INFO - Collecting data from /tmp/tmp2km97eh_/*test.sqlite
 
 file: 0it [00:00, ?it/s]
 
 feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-feature: 100%|██████████| 2/2 [00:00&lt;00:00, 58.54it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 79.60it/s]
 
-file: 1it [00:00, 21.45it/s]
-2024-03-28 09:14:17,937 - JUNIFER - INFO - Collect done
+file: 1it [00:00, 27.34it/s]
+2024-03-28 11:10:46,204 - JUNIFER - INFO - Collect done
 {&#39;1d81ad1f44011f6c4d7e180b2e69045a&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;SPMAuditoryTestingDataGrabber&#39;, &#39;types&#39;: [&#39;BOLD&#39;, &#39;T1w&#39;]}, &#39;dependencies&#39;: {&#39;nilearn&#39;: &#39;0.10.2&#39;}, &#39;datareader&#39;: {&#39;class&#39;: &#39;DefaultDataReader&#39;}, &#39;type&#39;: &#39;BOLD&#39;, &#39;marker&#39;: {&#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;class&#39;: &#39;RSSETSMarker&#39;, &#39;masks&#39;: None, &#39;name&#39;: &#39;Schaefer100x17_RSSETS&#39;, &#39;parcellation&#39;: &#39;Schaefer100x17&#39;}, &#39;_element_keys&#39;: [&#39;subject&#39;], &#39;name&#39;: &#39;BOLD_Schaefer100x17_RSSETS&#39;}, &#39;24fef87855ff678fc17e53f2c2ab5e6e&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;SPMAuditoryTestingDataGrabber&#39;, &#39;types&#39;: [&#39;BOLD&#39;, &#39;T1w&#39;]}, &#39;dependencies&#39;: {&#39;nilearn&#39;: &#39;0.10.2&#39;}, &#39;datareader&#39;: {&#39;class&#39;: &#39;DefaultDataReader&#39;}, &#39;type&#39;: &#39;BOLD&#39;, &#39;marker&#39;: {&#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;class&#39;: &#39;RSSETSMarker&#39;, &#39;masks&#39;: None, &#39;name&#39;: &#39;Schaefer200x17_RSSETS&#39;, &#39;parcellation&#39;: &#39;Schaefer200x17&#39;}, &#39;_element_keys&#39;: [&#39;subject&#39;], &#39;name&#39;: &#39;BOLD_Schaefer200x17_RSSETS&#39;}}
 </pre></div>
 </div>
@@ -455,7 +456,7 @@ file: 1it [00:00, 21.45it/s]
 </div>
 </div>
 <br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.391 seconds)</p>
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.521 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-ets-rss-marker-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/0129f8507efff39850cf153c51edb3ab/run_ets_rss_marker.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_ets_rss_marker.py</span></code></a></p>

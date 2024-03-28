@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="7.5. Adding Parcellations" href="parcellations.html" /><link rel="prev" title="7.3. Creating Markers" href="marker.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="7.5. Specifying dependencies" href="dependencies.html" /><link rel="prev" title="7.3. Creating Markers" href="marker.html" />
 
     <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
         <title>7.4. Creating Preprocessors - junifer documentation</title>
@@ -192,9 +192,10 @@
 <li class="toctree-l2"><a class="reference internal" href="datagrabber.html">7.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="marker.html">7.3. Creating Markers</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">7.4. Creating Preprocessors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parcellations.html">7.5. Adding Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="coordinates.html">7.6. Adding Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="masks.html">7.7. Adding Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dependencies.html">7.5. Specifying dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parcellations.html">7.6. Adding Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinates.html">7.7. Adding Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="masks.html">7.8. Adding Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -410,11 +411,11 @@ want to pass <code class="docutils literal notranslate"><span class="pre">None</
 <h2><span class="section-number">7.4.4. </span>Step 4: Finalise the Preprocessor<a class="headerlink" href="#step-4-finalise-the-preprocessor" title="Link to this heading">#</a></h2>
 <p>Now we just need to combine everything we have above and throw in a couple of
 other stuff to get our Preprocessor ready.</p>
-<p>First, we specify the <em>dependencies</em> for our class, which are basically the
-packages that are required by the class. This is used for validation before
-running to ensure all the packages are installed and also to keep track of
-the dependencies and their versions in the metadata. We define it using a
-class attribute like so:</p>
+<p>First, we specify the <a class="reference internal" href="dependencies.html#specifying-dependencies"><span class="std std-ref">dependencies</span></a> for our
+class, which are basically the packages that are required by the class. This is
+used for validation before running to ensure all the packages are installed and
+also to keep track of the dependencies and their versions in the metadata. We
+define it using a class attribute like so:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
@@ -492,12 +493,12 @@ decorator and our final code should look like this:</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="parcellations.html">
+          <a class="next-page" href="dependencies.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">7.5. </span>Adding Parcellations</div>
+                <div class="title"><span class="section-number">7.5. </span>Specifying dependencies</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>

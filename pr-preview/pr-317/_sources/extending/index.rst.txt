@@ -26,6 +26,7 @@ DataGrabbers, Preprocessors, Markers, etc.,  following the *junifer* way.
    datagrabber
    marker
    preprocessor
+   dependencies
    parcellations
    coordinates
    masks

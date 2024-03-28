@@ -192,9 +192,10 @@
 <li class="toctree-l2"><a class="reference internal" href="datagrabber.html">7.2. Creating Data Grabbers</a></li>
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">7.3. Creating Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="preprocessor.html">7.4. Creating Preprocessors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parcellations.html">7.5. Adding Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="coordinates.html">7.6. Adding Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="masks.html">7.7. Adding Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dependencies.html">7.5. Specifying dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parcellations.html">7.6. Adding Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coordinates.html">7.7. Adding Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="masks.html">7.8. Adding Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -419,12 +420,13 @@ be <code class="docutils literal notranslate"><span class="pre">data</span></cod
 <p>Once all of the above steps are done, we just need to give our Marker a name,
 state its <em>dependencies</em> and register it using the <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code>
 decorator.</p>
-<p>The <em>dependencies</em> are the core packages that are required to compute the Marker.
-This will be later used to keep track of the versions of the packages used to
-compute the Marker. To inform <code class="docutils literal notranslate"><span class="pre">junifer</span></code> about the dependencies of a Marker, we
-need to define a <code class="docutils literal notranslate"><span class="pre">_DEPENDENCIES</span></code> attribute in the class. This attribute must be a
-set, with the names of the packages as strings. For example, the <code class="docutils literal notranslate"><span class="pre">ParcelMean</span></code>
-marker has the following dependencies:</p>
+<p>The <a class="reference internal" href="dependencies.html#specifying-dependencies"><span class="std std-ref">dependencies</span></a> are the core packages that are
+required to compute the Marker. This will be later used to keep track of the
+versions of the packages used to compute the Marker. To inform <code class="docutils literal notranslate"><span class="pre">junifer</span></code>
+about the dependencies of a Marker, we need to define a <code class="docutils literal notranslate"><span class="pre">_DEPENDENCIES</span></code>
+attribute in the class. This attribute must be a set, with the names of the
+packages as strings. For example, the <code class="docutils literal notranslate"><span class="pre">ParcelMean</span></code> marker has the
+following dependencies:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
