@@ -43,7 +43,7 @@ _masks_path = Path(__file__).parent / "masks"
 def compute_brain_mask(
     target_data: Dict[str, Any],
     extra_input: Optional[Dict[str, Any]] = None,
-    mask_type: str = "whole",
+    mask_type: str = "brain",
     threshold: float = 0.5,
 ) -> "Nifti1Image":
     """Compute the whole-brain, grey-matter or white-matter mask.
@@ -59,14 +59,14 @@ def compute_brain_mask(
     extra_input : dict, optional
         The other fields in the data object. Useful for accessing other data
         types (default None).
-    mask_type : {"whole", "gm", "wm"}, optional
+    mask_type : {"brain", "gm", "wm"}, optional
         Type of mask to be computed:
 
-        * "whole" : whole-brain mask
+        * "brain" : whole-brain mask
         * "gm" : grey-matter mask
         * "wm" : white-matter mask
 
-        (default "whole").
+        (default "brain").
     threshold : float, optional
         The value under which the template is cut off (default 0.5).
 
@@ -84,7 +84,7 @@ def compute_brain_mask(
     """
     logger.debug(f"Computing {mask_type} mask")
 
-    if mask_type not in ["whole", "gm", "wm"]:
+    if mask_type not in ["brain", "gm", "wm"]:
         raise_error(f"Unknown mask type: {mask_type}")
 
     # Check pre-requirements for space manipulation

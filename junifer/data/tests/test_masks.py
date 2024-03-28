@@ -41,9 +41,9 @@ from junifer.testing.datagrabbers import (
 @pytest.mark.parametrize(
     "mask_type, threshold",
     [
-        ("whole", 0.2),
-        ("whole", 0.5),
-        ("whole", 0.8),
+        ("brain", 0.2),
+        ("brain", 0.5),
+        ("brain", 0.8),
         ("gm", 0.2),
         ("gm", 0.5),
         ("gm", 0.8),
@@ -80,7 +80,7 @@ def test_compute_brain_mask(mask_type: str, threshold: float) -> None:
 @pytest.mark.parametrize(
     "mask_type",
     [
-        "whole",
+        "brain",
         "gm",
         "wm",
     ],

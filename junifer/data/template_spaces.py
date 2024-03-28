@@ -113,7 +113,7 @@ def get_template(
     extra_input : dict, optional
         The other fields in the data object. Useful for accessing other data
         types (default None).
-    template_type : {"T1w", "whole", "gm", "wm", "csf"}, optional
+    template_type : {"T1w", "brain", "gm", "wm", "csf"}, optional
         The template type to retrieve (default "T1w").
 
     Returns
@@ -134,7 +134,7 @@ def get_template(
         raise_error(f"Unknown template space: {space}")
 
     # Check for template type
-    if template_type not in ["T1w", "whole", "gm", "wm", "csf"]:
+    if template_type not in ["T1w", "brain", "gm", "wm", "csf"]:
         raise_error(f"Unknown template type: {template_type}")
 
     # Get the min of the voxels sizes and use it as the resolution
@@ -159,7 +159,7 @@ def get_template(
             suffix = template_type
             desc = None
             label = None
-        elif template_type == "whole":
+        elif template_type == "brain":
             suffix = "mask"
             desc = "brain"
             label = None
