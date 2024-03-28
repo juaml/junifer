@@ -59,8 +59,8 @@ Step 1: Prepare code to register a parcellation
 -----------------------------------------------
 
 Now we know everything that we need to know to make sure ``junifer`` can use our
-own parcellation to compute any parcellation-based Marker. For example,
-a simple example could look like this:
+own parcellation to compute any parcellation-based Marker. A simple example could
+look like this:
 
 .. code-block:: python
 
