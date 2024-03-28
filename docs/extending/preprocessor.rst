@@ -163,11 +163,11 @@ Step 4: Finalise the Preprocessor
 Now we just need to combine everything we have above and throw in a couple of
 other stuff to get our Preprocessor ready.
 
-First, we specify the *dependencies* for our class, which are basically the
-packages that are required by the class. This is used for validation before
-running to ensure all the packages are installed and also to keep track of
-the dependencies and their versions in the metadata. We define it using a
-class attribute like so:
+First, we specify the :ref:`dependencies <specifying_dependencies>` for our
+class, which are basically the packages that are required by the class. This is
+used for validation before running to ensure all the packages are installed and
+also to keep track of the dependencies and their versions in the metadata. We
+define it using a class attribute like so:
 
 .. code-block:: python
 

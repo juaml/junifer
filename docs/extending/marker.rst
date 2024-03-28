@@ -178,12 +178,13 @@ Once all of the above steps are done, we just need to give our Marker a name,
 state its *dependencies* and register it using the ``@register_marker``
 decorator.
 
-The *dependencies* are the core packages that are required to compute the Marker.
-This will be later used to keep track of the versions of the packages used to
-compute the Marker. To inform ``junifer`` about the dependencies of a Marker, we
-need to define a ``_DEPENDENCIES`` attribute in the class. This attribute must be a
-set, with the names of the packages as strings. For example, the ``ParcelMean``
-marker has the following dependencies:
+The :ref:`dependencies <specifying_dependencies>` are the core packages that are
+required to compute the Marker. This will be later used to keep track of the
+versions of the packages used to compute the Marker. To inform ``junifer``
+about the dependencies of a Marker, we need to define a ``_DEPENDENCIES``
+attribute in the class. This attribute must be a set, with the names of the
+packages as strings. For example, the ``ParcelMean`` marker has the
+following dependencies:
 
 .. code-block:: python
 
