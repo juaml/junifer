@@ -66,7 +66,10 @@ class HTCondorAdapter(QueueContextAdapter):
 
     See Also
     --------
-    QueueContextAdapter : The base class for QueueContext.
+    QueueContextAdapter :
+        The base class for QueueContext.
+    GnuParallelLocalAdapter :
+        The concrete class for queueing via GNU Parallel (local).
 
     """
 
