@@ -356,7 +356,7 @@ method, in the same order.
       return ["subject", "session"]
 
 
-So, to summarize, our DataGrabber will look like this:
+So, to summarise, our DataGrabber will look like this:
 
 .. code-block:: python
 
