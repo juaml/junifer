@@ -164,6 +164,8 @@ In case you remove some files or change their filenames, you can run into
 errors when using ``make local``. In this situation you can use ``make clean``
 to clean up the already build files and then re-run ``make local``.
 
+Also, we follow British English for the documentation.
+
 
 Writing Examples
 ----------------
