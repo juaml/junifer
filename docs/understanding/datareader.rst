@@ -9,17 +9,17 @@ Description
 -----------
 
 The ``DataReader`` is an object that is responsible for actually reading data
-files in junifer. It reads the value of the key ``path`` for each
+files in ``junifer``. It reads the value of the key ``path`` for each
 :ref:`data type <data_types>` in the :ref:`Data object <data_object>` and loads
 them into memory. After reading the data into memory, it adds the key ``data``
 to the same level as ``path`` and the value is the actual data in the memory.
 
-DataReaders are meant to be used inside the datagrabber context but you can
+DataReaders are meant to be used inside the DataGrabber context but you can
 operate on them outside the context as long as the actual data is in the memory
 and the Python runtime has not garbage-collected it.
 
-For data formats not supported by junifer yet, you can either make your own
-*Data Reader* or open an issue on `junifer Github`_ and we can help you out.
+For data formats not supported by ``junifer`` yet, you can either make your own
+DataReader or open an issue on `junifer Github`_ and we can help you out.
 
 File Formats
 ------------
