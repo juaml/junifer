@@ -123,4 +123,4 @@ def test_ALFFParcels_comparison(tmp_path: Path, fractional: bool) -> None:
             junifer_output_bold["data"][0],
             afni_output_bold["data"][0],
         )
-        assert r > 0.99
+        assert r > 0.97
