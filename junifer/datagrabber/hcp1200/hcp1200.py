@@ -106,14 +106,26 @@ class HCP1200(PatternDataGrabber):
         types = ["BOLD", "T1w", "Warp"]
         # The patterns
         patterns = {
-            "BOLD": (
-                "{subject}/MNINonLinear/Results/"
-                "{task}_{phase_encoding}/"
-                "{task}_{phase_encoding}"
-                f"{suffix}.nii.gz"
-            ),
-            "T1w": "{subject}/T1w/T1w_acpc_dc_restore.nii.gz",
-            "Warp": "{subject}/MNINonLinear/xfms/standard2acpc_dc.nii.gz",
+            "BOLD": {
+                "pattern": (
+                    "{subject}/MNINonLinear/Results/"
+                    "{task}_{phase_encoding}/"
+                    "{task}_{phase_encoding}"
+                    f"{suffix}.nii.gz"
+                ),
+                "space": "MNI152NLin6Asym",
+            },
+            "T1w": {
+                "pattern": "{subject}/T1w/T1w_acpc_dc_restore.nii.gz",
+                "space": "native",
+            },
+            "Warp": {
+                "pattern": (
+                    "{subject}/MNINonLinear/xfms/standard2acpc_dc.nii.gz"
+                ),
+                "src": "MNI152NLin6Asym",
+                "dst": "native",
+            },
         }
         # The replacements
         replacements = ["subject", "task", "phase_encoding"]
@@ -154,14 +166,14 @@ class HCP1200(PatternDataGrabber):
             subject=subject, task=new_task, phase_encoding=phase_encoding
         )
         # Add space for BOLD data type
-        if "BOLD" in out:
-            out["BOLD"].update({"space": "MNI152NLin6Asym"})
+        # if "BOLD" in out:
+        #     out["BOLD"].update({"space": "MNI152NLin6Asym"})
         # Add space for T1w data type
-        if "T1w" in out:
-            out["T1w"].update({"space": "native"})
+        # if "T1w" in out:
+        #     out["T1w"].update({"space": "native"})
         # Add source space for Warp data type
-        if "Warp" in out:
-            out["Warp"].update({"src": "MNI152NLin6Asym"})
+        # if "Warp" in out:
+        #     out["Warp"].update({"src": "MNI152NLin6Asym"})
         return out
 
     def get_elements(self) -> List:
