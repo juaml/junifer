@@ -25,7 +25,7 @@ Data Grabber
     - In Progress
     - Done
 
-    Version added: If the status is "Done", the Junifer version in which the
+    Version added: If the status is "Done", the junifer version in which the
     dataset was added. Else, a link to the Github issue or pull request
     implementing the dataset. Links to github can be added by using the
     following syntax: :gh:`<issue number>`
@@ -122,6 +122,54 @@ Planned
      - :gh:`47`
 
 
+Preprocessor
+------------
+
+..
+    Provide a list of the Preprocessors that are implemented or planned.
+
+    State: this should indicate the state of the preprocessor. Valid options are
+    - Planned
+    - In Progress
+    - Done
+
+    Version added: If the status is "Done", the junifer version in which the
+    preprocessor was added. Else, a link to the Github issue or pull request
+    implementing the preprocessor. Links to github can be added by using the
+    following syntax: :gh:`<issue number>`
+
+Available
+~~~~~~~~~
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Class
+     - Description
+     - State
+     - Version Added
+   * - :class:`.fMRIPrepConfoundRemover`
+     - Remove confounds from ``fMRIPrep``-ed data
+     - Done
+     - 0.0.1
+   * - :class:`.SpaceWarper`
+     - | Warp / transform data from one space to another
+       | (subject-native or other template spaces)
+     - Done
+     - 0.0.4
+   * - ``Smoothing``
+     - | Apply smoothing to data, particularly useful when dealing with
+       | ``fMRIPrep``-ed data
+     - In Progress
+     - :gh:`161`
+
+
+..
+   Planned
+   ~~~~~~~
+
+
 Marker
 ------
 
@@ -133,7 +181,7 @@ Marker
     - In Progress
     - Done
 
-    Version added: If the status is "Done", the Junifer version in which the
+    Version added: If the status is "Done", the junifer version in which the
     marker was added. Else, a link to the Github issue or pull request
     implementing the marker. Links to github can be added by using the
     following syntax: :gh:`<issue number>`
@@ -254,10 +302,6 @@ Planned
    * - Connectedness
      - Compute connectedness
      - :gh:`34`
-   * - Permutation entropy, Range entropy, Multiscale entropy and Hurst exponent
-     - | Calculate Permutation entropy, Range entropy, Multiscale entropy and
-       | Hurst exponent
-     - :gh:`61`
 
 Parcellation
 ------------
@@ -265,7 +309,7 @@ Parcellation
 ..
     Provide a list of the Parcellations that are implemented or planned.
 
-    Version added: The Junifer version in which the parcellation was added.
+    Version added: The junifer version in which the parcellation was added.
 
 Available
 ~~~~~~~~~
@@ -277,8 +321,8 @@ Available
    * - Name
      - Options
      - Keys
-     - Spaces
-     - Version added
+     - Template Spaces
+     - Version Added
      - Publication
    * - Schaefer
      - ``n_rois``, ``yeo_networks``
@@ -439,7 +483,7 @@ Coordinates
 ..
     Provide a list of the Coordinates that are implemented or planned.
 
-    Version added: The Junifer version in which the parcellation was added.
+    Version added: The junifer version in which the parcellation was added.
 
 Available
 ~~~~~~~~~
@@ -450,7 +494,7 @@ Available
 
    * - Name
      - Keys
-     - Version added
+     - Version Added
      - Publication
    * - Cognitive action control
      - ``CogAC``
@@ -635,7 +679,7 @@ Mask
 ..
     Provide a list of the masks that are implemented or planned.
 
-    Version added: The Junifer version in which the mask was added.
+    Version added: The junifer version in which the mask was added.
 
 Available
 ~~~~~~~~~
@@ -646,8 +690,8 @@ Available
 
    * - Name
      - Keys
-     - Spaces
-     - Version added
+     - Template Space
+     - Version Added
      - Description - Publication
    * - Vickery-Patil (Gray Matter)
      - | ``GM_prob0.2``
@@ -663,14 +707,14 @@ Available
      - | Vickery, Sam, & Patil, Kaustubh. (2022).
        | Chimpanzee and Human Gray Matter Masks [Data set]. Zenodo.
        | https://doi.org/10.5281/zenodo.6463123
-   * - Nilearn's MNI152 1mm-resolution mask
+   * - ``junifer``'s custom brain mask
      - | ``compute_brain_mask``
      - Adapts to the target data
      - 0.0.2
-     - | Compute the whole-brain mask. This mask is calculated using
-       | MNI152 1mm-resolution template mask onto the target image.
-       | See :func:`nilearn.masking.compute_brain_mask`
-   * - Nilearn's mask computed from FMRI data
+     - | Compute the whole-brain, gray-matter or white-matter mask using
+       | the template and the resolution from the target image. The
+       | templates are obtained via ``templateflow``.
+   * - ``nilearn``'s mask computed from fMRI data
      - | ``compute_epi_mask``
      - Adapts to the target data
      - 0.0.2
@@ -678,15 +722,14 @@ Available
        | proposed by T.Nichols: find the least dense point of the histogram,
        | between fractions ``lower_cutoff`` and ``upper_cutoff`` of the total
        | image histogram. See :func:`nilearn.masking.compute_epi_mask`
-   * - Nilearn's background mask
+   * - ``nilearn``'s background mask
      - | ``compute_background_mask``
      - Adapts to the target data
      - 0.0.2
      - | Compute a brain mask for the images by guessing the value of the
        | background from the border of the image.
        | See :func:`nilearn.masking.compute_background_mask`
-
-   * - Nilearn's ICBM152 template gray-matter mask
+   * - ``nilearn``'s ICBM152 template gray-matter mask
      - | ``fetch_icbm152_brain_gm_mask``
      - ``MNI152NLin2009aAsym``
      - 0.0.2
@@ -695,8 +738,9 @@ Available
        | See :func:`nilearn.datasets.fetch_icbm152_brain_gm_mask`
 
 
-Planned
-~~~~~~~
+..
+   Planned
+   ~~~~~~~
 
 ..
   helpful site for creating tables: https://rest-sphinx-memo.readthedocs.io/en/latest/ReST.html#tables
