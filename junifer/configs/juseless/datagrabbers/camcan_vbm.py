@@ -34,7 +34,12 @@ class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
         )
         types = ["VBM_GM"]
         replacements = ["subject"]
-        patterns = {"VBM_GM": "sub-{subject}/mri/m0wp1sub-{subject}.nii.gz"}
+        patterns = {
+            "VBM_GM": {
+                "pattern": "sub-{subject}/mri/m0wp1sub-{subject}.nii.gz",
+                "space": "IXI549Space",
+            },
+        }
         super().__init__(
             types=types,
             datadir=datadir,
