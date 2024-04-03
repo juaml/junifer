@@ -70,30 +70,48 @@ class JuselessUCLA(PatternDataGrabber):
         self.tasks = tasks
         # The patterns
         patterns = {
-            "BOLD": (
-                "sub-{subject}/func/sub-{subject}_task-{task}_bold_space-"
-                "MNI152NLin2009cAsym_preproc.nii.gz"
-            ),
-            "BOLD_confounds": (
-                "sub-{subject}/func/sub-{subject}_"
-                "task-{task}_bold_confounds.tsv"
-            ),
-            "T1w": (
-                "sub-{subject}/anat/sub-{subject}_"
-                "T1w_space-MNI152NLin2009cAsym_preproc.nii.gz"
-            ),
-            "probseg_CSF": (
-                "sub-{subject}/anat/sub-{subject}_T1w_space-"
-                "MNI152NLin2009cAsym_class-CSF_probtissue.nii.gz"
-            ),
-            "probseg_GM": (
-                "sub-{subject}/anat/sub-{subject}_T1w_space-"
-                "MNI152NLin2009cAsym_class-GM_probtissue.nii.gz"
-            ),
-            "probseg_WM": (
-                "sub-{subject}/anat/sub-{subject}_T1w_space"
-                "-MNI152NLin2009cAsym_class-WM_probtissue.nii.gz"
-            ),
+            "BOLD": {
+                "pattern": (
+                    "sub-{subject}/func/sub-{subject}_task-{task}_bold_space-"
+                    "MNI152NLin2009cAsym_preproc.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "BOLD_confounds": {
+                "pattern": (
+                    "sub-{subject}/func/sub-{subject}_"
+                    "task-{task}_bold_confounds.tsv"
+                ),
+                "space": "fmriprep",
+            },
+            "T1w": {
+                "pattern": (
+                    "sub-{subject}/anat/sub-{subject}_"
+                    "T1w_space-MNI152NLin2009cAsym_preproc.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "probseg_CSF": {
+                "pattern": (
+                    "sub-{subject}/anat/sub-{subject}_T1w_space-"
+                    "MNI152NLin2009cAsym_class-CSF_probtissue.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "probseg_GM": {
+                "pattern": (
+                    "sub-{subject}/anat/sub-{subject}_T1w_space-"
+                    "MNI152NLin2009cAsym_class-GM_probtissue.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "probseg_WM": {
+                "pattern": (
+                    "sub-{subject}/anat/sub-{subject}_T1w_space"
+                    "-MNI152NLin2009cAsym_class-WM_probtissue.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
         }
         # Set default types
         if types is None:
