@@ -53,23 +53,22 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
         # Nothing to validate, any input is fine
         return input
 
-    def get_output_type(self, input: List[str]) -> List[str]:
+    def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
         Parameters
         ----------
-        input : list of str
-            The input to the reader. The list must contain the
-            available Junifer Data dictionary keys.
+        input_type : str
+            The data type input to the reader.
 
         Returns
         -------
-        list of str
-            The updated list of output types, as reading possibilities.
+        str
+            The data type output by the reader.
 
         """
         # It will output the same type of data as the input
-        return input
+        return input_type
 
     def _fit_transform(
         self,
