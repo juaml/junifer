@@ -54,16 +54,13 @@ def test_run_and_collect_commands(
 
     """
     # Get test config
-    infile = Path(__file__).parent / "data" / "gmd_mean.yaml"
+    infile = Path(__file__).parent / "data" / "partly_cloudy_agg_mean_tian.yml"
     # Read test config
     contents = yaml.load(infile)
     # Working directory
-    workdir = tmp_path / "workdir"
-    contents["workdir"] = str(workdir.resolve())
-    # Output directory
-    outdir = tmp_path / "outdir"
+    contents["workdir"] = str(tmp_path.resolve())
     # Storage
-    contents["storage"]["uri"] = str(outdir.resolve())
+    contents["storage"]["uri"] = str((tmp_path / "out.hdf5").resolve())
     # Write new test config
     outfile = tmp_path / "in.yaml"
     yaml.dump(contents, stream=outfile)
@@ -117,16 +114,13 @@ def test_run_using_element_file(tmp_path: Path, elements: str) -> None:
         f.write(elements)
 
     # Get test config
-    infile = Path(__file__).parent / "data" / "gmd_mean.yaml"
+    infile = Path(__file__).parent / "data" / "partly_cloudy_agg_mean_tian.yml"
     # Read test config
     contents = yaml.load(infile)
     # Working directory
-    workdir = tmp_path / "workdir"
-    contents["workdir"] = str(workdir.resolve())
-    # Output directory
-    outdir = tmp_path / "outdir"
+    contents["workdir"] = str(tmp_path.resolve())
     # Storage
-    contents["storage"]["uri"] = str(outdir.resolve())
+    contents["storage"]["uri"] = str((tmp_path / "out.hdf5").resolve())
     # Write new test config
     outfile = tmp_path / "in.yaml"
     yaml.dump(contents, stream=outfile)
@@ -228,7 +222,7 @@ def test_queue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.mark.parametrize(
     "action, action_file",
     [
-        (run, "gmd_mean.yaml"),
+        (run, "partly_cloudy_agg_mean_tian.yml"),
         (queue, "gmd_mean_htcondor.yaml"),
     ],
 )

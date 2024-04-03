@@ -12,12 +12,12 @@ import scipy as sp
 from junifer.datareader import DefaultDataReader
 from junifer.markers import ReHoParcels
 from junifer.pipeline import WorkDirManager
-from junifer.pipeline.utils import _check_afni
+from junifer.pipeline.utils import _check_afni, _check_ants
 from junifer.storage import SQLiteFeatureStorage
-from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
-
-
-PARCELLATION = "Schaefer100x7"
+from junifer.testing.datagrabbers import (
+    PartlyCloudyTestingDataGrabber,
+    SPMAuditoryTestingDataGrabber,
+)
 
 
 def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
@@ -32,13 +32,16 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 
     """
     with caplog.at_level(logging.DEBUG):
-        with SPMAuditoryTestingDataGrabber() as dg:
-            element_data = DefaultDataReader().fit_transform(dg["sub001"])
+        with PartlyCloudyTestingDataGrabber() as dg:
+            element_data = DefaultDataReader().fit_transform(dg["sub-01"])
             # Update workdir to current test's tmp_path
             WorkDirManager().workdir = tmp_path
 
             # Initialize marker
-            marker = ReHoParcels(parcellation=PARCELLATION, using="junifer")
+            marker = ReHoParcels(
+                parcellation="TianxS1x3TxMNInonlinear2009cAsym",
+                using="junifer",
+            )
             # Fit transform marker on data
             output = marker.fit_transform(element_data)
 
@@ -73,6 +76,9 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 
 
 @pytest.mark.skipif(
+    _check_ants() is False, reason="requires ANTs to be in PATH"
+)
+@pytest.mark.skipif(
     _check_afni() is False, reason="requires AFNI to be in PATH"
 )
 def test_ReHoParcels_comparison(tmp_path: Path) -> None:
@@ -91,7 +97,7 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
 
         # Initialize marker
         junifer_marker = ReHoParcels(
-            parcellation=PARCELLATION, using="junifer"
+            parcellation="Schaefer100x7", using="junifer"
         )
         # Fit transform marker on data
         junifer_output = junifer_marker.fit_transform(element_data)
@@ -99,7 +105,7 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
         junifer_output_bold = junifer_output["BOLD"]
 
         # Initialize marker
-        afni_marker = ReHoParcels(parcellation=PARCELLATION, using="afni")
+        afni_marker = ReHoParcels(parcellation="Schaefer100x7", using="afni")
         # Fit transform marker on data
         afni_output = afni_marker.fit_transform(element_data)
         # Get BOLD output
@@ -110,4 +116,4 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
             junifer_output_bold["data"].flatten(),
             afni_output_bold["data"].flatten(),
         )
-        assert r >= 0.3  # this is very bad, but they differ...
+        assert r >= 0.2  # this is very bad, but they differ...

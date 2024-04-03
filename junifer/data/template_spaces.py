@@ -99,6 +99,7 @@ def get_template(
     space: str,
     target_data: Dict[str, Any],
     extra_input: Optional[Dict[str, Any]] = None,
+    template_type: str = "T1w",
 ) -> nib.Nifti1Image:
     """Get template for the space, tailored for the target image.
 
@@ -112,6 +113,8 @@ def get_template(
     extra_input : dict, optional
         The other fields in the data object. Useful for accessing other data
         types (default None).
+    template_type : {"T1w", "brain", "gm", "wm", "csf"}, optional
+        The template type to retrieve (default "T1w").
 
     Returns
     -------
@@ -121,14 +124,18 @@ def get_template(
     Raises
     ------
     ValueError
-        If ``space`` is invalid.
+        If ``space`` or ``template_type`` is invalid.
     RuntimeError
-        If template in the required resolution is not found.
+        If required template is not found.
 
     """
     # Check for invalid space; early check to raise proper error
     if space not in tflow.templates():
         raise_error(f"Unknown template space: {space}")
+
+    # Check for template type
+    if template_type not in ["T1w", "brain", "gm", "wm", "csf"]:
+        raise_error(f"Unknown template type: {template_type}")
 
     # Get the min of the voxels sizes and use it as the resolution
     target_img = target_data["data"]
@@ -145,18 +152,38 @@ def get_template(
     logger.info(f"Downloading template {space} in resolution {resolution}")
     # Retrieve template
     try:
+        suffix = None
+        desc = None
+        label = None
+        if template_type == "T1w":
+            suffix = template_type
+            desc = None
+            label = None
+        elif template_type == "brain":
+            suffix = "mask"
+            desc = "brain"
+            label = None
+        elif template_type in ["gm", "wm", "csf"]:
+            suffix = "probseg"
+            desc = None
+            label = template_type.upper()
+        # Set kwargs for fetching
+        kwargs = {
+            "suffix": suffix,
+            "desc": desc,
+            "label": label,
+        }
         template_path = tflow.get(
             space,
             raise_empty=True,
             resolution=resolution,
-            suffix="T1w",
-            desc=None,
             extension="nii.gz",
+            **kwargs,
         )
     except Exception:  # noqa: BLE001
         raise_error(
-            f"Template {space} not found in the required resolution "
-            f"{resolution}",
+            f"Template {space} ({template_type}) with resolution {resolution} "
+            "not found",
             klass=RuntimeError,
         )
     else:

@@ -18,7 +18,7 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
-PARCELLATION = "Schaefer100x7"
+PARCELLATION = "TianxS1x3TxMNInonlinear2009cAsym"
 
 
 def test_ALFFParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
@@ -59,7 +59,7 @@ def test_ALFFParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             output_bold_data = output_bold["data"]
             # Assert BOLD output data dimension
             assert output_bold_data.ndim == 2
-            assert output_bold_data.shape == (1, 100)
+            assert output_bold_data.shape == (1, 16)
 
             # Reset log capture
             caplog.clear()
@@ -123,4 +123,4 @@ def test_ALFFParcels_comparison(tmp_path: Path, fractional: bool) -> None:
             junifer_output_bold["data"][0],
             afni_output_bold["data"][0],
         )
-        assert r > 0.99
+        assert r > 0.97

@@ -3,21 +3,24 @@
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 from pathlib import Path
 
 import pytest
-from nilearn import datasets, image
 from nilearn.connectome import ConnectivityMeasure
+from nilearn.maskers import NiftiSpheresMasker
 from numpy.testing import assert_array_almost_equal
 from sklearn.covariance import EmpiricalCovariance
 
+from junifer.data import get_coordinates
+from junifer.datareader import DefaultDataReader
 from junifer.markers.functional_connectivity import (
     FunctionalConnectivitySpheres,
 )
-from junifer.markers.sphere_aggregation import SphereAggregation
 from junifer.storage import SQLiteFeatureStorage
+from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
 def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
@@ -29,56 +32,57 @@ def test_FunctionalConnectivitySpheres(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    # get a dataset
-    ni_data = datasets.fetch_spm_auditory(subject_id="sub001")
-    fmri_img = image.concat_imgs(ni_data.func)  # type: ignore
+    with SPMAuditoryTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub001"])
+        marker = FunctionalConnectivitySpheres(
+            coords="DMNBuckner", radius=5.0, cor_method="correlation"
+        )
+        # Check correct output
+        assert marker.get_output_type("BOLD") == "matrix"
 
-    fc = FunctionalConnectivitySpheres(
-        coords="DMNBuckner", radius=5.0, cor_method="correlation"
-    )
-    all_out = fc.fit_transform(
-        {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
-    )
+        # Fit-transform the data
+        fc = marker.fit_transform(element_data)
+        fc_bold = fc["BOLD"]
 
-    out = all_out["BOLD"]
+        assert "data" in fc_bold
+        assert "row_names" in fc_bold
+        assert "col_names" in fc_bold
+        assert fc_bold["data"].shape == (6, 6)
+        assert len(set(fc_bold["row_names"])) == 6
+        assert len(set(fc_bold["col_names"])) == 6
 
-    assert "data" in out
-    assert "row_names" in out
-    assert "col_names" in out
-    assert out["data"].shape[0] == 6
-    assert out["data"].shape[1] == 6
-    assert len(set(out["row_names"])) == 6
-    assert len(set(out["col_names"])) == 6
+        # Compare with nilearn
+        # Load testing coordinates for the target data
+        testing_coords, _ = get_coordinates(
+            coords="DMNBuckner", target_data=element_data["BOLD"]
+        )
+        # Extract timeseries
+        nifti_spheres_masker = NiftiSpheresMasker(
+            seeds=testing_coords, radius=5.0
+        )
+        extracted_timeseries = nifti_spheres_masker.fit_transform(
+            element_data["BOLD"]["data"]
+        )
+        # Compute the connectivity measure
+        connectivity_measure = ConnectivityMeasure(
+            kind="correlation"
+        ).fit_transform([extracted_timeseries])[0]
 
-    # get the timeseries using sa
-    sa = SphereAggregation(
-        coords="DMNBuckner", radius=5.0, method="mean", on="BOLD"
-    )
-    ts = sa.compute({"data": fmri_img, "meta": {}, "space": "MNI"})
+        # Check that FC are almost equal
+        assert_array_almost_equal(
+            connectivity_measure, fc_bold["data"], decimal=3
+        )
 
-    # Check that FC are almost equal when using nileran
-    cm = ConnectivityMeasure(kind="correlation")
-    out_ni = cm.fit_transform([ts["data"]])[0]
-    assert_array_almost_equal(out_ni, out["data"], decimal=3)
-
-    # check correct output
-    assert fc.get_output_type("BOLD") == "matrix"
-
-    uri = tmp_path / "test_fc_parcel.sqlite"
-    # Single storage, must be the uri
-    storage = SQLiteFeatureStorage(uri=uri, upsert="ignore")
-    meta = {
-        "element": {"subject": "test"},
-        "dependencies": {"numpy", "nilearn"},
-    }
-    input = {"BOLD": {"data": fmri_img, "meta": meta, "space": "MNI"}}
-    all_out = fc.fit_transform(input, storage=storage)
-
-    features = storage.list_features()
-    assert any(
-        x["name"] == "BOLD_FunctionalConnectivitySpheres"
-        for x in features.values()
-    )
+        # Store
+        storage = SQLiteFeatureStorage(
+            uri=tmp_path / "test_fc_spheres.sqlite", upsert="ignore"
+        )
+        marker.fit_transform(input=element_data, storage=storage)
+        features = storage.list_features()
+        assert any(
+            x["name"] == "BOLD_FunctionalConnectivitySpheres"
+            for x in features.values()
+        )
 
 
 def test_FunctionalConnectivitySpheres_empirical(tmp_path: Path) -> None:
@@ -90,43 +94,49 @@ def test_FunctionalConnectivitySpheres_empirical(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
+    with SPMAuditoryTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub001"])
+        marker = FunctionalConnectivitySpheres(
+            coords="DMNBuckner",
+            radius=5.0,
+            cor_method="correlation",
+            cor_method_params={"empirical": True},
+        )
+        # Check correct output
+        assert marker.get_output_type("BOLD") == "matrix"
 
-    # get a dataset
-    ni_data = datasets.fetch_spm_auditory(subject_id="sub001")
-    fmri_img = image.concat_imgs(ni_data.func)  # type: ignore
+        # Fit-transform the data
+        fc = marker.fit_transform(element_data)
+        fc_bold = fc["BOLD"]
 
-    fc = FunctionalConnectivitySpheres(
-        coords="DMNBuckner",
-        radius=5.0,
-        cor_method="correlation",
-        cor_method_params={"empirical": True},
-    )
-    all_out = fc.fit_transform(
-        {"BOLD": {"data": fmri_img, "meta": {}, "space": "MNI"}}
-    )
+        assert "data" in fc_bold
+        assert "row_names" in fc_bold
+        assert "col_names" in fc_bold
+        assert fc_bold["data"].shape == (6, 6)
+        assert len(set(fc_bold["row_names"])) == 6
+        assert len(set(fc_bold["col_names"])) == 6
 
-    out = all_out["BOLD"]
+        # Compare with nilearn
+        # Load testing coordinates for the target data
+        testing_coords, _ = get_coordinates(
+            coords="DMNBuckner", target_data=element_data["BOLD"]
+        )
+        # Extract timeseries
+        nifti_spheres_masker = NiftiSpheresMasker(
+            seeds=testing_coords, radius=5.0
+        )
+        extracted_timeseries = nifti_spheres_masker.fit_transform(
+            element_data["BOLD"]["data"]
+        )
+        # Compute the connectivity measure
+        connectivity_measure = ConnectivityMeasure(
+            cov_estimator=EmpiricalCovariance(), kind="correlation"  # type: ignore
+        ).fit_transform([extracted_timeseries])[0]
 
-    assert "data" in out
-    assert "row_names" in out
-    assert "col_names" in out
-    assert out["data"].shape[0] == 6
-    assert out["data"].shape[1] == 6
-    assert len(set(out["row_names"])) == 6
-    assert len(set(out["col_names"])) == 6
-
-    # get the timeseries using sa
-    sa = SphereAggregation(
-        coords="DMNBuckner", radius=5.0, method="mean", on="BOLD"
-    )
-    ts = sa.compute({"data": fmri_img, "space": "MNI"})
-
-    # Check that FC are almost equal when using nileran
-    cm = ConnectivityMeasure(
-        cov_estimator=EmpiricalCovariance(), kind="correlation"  # type: ignore
-    )
-    out_ni = cm.fit_transform([ts["data"]])[0]
-    assert_array_almost_equal(out_ni, out["data"], decimal=3)
+        # Check that FC are almost equal
+        assert_array_almost_equal(
+            connectivity_measure, fc_bold["data"], decimal=3
+        )
 
 
 def test_FunctionalConnectivitySpheres_error() -> None:

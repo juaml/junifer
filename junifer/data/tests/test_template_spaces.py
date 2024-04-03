@@ -11,7 +11,10 @@ import pytest
 
 from junifer.data import get_template, get_xfm
 from junifer.datareader import DefaultDataReader
-from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
+from junifer.testing.datagrabbers import (
+    OasisVBMTestingDataGrabber,
+    PartlyCloudyTestingDataGrabber,
+)
 
 
 @pytest.mark.skipif(
@@ -33,15 +36,32 @@ def test_get_xfm(tmp_path: Path) -> None:
     assert isinstance(xfm_path, Path)
 
 
-def test_get_template() -> None:
-    """Test tailored template image fetch."""
-    with OasisVBMTestingDataGrabber() as dg:
+@pytest.mark.parametrize(
+    "template_type",
+    [
+        "T1w",
+        "brain",
+        "gm",
+        "wm",
+        "csf",
+    ],
+)
+def test_get_template(template_type: str) -> None:
+    """Test tailored template image fetch.
+
+    Parameters
+    ----------
+    template_type : str
+        The parametrized template type.
+
+    """
+    with PartlyCloudyTestingDataGrabber() as dg:
         element = dg["sub-01"]
         element_data = DefaultDataReader().fit_transform(element)
-        vbm_gm = element_data["VBM_GM"]
+        bold = element_data["BOLD"]
         # Get tailored parcellation
         tailored_template = get_template(
-            space=vbm_gm["space"], target_data=vbm_gm
+            space=bold["space"], target_data=bold, template_type=template_type
         )
         assert isinstance(tailored_template, nib.Nifti1Image)
 
@@ -54,7 +74,22 @@ def test_get_template_invalid_space() -> None:
         vbm_gm = element_data["VBM_GM"]
         # Get tailored parcellation
         with pytest.raises(ValueError, match="Unknown template space:"):
-            _ = get_template(space="andromeda", target_data=vbm_gm)
+            get_template(space="andromeda", target_data=vbm_gm)
+
+
+def test_get_template_invalid_template_type() -> None:
+    """Test invalid template type check for template fetch."""
+    with OasisVBMTestingDataGrabber() as dg:
+        element = dg["sub-01"]
+        element_data = DefaultDataReader().fit_transform(element)
+        vbm_gm = element_data["VBM_GM"]
+        # Get tailored parcellation
+        with pytest.raises(ValueError, match="Unknown template type:"):
+            get_template(
+                space=vbm_gm["space"],
+                target_data=vbm_gm,
+                template_type="xenon",
+            )
 
 
 def test_get_template_closest_resolution() -> None:
