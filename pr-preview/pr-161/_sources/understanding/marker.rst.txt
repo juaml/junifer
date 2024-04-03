@@ -21,12 +21,12 @@ the pipeline.
    SPM, AFNI, etc., . For example, one can perform confound removal on loaded
    data and then perform feature extraction.
 
-Markers are meant to be used inside the datagrabber context but you can operate
+Markers are meant to be used inside the DataGrabber context but you can operate
 on them outside the context as long as the actual data is in the memory and the
 Python runtime has not garbage-collected it.
 
-If you are interested in using already provided markers, please go to
-:doc:`../builtin`. And, if you want to implement your own marker, you need to
+If you are interested in using already provided Markers, please go to
+:doc:`../builtin`. And, if you want to implement your own Marker, you need to
 provide concrete implementation of :class:`.BaseMarker`. Specifically, you
 need to override ``get_valid_inputs``, ``get_output_type`` and ``compute``
 methods.

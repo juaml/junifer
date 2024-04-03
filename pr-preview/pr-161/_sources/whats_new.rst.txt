@@ -8,7 +8,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.4.dev707 (2024-03-26)
+Junifer 0.0.4.dev794 (2024-04-03)
 ---------------------------------
 
 Bugfixes
@@ -65,6 +65,8 @@ API Changes
   :func:`.register_parcellation` and :func:`.register_mask` and return space
   from :func:`.load_coordinates`, :func:`.load_parcellation` and
   :func:`.load_mask` by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
+- Add ``template_type`` parameter to :func:`.get_template` by `Synchon Mandal`_
+  (:gh:`299`)
 - Change :meth:`.BasePreprocessor.preprocess` return values to preprocessed
   target data and "helper" data types as a dictionary by `Synchon Mandal`_
   (:gh:`310`)
@@ -86,6 +88,8 @@ Improved Documentation
   "register_mask" by `Tobias Muganga`_ (:gh:`291`)
 - Rename ``Misc`` section to ``Miscellaneous`` in ``docs/whats_new.rst`` by
   `Synchon Mandal`_ (:gh:`300`)
+- Improve documentation by adding information about space transformation and
+  writing custom Preprocessors by `Synchon Mandal`_ (:gh:`317`)
 
 
 Enhancements
@@ -106,10 +110,14 @@ Enhancements
   :func:`.get_aggfunc_by_name` by `Synchon Mandal`_ (:gh:`287`)
 - Adapt :class:`.BOLDWarper` to use FSL or ANTs depending on warp file
   extension by `Synchon Mandal`_ (:gh:`293`)
+- Rewrite :func:`.compute_brain_mask` to allow variable template fetching via
+  templateflow, according to target data by `Synchon Mandal`_ (:gh:`299`)
 - Replace ``requests`` with ``httpx`` for fetching parcellations by `Synchon
   Mandal`_ (:gh:`300`)
 - Allow :class:`.BOLDWarper` to warp BOLD data to other MNI spaces by `Synchon
   Mandal`_ (:gh:`302`)
+- Add support for local ``junifer queue`` via GNU Parallel by `Synchon Mandal`_
+  (:gh:`306`)
 - Improve :class:`.BasePreprocessor` by revamping
   :meth:`.BasePreprocessor.preprocess` and ``BasePreprocessor._fit_transform``
   to handle "helper" data types better and make the pipeline explicit where
@@ -163,6 +171,10 @@ Features
   template spaces by `Synchon Mandal`_ (:gh:`297`)
 - Introduce :func:`.get_template` to fetch template space image tailored to a
   target data by `Synchon Mandal`_ (:gh:`298`)
+- Add support for on-the-fly template space transformation in
+  :func:`.get_parcellation` and :func:`.get_mask` to allow parcellation and
+  mask in different template spaces to work with a ``DataGrabber``'s data in a
+  specified template space. (:gh:`299`)
 - Introduce :class:`.SpaceWarper` for warping ``T1w``, ``BOLD``, ``VBM_GM``,
   ``VBM_WM``, ``fALFF``, ``GCOR`` and ``LCOR`` data to other spaces by `Synchon
   Mandal`_ (:gh:`301`)

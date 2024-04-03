@@ -1,35 +1,13 @@
 .. include:: links.inc
 
-Installing junifer
-==================
-
-
-Requirements
-------------
-
-junifer is compatible with `Python`_ >= 3.8 and requires the following packages:
-
-* ``click>=8.1.3,<8.2``
-* ``numpy>=1.24,<1.27``
-* ``datalad>=0.15.4,<0.20``
-* ``pandas>=1.4.0,<2.2``
-* ``nibabel>=3.2.0,<5.11``
-* ``nilearn>=0.9.0,<=0.11.0``
-* ``sqlalchemy>=1.4.27,<= 2.1.0``
-* ``ruamel.yaml>=0.17,<0.18``
-* ``h5py>=3.8.0,<3.10``
-
-Depending on the installation method, these packages might be installed
-automatically.
-
-Installation
-------------
+Installing ``junifer``
+======================
 
 Depending on your use-case, ``junifer`` can be installed differently:
 
-* Install the :ref:`install_latest_release`. This is the most suitable approach
+* Install the :ref:`latest stable release <install_latest_release>`. This is the most suitable approach
   for end users.
-* Install from :ref:`install_development_git`. This is the most suitable approach
+* Install from :ref:`latest development release <install_development_git>`. This is the most suitable approach
   for developers.
 
 
@@ -39,8 +17,8 @@ Either way, we strongly recommend using
 
 .. _install_latest_release:
 
-Stable release
-~~~~~~~~~~~~~~
+Using a package manager
+-----------------------
 
 Use ``pip`` to install ``junifer`` from `PyPI <https://pypi.org>`_, like so:
 
@@ -64,8 +42,8 @@ You can also install via ``conda``, like so:
 
 .. _install_development_git:
 
-Local Git repository
-~~~~~~~~~~~~~~~~~~~~
+From the source
+---------------
 
 Follow the `detailed contribution guidelines <contribution.rst>`_.
 
@@ -81,11 +59,11 @@ that are required for specific markers.
 
 .. important::
 
-   The Docker container wrappers add the commands required by junifer. Using
+   The Docker container wrappers add the commands required by ``junifer``. Using
    these commands have some limitations, mostly related to handling files and
-   paths. Junifer knows about this and uses these commands in the proper way.
+   paths. ``junifer`` knows about this and uses these commands in the proper way.
    Keep this in mind if you try to use the Docker wrappers outside of
-   junifer. These caveats and limitations are not documented.
+   ``junifer``. These caveats and limitations are not documented.
 
 AFNI
 ----

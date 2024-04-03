@@ -12,8 +12,8 @@ the structure of a dataset and provide two specific functionalities:
    element (e.g. the path to the T1 image, the path to the T2 image, etc.)
 #. Provide the list of *elements* available in the dataset.
 
-In this section, we will see how to create a datagrabber for a dataset. Basic
-aspects of datagrabbers are covered in the
+In this section, we will see how to create a DataGrabber for a dataset. Basic
+aspects of DataGrabbers are covered in the
 :ref:`Understanding Data Grabbers <datagrabber>` section.
 
 .. _extending_datagrabbers_think:
@@ -22,7 +22,7 @@ Step 1: Think about the element
 -------------------------------
 
 Like with any programming-related task, the first step is to think. When
-creating a Data Grabber, we need to first define what an *element* is.
+creating a DataGrabber, we need to first define what an *element* is.
 The *element* should be the smallest unit of data that can be processed. That
 is, for each element, there should be a set of data that can be processed, but
 only one of each *data type* (see :ref:`data_types`).
@@ -42,28 +42,28 @@ then the *element* should be composed of 3 items:
 If any of these items were not part of the element, then we will have more than
 one ``T1w`` and / or ``BOLD`` image for each subject, which is not allowed.
 
-Importantly, nothing prevents that one image is part of two different elements.
-For example, it is usually the case that the ``T1w`` image is not acquired for
-each task, but once in the entire session. So in this case, the ``T1w`` image
-for the element (``sub001``, ``ses1``, ``rest``) will be the same as the
-``T1w`` image for the element (``sub001``, ``ses1``, ``stroop``).
+Importantly, nothing prevents that one image being part of two different
+elements. For example, it is usually the case that the ``T1w`` image is not
+acquired for each task, but once in the entire session. So in this case, the
+``T1w`` image for the element (``sub001``, ``ses1``, ``rest``) will be the same
+as the ``T1w`` image for the element (``sub001``, ``ses1``, ``stroop``).
 
 We will now continue this section using as an example, a dataset in BIDS format
 in which 9 subjects (``sub-01`` to ``sub-09``) were scanned each during 3
 sessions (``ses-01``, ``ses-02``, ``ses-03``) and each session included a
 ``T1w`` and a ``BOLD`` image (resting-state), except for ``ses-03`` which was
-only anatomical.
+only anatomical data.
 
 Step 2: Think about the dataset's structure
 -------------------------------------------
 
 Now that we have our element defined, we need to think about the structure of
 the dataset. Mainly, because the structure of the dataset will determine how
-the Data Grabber needs to be implemented.
+the DataGrabber needs to be implemented.
 
-Junifer provides an abstract class to deal with datasets that can be thought in
-terms of *patterns*. A *pattern* is a string that contains placeholders that are
-replaced by the actual values of the element. In our BIDS example, the path
+``junifer`` provides an abstract class to deal with datasets that can be thought
+in terms of *patterns*. A *pattern* is a string that contains placeholders that
+are replaced by the actual values of the element. In our BIDS example, the path
 to the T1w image of subject ``sub-01`` and session ``ses-01``, relative to the
 dataset location, is ``sub-01/ses-01/anat/sub-01_ses-01_T1w.nii.gz``. By
 replacing ``sub-01`` with ``sub-02``, we can obtain the T1w image of the first
@@ -88,7 +88,7 @@ discussion in the `junifer Discussions`_ page. Most probably we can help you
 get your dataset in order.
 
 If there is no other way, then you can follow :ref:`extending_datagrabbers_base`
-to create a Data Grabber from scratch.
+to create a DataGrabber from scratch.
 
 .. _extending_datagrabbers_pattern:
 
@@ -101,7 +101,7 @@ Option A: Extending from PatternDataGrabber
 The :class:`.PatternDataGrabber` class is an abstract class that has the
 functionality of understanding patterns embedded in it.
 
-Before creating the datagrabber, we need to define 3 variables:
+Before creating the DataGrabber, we need to define 3 variables:
 
 * ``types``: A list with the available :ref:`data_types` in our dataset.
 * ``patterns``: A dictionary that specifies the pattern for each data type.
@@ -126,7 +126,7 @@ where the dataset is located. For example, if the dataset is located in
 location of the dataset, we can expose the variable in the constructor, as in
 the following example.
 
-With the variables defined above, we can create our datagrabber and name it
+With the variables defined above, we can create our DataGrabber and name it
 ``ExampleBIDSDataGrabber``:
 
 .. code-block:: python
@@ -152,7 +152,7 @@ With the variables defined above, we can create our datagrabber and name it
                replacements=replacements,
             )
 
-Our datagrabber is ready to be used by junifer. However, it is still unknown
+Our DataGrabber is ready to be used by ``junifer``. However, it is still unknown
 to the library. We need to register it in the library. To do so, we need to
 use the :func:`.register_datagrabber` decorator.
 
@@ -183,9 +183,9 @@ use the :func:`.register_datagrabber` decorator.
             )
 
 
-Now, we can use our datagrabber in junifer, by setting the ``datagrabber`` kind
-in the yaml file to ``ExampleBIDSDataGrabber``. Remember that we still need to
-set the ``datadir``.
+Now, we can use our DataGrabber in ``junifer``, by setting the ``datagrabber``
+kind in the yaml file to ``ExampleBIDSDataGrabber``. Remember that we still need
+to set the ``datadir``.
 
 .. code-block:: yaml
 
@@ -209,7 +209,7 @@ temporary directory. To set the location of the dataset, you can use the
 be used to specify the path to the root directory of the dataset after doing
 ``datalad clone``.
 
-In the example, the dataset is hosted in gin
+In the example, the dataset is hosted in Gin
 (``https://gin.g-node.org/juaml/datalad-example-bids``).
 
 When we clone this dataset, we will see the following structure:
@@ -238,7 +238,7 @@ Now we have our 2 additional variables:
     uri = "https://gin.g-node.org/juaml/datalad-example-bids"
     rootdir = "example_bids_ses"
 
-And we can create our datagrabber:
+And we can create our DataGrabber:
 
 .. code-block:: python
 
@@ -267,17 +267,34 @@ And we can create our datagrabber:
                replacements=replacements,
             )
 
+This approach can be used directly from the YAML, like so:
+
+.. code-block:: yaml
+
+   datagrabber:
+     - kind: PatternDataladDataGrabber
+       types:
+         - BOLD
+         - T1w
+       patterns:
+         BOLD: "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz"
+         T1w: "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+       replacements:
+         - subject
+         - session
+       uri: "https://gin.g-node.org/juaml/datalad-example-bids"
+       rootdir: "example_bids_ses"
 
 .. _extending_datagrabbers_base:
 
 Option B: Extending from BaseDataGrabber
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-While we could not think of a use case in which the pattern-based datagrabber
-would not be suitable, it is still possible to create a datagrabber extending
+While we could not think of a use case in which the pattern-based DataGrabber
+would not be suitable, it is still possible to create a DataGrabber extending
 from the :class:`.BaseDataGrabber` class.
 
-In order to create a datagrabber extending from :class:`.BaseDataGrabber`, we
+In order to create a DataGrabber extending from :class:`.BaseDataGrabber`, we
 need to implement the following methods:
 
 - ``get_item``: to get a single item from the dataset.
@@ -287,7 +304,7 @@ need to implement the following methods:
 .. note::
 
    The ``__init__`` method could also be implemented, but it is not mandatory.
-   This is required if the datagrabber requires any extra parameter.
+   This is required if the DataGrabber requires any extra parameter.
 
 We will now implement our BIDS example with this method.
 
@@ -339,7 +356,7 @@ method, in the same order.
       return ["subject", "session"]
 
 
-So, to summarize, our datagrabber will look like this:
+So, to summarise, our DataGrabber will look like this:
 
 .. code-block:: python
 
@@ -403,7 +420,7 @@ not standardised.
    The ``mappings`` key is only required if the ``format`` is ``adhoc``. If the
    ``format`` is ``fmriprep``, the ``mappings`` key is not required.
 
-Currently, junifer provides only one confound remover step
+Currently, ``junifer`` provides only one confound remover step
 (:class:`.fMRIPrepConfoundRemover`), which relies entirely on the ``fmriprep``
 confound variable names. Thus, if the confounds are not in ``fmriprep`` format,
 the user will need to provide the mappings between the *ad-hoc* variable names
