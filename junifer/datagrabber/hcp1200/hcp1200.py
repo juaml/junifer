@@ -162,19 +162,9 @@ class HCP1200(PatternDataGrabber):
         else:
             new_task = f"tfMRI_{task}"
 
-        out = super().get_item(
+        return super().get_item(
             subject=subject, task=new_task, phase_encoding=phase_encoding
         )
-        # Add space for BOLD data type
-        # if "BOLD" in out:
-        #     out["BOLD"].update({"space": "MNI152NLin6Asym"})
-        # Add space for T1w data type
-        # if "T1w" in out:
-        #     out["T1w"].update({"space": "native"})
-        # Add source space for Warp data type
-        # if "Warp" in out:
-        #     out["Warp"].update({"src": "MNI152NLin6Asym"})
-        return out
 
     def get_elements(self) -> List:
         """Implement fetching list of elements in the dataset.

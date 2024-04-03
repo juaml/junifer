@@ -231,22 +231,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         acq = task_acqs[task]
         new_task = f"{task}_acq-{acq}"
 
-        out = super().get_item(subject=subject, task=new_task)
-        # if out.get("BOLD"):
-        #     out["BOLD"]["mask_item"] = "BOLD_mask"
-        #     # Add space information
-        #     out["BOLD"].update({"space": "MNI152NLin2009cAsym"})
-        # if out.get("T1w"):
-        #     out["T1w"]["mask_item"] = "T1w_mask"
-        #     # Add space information
-        #     if self.native_t1w:
-        #         out["T1w"].update({"space": "native"})
-        #     else:
-        #         out["T1w"].update({"space": "MNI152NLin2009cAsym"})
-        # if out.get("Warp"):
-        #     # Add source space information
-        #     out["Warp"].update({"src": "MNI152NLin2009cAsym"})
-        return out
+        return super().get_item(subject=subject, task=new_task)
 
     def get_elements(self) -> List:
         """Implement fetching list of subjects in the dataset.
