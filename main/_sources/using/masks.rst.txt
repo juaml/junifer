@@ -12,7 +12,7 @@ contain a certain ratio of gray matter to white matter / cerebrospinal fluid,
 ensuring that the features are not extracted from voxels that contain mostly
 white matter or cerebrospinal fluid, which could add noise to the BOLD signal.
 
-Junifer provides a number of built-in masks, which can be listed using
+``junifer`` provides a number of built-in masks, which can be listed using
 :func:`.list_masks`. Some masks are images, while other masks can be computed
 using :ref:`nilearn` functions.
 
@@ -22,15 +22,14 @@ dictionary in which the **only** key is the built-in mask name and the value is
 a dictionary of keyword arguments to pass to the mask function.
 
 For example, the following is a valid mask specification that specified the
-``GM_prob0.2`` mask.
+``GM_prob0.2`` mask:
 
 .. code-block:: yaml
 
     masks: GM_prob0.2
 
 The following is a valid mask specification that specifies the
-``compute_brain_mask``  mask (function from nilearn), with a threshold of
-``0.5``.
+``compute_brain_mask`` mask, with a threshold of ``0.5``.
 
 .. code-block:: yaml
 
