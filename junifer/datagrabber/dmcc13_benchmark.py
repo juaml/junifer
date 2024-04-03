@@ -139,43 +139,69 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         self.runs = runs
         # The patterns
         patterns = {
-            "BOLD": (
-                "derivatives/fmriprep-1.3.2/sub-{subject}/ses-{session}/"
-                "func/sub-{subject}_ses-{session}_task-{task}_acq-mb4"
-                "{phase_encoding}_run-{run}_"
-                "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
-            ),
-            "BOLD_confounds": (
-                "derivatives/fmriprep-1.3.2/sub-{subject}/ses-{session}/"
-                "func/sub-{subject}_ses-{session}_task-{task}_acq-mb4"
-                "{phase_encoding}_run-{run}_desc-confounds_regressors.tsv"
-            ),
-            "BOLD_mask": (
-                "derivatives/fmriprep-1.3.2/sub-{subject}/ses-{session}/"
-                "/func/sub-{subject}_ses-{session}_task-{task}_acq-mb4"
-                "{phase_encoding}_run-{run}_"
-                "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
-            ),
-            "T1w": (
-                "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz"
-            ),
-            "T1w_mask": (
-                "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
-            ),
-            "probseg_CSF": (
-                "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_label-CSF_probseg.nii.gz"
-            ),
-            "probseg_GM": (
-                "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz"
-            ),
-            "probseg_WM": (
-                "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz"
-            ),
+            "BOLD": {
+                "pattern": (
+                    "derivatives/fmriprep-1.3.2/sub-{subject}/ses-{session}/"
+                    "func/sub-{subject}_ses-{session}_task-{task}_acq-mb4"
+                    "{phase_encoding}_run-{run}_"
+                    "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+                "mask_item": "BOLD_mask",
+            },
+            "BOLD_confounds": {
+                "pattern": (
+                    "derivatives/fmriprep-1.3.2/sub-{subject}/ses-{session}/"
+                    "func/sub-{subject}_ses-{session}_task-{task}_acq-mb4"
+                    "{phase_encoding}_run-{run}_desc-confounds_regressors.tsv"
+                ),
+                "format": "fmriprep",
+            },
+            "BOLD_mask": {
+                "pattern": (
+                    "derivatives/fmriprep-1.3.2/sub-{subject}/ses-{session}/"
+                    "/func/sub-{subject}_ses-{session}_task-{task}_acq-mb4"
+                    "{phase_encoding}_run-{run}_"
+                    "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "T1w": {
+                "pattern": (
+                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+                "mask_item": "T1w_mask",
+            },
+            "T1w_mask": {
+                "pattern": (
+                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "probseg_CSF": {
+                "pattern": (
+                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_label-CSF_probseg.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "probseg_GM": {
+                "pattern": (
+                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "probseg_WM": {
+                "pattern": (
+                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
         }
         # Use native T1w assets
         self.native_t1w = False
@@ -183,19 +209,30 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             self.native_t1w = True
             patterns.update(
                 {
-                    "T1w": (
-                        "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                        "sub-{subject}_desc-preproc_T1w.nii.gz"
-                    ),
-                    "T1w_mask": (
-                        "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                        "sub-{subject}_desc-brain_mask.nii.gz"
-                    ),
-                    "Warp": (
-                        "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                        "sub-{subject}_from-MNI152NLin2009cAsym_to-T1w_"
-                        "mode-image_xfm.h5"
-                    ),
+                    "T1w": {
+                        "pattern": (
+                            "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
+                            "sub-{subject}_desc-preproc_T1w.nii.gz"
+                        ),
+                        "space": "native",
+                        "mask_item": "T1w_mask",
+                    },
+                    "T1w_mask": {
+                        "pattern": (
+                            "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
+                            "sub-{subject}_desc-brain_mask.nii.gz"
+                        ),
+                        "space": "native",
+                    },
+                    "Warp": {
+                        "pattern": (
+                            "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
+                            "sub-{subject}_from-MNI152NLin2009cAsym_to-T1w_"
+                            "mode-image_xfm.h5"
+                        ),
+                        "src": "MNI152NLin2009cAsym",
+                        "dst": "native",
+                    },
                 }
             )
         # Set default types
