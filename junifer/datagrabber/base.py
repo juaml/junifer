@@ -59,7 +59,9 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         """
         yield from self.get_elements()
 
-    def __getitem__(self, element: Union[str, Tuple[str]]) -> Dict[str, Dict]:
+    def __getitem__(
+        self, element: Union[str, Tuple[str, ...]]
+    ) -> Dict[str, Dict]:
         """Enable indexing support.
 
         Parameters
@@ -183,7 +185,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         raise_error(
             msg="Concrete classes need to implement get_element_keys().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     @abstractmethod
     def get_elements(self) -> List[Union[str, Tuple[str]]]:
@@ -200,7 +202,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         raise_error(
             msg="Concrete classes need to implement get_elements().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     @abstractmethod
     def get_item(self, **element: Dict) -> Dict[str, Dict]:
@@ -221,4 +223,4 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         raise_error(
             msg="Concrete classes need to implement get_item().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
