@@ -55,14 +55,6 @@ PATTERNS_SCHEMA = {
         "mandatory": ["pattern", "space"],
         "optional": [],
     },
-    "VBM_GM": {
-        "mandatory": ["pattern", "space"],
-        "optional": [],
-    },
-    "VBM_WM": {
-        "mandatory": ["pattern", "space"],
-        "optional": [],
-    },
     "DWI": {
         "mandatory": ["pattern"],
         "optional": [],
