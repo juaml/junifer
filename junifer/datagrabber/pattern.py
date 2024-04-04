@@ -32,11 +32,98 @@ class PatternDataGrabber(BaseDataGrabber):
     types : list of str
         The types of data to be grabbed.
     patterns : dict
-        Patterns for each type of data as a dictionary. The keys are the types
-        and the values are the patterns. Each occurrence of the string
-        ``{subject}`` in the pattern will be replaced by the indexed element.
+        Data type patterns as a dictionary. It has the following schema:
+
+        * ``"T1w"`` :
+
+          .. code-block:: none
+
+            {
+              "mandatory": ["pattern", "space"],
+              "optional": []
+            }
+
+        * ``"T2w"`` :
+
+          .. code-block:: none
+
+            {
+              "mandatory": ["pattern", "space"],
+              "optional": []
+            }
+
+        * ``"BOLD"`` :
+
+          .. code-block:: none
+
+            {
+              "mandatory": ["pattern", "space"],
+              "optional": ["mask_item"]
+            }
+
+        * ``"Warp"`` :
+
+          .. code-block:: none
+
+            {
+              "mandatory": ["pattern", "src", "dst"],
+              "optional": []
+            }
+
+        * ``"BOLD_confounds"`` :
+
+          .. code-block:: none
+
+            {
+              "mandatory": ["pattern", "format"],
+              "optional": []
+            }
+
+        * ``"VBM_GM"`` :
+
+          .. code-block:: none
+
+            {
+              "mandatory": ["pattern", "space"],
+              "optional": []
+            }
+
+        * ``"VBM_WM"`` :
+
+          .. code-block:: none
+
+            {
+              "mandatory": ["pattern", "space"],
+              "optional": []
+            }
+
+        Basically, for each data type, one needs to provide ``mandatory`` keys
+        and can choose to also provide ``optional`` keys. The value for each
+        key is a string. So, one needs to provide necessary data types as a
+        dictionary, for example:
+
+        .. code-block:: none
+
+          {
+              "BOLD": {
+                "pattern": "...",
+                "space": "...",
+              },
+              "T1w": {
+                "pattern": "...",
+                "space": "...",
+              },
+              "Warp": {
+                "pattern": "...",
+                "src": "...",
+                "dst": "...",
+              }
+          }
+
+        taken from :class:`.HCP1200`.
     replacements : str or list of str
-        Replacements in the patterns for each item in the "element" tuple.
+        Replacements in the ``pattern`` key of each data type. The value needs
+        to be a list of all possible replacements.
     datadir : str or pathlib.Path
         The directory where the data is / will be stored.
     confounds_format : {"fmriprep", "adhoc"} or None, optional
@@ -52,7 +139,7 @@ class PatternDataGrabber(BaseDataGrabber):
     def __init__(
         self,
         types: List[str],
-        patterns: Dict[str, str],
+        patterns: Dict[str, Dict[str, str]],
         replacements: Union[List[str], str],
         datadir: Union[str, Path],
         confounds_format: Optional[str] = None,
@@ -69,7 +156,10 @@ class PatternDataGrabber(BaseDataGrabber):
         self.replacements = replacements
 
         # Validate confounds format
-        if confounds_format and confounds_format not in _CONFOUNDS_FORMATS:
+        if (
+            confounds_format is not None
+            and confounds_format not in _CONFOUNDS_FORMATS
+        ):
             raise_error(
                 "Invalid value for `confounds_format`, should be one of "
                 f"{_CONFOUNDS_FORMATS}."
@@ -143,6 +233,11 @@ class PatternDataGrabber(BaseDataGrabber):
         str
             The pattern with the element replaced.
 
+        Raises
+        ------
+        ValueError
+            If element keys do not match with replacements.
+
         """
         if list(element.keys()) != self.replacements:
             raise_error(
@@ -167,7 +262,7 @@ class PatternDataGrabber(BaseDataGrabber):
         return self.replacements
 
     def get_item(self, **element: str) -> Dict[str, Dict]:
-        """Implement single element indexing in the database.
+        """Implement single element indexing for the datagrabber.
 
         This method constructs a real path to the requested item's data, by
         replacing the ``patterns`` with actual values passed via ``**element``.
@@ -184,20 +279,33 @@ class PatternDataGrabber(BaseDataGrabber):
             Dictionary of dictionaries for each type of data required for the
             specified element.
 
+        Raises
+        ------
+        RuntimeError
+            If more than one file matches for a data type's pattern or
+            if no file matches for a data type's pattern or
+            if file cannot be accessed for an element.
+
         """
         out = {}
         for t_type in self.types:
             t_pattern = self.patterns[t_type]
-            t_replace = self._replace_patterns_glob(element, t_pattern)
+            t_replace = self._replace_patterns_glob(
+                element, t_pattern["pattern"]
+            )
             if "*" in t_replace:
                 t_matches = list(self.datadir.absolute().glob(t_replace))
                 if len(t_matches) > 1:
                     raise_error(
                         f"More than one file matches for {element} / {t_type}:"
-                        f" {t_matches}"
+                        f" {t_matches}",
+                        klass=RuntimeError,
                     )
                 elif len(t_matches) == 0:
-                    raise_error(f"No file matches for {element} / {t_type}")
+                    raise_error(
+                        f"No file matches for {element} / {t_type}",
+                        klass=RuntimeError,
+                    )
                 t_out = t_matches[0]
             else:
                 t_out = self.datadir / t_replace
@@ -205,22 +313,13 @@ class PatternDataGrabber(BaseDataGrabber):
                     if not t_out.exists() and not t_out.is_symlink():
                         raise_error(
                             f"Cannot access {t_type} for {element}: "
-                            f"File {t_out} does not exist"
+                            f"File {t_out} does not exist",
+                            klass=RuntimeError,
                         )
             # Update path for the element
-            out[t_type] = {"path": t_out}
-            # Update confounds format for BOLD_confounds
-            # (if found in the datagrabber)
-            if t_type == "BOLD_confounds":
-                if not self.confounds_format:
-                    raise_error(
-                        "`confounds_format` needs to be one of "
-                        f"{_CONFOUNDS_FORMATS}, None provided. "
-                        "As the DataGrabber used specifies "
-                        "'BOLD_confounds', None is invalid."
-                    )
-                # Set the format
-                out[t_type].update({"format": self.confounds_format})
+            out[t_type] = t_pattern.copy()  # copy data type dictionary
+            out[t_type].pop("pattern")  # remove pattern key
+            out[t_type].update({"path": t_out})  # add path key
 
         return out
 
@@ -259,7 +358,7 @@ class PatternDataGrabber(BaseDataGrabber):
                 re_pattern,
                 glob_pattern,
                 t_replacements,
-            ) = self._replace_patterns_regex(t_pattern)
+            ) = self._replace_patterns_regex(t_pattern["pattern"])
             for fname in self.datadir.glob(glob_pattern):
                 suffix = fname.relative_to(self.datadir).as_posix()
                 m = re.match(re_pattern, suffix)

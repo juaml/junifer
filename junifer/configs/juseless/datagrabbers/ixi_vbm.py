@@ -43,7 +43,12 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         types = ["VBM_GM"]
         replacements = ["site", "subject"]
         patterns = {
-            "VBM_GM": "{site}/sub-{subject}/mri/m0wp1sub-{subject}.nii.gz"
+            "VBM_GM": {
+                "pattern": (
+                    "{site}/sub-{subject}/mri/m0wp1sub-{subject}.nii.gz"
+                ),
+                "space": "IXI549Space",
+            },
         }
 
         # validate and/or transform 'site' input

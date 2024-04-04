@@ -61,7 +61,7 @@ Now that we have our element defined, we need to think about the structure of
 the dataset. Mainly, because the structure of the dataset will determine how
 the DataGrabber needs to be implemented.
 
-``junifer`` provides an abstract class to deal with datasets that can be thought
+``junifer`` provides a concrete class to deal with datasets that can be thought
 in terms of *patterns*. A *pattern* is a string that contains placeholders that
 are replaced by the actual values of the element. In our BIDS example, the path
 to the T1w image of subject ``sub-01`` and session ``ses-01``, relative to the
@@ -98,13 +98,14 @@ Step 3: Create a Data Grabber
 Option A: Extending from PatternDataGrabber
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The :class:`.PatternDataGrabber` class is an abstract class that has the
+The :class:`.PatternDataGrabber` class is a concrete class that has the
 functionality of understanding patterns embedded in it.
 
 Before creating the DataGrabber, we need to define 3 variables:
 
 * ``types``: A list with the available :ref:`data_types` in our dataset.
-* ``patterns``: A dictionary that specifies the pattern for each data type.
+* ``patterns``: A dictionary that specifies the pattern and some additional
+  information for each data type.
 * ``replacements``: A list indicating which of the elements in the patterns
   should be replaced by the values of the element.
 
@@ -114,8 +115,14 @@ For example, in our BIDS example, the variables will be:
 
     types = ["T1w", "BOLD"]
     patterns = {
-       "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-       "BOLD": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+       "T1w": {
+           "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+           "space": "native",
+       },
+       "BOLD": {
+           "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+           "space": "MNI152NLin6Asym",
+       },
     }
     replacements = ["subject", "session"]
 
@@ -141,8 +148,14 @@ With the variables defined above, we can create our DataGrabber and name it
         def __init__(self, datadir: str | Path) -> None:
             types = ["T1w", "BOLD"]
             patterns = {
-               "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-               "BOLD": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+               "T1w": {
+                   "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                   "space": "native",
+               },
+               "BOLD": {
+                   "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                   "space": "MNI152NLin6Asym",
+               },
             }
             replacements = ["subject", "session"]
             super().__init__(
@@ -171,8 +184,14 @@ use the :func:`.register_datagrabber` decorator.
         def __init__(self, datadir: str | Path) -> None:
             types = ["T1w", "BOLD"]
             patterns = {
-               "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-               "BOLD": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+               "T1w": {
+                   "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                   "space": "native",
+               },
+               "BOLD": {
+                   "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                   "space": "MNI152NLin6Asym",
+               },
             }
             replacements = ["subject", "session"]
             super().__init__(
@@ -252,8 +271,14 @@ And we can create our DataGrabber:
         def __init__(self) -> None:
             types = ["T1w", "BOLD"]
             patterns = {
-               "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-               "BOLD": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+               "T1w": {
+                   "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                   "space": "native",
+               },
+               "BOLD": {
+                   "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                   "space": "MNI152NLin6Asym",
+               },
             }
             replacements = ["subject", "session"]
             uri = "https://gin.g-node.org/juaml/datalad-example-bids"
@@ -277,13 +302,17 @@ This approach can be used directly from the YAML, like so:
          - BOLD
          - T1w
        patterns:
-         BOLD: "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz"
-         T1w: "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+         BOLD:
+           pattern: "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz"
+           space: MNI152NLin6Asym
+         T1w:
+           pattern: "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+           space: native
        replacements:
          - subject
          - session
        uri: "https://gin.g-node.org/juaml/datalad-example-bids"
-       rootdir: "example_bids_ses"
+       rootdir: example_bids_ses
 
 .. _extending_datagrabbers_base:
 
@@ -314,10 +343,16 @@ and ``session``, we will use them as parameters of ``get_item``:
 
 .. code-block:: python
 
-   def get_item(self, subject: str, session: str) -> dict[str, str]:
+   def get_item(self, subject: str, session: str) -> dict[str, dict[str, str]]:
       out = {
-         "T1w": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-         "BOLD": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+         "T1w": {
+             "path": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+             "space": "native",
+         },
+         "BOLD": {
+             "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+             "space": "MNI152NLin6Asym",
+         },
       }
       return out
 
@@ -367,12 +402,18 @@ So, to summarise, our DataGrabber will look like this:
    @register_datagrabber
    class ExampleBIDSDataGrabber(BaseDataGrabber):
 
-      def get_item(self, subject: str, session: str) -> dict[str, str]:
+      def get_item(self, subject: str, session: str) -> dict[str, dict[str, str]]:
          out = {
-            "T1w": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-            "BOLD": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+            "T1w": {
+                "path": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                "space": "native",
+            },
+            "BOLD": {
+                "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
          }
-      return out
+         return out
 
       def get_elements(self) -> list[str]:
          subjects = ["sub-01", "sub-02", "sub-03"]
@@ -438,16 +479,20 @@ this:
       self, subject: str, session: str
    ) -> dict:
       out = {
-         "BOLD": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+         "BOLD": {
+             "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+             "space": "MNI152NLin6Asym",
+         },
          "BOLD_confounds": {
-            "path": f"{subject}/{session}/func/{subject}_{session}_confounds.tsv",
-            "format": "adhoc",
-            "mappings": {
-               "fmriprep": {
-                  "variable1": "rot_x",
-                  "variable2": "rot_z",
-                  "variable3": "rot_y",
-               }
+             "path": f"{subject}/{session}/func/{subject}_{session}_confounds.tsv",
+             "format": "adhoc",
+             "mappings": {
+                 "fmriprep": {
+                    "variable1": "rot_x",
+                    "variable2": "rot_z",
+                    "variable3": "rot_y",
+                 },
+             },
          },
       }
 

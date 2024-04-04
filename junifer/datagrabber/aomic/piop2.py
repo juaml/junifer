@@ -74,50 +74,78 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         self.tasks = tasks
         # The patterns
         patterns = {
-            "BOLD": (
-                "derivatives/fmriprep/sub-{subject}/func/"
-                "sub-{subject}_task-{task}_"
-                "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
-            ),
-            "BOLD_confounds": (
-                "derivatives/fmriprep/sub-{subject}/func/"
-                "sub-{subject}_task-{task}_"
-                "desc-confounds_regressors.tsv"
-            ),
-            "BOLD_mask": (
-                "derivatives/fmriprep/sub-{subject}/func/"
-                "sub-{subject}_task-{task}_"
-                "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
-            ),
-            "T1w": (
-                "derivatives/fmriprep/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_"
-                "desc-preproc_T1w.nii.gz"
-            ),
-            "T1w_mask": (
-                "derivatives/fmriprep/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_"
-                "desc-brain_mask.nii.gz"
-            ),
-            "probseg_CSF": (
-                "derivatives/fmriprep/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_label-"
-                "CSF_probseg.nii.gz"
-            ),
-            "probseg_GM": (
-                "derivatives/fmriprep/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_label-"
-                "GM_probseg.nii.gz"
-            ),
-            "probseg_WM": (
-                "derivatives/fmriprep/sub-{subject}/anat/"
-                "sub-{subject}_space-MNI152NLin2009cAsym_label-"
-                "WM_probseg.nii.gz"
-            ),
-            "DWI": (
-                "derivatives/dwipreproc/sub-{subject}/dwi/"
-                "sub-{subject}_desc-preproc_dwi.nii.gz"
-            ),
+            "BOLD": {
+                "pattern": (
+                    "derivatives/fmriprep/sub-{subject}/func/"
+                    "sub-{subject}_task-{task}_"
+                    "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+                "mask_item": "BOLD_mask",
+            },
+            "BOLD_confounds": {
+                "pattern": (
+                    "derivatives/fmriprep/sub-{subject}/func/"
+                    "sub-{subject}_task-{task}_"
+                    "desc-confounds_regressors.tsv"
+                ),
+                "format": "fmriprep",
+            },
+            "BOLD_mask": {
+                "pattern": (
+                    "derivatives/fmriprep/sub-{subject}/func/"
+                    "sub-{subject}_task-{task}_"
+                    "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "T1w": {
+                "pattern": (
+                    "derivatives/fmriprep/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_"
+                    "desc-preproc_T1w.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+                "mask_item": "T1w_mask",
+            },
+            "T1w_mask": {
+                "pattern": (
+                    "derivatives/fmriprep/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_"
+                    "desc-brain_mask.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "probseg_CSF": {
+                "pattern": (
+                    "derivatives/fmriprep/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_label-"
+                    "CSF_probseg.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "probseg_GM": {
+                "pattern": (
+                    "derivatives/fmriprep/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_label-"
+                    "GM_probseg.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "probseg_WM": {
+                "pattern": (
+                    "derivatives/fmriprep/sub-{subject}/anat/"
+                    "sub-{subject}_space-MNI152NLin2009cAsym_label-"
+                    "WM_probseg.nii.gz"
+                ),
+                "space": "MNI152NLin2009cAsym",
+            },
+            "DWI": {
+                "pattern": (
+                    "derivatives/dwipreproc/sub-{subject}/dwi/"
+                    "sub-{subject}_desc-preproc_dwi.nii.gz"
+                ),
+            },
         }
         # Use native T1w assets
         self.native_t1w = False
@@ -125,19 +153,30 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             self.native_t1w = True
             patterns.update(
                 {
-                    "T1w": (
-                        "derivatives/fmriprep/sub-{subject}/anat/"
-                        "sub-{subject}_desc-preproc_T1w.nii.gz"
-                    ),
-                    "T1w_mask": (
-                        "derivatives/fmriprep/sub-{subject}/anat/"
-                        "sub-{subject}_desc-brain_mask.nii.gz"
-                    ),
-                    "Warp": (
-                        "derivatives/fmriprep/sub-{subject}/anat/"
-                        "sub-{subject}_from-MNI152NLin2009cAsym_to-T1w_"
-                        "mode-image_xfm.h5"
-                    ),
+                    "T1w": {
+                        "pattern": (
+                            "derivatives/fmriprep/sub-{subject}/anat/"
+                            "sub-{subject}_desc-preproc_T1w.nii.gz"
+                        ),
+                        "space": "native",
+                        "mask_item": "T1w_mask",
+                    },
+                    "T1w_mask": {
+                        "pattern": (
+                            "derivatives/fmriprep/sub-{subject}/anat/"
+                            "sub-{subject}_desc-brain_mask.nii.gz"
+                        ),
+                        "space": "native",
+                    },
+                    "Warp": {
+                        "pattern": (
+                            "derivatives/fmriprep/sub-{subject}/anat/"
+                            "sub-{subject}_from-MNI152NLin2009cAsym_to-T1w_"
+                            "mode-image_xfm.h5"
+                        ),
+                        "src": "MNI152NLin2009cAsym",
+                        "dst": "native",
+                    },
                 }
             )
         # Set default types
@@ -192,19 +231,4 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             specified element.
 
         """
-        out = super().get_item(subject=subject, task=f"{task}_acq-seq")
-        if out.get("BOLD"):
-            out["BOLD"]["mask_item"] = "BOLD_mask"
-            # Add space information
-            out["BOLD"].update({"space": "MNI152NLin2009cAsym"})
-        if out.get("T1w"):
-            out["T1w"]["mask_item"] = "T1w_mask"
-            # Add space information
-            if self.native_t1w:
-                out["T1w"].update({"space": "native"})
-            else:
-                out["T1w"].update({"space": "MNI152NLin2009cAsym"})
-        if out.get("Warp"):
-            # Add source space information
-            out["Warp"].update({"src": "MNI152NLin2009cAsym"})
-        return out
+        return super().get_item(subject=subject, task=f"{task}_acq-seq")

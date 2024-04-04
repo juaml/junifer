@@ -17,12 +17,10 @@ import datalad.api as dl
 from datalad.support.exceptions import IncompleteResultsError
 from datalad.support.gitrepo import GitRepo
 
-from ..api.decorators import register_datagrabber
 from ..utils import logger, raise_error, warn_with_log
 from .base import BaseDataGrabber
 
 
-@register_datagrabber
 class DataladDataGrabber(BaseDataGrabber):
     """Abstract base class for datalad-based data fetching.
 

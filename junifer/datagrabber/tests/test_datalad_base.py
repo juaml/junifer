@@ -26,12 +26,6 @@ _testing_dataset = {
 }
 
 
-def test_DataladDataGrabber_abstractness() -> None:
-    """Test DataladDataGrabber is abstract base class."""
-    with pytest.raises(TypeError, match=r"abstract"):
-        DataladDataGrabber()  # type: ignore
-
-
 @pytest.fixture
 def concrete_datagrabber() -> Type[DataladDataGrabber]:
     """Return a concrete datalad-based DataGrabber.

@@ -31,7 +31,12 @@ class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
         types = ["VBM_GM"]
         replacements = ["subject"]
         patterns = {
-            "VBM_GM": "sub-{subject}/mri/mwp1sub-{subject}_run-2_T1w.nii.gz",
+            "VBM_GM": {
+                "pattern": (
+                    "sub-{subject}/mri/mwp1sub-{subject}_run-2_T1w.nii.gz"
+                ),
+                "space": "IXI549Space",
+            },
         }
         super().__init__(
             types=types,

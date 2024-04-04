@@ -103,6 +103,9 @@ Data Types
    * - ``T1w``
      - T1w image (3D)
      - Preprocessed or Raw T1w image
+   * - ``T2w``
+     - T2w image (3D)
+     - Preprocessed or Raw T2w image
    * - ``BOLD``
      - BOLD image (4D)
      - Preprocessed or Denoised BOLD image (fMRIPrep output)

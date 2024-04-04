@@ -26,11 +26,21 @@ def test_MultipleDataGrabber() -> None:
     rootdir = "example_bids_ses"
     replacements = ["subject", "session"]
     pattern1 = {
-        "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+        "T1w": {
+            "pattern": (
+                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+            ),
+            "space": "native",
+        },
     }
     pattern2 = {
-        "BOLD": "{subject}/{session}/func/"
-        "{subject}_{session}_task-rest_bold.nii.gz",
+        "BOLD": {
+            "pattern": (
+                "{subject}/{session}/func/"
+                "{subject}_{session}_task-rest_bold.nii.gz"
+            ),
+            "space": "MNI152NLin6Asym",
+        },
     }
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
@@ -84,11 +94,21 @@ def test_MultipleDataGrabber_no_intersection() -> None:
     rootdir = "example_bids_ses"
     replacements = ["subject", "session"]
     pattern1 = {
-        "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+        "T1w": {
+            "pattern": (
+                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+            ),
+            "space": "native",
+        },
     }
     pattern2 = {
-        "BOLD": "{subject}/{session}/func/"
-        "{subject}_{session}_task-rest_bold.nii.gz",
+        "BOLD": {
+            "pattern": (
+                "{subject}/{session}/func/"
+                "{subject}_{session}_task-rest_bold.nii.gz"
+            ),
+            "space": "MNI152NLin6Asym",
+        },
     }
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
@@ -119,7 +139,12 @@ def test_MultipleDataGrabber_get_item() -> None:
     rootdir = "example_bids_ses"
     replacements = ["subject", "session"]
     pattern1 = {
-        "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+        "T1w": {
+            "pattern": (
+                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+            ),
+            "space": "native",
+        },
     }
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
@@ -142,10 +167,18 @@ def test_MultipleDataGrabber_validation() -> None:
     replacement1 = ["subject", "session"]
     replacement2 = ["subject"]
     pattern1 = {
-        "T1w": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+        "T1w": {
+            "pattern": (
+                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+            ),
+            "space": "native",
+        },
     }
     pattern2 = {
-        "bold": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+        "BOLD": {
+            "pattern": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+            "space": "MNI152NLin6Asym",
+        },
     }
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
@@ -158,7 +191,7 @@ def test_MultipleDataGrabber_validation() -> None:
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri2,
-        types=["bold"],
+        types=["BOLD"],
         patterns=pattern2,
         replacements=replacement2,
     )
