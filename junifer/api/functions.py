@@ -165,6 +165,8 @@ def run(
         preprocessors=built_preprocessors,
         storage=storage_object,
     )
+    mc.validate(datagrabber_object)
+
     # Fit elements
     with datagrabber_object:
         if elements is not None:
