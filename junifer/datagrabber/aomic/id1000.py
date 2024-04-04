@@ -24,8 +24,8 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    types: {"BOLD", "BOLD_confounds", "T1w", "probseg_CSF", "probseg_GM", \
-           "probseg_WM", "DWI"} or a list of the options, optional
+    types: {"BOLD", "BOLD_confounds", "T1w", "VBM_CSF", "VBM_GM", \
+           "VBM_WM", "DWI"} or a list of the options, optional
         AOMIC data types. If None, all available data types are selected.
         (default None).
     native_t1w : bool, optional
@@ -84,7 +84,7 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "probseg_CSF": {
+            "VBM_CSF": {
                 "pattern": (
                     "derivatives/fmriprep/sub-{subject}/anat/"
                     "sub-{subject}_space-MNI152NLin2009cAsym_label-"
@@ -92,7 +92,7 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "probseg_GM": {
+            "VBM_GM": {
                 "pattern": (
                     "derivatives/fmriprep/sub-{subject}/anat/"
                     "sub-{subject}_space-MNI152NLin2009cAsym_label-"
@@ -100,7 +100,7 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "probseg_WM": {
+            "VBM_WM": {
                 "pattern": (
                     "derivatives/fmriprep/sub-{subject}/anat/"
                     "sub-{subject}_space-MNI152NLin2009cAsym_label-"

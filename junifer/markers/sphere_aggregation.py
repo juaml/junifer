@@ -47,8 +47,8 @@ class SphereAggregation(BaseMarker):
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"} or \
-         list of the options, optional
+    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "VBM_CSF", "fALFF", "GCOR", \
+        "LCOR"} or list of the options, optional
         The data types to apply the marker to. If None, will work on all
         available data (default None).
     name : str, optional
@@ -109,7 +109,16 @@ class SphereAggregation(BaseMarker):
             The list of data types that can be used as input for this marker.
 
         """
-        return ["T1w", "BOLD", "VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]
+        return [
+            "T1w",
+            "BOLD",
+            "VBM_GM",
+            "VBM_WM",
+            "VBM_CSF",
+            "fALFF",
+            "GCOR",
+            "LCOR",
+        ]
 
     def get_output_type(self, input_type: str) -> str:
         """Get output type.
@@ -131,7 +140,14 @@ class SphereAggregation(BaseMarker):
 
         """
 
-        if input_type in ["VBM_GM", "VBM_WM", "fALFF", "GCOR", "LCOR"]:
+        if input_type in [
+            "VBM_GM",
+            "VBM_WM",
+            "VBM_CSF",
+            "fALFF",
+            "GCOR",
+            "LCOR",
+        ]:
             return "vector"
         elif input_type == "BOLD":
             return "timeseries"

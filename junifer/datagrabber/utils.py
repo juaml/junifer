@@ -51,15 +51,15 @@ PATTERNS_SCHEMA = {
         "mandatory": ["pattern", "space"],
         "optional": [],
     },
-    "probseg_CSF": {
+    "VBM_CSF": {
         "mandatory": ["pattern", "space"],
         "optional": [],
     },
-    "probseg_GM": {
+    "VBM_GM": {
         "mandatory": ["pattern", "space"],
         "optional": [],
     },
-    "probseg_WM": {
+    "VBM_WM": {
         "mandatory": ["pattern", "space"],
         "optional": [],
     },

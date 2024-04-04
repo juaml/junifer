@@ -23,8 +23,8 @@ class JuselessUCLA(PatternDataGrabber):
     datadir : str or Path, optional
         The directory where the dataset is stored.
         (default "/data/project/psychosis_thalamus/data/fmriprep").
-    types: {"BOLD", "BOLD_confounds", "T1w", "probseg_CSF", "probseg_GM", \
-           "probseg_WM"} or a list of the options, optional
+    types: {"BOLD", "BOLD_confounds", "T1w", "VBM_CSF", "VBM_GM", \
+           "VBM_WM"} or a list of the options, optional
         UCLA data types. If None, all available data types are selected.
         (default None).
     tasks : {"rest", "bart", "bht", "pamenc", "pamret", \
@@ -91,21 +91,21 @@ class JuselessUCLA(PatternDataGrabber):
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "probseg_CSF": {
+            "VBM_CSF": {
                 "pattern": (
                     "sub-{subject}/anat/sub-{subject}_T1w_space-"
                     "MNI152NLin2009cAsym_class-CSF_probtissue.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "probseg_GM": {
+            "VBM_GM": {
                 "pattern": (
                     "sub-{subject}/anat/sub-{subject}_T1w_space-"
                     "MNI152NLin2009cAsym_class-GM_probtissue.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "probseg_WM": {
+            "VBM_WM": {
                 "pattern": (
                     "sub-{subject}/anat/sub-{subject}_T1w_space"
                     "-MNI152NLin2009cAsym_class-WM_probtissue.nii.gz"

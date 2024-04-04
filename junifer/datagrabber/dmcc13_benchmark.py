@@ -25,8 +25,8 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    types: {"BOLD", "BOLD_confounds", "T1w", "probseg_CSF", "probseg_GM", \
-           "probseg_WM"} or a list of the options, optional
+    types: {"BOLD", "BOLD_confounds", "T1w", "VBM_CSF", "VBM_GM", \
+           "VBM_WM"} or a list of the options, optional
         DMCC data types. If None, all available data types are selected.
         (default None).
     sessions: {"wave1bas", "wave1pro", "wave1rea"} or list of the options, \
@@ -181,21 +181,21 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "probseg_CSF": {
+            "VBM_CSF": {
                 "pattern": (
                     "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
                     "sub-{subject}_space-MNI152NLin2009cAsym_label-CSF_probseg.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "probseg_GM": {
+            "VBM_GM": {
                 "pattern": (
                     "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
                     "sub-{subject}_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "probseg_WM": {
+            "VBM_WM": {
                 "pattern": (
                     "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
                     "sub-{subject}_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz"
