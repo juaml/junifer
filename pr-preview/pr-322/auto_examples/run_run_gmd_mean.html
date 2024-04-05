@@ -1,0 +1,933 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="8.4. Computer Parcel Aggregation." href="run_compute_parcel_mean.html" /><link rel="prev" title="8.2. Generic BIDS DataGrabber for datalad." href="run_datagrabber_bids_datalad.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+        <title>8.3. UKB VBM GMD Extraction - junifer documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">junifer  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/junifer_logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">junifer  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">4. Understanding <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 4. Understanding junifer</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">4.1. The <code class="docutils literal notranslate"><span class="pre">junifer</span></code> Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">4.2. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">4.3. Data Grabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">4.4. Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">4.5. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">4.6. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">4.7. Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">5. Using <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 5. Using junifer</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">5.1. Code-less Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html">5.2. Running Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">5.3. Collecting Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">5.4. Queueing Jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/masks.html">5.5.1. Masks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline Components</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">7. Extending <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 7. Extending junifer</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">7.1. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">7.2. Creating Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">7.3. Creating Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/preprocessor.html">7.4. Creating Preprocessors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/dependencies.html">7.5. Specifying Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.6. Adding Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">7.7. Adding Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">7.8. Adding Masks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">8. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="norun_ukbvm_gmd.html">8.1. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">8.2. Generic BIDS DataGrabber for datalad.</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">8.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_compute_parcel_mean.html">8.4. Computer Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_ets_rss_marker.html">8.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_junifer_julearn.html">8.7. Run junifer and julearn.</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">9. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of 9. API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">9.1.1. Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">9.1.2. DataReaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">9.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">9.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">9.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">9.2.1. Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">9.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.masks">9.2.3. Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.template_spaces">9.2.4. Template Spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">9.2.5. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">9.2.6. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">9.2.7. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">9.2.8. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">9.2.9. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">9.2.10. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/onthefly.html">9.2.11. On-the-fly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">9.3.1. Configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/nilearn.html">9.4.1. Nilearn</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">10. Getting Help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">11. Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">12. Maintaining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">13. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">14. What’s new</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-run-run-gmd-mean-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="ukb-vbm-gmd-extraction">
+<span id="sphx-glr-auto-examples-run-run-gmd-mean-py"></span><h1><span class="section-number">8.3. </span>UKB VBM GMD Extraction<a class="headerlink" href="#ukb-vbm-gmd-extraction" title="Link to this heading">#</a></h1>
+<p>Authors: Federico Raimondo</p>
+<p>License: BSD 3 clause</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-04-05 12:00:08,606 - JUNIFER - INFO - Registering OasisVBMTestingDataGrabber in datagrabber
+2024-04-05 12:00:08,606 - JUNIFER - INFO - Registering SPMAuditoryTestingDataGrabber in datagrabber
+2024-04-05 12:00:08,606 - JUNIFER - INFO - Registering PartlyCloudyTestingDataGrabber in datagrabber
+
+Dataset created in /home/runner/nilearn_data/oasis1
+
+Downloading data from https://www.nitrc.org/frs/download.php/6364/archive_dartel.tgz ...
+
+Downloaded 91734016 of 905208634 bytes (10.1%,    8.9s remaining)
+Downloaded 199909376 of 905208634 bytes (22.1%,    7.1s remaining)
+Downloaded 313753600 of 905208634 bytes (34.7%,    5.7s remaining)
+Downloaded 426409984 of 905208634 bytes (47.1%,    4.5s remaining)
+Downloaded 542375936 of 905208634 bytes (59.9%,    3.4s remaining)
+Downloaded 656539648 of 905208634 bytes (72.5%,    2.3s remaining)
+Downloaded 770277376 of 905208634 bytes (85.1%,    1.2s remaining)
+Downloaded 884899840 of 905208634 bytes (97.8%,    0.2s remaining) ...done. (9 seconds, 0 min)
+Extracting data from /home/runner/nilearn_data/oasis1/7088b0bf88f5650db26e32ec3afdd589/archive_dartel.tgz..... done.
+/opt/hostedtoolcache/Python/3.11.8/x64/lib/python3.11/site-packages/nilearn/datasets/struct.py:852: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
+  warnings.warn(_LEGACY_FORMAT_MSG)
+2024-04-05 12:00:23,774 - JUNIFER - INFO - Getting element sub-01
+2024-04-05 12:00:23,774 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:00:23,774 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:00:23,774 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:00:23,775 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:00:23,775 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:00:23,776 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:00:23,776 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:00:23,776 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:00:23,776 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:00:23,776 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:00:23,776 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+
+Dataset created in /home/runner/junifer/data/parcellations/schaefer_2018
+
+Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_1000Parcels_7Networks_order.txt ...
+ ...done. (0 seconds, 0 min)
+Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
+ ...done. (0 seconds, 0 min)
+2024-04-05 12:00:23,838 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:00:23,877 - JUNIFER - INFO - Downloading xfm file for MNI152NLin6Asym to MNI152Lin from https://gin.g-node.org/juaml/human-template-xfms/raw/main/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:10:13,499 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+Downloading https://templateflow.s3.amazonaws.com/tpl-MNI152Lin/tpl-MNI152Lin_res-02_T1w.nii.gz
+
+  0%|          | 0.00/1.45M [00:00&lt;?, ?B/s]
+ 33%|███▎      | 472k/1.45M [00:00&lt;00:00, 4.72MB/s]
+ 98%|█████████▊| 1.42M/1.45M [00:00&lt;00:00, 7.49MB/s]
+100%|██████████| 1.45M/1.45M [00:00&lt;00:00, 6.49MB/s]
+2024-04-05 12:10:14,036 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellations3i2_4szp/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellations3i2_4szp/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpok93afhu/parcellations64vzcmcn/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:10:21,266 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:10:22,405 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:10:22,562 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:10:22,563 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:10:22,563 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:10:22,563 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:10:22,563 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:10:22,563 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:10:22,563 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:10:22,565 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:10:22,603 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:10:23,783 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:10:23,883 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellations6sefcfmm/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellations6sefcfmm/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpok93afhu/parcellations0f_isni9/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:10:31,082 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:10:32,220 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:10:32,382 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:10:32,382 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:10:32,383 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:10:32,383 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:10:32,383 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:10:32,383 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:10:32,383 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:10:32,385 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:10:32,422 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:10:33,601 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:10:33,700 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsqek3rsjz/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsqek3rsjz/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpok93afhu/parcellationsnv39f4ll/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:10:40,952 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:10:42,100 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:10:42,263 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 12:10:42,264 - JUNIFER - INFO - Getting element sub-02
+2024-04-05 12:10:42,264 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:10:42,264 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:10:42,264 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:10:42,265 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:10:42,265 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:10:42,265 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:10:42,265 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:10:42,265 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:10:42,266 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:10:42,266 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:10:42,267 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:10:42,303 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:10:43,499 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:10:43,599 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsposqp217/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsposqp217/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp_6zz6rqm/parcellationsrxgxnfpe/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:10:50,746 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:10:51,885 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:10:52,038 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:10:52,038 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:10:52,039 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:10:52,039 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:10:52,039 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:10:52,039 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:10:52,039 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:10:52,041 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:10:52,078 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:10:53,250 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:10:53,349 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellations09jspn7q/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellations09jspn7q/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp_6zz6rqm/parcellationsn3cn5fvx/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:11:00,569 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:11:01,682 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:11:01,840 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:11:01,841 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:11:01,841 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:11:01,841 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:11:01,841 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:11:01,841 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:11:01,841 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:11:01,843 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:11:01,880 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:11:03,045 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:11:03,144 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationshs3mtas9/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationshs3mtas9/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp_6zz6rqm/parcellationssa9f7x7j/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:11:10,420 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:11:11,542 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:11:11,704 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 12:11:11,704 - JUNIFER - INFO - Getting element sub-03
+2024-04-05 12:11:11,704 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:11:11,704 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:11:11,704 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:11:11,705 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:11:11,705 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:11:11,706 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:11:11,706 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:11:11,706 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:11:11,706 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:11:11,706 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:11:11,708 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:11:11,743 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:11:12,909 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:11:13,009 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsnz6h1e7f/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsnz6h1e7f/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpekcb345_/parcellationsnrkomlk2/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:11:20,314 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:11:21,459 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:11:21,611 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:11:21,611 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:11:21,612 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:11:21,612 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:11:21,612 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:11:21,612 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:11:21,612 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:11:21,614 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:11:21,651 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:11:22,811 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:11:22,911 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationszncmssas/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationszncmssas/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpekcb345_/parcellationsewwtifg2/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:11:30,193 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:11:31,327 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:11:31,486 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:11:31,486 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:11:31,486 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:11:31,487 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:11:31,487 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:11:31,487 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:11:31,487 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:11:31,489 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:11:31,526 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:11:32,701 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:11:32,800 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsy1bddwuo/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsy1bddwuo/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpekcb345_/parcellationsdwi4f1j0/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:11:40,157 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:11:41,284 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:11:41,445 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 12:11:41,446 - JUNIFER - INFO - Getting element sub-04
+2024-04-05 12:11:41,446 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:11:41,446 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:11:41,446 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:11:41,447 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:11:41,447 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:11:41,447 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:11:41,447 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:11:41,447 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:11:41,447 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:11:41,447 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:11:41,449 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:11:41,485 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:11:42,651 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:11:42,751 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellations62pr2ur2/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellations62pr2ur2/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpbqdqo13w/parcellations85s7asiz/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:11:50,175 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:11:51,308 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:11:51,461 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:11:51,461 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:11:51,461 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:11:51,461 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:11:51,461 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:11:51,461 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:11:51,461 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:11:51,463 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:11:51,501 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:11:52,651 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:11:52,750 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsbwna5eky/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsbwna5eky/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpbqdqo13w/parcellationsl6o9r4o5/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:12:00,015 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:12:01,122 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:12:01,281 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:12:01,281 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:12:01,281 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:12:01,281 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:12:01,281 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:12:01,281 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:12:01,281 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:12:01,283 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:12:01,320 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:12:02,477 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:12:02,577 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsvq3dwl85/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsvq3dwl85/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpbqdqo13w/parcellations_g4_pwwv/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:12:09,903 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:12:11,035 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:12:11,195 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 12:12:11,196 - JUNIFER - INFO - Getting element sub-05
+2024-04-05 12:12:11,196 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:12:11,196 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:12:11,196 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:12:11,197 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:12:11,197 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:12:11,197 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:12:11,197 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:12:11,197 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:12:11,197 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:12:11,197 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:12:11,199 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:12:11,234 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:12:12,403 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:12:12,502 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationssf2ifujq/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationssf2ifujq/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpsbw7hkqg/parcellations759ag0yl/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:12:19,797 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:12:20,946 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:12:21,100 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:12:21,100 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:12:21,100 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:12:21,100 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:12:21,100 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:12:21,101 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:12:21,101 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:12:21,102 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:12:21,140 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:12:22,318 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:12:22,418 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationslh7sp76r/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationslh7sp76r/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpsbw7hkqg/parcellationsea2mwr23/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:12:29,717 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:12:30,829 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:12:30,985 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:12:30,985 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:12:30,985 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:12:30,985 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:12:30,985 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:12:30,985 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:12:30,985 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:12:30,987 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:12:31,023 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:12:32,204 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:12:32,303 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationshp2xlh0n/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationshp2xlh0n/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpsbw7hkqg/parcellations_02k3zt4/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:12:39,640 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:12:40,774 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:12:40,936 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 12:12:40,936 - JUNIFER - INFO - Getting element sub-06
+2024-04-05 12:12:40,937 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:12:40,937 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:12:40,937 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:12:40,937 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:12:40,938 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:12:40,938 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:12:40,938 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:12:40,938 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:12:40,938 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:12:40,938 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:12:40,940 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:12:40,975 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:12:42,145 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:12:42,245 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellations1kphc89m/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellations1kphc89m/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpd4t_dl2s/parcellationskdvp7z9k/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:12:49,874 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:12:51,015 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:12:51,168 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:12:51,168 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:12:51,169 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:12:51,169 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:12:51,169 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:12:51,169 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:12:51,169 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:12:51,171 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:12:51,208 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:12:52,383 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:12:52,482 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationshwg3_eo6/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationshwg3_eo6/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpd4t_dl2s/parcellationsy_6llpi4/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:12:59,755 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:13:00,864 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:13:01,022 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:13:01,022 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:13:01,022 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:13:01,022 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:13:01,023 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:13:01,023 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:13:01,023 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:13:01,025 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:13:01,061 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:13:02,225 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:13:02,323 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellations_u5hdjkh/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellations_u5hdjkh/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpd4t_dl2s/parcellationsx3n3bu_v/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:13:09,606 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:13:10,750 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:13:10,909 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 12:13:10,910 - JUNIFER - INFO - Getting element sub-07
+2024-04-05 12:13:10,910 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:13:10,910 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:13:10,910 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:13:10,911 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:13:10,911 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:13:10,911 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:13:10,911 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:13:10,911 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:13:10,911 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:13:10,911 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:13:10,913 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:13:10,948 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:13:12,134 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:13:12,234 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellations62wgppe5/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellations62wgppe5/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpgr57t_pb/parcellationsy4ms4q38/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:13:19,474 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:13:20,610 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:13:20,763 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:13:20,763 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:13:20,763 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:13:20,764 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:13:20,764 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:13:20,764 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:13:20,764 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:13:20,766 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:13:20,802 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:13:21,977 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:13:22,077 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationszs05wqx9/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationszs05wqx9/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpgr57t_pb/parcellations6m0yv77z/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:13:29,409 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:13:30,529 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:13:30,686 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:13:30,686 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:13:30,686 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:13:30,686 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:13:30,686 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:13:30,686 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:13:30,686 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:13:30,688 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:13:30,723 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:13:31,890 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:13:31,989 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationspp3lv4zl/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationspp3lv4zl/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpgr57t_pb/parcellationsfr392jrn/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:13:39,285 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:13:40,405 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:13:40,564 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 12:13:40,565 - JUNIFER - INFO - Getting element sub-08
+2024-04-05 12:13:40,565 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:13:40,565 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:13:40,565 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:13:40,566 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:13:40,566 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:13:40,566 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:13:40,566 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:13:40,566 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:13:40,566 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:13:40,566 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:13:40,568 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:13:40,603 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:13:41,790 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:13:41,890 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellations1j0g9iee/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellations1j0g9iee/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp7uhgj3ac/parcellationss9dv5c4r/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:13:49,197 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:13:50,339 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:13:50,493 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:13:50,493 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:13:50,493 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:13:50,493 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:13:50,493 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:13:50,493 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:13:50,493 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:13:50,495 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:13:50,531 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:13:51,715 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:13:51,814 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsq60xbdm6/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsq60xbdm6/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp7uhgj3ac/parcellations13or3or3/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:13:59,116 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:14:00,250 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:14:00,408 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:14:00,408 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:14:00,408 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:14:00,408 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:14:00,408 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:14:00,408 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:14:00,408 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:14:00,410 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:14:00,445 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:14:01,618 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:14:01,718 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsopcfvsva/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsopcfvsva/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp7uhgj3ac/parcellationsvn291z4c/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:14:09,030 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:14:10,161 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:14:10,322 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 12:14:10,322 - JUNIFER - INFO - Getting element sub-09
+2024-04-05 12:14:10,322 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:14:10,322 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:14:10,322 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:14:10,323 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:14:10,323 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:14:10,323 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:14:10,324 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:14:10,324 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:14:10,324 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:14:10,324 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:14:10,325 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:14:10,360 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:14:11,532 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:14:11,632 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsydzorfo3/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsydzorfo3/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpto0tnenk/parcellationsn5q5tatp/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:14:18,915 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:14:20,084 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:14:20,238 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:14:20,239 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:14:20,239 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:14:20,239 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:14:20,239 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:14:20,239 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:14:20,239 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:14:20,241 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:14:20,273 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:14:21,461 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:14:21,561 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsc7vigoo2/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsc7vigoo2/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpto0tnenk/parcellations0bdjsb47/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:14:28,921 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:14:30,066 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:14:30,225 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:14:30,225 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:14:30,226 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:14:30,226 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:14:30,226 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:14:30,226 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:14:30,226 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:14:30,228 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:14:30,259 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:14:31,450 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:14:31,549 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationsj7hpy2bb/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationsj7hpy2bb/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpto0tnenk/parcellationsy1b3ct5s/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:14:38,816 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:14:39,963 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:14:40,128 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 12:14:40,128 - JUNIFER - INFO - Getting element sub-10
+2024-04-05 12:14:40,129 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 12:14:40,129 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-04-05 12:14:40,129 - JUNIFER - INFO - VBM_GM is type NIFTI
+2024-04-05 12:14:40,129 - JUNIFER - INFO - Fitting marker Schaefer1000x7_TrimMean80
+2024-04-05 12:14:40,130 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:14:40,130 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:14:40,130 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:14:40,130 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:14:40,130 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:14:40,130 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:14:40,132 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:14:40,164 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:14:41,342 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:14:41,441 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationspe1ha68j/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationspe1ha68j/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpx2lqn0qd/parcellationsgkt7mpi8/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:14:48,725 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:14:49,858 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:14:50,011 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
+2024-04-05 12:14:50,012 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:14:50,012 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:14:50,012 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:14:50,012 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:14:50,012 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:14:50,012 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:14:50,014 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:14:50,046 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:14:51,218 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:14:51,317 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellations78ozbb8k/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellations78ozbb8k/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpx2lqn0qd/parcellationspsfu8kht/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:14:58,612 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:14:59,718 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:14:59,879 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
+2024-04-05 12:14:59,879 - JUNIFER - INFO - Computing VBM_GM
+2024-04-05 12:14:59,880 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 12:14:59,880 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 12:14:59,880 - JUNIFER - INFO -      resolution: 2.0
+2024-04-05 12:14:59,880 - JUNIFER - INFO -      n_rois: 1000
+2024-04-05 12:14:59,880 - JUNIFER - INFO -      yeo_networks: 7
+2024-04-05 12:14:59,882 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_1000Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 12:14:59,913 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 12:15:01,084 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 12:15:01,183 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpvheo6g1x/parcellationslancypup/Schaefer1000x7.nii.gz -r /tmp/tmpvheo6g1x/parcellationslancypup/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpx2lqn0qd/parcellationsld9e3mrb/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 12:15:08,489 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-04-05 12:15:09,612 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp9mckqir1/test.sqlite (multiple output)&gt;
+2024-04-05 12:15:09,772 - JUNIFER - INFO - Marker collection fitting done
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">import</span> <span class="nn">junifer.testing.registry</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">from</span> <span class="nn">junifer.api</span> <span class="kn">import</span> <span class="n">run</span>
+
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datagrabber</span></a> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;OasisVBMTestingDataGrabber&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers</span></a> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7_TrimMean80&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;trim_mean&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method_params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;proportiontocut&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7_Mean&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7_Std&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;std&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;SQLiteFeatureStorage&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">with</span> <a href="https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory" title="tempfile.TemporaryDirectory" class="sphx-glr-backref-module-tempfile sphx-glr-backref-type-py-class"><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span></a><span class="p">()</span> <span class="k">as</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="p">:</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">uri</span></a> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.sqlite&quot;</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">uri</span></a>
+    <span class="n">run</span><span class="p">(</span>
+        <span class="n">workdir</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span><span class="p">,</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datagrabber</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datagrabber</span></a><span class="p">,</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers</span></a><span class="p">,</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (15 minutes 1.169 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-run-gmd-mean-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/042dd4fe6bffbb0ea320b529af464ace/run_run_gmd_mean.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_run_gmd_mean.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/8a40bf470242f11236aa845a28ca568a/run_run_gmd_mean.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_run_gmd_mean.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="run_compute_parcel_mean.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">8.4. </span>Computer Parcel Aggregation.</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="run_datagrabber_bids_datalad.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">8.2. </span>Generic BIDS DataGrabber for datalad.</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Authors of junifer
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/custom.js?v=9868c0c7"></script>
+    </body>
+</html>
