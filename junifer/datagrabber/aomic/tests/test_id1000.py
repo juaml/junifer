@@ -71,41 +71,41 @@ def test_DataladAOMICID1000() -> None:
         # asserts T1w_mask
         assert out["T1w_mask"]["path"].exists()
 
-        # asserts type "probseg_CSF"
-        assert "probseg_CSF" in out
+        # asserts type "VBM_CSF"
+        assert "VBM_CSF" in out
 
         assert (
-            out["probseg_CSF"]["path"].name
+            out["VBM_CSF"]["path"].name
             == f"sub-{test_element}_space-MNI152NLin2009cAsym_label-"
             "CSF_probseg.nii.gz"
         )
 
-        assert out["probseg_CSF"]["path"].exists()
-        assert out["probseg_CSF"]["path"].is_file()
+        assert out["VBM_CSF"]["path"].exists()
+        assert out["VBM_CSF"]["path"].is_file()
 
-        # asserts type "probseg_GM"
-        assert "probseg_GM" in out
+        # asserts type "VBM_GM"
+        assert "VBM_GM" in out
 
         assert (
-            out["probseg_GM"]["path"].name
+            out["VBM_GM"]["path"].name
             == f"sub-{test_element}_space-MNI152NLin2009cAsym_label-"
             "GM_probseg.nii.gz"
         )
 
-        assert out["probseg_GM"]["path"].exists()
-        assert out["probseg_GM"]["path"].is_file()
+        assert out["VBM_GM"]["path"].exists()
+        assert out["VBM_GM"]["path"].is_file()
 
-        # asserts type "probseg_WM"
-        assert "probseg_WM" in out
+        # asserts type "VBM_WM"
+        assert "VBM_WM" in out
 
         assert (
-            out["probseg_WM"]["path"].name
+            out["VBM_WM"]["path"].name
             == f"sub-{test_element}_space-MNI152NLin2009cAsym_label-"
             "WM_probseg.nii.gz"
         )
 
-        assert out["probseg_WM"]["path"].exists()
-        assert out["probseg_WM"]["path"].is_file()
+        assert out["VBM_WM"]["path"].exists()
+        assert out["VBM_WM"]["path"].is_file()
 
         # asserts type "DWI"
         assert "DWI" in out
@@ -132,13 +132,13 @@ def test_DataladAOMICID1000() -> None:
         "BOLD",
         "BOLD_confounds",
         "T1w",
-        "probseg_CSF",
-        "probseg_GM",
-        "probseg_WM",
+        "VBM_CSF",
+        "VBM_GM",
+        "VBM_WM",
         "DWI",
         ["BOLD", "BOLD_confounds"],
-        ["T1w", "probseg_CSF"],
-        ["probseg_GM", "probseg_WM"],
+        ["T1w", "VBM_CSF"],
+        ["VBM_GM", "VBM_WM"],
         ["DWI", "BOLD"],
     ],
 )

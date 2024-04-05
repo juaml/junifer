@@ -29,9 +29,9 @@ def test_JuselessUCLA() -> None:
             "BOLD",
             "BOLD_confounds",
             "T1w",
-            "probseg_CSF",
-            "probseg_GM",
-            "probseg_WM",
+            "VBM_CSF",
+            "VBM_GM",
+            "VBM_WM",
         ]
 
         for t in types:
@@ -45,12 +45,12 @@ def test_JuselessUCLA() -> None:
         "BOLD",
         "BOLD_confounds",
         "T1w",
-        "probseg_CSF",
-        "probseg_GM",
-        "probseg_WM",
+        "VBM_CSF",
+        "VBM_GM",
+        "VBM_WM",
         ["BOLD", "BOLD_confounds"],
-        ["T1w", "probseg_CSF"],
-        ["probseg_GM", "probseg_WM"],
+        ["T1w", "VBM_CSF"],
+        ["VBM_GM", "VBM_WM"],
         ["BOLD", "T1w"],
     ],
 )
