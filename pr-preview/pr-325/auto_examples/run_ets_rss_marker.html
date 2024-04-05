@@ -291,14 +291,14 @@ of the edge-wise timeseries using the Schaefer parcellation
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-04-05 13:05:04,683 - JUNIFER - INFO - ===== Lib Versions =====
-2024-04-05 13:05:04,683 - JUNIFER - INFO - numpy: 1.26.4
-2024-04-05 13:05:04,683 - JUNIFER - INFO - scipy: 1.11.4
-2024-04-05 13:05:04,683 - JUNIFER - INFO - pandas: 2.1.4
-2024-04-05 13:05:04,683 - JUNIFER - INFO - nilearn: 0.10.2
-2024-04-05 13:05:04,683 - JUNIFER - INFO - nibabel: 5.2.1
-2024-04-05 13:05:04,683 - JUNIFER - INFO - junifer: 0.0.4.dev816
-2024-04-05 13:05:04,683 - JUNIFER - INFO - ========================
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-04-05 14:53:58,752 - JUNIFER - INFO - ===== Lib Versions =====
+2024-04-05 14:53:58,752 - JUNIFER - INFO - numpy: 1.26.4
+2024-04-05 14:53:58,752 - JUNIFER - INFO - scipy: 1.11.4
+2024-04-05 14:53:58,752 - JUNIFER - INFO - pandas: 2.1.4
+2024-04-05 14:53:58,752 - JUNIFER - INFO - nilearn: 0.10.2
+2024-04-05 14:53:58,752 - JUNIFER - INFO - nibabel: 5.2.1
+2024-04-05 14:53:58,752 - JUNIFER - INFO - junifer: 0.0.4.dev829
+2024-04-05 14:53:58,752 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>Define the DataGrabber interface</p>
@@ -349,63 +349,73 @@ At the end you can read the extracted data into a <code class="docutils literal 
     <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;BOLD_Schaefer100x17_RSSETS&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-04-05 13:05:04,684 - JUNIFER - INFO - Getting element sub001
-2024-04-05 13:05:07,133 - JUNIFER - INFO - Fitting pipeline
-2024-04-05 13:05:07,134 - JUNIFER - INFO - Reading BOLD from /tmp/tmpndvwls52/sub001_bold.nii.gz
-2024-04-05 13:05:07,134 - JUNIFER - INFO - BOLD is type NIFTI
-2024-04-05 13:05:07,134 - JUNIFER - INFO - Reading T1w from /tmp/tmpndvwls52/sub001_T1w.nii.gz
-2024-04-05 13:05:07,135 - JUNIFER - INFO - T1w is type NIFTI
-2024-04-05 13:05:07,135 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
-2024-04-05 13:05:07,135 - JUNIFER - INFO - Computing BOLD
-2024-04-05 13:05:07,136 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2024-04-05 13:05:07,136 - JUNIFER - INFO - Parcellation parameters:
-2024-04-05 13:05:07,136 - JUNIFER - INFO -      resolution: 3.0
-2024-04-05 13:05:07,136 - JUNIFER - INFO -      n_rois: 100
-2024-04-05 13:05:07,136 - JUNIFER - INFO -      yeo_networks: 17
-2024-04-05 13:05:07,136 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-04-05 14:53:58,753 - JUNIFER - INFO - Validating Marker Collection
+2024-04-05 14:53:58,753 - JUNIFER - INFO - DataGrabber output type: [&#39;BOLD&#39;, &#39;T1w&#39;]
+2024-04-05 14:53:58,753 - JUNIFER - INFO - Validating Data Reader:
+2024-04-05 14:53:58,753 - JUNIFER - INFO - Data Reader output type: [&#39;BOLD&#39;, &#39;T1w&#39;]
+2024-04-05 14:53:58,753 - JUNIFER - INFO - Validating Marker: Schaefer100x17_RSSETS
+2024-04-05 14:53:58,753 - JUNIFER - INFO - Marker output type: [&#39;timeseries&#39;]
+2024-04-05 14:53:58,753 - JUNIFER - INFO - Validating storage for Schaefer100x17_RSSETS
+2024-04-05 14:53:58,753 - JUNIFER - INFO - Validating Marker: Schaefer200x17_RSSETS
+2024-04-05 14:53:58,753 - JUNIFER - INFO - Marker output type: [&#39;timeseries&#39;]
+2024-04-05 14:53:58,753 - JUNIFER - INFO - Validating storage for Schaefer200x17_RSSETS
+2024-04-05 14:53:58,754 - JUNIFER - INFO - Getting element sub001
+2024-04-05 14:54:01,186 - JUNIFER - INFO - Fitting pipeline
+2024-04-05 14:54:01,186 - JUNIFER - INFO - Reading BOLD from /tmp/tmpq9hto5gs/sub001_bold.nii.gz
+2024-04-05 14:54:01,186 - JUNIFER - INFO - BOLD is type NIFTI
+2024-04-05 14:54:01,187 - JUNIFER - INFO - Reading T1w from /tmp/tmpq9hto5gs/sub001_T1w.nii.gz
+2024-04-05 14:54:01,187 - JUNIFER - INFO - T1w is type NIFTI
+2024-04-05 14:54:01,187 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
+2024-04-05 14:54:01,188 - JUNIFER - INFO - Computing BOLD
+2024-04-05 14:54:01,188 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 14:54:01,188 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 14:54:01,188 - JUNIFER - INFO -      resolution: 3.0
+2024-04-05 14:54:01,188 - JUNIFER - INFO -      n_rois: 100
+2024-04-05 14:54:01,188 - JUNIFER - INFO -      yeo_networks: 17
+2024-04-05 14:54:01,188 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_17Networks_order.txt ...
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2024-04-05 13:05:07,192 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-2024-04-05 13:05:07,223 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-2024-04-05 13:05:08,338 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-2024-04-05 13:05:08,436 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpzh4aaqfy/parcellationsz8b1blg4/Schaefer100x17.nii.gz -r /tmp/tmpzh4aaqfy/parcellationsz8b1blg4/MNI152Lin_T1w_3.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp5xkjp7kx/parcellationsw8d05531/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-2024-04-05 13:05:09,843 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+2024-04-05 14:54:01,673 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 14:54:01,704 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 14:54:02,843 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 14:54:02,942 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpa0sbus_z/parcellationsohz03fsu/Schaefer100x17.nii.gz -r /tmp/tmpa0sbus_z/parcellationsohz03fsu/MNI152Lin_T1w_3.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmponzhhczk/parcellationsbn58wlb9/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 14:54:04,347 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 b&#39;&#39;
-2024-04-05 13:05:12,879 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpj2wapfxz/test.sqlite (multiple output)&gt;
-2024-04-05 13:05:12,897 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
-2024-04-05 13:05:12,897 - JUNIFER - INFO - Computing BOLD
-2024-04-05 13:05:12,898 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-2024-04-05 13:05:12,898 - JUNIFER - INFO - Parcellation parameters:
-2024-04-05 13:05:12,898 - JUNIFER - INFO -      resolution: 3.0
-2024-04-05 13:05:12,898 - JUNIFER - INFO -      n_rois: 200
-2024-04-05 13:05:12,898 - JUNIFER - INFO -      yeo_networks: 17
-2024-04-05 13:05:12,898 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+2024-04-05 14:54:07,402 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp8uv49chq/test.sqlite (multiple output)&gt;
+2024-04-05 14:54:07,426 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
+2024-04-05 14:54:07,426 - JUNIFER - INFO - Computing BOLD
+2024-04-05 14:54:07,426 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-04-05 14:54:07,427 - JUNIFER - INFO - Parcellation parameters:
+2024-04-05 14:54:07,427 - JUNIFER - INFO -      resolution: 3.0
+2024-04-05 14:54:07,427 - JUNIFER - INFO -      n_rois: 200
+2024-04-05 14:54:07,427 - JUNIFER - INFO -      yeo_networks: 17
+2024-04-05 14:54:07,427 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_200Parcels_17Networks_order.txt ...
  ...done. (0 seconds, 0 min)
 Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz ...
  ...done. (0 seconds, 0 min)
-2024-04-05 13:05:12,952 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-2024-04-05 13:05:12,984 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-2024-04-05 13:05:14,097 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-2024-04-05 13:05:14,195 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpzh4aaqfy/parcellationswn8ag4_0/Schaefer200x17.nii.gz -r /tmp/tmpzh4aaqfy/parcellationswn8ag4_0/MNI152Lin_T1w_3.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp5xkjp7kx/parcellations11q9zmey/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-2024-04-05 13:05:16,274 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+2024-04-05 14:54:07,733 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-04-05 14:54:07,767 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-04-05 14:54:08,895 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-04-05 14:54:08,994 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpa0sbus_z/parcellationsc5qrax_k/Schaefer200x17.nii.gz -r /tmp/tmpa0sbus_z/parcellationsc5qrax_k/MNI152Lin_T1w_3.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmponzhhczk/parcellationsa0ti0m8t/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-04-05 14:54:11,023 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 b&#39;&#39;
-2024-04-05 13:05:18,665 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpj2wapfxz/test.sqlite (multiple output)&gt;
-2024-04-05 13:05:18,685 - JUNIFER - INFO - Marker collection fitting done
-2024-04-05 13:05:18,687 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
-2024-04-05 13:05:18,687 - JUNIFER - INFO - Collecting data from /tmp/tmpj2wapfxz/*test.sqlite
+2024-04-05 14:54:13,475 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmp8uv49chq/test.sqlite (multiple output)&gt;
+2024-04-05 14:54:13,501 - JUNIFER - INFO - Marker collection fitting done
+2024-04-05 14:54:13,503 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
+2024-04-05 14:54:13,503 - JUNIFER - INFO - Collecting data from /tmp/tmp8uv49chq/*test.sqlite
 
 file: 0it [00:00, ?it/s]
 
 feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-feature: 100%|██████████| 2/2 [00:00&lt;00:00, 77.17it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 61.55it/s]
 
-file: 1it [00:00, 26.70it/s]
-2024-04-05 13:05:18,725 - JUNIFER - INFO - Collect done
+file: 1it [00:00, 21.93it/s]
+2024-04-05 14:54:13,549 - JUNIFER - INFO - Collect done
 {&#39;1d81ad1f44011f6c4d7e180b2e69045a&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;SPMAuditoryTestingDataGrabber&#39;, &#39;types&#39;: [&#39;BOLD&#39;, &#39;T1w&#39;]}, &#39;dependencies&#39;: {&#39;nilearn&#39;: &#39;0.10.2&#39;}, &#39;datareader&#39;: {&#39;class&#39;: &#39;DefaultDataReader&#39;}, &#39;type&#39;: &#39;BOLD&#39;, &#39;marker&#39;: {&#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;class&#39;: &#39;RSSETSMarker&#39;, &#39;masks&#39;: None, &#39;name&#39;: &#39;Schaefer100x17_RSSETS&#39;, &#39;parcellation&#39;: &#39;Schaefer100x17&#39;}, &#39;_element_keys&#39;: [&#39;subject&#39;], &#39;name&#39;: &#39;BOLD_Schaefer100x17_RSSETS&#39;}, &#39;24fef87855ff678fc17e53f2c2ab5e6e&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;SPMAuditoryTestingDataGrabber&#39;, &#39;types&#39;: [&#39;BOLD&#39;, &#39;T1w&#39;]}, &#39;dependencies&#39;: {&#39;nilearn&#39;: &#39;0.10.2&#39;}, &#39;datareader&#39;: {&#39;class&#39;: &#39;DefaultDataReader&#39;}, &#39;type&#39;: &#39;BOLD&#39;, &#39;marker&#39;: {&#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;class&#39;: &#39;RSSETSMarker&#39;, &#39;masks&#39;: None, &#39;name&#39;: &#39;Schaefer200x17_RSSETS&#39;, &#39;parcellation&#39;: &#39;Schaefer200x17&#39;}, &#39;_element_keys&#39;: [&#39;subject&#39;], &#39;name&#39;: &#39;BOLD_Schaefer200x17_RSSETS&#39;}}
 </pre></div>
 </div>
@@ -468,7 +478,7 @@ file: 1it [00:00, 26.70it/s]
 </div>
 </div>
 <br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.063 seconds)</p>
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 14.819 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-ets-rss-marker-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/0129f8507efff39850cf153c51edb3ab/run_ets_rss_marker.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_ets_rss_marker.py</span></code></a></p>
