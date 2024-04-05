@@ -96,14 +96,14 @@ def test_compute_brain_mask_for_native(mask_type: str) -> None:
     """
     with DMCC13Benchmark(
         types=["BOLD"],
-        sessions=["wave1bas"],
+        sessions=["ses-wave1bas"],
         tasks=["Rest"],
         phase_encodings=["AP"],
         runs=["1"],
         native_t1w=True,
     ) as dg:
         element_data = DefaultDataReader().fit_transform(
-            dg[("f1031ax", "wave1bas", "Rest", "AP", "1")]
+            dg[("sub-f1031ax", "ses-wave1bas", "Rest", "AP", "1")]
         )
         mask = compute_brain_mask(
             target_data=element_data["BOLD"],

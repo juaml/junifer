@@ -35,7 +35,7 @@ def test_AntsApplyTransformsWarper_preprocess() -> None:
     """Test AntsApplyTransformsWarper preprocess."""
     with DMCC13Benchmark(
         types=["BOLD", "T1w", "Warp"],
-        sessions=["wave1bas"],
+        sessions=["ses-wave1bas"],
         tasks=["Rest"],
         phase_encodings=["AP"],
         runs=["1"],
@@ -43,7 +43,7 @@ def test_AntsApplyTransformsWarper_preprocess() -> None:
     ) as dg:
         # Read data
         element_data = DefaultDataReader().fit_transform(
-            dg[("f9057kp", "wave1bas", "Rest", "AP", "1")]
+            dg[("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1")]
         )
         # Preprocess data
         data_type, data = _AntsApplyTransformsWarper(

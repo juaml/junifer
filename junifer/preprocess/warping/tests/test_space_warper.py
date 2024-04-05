@@ -70,13 +70,13 @@ def test_SpaceWarper_errors(
         [
             DMCC13Benchmark(
                 types=["BOLD", "T1w", "Warp"],
-                sessions=["wave1bas"],
+                sessions=["ses-wave1bas"],
                 tasks=["Rest"],
                 phase_encodings=["AP"],
                 runs=["1"],
                 native_t1w=True,
             ),
-            ("f9057kp", "wave1bas", "Rest", "AP", "1"),
+            ("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1"),
             "ants",
         ],
         [
@@ -135,25 +135,25 @@ def test_SpaceWarper_native(
         [
             DMCC13Benchmark(
                 types=["T1w"],
-                sessions=["wave1bas"],
+                sessions=["ses-wave1bas"],
                 tasks=["Rest"],
                 phase_encodings=["AP"],
                 runs=["1"],
                 native_t1w=False,
             ),
-            ("f9057kp", "wave1bas", "Rest", "AP", "1"),
+            ("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1"),
             "MNI152NLin2009aAsym",
         ],
         [
             DMCC13Benchmark(
                 types=["T1w"],
-                sessions=["wave1bas"],
+                sessions=["ses-wave1bas"],
                 tasks=["Rest"],
                 phase_encodings=["AP"],
                 runs=["1"],
                 native_t1w=False,
             ),
-            ("f9057kp", "wave1bas", "Rest", "AP", "1"),
+            ("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1"),
             "MNI152NLin6Asym",
         ],
     ],

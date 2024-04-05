@@ -43,8 +43,8 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         patterns = {
             "BOLD": {
                 "pattern": (
-                    "derivatives/fmriprep/sub-{subject}/func/"
-                    "sub-{subject}_task-moviewatching_"
+                    "derivatives/fmriprep/{subject}/func/"
+                    "{subject}_task-moviewatching_"
                     "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
@@ -52,16 +52,16 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
             },
             "BOLD_confounds": {
                 "pattern": (
-                    "derivatives/fmriprep/sub-{subject}/func/"
-                    "sub-{subject}_task-moviewatching_"
+                    "derivatives/fmriprep/{subject}/func/"
+                    "{subject}_task-moviewatching_"
                     "desc-confounds_regressors.tsv"
                 ),
                 "format": "fmriprep",
             },
             "BOLD_mask": {
                 "pattern": (
-                    "derivatives/fmriprep/sub-{subject}/func/"
-                    "sub-{subject}_task-moviewatching_"
+                    "derivatives/fmriprep/{subject}/func/"
+                    "{subject}_task-moviewatching_"
                     "space-MNI152NLin2009cAsym_"
                     "desc-brain_mask.nii.gz"
                 ),
@@ -69,8 +69,8 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
             },
             "T1w": {
                 "pattern": (
-                    "derivatives/fmriprep/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_"
+                    "derivatives/fmriprep/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_"
                     "desc-preproc_T1w.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
@@ -78,40 +78,40 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
             },
             "T1w_mask": {
                 "pattern": (
-                    "derivatives/fmriprep/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_"
+                    "derivatives/fmriprep/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_"
                     "desc-brain_mask.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
             "VBM_CSF": {
                 "pattern": (
-                    "derivatives/fmriprep/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_label-"
+                    "derivatives/fmriprep/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_label-"
                     "CSF_probseg.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
             "VBM_GM": {
                 "pattern": (
-                    "derivatives/fmriprep/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_label-"
+                    "derivatives/fmriprep/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_label-"
                     "GM_probseg.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
             "VBM_WM": {
                 "pattern": (
-                    "derivatives/fmriprep/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_label-"
+                    "derivatives/fmriprep/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_label-"
                     "WM_probseg.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
             "DWI": {
                 "pattern": (
-                    "derivatives/dwipreproc/sub-{subject}/dwi/"
-                    "sub-{subject}_desc-preproc_dwi.nii.gz"
+                    "derivatives/dwipreproc/{subject}/dwi/"
+                    "{subject}_desc-preproc_dwi.nii.gz"
                 ),
             },
         }
@@ -123,23 +123,23 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                 {
                     "T1w": {
                         "pattern": (
-                            "derivatives/fmriprep/sub-{subject}/anat/"
-                            "sub-{subject}_desc-preproc_T1w.nii.gz"
+                            "derivatives/fmriprep/{subject}/anat/"
+                            "{subject}_desc-preproc_T1w.nii.gz"
                         ),
                         "space": "native",
                         "mask_item": "T1w_mask",
                     },
                     "T1w_mask": {
                         "pattern": (
-                            "derivatives/fmriprep/sub-{subject}/anat/"
-                            "sub-{subject}_desc-brain_mask.nii.gz"
+                            "derivatives/fmriprep/{subject}/anat/"
+                            "{subject}_desc-brain_mask.nii.gz"
                         ),
                         "space": "native",
                     },
                     "Warp": {
                         "pattern": (
-                            "derivatives/fmriprep/sub-{subject}/anat/"
-                            "sub-{subject}_from-MNI152NLin2009cAsym_to-T1w_"
+                            "derivatives/fmriprep/{subject}/anat/"
+                            "{subject}_from-MNI152NLin2009cAsym_to-T1w_"
                             "mode-image_xfm.h5"
                         ),
                         "src": "MNI152NLin2009cAsym",

@@ -34,7 +34,7 @@ class JuselessDataladUKBVBM(PatternDataladDataGrabber):
         replacements = ["subject", "session"]
         patterns = {
             "VBM_GM": {
-                "pattern": "m0wp1sub-{subject}_ses-{session}_T1w.nii.gz",
+                "pattern": "m0wp1{subject}_ses-{session}_T1w.nii.gz",
                 "space": "IXI549Space",
             },
         }

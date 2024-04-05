@@ -34,7 +34,7 @@ def test_DataladAOMICID1000() -> None:
 
         assert (
             out["BOLD"]["path"].name
-            == f"sub-{test_element}_task-moviewatching_"
+            == f"{test_element}_task-moviewatching_"
             "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
         )
 
@@ -46,7 +46,7 @@ def test_DataladAOMICID1000() -> None:
 
         assert (
             out["BOLD_confounds"]["path"].name
-            == f"sub-{test_element}_task-moviewatching_"
+            == f"{test_element}_task-moviewatching_"
             "desc-confounds_regressors.tsv"
         )
 
@@ -61,7 +61,7 @@ def test_DataladAOMICID1000() -> None:
 
         assert (
             out["T1w"]["path"].name
-            == f"sub-{test_element}_space-MNI152NLin2009cAsym_"
+            == f"{test_element}_space-MNI152NLin2009cAsym_"
             "desc-preproc_T1w.nii.gz"
         )
 
@@ -76,7 +76,7 @@ def test_DataladAOMICID1000() -> None:
 
         assert (
             out["VBM_CSF"]["path"].name
-            == f"sub-{test_element}_space-MNI152NLin2009cAsym_label-"
+            == f"{test_element}_space-MNI152NLin2009cAsym_label-"
             "CSF_probseg.nii.gz"
         )
 
@@ -88,7 +88,7 @@ def test_DataladAOMICID1000() -> None:
 
         assert (
             out["VBM_GM"]["path"].name
-            == f"sub-{test_element}_space-MNI152NLin2009cAsym_label-"
+            == f"{test_element}_space-MNI152NLin2009cAsym_label-"
             "GM_probseg.nii.gz"
         )
 
@@ -100,7 +100,7 @@ def test_DataladAOMICID1000() -> None:
 
         assert (
             out["VBM_WM"]["path"].name
-            == f"sub-{test_element}_space-MNI152NLin2009cAsym_label-"
+            == f"{test_element}_space-MNI152NLin2009cAsym_label-"
             "WM_probseg.nii.gz"
         )
 
@@ -112,7 +112,7 @@ def test_DataladAOMICID1000() -> None:
 
         assert (
             out["DWI"]["path"].name
-            == f"sub-{test_element}_desc-preproc_dwi.nii.gz"
+            == f"{test_element}_desc-preproc_dwi.nii.gz"
         )
 
         assert out["DWI"]["path"].exists()

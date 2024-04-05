@@ -45,7 +45,7 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         patterns = {
             "VBM_GM": {
                 "pattern": (
-                    "{site}/sub-{subject}/mri/m0wp1sub-{subject}.nii.gz"
+                    "{site}/{subject}/mri/m0wp1{subject}.nii.gz"
                 ),
                 "space": "IXI549Space",
             },

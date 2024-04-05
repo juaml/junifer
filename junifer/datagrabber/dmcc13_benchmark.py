@@ -29,8 +29,8 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
            "VBM_WM"} or a list of the options, optional
         DMCC data types. If None, all available data types are selected.
         (default None).
-    sessions: {"wave1bas", "wave1pro", "wave1rea"} or list of the options, \
-               optional
+    sessions: {"ses-wave1bas", "ses-wave1pro", "ses-wave1rea"} or list of \
+            the options, optional
         DMCC sessions. If None, all available sessions are selected
         (default None).
     tasks: {"Rest", "Axcpt", "Cuedts", "Stern", "Stroop"} or \
@@ -68,9 +68,9 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
     ) -> None:
         # Declare all sessions
         all_sessions = [
-            "wave1bas",
-            "wave1pro",
-            "wave1rea",
+            "ses-wave1bas",
+            "ses-wave1pro",
+            "ses-wave1rea",
         ]
         # Set default sessions
         if sessions is None:
@@ -141,8 +141,8 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         patterns = {
             "BOLD": {
                 "pattern": (
-                    "derivatives/fmriprep-1.3.2/sub-{subject}/ses-{session}/"
-                    "func/sub-{subject}_ses-{session}_task-{task}_acq-mb4"
+                    "derivatives/fmriprep-1.3.2/{subject}/{session}/"
+                    "func/{subject}_{session}_task-{task}_acq-mb4"
                     "{phase_encoding}_run-{run}_"
                     "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
                 ),
@@ -151,16 +151,16 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             },
             "BOLD_confounds": {
                 "pattern": (
-                    "derivatives/fmriprep-1.3.2/sub-{subject}/ses-{session}/"
-                    "func/sub-{subject}_ses-{session}_task-{task}_acq-mb4"
+                    "derivatives/fmriprep-1.3.2/{subject}/{session}/"
+                    "func/{subject}_{session}_task-{task}_acq-mb4"
                     "{phase_encoding}_run-{run}_desc-confounds_regressors.tsv"
                 ),
                 "format": "fmriprep",
             },
             "BOLD_mask": {
                 "pattern": (
-                    "derivatives/fmriprep-1.3.2/sub-{subject}/ses-{session}/"
-                    "/func/sub-{subject}_ses-{session}_task-{task}_acq-mb4"
+                    "derivatives/fmriprep-1.3.2/{subject}/{session}/"
+                    "/func/{subject}_{session}_task-{task}_acq-mb4"
                     "{phase_encoding}_run-{run}_"
                     "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
                 ),
@@ -168,37 +168,37 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             },
             "T1w": {
                 "pattern": (
-                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz"
+                    "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
                 "mask_item": "T1w_mask",
             },
             "T1w_mask": {
                 "pattern": (
-                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+                    "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
             "VBM_CSF": {
                 "pattern": (
-                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_label-CSF_probseg.nii.gz"
+                    "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_label-CSF_probseg.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
             "VBM_GM": {
                 "pattern": (
-                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz"
+                    "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
             "VBM_WM": {
                 "pattern": (
-                    "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                    "sub-{subject}_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz"
+                    "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                    "{subject}_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
@@ -211,23 +211,23 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                 {
                     "T1w": {
                         "pattern": (
-                            "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                            "sub-{subject}_desc-preproc_T1w.nii.gz"
+                            "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                            "{subject}_desc-preproc_T1w.nii.gz"
                         ),
                         "space": "native",
                         "mask_item": "T1w_mask",
                     },
                     "T1w_mask": {
                         "pattern": (
-                            "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                            "sub-{subject}_desc-brain_mask.nii.gz"
+                            "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                            "{subject}_desc-brain_mask.nii.gz"
                         ),
                         "space": "native",
                     },
                     "Warp": {
                         "pattern": (
-                            "derivatives/fmriprep-1.3.2/sub-{subject}/anat/"
-                            "sub-{subject}_from-MNI152NLin2009cAsym_to-T1w_"
+                            "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                            "{subject}_from-MNI152NLin2009cAsym_to-T1w_"
                             "mode-image_xfm.h5"
                         ),
                         "src": "MNI152NLin2009cAsym",
@@ -268,7 +268,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         ----------
         subject : str
             The subject ID.
-        session : {"wave1bas", "wave1pro", "wave1rea"}
+        session : {"ses-wave1bas", "ses-wave1pro", "ses-wave1rea"}
             The session to get.
         task : {"Rest", "Axcpt", "Cuedts", "Stern", "Stroop"}
             The task to get.
@@ -323,25 +323,25 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
 
         """
         subjects = [
-            "f1031ax",
-            "f1552xo",
-            "f1659oa",
-            "f1670rz",
-            "f1951tt",
-            "f3300jh",
-            "f3720ca",
-            "f5004cr",
-            "f5407sl",
-            "f5416zj",
-            "f8113do",
-            "f8570ui",
-            "f9057kp",
+            "sub-f1031ax",
+            "sub-f1552xo",
+            "sub-f1659oa",
+            "sub-f1670rz",
+            "sub-f1951tt",
+            "sub-f3300jh",
+            "sub-f3720ca",
+            "sub-f5004cr",
+            "sub-f5407sl",
+            "sub-f5416zj",
+            "sub-f8113do",
+            "sub-f8570ui",
+            "sub-f9057kp",
         ]
         elems = []
         # For wave1bas session
         for subject, session, task, phase_encoding in product(
             subjects,
-            ["wave1bas"],
+            ["ses-wave1bas"],
             self.tasks,
             self.phase_encodings,
         ):
@@ -350,13 +350,13 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             else:
                 run = "2"
             # Bypass for f1951tt not having run 2 for Rest
-            if subject == "f1951tt" and task == "Rest" and run == "2":
+            if subject == "sub-f1951tt" and task == "Rest" and run == "2":
                 continue
             elems.append((subject, session, task, phase_encoding, run))
         # For other sessions
         for subject, session, task, phase_encoding in product(
             subjects,
-            ["wave1pro", "wave1rea"],
+            ["ses-wave1pro", "ses-wave1rea"],
             ["Rest"],
             self.phase_encodings,
         ):
@@ -365,7 +365,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             else:
                 run = "2"
             # Bypass for f5416zj for not having wave1rea session
-            if subject == "f5416zj" and session == "wave1rea":
+            if subject == "sub-f5416zj" and session == "ses-wave1rea":
                 continue
             elems.append((subject, session, task, phase_encoding, run))
 

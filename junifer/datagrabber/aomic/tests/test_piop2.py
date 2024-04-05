@@ -50,7 +50,7 @@ def test_DataladAOMICPIOP2(tasks: Optional[str]) -> None:
 
         new_task = f"{task}_acq-seq"
         assert (
-            out["BOLD"]["path"].name == f"sub-{sub}_task-{new_task}_"
+            out["BOLD"]["path"].name == f"{sub}_task-{new_task}_"
             "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
         )
 
@@ -61,7 +61,7 @@ def test_DataladAOMICPIOP2(tasks: Optional[str]) -> None:
         assert "BOLD_confounds" in out
 
         assert (
-            out["BOLD_confounds"]["path"].name == f"sub-{sub}_task-{new_task}_"
+            out["BOLD_confounds"]["path"].name == f"{sub}_task-{new_task}_"
             "desc-confounds_regressors.tsv"
         )
 
@@ -75,7 +75,7 @@ def test_DataladAOMICPIOP2(tasks: Optional[str]) -> None:
         assert "T1w" in out
 
         assert (
-            out["T1w"]["path"].name == f"sub-{sub}_space-MNI152NLin2009cAsym_"
+            out["T1w"]["path"].name == f"{sub}_space-MNI152NLin2009cAsym_"
             "desc-preproc_T1w.nii.gz"
         )
 
@@ -90,7 +90,7 @@ def test_DataladAOMICPIOP2(tasks: Optional[str]) -> None:
 
         assert (
             out["VBM_CSF"]["path"].name
-            == f"sub-{sub}_space-MNI152NLin2009cAsym_label-"
+            == f"{sub}_space-MNI152NLin2009cAsym_label-"
             "CSF_probseg.nii.gz"
         )
 
@@ -102,7 +102,7 @@ def test_DataladAOMICPIOP2(tasks: Optional[str]) -> None:
 
         assert (
             out["VBM_GM"]["path"].name
-            == f"sub-{sub}_space-MNI152NLin2009cAsym_label-"
+            == f"{sub}_space-MNI152NLin2009cAsym_label-"
             "GM_probseg.nii.gz"
         )
 
@@ -114,7 +114,7 @@ def test_DataladAOMICPIOP2(tasks: Optional[str]) -> None:
 
         assert (
             out["VBM_WM"]["path"].name
-            == f"sub-{sub}_space-MNI152NLin2009cAsym_label-"
+            == f"{sub}_space-MNI152NLin2009cAsym_label-"
             "WM_probseg.nii.gz"
         )
 
@@ -124,7 +124,7 @@ def test_DataladAOMICPIOP2(tasks: Optional[str]) -> None:
         # asserts type "DWI"
         assert "DWI" in out
 
-        assert out["DWI"]["path"].name == f"sub-{sub}_desc-preproc_dwi.nii.gz"
+        assert out["DWI"]["path"].name == f"{sub}_desc-preproc_dwi.nii.gz"
 
         assert out["DWI"]["path"].exists()
         assert out["DWI"]["path"].is_file()
