@@ -8,8 +8,232 @@ What's new
 
 .. towncrier release notes start
 
+Junifer 0.0.4 (2024-04-05)
+--------------------------
+
+Bugfixes
+^^^^^^^^
+
+- Make copying of assets in ``with`` block of YAML, relative to YAML and not to
+  current working directory by `Fede Raimondo`_ and `Synchon Mandal`_
+  (:gh:`224`)
+- Adapt ``junifer queue`` to properly use HTCondor >=10.4.0
+  ``condor_submit_dag`` by `Fede Raimondo`_ and `Synchon Mandal`_ (:gh:`233`)
+- Use 1 instead of 0 for successful FSL commands in ``_check_fsl()`` by
+  `Synchon Mandal`_ (:gh:`272`)
+- Store native warped parcellations, coordinates and masks in element-scoped
+  tempdirs for the pipeline to work by `Synchon Mandal`_ (:gh:`274`)
+- Change interpolation scheme for parcel and mask native space transformation
+  to nearest neighbour by `Synchon Mandal`_ (:gh:`276`)
+- Bypass FSL ``std2imgcoord`` stdin bug and use recommended piped input for
+  coordinates transformation by `Synchon Mandal`_ (:gh:`278`)
+- Add ``-std`` to FSL ``std2imgcoord`` for coordinates transformation by
+  `Synchon Mandal`_ (:gh:`280`)
+- Replace FSL ``std2imgcoord`` with ``img2imgcoord`` as the former is incorrect
+  for coordinates transformation to other template spaces. (:gh:`281`)
+- Propagate ReHo and fALFF maps, for aggregation to convert to other template
+  spaces when required by `Synchon Mandal`_ (:gh:`282`)
+- Allow :class:`junifer.pipeline.WorkDirManager` to accept str via the
+  ``workdir`` parameter by `Synchon Mandal`_ (:gh:`283`)
+- Avoid warping mask preprocessed with :class:`.fMRIPrepConfoundRemover` and
+  used by markers with ``mask="inherit"`` in subject-native template space by
+  `Fede Raimondo`_ and `Synchon Mandal`_ (:gh:`284`)
+- Pass down input path if input space is "native" for ``ReHoEstimator`` and
+  ``ALFFEstimator``, else use respective compute maps by `Fede Raimondo`_ and
+  `Synchon Mandal`_ (:gh:`286`)
+- Fix :class:`.HTCondorAdapter`'s script generation to use double quotes
+  instead of single quotes for HTCondor's ``VARS`` by `Synchon Mandal`_
+  (:gh:`312`)
+- Fix element access for :class:`.DMCC13Benchmark` DataGrabber by `Synchon
+  Mandal`_ (:gh:`314`)
+- Force ``str`` dtype when parsing elements from file by `Synchon Mandal`_
+  (:gh:`322`)
+
+
+API Changes
+^^^^^^^^^^^
+
+- Rename ``Power`` coordinates to ``Power2011`` by `Synchon Mandal`_
+  (:gh:`245`)
+- Add ``feature_md5`` argument to :func:`.read_transform()` by `Synchon
+  Mandal`_ (:gh:`248`)
+- Add ``native_t1w`` parameter to :class:`.DataladAOMICID1000`,
+  :class:`.DataladAOMICPIOP1`, :class:`.DataladAOMICPIOP2`, enabling fetching
+  of T1w data in subject-native space by `Synchon Mandal`_ (:gh:`252`)
+- Modify ``preprocessor`` to ``preprocessors`` in :func:`.run` and
+  ``preprocessing`` to ``preprocessors`` in :class:`.MarkerCollection` to
+  accept multiple preprocessors by `Synchon Mandal`_ (:gh:`263`)
+- Add ``space`` parameter to :func:`.register_coordinates`,
+  :func:`.register_parcellation` and :func:`.register_mask` and return space
+  from :func:`.load_coordinates`, :func:`.load_parcellation` and
+  :func:`.load_mask` by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
+- Add ``template_type`` parameter to :func:`.get_template` by `Synchon Mandal`_
+  (:gh:`299`)
+- Change :meth:`.BasePreprocessor.preprocess` return values to preprocessed
+  target data and "helper" data types as a dictionary by `Synchon Mandal`_
+  (:gh:`310`)
+- Add a positional argument ``using`` for Markers and Preprocessors having
+  implementation-based variations, in particular :class:`.ReHoParcels`,
+  :class:`.ReHoSpheres`, :class:`.ALFFParcels`, :class:`.ALFFSpheres` and
+  :class:`.BOLDWarper` by `Synchon Mandal`_ (:gh:`311`)
+- Change all ``probseg_`` types to ``VBM_`` types by `Fede Raimondo`_
+  (:gh:`320`)
+- Change the subject and session patterns for :class:`.DataladAOMICID1000`,
+  :class:`.DataladAOMICPIOP1`, :class:`.DataladAOMICPIOP2` and
+  :class:`.DMCC13Benchmark` so that they are consistent with their own
+  ``"participants.tsv"`` file by `Fede Raimondo`_ (:gh:`325`)
+
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Add Zenodo badge in ``README`` and improve general documentation by `Synchon
+  Mandal`_ (:gh:`247`)
+- Rename ``extMDN`` to ``extDMN`` (extended default mode network) and fix
+  listing for ``eMDN`` (extended multiple-demand network) by `Synchon Mandal`_
+  (:gh:`251`)
+- Fixed typo in code example for adding masks from "register_custom_mask" to
+  "register_mask" by `Tobias Muganga`_ (:gh:`291`)
+- Rename ``Misc`` section to ``Miscellaneous`` in ``docs/whats_new.rst`` by
+  `Synchon Mandal`_ (:gh:`300`)
+- Improve documentation by adding information about space transformation and
+  writing custom Preprocessors by `Synchon Mandal`_ (:gh:`317`)
+
+
+Enhancements
+^^^^^^^^^^^^
+
+- Support element(s) to be specified via text file for ``--element`` option of
+  ``junifer run`` by `Synchon Mandal`_ (:gh:`182`)
+- Support element-scoped directory and temporary directories for
+  :class:`junifer.pipeline.WorkDirManager` by `Synchon Mandal`_ (:gh:`258`)
+- Improve element directory cleanup via
+  ``junifer.pipeline.WorkDirManager.cleanup_elementdir`` method by `Synchon
+  Mandal`_ (:gh:`259`)
+- Improve :class:`.BasePreprocessor` for easy subclassing and adapt
+  :class:`.fMRIPrepConfoundRemover` to it by `Synchon Mandal`_ (:gh:`260`)
+- Add ``space`` information to existing datagrabbers, masks, parcellations and
+  coordinates by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
+- Add ``mode`` as an aggregation function option in
+  :func:`.get_aggfunc_by_name` by `Synchon Mandal`_ (:gh:`287`)
+- Adapt :class:`.BOLDWarper` to use FSL or ANTs depending on warp file
+  extension by `Synchon Mandal`_ (:gh:`293`)
+- Rewrite :func:`.compute_brain_mask` to allow variable template fetching via
+  templateflow, according to target data by `Synchon Mandal`_ (:gh:`299`)
+- Replace ``requests`` with ``httpx`` for fetching parcellations by `Synchon
+  Mandal`_ (:gh:`300`)
+- Allow :class:`.BOLDWarper` to warp BOLD data to other MNI spaces by `Synchon
+  Mandal`_ (:gh:`302`)
+- Add support for local ``junifer queue`` via GNU Parallel by `Synchon Mandal`_
+  (:gh:`306`)
+- Improve :class:`.PatternDataGrabber` and
+  :class:`.PatternDataladDataGrabber`'s ``patterns`` to enable ``space``,
+  ``format``, ``mask_item`` and other metadata description handling via YAML by
+  `Synchon Mandal`_ (:gh:`308`)
+- Improve :class:`.BasePreprocessor` by revamping
+  :meth:`.BasePreprocessor.preprocess` and ``BasePreprocessor._fit_transform``
+  to handle "helper" data types better and make the pipeline explicit where
+  data is being altered by `Synchon Mandal`_ (:gh:`310`)
+- Improve external dependency handling for :class:`.PipelineStepMixin`-derived
+  objects having implementation-based variations by `Synchon Mandal`_
+  (:gh:`311`)
+
+
+Features
+^^^^^^^^
+
+- Introduce complexity markers: :class:`.HurstExponent`,
+  :class:`.MultiscaleEntropyAUC`, :class:`.PermEntropy`,
+  :class:`.RangeEntropy`, :class:`.RangeEntropyAUC` and :class:`.SampleEntropy`
+  by `Amir Omidvarnia`_ (:gh:`145`)
+- Add ``junifer reset`` to reset storage and jobs directory by `Synchon
+  Mandal`_ (:gh:`240`)
+- Add support for ``Power2013`` coordinates by `Synchon Mandal`_ (:gh:`245`)
+- Support ``venv`` as environment kind for queueing jobs by `Synchon Mandal`_
+  (:gh:`249`)
+- Add support for ``AutobiographicalMemory`` coordinates by `Synchon Mandal`_
+  (:gh:`250`)
+- Add support for subject-native space by `Synchon Mandal`_ and `Fede
+  Raimondo`_ (:gh:`252`)
+- Introduce :class:`junifer.pipeline.WorkDirManager` singleton class to manage
+  working and temporary directories across pipeline by `Synchon Mandal`_
+  (:gh:`254`)
+- Introduce :func:`.get_parcellation` to fetch parcellation tailored for the
+  data by `Synchon Mandal`_ (:gh:`264`)
+- Introduce :func:`.get_coordinates` to fetch coordinates tailored for the data
+  by `Synchon Mandal`_ (:gh:`265`)
+- Introduce ``junifer.preprocess.fsl.apply_warper._ApplyWarper`` to wrap FSL's
+  ``applywarp`` by `Synchon Mandal`_ (:gh:`266`)
+- Introduce :class:`.BOLDWarper` for warping BOLD data via FSL's ``applywarp``
+  by `Synchon Mandal`_ (:gh:`267`)
+- Introduce :class:`.DMCC13Benchmark` to access `DMCC13benchmark dataset
+  <https://openneuro.org/datasets/ds003452/versions/1.0.1>`_ by `Synchon
+  Mandal`_ (:gh:`271`)
+- Add ``Brainnetome 246`` parcellation to ``junifer.data`` by `Synchon Mandal`_
+  (:gh:`275`)
+- Introduce
+  ``junifer.preprocess.ants.ants_apply_transforms_warper._AntsApplyTransformsWarper``
+  to wrap ANTs' ``antsApplyTransforms`` by `Synchon Mandal`_ (:gh:`293`)
+- Introduce :func:`.run_ext_cmd` to take care of the boilerplate code for
+  running external commands from FSL, ANTs and others by `Synchon Mandal`_
+  (:gh:`295`)
+- Introduce :func:`.get_xfm` to fetch transformation files for moving between
+  template spaces by `Synchon Mandal`_ (:gh:`297`)
+- Introduce :func:`.get_template` to fetch template space image tailored to a
+  target data by `Synchon Mandal`_ (:gh:`298`)
+- Add support for on-the-fly template space transformation in
+  :func:`.get_parcellation` and :func:`.get_mask` to allow parcellation and
+  mask in different template spaces to work with a ``DataGrabber``'s data in a
+  specified template space. (:gh:`299`)
+- Introduce :class:`.SpaceWarper` for warping ``T1w``, ``BOLD``, ``VBM_GM``,
+  ``VBM_WM``, ``fALFF``, ``GCOR`` and ``LCOR`` data to other spaces by `Synchon
+  Mandal`_ (:gh:`301`)
+- Introduce :class:`.QueueContextAdapter` as an abstract base class for job
+  queueing and :class:`.HTCondorAdapter` as its implementation for HTCondor by
+  `Synchon Mandal`_ (:gh:`309`)
+
+
+Miscellaneous
+^^^^^^^^^^^^^
+
+- Update dependencies requirements by `Fede Raimondo`_ (:gh:`253`)
+- Pin ``ruff`` to ``0.1.0`` as the lowest version and update ``pre-commit``
+  config by `Synchon Mandal`_ (:gh:`261`)
+- Add support for accessing FSL via Docker wrapper along with ``flirt``,
+  ``applywarp``  and ``std2imgcoord`` commands by `Synchon Mandal`_ (:gh:`262`)
+- Improve documentation, packaging and code style by `Synchon Mandal`_
+  (:gh:`269`)
+- Add support for Python 3.12 and make Python 3.11 the base for code coverage
+  and CI checks by `Synchon Mandal`_ (:gh:`270`)
+- Add support for accessing ANTs via Docker wrapper along with
+  ``antsApplyTransforms`` and ``antsApplyTransformsToPoints`` by `Synchon
+  Mandal`_ (:gh:`277`)
+- Make the external tool wrappers output to stderr instead of stdout by
+  `Synchon Mandal`_ (:gh:`279`)
+- Add support for accessing FSL ``img2imgcoord`` via Docker wrapper command by
+  `Synchon Mandal`_ (:gh:`281`)
+- Make :class:`.BOLDWarper` tool-agnostic by moving it from
+  ``junifer.preprocess.fsl`` to :mod:`junifer.preprocess` by `Synchon Mandal`_
+  (:gh:`288`)
+- Add support for accessing ANTs' ``ResampleImage`` via Docker wrapper by
+  `Synchon Mandal`_ (:gh:`293`)
+- Update ``pyproject.toml`` and add FAIR shield in ``README.md`` by `Synchon
+  Mandal`_ (:gh:`294`)
+- Update dependency listing in ``pyproject.toml``, add
+  ``.github/dependabot.yml`` to auto-update GitHub Actions, add ``ANTs`` and
+  ``FSL`` installation in CI and improve general code style by `Synchon
+  Mandal`_ (:gh:`300`)
+
+
+Deprecations and Removals
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Deprecate :class:`.BOLDWarper` and mark for removal in v0.0.4 by `Synchon
+  Mandal`_ (:gh:`301`)
+
+
 Junifer 0.0.3 (2023-07-21)
----------------------------------
+--------------------------
 
 Bugfixes
 ^^^^^^^^
