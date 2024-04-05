@@ -114,14 +114,13 @@ def _parse_elements_file(filepath: Path) -> List[Tuple[str, ...]]:
         filepath,
         header=None,  # no header  # type: ignore
         index_col=False,  # no index column
+        dtype=str,
         skipinitialspace=True,  # no leading space after delimiter
     )
     # Remove trailing whitespace in cell entries
-    csv_df_trimmed = csv_df.apply(
-        lambda x: x.str.strip() if x.dtype == "object" else x
-    )
+    csv_df_trimmed = csv_df.apply(lambda x: x.str.strip())
     # Convert to list of tuple of str
-    return list(map(tuple, csv_df_trimmed.to_numpy().astype(str)))
+    return list(map(tuple, csv_df_trimmed.to_numpy()))
 
 
 def _validate_verbose(
