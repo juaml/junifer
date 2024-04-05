@@ -25,8 +25,14 @@ configure_logging(level="INFO")
 # replaced in the patterns.
 types = ["T1w", "BOLD"]
 patterns = {
-    "T1w": "{subject}/anat/{subject}_T1w.nii.gz",
-    "BOLD": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+    "T1w": {
+        "pattern": "{subject}/anat/{subject}_T1w.nii.gz",
+        "space": "native",
+    },
+    "BOLD": {
+        "pattern": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+        "space": "MNI152NLin6Asym",
+    },
 }
 replacements = ["subject"]
 ###############################################################################
