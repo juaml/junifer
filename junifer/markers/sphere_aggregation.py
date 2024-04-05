@@ -47,8 +47,8 @@ class SphereAggregation(BaseMarker):
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    on : {"T1w", "BOLD", "VBM_GM", "VBM_WM", "VBM_CSF", "fALFF", "GCOR", \
-        "LCOR"} or list of the options, optional
+    on : {"T1w", "T2w", "BOLD", "VBM_GM", "VBM_WM", "VBM_CSF", "fALFF", \
+        "GCOR", "LCOR"} or list of the options, optional
         The data types to apply the marker to. If None, will work on all
         available data (default None).
     name : str, optional
@@ -111,6 +111,7 @@ class SphereAggregation(BaseMarker):
         """
         return [
             "T1w",
+            "T2w",
             "BOLD",
             "VBM_GM",
             "VBM_WM",
