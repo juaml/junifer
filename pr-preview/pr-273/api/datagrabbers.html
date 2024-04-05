@@ -199,8 +199,8 @@
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.1. Generic BIDS DataGrabber for datalad.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.2. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.1. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.2. Generic BIDS DataGrabber for datalad.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.3. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.4. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">8.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
@@ -503,27 +503,6 @@ the datalad dataset will be cloned into a temporary directory
 </dl>
 </dd>
 </dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICID1000.get_item">
-<span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICID1000.get_item" title="Link to this definition">#</a></dt>
-<dd><p>Index one element in the dataset.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>subject</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The subject ID.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl>
-<dt><strong>out</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Dictionary of paths for each type of data required for the
-specified element.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
@@ -953,11 +932,90 @@ specified element.</p>
 <dd class="field-odd"><dl>
 <dt><strong>types</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The types of data to be grabbed.</p>
 </dd>
-<dt><strong>patterns</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Patterns for each type of data as a dictionary. The keys are the types
-and the values are the patterns. Each occurrence of the string
-<code class="docutils literal notranslate"><span class="pre">{subject}</span></code> in the pattern will be replaced by the indexed element.</p>
+<dt><strong>patterns</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Data type patterns as a dictionary. It has the following schema:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;T1w&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;T2w&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;BOLD&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: [&quot;mask_item&quot;]
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;Warp&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;src&quot;, &quot;dst&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;BOLD_confounds&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;format&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;VBM_GM&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;VBM_WM&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Basically, for each data type, one needs to provide <code class="docutils literal notranslate"><span class="pre">mandatory</span></code> keys
+and can choose to also provide <code class="docutils literal notranslate"><span class="pre">optional</span></code> keys. The value for each
+key is a string. So, one needs to provide necessary data types as a
+dictionary, for example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;BOLD&quot;: {
+      &quot;pattern&quot;: &quot;...&quot;,
+      &quot;space&quot;: &quot;...&quot;,
+    },
+    &quot;T1w&quot;: {
+      &quot;pattern&quot;: &quot;...&quot;,
+      &quot;space&quot;: &quot;...&quot;,
+    },
+    &quot;Warp&quot;: {
+      &quot;pattern&quot;: &quot;...&quot;,
+      &quot;src&quot;: &quot;...&quot;,
+      &quot;dst&quot;: &quot;...&quot;,
+    }
+}
+</pre></div>
+</div>
+<p>taken from <a class="reference internal" href="#junifer.datagrabber.HCP1200" title="junifer.datagrabber.HCP1200"><code class="xref py py-class docutils literal notranslate"><span class="pre">HCP1200</span></code></a>.</p>
 </dd>
-<dt><strong>replacements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Replacements in the patterns for each item in the “element” tuple.</p>
+<dt><strong>replacements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Replacements in the <code class="docutils literal notranslate"><span class="pre">pattern</span></code> key of each data type. The value needs
+to be a list of all possible replacements.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The directory where the data is / will be stored.</p>
 </dd>
@@ -1009,7 +1067,7 @@ list of elements that have all the required types.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber.get_item">
 <span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.get_item" title="Link to this definition">#</a></dt>
-<dd><p>Implement single element indexing in the database.</p>
+<dd><p>Implement single element indexing for the datagrabber.</p>
 <p>This method constructs a real path to the requested item’s data, by
 replacing the <code class="docutils literal notranslate"><span class="pre">patterns</span></code> with actual values passed via <code class="docutils literal notranslate"><span class="pre">**element</span></code>.</p>
 <dl class="field-list">
@@ -1027,6 +1085,14 @@ specified element.</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If more than one file matches for a data type’s pattern or
+if no file matches for a data type’s pattern or
+if file cannot be accessed for an element.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1040,7 +1106,7 @@ specified element.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.datagrabber.PatternDataladDataGrabber">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">PatternDataladDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patterns</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataladDataGrabber" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">PatternDataladDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataladDataGrabber" title="Link to this definition">#</a></dt>
 <dd><p>Concrete implementation for pattern and datalad based data fetching.</p>
 <p>Implements a DataGrabber that gets data from a datalad sibling,
 interpreting patterns.</p>
@@ -1049,11 +1115,101 @@ interpreting patterns.</p>
 <dd class="field-odd"><dl>
 <dt><strong>types</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The types of data to be grabbed.</p>
 </dd>
-<dt><strong>patterns</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Patterns for each type of data as a dictionary. The keys are the types
-and the values are the patterns. Each occurrence of the string
-<code class="docutils literal notranslate"><span class="pre">{subject}</span></code> in the pattern will be replaced by the indexed element.</p>
+<dt><strong>patterns</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Data type patterns as a dictionary. It has the following schema:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;T1w&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;T2w&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;BOLD&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: [&quot;mask_item&quot;]
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;Warp&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;src&quot;, &quot;dst&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;BOLD_confounds&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;format&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;VBM_GM&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;VBM_WM&quot;</span></code> :</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;space&quot;],
+  &quot;optional&quot;: []
+}
+</pre></div>
+</div>
+</li>
+</ul>
+<p>Basically, for each data type, one needs to provide <code class="docutils literal notranslate"><span class="pre">mandatory</span></code> keys
+and can choose to also provide <code class="docutils literal notranslate"><span class="pre">optional</span></code> keys. The value for each
+key is a string. So, one needs to provide necessary data types as a
+dictionary, for example:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;BOLD&quot;: {
+      &quot;pattern&quot;: &quot;...&quot;,
+      &quot;space&quot;: &quot;...&quot;,
+    },
+    &quot;T1w&quot;: {
+      &quot;pattern&quot;: &quot;...&quot;,
+      &quot;space&quot;: &quot;...&quot;,
+    },
+    &quot;Warp&quot;: {
+      &quot;pattern&quot;: &quot;...&quot;,
+      &quot;src&quot;: &quot;...&quot;,
+      &quot;dst&quot;: &quot;...&quot;,
+    }
+}
+</pre></div>
+</div>
+<p>taken from <a class="reference internal" href="#junifer.datagrabber.HCP1200" title="junifer.datagrabber.HCP1200"><code class="xref py py-class docutils literal notranslate"><span class="pre">HCP1200</span></code></a>.</p>
 </dd>
-<dt><strong>**kwargs</strong></dt><dd><p>Keyword arguments passed to superclass.</p>
+<dt><strong>replacements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Replacements in the <code class="docutils literal notranslate"><span class="pre">pattern</span></code> key of each data type. The value needs
+to be a list of all possible replacements.</p>
+</dd>
+<dt><strong>confounds_format</strong><span class="classifier">{“fmriprep”, “adhoc”} or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>The format of the confounds for the dataset (default None).</p>
+</dd>
+<dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>That directory where the datalad dataset will be cloned. If None,
+the datalad dataset will be cloned into a temporary directory
+(default None).</p>
+</dd>
+<dt><strong>rootdir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>The path within the datalad dataset to the root directory
+(default “.”).</p>
+</dd>
+<dt><strong>uri</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>URI of the datalad sibling (default None).</p>
 </dd>
 </dl>
 </dd>
@@ -1141,10 +1297,7 @@ and the values are the patterns. Each occurrence of the string
 <li><a class="reference internal" href="#junifer.datagrabber.DMCC13Benchmark.get_item"><code class="docutils literal notranslate"><span class="pre">DMCC13Benchmark.get_item()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICID1000"><code class="docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a><ul>
-<li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICID1000.get_item"><code class="docutils literal notranslate"><span class="pre">DataladAOMICID1000.get_item()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICID1000"><code class="docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1.get_elements"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1.get_elements()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1.get_item"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1.get_item()</span></code></a></li>
