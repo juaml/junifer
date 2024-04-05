@@ -29,8 +29,8 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
            "VBM_WM"} or a list of the options, optional
         DMCC data types. If None, all available data types are selected.
         (default None).
-    sessions: {"wave1bas", "wave1pro", "wave1rea"} or list of the options, \
-               optional
+    sessions: {"ses-wave1bas", "ses-wave1pro", "ses-wave1rea"} or list of \
+            the options, optional
         DMCC sessions. If None, all available sessions are selected
         (default None).
     tasks: {"Rest", "Axcpt", "Cuedts", "Stern", "Stroop"} or \
