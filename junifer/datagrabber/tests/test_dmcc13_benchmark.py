@@ -17,34 +17,34 @@ URI = "https://gin.g-node.org/synchon/datalad-example-dmcc13-benchmark"
     "sessions, tasks, phase_encodings, runs, native_t1w",
     [
         (None, None, None, None, False),
-        ("wave1bas", "Rest", "AP", "1", False),
-        ("wave1bas", "Axcpt", "AP", "1", False),
-        ("wave1bas", "Cuedts", "AP", "1", False),
-        ("wave1bas", "Stern", "AP", "1", False),
-        ("wave1bas", "Stroop", "AP", "1", False),
-        ("wave1bas", "Rest", "PA", "2", False),
-        ("wave1bas", "Axcpt", "PA", "2", False),
-        ("wave1bas", "Cuedts", "PA", "2", False),
-        ("wave1bas", "Stern", "PA", "2", False),
-        ("wave1bas", "Stroop", "PA", "2", False),
-        ("wave1bas", "Rest", "AP", "1", True),
-        ("wave1bas", "Axcpt", "AP", "1", True),
-        ("wave1bas", "Cuedts", "AP", "1", True),
-        ("wave1bas", "Stern", "AP", "1", True),
-        ("wave1bas", "Stroop", "AP", "1", True),
-        ("wave1bas", "Rest", "PA", "2", True),
-        ("wave1bas", "Axcpt", "PA", "2", True),
-        ("wave1bas", "Cuedts", "PA", "2", True),
-        ("wave1bas", "Stern", "PA", "2", True),
-        ("wave1bas", "Stroop", "PA", "2", True),
-        ("wave1pro", "Rest", "AP", "1", False),
-        ("wave1pro", "Rest", "PA", "2", False),
-        ("wave1pro", "Rest", "AP", "1", True),
-        ("wave1pro", "Rest", "PA", "2", True),
-        ("wave1rea", "Rest", "AP", "1", False),
-        ("wave1rea", "Rest", "PA", "2", False),
-        ("wave1rea", "Rest", "AP", "1", True),
-        ("wave1rea", "Rest", "PA", "2", True),
+        ("ses-wave1bas", "Rest", "AP", "1", False),
+        ("ses-wave1bas", "Axcpt", "AP", "1", False),
+        ("ses-wave1bas", "Cuedts", "AP", "1", False),
+        ("ses-wave1bas", "Stern", "AP", "1", False),
+        ("ses-wave1bas", "Stroop", "AP", "1", False),
+        ("ses-wave1bas", "Rest", "PA", "2", False),
+        ("ses-wave1bas", "Axcpt", "PA", "2", False),
+        ("ses-wave1bas", "Cuedts", "PA", "2", False),
+        ("ses-wave1bas", "Stern", "PA", "2", False),
+        ("ses-wave1bas", "Stroop", "PA", "2", False),
+        ("ses-wave1bas", "Rest", "AP", "1", True),
+        ("ses-wave1bas", "Axcpt", "AP", "1", True),
+        ("ses-wave1bas", "Cuedts", "AP", "1", True),
+        ("ses-wave1bas", "Stern", "AP", "1", True),
+        ("ses-wave1bas", "Stroop", "AP", "1", True),
+        ("ses-wave1bas", "Rest", "PA", "2", True),
+        ("ses-wave1bas", "Axcpt", "PA", "2", True),
+        ("ses-wave1bas", "Cuedts", "PA", "2", True),
+        ("ses-wave1bas", "Stern", "PA", "2", True),
+        ("ses-wave1bas", "Stroop", "PA", "2", True),
+        ("ses-wave1pro", "Rest", "AP", "1", False),
+        ("ses-wave1pro", "Rest", "PA", "2", False),
+        ("ses-wave1pro", "Rest", "AP", "1", True),
+        ("ses-wave1pro", "Rest", "PA", "2", True),
+        ("ses-wave1rea", "Rest", "AP", "1", False),
+        ("ses-wave1rea", "Rest", "PA", "2", False),
+        ("ses-wave1rea", "Rest", "AP", "1", True),
+        ("ses-wave1rea", "Rest", "PA", "2", True),
     ],
 )
 def test_DMCC13Benchmark(
@@ -88,7 +88,7 @@ def test_DMCC13Benchmark(
         # Get test element's access values
         _, ses, task, phase, run = test_element
         # Access data
-        out = dg[("01", ses, task, phase, run)]
+        out = dg[("sub-01", ses, task, phase, run)]
 
         # Available data types
         data_types = [
@@ -108,15 +108,15 @@ def test_DMCC13Benchmark(
         # Data type file name formats
         data_file_names = [
             (
-                f"sub-01_ses-{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
+                f"sub-01_{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
                 "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
             ),
             (
-                f"sub-01_ses-{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
+                f"sub-01_{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
                 "desc-confounds_regressors.tsv"
             ),
             (
-                f"sub-01_ses-{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
+                f"sub-01_{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
                 "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
             ),
             "sub-01_space-MNI152NLin2009cAsym_label-CSF_probseg.nii.gz",
@@ -199,7 +199,7 @@ def test_DMCC13Benchmark_partial_data_access(
         # Get test element's access values
         _, ses, task, phase, run = test_element
         # Access data
-        out = dg[("01", ses, task, phase, run)]
+        out = dg[("sub-01", ses, task, phase, run)]
         # Assert data type
         if isinstance(types, list):
             for type_ in types:

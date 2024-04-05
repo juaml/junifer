@@ -36,7 +36,7 @@ class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
         replacements = ["subject"]
         patterns = {
             "VBM_GM": {
-                "pattern": "sub-{subject}/mri/m0wp1sub-{subject}.nii.gz",
+                "pattern": "{subject}/mri/m0wp1{subject}.nii.gz",
                 "space": "IXI549Space",
             },
         }
