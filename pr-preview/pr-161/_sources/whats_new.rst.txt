@@ -8,8 +8,18 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.4.dev827 (2024-04-05)
----------------------------------
+Junifer 0.0.5.dev13 (2024-04-08)
+--------------------------------
+
+Features
+^^^^^^^^
+
+- Introduce :class:`.Smoothing` for smoothing / blurring images as a
+  preprocessing step by `Synchon Mandal`_ (:gh:`161`)
+
+
+Junifer 0.0.4 (2024-04-05)
+--------------------------
 
 Bugfixes
 ^^^^^^^^
@@ -46,6 +56,8 @@ Bugfixes
   (:gh:`312`)
 - Fix element access for :class:`.DMCC13Benchmark` DataGrabber by `Synchon
   Mandal`_ (:gh:`314`)
+- Force ``str`` dtype when parsing elements from file by `Synchon Mandal`_
+  (:gh:`322`)
 
 
 API Changes
@@ -74,6 +86,12 @@ API Changes
   implementation-based variations, in particular :class:`.ReHoParcels`,
   :class:`.ReHoSpheres`, :class:`.ALFFParcels`, :class:`.ALFFSpheres` and
   :class:`.BOLDWarper` by `Synchon Mandal`_ (:gh:`311`)
+- Change all ``probseg_`` types to ``VBM_`` types by `Fede Raimondo`_
+  (:gh:`320`)
+- Change the subject and session patterns for :class:`.DataladAOMICID1000`,
+  :class:`.DataladAOMICPIOP1`, :class:`.DataladAOMICPIOP2` and
+  :class:`.DMCC13Benchmark` so that they are consistent with their own
+  ``"participants.tsv"`` file by `Fede Raimondo`_ (:gh:`325`)
 
 
 Improved Documentation
@@ -138,8 +156,6 @@ Features
   :class:`.MultiscaleEntropyAUC`, :class:`.PermEntropy`,
   :class:`.RangeEntropy`, :class:`.RangeEntropyAUC` and :class:`.SampleEntropy`
   by `Amir Omidvarnia`_ (:gh:`145`)
-- Introduce :class:`.Smoothing` for smoothing / blurring images as a
-  preprocessing step by `Synchon Mandal`_ (:gh:`161`)
 - Add ``junifer reset`` to reset storage and jobs directory by `Synchon
   Mandal`_ (:gh:`240`)
 - Add support for ``Power2013`` coordinates by `Synchon Mandal`_ (:gh:`245`)
@@ -227,7 +243,7 @@ Deprecations and Removals
 
 
 Junifer 0.0.3 (2023-07-21)
----------------------------------
+--------------------------
 
 Bugfixes
 ^^^^^^^^
