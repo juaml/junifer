@@ -46,6 +46,10 @@ Bugfixes
   (:gh:`312`)
 - Fix element access for :class:`.DMCC13Benchmark` DataGrabber by `Synchon
   Mandal`_ (:gh:`314`)
+- Add a validation step on the :func:`.run` function to validate the marker
+  collection by `Fede Raimondo`_ (:gh:`320`)
+- Add the executable flag to the ants docker scripts, fsl docker scripts and
+  other running scripts by `Fede Raimondo`_ (:gh:`321`)
 - Force ``str`` dtype when parsing elements from file by `Synchon Mandal`_
   (:gh:`322`)
 
