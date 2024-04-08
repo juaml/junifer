@@ -1,1 +1,1 @@
-Add support for choosing between ``bash`` and ``zsh`` when queueing a HTCondor job by `Synchon Mandal`_
+Add support for choosing between ``bash`` and ``zsh`` shells when queueing by `Synchon Mandal`_
