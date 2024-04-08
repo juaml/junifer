@@ -32,9 +32,7 @@ class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
         replacements = ["subject"]
         patterns = {
             "VBM_GM": {
-                "pattern": (
-                    "{subject}/mri/mwp1{subject}_run-2_T1w.nii.gz"
-                ),
+                "pattern": ("{subject}/mri/mwp1{subject}_run-2_T1w.nii.gz"),
                 "space": "IXI549Space",
             },
         }
