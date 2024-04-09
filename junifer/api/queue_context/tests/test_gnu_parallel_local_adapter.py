@@ -12,15 +12,27 @@ import pytest
 from junifer.api.queue_context import GnuParallelLocalAdapter
 
 
-def test_GnuParallelLocalAdapter_env_error() -> None:
+def test_GnuParallelLocalAdapter_env_kind_error() -> None:
     """Test error for invalid env kind."""
     with pytest.raises(ValueError, match="Invalid value for `env.kind`"):
         GnuParallelLocalAdapter(
-            job_name="check_env",
+            job_name="check_env_kind",
             job_dir=Path("."),
             yaml_config_path=Path("."),
             elements=["sub01"],
             env={"kind": "jambalaya"},
+        )
+
+
+def test_GnuParallelLocalAdapter_env_shell_error() -> None:
+    """Test error for invalid env shell."""
+    with pytest.raises(ValueError, match="Invalid value for `env.shell`"):
+        GnuParallelLocalAdapter(
+            job_name="check_env_shell",
+            job_dir=Path("."),
+            yaml_config_path=Path("."),
+            elements=["sub01"],
+            env={"kind": "conda", "shell": "fish"},
         )
 
 
@@ -55,14 +67,18 @@ def test_GnuParallelLocalAdapter_elements(
 
 
 @pytest.mark.parametrize(
-    "pre_run, expected_text",
+    "pre_run, expected_text, shell",
     [
-        (None, "# Force datalad"),
-        ("# Check this out\n", "# Check this out"),
+        (None, "# Force datalad", "bash"),
+        (None, "# Force datalad", "zsh"),
+        ("# Check this out\n", "# Check this out", "bash"),
+        ("# Check this out\n", "# Check this out", "zsh"),
     ],
 )
 def test_GnuParallelLocalAdapter_pre_run(
-    pre_run: Optional[str], expected_text: str
+    pre_run: Optional[str],
+    expected_text: str,
+    shell: str,
 ) -> None:
     """Test GnuParallelLocalAdapter pre_run().
 
@@ -72,6 +88,8 @@ def test_GnuParallelLocalAdapter_pre_run(
         The parametrized pre run text.
     expected_text : str
         The parametrized expected text.
+    shell : str
+        The parametrized expected shell.
 
     """
     adapter = GnuParallelLocalAdapter(
@@ -79,21 +97,26 @@ def test_GnuParallelLocalAdapter_pre_run(
         job_dir=Path("."),
         yaml_config_path=Path("."),
         elements=["sub01"],
+        env={"kind": "conda", "name": "junifer", "shell": shell},
         pre_run=pre_run,
     )
+    assert shell in adapter.pre_run()
     assert expected_text in adapter.pre_run()
 
 
 @pytest.mark.parametrize(
-    "pre_collect, expected_text",
+    "pre_collect, expected_text, shell",
     [
-        (None, "# This script"),
-        ("# Check this out\n", "# Check this out"),
+        (None, "# This script", "bash"),
+        (None, "# This script", "zsh"),
+        ("# Check this out\n", "# Check this out", "bash"),
+        ("# Check this out\n", "# Check this out", "zsh"),
     ],
 )
 def test_GnuParallelLocalAdapter_pre_collect(
     pre_collect: Optional[str],
     expected_text: str,
+    shell: str,
 ) -> None:
     """Test GnuParallelLocalAdapter pre_collect().
 
@@ -103,6 +126,8 @@ def test_GnuParallelLocalAdapter_pre_collect(
         The parametrized pre collect text.
     expected_text : str
         The parametrized expected text.
+    shell : str
+        The parametrized expected shell.
 
     """
     adapter = GnuParallelLocalAdapter(
@@ -110,8 +135,10 @@ def test_GnuParallelLocalAdapter_pre_collect(
         job_dir=Path("."),
         yaml_config_path=Path("."),
         elements=["sub01"],
+        env={"kind": "venv", "name": "junifer", "shell": shell},
         pre_collect=pre_collect,
     )
+    assert shell in adapter.pre_collect()
     assert expected_text in adapter.pre_collect()
 
 
@@ -140,8 +167,10 @@ def test_GnuParallelLocalAdapter_collect() -> None:
 @pytest.mark.parametrize(
     "env",
     [
-        {"kind": "conda", "name": "junifer"},
-        {"kind": "venv", "name": "./junifer"},
+        {"kind": "conda", "name": "junifer", "shell": "bash"},
+        {"kind": "conda", "name": "junifer", "shell": "zsh"},
+        {"kind": "venv", "name": "./junifer", "shell": "bash"},
+        {"kind": "venv", "name": "./junifer", "shell": "zsh"},
     ],
 )
 def test_GnuParallelLocalAdapter_prepare(
@@ -177,7 +206,7 @@ def test_GnuParallelLocalAdapter_prepare(
             adapter.prepare()
 
             assert "GNU parallel" in caplog.text
-            assert f"Copying run_{env['kind']}" in caplog.text
+            assert f"Copying run_{env['kind']}.{env['shell']}" in caplog.text
             assert "Writing pre_run.sh" in caplog.text
             assert "Writing run_test_prepare.sh" in caplog.text
             assert "Writing pre_collect.sh" in caplog.text

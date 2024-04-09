@@ -44,9 +44,7 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         replacements = ["site", "subject"]
         patterns = {
             "VBM_GM": {
-                "pattern": (
-                    "{site}/{subject}/mri/m0wp1{subject}.nii.gz"
-                ),
+                "pattern": ("{site}/{subject}/mri/m0wp1{subject}.nii.gz"),
                 "space": "IXI549Space",
             },
         }

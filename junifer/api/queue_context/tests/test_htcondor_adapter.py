@@ -12,15 +12,27 @@ import pytest
 from junifer.api.queue_context import HTCondorAdapter
 
 
-def test_HTCondorAdapter_env_error() -> None:
+def test_HTCondorAdapter_env_kind_error() -> None:
     """Test error for invalid env kind."""
     with pytest.raises(ValueError, match="Invalid value for `env.kind`"):
         HTCondorAdapter(
-            job_name="check_env",
+            job_name="check_env_kind",
             job_dir=Path("."),
             yaml_config_path=Path("."),
             elements=["sub01"],
             env={"kind": "jambalaya"},
+        )
+
+
+def test_HTCondorAdapter_env_shell_error() -> None:
+    """Test error for invalid env shell."""
+    with pytest.raises(ValueError, match="Invalid value for `env.shell`"):
+        HTCondorAdapter(
+            job_name="check_env_shell",
+            job_dir=Path("."),
+            yaml_config_path=Path("."),
+            elements=["sub01"],
+            env={"kind": "conda", "shell": "fish"},
         )
 
 
@@ -37,14 +49,18 @@ def test_HTCondorAdapter_collect_error() -> None:
 
 
 @pytest.mark.parametrize(
-    "pre_run, expected_text",
+    "pre_run, expected_text, shell",
     [
-        (None, "# Force datalad"),
-        ("# Check this out\n", "# Check this out"),
+        (None, "# Force datalad", "bash"),
+        (None, "# Force datalad", "zsh"),
+        ("# Check this out\n", "# Check this out", "bash"),
+        ("# Check this out\n", "# Check this out", "zsh"),
     ],
 )
 def test_HTCondorAdapter_pre_run(
-    pre_run: Optional[str], expected_text: str
+    pre_run: Optional[str],
+    expected_text: str,
+    shell: str,
 ) -> None:
     """Test HTCondorAdapter pre_run().
 
@@ -54,6 +70,8 @@ def test_HTCondorAdapter_pre_run(
         The parametrized pre run text.
     expected_text : str
         The parametrized expected text.
+    shell : str
+        The parametrized expected shell.
 
     """
     adapter = HTCondorAdapter(
@@ -61,22 +79,31 @@ def test_HTCondorAdapter_pre_run(
         job_dir=Path("."),
         yaml_config_path=Path("."),
         elements=["sub01"],
+        env={"kind": "conda", "name": "junifer", "shell": shell},
         pre_run=pre_run,
     )
+    assert shell in adapter.pre_run()
     assert expected_text in adapter.pre_run()
 
 
 @pytest.mark.parametrize(
-    "pre_collect, expected_text, collect",
+    "pre_collect, expected_text, collect, shell",
     [
-        (None, "exit 1", "yes"),
-        (None, "# This script", "on_success_only"),
-        ("# Check this out\n", "# Check this out", "yes"),
-        ("# Check this out\n", "# Check this out", "on_success_only"),
+        (None, "exit 1", "yes", "bash"),
+        (None, "exit 1", "yes", "zsh"),
+        (None, "# This script", "on_success_only", "bash"),
+        (None, "# This script", "on_success_only", "zsh"),
+        ("# Check this out\n", "# Check this out", "yes", "bash"),
+        ("# Check this out\n", "# Check this out", "yes", "zsh"),
+        ("# Check this out\n", "# Check this out", "on_success_only", "bash"),
+        ("# Check this out\n", "# Check this out", "on_success_only", "zsh"),
     ],
 )
 def test_HTCondorAdapter_pre_collect(
-    pre_collect: Optional[str], expected_text: str, collect: str
+    pre_collect: Optional[str],
+    expected_text: str,
+    collect: str,
+    shell: str,
 ) -> None:
     """Test HTCondorAdapter pre_collect().
 
@@ -88,6 +115,8 @@ def test_HTCondorAdapter_pre_collect(
         The parametrized expected text.
     collect : str
         The parametrized collect parameter.
+    shell : str
+        The parametrized expected shell.
 
     """
     adapter = HTCondorAdapter(
@@ -95,9 +124,11 @@ def test_HTCondorAdapter_pre_collect(
         job_dir=Path("."),
         yaml_config_path=Path("."),
         elements=["sub01"],
+        env={"kind": "venv", "name": "junifer", "shell": shell},
         pre_collect=pre_collect,
         collect=collect,
     )
+    assert shell in adapter.pre_collect()
     assert expected_text in adapter.pre_collect()
 
 
@@ -177,8 +208,10 @@ def test_HTCondor_dag(
 @pytest.mark.parametrize(
     "env",
     [
-        {"kind": "conda", "name": "junifer"},
-        {"kind": "venv", "name": "./junifer"},
+        {"kind": "conda", "name": "junifer", "shell": "bash"},
+        {"kind": "conda", "name": "junifer", "shell": "zsh"},
+        {"kind": "venv", "name": "./junifer", "shell": "bash"},
+        {"kind": "venv", "name": "./junifer", "shell": "zsh"},
     ],
 )
 def test_HTCondorAdapter_prepare(
@@ -215,7 +248,7 @@ def test_HTCondorAdapter_prepare(
 
             assert "Creating HTCondor job" in caplog.text
             assert "Creating logs directory" in caplog.text
-            assert f"Copying run_{env['kind']}" in caplog.text
+            assert f"Copying run_{env['kind']}.{env['shell']}" in caplog.text
             assert "Writing pre_run.sh" in caplog.text
             assert "Writing run_test_prepare.submit" in caplog.text
             assert "Writing pre_collect.sh" in caplog.text

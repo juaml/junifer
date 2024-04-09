@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env zsh
 
 if [ $# -lt 2 ]; then
     echo "This script is meant to run a command within a conda environment."
@@ -8,7 +8,7 @@ if [ $# -lt 2 ]; then
     exit 255
 fi
 
-eval "$(conda shell.bash hook)"
+eval "$(conda shell.zsh hook)"
 env_name=$1
 echo "Activating ${env_name}"
 conda activate "${env_name}"

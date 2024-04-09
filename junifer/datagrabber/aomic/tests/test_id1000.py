@@ -33,8 +33,7 @@ def test_DataladAOMICID1000() -> None:
         assert "BOLD" in out
 
         assert (
-            out["BOLD"]["path"].name
-            == f"{test_element}_task-moviewatching_"
+            out["BOLD"]["path"].name == f"{test_element}_task-moviewatching_"
             "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
         )
 
