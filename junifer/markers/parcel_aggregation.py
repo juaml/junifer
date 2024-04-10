@@ -195,7 +195,9 @@ class ParcelAggregation(BaseMarker):
         )
 
         # Get binarized parcellation image for masking
-        parcellation_bin = math_img("img != 0", img=parcellation_img)
+        parcellation_bin = math_img(
+            "np.squeeze(img) != 0", img=parcellation_img
+        )
 
         # Load mask
         if self.masks is not None:
