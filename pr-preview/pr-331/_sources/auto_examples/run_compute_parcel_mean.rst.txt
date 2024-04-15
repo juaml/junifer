@@ -68,14 +68,14 @@ Set the logging level to info to see extra information
 
  .. code-block:: none
 
-    2024-04-15 11:05:36,730 - JUNIFER - INFO - ===== Lib Versions =====
-    2024-04-15 11:05:36,730 - JUNIFER - INFO - numpy: 1.26.4
-    2024-04-15 11:05:36,730 - JUNIFER - INFO - scipy: 1.11.4
-    2024-04-15 11:05:36,730 - JUNIFER - INFO - pandas: 2.1.4
-    2024-04-15 11:05:36,730 - JUNIFER - INFO - nilearn: 0.10.2
-    2024-04-15 11:05:36,730 - JUNIFER - INFO - nibabel: 5.2.1
-    2024-04-15 11:05:36,730 - JUNIFER - INFO - junifer: 0.0.5.dev29
-    2024-04-15 11:05:36,730 - JUNIFER - INFO - ========================
+    2024-04-15 11:29:37,647 - JUNIFER - INFO - ===== Lib Versions =====
+    2024-04-15 11:29:37,647 - JUNIFER - INFO - numpy: 1.26.4
+    2024-04-15 11:29:37,647 - JUNIFER - INFO - scipy: 1.11.4
+    2024-04-15 11:29:37,647 - JUNIFER - INFO - pandas: 2.1.4
+    2024-04-15 11:29:37,647 - JUNIFER - INFO - nilearn: 0.10.2
+    2024-04-15 11:29:37,647 - JUNIFER - INFO - nibabel: 5.2.1
+    2024-04-15 11:29:37,647 - JUNIFER - INFO - junifer: 0.0.5.dev30
+    2024-04-15 11:29:37,647 - JUNIFER - INFO - ========================
 
 
 
@@ -111,28 +111,28 @@ Perform parcel aggregation on VBM GM data (3D) from OASIS dataset
 
     /opt/hostedtoolcache/Python/3.11.9/x64/lib/python3.11/site-packages/nilearn/datasets/struct.py:852: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
       warnings.warn(_LEGACY_FORMAT_MSG)
-    2024-04-15 11:05:36,735 - JUNIFER - INFO - Getting element sub-01
-    2024-04-15 11:05:36,736 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-04-15 11:05:36,736 - JUNIFER - INFO - VBM_GM is type NIFTI
-    2024-04-15 11:05:36,736 - JUNIFER - INFO - Computing VBM_GM
-    2024-04-15 11:05:36,737 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-04-15 11:05:36,737 - JUNIFER - INFO - Parcellation parameters:
-    2024-04-15 11:05:36,737 - JUNIFER - INFO -      resolution: 2.0
-    2024-04-15 11:05:36,737 - JUNIFER - INFO -      n_rois: 100
-    2024-04-15 11:05:36,737 - JUNIFER - INFO -      yeo_networks: 7
-    2024-04-15 11:05:36,737 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
+    2024-04-15 11:29:37,652 - JUNIFER - INFO - Getting element sub-01
+    2024-04-15 11:29:37,652 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2024-04-15 11:29:37,652 - JUNIFER - INFO - VBM_GM is type NIFTI
+    2024-04-15 11:29:37,653 - JUNIFER - INFO - Computing VBM_GM
+    2024-04-15 11:29:37,653 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+    2024-04-15 11:29:37,654 - JUNIFER - INFO - Parcellation parameters:
+    2024-04-15 11:29:37,654 - JUNIFER - INFO -      resolution: 2.0
+    2024-04-15 11:29:37,654 - JUNIFER - INFO -      n_rois: 100
+    2024-04-15 11:29:37,654 - JUNIFER - INFO -      yeo_networks: 7
+    2024-04-15 11:29:37,654 - JUNIFER - INFO - At least one of the parcellation files are missing. Fetching using nilearn.
     Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order.txt ...
      ...done. (0 seconds, 0 min)
     Downloading data from https://raw.githubusercontent.com/ThomasYeoLab/CBIG/v0.14.3-Update_Yeo2011_Schaefer2018_labelname/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal/Parcellations/MNI/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz ...
      ...done. (0 seconds, 0 min)
-    2024-04-15 11:05:36,810 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-    2024-04-15 11:05:36,840 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-04-15 11:05:37,952 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-04-15 11:05:38,049 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmp3uelikrz/parcellations_9_erhmj/Schaefer100x7.nii.gz -r /tmp/tmp3uelikrz/parcellations_9_erhmj/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpreqv0_24/parcellationsvwxnv6ht/Schaefer100x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-04-15 11:05:39,436 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2024-04-15 11:29:37,873 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+    2024-04-15 11:29:37,903 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+    2024-04-15 11:29:38,999 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+    2024-04-15 11:29:39,097 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmp7mik2mn4/parcellationspx5onu8h/Schaefer100x7.nii.gz -r /tmp/tmp7mik2mn4/parcellationspx5onu8h/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpwod6a2fb/parcellationsa0j5idte/Schaefer100x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+    2024-04-15 11:29:40,508 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
     b''
-    2024-04-15 11:05:40,466 - JUNIFER - INFO - No storage specified, returning dictionary
+    2024-04-15 11:29:41,655 - JUNIFER - INFO - No storage specified, returning dictionary
     dict_keys(['VBM_GM'])
     (1, 100)
 
@@ -169,32 +169,32 @@ Perform parcel aggregation on BOLD data (4D) from SPM Auditory dataset
 
  .. code-block:: none
 
-    2024-04-15 11:05:40,467 - JUNIFER - INFO - Getting element sub001
+    2024-04-15 11:29:41,656 - JUNIFER - INFO - Getting element sub001
 
     Dataset created in /home/runner/nilearn_data/spm_auditory
 
     Data absent, downloading...
     Downloading data from https://www.fil.ion.ucl.ac.uk/spm/download/data/MoAEpilot/MoAEpilot.zip ...
-    Downloaded 4005888 of 34212021 bytes (11.7%,    7.8s remaining)    Downloaded 8118272 of 34212021 bytes (23.7%,    6.5s remaining)    Downloaded 12402688 of 34212021 bytes (36.3%,    5.3s remaining)    Downloaded 16809984 of 34212021 bytes (49.1%,    4.2s remaining)    Downloaded 21495808 of 34212021 bytes (62.8%,    3.0s remaining)    Downloaded 25763840 of 34212021 bytes (75.3%,    2.0s remaining)    Downloaded 29515776 of 34212021 bytes (86.3%,    1.1s remaining)    Downloaded 33726464 of 34212021 bytes (98.6%,    0.1s remaining) ...done. (9 seconds, 0 min)
+    Downloaded 2973696 of 34212021 bytes (8.7%,   11.5s remaining)    Downloaded 7135232 of 34212021 bytes (20.9%,    8.1s remaining)    Downloaded 11444224 of 34212021 bytes (33.5%,    6.2s remaining)    Downloaded 15605760 of 34212021 bytes (45.6%,    5.0s remaining)    Downloaded 20185088 of 34212021 bytes (59.0%,    3.6s remaining)    Downloaded 24461312 of 34212021 bytes (71.5%,    2.5s remaining)    Downloaded 29097984 of 34212021 bytes (85.1%,    1.3s remaining)    Downloaded 33366016 of 34212021 bytes (97.5%,    0.2s remaining) ...done. (9 seconds, 0 min)
     Extracting data from /home/runner/nilearn_data/spm_auditory/sub001/MoAEpilot.zip..... done.
-    2024-04-15 11:05:53,154 - JUNIFER - INFO - Reading BOLD from /tmp/tmpucbja5hq/sub001_bold.nii.gz
-    2024-04-15 11:05:53,155 - JUNIFER - INFO - BOLD is type NIFTI
-    2024-04-15 11:05:53,155 - JUNIFER - INFO - Reading T1w from /tmp/tmpucbja5hq/sub001_T1w.nii.gz
-    2024-04-15 11:05:53,155 - JUNIFER - INFO - T1w is type NIFTI
-    2024-04-15 11:05:53,156 - JUNIFER - INFO - Computing BOLD
-    2024-04-15 11:05:53,156 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-04-15 11:05:53,157 - JUNIFER - INFO - Parcellation parameters:
-    2024-04-15 11:05:53,157 - JUNIFER - INFO -      resolution: 3.0
-    2024-04-15 11:05:53,157 - JUNIFER - INFO -      n_rois: 100
-    2024-04-15 11:05:53,157 - JUNIFER - INFO -      yeo_networks: 7
-    2024-04-15 11:05:53,158 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
-    2024-04-15 11:05:53,187 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-04-15 11:05:54,272 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-04-15 11:05:54,369 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmp3uelikrz/parcellationsxwcoh80g/Schaefer100x7.nii.gz -r /tmp/tmp3uelikrz/parcellationsxwcoh80g/MNI152Lin_T1w_3.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpreqv0_24/parcellationscqptee6q/Schaefer100x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-04-15 11:05:55,754 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2024-04-15 11:29:54,342 - JUNIFER - INFO - Reading BOLD from /tmp/tmpu5a0qr19/sub001_bold.nii.gz
+    2024-04-15 11:29:54,342 - JUNIFER - INFO - BOLD is type NIFTI
+    2024-04-15 11:29:54,343 - JUNIFER - INFO - Reading T1w from /tmp/tmpu5a0qr19/sub001_T1w.nii.gz
+    2024-04-15 11:29:54,343 - JUNIFER - INFO - T1w is type NIFTI
+    2024-04-15 11:29:54,344 - JUNIFER - INFO - Computing BOLD
+    2024-04-15 11:29:54,344 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+    2024-04-15 11:29:54,344 - JUNIFER - INFO - Parcellation parameters:
+    2024-04-15 11:29:54,344 - JUNIFER - INFO -      resolution: 3.0
+    2024-04-15 11:29:54,344 - JUNIFER - INFO -      n_rois: 100
+    2024-04-15 11:29:54,345 - JUNIFER - INFO -      yeo_networks: 7
+    2024-04-15 11:29:54,346 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz
+    2024-04-15 11:29:54,377 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+    2024-04-15 11:29:55,522 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+    2024-04-15 11:29:55,621 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmp7mik2mn4/parcellationsngnj6zl8/Schaefer100x7.nii.gz -r /tmp/tmp7mik2mn4/parcellationsngnj6zl8/MNI152Lin_T1w_3.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpwod6a2fb/parcellationseans_l_x/Schaefer100x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+    2024-04-15 11:29:57,026 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
     b''
-    2024-04-15 11:05:58,496 - JUNIFER - INFO - No storage specified, returning dictionary
+    2024-04-15 11:30:00,042 - JUNIFER - INFO - No storage specified, returning dictionary
     dict_keys(['BOLD'])
     (96, 100)
 
@@ -204,7 +204,7 @@ Perform parcel aggregation on BOLD data (4D) from SPM Auditory dataset
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 21.771 seconds)
+   **Total running time of the script:** (0 minutes 22.400 seconds)
 
 
 .. _sphx_glr_download_auto_examples_run_compute_parcel_mean.py:
