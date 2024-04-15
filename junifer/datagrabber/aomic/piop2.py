@@ -26,8 +26,9 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    types: {"BOLD", "BOLD_confounds", "T1w", "VBM_CSF", "VBM_GM", \
-           "VBM_WM", "DWI"} or a list of the options, optional
+    types: {"BOLD", "BOLD_confounds", "BOLD_mask", "T1w", "T1w_mask", \
+           "VBM_CSF", "VBM_GM", "VBM_WM", "DWI"} or \
+           a list of the options, optional
         AOMIC data types. If None, all available data types are selected.
         (default None).
     tasks : {"restingstate", "stopsignal", "workingmemory"} \
