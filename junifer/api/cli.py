@@ -8,7 +8,7 @@ import pathlib
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import click
 import pandas as pd
@@ -20,6 +20,7 @@ from ..utils.logging import (
     warn_with_log,
 )
 from .functions import collect as api_collect
+from .functions import list_elements as api_list_elements
 from .functions import queue as api_queue
 from .functions import reset as api_reset
 from .functions import run as api_run
@@ -449,6 +450,69 @@ def reset(
     config = parse_yaml(filepath)
     # Perform operation
     api_reset(config)
+
+
+@cli.command()
+@click.argument(
+    "filepath",
+    type=click.Path(
+        exists=True, readable=True, dir_okay=False, path_type=pathlib.Path
+    ),
+)
+@click.option("--element", type=str, multiple=True)
+@click.option(
+    "-o",
+    "--output-file",
+    type=click.Path(dir_okay=False, writable=True, path_type=pathlib.Path),
+)
+@click.option(
+    "-v",
+    "--verbose",
+    type=click.UNPROCESSED,
+    callback=_validate_verbose,
+    default="info",
+)
+def list_elements(
+    filepath: click.Path,
+    element: Tuple[str],
+    output_file: Optional[click.Path],
+    verbose: Union[str, int],
+) -> None:
+    """Element listing command for CLI.
+
+    \f
+
+    Parameters
+    ----------
+    filepath : click.Path
+        The filepath to the configuration file.
+    element : tuple of str
+        The element to operate on.
+    output_file : click.Path or None
+        The path to write the output to. If not None, writing to
+        stdout is not performed.
+    verbose : click.Choice
+        The verbosity level: warning, info or debug (default "info").
+
+    """
+    configure_logging(level=verbose)
+    # Parse YAML
+    config = parse_yaml(filepath)  # type: ignore
+    # Fetch datagrabber
+    datagrabber = config["datagrabber"]
+    # Parse elements
+    elements = _parse_elements(element, config)
+    # Perform operation
+    listed_elements = api_list_elements(
+        datagrabber=datagrabber,
+        elements=elements,
+    )
+    # Check if output file is provided
+    if output_file is not None:
+        output_file.touch()
+        output_file.write_text(listed_elements)
+    else:
+        click.secho(listed_elements, fg="blue")
 
 
 @cli.group()
