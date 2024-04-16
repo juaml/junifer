@@ -14,6 +14,7 @@ from ruamel.yaml import YAML
 from junifer.api.cli import (
     _parse_elements_file,
     collect,
+    list_elements,
     queue,
     reset,
     run,
@@ -295,6 +296,88 @@ def test_reset(
         reset_result = runner.invoke(reset, reset_args)
         # Check
         assert reset_result.exit_code == 0
+
+
+@pytest.mark.parametrize(
+    "elements",
+    [
+        ("sub-01", "sub-02"),
+        ("sub-03", "sub-04"),
+    ],
+)
+def test_list_elements_stdout(
+    elements: Tuple[str, ...],
+) -> None:
+    """Test elements listing to stdout.
+
+    Parameters
+    ----------
+    elements : tuple of str
+        The parametrized elements for filtering.
+
+    """
+    # Get test config
+    infile = Path(__file__).parent / "data" / "partly_cloudy_agg_mean_tian.yml"
+    # List elements command arguments
+    list_elements_args = [
+        str(infile.absolute()),
+        "--verbose",
+        "debug",
+        "--element",
+        elements[0],
+        "--element",
+        elements[1],
+    ]
+    # Invoke list elements command
+    list_elements_result = runner.invoke(list_elements, list_elements_args)
+    # Check
+    assert list_elements_result.exit_code == 0
+    assert f"{elements[0]}\n{elements[1]}" in list_elements_result.stdout
+
+
+@pytest.mark.parametrize(
+    "elements",
+    [
+        ("sub-01", "sub-02"),
+        ("sub-03", "sub-04"),
+    ],
+)
+def test_list_elements_output_file(
+    tmp_path: Path,
+    elements: Tuple[str, ...],
+) -> None:
+    """Test elements listing to output file.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    elements : tuple of str
+        The parametrized elements for filtering.
+
+    """
+    # Get test config
+    infile = Path(__file__).parent / "data" / "partly_cloudy_agg_mean_tian.yml"
+    # Output file
+    output_file = tmp_path / "elements.txt"
+    # List elements command arguments
+    list_elements_args = [
+        str(infile.absolute()),
+        "--verbose",
+        "debug",
+        "--element",
+        elements[0],
+        "--element",
+        elements[1],
+        "--output-file",
+        str(output_file.resolve()),
+    ]
+    # Invoke list elements command
+    list_elements_result = runner.invoke(list_elements, list_elements_args)
+    # Check
+    assert list_elements_result.exit_code == 0
+    with open(output_file) as f:
+        assert f"{elements[0]}\n{elements[1]}" == f.read()
 
 
 def test_wtf_short() -> None:
