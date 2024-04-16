@@ -7,13 +7,13 @@
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import pytest
 from ruamel.yaml import YAML
 
 import junifer.testing.registry  # noqa: F401
-from junifer.api.functions import collect, queue, reset, run
+from junifer.api.functions import collect, list_elements, queue, reset, run
 from junifer.datagrabber.base import BaseDataGrabber
 from junifer.pipeline.registry import build
 
@@ -637,3 +637,28 @@ def test_reset_queue(
 
         assert not Path(storage["uri"]).exists()
         assert not (tmp_path / "junifer_jobs" / job_name).exists()
+
+
+@pytest.mark.parametrize(
+    "elements",
+    [
+        ["sub-01"],
+        None,
+    ],
+)
+def test_list_elements(
+    datagrabber: Dict[str, str],
+    elements: Optional[List[str]],
+) -> None:
+    """Test elements listing.
+
+    Parameters
+    ----------
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    elements : str of list of str
+        The parametrized elements for filtering.
+
+    """
+    listed_elements = list_elements(datagrabber, elements)
+    assert "sub-01" in listed_elements
