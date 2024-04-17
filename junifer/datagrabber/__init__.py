@@ -1,4 +1,4 @@
-"""Provide imports for datagrabber sub-package."""
+"""DataGrabbers for datasets' data description."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>

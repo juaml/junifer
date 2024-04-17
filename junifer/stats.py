@@ -1,4 +1,4 @@
-"""Provide functions for statistics."""
+"""Statistical functions and helpers."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>

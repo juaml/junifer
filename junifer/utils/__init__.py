@@ -1,4 +1,4 @@
-"""Provide imports for utils sub-package."""
+"""General utilities and helpers."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>

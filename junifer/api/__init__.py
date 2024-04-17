@@ -1,4 +1,4 @@
-"""Provide imports for api sub-package."""
+"""Public API and CLI components."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>

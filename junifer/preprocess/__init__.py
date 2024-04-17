@@ -1,4 +1,4 @@
-"""Provide imports for preprocess sub-package."""
+"""Preprocessors for preprocessing data before feature extraction."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
