@@ -18,13 +18,16 @@ if TYPE_CHECKING:
 class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
     """Abstract base class for all markers.
 
+    For every interface that is required, one needs to provide a concrete
+    implementation of this abstract class.
+
     Parameters
     ----------
-    on : str or list of str
-        The kind of data to apply the marker to. By default, will work on all
-        available data.
+    on : str or list of str or None, optional
+        The data type to apply the marker on. If None,
+        will work on all available data types (default None).
     name : str, optional
-        The name of the marker. By default, it will use the class name as the
+        The name of the marker. If None, will use the class name as the
         name of the marker (default None).
 
     Raises
@@ -192,17 +195,21 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         for type_ in self._on:
             if type_ in input.keys():
                 logger.info(f"Computing {type_}")
+                # Get data dict for data type
                 t_input = input[type_]
+                # Pass the other data types as extra input, removing
+                # the current type
                 extra_input = input.copy()
                 extra_input.pop(type_)
+                # Copy metadata
                 t_meta = t_input["meta"].copy()
                 t_meta["type"] = type_
-
+                # Compute marker
                 t_out = self.compute(input=t_input, extra_input=extra_input)
                 t_out["meta"] = t_meta
-
+                # Update metadata for step
                 self.update_meta(t_out, "marker")
-
+                # Check storage
                 if storage is not None:
                     logger.info(f"Storing in {storage}")
                     self.store(type_=type_, out=t_out, storage=storage)
