@@ -79,7 +79,7 @@ API Changes
 - Add a positional argument ``using`` for Markers and Preprocessors having
   implementation-based variations, in particular :class:`.ReHoParcels`,
   :class:`.ReHoSpheres`, :class:`.ALFFParcels`, :class:`.ALFFSpheres` and
-  :class:`.BOLDWarper` by `Synchon Mandal`_ (:gh:`311`)
+  ``BOLDWarper`` by `Synchon Mandal`_ (:gh:`311`)
 - Change all ``probseg_`` types to ``VBM_`` types by `Fede Raimondo`_
   (:gh:`320`)
 - Change the subject and session patterns for :class:`.DataladAOMICID1000`,
@@ -120,13 +120,13 @@ Enhancements
   coordinates by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
 - Add ``mode`` as an aggregation function option in
   :func:`.get_aggfunc_by_name` by `Synchon Mandal`_ (:gh:`287`)
-- Adapt :class:`.BOLDWarper` to use FSL or ANTs depending on warp file
+- Adapt ``BOLDWarper`` to use FSL or ANTs depending on warp file
   extension by `Synchon Mandal`_ (:gh:`293`)
 - Rewrite :func:`.compute_brain_mask` to allow variable template fetching via
   templateflow, according to target data by `Synchon Mandal`_ (:gh:`299`)
 - Replace ``requests`` with ``httpx`` for fetching parcellations by `Synchon
   Mandal`_ (:gh:`300`)
-- Allow :class:`.BOLDWarper` to warp BOLD data to other MNI spaces by `Synchon
+- Allow ``BOLDWarper`` to warp BOLD data to other MNI spaces by `Synchon
   Mandal`_ (:gh:`302`)
 - Add support for local ``junifer queue`` via GNU Parallel by `Synchon Mandal`_
   (:gh:`306`)
@@ -168,7 +168,7 @@ Features
   by `Synchon Mandal`_ (:gh:`265`)
 - Introduce ``junifer.preprocess.fsl.apply_warper._ApplyWarper`` to wrap FSL's
   ``applywarp`` by `Synchon Mandal`_ (:gh:`266`)
-- Introduce :class:`.BOLDWarper` for warping BOLD data via FSL's ``applywarp``
+- Introduce ``BOLDWarper`` for warping BOLD data via FSL's ``applywarp``
   by `Synchon Mandal`_ (:gh:`267`)
 - Introduce :class:`.DMCC13Benchmark` to access `DMCC13benchmark dataset
   <https://openneuro.org/datasets/ds003452/versions/1.0.1>`_ by `Synchon
@@ -216,7 +216,7 @@ Miscellaneous
   `Synchon Mandal`_ (:gh:`279`)
 - Add support for accessing FSL ``img2imgcoord`` via Docker wrapper command by
   `Synchon Mandal`_ (:gh:`281`)
-- Make :class:`.BOLDWarper` tool-agnostic by moving it from
+- Make ``BOLDWarper`` tool-agnostic by moving it from
   ``junifer.preprocess.fsl`` to :mod:`junifer.preprocess` by `Synchon Mandal`_
   (:gh:`288`)
 - Add support for accessing ANTs' ``ResampleImage`` via Docker wrapper by
@@ -232,7 +232,7 @@ Miscellaneous
 Deprecations and Removals
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- Deprecate :class:`.BOLDWarper` and mark for removal in v0.0.4 by `Synchon
+- Deprecate ``BOLDWarper`` and mark for removal in v0.0.4 by `Synchon
   Mandal`_ (:gh:`301`)
 
 
