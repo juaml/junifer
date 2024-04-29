@@ -146,8 +146,8 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             The computed result as dictionary.
         dict or None
             Extra "helper" data types as dictionary to add to the Junifer Data
-            object. For example, computed BOLD mask can be passed via this.
-            If no new "helper" data types is created, None is to be passed.
+            object. If no new "helper" data type(s) is(are) created, None is to
+            be passed.
 
         """
         raise_error(
