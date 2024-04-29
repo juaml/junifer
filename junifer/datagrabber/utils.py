@@ -13,51 +13,45 @@ from ..utils import logger, raise_error
 PATTERNS_SCHEMA = {
     "T1w": {
         "mandatory": ["pattern", "space"],
-        "optional": ["mask_item"],
-    },
-    "T1w_mask": {
-        "mandatory": ["pattern", "space"],
-        "optional": [],
+        "optional": {
+            "mask": {"mandatory": ["pattern", "space"], "optional": []},
+        },
     },
     "T2w": {
         "mandatory": ["pattern", "space"],
-        "optional": ["mask_item"],
-    },
-    "T2w_mask": {
-        "mandatory": ["pattern", "space"],
-        "optional": [],
+        "optional": {
+            "mask": {"mandatory": ["pattern", "space"], "optional": []},
+        },
     },
     "BOLD": {
         "mandatory": ["pattern", "space"],
-        "optional": ["mask_item"],
-    },
-    "BOLD_confounds": {
-        "mandatory": ["pattern", "format"],
-        "optional": [],
-    },
-    "BOLD_mask": {
-        "mandatory": ["pattern", "space"],
-        "optional": [],
+        "optional": {
+            "mask": {"mandatory": ["pattern", "space"], "optional": []},
+            "confounds": {
+                "mandatory": ["pattern", "format"],
+                "optional": ["mappings"],
+            },
+        },
     },
     "Warp": {
         "mandatory": ["pattern", "src", "dst"],
-        "optional": [],
+        "optional": {},
     },
     "VBM_GM": {
         "mandatory": ["pattern", "space"],
-        "optional": [],
+        "optional": {},
     },
     "VBM_WM": {
         "mandatory": ["pattern", "space"],
-        "optional": [],
+        "optional": {},
     },
     "VBM_CSF": {
         "mandatory": ["pattern", "space"],
-        "optional": [],
+        "optional": {},
     },
     "DWI": {
         "mandatory": ["pattern"],
-        "optional": [],
+        "optional": {},
     },
 }
 
@@ -129,6 +123,67 @@ def validate_replacements(
         raise_error(msg="At least one pattern must contain all replacements.")
 
 
+def _validate_mandatory_keys(
+    keys: List[str], schema: List[str], data_type: str
+) -> None:
+    """Validate mandatory keys.
+
+    Parameters
+    ----------
+    keys : list of str
+        The keys to validate.
+    schema : list of str
+        The schema to validate against.
+    data_type : str
+        The data type being validated.
+
+    Raises
+    ------
+    KeyError
+        If any mandatory key is missing for a data type.
+
+    """
+    for key in schema:
+        if key not in keys:
+            raise_error(
+                msg=f"Mandatory key: `{key}` missing for {data_type}",
+                klass=KeyError,
+            )
+        else:
+            logger.debug(f"Mandatory key: `{key}` found for {data_type}")
+
+
+def _identify_stray_keys(
+    keys: List[str], schema: List[str], data_type: str
+) -> None:
+    """Identify stray keys.
+
+    Parameters
+    ----------
+    keys : list of str
+        The keys to check.
+    schema : list of str
+        The schema to check against.
+    data_type : str
+        The data type being checked.
+
+    Raises
+    ------
+    RuntimeError
+        If an unknown key is found for a data type.
+
+    """
+    for key in keys:
+        if key not in schema:
+            raise_error(
+                msg=(
+                    f"Key: {key} not accepted for {data_type} "
+                    "pattern, remove it to proceed"
+                ),
+                klass=RuntimeError,
+            )
+
+
 def validate_patterns(
     types: List[str], patterns: Dict[str, Dict[str, str]]
 ) -> None:
@@ -143,10 +198,6 @@ def validate_patterns(
 
     Raises
     ------
-    KeyError
-        If any mandatory key is missing for a data type.
-    RuntimeError
-        If an unknown key is found for a data type.
     TypeError
         If ``patterns`` is not a dictionary.
     ValueError
@@ -180,22 +231,15 @@ def validate_patterns(
                 f"should be one of: {list(PATTERNS_SCHEMA.keys())}"
             )
         # Check mandatory keys for data type
-        for mandatory_key in PATTERNS_SCHEMA[data_type_key]["mandatory"]:
-            if mandatory_key not in data_type_val:
-                raise_error(
-                    msg=(
-                        f"Mandatory key: `{mandatory_key}` missing for "
-                        f"{data_type_key}"
-                    ),
-                    klass=KeyError,
-                )
-            else:
-                logger.debug(
-                    f"Mandatory key: `{mandatory_key}` found for "
-                    f"{data_type_key}"
-                )
+        _validate_mandatory_keys(
+            keys=list(data_type_val),
+            schema=PATTERNS_SCHEMA[data_type_key]["mandatory"],
+            data_type=data_type_key,
+        )
         # Check optional keys for data type
-        for optional_key in PATTERNS_SCHEMA[data_type_key]["optional"]:
+        for optional_key, optional_val in PATTERNS_SCHEMA[data_type_key][
+            "optional"
+        ].items():
             if optional_key not in data_type_val:
                 logger.debug(
                     f"Optional key: `{optional_key}` missing for "
@@ -206,19 +250,48 @@ def validate_patterns(
                     f"Optional key: `{optional_key}` found for "
                     f"{data_type_key}"
                 )
-        # Check stray key for data type
-        for key in data_type_val.keys():
-            if key not in (
-                PATTERNS_SCHEMA[data_type_key]["mandatory"]
-                + PATTERNS_SCHEMA[data_type_key]["optional"]
-            ):
-                raise_error(
-                    msg=(
-                        f"Key: {key} not accepted for {data_type_key} "
-                        "pattern, remove it to proceed"
-                    ),
-                    klass=RuntimeError,
+                # Set nested type name for easier access
+                nested_data_type = f"{data_type_key}.{optional_key}"
+                nested_mandatory_keys_schema = PATTERNS_SCHEMA[data_type_key][
+                    "optional"
+                ][optional_key]["mandatory"]
+                nested_optional_keys_schema = PATTERNS_SCHEMA[data_type_key][
+                    "optional"
+                ][optional_key]["optional"]
+                # Check mandatory keys for nested type
+                _validate_mandatory_keys(
+                    keys=list(optional_val["mandatory"]),
+                    schema=nested_mandatory_keys_schema,
+                    data_type=nested_data_type,
                 )
+                # Check optional keys for nested type
+                for nested_optional_key in nested_optional_keys_schema:
+                    if nested_optional_key not in optional_val["optional"]:
+                        logger.debug(
+                            f"Optional key: `{nested_optional_key}` missing "
+                            f"for {nested_data_type}"
+                        )
+                    else:
+                        logger.debug(
+                            f"Optional key: `{nested_optional_key}` found for "
+                            f"{nested_data_type}"
+                        )
+                # Check stray key for nested data type
+                _identify_stray_keys(
+                    keys=optional_val["mandatory"] + optional_val["optional"],
+                    schema=nested_mandatory_keys_schema
+                    + nested_optional_keys_schema,
+                    data_type=nested_data_type,
+                )
+        # Check stray key for data type
+        _identify_stray_keys(
+            keys=list(data_type_val.keys()),
+            schema=(
+                PATTERNS_SCHEMA[data_type_key]["mandatory"]
+                + list(PATTERNS_SCHEMA[data_type_key]["optional"].keys())
+            ),
+            data_type=data_type_key,
+        )
         # Wildcard check in patterns
         if "}*" in data_type_val["pattern"]:
             raise_error(
