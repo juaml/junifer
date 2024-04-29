@@ -32,7 +32,12 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
 
             {
               "mandatory": ["pattern", "space"],
-              "optional": []
+              "optional": {
+                  "mask": {
+                      "mandatory": ["pattern", "space"],
+                      "optional": []
+                  }
+              }
             }
 
         * ``"T2w"`` :
@@ -41,7 +46,12 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
 
             {
               "mandatory": ["pattern", "space"],
-              "optional": []
+              "optional": {
+                  "mask": {
+                      "mandatory": ["pattern", "space"],
+                      "optional": []
+                  }
+              }
             }
 
         * ``"BOLD"`` :
@@ -50,7 +60,16 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
 
             {
               "mandatory": ["pattern", "space"],
-              "optional": ["mask_item"]
+              "optional": {
+                  "mask": {
+                      "mandatory": ["pattern", "space"],
+                      "optional": []
+                  }
+                  "confounds": {
+                      "mandatory": ["pattern", "format"],
+                      "optional": []
+                  }
+              }
             }
 
         * ``"Warp"`` :
@@ -59,15 +78,6 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
 
             {
               "mandatory": ["pattern", "src", "dst"],
-              "optional": []
-            }
-
-        * ``"BOLD_confounds"`` :
-
-          .. code-block:: none
-
-            {
-              "mandatory": ["pattern", "format"],
               "optional": []
             }
 
