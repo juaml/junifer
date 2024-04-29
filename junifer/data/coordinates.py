@@ -13,7 +13,7 @@ import pandas as pd
 from numpy.typing import ArrayLike
 
 from ..pipeline import WorkDirManager
-from ..utils import logger, raise_error, run_ext_cmd, warn_with_log
+from ..utils import logger, raise_error, run_ext_cmd
 
 
 # Path to the VOIs
@@ -377,11 +377,6 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str], str]:
     ValueError
         If ``name`` is invalid.
 
-    Warns
-    -----
-    DeprecationWarning
-        If ``Power`` is provided as the ``name``.
-
     """
     # Check for valid coordinates name
     if name not in _available_coordinates:
@@ -389,18 +384,6 @@ def load_coordinates(name: str) -> Tuple[ArrayLike, List[str], str]:
             f"Coordinates {name} not found. "
             f"Valid options are: {list_coordinates()}"
         )
-
-    # Put up deprecation notice
-    if name == "Power":
-        warn_with_log(
-            msg=(
-                "`Power` has been replaced with `Power2011` and will be "
-                "removed in the next release. For now, it's available for "
-                "backward compatibility."
-            ),
-            category=DeprecationWarning,
-        )
-
     # Load coordinates
     t_coord = _available_coordinates[name]
     if isinstance(t_coord.get("path"), Path):
