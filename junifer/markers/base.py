@@ -201,6 +201,10 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
                 # the current type
                 extra_input = input.copy()
                 extra_input.pop(type_)
+                logger.debug(
+                    f"Extra data type for feature extraction: "
+                    f"{extra_input.keys()}"
+                )
                 # Copy metadata
                 t_meta = t_input["meta"].copy()
                 t_meta["type"] = type_
