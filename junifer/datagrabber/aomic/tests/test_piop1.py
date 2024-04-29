@@ -63,19 +63,19 @@ def test_DataladAOMICPIOP1(tasks: Optional[str]) -> None:
         assert out["BOLD"]["path"].exists()
         assert out["BOLD"]["path"].is_file()
 
-        # asserts type "BOLD_confounds"
-        assert "BOLD_confounds" in out
+        # asserts type BOLD.confounds
+        assert "confounds" in out["BOLD"]
 
         assert (
-            out["BOLD_confounds"]["path"].name == f"{sub}_task-{new_task}_"
+            out["BOLD"]["confounds"]["path"].name == f"{sub}_task-{new_task}_"
             "desc-confounds_regressors.tsv"
         )
 
-        assert out["BOLD_confounds"]["path"].exists()
-        assert out["BOLD_confounds"]["path"].is_file()
+        assert out["BOLD"]["confounds"]["path"].exists()
+        assert out["BOLD"]["confounds"]["path"].is_file()
 
-        # assert BOLD_mask
-        assert out["BOLD_mask"]["path"].exists()
+        # assert BOLD.mask
+        assert out["BOLD"]["mask"]["path"].exists()
 
         # asserts type "T1w"
         assert "T1w" in out
@@ -88,8 +88,8 @@ def test_DataladAOMICPIOP1(tasks: Optional[str]) -> None:
         assert out["T1w"]["path"].exists()
         assert out["T1w"]["path"].is_file()
 
-        # asserts T1w_mask
-        assert out["T1w_mask"]["path"].exists()
+        # asserts T1w.mask
+        assert out["T1w"]["mask"]["path"].exists()
 
         # asserts type "VBM_CSF"
         assert "VBM_CSF" in out
@@ -147,13 +147,12 @@ def test_DataladAOMICPIOP1(tasks: Optional[str]) -> None:
     "types",
     [
         "BOLD",
-        "BOLD_confounds",
         "T1w",
         "VBM_CSF",
         "VBM_GM",
         "VBM_WM",
         "DWI",
-        ["BOLD", "BOLD_confounds"],
+        ["BOLD", "VBM_CSF"],
         ["T1w", "VBM_CSF"],
         ["VBM_GM", "VBM_WM"],
         ["DWI", "BOLD"],

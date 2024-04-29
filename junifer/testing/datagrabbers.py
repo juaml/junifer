@@ -181,7 +181,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         """Initialize the class."""
         datadir = tempfile.mkdtemp()
         # Define types
-        types = ["BOLD", "BOLD_confounds"]
+        types = ["BOLD"]
         self.reduce_confounds = reduce_confounds
         self.age_group = age_group
         super().__init__(types=types, datadir=datadir)
@@ -242,10 +242,10 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         out["BOLD"] = {
             "path": Path(self._dataset["func"][i_sub]),
             "space": "MNI152NLin2009cAsym",
-        }
-        out["BOLD_confounds"] = {
-            "path": Path(self._dataset["confounds"][i_sub]),
-            "format": "fmriprep",
+            "confounds": {
+                "path": Path(self._dataset["confounds"][i_sub]),
+                "format": "fmriprep",
+            },
         }
 
         return out

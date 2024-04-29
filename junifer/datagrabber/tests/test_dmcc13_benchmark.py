@@ -93,13 +93,10 @@ def test_DMCC13Benchmark(
         # Available data types
         data_types = [
             "BOLD",
-            "BOLD_confounds",
-            "BOLD_mask",
             "VBM_CSF",
             "VBM_GM",
             "VBM_WM",
             "T1w",
-            "T1w_mask",
         ]
         # Add Warp if native T1w is accessed
         if native_t1w:
@@ -111,14 +108,6 @@ def test_DMCC13Benchmark(
                 f"sub-01_{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
                 "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
             ),
-            (
-                f"sub-01_{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
-                "desc-confounds_regressors.tsv"
-            ),
-            (
-                f"sub-01_{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
-                "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
-            ),
             "sub-01_space-MNI152NLin2009cAsym_label-CSF_probseg.nii.gz",
             "sub-01_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz",
             "sub-01_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz",
@@ -127,16 +116,12 @@ def test_DMCC13Benchmark(
             data_file_names.extend(
                 [
                     "sub-01_desc-preproc_T1w.nii.gz",
-                    "sub-01_desc-brain_mask.nii.gz",
                     "sub-01_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5",
                 ]
             )
         else:
-            data_file_names.extend(
-                [
-                    "sub-01_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz",
-                    "sub-01_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz",
-                ]
+            data_file_names.append(
+                "sub-01_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz"
             )
 
         for data_type, data_file_name in zip(data_types, data_file_names):
@@ -150,6 +135,48 @@ def test_DMCC13Benchmark(
             assert out[data_type]["path"].name == data_file_name
             # Assert metadata
             assert "meta" in out[data_type]
+
+        # Check BOLD nested data types
+        for type_, file_name in zip(
+            ("mask", "confounds"),
+            (
+                (
+                    f"sub-01_{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
+                    "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+                ),
+                (
+                    f"sub-01_{ses}_task-{task}_acq-mb4{phase}_run-{run}_"
+                    "desc-confounds_regressors.tsv"
+                ),
+            ),
+        ):
+            # Assert data type
+            assert type_ in out["BOLD"]
+            # Assert data file path exists
+            assert out["BOLD"][type_]["path"].exists()
+            # Assert data file path is a file
+            assert out["BOLD"][type_]["path"].is_file()
+            # Assert data file name
+            assert out["BOLD"][type_]["path"].name == file_name
+
+        # Check T1w nested data types
+        # Assert data type
+        assert "mask" in out["T1w"]
+        # Assert data file path exists
+        assert out["T1w"]["mask"]["path"].exists()
+        # Assert data file path is a file
+        assert out["T1w"]["mask"]["path"].is_file()
+        # Assert data file name
+        if native_t1w:
+            assert (
+                out["T1w"]["mask"]["path"].name
+                == "sub-01_desc-brain_mask.nii.gz"
+            )
+        else:
+            assert (
+                out["T1w"]["mask"]["path"].name
+                == "sub-01_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+            )
 
 
 @pytest.mark.parametrize(
@@ -165,8 +192,8 @@ def test_DMCC13Benchmark(
         ("VBM_GM", False),
         ("VBM_WM", True),
         ("VBM_WM", False),
-        (["BOLD", "BOLD_confounds"], True),
-        (["BOLD", "BOLD_confounds"], False),
+        (["BOLD", "VBM_CSF"], True),
+        (["BOLD", "VBM_CSF"], False),
         (["T1w", "VBM_CSF"], True),
         (["T1w", "VBM_CSF"], False),
         (["VBM_GM", "VBM_WM"], True),

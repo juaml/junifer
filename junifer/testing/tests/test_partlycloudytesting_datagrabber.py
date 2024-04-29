@@ -28,13 +28,13 @@ def test_PartlyCloudyTestingDataGrabber() -> None:
         assert out["BOLD"]["path"].exists()
         assert out["BOLD"]["path"].is_file()
 
-        assert "BOLD_confounds" in out
-        assert out["BOLD_confounds"]["path"].exists()
-        assert out["BOLD_confounds"]["path"].is_file()
-        assert "format" in out["BOLD_confounds"]
-        assert "fmriprep" == out["BOLD_confounds"]["format"]
+        assert "confounds" in out["BOLD"]
+        assert out["BOLD"]["confounds"]["path"].exists()
+        assert out["BOLD"]["confounds"]["path"].is_file()
+        assert "format" in out["BOLD"]["confounds"]
+        assert "fmriprep" == out["BOLD"]["confounds"]["format"]
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         out = dg["sub-01"]
-        assert "format" in out["BOLD_confounds"]
-        assert "fmriprep" == out["BOLD_confounds"]["format"]
+        assert "format" in out["BOLD"]["confounds"]
+        assert "fmriprep" == out["BOLD"]["confounds"]["format"]
