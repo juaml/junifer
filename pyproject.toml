@@ -217,7 +217,17 @@ max-complexity = 20
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "--ignore=junifer/external/h5io --ignore=junifer/external/BrainPrint -vv"
+testpaths = "junifer"
+log_cli_level = "INFO"
+xfail_strict = true
+addopts = [
+    "-ra",
+    "--strict-config",
+    "--strict-markers",
+    "--ignore=junifer/external/h5io",
+    "--ignore=junifer/external/BrainPrint",
+    "-vv",
+]
 
 [tool.towncrier]
 directory = "docs/changes/newsfragments"
