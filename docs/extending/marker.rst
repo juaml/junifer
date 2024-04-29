@@ -114,8 +114,7 @@ arguments:
   path to the data. The dictionary can also contain other keys, depending on the
   data type.
 * ``extra_input``: the rest of the :ref:`Data Object<data_object>`. This is
-  useful if you want to use other data to compute the Marker
-  (e.g.: ``BOLD_confounds`` can be used to de-confound the ``BOLD`` data).
+  useful if you want to use other data to compute the Marker.
 
 Following the example, we will compute the mean of the data in each parcel using
 :class:`nilearn.maskers.NiftiLabelsMasker`. Importantly, the output of the
