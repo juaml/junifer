@@ -1,4 +1,4 @@
-"""Provide imports for datareader sub-package."""
+"""DataReaders for datasets' data loading."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>

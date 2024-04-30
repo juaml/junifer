@@ -1,4 +1,4 @@
-"""Provide functions for parcellation."""
+"""Functions for parcellation manipulation."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>

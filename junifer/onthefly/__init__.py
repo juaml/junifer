@@ -1,4 +1,4 @@
-"""Provide imports for onthefly sub-package."""
+"""Utilities for on-the-fly analyses."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL

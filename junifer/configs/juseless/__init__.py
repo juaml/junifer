@@ -1,4 +1,4 @@
-"""Provide imports for juseless sub-package."""
+"""Custom components for FZJ INM-7's beloved juseless."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
