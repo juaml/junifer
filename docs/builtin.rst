@@ -729,14 +729,6 @@ Available
      - | Compute a brain mask for the images by guessing the value of the
        | background from the border of the image.
        | See :func:`nilearn.masking.compute_background_mask`
-   * - ``nilearn``'s ICBM152 template gray-matter mask
-     - | ``fetch_icbm152_brain_gm_mask``
-     - ``MNI152NLin2009aAsym``
-     - 0.0.2
-     - | Compute a gray-matter mask from the asymmetrical ICBM152 2009 template,
-       | release a.
-       | See :func:`nilearn.datasets.fetch_icbm152_brain_gm_mask`
-
 
 ..
    Planned
