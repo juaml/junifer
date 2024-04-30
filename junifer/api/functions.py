@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import os
 import shutil
 import typing
 from pathlib import Path
@@ -339,12 +340,12 @@ def reset(config: Dict) -> None:
     storage = config["storage"]
     storage_uri = Path(storage["uri"])
     logger.info(f"Deleting {storage_uri.resolve()!s}")
-    # Delete storage; will be str
+    # Delete storage
     if storage_uri.exists():
-        # Delete files in the directory
-        for file in storage_uri.iterdir():
+        # Delete files in the job storage directory
+        for file in storage_uri.parent.iterdir():
             file.unlink(missing_ok=True)
-        # Remove directory
+        # Remove job storage directory
         storage_uri.parent.rmdir()
 
     # Fetch job name (if present)
@@ -359,8 +360,9 @@ def reset(config: Dict) -> None:
         if job_dir.exists():
             # Remove files and directories
             shutil.rmtree(job_dir)
-            # Remove directory
-            job_dir.parent.rmdir()
+            # Remove parent directory (if empty)
+            if not next(os.scandir(job_dir.parent), None):
+                job_dir.parent.rmdir()        
 
 
 def list_elements(
