@@ -269,7 +269,7 @@
         <article role="main">
           <section id="module-junifer.data.parcellations">
 <span id="parcellations"></span><h1><span class="section-number">9.2.1. </span>Parcellations<a class="headerlink" href="#module-junifer.data.parcellations" title="Link to this heading">#</a></h1>
-<p>Provide functions for parcellation.</p>
+<p>Functions for parcellation manipulation.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.parcellations.get_parcellation">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.parcellations.</span></span><span class="sig-name descname"><span class="pre">get_parcellation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.parcellations.get_parcellation" title="Link to this definition">#</a></dt>
@@ -428,7 +428,7 @@ False or if the parcellation name is a built-in parcellation.</p>
 </section>
 <section id="module-junifer.data.coordinates">
 <span id="coordinates"></span><h1><span class="section-number">9.2.2. </span>Coordinates<a class="headerlink" href="#module-junifer.data.coordinates" title="Link to this heading">#</a></h1>
-<p>Provide functions for list of coordinates.</p>
+<p>Functions for coordinates manipulation.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.coordinates.get_coordinates">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.coordinates.</span></span><span class="sig-name descname"><span class="pre">get_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.coordinates.get_coordinates" title="Link to this definition">#</a></dt>
@@ -507,12 +507,6 @@ kinds that needs to be used in the computation of coordinates
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Warns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#DeprecationWarning" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DeprecationWarning</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">Power</span></code> is provided as the <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
-</dd>
-</dl>
-</dd>
 </dl>
 </dd></dl>
 
@@ -557,7 +551,7 @@ False or if the coordinates name is a built-in coordinates or if the
 </section>
 <section id="module-junifer.data.masks">
 <span id="masks"></span><h1><span class="section-number">9.2.3. </span>Masks<a class="headerlink" href="#module-junifer.data.masks" title="Link to this heading">#</a></h1>
-<p>Provide functions for masks.</p>
+<p>Functions for mask manipulation.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.masks.compute_brain_mask">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.masks.</span></span><span class="sig-name descname"><span class="pre">compute_brain_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'brain'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.masks.compute_brain_mask" title="Link to this definition">#</a></dt>
@@ -627,9 +621,7 @@ kinds that needs to be used in the computation of masks (default None).</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If warp / transformation file extension is not “.mat” or “.h5” or
-if fetch_icbm152_brain_gm_mask is used and requires warping to
-other template space.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If warp / transformation file extension is not “.mat” or “.h5”.</p>
 </dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If extra key is provided in addition to mask name in <code class="docutils literal notranslate"><span class="pre">masks</span></code> or
 if no mask is provided or
@@ -728,7 +720,7 @@ False or if the mask name is a built-in mask.</p>
 </section>
 <section id="module-junifer.data.template_spaces">
 <span id="template-spaces"></span><h1><span class="section-number">9.2.4. </span>Template Spaces<a class="headerlink" href="#module-junifer.data.template_spaces" title="Link to this heading">#</a></h1>
-<p>Provide functions for template spaces.</p>
+<p>Functions for template space manipulation.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.template_spaces.get_template">
 <span class="sig-prename descclassname"><span class="pre">junifer.data.template_spaces.</span></span><span class="sig-name descname"><span class="pre">get_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T1w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.template_spaces.get_template" title="Link to this definition">#</a></dt>
