@@ -326,7 +326,9 @@ def get_parcellation(
             # Call antsApplyTransforms
             run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
 
-            img = nib.load(warped_parcellation_path)
+            raw_img = nib.load(warped_parcellation_path)
+            # Remove extra dimension added by ANTs
+            img = image.math_img("np.squeeze(img)", img=raw_img)
 
         # Resample parcellation to target image
         img_to_merge = image.resample_to_img(
