@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import os
 import shutil
 import typing
 from pathlib import Path
@@ -339,12 +340,12 @@ def reset(config: Dict) -> None:
     storage = config["storage"]
     storage_uri = Path(storage["uri"])
     logger.info(f"Deleting {storage_uri.resolve()!s}")
-    # Delete storage; will be str
+    # Delete storage
     if storage_uri.exists():
-        # Delete files in the directory
-        for file in storage_uri.iterdir():
+        # Delete files in the job storage directory
+        for file in storage_uri.parent.iterdir():
             file.unlink(missing_ok=True)
-        # Remove directory
+        # Remove job storage directory
         storage_uri.parent.rmdir()
 
     # Fetch job name (if present)
@@ -359,5 +360,47 @@ def reset(config: Dict) -> None:
         if job_dir.exists():
             # Remove files and directories
             shutil.rmtree(job_dir)
-            # Remove directory
-            job_dir.parent.rmdir()
+            # Remove parent directory (if empty)
+            if not next(os.scandir(job_dir.parent), None):
+                job_dir.parent.rmdir()        
+
+
+def list_elements(
+    datagrabber: Dict,
+    elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
+) -> str:
+    """List elements of the datagrabber filtered using `elements`.
+
+    Parameters
+    ----------
+    datagrabber : dict
+        DataGrabber to index. Must have a key ``kind`` with the kind of
+        DataGrabber to use. All other keys are passed to the DataGrabber
+        constructor.
+    elements : str or tuple or list of str or tuple, optional
+        Element(s) to filter using. Will be used to index the DataGrabber
+        (default None).
+
+    """
+    # Get datagrabber to use
+    datagrabber_object = _get_datagrabber(datagrabber)
+
+    # Fetch elements
+    raw_elements_to_list = []
+    with datagrabber_object:
+        if elements is not None:
+            for element in datagrabber_object.filter(elements):
+                raw_elements_to_list.append(element)
+        else:
+            for element in datagrabber_object:
+                raw_elements_to_list.append(element)
+
+    elements_to_list = []
+    for element in raw_elements_to_list:
+        # Stringify elements if tuple for operation
+        str_element = (
+            ",".join(element) if isinstance(element, tuple) else element
+        )
+        elements_to_list.append(str_element)
+
+    return "\n".join(elements_to_list)

@@ -1,4 +1,4 @@
-"""Provide imports for markers sub-package."""
+"""Markers for feature extraction."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>

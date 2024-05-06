@@ -1,4 +1,4 @@
-"""Provide imports for custom nilearn objects sub-package."""
+"""Custom objects adapted from nilearn."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL

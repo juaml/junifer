@@ -386,14 +386,6 @@ def test_get_mask_errors() -> None:
                 masks="inherit", target_data=vbm_gm, extra_input=extra_input
             )
 
-        # Block fetch_icbm152_brain_gm_mask space transformation
-        with pytest.raises(RuntimeError, match="prohibited"):
-            get_mask(
-                masks="fetch_icbm152_brain_gm_mask",
-                target_data=vbm_gm,
-                extra_input=extra_input,
-            )
-
 
 @pytest.mark.parametrize(
     "mask_name,function,params,resample",

@@ -1,4 +1,4 @@
-"""Provide imports for pipeline sub-package."""
+"""Pipeline components."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL

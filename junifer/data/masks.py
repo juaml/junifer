@@ -1,4 +1,4 @@
-"""Provide functions for masks."""
+"""Functions for mask manipulation."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -19,7 +19,6 @@ from typing import (
 
 import nibabel as nib
 import numpy as np
-from nilearn.datasets import fetch_icbm152_brain_gm_mask
 from nilearn.image import get_data, new_img_like, resample_to_img
 from nilearn.masking import (
     compute_background_mask,
@@ -28,7 +27,7 @@ from nilearn.masking import (
 )
 
 from ..pipeline import WorkDirManager
-from ..utils import logger, raise_error, run_ext_cmd, warn_with_log
+from ..utils import logger, raise_error, run_ext_cmd
 from .template_spaces import get_template, get_xfm
 from .utils import closest_resolution
 
@@ -121,46 +120,6 @@ def compute_brain_mask(
     return new_img_like(target_img, mask)  # type: ignore
 
 
-def _fetch_icbm152_brain_gm_mask(
-    target_img: "Nifti1Image",
-    **kwargs,
-) -> "Nifti1Image":
-    """Fetch ICBM152 brain mask and resample.
-
-    Parameters
-    ----------
-    target_img : nibabel.Nifti1Image
-        The image to which the mask will be resampled.
-    **kwargs : dict
-        Keyword arguments to be passed to
-        :func:`nilearn.datasets.fetch_icbm152_brain_gm_mask`.
-
-    Returns
-    -------
-    nibabel.Nifti1Image
-        The resampled mask.
-
-    Warns
-    -----
-    DeprecationWarning
-        If this function is used.
-
-    """
-    warn_with_log(
-        msg=(
-            "It is recommended to use ``compute_brain_mask`` with "
-            "``mask_type='gm'``. This function will be removed in the next "
-            "release. For now, it's available for backward compatibility."
-        ),
-        category=DeprecationWarning,
-    )
-    mask = fetch_icbm152_brain_gm_mask(**kwargs)
-    mask = resample_to_img(
-        mask, target_img, interpolation="nearest", copy=True
-    )
-    return mask
-
-
 # A dictionary containing all supported masks and their respective file or
 # data.
 
@@ -193,11 +152,6 @@ _available_masks: Dict[str, Dict[str, Any]] = {
         "family": "Callable",
         "func": compute_epi_mask,
         "space": "inherit",
-    },
-    "fetch_icbm152_brain_gm_mask": {
-        "family": "Callable",
-        "func": _fetch_icbm152_brain_gm_mask,
-        "space": "MNI152NLin2009aAsym",
     },
 }
 
@@ -292,9 +246,7 @@ def get_mask(  # noqa: C901
     Raises
     ------
     RuntimeError
-        If warp / transformation file extension is not ".mat" or ".h5" or
-        if fetch_icbm152_brain_gm_mask is used and requires warping to
-        other template space.
+        If warp / transformation file extension is not ".mat" or ".h5".
     ValueError
         If extra key is provided in addition to mask name in ``masks`` or
         if no mask is provided or
@@ -402,21 +354,6 @@ def get_mask(  # noqa: C901
             mask_img = extra_input[inherited_mask_item]["data"]
         # Starting with new mask
         else:
-            # Restrict fetch_icbm152_brain_gm_mask if target std space doesn't
-            # match
-            if (
-                mask_name == "fetch_icbm152_brain_gm_mask"
-                and target_std_space != "MNI152NLin2009aAsym"
-            ):
-                raise_error(
-                    (
-                        "``fetch_icbm152_brain_gm_mask`` is deprecated and "
-                        "space transformation to any other template space is "
-                        "prohibited as it will lead to unforeseen errors. "
-                        "``compute_brain_mask`` is a better alternative."
-                    ),
-                    klass=RuntimeError,
-                )
             # Load mask
             mask_object, _, mask_space = load_mask(
                 mask_name, path_only=False, resolution=resolution

@@ -1,4 +1,4 @@
-"""Provide imports for data sub-package."""
+"""Parcellations, coordinates and masks."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>

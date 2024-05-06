@@ -1,4 +1,4 @@
-"""Provide functions for template spaces."""
+"""Functions for template space manipulation."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
