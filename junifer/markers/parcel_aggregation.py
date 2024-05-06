@@ -208,7 +208,7 @@ class ParcelAggregation(BaseMarker):
             )
             # Get "logical and" version of parcellation and mask
             parcellation_bin = math_img(
-                "np.logical_and(img, mask)",
+                "np.logical_and(img, np.squeeze(mask))",
                 img=parcellation_bin,
                 mask=mask_img,
             )
