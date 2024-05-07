@@ -143,7 +143,7 @@ class MarkerCollection:
                 # Extend validated list
                 validated_input_data_types.extend(p_data)
             # Set t_data for further use
-            t_data = list(set(validated_input_data_types))
+            t_data = list(set(validated_input_data_types) | set(t_data))
 
         for marker in self._markers:
             logger.info(f"Validating Marker: {marker.name}")
