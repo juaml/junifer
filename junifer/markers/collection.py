@@ -131,19 +131,19 @@ class MarkerCollection:
         logger.info(f"Data Reader output type: {t_data}")
 
         if self._preprocessors is not None:
-            validated_input_data_types = []
             for preprocessor in self._preprocessors:
                 logger.info(
                     "Validating Preprocessor: "
                     f"{preprocessor.__class__.__name__}"
                 )
+                # Copy existing data types
+                old_t_data = t_data.copy()
+                logger.info(f"Preprocessor input type: {t_data}")
                 # Validate preprocessor
-                p_data = preprocessor.validate(t_data)
-                logger.info(f"Preprocess output type: {p_data}")
-                # Extend validated list
-                validated_input_data_types.extend(p_data)
-            # Set t_data for further use
-            t_data = list(set(validated_input_data_types) | set(t_data))
+                new_t_data = preprocessor.validate(old_t_data)
+                # Set new data types
+                t_data = list(set(old_t_data) | set(new_t_data))
+                logger.info(f"Preprocessor output type: {t_data}")
 
         for marker in self._markers:
             logger.info(f"Validating Marker: {marker.name}")
