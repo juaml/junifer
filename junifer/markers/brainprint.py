@@ -74,7 +74,7 @@ class BrainPrint(BaseMarker):
         },
     ]
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"brainprint"}
+    _DEPENDENCIES: ClassVar[Set[str]] = {"lapy"}
 
     def __init__(
         self,
