@@ -53,6 +53,17 @@ PATTERNS_SCHEMA = {
         "mandatory": ["pattern"],
         "optional": {},
     },
+    "FreeSurfer": {
+        "mandatory": ["pattern"],
+        "optional": {
+            "aseg": {"mandatory": ["pattern"], "optional": []},
+            "norm": {"mandatory": ["pattern"], "optional": []},
+            "lh_white": {"mandatory": ["pattern"], "optional": []},
+            "rh_white": {"mandatory": ["pattern"], "optional": []},
+            "lh_pial": {"mandatory": ["pattern"], "optional": []},
+            "rh_pial": {"mandatory": ["pattern"], "optional": []},
+        },
+    },
 }
 
 
