@@ -163,3 +163,36 @@ Or, alternatively, you can execute this command which will update the
 .. code-block:: bash
 
   junifer setup ants-docker | grep "PATH=" | xargs | >> ~/.bashrc
+
+FreeSurfer
+----------
+
+To install FreeSurfer, you can always follow the `FreeSurfer official instructions
+<https://surfer.nmr.mgh.harvard.edu/fswiki/DownloadAndInstall>`_. Additionally, you can
+also follow the following steps to install and configure the FreeSurfer Docker container
+in your local system.
+
+1. Install Docker. You can follow the
+   `Docker official instructions <https://docs.docker.com/get-docker/>`_.
+2. Pull the FreeSurfer Docker image from
+   `Docker Hub FreeSurfer <https://hub.docker.com/r/freesurfer/freesurfer>`_:
+
+.. code-block:: bash
+
+  docker pull freesurfer/freesurfer
+
+3. Add the Junifer FreeSurfer scripts to your PATH environment variable. Run the
+   following command:
+
+.. code-block:: bash
+
+  junifer setup freesurfer-docker
+
+Take the last line and copy it to your ``.bashrc`` or ``.zshrc`` file.
+
+Or, alternatively, you can execute this command which will update the
+``~/.bashrc`` for you:
+
+.. code-block:: bash
+
+  junifer setup freesurfer-docker | grep "PATH=" | xargs | >> ~/.bashrc

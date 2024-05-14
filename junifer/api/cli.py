@@ -588,3 +588,29 @@ def ants_docker() -> None:  # pragma: no cover
     export PATH="$PATH:{ants_wrappers_path}"
     """
     click.secho(msg, fg="blue")
+
+
+@setup.command("freesurfer-docker")
+def freesurfer_docker() -> None:  # pragma: no cover
+    """Configure FreeSurfer-Docker wrappers."""
+    import junifer
+
+    pkg_path = Path(junifer.__path__[0])  # type: ignore
+    fs_wrappers_path = pkg_path / "api" / "res" / "freesurfer"
+    msg = f"""
+    Installation instructions for FreeSurfer-Docker wrappers:
+
+    1. Install Docker: https://docs.docker.com/get-docker/
+
+    2. Get the FreeSurfer-Docker image by running this on the command line:
+
+        docker pull freesurfer/freesurfer
+
+    3. Get license from: https://surfer.nmr.mgh.harvard.edu/registration.html .
+       You can skip this step if you already have one.
+
+    4. Add this line to the ~/.bashrc or ~/.zshrc file:
+
+    export PATH="$PATH:{fs_wrappers_path}"
+    """
+    click.secho(msg, fg="blue")
