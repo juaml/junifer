@@ -103,8 +103,8 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
             params = {}
         # For each type of data, try to read it
         for type_key, type_val in input.items():
-            # Skip Warp data type
-            if type_key == "Warp":
+            # Skip Warp and FreeSurfer data type
+            if type_key in ["Warp", "FreeSurfer"]:
                 continue
 
             # Check for malformed datagrabber specification
