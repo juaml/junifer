@@ -250,8 +250,8 @@ def get_mask(  # noqa: C901
     ValueError
         If extra key is provided in addition to mask name in ``masks`` or
         if no mask is provided or
-        if ``masks = "inherit"`` but ``extra_input`` is None or ``mask_item``
-        is None or ``mask_items``'s value is not in ``extra_input`` or
+        if ``masks = "inherit"`` and ``mask`` key for the ``target_data`` is
+        not found or
         if callable parameters are passed to non-callable mask or
         if parameters are passed to :func:`nilearn.masking.intersect_masks`
         when there is only one mask or
@@ -310,8 +310,8 @@ def get_mask(  # noqa: C901
     if len(true_masks) == 0:
         raise_error("No mask was passed. At least one mask is required.")
 
-    # Get the data type for the input data type's mask
-    inherited_mask_item = target_data.get("mask_item", None)
+    # Get the nested mask data type for the input data type
+    inherited_mask_item = target_data.get("mask", None)
 
     # Create component-scoped tempdir
     tempdir = WorkDirManager().get_tempdir(prefix="masks")
@@ -330,28 +330,16 @@ def get_mask(  # noqa: C901
             mask_name = t_mask
             mask_params = None
 
-        # If mask is being inherited from previous steps like preprocessing
+        # If mask is being inherited from the datagrabber or a preprocessor,
+        # check that it's accessible
         if mask_name == "inherit":
-            # Requires extra input to be passed
-            if extra_input is None:
-                raise_error(
-                    "Cannot inherit mask from another data item "
-                    "because no extra data was passed."
-                )
-            # Missing inherited mask item
             if inherited_mask_item is None:
                 raise_error(
-                    "Cannot inherit mask from another data item "
-                    "because no mask item was specified "
-                    "(missing `mask_item` key in the data object)."
+                    "Cannot inherit mask from the target data. Either the "
+                    "DataGrabber or a Preprocessor does not provide `mask` "
+                    "for the target data type."
                 )
-            # Missing inherited mask item in extra input
-            if inherited_mask_item not in extra_input:
-                raise_error(
-                    "Cannot inherit mask from another data item "
-                    f"because the item ({inherited_mask_item}) does not exist."
-                )
-            mask_img = extra_input[inherited_mask_item]["data"]
+            mask_img = inherited_mask_item["data"]
         # Starting with new mask
         else:
             # Load mask

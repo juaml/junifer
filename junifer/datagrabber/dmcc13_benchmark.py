@@ -25,17 +25,16 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    types: {"BOLD", "BOLD_confounds", "BOLD_mask", "T1w", "T1w_mask", \
-           "VBM_CSF", "VBM_GM", "VBM_WM", "Warp" (only if \
-           "native_t1w = True")} or a list of the options, optional
+    types: {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM"} or \
+           list of the options, optional
         DMCC data types. If None, all available data types are selected.
         (default None).
-    sessions: {"ses-wave1bas", "ses-wave1pro", "ses-wave1rea"} or list of \
-            the options, optional
+    sessions: {"ses-wave1bas", "ses-wave1pro", "ses-wave1rea"} or \
+              list of the options, optional
         DMCC sessions. If None, all available sessions are selected
         (default None).
     tasks: {"Rest", "Axcpt", "Cuedts", "Stern", "Stroop"} or \
-            list of the options, optional
+           list of the options, optional
         DMCC task sessions. If None, all available task sessions are selected
         (default None).
     phase_encodings : {"AP", "PA"} or list of the options, optional
@@ -148,24 +147,23 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                     "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
-                "mask_item": "BOLD_mask",
-            },
-            "BOLD_confounds": {
-                "pattern": (
-                    "derivatives/fmriprep-1.3.2/{subject}/{session}/"
-                    "func/{subject}_{session}_task-{task}_acq-mb4"
-                    "{phase_encoding}_run-{run}_desc-confounds_regressors.tsv"
-                ),
-                "format": "fmriprep",
-            },
-            "BOLD_mask": {
-                "pattern": (
-                    "derivatives/fmriprep-1.3.2/{subject}/{session}/"
-                    "/func/{subject}_{session}_task-{task}_acq-mb4"
-                    "{phase_encoding}_run-{run}_"
-                    "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
-                ),
-                "space": "MNI152NLin2009cAsym",
+                "mask": {
+                    "pattern": (
+                        "derivatives/fmriprep-1.3.2/{subject}/{session}/"
+                        "/func/{subject}_{session}_task-{task}_acq-mb4"
+                        "{phase_encoding}_run-{run}_"
+                        "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+                    ),
+                    "space": "MNI152NLin2009cAsym",
+                },
+                "confounds": {
+                    "pattern": (
+                        "derivatives/fmriprep-1.3.2/{subject}/{session}/"
+                        "func/{subject}_{session}_task-{task}_acq-mb4"
+                        "{phase_encoding}_run-{run}_desc-confounds_regressors.tsv"
+                    ),
+                    "format": "fmriprep",
+                },
             },
             "T1w": {
                 "pattern": (
@@ -173,14 +171,13 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                     "{subject}_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
-                "mask_item": "T1w_mask",
-            },
-            "T1w_mask": {
-                "pattern": (
-                    "derivatives/fmriprep-1.3.2/{subject}/anat/"
-                    "{subject}_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
-                ),
-                "space": "MNI152NLin2009cAsym",
+                "mask": {
+                    "pattern": (
+                        "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                        "{subject}_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+                    ),
+                    "space": "MNI152NLin2009cAsym",
+                },
             },
             "VBM_CSF": {
                 "pattern": (
@@ -216,14 +213,13 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                             "{subject}_desc-preproc_T1w.nii.gz"
                         ),
                         "space": "native",
-                        "mask_item": "T1w_mask",
-                    },
-                    "T1w_mask": {
-                        "pattern": (
-                            "derivatives/fmriprep-1.3.2/{subject}/anat/"
-                            "{subject}_desc-brain_mask.nii.gz"
-                        ),
-                        "space": "native",
+                        "mask": {
+                            "pattern": (
+                                "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                                "{subject}_desc-brain_mask.nii.gz"
+                            ),
+                            "space": "native",
+                        },
                     },
                     "Warp": {
                         "pattern": (
@@ -298,20 +294,6 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             phase_encoding=phase_encoding,
             run=run,
         )
-        if out.get("BOLD"):
-            out["BOLD"]["mask_item"] = "BOLD_mask"
-            # Add space information
-            out["BOLD"].update({"space": "MNI152NLin2009cAsym"})
-        if out.get("T1w"):
-            out["T1w"]["mask_item"] = "T1w_mask"
-            # Add space information
-            if self.native_t1w:
-                out["T1w"].update({"space": "native"})
-            else:
-                out["T1w"].update({"space": "MNI152NLin2009cAsym"})
-        if out.get("Warp"):
-            # Add source space information
-            out["Warp"].update({"src": "MNI152NLin2009cAsym"})
         return out
 
     def get_elements(self) -> List:

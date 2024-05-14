@@ -889,7 +889,7 @@ def _retrieve_tian(
         )
         with open(parcellation_lname, "w") as filehandle:
             for listitem in labels:
-                filehandle.write("%s\n" % listitem)
+                filehandle.write(f"{listitem}\n")
         logger.info(
             "Currently there are no labels provided for the 7T Tian "
             "parcellation. A simple numbering scheme for distinction was "

@@ -23,7 +23,7 @@ Confound Removal
 ----------------
 
 This step is meant to remove *confounds* from the ``BOLD`` data. The confounds
-are extracted from the ``BOLD_confounds`` data (must be provided by the
+are extracted from the ``BOLD.confounds`` data (must be provided by the
 :ref:`Data Grabber <datagrabber>`). The confounds are then regressed out from
 the ``BOLD`` data using :func:`nilearn.image.clean_img`.
 
@@ -36,7 +36,7 @@ Strategy
 
 This confound remover uses the `nilearn`_ API from
 :func:`nilearn.interfaces.fmriprep.load_confounds`. That is, define a *strategy*
-to extract the confounds from the ``BOLD_confounds`` data. The *strategy* is
+to extract the confounds from the ``BOLD.confounds`` data. The *strategy* is
 defined by choosing the *noise components* to be used and the *confounds* to be
 extracted from each noise components. The *noise components* currently supported
 are:

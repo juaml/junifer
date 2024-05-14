@@ -365,26 +365,9 @@ def test_get_mask_errors() -> None:
                 target_data=vbm_gm,
             )
 
-        # Test "inherited" masks errors
-
-        # 1) No extra_data parameter
-        with pytest.raises(ValueError, match=r"no extra data was passed"):
+        # Test "inherited" masks error
+        with pytest.raises(ValueError, match=r"provide `mask`"):
             get_mask(masks="inherit", target_data=vbm_gm)
-
-        extra_input = {"VBM_MASK": {}}
-
-        # 2) No mask_item key in target_data
-        with pytest.raises(ValueError, match=r"no mask item was specified"):
-            get_mask(
-                masks="inherit", target_data=vbm_gm, extra_input=extra_input
-            )
-
-        # 3) mask_item not in extra data
-        with pytest.raises(ValueError, match=r"does not exist"):
-            vbm_gm["mask_item"] = "wrong"
-            get_mask(
-                masks="inherit", target_data=vbm_gm, extra_input=extra_input
-            )
 
 
 @pytest.mark.parametrize(
@@ -457,18 +440,15 @@ def test_get_mask_inherit() -> None:
         )
 
         # Now get the mask using the inherit functionality, passing the
-        # computed mask as extra data
-        extra_input = {
-            "BOLD_MASK": {
-                "data": gm_mask,
-                "space": element_data["BOLD"]["space"],
-            }
+        # computed mask as the data
+        bold_dict = element_data["BOLD"]
+        bold_dict["mask"] = {
+            "data": gm_mask,
+            "space": element_data["BOLD"]["space"],
         }
-        element_data["BOLD"]["mask_item"] = "BOLD_MASK"
         mask2 = get_mask(
             masks="inherit",
-            target_data=element_data["BOLD"],
-            extra_input=extra_input,
+            target_data=bold_dict,
         )
 
         # Both masks should be equal

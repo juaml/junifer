@@ -151,12 +151,18 @@ def test_validate_replacements(
             pytest.raises(KeyError, match="Mandatory key"),
         ),
         (
-            ["BOLD_confounds"],
+            ["BOLD"],
             {
-                "BOLD_confounds": {
-                    "pattern": "{subject}/func/{subject}_confounds.tsv",
-                    "format": "fmriprep",
+                "BOLD": {
+                    "pattern": (
+                        "{subject}/func/{subject}_task-rest_bold.nii.gz"
+                    ),
                     "space": "MNINLin6Asym",
+                    "confounds": {
+                        "pattern": "{subject}/func/{subject}_confounds.tsv",
+                        "format": "fmriprep",
+                    },
+                    "zip": "zap",
                 },
             },
             pytest.raises(RuntimeError, match="not accepted"),
@@ -172,7 +178,7 @@ def test_validate_replacements(
             pytest.raises(ValueError, match="following a replacement"),
         ),
         (
-            ["T1w", "T2w", "BOLD", "BOLD_confounds"],
+            ["T1w", "T2w", "BOLD"],
             {
                 "T1w": {
                     "pattern": "{subject}/anat/{subject}_T1w.nii.gz",
@@ -187,10 +193,10 @@ def test_validate_replacements(
                         "{subject}/func/{subject}_task-rest_bold.nii.gz"
                     ),
                     "space": "MNI152NLin6Asym",
-                },
-                "BOLD_confounds": {
-                    "pattern": "{subject}/func/{subject}_confounds.tsv",
-                    "format": "fmriprep",
+                    "confounds": {
+                        "pattern": "{subject}/func/{subject}_confounds.tsv",
+                        "format": "fmriprep",
+                    },
                 },
             },
             nullcontext(),

@@ -27,7 +27,6 @@ def test_JuselessUCLA() -> None:
 
         types = [
             "BOLD",
-            "BOLD_confounds",
             "T1w",
             "VBM_CSF",
             "VBM_GM",
@@ -43,12 +42,11 @@ def test_JuselessUCLA() -> None:
     "types",
     [
         "BOLD",
-        "BOLD_confounds",
         "T1w",
         "VBM_CSF",
         "VBM_GM",
         "VBM_WM",
-        ["BOLD", "BOLD_confounds"],
+        ["BOLD", "VBM_CSF"],
         ["T1w", "VBM_CSF"],
         ["VBM_GM", "VBM_WM"],
         ["BOLD", "T1w"],

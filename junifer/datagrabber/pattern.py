@@ -40,7 +40,12 @@ class PatternDataGrabber(BaseDataGrabber):
 
             {
               "mandatory": ["pattern", "space"],
-              "optional": []
+              "optional": {
+                  "mask": {
+                      "mandatory": ["pattern", "space"],
+                      "optional": []
+                  }
+              }
             }
 
         * ``"T2w"`` :
@@ -49,7 +54,12 @@ class PatternDataGrabber(BaseDataGrabber):
 
             {
               "mandatory": ["pattern", "space"],
-              "optional": []
+              "optional": {
+                  "mask": {
+                      "mandatory": ["pattern", "space"],
+                      "optional": []
+                  }
+              }
             }
 
         * ``"BOLD"`` :
@@ -58,7 +68,16 @@ class PatternDataGrabber(BaseDataGrabber):
 
             {
               "mandatory": ["pattern", "space"],
-              "optional": ["mask_item"]
+              "optional": {
+                  "mask": {
+                      "mandatory": ["pattern", "space"],
+                      "optional": []
+                  }
+                  "confounds": {
+                      "mandatory": ["pattern", "format"],
+                      "optional": []
+                  }
+              }
             }
 
         * ``"Warp"`` :
@@ -67,15 +86,6 @@ class PatternDataGrabber(BaseDataGrabber):
 
             {
               "mandatory": ["pattern", "src", "dst"],
-              "optional": []
-            }
-
-        * ``"BOLD_confounds"`` :
-
-          .. code-block:: none
-
-            {
-              "mandatory": ["pattern", "format"],
               "optional": []
             }
 
@@ -246,6 +256,64 @@ class PatternDataGrabber(BaseDataGrabber):
             )
         return pattern.format(**element)
 
+    def _get_path_from_patterns(
+        self, element: Dict, pattern: str, data_type: str
+    ) -> Path:
+        """Get path from resolved patterns.
+
+        Parameters
+        ----------
+        element : dict
+            The element to be used in the replacement.
+        pattern : str
+            The pattern to be replaced.
+        data_type : str
+            The data type of the pattern.
+
+        Returns
+        -------
+        pathlib.Path
+            The path for the resolved pattern.
+
+        Raises
+        ------
+        RuntimeError
+            If more than one file matches for a data type's pattern or
+            if no file matches for a data type's pattern or
+            if file cannot be accessed for an element.
+
+        """
+        # Replace element in the pattern for globbing
+        resolved_pattern = self._replace_patterns_glob(element, pattern)
+        # Resolve path for wildcard
+        if "*" in resolved_pattern:
+            t_matches = list(self.datadir.absolute().glob(resolved_pattern))
+            # Multiple matches
+            if len(t_matches) > 1:
+                raise_error(
+                    f"More than one file matches for {element} / {data_type}:"
+                    f" {t_matches}",
+                    klass=RuntimeError,
+                )
+            # No matches
+            elif len(t_matches) == 0:
+                raise_error(
+                    f"No file matches for {element} / {data_type}",
+                    klass=RuntimeError,
+                )
+            path = t_matches[0]
+        else:
+            path = self.datadir / resolved_pattern
+            if not self.skip_file_check:
+                if not path.exists() and not path.is_symlink():
+                    raise_error(
+                        f"Cannot access {data_type} for {element}: "
+                        f"File {path} does not exist",
+                        klass=RuntimeError,
+                    )
+
+        return path
+
     def get_element_keys(self) -> List[str]:
         """Get element keys.
 
@@ -279,47 +347,49 @@ class PatternDataGrabber(BaseDataGrabber):
             Dictionary of dictionaries for each type of data required for the
             specified element.
 
-        Raises
-        ------
-        RuntimeError
-            If more than one file matches for a data type's pattern or
-            if no file matches for a data type's pattern or
-            if file cannot be accessed for an element.
-
         """
         out = {}
         for t_type in self.types:
+            # Data type dictionary
             t_pattern = self.patterns[t_type]
-            t_replace = self._replace_patterns_glob(
-                element, t_pattern["pattern"]
-            )
-            if "*" in t_replace:
-                t_matches = list(self.datadir.absolute().glob(t_replace))
-                if len(t_matches) > 1:
-                    raise_error(
-                        f"More than one file matches for {element} / {t_type}:"
-                        f" {t_matches}",
-                        klass=RuntimeError,
+            # Copy data type dictionary in output
+            out[t_type] = t_pattern.copy()
+            # Iterate to check for nested "types" like mask
+            for k, v in t_pattern.items():
+                # Resolve pattern for base data type
+                if k == "pattern":
+                    logger.info(f"Resolving path from pattern for {t_type}")
+                    # Resolve pattern
+                    base_data_type_pattern_path = self._get_path_from_patterns(
+                        element=element,
+                        pattern=v,
+                        data_type=t_type,
                     )
-                elif len(t_matches) == 0:
-                    raise_error(
-                        f"No file matches for {element} / {t_type}",
-                        klass=RuntimeError,
+                    # Remove pattern key
+                    out[t_type].pop("pattern")
+                    # Add path key
+                    out[t_type].update({"path": base_data_type_pattern_path})
+                # Resolve pattern for nested data type
+                if isinstance(v, dict) and "pattern" in v:
+                    # Set nested type key for easier access
+                    t_nested_type = f"{t_type}.{k}"
+                    logger.info(
+                        f"Resolving path from pattern for {t_nested_type}"
                     )
-                t_out = t_matches[0]
-            else:
-                t_out = self.datadir / t_replace
-                if not self.skip_file_check:
-                    if not t_out.exists() and not t_out.is_symlink():
-                        raise_error(
-                            f"Cannot access {t_type} for {element}: "
-                            f"File {t_out} does not exist",
-                            klass=RuntimeError,
+                    # Resolve pattern
+                    nested_data_type_pattern_path = (
+                        self._get_path_from_patterns(
+                            element=element,
+                            pattern=v["pattern"],
+                            data_type=t_nested_type,
                         )
-            # Update path for the element
-            out[t_type] = t_pattern.copy()  # copy data type dictionary
-            out[t_type].pop("pattern")  # remove pattern key
-            out[t_type].update({"path": t_out})  # add path key
+                    )
+                    # Remove pattern key
+                    out[t_type][k].pop("pattern")
+                    # Add path key
+                    out[t_type][k].update(
+                        {"path": nested_data_type_pattern_path}
+                    )
 
         return out
 

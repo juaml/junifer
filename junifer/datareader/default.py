@@ -5,7 +5,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 import nibabel as nib
 import pandas as pd
@@ -102,57 +102,106 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
         if params is None:
             params = {}
         # For each type of data, try to read it
-        for type_ in input.keys():
+        for type_key, type_val in input.items():
             # Skip Warp data type
-            if type_ == "Warp":
+            if type_key == "Warp":
                 continue
 
             # Check for malformed datagrabber specification
-            if "path" not in input[type_]:
+            if "path" not in type_val:
                 warn_with_log(
-                    f"Input type {type_} does not provide a path. Skipping."
+                    f"Input type {type_key} does not provide a path. Skipping."
                 )
                 continue
 
-            # Retrieve actual path
-            t_path = input[type_]["path"]
-            # Retrieve loading params for the data type
-            t_params = params.get(type_, {})
-
-            # Convert str to Path
-            if not isinstance(t_path, Path):
-                t_path = Path(t_path)
-                out[type_]["path"] = t_path
-
-            logger.info(f"Reading {type_} from {t_path.as_posix()}")
-            # Initialize variable for file data
-            fread = None
-            # Lowercase path
-            fname = t_path.name.lower()
-            # Loop through extensions to find the correct one
-            for ext, ftype in _extensions.items():
-                if fname.endswith(ext):
-                    logger.info(f"{type_} is type {ftype}")
-                    # Retrieve reader function
-                    reader_func = _readers[ftype]["func"]
-                    # Retrieve reader function params
-                    reader_params = _readers[ftype]["params"]
-                    # Update reader function params
-                    if reader_params is not None:
-                        t_params.update(reader_params)
-                    logger.debug(f"Calling {reader_func} with {t_params}")
+            # Iterate to check for nested "types" like mask;
+            # need to copy to avoid runtime error for changing dict size
+            for k, v in type_val.copy().items():
+                # Read data for base data type
+                if k == "path":
+                    # Convert str to Path
+                    if not isinstance(v, Path):
+                        v = Path(v)
+                    # Update path
+                    out[type_key]["path"] = v
+                    logger.info(f"Reading {type_key} from {v.absolute()!s}")
+                    # Retrieve loading params for the data type
+                    t_params = params.get(type_key, {})
                     # Read data
-                    fread = reader_func(t_path, **t_params)
-                    break
-            # If no file data is found due to unknown extension
-            if fread is None:
-                logger.info(
-                    f"Unknown file type {t_path.as_posix()}, skipping reading"
-                )
+                    out[type_key]["data"] = _read_data(
+                        data_type=type_key, path=v, read_params=t_params
+                    )
+                # Read data for nested data type
+                if isinstance(v, dict) and "path" in v:
+                    # Set path
+                    nested_path = v["path"]
+                    # Convert str to Path
+                    if not isinstance(nested_path, Path):
+                        nested_path = Path(nested_path)
+                    # Update path
+                    out[type_key][k]["path"] = nested_path
+                    # Set nested type key for easier access
+                    nested_type = f"{type_key}.{k}"
+                    logger.info(
+                        f"Reading {nested_type} from "
+                        f"{nested_path.absolute()!s}"
+                    )
+                    # Retrieve loading params for the nested data type
+                    nested_params = params.get(nested_type, {})
+                    # Read data
+                    out[type_key][k]["data"] = _read_data(
+                        data_type=nested_type,
+                        path=nested_path,
+                        read_params=nested_params,
+                    )
 
-            # Set file data for output
-            out[type_]["data"] = fread
             # Update metadata for step
-            self.update_meta(out[type_], "datareader")
+            self.update_meta(out[type_key], "datareader")
 
         return out
+
+
+def _read_data(
+    data_type: str, path: Path, read_params: Dict
+) -> Union[nib.Nifti1Image, pd.DataFrame, None]:
+    """Read data for data type.
+
+    Parameters
+    ----------
+    data_type : str
+        The data type being read.
+    path : pathlib.Path
+        The path to read data from.
+    read_params : dict
+        Parameters for reader function.
+
+    Returns
+    -------
+    nibabel.Nifti1Image or pandas.DataFrame or pandas.TextFileReader or None
+        The data loaded in memory if file type is known else None.
+
+    """
+    # Initialize variable for file data
+    fread = None
+    # Lowercase path
+    fname = path.name.lower()
+    # Loop through extensions to find the correct one
+    for ext, ftype in _extensions.items():
+        if fname.endswith(ext):
+            logger.info(f"{data_type} is of type {ftype}")
+            # Retrieve reader function
+            reader_func = _readers[ftype]["func"]
+            # Retrieve reader function params
+            reader_params = _readers[ftype]["params"]
+            # Update reader function params
+            if reader_params is not None:
+                read_params.update(reader_params)
+            logger.debug(f"Calling {reader_func!s} with {read_params}")
+            # Read data
+            fread = reader_func(path, **read_params)
+            break
+    # If no file data is found due to unknown extension
+    if fread is None:
+        logger.info(f"Unknown file type {path.absolute()!s}, skipping reading")
+
+    return fread

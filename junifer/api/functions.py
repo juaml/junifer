@@ -362,7 +362,7 @@ def reset(config: Dict) -> None:
             shutil.rmtree(job_dir)
             # Remove parent directory (if empty)
             if not next(os.scandir(job_dir.parent), None):
-                job_dir.parent.rmdir()        
+                job_dir.parent.rmdir()
 
 
 def list_elements(

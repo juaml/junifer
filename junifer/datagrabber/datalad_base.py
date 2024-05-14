@@ -176,7 +176,16 @@ class DataladDataGrabber(BaseDataGrabber):
             The unmodified input dictionary.
 
         """
-        to_get = [v["path"] for v in out.values() if "path" in v]
+        to_get = []
+        for type_val in out.values():
+            # Iterate to check for nested "types" like mask
+            for k, v in type_val.items():
+                # Add base data type path
+                if k == "path":
+                    to_get.append(v)
+                # Add nested data type path
+                if isinstance(v, dict) and "path" in v:
+                    to_get.append(v["path"])
 
         if len(to_get) > 0:
             logger.debug(f"Getting {len(to_get)} files using datalad:")

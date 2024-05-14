@@ -23,8 +23,8 @@ class JuselessUCLA(PatternDataGrabber):
     datadir : str or Path, optional
         The directory where the dataset is stored.
         (default "/data/project/psychosis_thalamus/data/fmriprep").
-    types: {"BOLD", "BOLD_confounds", "T1w", "VBM_CSF", "VBM_GM", \
-           "VBM_WM"} or a list of the options, optional
+    types: {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM"} or \
+           list of the options, optional
         UCLA data types. If None, all available data types are selected.
         (default None).
     tasks : {"rest", "bart", "bht", "pamenc", "pamret", \
@@ -76,13 +76,13 @@ class JuselessUCLA(PatternDataGrabber):
                     "MNI152NLin2009cAsym_preproc.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
-            },
-            "BOLD_confounds": {
-                "pattern": (
-                    "{subject}/func/{subject}_"
-                    "task-{task}_bold_confounds.tsv"
-                ),
-                "space": "fmriprep",
+                "confounds": {
+                    "pattern": (
+                        "{subject}/func/{subject}_"
+                        "task-{task}_bold_confounds.tsv"
+                    ),
+                    "space": "fmriprep",
+                },
             },
             "T1w": {
                 "pattern": (

@@ -20,6 +20,7 @@ from junifer.testing import get_testing_data
 from junifer.testing.datagrabbers import (
     OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
+    SPMAuditoryTestingDataGrabber,
 )
 
 
@@ -42,33 +43,8 @@ def test_fMRIPrepConfoundRemover_init() -> None:
 @pytest.mark.parametrize(
     "input_",
     [
-        ["T1w"],
         ["BOLD"],
         ["T1w", "BOLD"],
-    ],
-)
-def test_fMRIPrepConfoundRemover_validate_input_errors(
-    input_: List[str],
-) -> None:
-    """Test errors for fMRIPrepConfoundRemover validate_input.
-
-    Parameters
-    ----------
-    input_ : list of str
-        The input data types.
-
-    """
-    confound_remover = fMRIPrepConfoundRemover()
-
-    with pytest.raises(ValueError, match="not have the required data"):
-        confound_remover.validate_input(input_)
-
-
-@pytest.mark.parametrize(
-    "input_",
-    [
-        ["BOLD", "BOLD_confounds"],
-        ["T1w", "BOLD", "BOLD_confounds"],
     ],
 )
 def test_fMRIPrepConfoundRemover_validate_input(input_: List[str]) -> None:
@@ -302,13 +278,13 @@ def test_fMRIPRepConfoundRemover__pick_confounds_fmriprep() -> None:
     with PartlyCloudyTestingDataGrabber() as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
-        out1 = confound_remover._pick_confounds(input["BOLD_confounds"])
+        out1 = confound_remover._pick_confounds(input["BOLD"]["confounds"])
         assert set(out1.columns) == {*fmriprep_all_vars, "spike"}
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         input = dg["sub-01"]
         input = reader.fit_transform(input)
-        out2 = confound_remover._pick_confounds(input["BOLD_confounds"])
+        out2 = confound_remover._pick_confounds(input["BOLD"]["confounds"])
         assert set(out2.columns) == {*fmriprep_all_vars, "spike"}
 
     assert_frame_equal(out1, out2)
@@ -348,123 +324,106 @@ def test_fMRIPRepConfoundRemover__pick_confounds_fmriprep_compute() -> None:
 def test_fMRIPrepConfoundRemover__validate_data() -> None:
     """Test fMRIPrepConfoundRemover validate data."""
     confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
-
+    # Check correct data type
     with OasisVBMTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         vbm = element_data["VBM_GM"]
         with pytest.raises(
             DimensionError, match="incompatible dimensionality"
         ):
-            confound_remover._validate_data(vbm, None)
-
-    with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
+            confound_remover._validate_data(vbm)
+    # Check missing nested type in correct data type
+    with SPMAuditoryTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         bold = element_data["BOLD"]
-
-        with pytest.raises(ValueError, match="No extra input"):
-            confound_remover._validate_data(bold, None)
+        # Test confound type
         with pytest.raises(
-            ValueError, match="`BOLD_confounds` data type not provided"
+            ValueError, match="`BOLD.confounds` data type not provided"
         ):
-            confound_remover._validate_data(bold, {})
+            confound_remover._validate_data(bold)
+        # Test confound data
+        bold["confounds"] = {}
         with pytest.raises(
-            ValueError, match="`BOLD_confounds.data` not provided"
+            ValueError, match="`BOLD.confounds.data` not provided"
         ):
-            confound_remover._validate_data(bold, {"BOLD_confounds": {}})
-
-        extra_input = {
-            "BOLD_confounds": {"data": "wrong"},
-        }
-        msg = "must be a `pandas.DataFrame`"
-        with pytest.raises(ValueError, match=msg):
-            confound_remover._validate_data(bold, extra_input)
-
-        extra_input = {"BOLD_confounds": {"data": pd.DataFrame()}}
+            confound_remover._validate_data(bold)
+        # Test confound data is valid type
+        bold["confounds"] = {"data": None}
+        with pytest.raises(ValueError, match="must be a `pandas.DataFrame`"):
+            confound_remover._validate_data(bold)
+        # Test confound data dimension mismatch with BOLD
+        bold["confounds"] = {"data": pd.DataFrame()}
         with pytest.raises(ValueError, match="Image time series and"):
-            confound_remover._validate_data(bold, extra_input)
-
-        extra_input = {
-            "BOLD_confounds": {"data": element_data["BOLD_confounds"]["data"]}
+            confound_remover._validate_data(bold)
+    # Check nested type variations
+    with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        # Test format
+        modified_bold = {
+            "data": element_data["BOLD"]["data"],
+            "confounds": {
+                "data": element_data["BOLD"]["confounds"]["data"],
+                "format": "adhoc",
+            },
         }
-        with pytest.raises(
-            ValueError, match="`BOLD_confounds.format` not provided"
-        ):
-            confound_remover._validate_data(bold, extra_input)
-
-        extra_input = {
-            "BOLD_confounds": {
-                "data": element_data["BOLD_confounds"]["data"],
-                "format": "wrong",
-            }
-        }
+        # Test incorrect format
+        modified_bold["confounds"].update({"format": "wrong"})
         with pytest.raises(ValueError, match="Invalid confounds format"):
-            confound_remover._validate_data(bold, extra_input)
-
-        extra_input = {
-            "BOLD_confounds": {
-                "data": element_data["BOLD_confounds"]["data"],
-                "format": "adhoc",
-            }
-        }
-        with pytest.raises(ValueError, match="need to be set"):
-            confound_remover._validate_data(bold, extra_input)
-
-        extra_input = {
-            "BOLD_confounds": {
-                "data": element_data["BOLD_confounds"]["data"],
-                "format": "adhoc",
-                "mappings": {},
-            }
-        }
-        with pytest.raises(ValueError, match="need to be set"):
-            confound_remover._validate_data(bold, extra_input)
-
-        extra_input = {
-            "BOLD_confounds": {
-                "data": element_data["BOLD_confounds"]["data"],
-                "format": "adhoc",
+            confound_remover._validate_data(modified_bold)
+        # Test missing mappings for adhoc
+        modified_bold["confounds"].update({"format": "adhoc"})
+        with pytest.raises(
+            ValueError, match="`BOLD.confounds.mappings` need to be set"
+        ):
+            confound_remover._validate_data(modified_bold)
+        # Test missing fmriprep mappings for adhoc
+        modified_bold["confounds"].update({"mappings": {}})
+        with pytest.raises(
+            ValueError,
+            match="`BOLD.confounds.mappings.fmriprep` need to be set",
+        ):
+            confound_remover._validate_data(modified_bold)
+        # Test incorrect fmriprep mappings for adhoc
+        modified_bold["confounds"].update(
+            {
                 "mappings": {
                     "fmriprep": {
                         "rot_x": "wrong",
                         "rot_y": "rot_z",
                         "rot_z": "rot_y",
-                    }
-                },
+                    },
+                }
             }
-        }
+        )
         with pytest.raises(ValueError, match=r"names: \['wrong'\]"):
-            confound_remover._validate_data(bold, extra_input)
-
-        extra_input = {
-            "BOLD_confounds": {
-                "data": element_data["BOLD_confounds"]["data"],
-                "format": "adhoc",
+            confound_remover._validate_data(modified_bold)
+        # Test missing fmriprep mappings for adhoc
+        modified_bold["confounds"].update(
+            {
                 "mappings": {
                     "fmriprep": {
                         "wrong": "rot_x",
                         "rot_y": "rot_z",
                         "rot_z": "rot_y",
-                    }
-                },
+                    },
+                }
             }
-        }
+        )
         with pytest.raises(ValueError, match=r"Missing columns: \['wrong'\]"):
-            confound_remover._validate_data(bold, extra_input)
-
-        extra_input = {
-            "BOLD_confounds": {
-                "data": element_data["BOLD_confounds"]["data"],
-                "format": "adhoc",
+            confound_remover._validate_data(modified_bold)
+        # Test correct adhoc format
+        modified_bold["confounds"].update(
+            {
                 "mappings": {
                     "fmriprep": {
                         "rot_x": "rot_x",
                         "rot_y": "rot_z",
                         "rot_z": "rot_y",
-                    }
-                },
+                    },
+                }
             }
-        }
-        confound_remover._validate_data(bold, extra_input)
+        )
+        confound_remover._validate_data(modified_bold)
 
 
 def test_fMRIPrepConfoundRemover_preprocess() -> None:
@@ -476,7 +435,9 @@ def test_fMRIPrepConfoundRemover_preprocess() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         orig_bold = element_data["BOLD"]["data"].get_fdata().copy()
         pre_input = element_data["BOLD"]
-        pre_extra_input = {"BOLD_confounds": element_data["BOLD_confounds"]}
+        pre_extra_input = {
+            "BOLD": {"confounds": element_data["BOLD"]["confounds"]}
+        }
         output, _ = confound_remover.preprocess(pre_input, pre_extra_input)
         trans_bold = output["data"].get_fdata()
         # Transformation is in place
@@ -530,7 +491,7 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
         assert t_meta["t_r"] is None
         assert t_meta["masks"] is None
 
-        assert "BOLD_mask" not in output
+        assert "mask" not in output["BOLD"]
 
         assert "dependencies" in output["BOLD"]["meta"]
         dependencies = output["BOLD"]["meta"]["dependencies"]
@@ -582,9 +543,7 @@ def test_fMRIPrepConfoundRemover_fit_transform_masks() -> None:
         assert "threshold" in t_meta["masks"]["compute_brain_mask"]
         assert t_meta["masks"]["compute_brain_mask"]["threshold"] == 0.2
 
-        assert "BOLD_mask" in output
-        assert "mask_item" in output["BOLD"]
-        assert output["BOLD"]["mask_item"] == "BOLD_mask"
+        assert "mask" in output["BOLD"]
 
         assert "dependencies" in output["BOLD"]["meta"]
         dependencies = output["BOLD"]["meta"]["dependencies"]

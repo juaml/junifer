@@ -109,9 +109,6 @@ Data Types
    * - ``BOLD``
      - BOLD image (4D)
      - Preprocessed or Denoised BOLD image (fMRIPrep output)
-   * - ``BOLD_confounds``
-     - BOLD image confounds (CSV/TSV file)
-     - Confounds that can be applied to the BOLD image.
    * - ``VBM_GM``
      - VBM Gray Matter segmentation (3D)
      - CAT output (`m0wp1` images)

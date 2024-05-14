@@ -26,13 +26,12 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    types: {"BOLD", "BOLD_confounds", "BOLD_mask", "T1w", "T1w_mask", \
-           "VBM_CSF", "VBM_GM", "VBM_WM", "DWI"} or \
-           a list of the options, optional
+    types: {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM", "DWI"} or \
+           list of the options, optional
         AOMIC data types. If None, all available data types are selected.
         (default None).
-    tasks : {"restingstate", "stopsignal", "workingmemory"} \
-            or list of the options, optional
+    tasks : {"restingstate", "stopsignal", "workingmemory"} or \
+            list of the options, optional
         AOMIC PIOP2 task sessions. If None, all available task sessions are
         selected (default None).
     native_t1w : bool, optional
@@ -82,23 +81,22 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
                     "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
-                "mask_item": "BOLD_mask",
-            },
-            "BOLD_confounds": {
-                "pattern": (
-                    "derivatives/fmriprep/{subject}/func/"
-                    "{subject}_task-{task}_"
-                    "desc-confounds_regressors.tsv"
-                ),
-                "format": "fmriprep",
-            },
-            "BOLD_mask": {
-                "pattern": (
-                    "derivatives/fmriprep/{subject}/func/"
-                    "{subject}_task-{task}_"
-                    "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
-                ),
-                "space": "MNI152NLin2009cAsym",
+                "mask": {
+                    "pattern": (
+                        "derivatives/fmriprep/{subject}/func/"
+                        "{subject}_task-{task}_"
+                        "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+                    ),
+                    "space": "MNI152NLin2009cAsym",
+                },
+                "confounds": {
+                    "pattern": (
+                        "derivatives/fmriprep/{subject}/func/"
+                        "{subject}_task-{task}_"
+                        "desc-confounds_regressors.tsv"
+                    ),
+                    "format": "fmriprep",
+                },
             },
             "T1w": {
                 "pattern": (
@@ -107,15 +105,14 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
                     "desc-preproc_T1w.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
-                "mask_item": "T1w_mask",
-            },
-            "T1w_mask": {
-                "pattern": (
-                    "derivatives/fmriprep/{subject}/anat/"
-                    "{subject}_space-MNI152NLin2009cAsym_"
-                    "desc-brain_mask.nii.gz"
-                ),
-                "space": "MNI152NLin2009cAsym",
+                "mask": {
+                    "pattern": (
+                        "derivatives/fmriprep/{subject}/anat/"
+                        "{subject}_space-MNI152NLin2009cAsym_"
+                        "desc-brain_mask.nii.gz"
+                    ),
+                    "space": "MNI152NLin2009cAsym",
+                },
             },
             "VBM_CSF": {
                 "pattern": (
@@ -160,14 +157,13 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
                             "{subject}_desc-preproc_T1w.nii.gz"
                         ),
                         "space": "native",
-                        "mask_item": "T1w_mask",
-                    },
-                    "T1w_mask": {
-                        "pattern": (
-                            "derivatives/fmriprep/{subject}/anat/"
-                            "{subject}_desc-brain_mask.nii.gz"
-                        ),
-                        "space": "native",
+                        "mask": {
+                            "pattern": (
+                                "derivatives/fmriprep/{subject}/anat/"
+                                "{subject}_desc-brain_mask.nii.gz"
+                            ),
+                            "space": "native",
+                        },
                     },
                     "Warp": {
                         "pattern": (
