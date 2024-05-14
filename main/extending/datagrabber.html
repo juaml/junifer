@@ -538,22 +538,22 @@ be used to specify the path to the root directory of the dataset after doing
 </div>
 <p>This approach can be used directly from the YAML, like so:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PatternDataladDataGrabber</span>
-<span class="w">    </span><span class="nt">types</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOLD</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T1w</span>
-<span class="w">    </span><span class="nt">patterns</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">BOLD</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz&quot;</span>
-<span class="w">        </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MNI152NLin6Asym</span>
-<span class="w">      </span><span class="nt">T1w</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz&quot;</span>
-<span class="w">        </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
-<span class="w">    </span><span class="nt">replacements</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session</span>
-<span class="w">    </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://gin.g-node.org/juaml/datalad-example-bids&quot;</span>
-<span class="w">    </span><span class="nt">rootdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_bids_ses</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PatternDataladDataGrabber</span>
+<span class="w">  </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOLD</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T1w</span>
+<span class="w">  </span><span class="nt">patterns</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">BOLD</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz&quot;</span>
+<span class="w">      </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MNI152NLin6Asym</span>
+<span class="w">    </span><span class="nt">T1w</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz&quot;</span>
+<span class="w">      </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
+<span class="w">  </span><span class="nt">replacements</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session</span>
+<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://gin.g-node.org/juaml/datalad-example-bids&quot;</span>
+<span class="w">  </span><span class="nt">rootdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_bids_ses</span>
 </pre></div>
 </div>
 </section>
@@ -670,11 +670,11 @@ allow us to use the datalad API to obtain the data.</p>
 <section id="step-4-optional-adding-bold-confounds">
 <h2><span class="section-number">7.2.4. </span>Step 4: Optional: Adding <em>BOLD confounds</em><a class="headerlink" href="#step-4-optional-adding-bold-confounds" title="Link to this heading">#</a></h2>
 <p>For some analyses, it is useful to have the confounds associated with the BOLD
-data. This corresponds to the <code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> item in the
+data. This corresponds to the <code class="docutils literal notranslate"><span class="pre">BOLD.confounds</span></code> item in the
 <a class="reference internal" href="../understanding/data.html#data-object"><span class="std std-ref">Data Object</span></a> (see <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">Data Types</span></a>). However, the
-<code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> element does not only consists of a <code class="docutils literal notranslate"><span class="pre">path</span></code>, but it requires
+<code class="docutils literal notranslate"><span class="pre">BOLD.confounds</span></code> element does not only consists of a <code class="docutils literal notranslate"><span class="pre">path</span></code>, but it requires
 more information about the format of the confounds file. Thus, the
-<code class="docutils literal notranslate"><span class="pre">BOLD_confounds</span></code> element is a dictionary with the following keys:</p>
+<code class="docutils literal notranslate"><span class="pre">BOLD.confounds</span></code> element is a dictionary with the following keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>: the path to the confounds file.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">format</span></code>: the format of the confounds file. Currently, this can be either
@@ -705,15 +705,15 @@ this:</p>
       <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
           <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
           <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;MNI152NLin6Asym&quot;</span><span class="p">,</span>
-      <span class="p">},</span>
-      <span class="s2">&quot;BOLD_confounds&quot;</span><span class="p">:</span> <span class="p">{</span>
-          <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_confounds.tsv&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;adhoc&quot;</span><span class="p">,</span>
-          <span class="s2">&quot;mappings&quot;</span><span class="p">:</span> <span class="p">{</span>
-              <span class="s2">&quot;fmriprep&quot;</span><span class="p">:</span> <span class="p">{</span>
-                 <span class="s2">&quot;variable1&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_x&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;variable2&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_z&quot;</span><span class="p">,</span>
-                 <span class="s2">&quot;variable3&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_y&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;confounds&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_confounds.tsv&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;adhoc&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;mappings&quot;</span><span class="p">:</span> <span class="p">{</span>
+                  <span class="s2">&quot;fmriprep&quot;</span><span class="p">:</span> <span class="p">{</span>
+                     <span class="s2">&quot;variable1&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_x&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;variable2&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_z&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;variable3&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_y&quot;</span><span class="p">,</span>
+                  <span class="p">},</span>
               <span class="p">},</span>
           <span class="p">},</span>
       <span class="p">},</span>

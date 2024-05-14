@@ -297,22 +297,22 @@ This approach can be used directly from the YAML, like so:
 .. code-block:: yaml
 
    datagrabber:
-     - kind: PatternDataladDataGrabber
-       types:
-         - BOLD
-         - T1w
-       patterns:
-         BOLD:
-           pattern: "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz"
-           space: MNI152NLin6Asym
-         T1w:
-           pattern: "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
-           space: native
-       replacements:
-         - subject
-         - session
-       uri: "https://gin.g-node.org/juaml/datalad-example-bids"
-       rootdir: example_bids_ses
+     kind: PatternDataladDataGrabber
+     types:
+       - BOLD
+       - T1w
+     patterns:
+       BOLD:
+         pattern: "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz"
+         space: MNI152NLin6Asym
+       T1w:
+         pattern: "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+         space: native
+     replacements:
+       - subject
+       - session
+     uri: "https://gin.g-node.org/juaml/datalad-example-bids"
+     rootdir: example_bids_ses
 
 .. _extending_datagrabbers_base:
 
@@ -442,11 +442,11 @@ Step 4: Optional: Adding *BOLD confounds*
 -----------------------------------------
 
 For some analyses, it is useful to have the confounds associated with the BOLD
-data. This corresponds to the ``BOLD_confounds`` item in the
+data. This corresponds to the ``BOLD.confounds`` item in the
 :ref:`Data Object <data_object>` (see :ref:`data_types`). However, the
-``BOLD_confounds`` element does not only consists of a ``path``, but it requires
+``BOLD.confounds`` element does not only consists of a ``path``, but it requires
 more information about the format of the confounds file. Thus, the
-``BOLD_confounds`` element is a dictionary with the following keys:
+``BOLD.confounds`` element is a dictionary with the following keys:
 
 - ``path``: the path to the confounds file.
 - ``format``: the format of the confounds file. Currently, this can be either
@@ -482,15 +482,15 @@ this:
          "BOLD": {
              "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
              "space": "MNI152NLin6Asym",
-         },
-         "BOLD_confounds": {
-             "path": f"{subject}/{session}/func/{subject}_{session}_confounds.tsv",
-             "format": "adhoc",
-             "mappings": {
-                 "fmriprep": {
-                    "variable1": "rot_x",
-                    "variable2": "rot_z",
-                    "variable3": "rot_y",
+             "confounds": {
+                 "path": f"{subject}/{session}/func/{subject}_{session}_confounds.tsv",
+                 "format": "adhoc",
+                 "mappings": {
+                     "fmriprep": {
+                        "variable1": "rot_x",
+                        "variable2": "rot_z",
+                        "variable3": "rot_y",
+                     },
                  },
              },
          },
