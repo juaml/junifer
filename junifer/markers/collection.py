@@ -136,9 +136,14 @@ class MarkerCollection:
                     "Validating Preprocessor: "
                     f"{preprocessor.__class__.__name__}"
                 )
+                # Copy existing data types
+                old_t_data = t_data.copy()
+                logger.info(f"Preprocessor input type: {t_data}")
                 # Validate preprocessor
-                t_data = preprocessor.validate(t_data)
-                logger.info(f"Preprocess output type: {t_data}")
+                new_t_data = preprocessor.validate(old_t_data)
+                # Set new data types
+                t_data = list(set(old_t_data) | set(new_t_data))
+                logger.info(f"Preprocessor output type: {t_data}")
 
         for marker in self._markers:
             logger.info(f"Validating Marker: {marker.name}")
