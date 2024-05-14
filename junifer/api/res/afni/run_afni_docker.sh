@@ -31,7 +31,7 @@ if [ -d "${var}" ]; then
 done
 
 echo "Docker args: ${docker_args[*]}" >&2
-echo "Corrected args for afni: ${corrected_args[*]}" >&2
+echo "Corrected args for AFNI: ${corrected_args[*]}" >&2
 
 cwd=$(pwd)
 cmd="docker run --rm ${docker_args[*]} -v ${cwd}:${cwd} -w ${cwd} afni/afni_make_build ${corrected_args[*]}"

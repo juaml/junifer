@@ -31,7 +31,7 @@ if [ -d "${var}" ]; then
 done
 
 echo "Docker args: ${docker_args[*]}" >&2
-echo "Corrected args for fsl: ${corrected_args[*]}" >&2
+echo "Corrected args for ANTs: ${corrected_args[*]}" >&2
 
 cwd=$(pwd)
 cmd="docker run --rm ${docker_args[*]} -v ${cwd}:${cwd} -w ${cwd} antsx/ants ${corrected_args[*]}"
