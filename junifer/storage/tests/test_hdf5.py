@@ -808,12 +808,59 @@ def test_store_timeseries(tmp_path: Path) -> None:
     data = np.array([[10], [20], [30], [40], [50]])
     col_names = ["signal"]
 
-    # Store vector
+    # Store timeseries
     storage.store_timeseries(
         meta_md5=meta_md5,
         element=element_to_store,
         data=data,
         col_names=col_names,
+    )
+
+    # Read into dataframe
+    read_df = storage.read_df(feature_md5=meta_md5)
+    # Check if data are equal
+    assert_array_equal(read_df.values, data)
+
+
+def test_store_scalar_table(tmp_path: Path) -> None:
+    """Test scalar table store.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_store_scalar_table.hdf5"
+    storage = HDF5FeatureStorage(uri=uri)
+    # Metadata to store
+    element = {"subject": "test"}
+    meta = {
+        "element": element,
+        "dependencies": ["numpy"],
+        "marker": {"name": "brainprint"},
+        "type": "FreeSurfer",
+    }
+    # Process the metadata
+    meta_md5, meta_to_store, element_to_store = process_meta(meta)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
+
+    # Data to store
+    data = np.array([[10, 20], [30, 40], [50, 60]])
+    col_names = ["roi1", "roi2"]
+    row_names = ["ev1", "ev2", "ev3"]
+
+    # Store timeseries
+    storage.store_scalar_table(
+        meta_md5=meta_md5,
+        element=element_to_store,
+        data=data,
+        col_names=col_names,
+        row_names=row_names,
+        row_header_col_name="eigenvalue",
     )
 
     # Read into dataframe
@@ -854,13 +901,19 @@ def _create_data_to_store(n_elements: int, kind: str) -> Tuple[str, Dict]:
             "col_names": [f"col-{i}" for i in range(10)],
             "matrix_kind": "full",
         }
-    elif kind == "timeseries":
+    elif kind in "timeseries":
         data_to_store = {
             "data": np.arange(20).reshape(2, 10),
             "col_names": [f"col-{i}" for i in range(10)],
         }
-    else:
-        raise ValueError(f"Unknown kind {kind}.")
+    elif kind in "scalar_table":
+        data_to_store = {
+            "data": np.arange(50).reshape(5, 10),
+            "row_names": [f"row-{i}" for i in range(5)],
+            "col_names": [f"col-{i}" for i in range(10)],
+            "row_header_col_name": "row",
+        }
+
     for i in range(n_elements):
         element = {"subject": f"sub-{i // 2}", "session": f"ses-{i % 2}"}
         meta = {
@@ -903,6 +956,7 @@ def _create_data_to_store(n_elements: int, kind: str) -> Tuple[str, Dict]:
         (10, 3, "matrix"),
         (10, 5, "matrix"),
         (10, 5, "timeseries"),
+        (10, 5, "scalar_table"),
     ],
 )
 def test_multi_output_store_and_collect(
@@ -930,21 +984,20 @@ def test_multi_output_store_and_collect(
     meta_md5, all_data = _create_data_to_store(n_elements, kind)
 
     for t_data in all_data:
-        # Store metadata for tables
+        # Store metadata
         storage.store_metadata(
             meta_md5=meta_md5,
             element=t_data["element"],
             meta=t_data["meta"],
         )
+        # Store data
         if kind == "vector":
-            # Store tables
             storage.store_vector(
                 meta_md5=meta_md5,
                 element=t_data["element"],
                 **t_data["data"],
             )
         elif kind == "matrix":
-            # Store tables
             storage.store_matrix(
                 meta_md5=meta_md5,
                 element=t_data["element"],
@@ -956,11 +1009,17 @@ def test_multi_output_store_and_collect(
                 element=t_data["element"],
                 **t_data["data"],
             )
+        elif kind == "scalar_table":
+            storage.store_scalar_table(
+                meta_md5=meta_md5,
+                element=t_data["element"],
+                **t_data["data"],
+            )
     # Check that base URI does not exist yet
     assert not uri.exists()
 
     for t_data in all_data:
-        # Convert element to preifx
+        # Convert element to prefix
         prefix = element_to_prefix(t_data["element"])
         # URIs for data storage
         elem_uri = uri.parent / f"{prefix}{uri.name}"
@@ -977,7 +1036,7 @@ def test_multi_output_store_and_collect(
     # Check that base URI exists now
     assert uri.exists()
 
-    # # Read unified metadata
+    # Read unified metadata
     read_unified_meta = storage.list_features()
     assert meta_md5 in read_unified_meta
 
@@ -989,6 +1048,10 @@ def test_multi_output_store_and_collect(
         data_size = np.sum([x["data"]["data"].shape[0] for x in all_data])
         assert len(all_df) == data_size
         idx_names = [x for x in all_df.index.names if x != "timepoint"]
+    elif kind == "scalar_table":
+        data_size = np.sum([x["data"]["data"].shape[0] for x in all_data])
+        assert len(all_df) == data_size
+        idx_names = [x for x in all_df.index.names if x != "row"]
     else:
         assert len(all_df) == len(all_data)
         idx_names = all_df.index.names
@@ -1010,6 +1073,10 @@ def test_multi_output_store_and_collect(
             series_names = t_series.index.values.tolist()
             assert series_names == columns
         elif kind == "timeseries":
+            assert_array_equal(t_series.values, t_data["data"]["data"])
+            series_names = t_series.columns.values.tolist()
+            assert series_names == t_data["data"]["col_names"]
+        elif kind == "scalar_table":
             assert_array_equal(t_series.values, t_data["data"]["data"])
             series_names = t_series.columns.values.tolist()
             assert series_names == t_data["data"]["col_names"]
