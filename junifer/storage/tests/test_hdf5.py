@@ -25,7 +25,12 @@ from junifer.storage.utils import (
 def test_get_valid_inputs() -> None:
     """Test valid inputs."""
     storage = HDF5FeatureStorage(uri="/tmp")
-    assert storage.get_valid_inputs() == ["matrix", "vector", "timeseries"]
+    assert storage.get_valid_inputs() == [
+        "matrix",
+        "vector",
+        "timeseries",
+        "scalar_table",
+    ]
 
 
 def test_single_output(tmp_path: Path) -> None:
