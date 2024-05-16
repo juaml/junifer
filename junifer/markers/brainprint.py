@@ -3,7 +3,14 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+try:
+    from importlib.metadata import packages_distributions
+except ImportError:  # pragma: no cover
+    from importlib_metadata import packages_distributions
+
 import uuid
+from importlib.util import find_spec
+from itertools import chain
 from pathlib import Path
 from typing import (
     Any,
@@ -22,7 +29,8 @@ from ..external.BrainPrint.brainprint.brainprint import (
 )
 from ..external.BrainPrint.brainprint.surfaces import surf_to_vtk
 from ..pipeline import WorkDirManager
-from ..utils import logger, run_ext_cmd
+from ..pipeline.utils import check_ext_dependencies
+from ..utils import logger, raise_error, run_ext_cmd
 from .base import BaseMarker
 
 
@@ -109,6 +117,7 @@ class BrainPrint(BaseMarker):
         """
         return ["FreeSurfer"]
 
+    # TODO: kept for making this class concrete; should be removed later
     def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
@@ -124,6 +133,89 @@ class BrainPrint(BaseMarker):
 
         """
         return "vector"
+
+    # TODO: overridden to allow multiple outputs from single data type; should
+    # be removed later
+    def validate(self, input: List[str]) -> List[str]:
+        """Validate the the pipeline step.
+
+        Parameters
+        ----------
+        input : list of str
+            The input to the pipeline step.
+
+        Returns
+        -------
+        list of str
+            The output of the pipeline step.
+
+        """
+
+        def _check_dependencies(obj) -> None:
+            """Check obj._DEPENDENCIES.
+
+            Parameters
+            ----------
+            obj : object
+                Object to check _DEPENDENCIES of.
+
+            Raises
+            ------
+            ImportError
+                If the pipeline step object is missing dependencies required
+                for its working.
+
+            """
+            # Check if _DEPENDENCIES attribute is found;
+            # (markers and preprocessors will have them but not datareaders
+            # as of now)
+            dependencies_not_found = []
+            if hasattr(obj, "_DEPENDENCIES"):
+                # Check if dependencies are importable
+                for dependency in obj._DEPENDENCIES:
+                    # First perform an easy check
+                    if find_spec(dependency) is None:
+                        # Then check mapped names
+                        if dependency not in list(
+                            chain.from_iterable(
+                                packages_distributions().values()
+                            )
+                        ):
+                            dependencies_not_found.append(dependency)
+            # Raise error if any dependency is not found
+            if dependencies_not_found:
+                raise_error(
+                    msg=(
+                        f"{dependencies_not_found} are not installed but are "
+                        f"required for using {obj.__class__.__name__}."
+                    ),
+                    klass=ImportError,
+                )
+
+        def _check_ext_dependencies(obj) -> None:
+            """Check obj._EXT_DEPENDENCIES.
+
+            Parameters
+            ----------
+            obj : object
+                Object to check _EXT_DEPENDENCIES of.
+
+            """
+            # Check if _EXT_DEPENDENCIES attribute is found;
+            # (some markers and preprocessors might have them)
+            if hasattr(obj, "_EXT_DEPENDENCIES"):
+                for dependency in obj._EXT_DEPENDENCIES:
+                    check_ext_dependencies(**dependency)
+
+        # Check dependencies
+        _check_dependencies(self)
+        # Check external dependencies
+        # _check_ext_dependencies(self)
+        # Validate input
+        _ = self.validate_input(input=input)
+        # Validate output type
+        outputs = ["scalar_table", "vector"]
+        return outputs
 
     def _create_aseg_surface(
         self,
