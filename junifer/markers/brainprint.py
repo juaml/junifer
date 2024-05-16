@@ -508,6 +508,43 @@ class BrainPrint(BaseMarker):
             "distances": distances,
         }
 
+    # TODO: overridden to allow storing multiple outputs from single input; should
+    # be removed later
+    def store(
+        self,
+        type_: str,
+        feature: str,
+        out: Dict[str, Any],
+        storage: "BaseFeatureStorage",
+    ) -> None:
+        """Store.
+
+        Parameters
+        ----------
+        type_ : str
+            The data type to store.
+        feature : {"eigenvalues", "distances", "areas", "volumes"}
+            The feature name to store.
+        out : dict
+            The computed result as a dictionary to store.
+        storage : storage-like
+            The storage class, for example, SQLiteFeatureStorage.
+
+        Raises
+        ------
+        ValueError
+            If ``feature`` is invalid.
+
+        """
+        if feature == "eigenvalues":
+            output_type = "scalar_table"
+        elif feature in ["distances", "areas", "volumes"]:
+            output_type = "vector"
+        else:
+            raise_error(f"Unknown feature: {feature}")
+
+        logger.debug(f"Storing {output_type} in {storage}")
+        storage.store(kind=output_type, **out)
 
     # TODO: overridden to allow storing multiple outputs from single input; should
     # be removed later
