@@ -9,10 +9,12 @@ except ImportError:  # pragma: no cover
     from importlib_metadata import packages_distributions
 
 import uuid
+from copy import deepcopy
 from importlib.util import find_spec
 from itertools import chain
 from pathlib import Path
 from typing import (
+    TYPE_CHECKING,
     Any,
     ClassVar,
     Dict,
@@ -32,6 +34,10 @@ from ..pipeline import WorkDirManager
 from ..pipeline.utils import check_ext_dependencies
 from ..utils import logger, raise_error, run_ext_cmd
 from .base import BaseMarker
+
+
+if TYPE_CHECKING:
+    from junifer.storage import BaseFeatureStorage
 
 
 @register_marker
@@ -501,3 +507,68 @@ class BrainPrint(BaseMarker):
             "eigenvectors": eigenvectors,
             "distances": distances,
         }
+
+
+    # TODO: overridden to allow storing multiple outputs from single input; should
+    # be removed later
+    def _fit_transform(
+        self,
+        input: Dict[str, Dict],
+        storage: Optional["BaseFeatureStorage"] = None,
+    ) -> Dict:
+        """Fit and transform.
+
+        Parameters
+        ----------
+        input : dict
+            The Junifer Data object.
+        storage : storage-like, optional
+            The storage class, for example, SQLiteFeatureStorage.
+
+        Returns
+        -------
+        dict
+            The processed output as a dictionary. If `storage` is provided,
+            empty dictionary is returned.
+
+        """
+        out = {}
+        for type_ in self._on:
+            if type_ in input.keys():
+                logger.info(f"Computing {type_}")
+                t_input = input[type_]
+                extra_input = input.copy()
+                extra_input.pop(type_)
+                t_meta = t_input["meta"].copy()
+                t_meta["type"] = type_
+
+                # Returns multiple features
+                t_out = self.compute(input=t_input, extra_input=extra_input)
+
+                if storage is None:
+                    out[type_] = {}
+
+                for feature_name, feature_data in t_out.copy().items():
+                    t_meta_copy = deepcopy(t_meta)
+                    t_meta_copy["marker"]["name"] += f"_{feature_name}"
+                    # Add metadata to feature data
+                    feature_data["meta"] = t_meta_copy
+                    # Update metadata for the feature,
+                    # feature data is not manipulated
+                    self.update_meta(t_out, "marker")
+
+                    if storage is not None:
+                        logger.info(f"Storing in {storage}")
+                        self.store(
+                            type_=type_,
+                            feature=feature_name,
+                            out=feature_data,
+                            storage=storage,
+                        )
+                    else:
+                        logger.info(
+                            "No storage specified, returning dictionary"
+                        )
+                        out[type_][feature_name] = feature_data
+
+        return out
