@@ -502,14 +502,31 @@ class BrainPrint(BaseMarker):
         # Delete tempdir
         WorkDirManager().delete_tempdir(self._tempdir)
 
-        return {
-            "eigenvalues": eigenvalues,
-            "eigenvectors": eigenvectors,
-            "distances": distances,
+        output = {
+            "eigenvalues": {
+                "data": [val[2:, :] for val in eigenvalues.values()],
+                "col_names": list(eigenvalues.keys()),
+                "row_names": [f"ev{i}" for i in range(self.num)],
+                "row_header_col_name": "eigenvalue",
+            },
+            "areas": {
+                "data": [val[0, :] for val in eigenvalues.values()],
+                "col_names": list(eigenvalues.keys()),
+            },
+            "volumes": {
+                "data": [val[1, :] for val in eigenvalues.values()],
+                "col_names": list(eigenvalues.keys()),
+            },
         }
+        if self.asymmetry:
+            output["distances"] = {
+                "data": list(distances.values()),
+                "col_names": list(distances.keys()),
+            }
+        return output
 
-    # TODO: overridden to allow storing multiple outputs from single input; should
-    # be removed later
+    # TODO: overridden to allow storing multiple outputs from single input;
+    # should be removed later
     def store(
         self,
         type_: str,
@@ -546,8 +563,8 @@ class BrainPrint(BaseMarker):
         logger.debug(f"Storing {output_type} in {storage}")
         storage.store(kind=output_type, **out)
 
-    # TODO: overridden to allow storing multiple outputs from single input; should
-    # be removed later
+    # TODO: overridden to allow storing multiple outputs from single input;
+    # should be removed later
     def _fit_transform(
         self,
         input: Dict[str, Dict],
