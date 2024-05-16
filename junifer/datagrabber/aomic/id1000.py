@@ -112,6 +112,39 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                     "{subject}_desc-preproc_dwi.nii.gz"
                 ),
             },
+            "FreeSurfer": {
+                "pattern": "derivatives/freesurfer/{subject}/mri/T1.mgz",
+                "aseg": {
+                    "pattern": (
+                        "derivatives/freesurfer/{subject}/mri/aseg.mgz"
+                    )
+                },
+                "norm": {
+                    "pattern": (
+                        "derivatives/freesurfer/{subject}/mri/norm.mgz"
+                    )
+                },
+                "lh_white": {
+                    "pattern": (
+                        "derivatives/freesurfer/{subject}/surf/lh.white"
+                    )
+                },
+                "rh_white": {
+                    "pattern": (
+                        "derivatives/freesurfer/{subject}/surf/rh.white"
+                    )
+                },
+                "lh_pial": {
+                    "pattern": (
+                        "derivatives/freesurfer/{subject}/surf/lh.pial"
+                    )
+                },
+                "rh_pial": {
+                    "pattern": (
+                        "derivatives/freesurfer/{subject}/surf/rh.pial"
+                    )
+                },
+            },
         }
         # Use native T1w assets
         self.native_t1w = False
