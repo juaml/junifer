@@ -49,6 +49,7 @@ dependencies = [
     "httpx[http2]==0.26.0",
     "tqdm==4.66.1",
     "templateflow>=23.0.0",
+    "lapy>=1.0.0,<2.0.0",
     "importlib_metadata; python_version<'3.10'",
     "looseversion==1.3.0; python_version>='3.12'",
 ]
@@ -67,14 +68,12 @@ junifer = "junifer.api.cli:cli"
 all = [
     "bctpy==0.6.0",
     "neurokit2>=0.1.7",
-    "lapy>=1.0.0,<2.0.0",
 ]
 bct = ["bctpy==0.6.0"]
 onthefly = [
     "bctpy==0.6.0"
 ]
 neurokit2 = ["neurokit2>=0.1.7"]
-brainprint = ["lapy>=1.0.0,<2.0.0"]
 dev = ["tox", "pre-commit"]
 docs = [
     "seaborn>=0.11.2,<0.13",
@@ -97,6 +96,7 @@ packages = [
     "junifer",
     "junifer.external.h5io.h5io",
     "junifer.external.BrainPrint.brainprint",
+    "junifer.external.BrainPrint.brainprint.utils",
 ]
 
 [tool.setuptools_scm]
@@ -115,7 +115,7 @@ extend-exclude = """
 """
 
 [tool.codespell]
-skip = "*/auto_examples/*,*.html,.git/,*.pyc,*/_build/*,*/h5io/*"
+skip = "*/auto_examples/*,*.html,.git/,*.pyc,*/_build/*,*/h5io/*,*/BrainPrint/*"
 count = ""
 quiet-level = 3
 ignore-words = "ignore_words.txt"
@@ -205,6 +205,8 @@ known-third-party =[
     "templateflow",
     "bct",
     "neurokit2",
+    "brainprint",
+    "lapy",
     "pytest",
 ]
 
@@ -213,7 +215,7 @@ max-complexity = 20
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "--ignore=junifer/external/h5io -vv"
+addopts = "--ignore=junifer/external/h5io --ignore=junifer/external/BrainPrint -vv"
 
 [tool.towncrier]
 directory = "docs/changes/newsfragments"

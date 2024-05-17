@@ -45,6 +45,7 @@ def test_get_dependency_information_short() -> None:
         "httpx",
         "tqdm",
         "templateflow",
+        "lapy",
         "looseversion",
     ]
 
@@ -74,6 +75,7 @@ def test_get_dependency_information_long() -> None:
         "httpx",
         "tqdm",
         "templateflow",
+        "lapy",
     ]
     for key in dependency_list:
         assert key in dependency_information_keys
