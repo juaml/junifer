@@ -504,17 +504,17 @@ class BrainPrint(BaseMarker):
 
         output = {
             "eigenvalues": {
-                "data": [val[2:, :] for val in eigenvalues.values()],
+                "data": [val[2:] for val in eigenvalues.values()],
                 "col_names": list(eigenvalues.keys()),
                 "row_names": [f"ev{i}" for i in range(self.num)],
                 "row_header_col_name": "eigenvalue",
             },
             "areas": {
-                "data": [val[0, :] for val in eigenvalues.values()],
+                "data": [val[0] for val in eigenvalues.values()],
                 "col_names": list(eigenvalues.keys()),
             },
             "volumes": {
-                "data": [val[1, :] for val in eigenvalues.values()],
+                "data": [val[1] for val in eigenvalues.values()],
                 "col_names": list(eigenvalues.keys()),
             },
         }
