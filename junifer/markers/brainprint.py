@@ -246,7 +246,7 @@ class BrainPrint(BaseMarker):
             Path to the generated surface in VTK format.
 
         """
-        tempfile_prefix = f"aseg.{uuid.uuid4}"
+        tempfile_prefix = f"aseg.{uuid.uuid4()}"
 
         # Set mri_binarize command
         mri_binarize_output_path = self._tempdir / f"{tempfile_prefix}.mgz"
