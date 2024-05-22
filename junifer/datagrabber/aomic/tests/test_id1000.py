@@ -26,6 +26,7 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomic1000"
         ("VBM_GM", None),
         ("VBM_WM", None),
         ("DWI", None),
+        ("FreeSurfer", None),
     ],
 )
 def test_DataladAOMICID1000(

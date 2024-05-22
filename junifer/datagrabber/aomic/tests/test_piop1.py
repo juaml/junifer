@@ -35,6 +35,7 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomicpiop1"
         ("VBM_GM", None, None),
         ("VBM_WM", None, None),
         ("DWI", None, None),
+        ("FreeSurfer", None, None),
     ],
 )
 def test_DataladAOMICPIOP1(
