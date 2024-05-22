@@ -1,0 +1,916 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="9. API Reference" href="../api/index.html" /><link rel="prev" title="8.6. HCP FC Extraction" href="norun_hcpfc_pearson.html" />
+
+    <!-- Generated with Sphinx 7.2.6 and Furo 2023.09.10 -->
+        <title>8.7. Run junifer and julearn. - junifer documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=135e06be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">junifer  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/junifer_logo.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">junifer  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../starting.html">3. First steps with <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../understanding/index.html">4. Understanding <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of 4. Understanding junifer</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/pipeline.html">4.1. The <code class="docutils literal notranslate"><span class="pre">junifer</span></code> Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/data.html">4.2. The Data Object</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datagrabber.html">4.3. Data Grabber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/datareader.html">4.4. Data Reader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/preprocess.html">4.5. Preprocess</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/marker.html">4.6. Marker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../understanding/storage.html">4.7. Storage</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../using/index.html">5. Using <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of 5. Using junifer</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../using/codeless.html">5.1. Code-less Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html">5.2. Running Jobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">5.3. Collecting Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">5.4. Queueing Jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/masks.html">5.5.1. Masks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline Components</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../extending/index.html">7. Extending <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of 7. Extending junifer</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../extending/extension.html">7.1. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/datagrabber.html">7.2. Creating Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/marker.html">7.3. Creating Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/preprocessor.html">7.4. Creating Preprocessors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/dependencies.html">7.5. Specifying Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.6. Adding Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">7.7. Adding Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">7.8. Adding Masks</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">8. Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="norun_ukbvm_gmd.html">8.1. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_datagrabber_bids_datalad.html">8.2. Generic BIDS DataGrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_run_gmd_mean.html">8.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_compute_parcel_mean.html">8.4. Computer Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_ets_rss_marker.html">8.5. Extracting root sum of squares from edge-wise timeseries.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">8.7. Run junifer and julearn.</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/index.html">9. API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of 9. API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/datagrabbers.html">9.1.1. Data Grabbers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/datareaders.html">9.1.2. DataReaders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">9.1.3. Pre-processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/markers.html">9.1.4. Markers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/storage.html">9.1.5. Storage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">9.2.1. Parcellations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">9.2.2. Coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.masks">9.2.3. Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.template_spaces">9.2.4. Template Spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">9.2.5. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">9.2.6. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">9.2.7. Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">9.2.8. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">9.2.9. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">9.2.10. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/onthefly.html">9.2.11. On-the-fly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/configs.html">9.3.1. Configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/nilearn.html">9.4.1. Nilearn</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../help.html">10. Getting Help</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">11. Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../maintaining.html">12. Maintaining</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">13. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">14. What’s new</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-auto-examples-run-junifer-julearn-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="run-junifer-and-julearn">
+<span id="sphx-glr-auto-examples-run-junifer-julearn-py"></span><h1><span class="section-number">8.7. </span>Run junifer and julearn.<a class="headerlink" href="#run-junifer-and-julearn" title="Link to this heading">#</a></h1>
+<p>This example uses a ParcelAggregation marker to compute the mean of each parcel
+using the Schaefer parcellation (100 rois, 7 Yeo networks) for a 3D nifti to
+extract some features for machine learning using julearn to predict some other
+data.</p>
+<p>Authors: Leonard Sasse, Sami Hamdan, Nicolas Nieto, Synchon Mandal</p>
+<p>License: BSD 3 clause</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tempfile</span>
+
+<span class="kn">import</span> <span class="nn">nilearn</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">julearn</span> <span class="kn">import</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.run_cross_validation.html#julearn.run_cross_validation" title="julearn.run_cross_validation" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-function"><span class="n">run_cross_validation</span></a><span class="p">,</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class"><span class="n">PipelineCreator</span></a>
+
+<span class="kn">import</span> <span class="nn">junifer.testing.registry</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">from</span> <span class="nn">junifer.api</span> <span class="kn">import</span> <span class="n">collect</span><span class="p">,</span> <span class="n">run</span>
+<span class="kn">from</span> <span class="nn">junifer.storage.sqlite</span> <span class="kn">import</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">SQLiteFeatureStorage</span></a>
+<span class="kn">from</span> <span class="nn">junifer.utils</span> <span class="kn">import</span> <span class="n">configure_logging</span>
+</pre></div>
+</div>
+<p>Set the logging level to info to see extra information:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-05-22 10:35:29,622 - JUNIFER - INFO - ===== Lib Versions =====
+2024-05-22 10:35:29,623 - JUNIFER - INFO - numpy: 1.26.4
+2024-05-22 10:35:29,623 - JUNIFER - INFO - scipy: 1.11.4
+2024-05-22 10:35:29,623 - JUNIFER - INFO - pandas: 2.1.4
+2024-05-22 10:35:29,623 - JUNIFER - INFO - nilearn: 0.10.2
+2024-05-22 10:35:29,623 - JUNIFER - INFO - nibabel: 5.2.1
+2024-05-22 10:35:29,623 - JUNIFER - INFO - junifer: 0.0.5.dev99
+2024-05-22 10:35:29,623 - JUNIFER - INFO - ========================
+</pre></div>
+</div>
+<p>Define the markers you want:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">marker_dicts</span></a> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer100x17_TrimMean80&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer100x17&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;trim_mean&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method_params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;proportiontocut&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer200x17_Mean&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer200x17&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>Define target and confounds for julearn machine learning:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="s2">&quot;age&quot;</span>
+<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a> <span class="o">=</span> <span class="s2">&quot;sex&quot;</span>
+</pre></div>
+</div>
+<p>Load the VBM phenotype data for machine learning data:
+- Fetch the Oasis dataset</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_oasis_vbm.html#nilearn.datasets.fetch_oasis_vbm" title="nilearn.datasets.fetch_oasis_vbm" class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_oasis_vbm</span></a><span class="p">()</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="numpy.recarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">ext_vars</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sex</span></a> <span class="o">=</span> <span class="p">(</span>
+    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="pandas.core.series.Series" class="sphx-glr-backref-module-pandas-core-series sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="numpy.recarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">ext_vars</span></a><span class="p">[</span><span class="s2">&quot;mf&quot;</span><span class="p">][:</span><span class="mi">10</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">values</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/opt/hostedtoolcache/Python/3.11.9/x64/lib/python3.11/site-packages/nilearn/datasets/struct.py:852: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
+  warnings.warn(_LEGACY_FORMAT_MSG)
+</pre></div>
+</div>
+<p>Create a temporary directory for junifer feature extraction:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <a href="https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory" title="tempfile.TemporaryDirectory" class="sphx-glr-backref-module-tempfile sphx-glr-backref-type-py-class"><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span></a><span class="p">()</span> <span class="k">as</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="p">:</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;SQLiteFeatureStorage&quot;</span><span class="p">,</span> <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.sqlite&quot;</span><span class="p">}</span>
+    <span class="c1"># run the defined junifer feature extraction pipeline</span>
+    <span class="n">run</span><span class="p">(</span>
+        <span class="n">workdir</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span><span class="p">,</span>
+        <span class="n">datagrabber</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;OasisVBMTestingDataGrabber&quot;</span><span class="p">},</span>
+        <span class="n">markers</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">marker_dicts</span></a><span class="p">,</span>
+        <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># read in extracted features and add confounds and targets</span>
+    <span class="c1"># for julearn run cross validation</span>
+    <span class="n">collect</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">SQLiteFeatureStorage</span></a><span class="p">(</span><span class="n">uri</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">])</span>
+
+    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;VBM_GM_Schaefer200x17_Mean&quot;</span><span class="p">)</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_subjects</span></a> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.core.indexes.base.Index" class="sphx-glr-backref-module-pandas-core-indexes-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span><span class="o">.</span><span class="n">index</span></a><span class="p">]</span>
+    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.core.indexes.base.Index" class="sphx-glr-backref-module-pandas-core-indexes-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span><span class="o">.</span><span class="n">index</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_subjects</span></a>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-05-22 10:35:29,637 - JUNIFER - INFO - Validating Marker Collection
+2024-05-22 10:35:29,637 - JUNIFER - INFO - DataGrabber output type: [&#39;VBM_GM&#39;]
+2024-05-22 10:35:29,637 - JUNIFER - INFO - Validating Data Reader:
+2024-05-22 10:35:29,637 - JUNIFER - INFO - Data Reader output type: [&#39;VBM_GM&#39;]
+2024-05-22 10:35:29,637 - JUNIFER - INFO - Validating Marker: Schaefer100x17_TrimMean80
+2024-05-22 10:35:29,637 - JUNIFER - INFO - Marker output type: [&#39;vector&#39;]
+2024-05-22 10:35:29,637 - JUNIFER - INFO - Validating storage for Schaefer100x17_TrimMean80
+2024-05-22 10:35:29,637 - JUNIFER - INFO - Validating Marker: Schaefer200x17_Mean
+2024-05-22 10:35:29,637 - JUNIFER - INFO - Marker output type: [&#39;vector&#39;]
+2024-05-22 10:35:29,637 - JUNIFER - INFO - Validating storage for Schaefer200x17_Mean
+/opt/hostedtoolcache/Python/3.11.9/x64/lib/python3.11/site-packages/nilearn/datasets/struct.py:852: UserWarning: `legacy_format` will default to `False` in release 0.11. Dataset fetchers will then return pandas dataframes by default instead of recarrays.
+  warnings.warn(_LEGACY_FORMAT_MSG)
+2024-05-22 10:35:29,641 - JUNIFER - INFO - Getting element sub-01
+2024-05-22 10:35:29,641 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:35:29,641 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:35:29,641 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:35:29,642 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:35:29,642 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:35:29,642 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:35:29,642 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:35:29,643 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:35:29,643 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:35:29,643 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:35:29,644 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:35:29,673 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:35:30,762 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:35:30,862 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellations9xn48hsg/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellations9xn48hsg/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmppt1boab8/parcellationsacqbkwpu/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:35:32,257 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:35:33,352 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:35:33,387 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:35:33,387 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:35:33,387 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:35:33,388 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:35:33,388 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:35:33,388 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:35:33,388 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:35:33,389 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:35:33,419 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:35:34,531 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:35:34,629 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationsjxm3vnje/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationsjxm3vnje/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmppt1boab8/parcellations9x6emdih/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:35:36,670 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:35:37,853 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:35:37,902 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:35:37,902 - JUNIFER - INFO - Getting element sub-02
+2024-05-22 10:35:37,902 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:35:37,902 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:35:37,902 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:35:37,903 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:35:37,903 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:35:37,903 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:35:37,904 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:35:37,904 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:35:37,904 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:35:37,904 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:35:37,905 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:35:37,935 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:35:39,059 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:35:39,156 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellations2h7lqqre/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellations2h7lqqre/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpycn1az1i/parcellationsjcmm5otd/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:35:40,549 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:35:41,733 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:35:41,765 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:35:41,765 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:35:41,766 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:35:41,766 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:35:41,766 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:35:41,766 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:35:41,766 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:35:41,767 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:35:41,798 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:35:42,925 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:35:43,024 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationsc8kc0oio/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationsc8kc0oio/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpycn1az1i/parcellationsu1tca91k/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:35:45,070 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:35:46,246 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:35:46,298 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:35:46,298 - JUNIFER - INFO - Getting element sub-03
+2024-05-22 10:35:46,298 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:35:46,298 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:35:46,299 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:35:46,299 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:35:46,300 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:35:46,300 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:35:46,300 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:35:46,300 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:35:46,300 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:35:46,300 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:35:46,301 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:35:46,332 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:35:47,457 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:35:47,554 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationslt7kzao6/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationslt7kzao6/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpdzj61_a_/parcellations7pti2hpa/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:35:48,977 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:35:50,036 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:35:50,068 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:35:50,069 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:35:50,069 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:35:50,069 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:35:50,069 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:35:50,069 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:35:50,069 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:35:50,070 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:35:50,100 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:35:51,214 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:35:51,312 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationsw28m949c/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationsw28m949c/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpdzj61_a_/parcellationsdrql4o1j/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:35:53,359 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:35:54,454 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:35:54,502 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:35:54,502 - JUNIFER - INFO - Getting element sub-04
+2024-05-22 10:35:54,502 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:35:54,502 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:35:54,502 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:35:54,503 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:35:54,503 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:35:54,503 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:35:54,504 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:35:54,504 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:35:54,504 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:35:54,504 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:35:54,505 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:35:54,534 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:35:55,634 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:35:55,731 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationsfb_srb2l/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationsfb_srb2l/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpxzm2azq6/parcellationss3svjy_t/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:35:57,138 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:35:58,279 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:35:58,310 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:35:58,310 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:35:58,311 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:35:58,311 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:35:58,311 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:35:58,311 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:35:58,311 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:35:58,312 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:35:58,343 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:35:59,458 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:35:59,556 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellations6e2_uecu/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellations6e2_uecu/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpxzm2azq6/parcellationsye75zdms/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:01,594 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:02,689 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:02,737 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:36:02,738 - JUNIFER - INFO - Getting element sub-05
+2024-05-22 10:36:02,738 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:36:02,738 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:36:02,738 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:36:02,739 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:36:02,739 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:02,739 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:02,739 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:02,739 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:02,739 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:36:02,739 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:02,740 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:02,771 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:03,886 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:03,984 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellations7yjlce2n/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellations7yjlce2n/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpxiqr2zlk/parcellationsu24psuie/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:05,380 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:06,527 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:06,559 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:36:06,559 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:06,560 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:06,560 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:06,560 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:06,560 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:36:06,560 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:06,561 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:06,591 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:07,708 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:07,806 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellations8p472zfv/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellations8p472zfv/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpxiqr2zlk/parcellationspa5m88_4/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:09,849 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:11,071 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:11,123 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:36:11,123 - JUNIFER - INFO - Getting element sub-06
+2024-05-22 10:36:11,123 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:36:11,123 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:36:11,123 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:36:11,124 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:36:11,124 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:11,125 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:11,125 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:11,125 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:11,125 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:36:11,125 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:11,126 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:11,156 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:12,293 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:12,391 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationsyrf0czsw/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationsyrf0czsw/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmprk6ucst_/parcellationsqlxhiv4q/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:13,804 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:14,971 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:15,003 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:36:15,003 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:15,003 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:15,003 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:15,003 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:15,003 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:36:15,003 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:15,005 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:15,035 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:16,161 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:16,259 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationsfwhc_juq/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationsfwhc_juq/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmprk6ucst_/parcellationsxh8sw1sa/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:18,305 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:19,404 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:19,459 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:36:19,459 - JUNIFER - INFO - Getting element sub-07
+2024-05-22 10:36:19,460 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:36:19,460 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:36:19,460 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:36:19,461 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:36:19,461 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:19,461 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:19,461 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:19,461 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:19,461 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:36:19,461 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:19,462 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:19,492 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:20,597 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:20,694 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationswdljrrax/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationswdljrrax/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp1wgmej0s/parcellationsyz3hlay4/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:22,094 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:23,218 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:23,251 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:36:23,251 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:23,251 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:23,251 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:23,251 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:23,251 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:36:23,251 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:23,253 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:23,283 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:24,404 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:24,502 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationsubdcd2k7/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationsubdcd2k7/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp1wgmej0s/parcellationsl9apwaix/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:26,535 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:27,635 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:27,685 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:36:27,685 - JUNIFER - INFO - Getting element sub-08
+2024-05-22 10:36:27,685 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:36:27,686 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:36:27,686 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:36:27,686 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:36:27,686 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:27,687 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:27,687 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:27,687 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:27,687 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:36:27,687 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:27,688 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:27,720 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:28,811 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:28,909 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellations7ydgu6cw/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellations7ydgu6cw/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpy2p644_l/parcellations6dpo6ezl/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:30,306 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:31,393 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:31,425 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:36:31,426 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:31,426 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:31,426 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:31,426 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:31,426 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:36:31,426 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:31,427 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:31,457 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:32,549 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:32,646 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellations_2szosfx/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellations_2szosfx/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpy2p644_l/parcellationsky9i2pyl/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:34,679 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:35,760 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:35,808 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:36:35,809 - JUNIFER - INFO - Getting element sub-09
+2024-05-22 10:36:35,809 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:36:35,809 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:36:35,809 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:36:35,810 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:36:35,810 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:35,810 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:35,810 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:35,811 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:35,811 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:36:35,811 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:35,812 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:35,842 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:36,959 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:37,057 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationse03cji1m/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationse03cji1m/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpkx1rpfl7/parcellations0h74gktr/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:38,464 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:39,562 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:39,594 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:36:39,594 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:39,595 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:39,595 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:39,595 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:39,595 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:36:39,595 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:39,596 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:39,626 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:40,735 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:40,833 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellations6ie2wi38/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellations6ie2wi38/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpkx1rpfl7/parcellationsdn_da6i4/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:42,886 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:44,002 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:44,050 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:36:44,050 - JUNIFER - INFO - Getting element sub-10
+2024-05-22 10:36:44,050 - JUNIFER - INFO - Fitting pipeline
+2024-05-22 10:36:44,050 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2024-05-22 10:36:44,050 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2024-05-22 10:36:44,051 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+2024-05-22 10:36:44,051 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:44,052 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:44,052 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:44,052 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:44,052 - JUNIFER - INFO -      n_rois: 100
+2024-05-22 10:36:44,052 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:44,053 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:44,083 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:45,182 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:45,279 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellations_d9r2tv7/Schaefer100x17.nii.gz -r /tmp/tmp4ohd9by1/parcellations_d9r2tv7/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpy_rph4vx/parcellationsiixmafvi/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:46,686 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:47,781 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:47,813 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+2024-05-22 10:36:47,813 - JUNIFER - INFO - Computing VBM_GM
+2024-05-22 10:36:47,813 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
+2024-05-22 10:36:47,813 - JUNIFER - INFO - Parcellation parameters:
+2024-05-22 10:36:47,813 - JUNIFER - INFO -      resolution: 2.0
+2024-05-22 10:36:47,813 - JUNIFER - INFO -      n_rois: 200
+2024-05-22 10:36:47,813 - JUNIFER - INFO -      yeo_networks: 17
+2024-05-22 10:36:47,815 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
+2024-05-22 10:36:47,845 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
+2024-05-22 10:36:48,944 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
+2024-05-22 10:36:49,042 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmp4ohd9by1/parcellationsdf6fowak/Schaefer200x17.nii.gz -r /tmp/tmp4ohd9by1/parcellationsdf6fowak/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpy_rph4vx/parcellationsonxa2fti/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+2024-05-22 10:36:51,112 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+b&#39;&#39;
+2024-05-22 10:36:52,243 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmprrj0nznc/test.sqlite (multiple output)&gt;
+2024-05-22 10:36:52,291 - JUNIFER - INFO - Marker collection fitting done
+2024-05-22 10:36:52,292 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
+2024-05-22 10:36:52,292 - JUNIFER - INFO - Collecting data from /tmp/tmprrj0nznc/*test.sqlite
+
+file: 0it [00:00, ?it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 15.10it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 15.08it/s]
+
+file: 1it [00:00,  6.96it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.92it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.89it/s]
+
+file: 2it [00:00,  7.41it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.01it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 15.97it/s]
+
+file: 3it [00:00,  7.38it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.29it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.26it/s]
+
+file: 4it [00:00,  7.40it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00,  8.15it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00,  8.15it/s]
+
+file: 5it [00:00,  5.59it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.81it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.77it/s]
+
+file: 6it [00:00,  6.16it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.44it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.41it/s]
+
+file: 7it [00:01,  6.55it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.89it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.86it/s]
+
+file: 8it [00:01,  6.89it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.80it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 16.77it/s]
+
+file: 9it [00:01,  7.12it/s]
+
+feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
+
+feature: 100%|██████████| 2/2 [00:00&lt;00:00,  8.06it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00,  8.05it/s]
+
+file: 10it [00:01,  5.65it/s]
+file: 10it [00:01,  6.33it/s]
+2024-05-22 10:36:53,873 - JUNIFER - INFO - Collect done
+</pre></div>
+</div>
+<p>Using julearn for machine learning:
+We predict the age given our vbm features and sex as a confound.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.core.indexes.base.Index" class="sphx-glr-backref-module-pandas-core-indexes-base sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span><span class="o">.</span><span class="n">columns</span></a><span class="p">)</span>
+<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">]</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age</span></a>
+<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">]</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sex</span></a>
+
+<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_types</span></a> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span>
+    <span class="s2">&quot;confound&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">,</span>
+<span class="p">}</span>
+
+<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">creator</span></a> <span class="o">=</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class"><span class="n">PipelineCreator</span></a><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">)</span>
+<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">&quot;zscore&quot;</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;confound&quot;</span><span class="p">])</span>
+<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">&quot;confound_removal&quot;</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="s2">&quot;confound&quot;</span><span class="p">)</span>
+<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">&quot;ridge&quot;</span><span class="p">)</span>
+
+<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">scores</span></a> <span class="o">=</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.run_cross_validation.html#julearn.run_cross_validation" title="julearn.run_cross_validation" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-function"><span class="n">run_cross_validation</span></a><span class="p">(</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">+</span> <span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">],</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_types</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_types</span></a><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">creator</span></a><span class="p">,</span>
+    <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">scores</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>   fit_time  score_time  ...  fold                          cv_mdsum
+0  0.136281    0.019430  ...     0  509497eb21da473048117e0c6704d3ea
+1  0.136793    0.019428  ...     1  509497eb21da473048117e0c6704d3ea
+2  0.133177    0.019190  ...     2  509497eb21da473048117e0c6704d3ea
+
+[3 rows x 8 columns]
+</pre></div>
+</div>
+<p>Interpretation of results:
+Doing machine learning with only 10 datapoints is not meaningful.
+This explains the big variation in scores
+for different cross-validation folds.</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 24.879 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-junifer-julearn-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/9c18fc617bcd4554f37a08e058947c6a/run_junifer_julearn.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">run_junifer_julearn.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/35c7ed013e0aac743386dbe5f567501f/run_junifer_julearn.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_junifer_julearn.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="../api/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">9. </span>API Reference</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="norun_hcpfc_pearson.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">8.6. </span>HCP FC Extraction</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Authors of junifer
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=32e29ea5"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/custom.js?v=9868c0c7"></script>
+    </body>
+</html>
