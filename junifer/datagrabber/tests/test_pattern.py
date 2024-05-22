@@ -236,6 +236,51 @@ def test_PatternDataGrabber(tmp_path: Path) -> None:
     assert out1["VBM_GM"]["path"] != out2["VBM_GM"]["path"]
 
 
+def test_PatternDataGrabber_unix_path_expansion(tmp_path: Path) -> None:
+    """Test PatterDataGrabber for patterns with unix path expansion.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Create test data root dir
+    freesurfer_dir = tmp_path / "derivatives" / "freesurfer"
+    freesurfer_dir.mkdir(parents=True, exist_ok=True)
+    # Create test data sub dirs and files
+    for dir_name in ["fsaverage", "sub-0001"]:
+        mri_dir = freesurfer_dir / dir_name / "mri"
+        mri_dir.mkdir(parents=True, exist_ok=True)
+        # Create files
+        (mri_dir / "T1.mgz").touch(exist_ok=True)
+        (mri_dir / "aseg.mgz").touch(exist_ok=True)
+    # Create datagrabber
+    dg = PatternDataGrabber(
+        datadir=tmp_path,
+        types=["FreeSurfer"],
+        patterns={
+            "FreeSurfer": {
+                "pattern": "derivatives/freesurfer/[!f]{subject}/mri/T1.mg[z]",
+                "aseg": {
+                    "pattern": (
+                        "derivatives/freesurfer/[!f]{subject}/mri/aseg.mg[z]"
+                    )
+                },
+            },
+        },
+        replacements=["subject"],
+    )
+    # Check that "fsaverage" is filtered
+    elements = dg.get_elements()
+    assert elements == ["sub-0001"]
+    # Fetch data
+    out = dg["sub-0001"]
+    # Check paths are found
+    assert set(out["FreeSurfer"].keys()) == {"path", "aseg", "meta"}
+    assert list(out["FreeSurfer"]["aseg"].keys()) == ["path"]
+
+
 def test_PatternDataGrabber_confounds_format_error_on_init() -> None:
     """Test PatterDataGrabber confounds format error on initialisation."""
     with pytest.raises(

@@ -214,18 +214,25 @@ class PatternDataGrabber(BaseDataGrabber):
         t_replacements = [
             x for x in self.replacements if f"{{{x}}}" in pattern
         ]
-
+        # Ops on re_pattern
+        # Remove negated unix glob pattern i.e., [!...] for re_pattern
+        re_pattern = re.sub(r"\[!.?\]", "", re_pattern)
+        # Remove enclosing square brackets from unix glob pattern i.e., [...]
+        # for re_pattern
+        re_pattern = re.sub(r"\[|\]", "", re_pattern)
+        # Iteratively replace the first of each with a named group definition
         for t_r in t_replacements:
-            # Replace the first of each with a named group definition
             re_pattern = re_pattern.replace(f"{{{t_r}}}", f"(?P<{t_r}>.*)", 1)
-
+        # Iteratively replace the second appearance of each with the named
+        # group back reference
         for t_r in t_replacements:
-            # Replace the second appearance of each with the named group
-            # back reference
             re_pattern = re_pattern.replace(f"{{{t_r}}}", f"(?P={t_r})")
-
+        # Ops on glob_pattern
+        # Iteratively replace replacements with wildcard i.e., *
+        # for glob_pattern
         for t_r in t_replacements:
             glob_pattern = glob_pattern.replace(f"{{{t_r}}}", "*")
+
         return re_pattern, glob_pattern, t_replacements
 
     def _replace_patterns_glob(self, element: Dict, pattern: str) -> str:
@@ -254,6 +261,10 @@ class PatternDataGrabber(BaseDataGrabber):
                 f"The element keys must be {self.replacements}, "
                 f"element has {list(element.keys())}."
             )
+        # Remove negated unix glob pattern i.e., [!...]
+        pattern = re.sub(r"\[!.?\]", "", pattern)
+        # Remove enclosing square brackets from unix glob pattern i.e., [...]
+        pattern = re.sub(r"\[|\]", "", pattern)
         return pattern.format(**element)
 
     def _get_path_from_patterns(
