@@ -56,7 +56,8 @@ def _create_chunk(
     Raises
     ------
     ValueError
-        If `kind` is not one of ['vector', 'matrix', 'timeseries'].
+        If `kind` is not one of ['vector', 'matrix', 'timeseries',
+        'scalar_table'].
 
     """
     if kind in ["vector", "matrix"]:
@@ -77,7 +78,7 @@ def _create_chunk(
             chunk_size=tuple(array_chunk_size),
             n_chunk=i_chunk,
         )
-    elif kind == "timeseries":
+    elif kind in ["timeseries", "scalar_table"]:
         out = ChunkedList(
             data=chunk_data,
             size=element_count,
@@ -86,7 +87,8 @@ def _create_chunk(
     else:
         raise_error(
             f"Invalid kind: {kind}. "
-            "Must be one of ['vector', 'matrix', 'timeseries']."
+            "Must be one of ['vector', 'matrix', 'timeseries',"
+            "'scalar_table']."
         )
     return out
 
@@ -146,7 +148,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             uri.parent.mkdir(parents=True, exist_ok=True)
 
         # Available storage kinds
-        storage_types = ["vector", "timeseries", "matrix"]
+        storage_types = ["vector", "timeseries", "matrix", "scalar_table"]
 
         super().__init__(
             uri=uri,
@@ -169,7 +171,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             storage.
 
         """
-        return ["matrix", "vector", "timeseries"]
+        return ["matrix", "vector", "timeseries", "scalar_table"]
 
     def _fetch_correct_uri_for_io(self, element: Optional[Dict]) -> str:
         """Return proper URI for I/O based on `element`.
@@ -508,6 +510,26 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             columns = hdf_data["column_headers"]
             # Convert data from 3D to 2D
             reshaped_data = np.concatenate(all_data, axis=0)
+        elif hdf_data["kind"] == "scalar_table":
+            # Create dictionary for aggregating index data
+            element_idx = defaultdict(list)
+            all_data = []
+            for idx, element in enumerate(hdf_data["element"]):
+                # Get row count for the element
+                t_data = hdf_data["data"][idx]
+                all_data.append(t_data)
+                n_rows = len(hdf_data["row_headers"])
+                # Set rows for the index
+                for key, val in element.items():
+                    element_idx[key].extend([val] * n_rows)
+                # Add extra column for row header column name
+                element_idx[hdf_data["row_header_column_name"]].extend(
+                    hdf_data["row_headers"]
+                )
+            # Set column headers for dataframe
+            columns = hdf_data["column_headers"]
+            # Convert data from 3D to 2D
+            reshaped_data = np.concatenate(all_data, axis=0)
 
         # Create dataframe for index
         idx_df = pd.DataFrame(data=element_idx)  # type: ignore
@@ -643,7 +665,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Parameters
         ----------
-        kind : {"matrix", "vector", "timeseries"}
+        kind : {"matrix", "vector", "timeseries", "scalar_table"}
             The storage kind.
         meta_md5 : str
             The metadata MD5 hash.
@@ -739,8 +761,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
             t_data = stored_data["data"]
-            if kind == "timeseries":
-                t_data.append(data)
+            if kind in ["timeseries", "scalar_table"]:
+                t_data += data
             else:
                 t_data = np.concatenate((t_data, data), axis=-1)
             # Existing entry; append to existing
@@ -921,6 +943,43 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             row_header_column_name="timepoint",
         )
 
+    def store_scalar_table(
+        self,
+        meta_md5: str,
+        element: Dict,
+        data: np.ndarray,
+        col_names: Optional[Iterable[str]] = None,
+        row_names: Optional[Iterable[str]] = None,
+        row_header_col_name: Optional[str] = "feature",
+    ) -> None:
+        """Store table with scalar values.
+
+        Parameters
+        ----------
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
+        data : numpy.ndarray
+            The scalar table data to store.
+        col_names : list or tuple of str, optional
+            The column labels (default None).
+        row_names : str, optional
+            The row labels (default None).
+        row_header_col_name : str, optional
+            The column name for the row header column (default "feature").
+
+        """
+        self._store_data(
+            kind="scalar_table",
+            meta_md5=meta_md5,
+            element=[element],  # convert to list
+            data=[data],  # convert to list
+            column_headers=col_names,
+            row_headers=row_names,
+            row_header_column_name=row_header_col_name,
+        )
+
     def collect(self) -> None:
         """Implement data collection.
 
@@ -1029,7 +1088,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     kind = static_data["kind"]
 
                 # Append the "dynamic" data
-                if kind == "timeseries":
+                if kind in ["timeseries", "scalar_table"]:
                     chunk_data.extend(t_data["data"])
                 else:
                     chunk_data.append(t_data["data"])

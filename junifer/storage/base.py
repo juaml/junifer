@@ -189,7 +189,7 @@ class BaseFeatureStorage(ABC):
 
         Parameters
         ----------
-        kind : {"matrix", "timeseries", "vector"}
+        kind : {"matrix", "timeseries", "vector", "scalar_table"}
             The storage kind.
         **kwargs
             The keyword arguments.
@@ -218,6 +218,10 @@ class BaseFeatureStorage(ABC):
             )
         elif kind == "vector":
             self.store_vector(meta_md5=meta_md5, element=t_element, **kwargs)
+        elif kind == "scalar_table":
+            self.store_scalar_table(
+                meta_md5=meta_md5, element=t_element, **kwargs
+            )
 
     def store_matrix(
         self,
@@ -310,6 +314,38 @@ class BaseFeatureStorage(ABC):
         """
         raise_error(
             msg="Concrete classes need to implement store_timeseries().",
+            klass=NotImplementedError,
+        )
+
+    def store_scalar_table(
+        self,
+        meta_md5: str,
+        element: Dict,
+        data: np.ndarray,
+        col_names: Optional[Iterable[str]] = None,
+        row_names: Optional[Iterable[str]] = None,
+        row_header_col_name: Optional[str] = "feature",
+    ) -> None:
+        """Store table with scalar values.
+
+        Parameters
+        ----------
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
+        data : numpy.ndarray
+            The timeseries data to store.
+        col_names : list or tuple of str, optional
+            The column labels (default None).
+        row_names : str, optional
+            The row labels (default None).
+        row_header_col_name : str, optional
+            The column name for the row header column (default "feature").
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_scalar_table().",
             klass=NotImplementedError,
         )
 
