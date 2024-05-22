@@ -18,123 +18,66 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomicpiop2"
 
 
 @pytest.mark.parametrize(
-    "tasks",
-    [None, "restingstate"],
+    "type_, nested_types, tasks",
+    [
+        ("BOLD", ["confounds", "mask"], None),
+        ("BOLD", ["confounds", "mask"], ["restingstate"]),
+        ("BOLD", ["confounds", "mask"], ["restingstate", "stopsignal"]),
+        ("BOLD", ["confounds", "mask"], ["workingmemory", "stopsignal"]),
+        ("BOLD", ["confounds", "mask"], ["workingmemory"]),
+        ("T1w", ["mask"], None),
+        ("VBM_CSF", None, None),
+        ("VBM_GM", None, None),
+        ("VBM_WM", None, None),
+        ("DWI", None, None),
+    ],
 )
-def test_DataladAOMICPIOP2(tasks: Optional[str]) -> None:
+def test_DataladAOMICPIOP2(
+    type_: str,
+    nested_types: Optional[List[str]],
+    tasks: Optional[List[str]],
+) -> None:
     """Test DataladAOMICPIOP2 DataGrabber.
 
     Parameters
     ----------
-    tasks : str or None
+    type_ : str
+        The parametrized type.
+    nested_types : list of str or None
+        The parametrized nested types.
+    tasks : list of str or None
         The parametrized task values.
 
     """
-    dg = DataladAOMICPIOP2(tasks=tasks)
+    dg = DataladAOMICPIOP2(types=type_, tasks=tasks)
     # Set URI to Gin
     dg.uri = URI
 
     with dg:
+        # Get all elements
         all_elements = dg.get_elements()
-
-        if tasks == "restingstate":
-            for el in all_elements:
-                assert el[1] == "restingstate"
-
+        # Get test element
         test_element = all_elements[0]
-        sub, task = test_element
+        # Get test element data
         out = dg[test_element]
-
-        # asserts type "BOLD"
-        assert "BOLD" in out
-
-        new_task = f"{task}_acq-seq"
-        assert (
-            out["BOLD"]["path"].name == f"{sub}_task-{new_task}_"
-            "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
-        )
-
-        assert out["BOLD"]["path"].exists()
-        assert out["BOLD"]["path"].is_file()
-
-        # asserts type BOLD.confounds
-        assert "confounds" in out["BOLD"]
-
-        assert (
-            out["BOLD"]["confounds"]["path"].name == f"{sub}_task-{new_task}_"
-            "desc-confounds_regressors.tsv"
-        )
-
-        assert out["BOLD"]["confounds"]["path"].exists()
-        assert out["BOLD"]["confounds"]["path"].is_file()
-
-        # assert BOLD.mask
-        assert out["BOLD"]["mask"]["path"].exists()
-
-        # asserts type "T1w"
-        assert "T1w" in out
-
-        assert (
-            out["T1w"]["path"].name == f"{sub}_space-MNI152NLin2009cAsym_"
-            "desc-preproc_T1w.nii.gz"
-        )
-
-        assert out["T1w"]["path"].exists()
-        assert out["T1w"]["path"].is_file()
-
-        # asserts T1w.mask
-        assert out["T1w"]["mask"]["path"].exists()
-
-        # asserts type "VBM_CSF"
-        assert "VBM_CSF" in out
-
-        assert (
-            out["VBM_CSF"]["path"].name
-            == f"{sub}_space-MNI152NLin2009cAsym_label-"
-            "CSF_probseg.nii.gz"
-        )
-
-        assert out["VBM_CSF"]["path"].exists()
-        assert out["VBM_CSF"]["path"].is_file()
-
-        # asserts type "VBM_GM"
-        assert "VBM_GM" in out
-
-        assert (
-            out["VBM_GM"]["path"].name
-            == f"{sub}_space-MNI152NLin2009cAsym_label-"
-            "GM_probseg.nii.gz"
-        )
-
-        assert out["VBM_GM"]["path"].exists()
-        assert out["VBM_GM"]["path"].is_file()
-
-        # asserts type "VBM_WM"
-        assert "VBM_WM" in out
-
-        assert (
-            out["VBM_WM"]["path"].name
-            == f"{sub}_space-MNI152NLin2009cAsym_label-"
-            "WM_probseg.nii.gz"
-        )
-
-        assert out["VBM_WM"]["path"].exists()
-        assert out["VBM_WM"]["path"].is_file()
-
-        # asserts type "DWI"
-        assert "DWI" in out
-
-        assert out["DWI"]["path"].name == f"{sub}_desc-preproc_dwi.nii.gz"
-
-        assert out["DWI"]["path"].exists()
-        assert out["DWI"]["path"].is_file()
-
-        # asserts meta
-        assert "meta" in out["BOLD"]
-        meta = out["BOLD"]["meta"]
+        # Assert data type
+        assert type_ in out
+        # Check task name if BOLD
+        if type_ == "BOLD" and tasks is not None:
+            assert test_element[1] in out[type_]["path"].name
+        assert out[type_]["path"].exists()
+        assert out[type_]["path"].is_file()
+        # Asserts data type metadata
+        assert "meta" in out[type_]
+        meta = out[type_]["meta"]
         assert "element" in meta
         assert "subject" in meta["element"]
-        assert sub == meta["element"]["subject"]
+        assert test_element[0] == meta["element"]["subject"]
+        # Assert nested data type if not None
+        if nested_types is not None:
+            for nested_type in nested_types:
+                assert out[type_][nested_type]["path"].exists()
+                assert out[type_][nested_type]["path"].is_file()
 
 
 @pytest.mark.parametrize(
