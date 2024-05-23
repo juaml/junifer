@@ -20,7 +20,7 @@ with TemporaryDirectory() as tmpdir_name:
     base_dir = tmpdir / "derivatives"
     base_dir.mkdir(exist_ok=True, parents=True)
 
-    for dtype in ["dwipreproc", "fmriprep"]:
+    for dtype in ["dwipreproc", "fmriprep", "freesurfer"]:
         dtype_dir = base_dir / dtype
         dtype_dir.mkdir()
 
@@ -94,9 +94,45 @@ with TemporaryDirectory() as tmpdir_name:
                     (f"{dname}/{t_sub}_desc-preproc_dwi.nii.gz"),
                 ]
 
+            elif dtype == "freesurfer":
+                for dname in ["mri", "surf"]:
+                    (sub_dir / dname).mkdir()
+
+                fnames = [
+                    ("mri/T1.mgz"),
+                    ("mri/aseg.mgz"),
+                    ("mri/norm.mgz"),
+                    ("surf/lh.white"),
+                    ("surf/rh.white"),
+                    ("surf/lh.pial"),
+                    ("surf/rh.pial"),
+                ]
+
             for fname in fnames:
                 with open(sub_dir / fname, "w") as f:
                     f.write("placeholder")
+
+        if dtype == "freesurfer":
+            for extra in ["fsaverage", "fsaverage5"]:
+                extra_dir = dtype_dir / extra
+                extra_dir.mkdir()
+
+                for dname in ["mri", "surf"]:
+                    (extra_dir / dname).mkdir()
+
+                fnames = [
+                    ("mri/T1.mgz"),
+                    ("mri/aseg.mgz"),
+                    ("mri/norm.mgz"),
+                    ("surf/lh.white"),
+                    ("surf/rh.white"),
+                    ("surf/lh.pial"),
+                    ("surf/rh.pial"),
+                ]
+
+                for fname in fnames:
+                    with open(extra_dir / fname, "w") as f:
+                        f.write("placeholder")
 
     ds.save(recursive=True)
     # use this to create the repo automatically, only possible for juaml owner

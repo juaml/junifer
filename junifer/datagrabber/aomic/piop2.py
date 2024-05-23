@@ -26,8 +26,8 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         The directory where the datalad dataset will be cloned. If None,
         the datalad dataset will be cloned into a temporary directory
         (default None).
-    types: {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM", "DWI"} or \
-           list of the options, optional
+    types: {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM", "DWI", \
+           "FreeSurfer"} or list of the options, optional
         AOMIC data types. If None, all available data types are selected.
         (default None).
     tasks : {"restingstate", "stopsignal", "workingmemory"} or \
@@ -143,6 +143,39 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
                     "derivatives/dwipreproc/{subject}/dwi/"
                     "{subject}_desc-preproc_dwi.nii.gz"
                 ),
+            },
+            "FreeSurfer": {
+                "pattern": "derivatives/freesurfer/[!f]{subject}/mri/T1.mg[z]",
+                "aseg": {
+                    "pattern": (
+                        "derivatives/freesurfer/[!f]{subject}/mri/aseg.mg[z]"
+                    )
+                },
+                "norm": {
+                    "pattern": (
+                        "derivatives/freesurfer/[!f]{subject}/mri/norm.mg[z]"
+                    )
+                },
+                "lh_white": {
+                    "pattern": (
+                        "derivatives/freesurfer/[!f]{subject}/surf/lh.whit[e]"
+                    )
+                },
+                "rh_white": {
+                    "pattern": (
+                        "derivatives/freesurfer/[!f]{subject}/surf/rh.whit[e]"
+                    )
+                },
+                "lh_pial": {
+                    "pattern": (
+                        "derivatives/freesurfer/[!f]{subject}/surf/lh.pia[l]"
+                    )
+                },
+                "rh_pial": {
+                    "pattern": (
+                        "derivatives/freesurfer/[!f]{subject}/surf/rh.pia[l]"
+                    )
+                },
             },
         }
         # Use native T1w assets
