@@ -115,6 +115,9 @@ Data Types
    * - ``VBM_WM``
      - VBM White Matter segmentation (3D)
      - CAT output (`m0wp2` images)
+   * - ``VBM_CSF``
+     - VBM Central Spinal Fluid segmentation (3D)
+     - CAT output (`m0wp3` images)
    * - ``fALFF``
      - Voxel-wise fALFF image (3D)
      - fALFF computed with CONN toolbox
@@ -124,3 +127,9 @@ Data Types
    * - ``LCOR``
      - Local Correlation image (3D)
      - LCOR computed with CONN toolbox
+   * - ``DWI``
+     - Diffusion-weighted image (3D)
+     - Diffusion-weighted image (FSL or MRtrix output)
+   * - ``FreeSurfer``
+     - T1 image (3D)
+     - T1 image computed by FreeSurfer

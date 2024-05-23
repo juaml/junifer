@@ -314,6 +314,53 @@ This approach can be used directly from the YAML, like so:
      uri: "https://gin.g-node.org/juaml/datalad-example-bids"
      rootdir: example_bids_ses
 
+Advanced: Using Unix-like path expansion directives
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is also possible to use some advanced Unix-like path expansion tricks to
+define our patterns.
+
+A very common thing would be to use ``*`` to match any number of
+characters but we cannot use it right after a replacement like:
+
+.. code-block:: python
+
+    "derivatives/freesurfer/{subject}*"
+
+or if there are multiple files or no files which can be globbed.
+
+We can also use ``[]`` and ``[!]`` to glob certain tricky files like with the
+case of FreeSurfer derivatives. The file structure seen in a typical
+FreeSurfer derivative of a dataset (like ``AOMIC`` ones) is like so:
+
+.. code-block::
+
+      .
+      └── derivatives
+          └── freesurfer
+             ├── fsaverage
+             │   ├── mri
+             │   |   ├── T1.mgz
+             │   |   └── ...
+             │   └── ...
+             ├── sub-01
+             │   ├── mri
+             │   |   ├── T1.mgz
+             │   |   └── ...
+             │   |   └── ...
+             │   └── ...
+             ...
+
+With a structure like this, it would be cumbersome to write custom methods
+for the class and thus we could use a pattern like this:
+
+.. code-block:: python
+
+    "derivatives/freesurfer/[!f]{subject}/mri/T1.mg[z]"
+
+This would ignore the ``fsaverage`` directory as a subject and let ``T1.mgz`` be
+fetched as there can be many files with the same prefix.
+
 .. _extending_datagrabbers_base:
 
 Option B: Extending from BaseDataGrabber
