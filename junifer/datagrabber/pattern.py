@@ -6,6 +6,7 @@
 # License: AGPL
 
 import re
+from copy import deepcopy
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
@@ -364,7 +365,7 @@ class PatternDataGrabber(BaseDataGrabber):
             # Data type dictionary
             t_pattern = self.patterns[t_type]
             # Copy data type dictionary in output
-            out[t_type] = t_pattern.copy()
+            out[t_type] = deepcopy(t_pattern)
             # Iterate to check for nested "types" like mask
             for k, v in t_pattern.items():
                 # Resolve pattern for base data type
