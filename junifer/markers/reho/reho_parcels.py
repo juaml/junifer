@@ -37,7 +37,7 @@ class ReHoParcels(ReHoBase):
             Number of voxels in the neighbourhood, inclusive. Can be:
 
             - 7 : for facewise neighbours only
-            - 19 : for face- and edge-wise nieghbours
+            - 19 : for face- and edge-wise neighbours
             - 27 : for face-, edge-, and node-wise neighbors
 
         * ``neigh_rad`` : positive float, optional
@@ -67,7 +67,7 @@ class ReHoParcels(ReHoBase):
             Number of voxels in the neighbourhood, inclusive. Can be:
 
             * 7 : for facewise neighbours only
-            * 19 : for face- and edge-wise nieghbours
+            * 19 : for face- and edge-wise neighbours
             * 27 : for face-, edge-, and node-wise neighbors
             * 125 : for 5x5 cuboidal volume
 

@@ -72,7 +72,7 @@ class AFNIReHo:
             Number of voxels in the neighbourhood, inclusive. Can be:
 
             * 7 : for facewise neighbours only
-            * 19 : for face- and edge-wise nieghbours
+            * 19 : for face- and edge-wise neighbours
             * 27 : for face-, edge-, and node-wise neighbors
 
             (default 27).
