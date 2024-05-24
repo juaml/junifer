@@ -24,6 +24,9 @@ from typing import (
     Union,
 )
 
+import numpy as np
+import numpy.typing as npt
+
 from ..api.decorators import register_marker
 from ..external.BrainPrint.brainprint.brainprint import (
     compute_asymmetry,
@@ -88,7 +91,7 @@ class BrainPrint(BaseMarker):
         },
     ]
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"lapy"}
+    _DEPENDENCIES: ClassVar[Set[str]] = {"lapy", "numpy"}
 
     def __init__(
         self,
@@ -504,26 +507,53 @@ class BrainPrint(BaseMarker):
 
         output = {
             "eigenvalues": {
-                "data": [val[2:] for val in eigenvalues.values()],
+                "data": self._fix_nan(
+                    [val[2:] for val in eigenvalues.values()]
+                ).T,
                 "col_names": list(eigenvalues.keys()),
                 "row_names": [f"ev{i}" for i in range(self.num)],
                 "row_header_col_name": "eigenvalue",
             },
             "areas": {
-                "data": [val[0] for val in eigenvalues.values()],
+                "data": self._fix_nan(
+                    [val[0] for val in eigenvalues.values()]
+                ),
                 "col_names": list(eigenvalues.keys()),
             },
             "volumes": {
-                "data": [val[1] for val in eigenvalues.values()],
+                "data": self._fix_nan(
+                    [val[1] for val in eigenvalues.values()]
+                ),
                 "col_names": list(eigenvalues.keys()),
             },
         }
         if self.asymmetry:
             output["distances"] = {
-                "data": list(distances.values()),
+                "data": self._fix_nan(list(distances.values())),
                 "col_names": list(distances.keys()),
             }
         return output
+
+    def _fix_nan(
+        self,
+        input_data: List[Union[float, str, npt.ArrayLike]],
+    ) -> np.ndarray:
+        """Convert BrainPrint output with string NaN to ``numpy.nan``.
+
+        Parameters
+        ----------
+        input_data : list of str, float or numpy.ndarray-like
+            The data to convert.
+
+        Returns
+        -------
+        np.ndarray
+            The converted data as ``numpy.ndarray``.
+
+        """
+        arr = np.asarray(input_data)
+        arr[arr == "NaN"] = np.nan
+        return arr.astype(np.float64)
 
     # TODO: overridden to allow storing multiple outputs from single input;
     # should be removed later
