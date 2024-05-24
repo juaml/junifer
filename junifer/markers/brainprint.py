@@ -632,27 +632,31 @@ class BrainPrint(BaseMarker):
                 if storage is None:
                     out[type_] = {}
 
-                for feature_name, feature_data in t_out.copy().items():
-                    t_meta_copy = deepcopy(t_meta)
-                    t_meta_copy["marker"]["name"] += f"_{feature_name}"
-                    # Add metadata to feature data
-                    feature_data["meta"] = t_meta_copy
+                for feature_name, feature_data in t_out.items():
+                    # Make deep copy of the feature data for manipulation
+                    feature_data_copy = deepcopy(feature_data)
+                    # Make deep copy of metadata and add to feature data
+                    feature_data_copy["meta"] = deepcopy(t_meta)
                     # Update metadata for the feature,
-                    # feature data is not manipulated
-                    self.update_meta(t_out, "marker")
+                    # feature data is not manipulated, only meta
+                    self.update_meta(feature_data_copy, "marker")
+                    # Update marker feature's metadata name
+                    feature_data_copy["meta"]["marker"][
+                        "name"
+                    ] += f"_{feature_name}"
 
                     if storage is not None:
                         logger.info(f"Storing in {storage}")
                         self.store(
                             type_=type_,
                             feature=feature_name,
-                            out=feature_data,
+                            out=feature_data_copy,
                             storage=storage,
                         )
                     else:
                         logger.info(
                             "No storage specified, returning dictionary"
                         )
-                        out[type_][feature_name] = feature_data
+                        out[type_][feature_name] = feature_data_copy
 
         return out
