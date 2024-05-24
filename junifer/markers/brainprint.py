@@ -485,7 +485,7 @@ class BrainPrint(BaseMarker):
             )
             surfaces.update(cortical_surfaces)
         # Compute brainprint
-        eigenvalues, eigenvectors = compute_brainprint(
+        eigenvalues, _ = compute_brainprint(
             surfaces=surfaces,
             keep_eigenvectors=self.keep_eigenvectors,
             num=self.num,
