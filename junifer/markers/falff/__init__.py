@@ -5,3 +5,6 @@
 
 from .falff_parcels import ALFFParcels
 from .falff_spheres import ALFFSpheres
+
+
+__all__ = ["ALFFParcels", "ALFFSpheres"]

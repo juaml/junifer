@@ -27,6 +27,9 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
+__all__ = ["JuniferALFF"]
+
+
 @singleton
 class JuniferALFF:
     """Class for computing ALFF using junifer.

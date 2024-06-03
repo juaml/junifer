@@ -20,6 +20,9 @@ from ...pipeline import WorkDirManager
 from ...utils import logger, run_ext_cmd
 
 
+__all__ = ["ANTsWarper"]
+
+
 class ANTsWarper:
     """Class for space warping via ANTs antsApplyTransforms.
 

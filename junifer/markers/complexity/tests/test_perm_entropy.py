@@ -13,6 +13,7 @@ pytest.importorskip("neurokit2")
 
 from junifer.datareader import DefaultDataReader  # noqa: E402
 from junifer.markers.complexity import PermEntropy  # noqa: E402
+from junifer.pipeline.utils import _check_ants  # noqa: E402
 from junifer.storage import SQLiteFeatureStorage  # noqa: E402
 from junifer.testing.datagrabbers import (  # noqa: E402
     SPMAuditoryTestingDataGrabber,
@@ -23,6 +24,9 @@ from junifer.testing.datagrabbers import (  # noqa: E402
 PARCELLATION = "Schaefer100x17"
 
 
+@pytest.mark.skipif(
+    _check_ants() is False, reason="requires ANTs to be in PATH"
+)
 def test_compute() -> None:
     """Test PermEntropy compute()."""
     with SPMAuditoryTestingDataGrabber() as dg:
@@ -44,6 +48,9 @@ def test_get_output_type() -> None:
     assert marker.get_output_type("BOLD") == "vector"
 
 
+@pytest.mark.skipif(
+    _check_ants() is False, reason="requires ANTs to be in PATH"
+)
 def test_store(tmp_path: Path) -> None:
     """Test PermEntropy store().
 

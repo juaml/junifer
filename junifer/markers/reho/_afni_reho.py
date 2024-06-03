@@ -26,6 +26,9 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
+__all__ = ["AFNIReHo"]
+
+
 @singleton
 class AFNIReHo:
     """Class for computing ReHo using AFNI.

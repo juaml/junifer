@@ -14,6 +14,9 @@ from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
 
 
+__all__ = ["MultiscaleEntropyAUC"]
+
+
 @register_marker
 class MultiscaleEntropyAUC(ComplexityBase):
     """Class for AUC of multiscale entropy of a time series.

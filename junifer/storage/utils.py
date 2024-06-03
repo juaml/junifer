@@ -14,6 +14,15 @@ import numpy as np
 from ..utils.logging import logger, raise_error
 
 
+__all__ = [
+    "get_dependency_version",
+    "process_meta",
+    "element_to_prefix",
+    "store_matrix_checks",
+    "matrix_to_vector",
+]
+
+
 def get_dependency_version(dependency: str) -> str:
     """Get dependency version.
 

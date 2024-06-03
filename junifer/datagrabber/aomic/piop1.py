@@ -16,6 +16,9 @@ from ...utils import raise_error
 from ..pattern_datalad import PatternDataladDataGrabber
 
 
+__all__ = ["DataladAOMICPIOP1"]
+
+
 @register_datagrabber
 class DataladAOMICPIOP1(PatternDataladDataGrabber):
     """Concrete implementation for pattern-based data fetching of AOMIC PIOP1.

@@ -93,6 +93,7 @@ that it shows the problem a bit better and how we solve it:
             self, using: str, reference: str, on: Union[List[str], str]
         ) -> None:
             # validation and setting up
+            ...
 
 
 Here, you see a new class attribute ``_CONDITIONAL_DEPENDENCIES`` which is a
@@ -129,6 +130,7 @@ similar. ``FSLWarper`` looks like this (only the relevant part is shown here):
             extra_input: Dict[str, Any],
         ) -> Dict[str, Any]:
             # implementation
+            ...
 
 Here you can see the familiar ``_DEPENDENCIES`` and ``_EXT_DEPENDENCIES`` class
 attributes. The validation process starts by looking up the ``using`` value of

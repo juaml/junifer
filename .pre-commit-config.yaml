@@ -4,7 +4,7 @@ ci:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-ast
       - id: check-docstring-first
@@ -20,14 +20,14 @@ repos:
     rev: v0.16
     hooks:
       - id: validate-pyproject
-  - repo: https://github.com/psf/black
-    rev: 24.1.1
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 24.4.2
     hooks:
       - id: black
         exclude: ^(docs/|examples/|tools/)
         args: [--check]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.1.15
+    rev: v0.4.2
     hooks:
       - id: ruff
         types_or: [python, jupyter]
@@ -38,7 +38,7 @@ repos:
     hooks:
       - id: codespell
         exclude: ^(.github/|docs/)
-        args: [--config, tox.ini]
+        args: [--toml, pyproject.toml]
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
     hooks:
@@ -47,3 +47,10 @@ repos:
       - id: rst-backticks
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
+  - repo: https://github.com/adamchainz/blacken-docs
+    rev: "1.16.0"
+    hooks:
+      - id: blacken-docs
+        additional_dependencies:
+          - black==24.4.2
+        args: [-l 79]

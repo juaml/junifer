@@ -11,6 +11,9 @@ from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
 
 
+__all__ = ["BasePreprocessor"]
+
+
 class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
     """Abstract base class for all preprocessors.
 
@@ -136,7 +139,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             A single input from the Junifer Data object to preprocess.
         extra_input : dict, optional
             The other fields in the Junifer Data object. Useful for accessing
-            other data kind that needs to be used in the computation. For
+            other data type that needs to be used in the computation. For
             example, the confound removers can make use of the
             confounds if available (default None).
 

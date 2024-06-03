@@ -19,6 +19,9 @@ if TYPE_CHECKING:
     from junifer.datagrabber import BaseDataGrabber
 
 
+__all__ = ["MarkerCollection"]
+
+
 class MarkerCollection:
     """Class for marker collection.
 

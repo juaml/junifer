@@ -16,6 +16,9 @@ if TYPE_CHECKING:
     from .pipeline_step_mixin import PipelineStepMixin
 
 
+__all__ = ["register", "get_step_names", "get_class", "build"]
+
+
 # Define valid steps for operation
 _VALID_STEPS: List[str] = [
     "datagrabber",

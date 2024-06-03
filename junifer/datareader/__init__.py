@@ -6,3 +6,6 @@
 # License: AGPL
 
 from .default import DefaultDataReader
+
+
+__all__ = ["DefaultDataReader"]

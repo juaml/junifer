@@ -23,6 +23,9 @@ from .queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from .utils import yaml
 
 
+__all__ = ["run", "collect", "queue", "reset", "list_elements"]
+
+
 def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
     """Get DataGrabber.
 
@@ -92,7 +95,7 @@ def run(
     datagrabber : dict
         DataGrabber to use. Must have a key ``kind`` with the kind of
         DataGrabber to use. All other keys are passed to the DataGrabber
-        init function.
+        constructor.
     markers : list of dict
         List of markers to extract. Each marker is a dict with at least two
         keys: ``name`` and ``kind``. The ``name`` key is used to name the
@@ -102,11 +105,11 @@ def run(
     storage : dict
         Storage to use. Must have a key ``kind`` with the kind of
         storage to use. All other keys are passed to the storage
-        init function.
+        constructor.
     preprocessors : list of dict, optional
         List of preprocessors to use. Each preprocessor is a dict with at
         least a key ``kind`` specifying the preprocessor to use. All other keys
-        are passed to the preprocessor init function (default None).
+        are passed to the preprocessor constructor (default None).
     elements : str or tuple or list of str or tuple, optional
         Element(s) to process. Will be used to index the DataGrabber
         (default None).
@@ -188,7 +191,7 @@ def collect(storage: Dict) -> None:
     storage : dict
         Storage to use. Must have a key ``kind`` with the kind of
         storage to use. All other keys are passed to the storage
-        init function.
+        constructor.
 
     """
     storage_params = storage.copy()

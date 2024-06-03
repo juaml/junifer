@@ -17,6 +17,9 @@ from .parcel_aggregation import ParcelAggregation
 from .utils import _ets
 
 
+__all__ = ["RSSETSMarker"]
+
+
 @register_marker
 class RSSETSMarker(BaseMarker):
     """Class for root sum of squares of edgewise timeseries.

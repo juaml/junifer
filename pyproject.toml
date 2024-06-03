@@ -124,6 +124,16 @@ builtin = "clear,rare,informal,names,usage,code"
 
 [tool.ruff]
 line-length = 79
+extend-exclude = [
+    "__init__.py",
+    "junifer/external/h5io",
+    "junifer/external/BrainPrint",
+    "docs",
+    "examples",
+    "tools",
+]
+
+[tool.ruff.lint]
 select = [
     # flake8-bugbear
     "B",
@@ -156,14 +166,6 @@ select = [
     # flake8-2020
     "YTT",
 ]
-extend-exclude = [
-    "__init__.py",
-    "junifer/external/h5io",
-    "junifer/external/BrainPrint",
-    "docs",
-    "examples",
-    "tools",
-]
 ignore = [
     # Use of `functools.lru_cache` or `functools.cache` on methods can lead to
     # memory leaks. The cache may retain instance references, preventing garbage
@@ -186,7 +188,7 @@ ignore = [
     "PGH003",
 ]
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 lines-after-imports = 2
 known-first-party = ["junifer"]
 known-third-party =[
@@ -210,12 +212,22 @@ known-third-party =[
     "pytest",
 ]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 20
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "--ignore=junifer/external/h5io --ignore=junifer/external/BrainPrint -vv"
+testpaths = "junifer"
+log_cli_level = "INFO"
+xfail_strict = true
+addopts = [
+    "-ra",
+    "--strict-config",
+    "--strict-markers",
+    "--ignore=junifer/external/h5io",
+    "--ignore=junifer/external/BrainPrint",
+    "-vv",
+]
 
 [tool.towncrier]
 directory = "docs/changes/newsfragments"

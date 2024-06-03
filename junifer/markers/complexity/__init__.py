@@ -25,3 +25,13 @@ else:
     from .weighted_perm_entropy import WeightedPermEntropy
     from .sample_entropy import SampleEntropy
     from .multiscale_entropy_auc import MultiscaleEntropyAUC
+
+    __all__ = [
+        "HurstExponent",
+        "RangeEntropy",
+        "RangeEntropyAUC",
+        "PermEntropy",
+        "WeightedPermEntropy",
+        "SampleEntropy",
+        "MultiscaleEntropyAUC",
+    ]

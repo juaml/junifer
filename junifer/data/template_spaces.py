@@ -15,6 +15,9 @@ from ..utils import logger, raise_error
 from .utils import closest_resolution
 
 
+__all__ = ["get_xfm", "get_template"]
+
+
 def get_xfm(
     src: str, dst: str, xfms_dir: Union[str, Path, None] = None
 ) -> Path:  # pragma: no cover

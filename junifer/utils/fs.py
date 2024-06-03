@@ -8,6 +8,9 @@ import stat
 from pathlib import Path
 
 
+__all__ = ["make_executable"]
+
+
 def make_executable(path: Path) -> None:
     """Make ``path`` executable.
 

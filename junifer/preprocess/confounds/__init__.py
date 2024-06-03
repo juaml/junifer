@@ -5,3 +5,6 @@
 # License: AGPL
 
 from .fmriprep_confound_remover import fMRIPrepConfoundRemover
+
+
+__all__ = ["fMRIPrepConfoundRemover"]

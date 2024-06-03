@@ -13,6 +13,9 @@ from ...utils import raise_error
 from ..base import BaseMarker
 
 
+__all__ = ["TemporalSNRBase"]
+
+
 class TemporalSNRBase(BaseMarker):
     """Abstract base class for temporal SNR markers.
 

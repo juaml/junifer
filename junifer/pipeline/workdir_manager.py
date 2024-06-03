@@ -13,6 +13,9 @@ from ..utils import logger
 from .singleton import singleton
 
 
+__all__ = ["WorkDirManager"]
+
+
 @singleton
 class WorkDirManager:
     """Class for working directory manager.

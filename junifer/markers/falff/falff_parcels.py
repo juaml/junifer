@@ -14,6 +14,9 @@ from ..parcel_aggregation import ParcelAggregation
 from .falff_base import ALFFBase
 
 
+__all__ = ["ALFFParcels"]
+
+
 @register_marker
 class ALFFParcels(ALFFBase):
     """Class for ALFF / fALFF on parcels.

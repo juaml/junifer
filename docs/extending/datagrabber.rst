@@ -115,14 +115,14 @@ For example, in our BIDS example, the variables will be:
 
     types = ["T1w", "BOLD"]
     patterns = {
-       "T1w": {
-           "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-           "space": "native",
-       },
-       "BOLD": {
-           "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-           "space": "MNI152NLin6Asym",
-       },
+        "T1w": {
+            "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+            "space": "native",
+        },
+        "BOLD": {
+            "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+            "space": "MNI152NLin6Asym",
+        },
     }
     replacements = ["subject", "session"]
 
@@ -144,25 +144,24 @@ With the variables defined above, we can create our DataGrabber and name it
 
 
     class ExampleBIDSDataGrabber(PatternDataGrabber):
-
         def __init__(self, datadir: str | Path) -> None:
             types = ["T1w", "BOLD"]
             patterns = {
-               "T1w": {
-                   "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-                   "space": "native",
-               },
-               "BOLD": {
-                   "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-                   "space": "MNI152NLin6Asym",
-               },
+                "T1w": {
+                    "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                    "space": "native",
+                },
+                "BOLD": {
+                    "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                    "space": "MNI152NLin6Asym",
+                },
             }
             replacements = ["subject", "session"]
             super().__init__(
-               datadir=datadir,
-               types=types,
-               patterns=patterns,
-               replacements=replacements,
+                datadir=datadir,
+                types=types,
+                patterns=patterns,
+                replacements=replacements,
             )
 
 Our DataGrabber is ready to be used by ``junifer``. However, it is still unknown
@@ -180,25 +179,24 @@ use the :func:`.register_datagrabber` decorator.
 
     @register_datagrabber
     class ExampleBIDSDataGrabber(PatternDataGrabber):
-
         def __init__(self, datadir: str | Path) -> None:
             types = ["T1w", "BOLD"]
             patterns = {
-               "T1w": {
-                   "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-                   "space": "native",
-               },
-               "BOLD": {
-                   "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-                   "space": "MNI152NLin6Asym",
-               },
+                "T1w": {
+                    "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                    "space": "native",
+                },
+                "BOLD": {
+                    "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                    "space": "MNI152NLin6Asym",
+                },
             }
             replacements = ["subject", "session"]
             super().__init__(
-               datadir=datadir,
-               types=types,
-               patterns=patterns,
-               replacements=replacements,
+                datadir=datadir,
+                types=types,
+                patterns=patterns,
+                replacements=replacements,
             )
 
 
@@ -267,29 +265,28 @@ And we can create our DataGrabber:
 
     @register_datagrabber
     class ExampleBIDSDataGrabber(PatternDataladDataGrabber):
-
         def __init__(self) -> None:
             types = ["T1w", "BOLD"]
             patterns = {
-               "T1w": {
-                   "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-                   "space": "native",
-               },
-               "BOLD": {
-                   "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-                   "space": "MNI152NLin6Asym",
-               },
+                "T1w": {
+                    "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                    "space": "native",
+                },
+                "BOLD": {
+                    "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                    "space": "MNI152NLin6Asym",
+                },
             }
             replacements = ["subject", "session"]
             uri = "https://gin.g-node.org/juaml/datalad-example-bids"
             rootdir = "example_bids_ses"
             super().__init__(
-               datadir=None,
-               uri=uri,
-               rootdir=rootdir,
-               types=types,
-               patterns=patterns,
-               replacements=replacements,
+                datadir=None,
+                uri=uri,
+                rootdir=rootdir,
+                types=types,
+                patterns=patterns,
+                replacements=replacements,
             )
 
 This approach can be used directly from the YAML, like so:
@@ -391,17 +388,17 @@ and ``session``, we will use them as parameters of ``get_item``:
 .. code-block:: python
 
    def get_item(self, subject: str, session: str) -> dict[str, dict[str, str]]:
-      out = {
-         "T1w": {
-             "path": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-             "space": "native",
-         },
-         "BOLD": {
-             "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-             "space": "MNI152NLin6Asym",
-         },
-      }
-      return out
+       out = {
+           "T1w": {
+               "path": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+               "space": "native",
+           },
+           "BOLD": {
+               "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+               "space": "MNI152NLin6Asym",
+           },
+       }
+       return out
 
 
 The second method, ``get_elements``, needs to return a list of all the elements
@@ -415,16 +412,16 @@ need to remember that for session *ses-03* there is no BOLD data.
 
 
    def get_elements(self) -> list[str]:
-      subjects = ["sub-01", "sub-02", "sub-03"]
-      sessions = ["ses-01", "ses-02"]
+       subjects = ["sub-01", "sub-02", "sub-03"]
+       sessions = ["ses-01", "ses-02"]
 
-      # If we are not working on BOLD data, we can add "ses-03"
-      if "BOLD" not in self.types:
-         sessions.append("ses-03")
-      elements = []
-      for subject, element in product(subjects, sessions):
-         elements.append({"subject": subject, "session": session})
-      return elements
+       # If we are not working on BOLD data, we can add "ses-03"
+       if "BOLD" not in self.types:
+           sessions.append("ses-03")
+       elements = []
+       for subject, element in product(subjects, sessions):
+           elements.append({"subject": subject, "session": session})
+       return elements
 
 
 And finally, we can implement the ``get_element_keys`` method. This method needs
@@ -435,7 +432,7 @@ method, in the same order.
 .. code-block:: python
 
    def get_element_keys(self) -> list[str]:
-      return ["subject", "session"]
+       return ["subject", "session"]
 
 
 So, to summarise, our DataGrabber will look like this:
@@ -448,35 +445,36 @@ So, to summarise, our DataGrabber will look like this:
 
    @register_datagrabber
    class ExampleBIDSDataGrabber(BaseDataGrabber):
+       def get_item(
+           self, subject: str, session: str
+       ) -> dict[str, dict[str, str]]:
+           out = {
+               "T1w": {
+                   "path": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                   "space": "native",
+               },
+               "BOLD": {
+                   "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                   "space": "MNI152NLin6Asym",
+               },
+           }
+           return out
 
-      def get_item(self, subject: str, session: str) -> dict[str, dict[str, str]]:
-         out = {
-            "T1w": {
-                "path": f"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-                "space": "native",
-            },
-            "BOLD": {
-                "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-                "space": "MNI152NLin6Asym",
-            },
-         }
-         return out
+       def get_elements(self) -> list[str]:
+           subjects = ["sub-01", "sub-02", "sub-03"]
+           sessions = ["ses-01", "ses-02"]
 
-      def get_elements(self) -> list[str]:
-         subjects = ["sub-01", "sub-02", "sub-03"]
-         sessions = ["ses-01", "ses-02"]
+           # If we are not working on BOLD data, we can add "ses-03"
+           if "BOLD" not in self.types:
+               sessions.append("ses-03")
+           elements = []
+           for subject in subjects:
+               for session in sessions:
+                   elements.append({"subject": subject, "session": session})
+           return elements
 
-         # If we are not working on BOLD data, we can add "ses-03"
-         if "BOLD" not in self.types:
-            sessions.append("ses-03")
-         elements = []
-         for subject in subjects:
-            for session in sessions:
-               elements.append({"subject": subject, "session": session})
-         return elements
-
-      def get_element_keys(self) -> list[str]:
-         return ["subject", "session"]
+       def get_element_keys(self) -> list[str]:
+           return ["subject", "session"]
 
 Optional: Using datalad
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -522,26 +520,24 @@ this:
 
 .. code-block:: python
 
-   def get_item(
-      self, subject: str, session: str
-   ) -> dict:
-      out = {
-         "BOLD": {
-             "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-             "space": "MNI152NLin6Asym",
-             "confounds": {
-                 "path": f"{subject}/{session}/func/{subject}_{session}_confounds.tsv",
-                 "format": "adhoc",
-                 "mappings": {
-                     "fmriprep": {
-                        "variable1": "rot_x",
-                        "variable2": "rot_z",
-                        "variable3": "rot_y",
-                     },
-                 },
-             },
-         },
-      }
+   def get_item(self, subject: str, session: str) -> dict:
+       out = {
+           "BOLD": {
+               "path": f"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+               "space": "MNI152NLin6Asym",
+               "confounds": {
+                   "path": f"{subject}/{session}/func/{subject}_{session}_confounds.tsv",
+                   "format": "adhoc",
+                   "mappings": {
+                       "fmriprep": {
+                           "variable1": "rot_x",
+                           "variable2": "rot_z",
+                           "variable3": "rot_y",
+                       },
+                   },
+               },
+           },
+       }
 
 .. note::
 

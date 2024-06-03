@@ -12,6 +12,9 @@ from .datalad_base import DataladDataGrabber
 from .pattern import PatternDataGrabber
 
 
+__all__ = ["PatternDataladDataGrabber"]
+
+
 @register_datagrabber
 class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
     """Concrete implementation for pattern and datalad based data fetching.

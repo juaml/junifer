@@ -14,6 +14,9 @@ from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
 
 
+__all__ = ["PermEntropy"]
+
+
 @register_marker
 class PermEntropy(ComplexityBase):
     """Class for permutation entropy of a time series.

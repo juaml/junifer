@@ -14,6 +14,9 @@ from ...api.decorators import register_datagrabber
 from .hcp1200 import HCP1200
 
 
+__all__ = ["DataladHCP1200"]
+
+
 @register_datagrabber
 class DataladHCP1200(DataladDataGrabber, HCP1200):
     """Concrete implementation for datalad-based data fetching of HCP1200.

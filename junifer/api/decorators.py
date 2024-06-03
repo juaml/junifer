@@ -10,6 +10,15 @@ from typing import Type
 from ..pipeline.registry import register
 
 
+__all__ = [
+    "register_datagrabber",
+    "register_datareader",
+    "register_preprocessor",
+    "register_marker",
+    "register_storage",
+]
+
+
 def register_datagrabber(klass: Type) -> Type:
     """Register DataGrabber.
 

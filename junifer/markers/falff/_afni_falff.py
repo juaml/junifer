@@ -26,6 +26,9 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
+__all__ = ["AFNIALFF"]
+
+
 @singleton
 class AFNIALFF:
     """Class for computing ALFF using AFNI.

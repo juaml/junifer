@@ -10,6 +10,9 @@ from ..parcel_aggregation import ParcelAggregation
 from .temporal_snr_base import TemporalSNRBase
 
 
+__all__ = ["TemporalSNRParcels"]
+
+
 @register_marker
 class TemporalSNRParcels(TemporalSNRBase):
     """Class for temporal signal-to-noise ratio using parcellations.

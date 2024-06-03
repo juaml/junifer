@@ -30,6 +30,15 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
+__all__ = [
+    "register_parcellation",
+    "list_parcellations",
+    "get_parcellation",
+    "load_parcellation",
+    "merge_parcellations",
+]
+
+
 # A dictionary containing all supported parcellations and their respective
 # valid parameters.
 

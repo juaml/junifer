@@ -4,3 +4,6 @@
 # License: AGPL
 
 from .smoothing import Smoothing
+
+
+__all__ = ["Smoothing"]

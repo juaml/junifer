@@ -14,6 +14,9 @@ from ..parcel_aggregation import ParcelAggregation
 from .reho_base import ReHoBase
 
 
+__all__ = ["ReHoParcels"]
+
+
 @register_marker
 class ReHoParcels(ReHoBase):
     """Class for regional homogeneity on parcels.

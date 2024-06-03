@@ -10,6 +10,9 @@ from typing import Any, List, Optional
 from junifer.utils.logging import raise_error, warn_with_log
 
 
+__all__ = ["check_ext_dependencies"]
+
+
 def check_ext_dependencies(
     name: str, optional: bool = False, **kwargs: Any
 ) -> bool:

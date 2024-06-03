@@ -25,6 +25,9 @@ if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
 
+__all__ = ["SQLiteFeatureStorage"]
+
+
 @register_storage
 class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     """Concrete implementation for feature storage via SQLite.

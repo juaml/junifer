@@ -12,6 +12,9 @@ from ....datagrabber import PatternDataGrabber
 from ....utils import raise_error
 
 
+__all__ = ["JuselessUCLA"]
+
+
 @register_datagrabber
 class JuselessUCLA(PatternDataGrabber):
     """Concrete implementation for Juseless UCLA data fetching.

@@ -15,6 +15,9 @@ from ..parcel_aggregation import ParcelAggregation
 from ..utils import _correlate_dataframes
 
 
+__all__ = ["CrossParcellationFC"]
+
+
 @register_marker
 class CrossParcellationFC(BaseMarker):
     """Class for calculating parcel-wise correlations with 2 parcellations.

@@ -9,3 +9,11 @@ from .base import BasePreprocessor
 from .confounds import fMRIPrepConfoundRemover
 from .warping import SpaceWarper
 from .smoothing import Smoothing
+
+
+__all__ = [
+    "BasePreprocessor",
+    "fMRIPrepConfoundRemover",
+    "SpaceWarper",
+    "Smoothing",
+]

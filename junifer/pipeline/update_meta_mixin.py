@@ -7,6 +7,9 @@
 from typing import Dict
 
 
+__all__ = ["UpdateMetaMixin"]
+
+
 class UpdateMetaMixin:
     """Mixin class for updating meta."""
 
