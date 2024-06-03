@@ -27,6 +27,9 @@ from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 
 
+__all__ = ["fMRIPrepConfoundRemover"]
+
+
 FMRIPREP_BASICS = {
     "motion": [
         "trans_x",

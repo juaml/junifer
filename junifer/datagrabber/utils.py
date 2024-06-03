@@ -9,6 +9,9 @@ from typing import Dict, List
 from ..utils import logger, raise_error
 
 
+__all__ = ["validate_types", "validate_replacements", "validate_patterns"]
+
+
 # Define schema for pattern-based datagrabber's patterns
 PATTERNS_SCHEMA = {
     "T1w": {

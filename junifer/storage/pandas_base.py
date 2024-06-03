@@ -15,6 +15,9 @@ from ..utils import raise_error
 from .base import BaseFeatureStorage
 
 
+__all__ = ["PandasBaseFeatureStorage"]
+
+
 class PandasBaseFeatureStorage(BaseFeatureStorage):
     """Abstract base class for feature storage via pandas.
 

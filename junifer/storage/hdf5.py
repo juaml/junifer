@@ -26,6 +26,9 @@ from .base import BaseFeatureStorage
 from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
 
 
+__all__ = ["HDF5FeatureStorage"]
+
+
 def _create_chunk(
     chunk_data: List[np.ndarray],
     kind: str,

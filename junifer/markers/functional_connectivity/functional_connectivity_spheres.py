@@ -13,6 +13,9 @@ from ..utils import raise_error
 from .functional_connectivity_base import FunctionalConnectivityBase
 
 
+__all__ = ["FunctionalConnectivitySpheres"]
+
+
 @register_marker
 class FunctionalConnectivitySpheres(FunctionalConnectivityBase):
     """Class for functional connectivity using coordinates (spheres).

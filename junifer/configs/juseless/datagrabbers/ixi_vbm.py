@@ -13,6 +13,9 @@ from ....datagrabber import PatternDataladDataGrabber
 from ....utils import raise_error
 
 
+__all__ = ["JuselessDataladIXIVBM"]
+
+
 @register_datagrabber
 class JuselessDataladIXIVBM(PatternDataladDataGrabber):
     """Concrete implementation for Juseless IXI VBM data fetching.

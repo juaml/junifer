@@ -6,6 +6,9 @@
 from pathlib import Path
 
 
+__all__ = ["get_testing_data"]
+
+
 def get_testing_data(fname: str) -> Path:
     """Get the path to a testing data file.
 

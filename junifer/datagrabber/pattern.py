@@ -18,6 +18,9 @@ from .base import BaseDataGrabber
 from .utils import validate_patterns, validate_replacements
 
 
+__all__ = ["PatternDataGrabber"]
+
+
 # Accepted formats for confounds specification
 _CONFOUNDS_FORMATS = ("fmriprep", "adhoc")
 

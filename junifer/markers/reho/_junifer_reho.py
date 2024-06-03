@@ -28,6 +28,9 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
+__all__ = ["JuniferReHo"]
+
+
 @singleton
 class JuniferReHo:
     """Class for computing ReHo using junifer.

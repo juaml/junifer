@@ -43,6 +43,9 @@ if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 
 
+__all__ = ["BrainPrint"]
+
+
 @register_marker
 class BrainPrint(BaseMarker):
     """Class for BrainPrint.

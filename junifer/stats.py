@@ -13,6 +13,9 @@ from scipy.stats.mstats import winsorize
 from .utils import logger, raise_error
 
 
+__all__ = ["get_aggfunc_by_name", "count", "winsorized_mean", "select"]
+
+
 def get_aggfunc_by_name(
     name: str, func_params: Optional[Dict[str, Any]] = None
 ) -> Callable:

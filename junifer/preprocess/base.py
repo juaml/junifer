@@ -11,6 +11,9 @@ from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
 
 
+__all__ = ["BasePreprocessor"]
+
+
 class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
     """Abstract base class for all preprocessors.
 

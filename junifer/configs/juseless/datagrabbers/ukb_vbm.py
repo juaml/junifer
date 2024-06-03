@@ -12,6 +12,9 @@ from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataladDataGrabber
 
 
+__all__ = ["JuselessDataladUKBVBM"]
+
+
 @register_datagrabber
 class JuselessDataladUKBVBM(PatternDataladDataGrabber):
     """Concrete implementation for Juseless UKB VBM data fetching.

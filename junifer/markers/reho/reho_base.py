@@ -26,6 +26,8 @@ from ._junifer_reho import JuniferReHo
 if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
+__all__ = ["ReHoBase"]
+
 
 class ReHoBase(BaseMarker):
     """Base class for regional homogeneity computation.

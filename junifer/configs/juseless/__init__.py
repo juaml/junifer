@@ -4,3 +4,6 @@
 # License: AGPL
 
 from . import datagrabbers
+
+
+__all__ = ["datagrabbers"]

@@ -12,6 +12,9 @@ from ..utils import _ets
 from .functional_connectivity_base import FunctionalConnectivityBase
 
 
+__all__ = ["EdgeCentricFCParcels"]
+
+
 @register_marker
 class EdgeCentricFCParcels(FunctionalConnectivityBase):
     """Class for edge-centric FC using parcellations.

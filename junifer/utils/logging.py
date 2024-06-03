@@ -19,6 +19,16 @@ from warnings import warn
 import datalad
 
 
+__all__ = [
+    "WrapStdOut",
+    "get_versions",
+    "log_versions",
+    "configure_logging",
+    "raise_error",
+    "warn_with_log",
+]
+
+
 logger = logging.getLogger("JUNIFER")
 
 # Set up datalad logger level to warning by default

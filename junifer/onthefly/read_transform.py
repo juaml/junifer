@@ -15,6 +15,9 @@ if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 
 
+__all__ = ["read_transform"]
+
+
 def read_transform(
     storage: Type["BaseFeatureStorage"],
     transform: str,

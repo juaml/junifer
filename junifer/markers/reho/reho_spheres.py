@@ -14,6 +14,9 @@ from ..sphere_aggregation import SphereAggregation
 from .reho_base import ReHoBase
 
 
+__all__ = ["ReHoSpheres"]
+
+
 @register_marker
 class ReHoSpheres(ReHoBase):
     """Class for regional homogeneity on spheres.

@@ -14,6 +14,9 @@ from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
 
 
+__all__ = ["WeightedPermEntropy"]
+
+
 @register_marker
 class WeightedPermEntropy(ComplexityBase):
     """Class for weighted permutation entropy of a time series.

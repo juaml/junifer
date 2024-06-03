@@ -14,6 +14,9 @@ from ..utils import logger, raise_error
 from .utils import validate_types
 
 
+__all__ = ["BaseDataGrabber"]
+
+
 class BaseDataGrabber(ABC, UpdateMetaMixin):
     """Abstract base class for DataGrabber.
 

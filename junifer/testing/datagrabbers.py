@@ -14,6 +14,13 @@ from nilearn import datasets, image
 from ..datagrabber.base import BaseDataGrabber
 
 
+__all__ = [
+    "OasisVBMTestingDataGrabber",
+    "SPMAuditoryTestingDataGrabber",
+    "PartlyCloudyTestingDataGrabber",
+]
+
+
 class OasisVBMTestingDataGrabber(BaseDataGrabber):
     """DataGrabber for Oasis VBM testing data.
 

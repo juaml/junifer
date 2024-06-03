@@ -19,6 +19,9 @@ from ...pipeline import WorkDirManager
 from ...utils import logger, run_ext_cmd
 
 
+__all__ = ["FSLWarper"]
+
+
 class FSLWarper:
     """Class for space warping via FSL FLIRT.
 

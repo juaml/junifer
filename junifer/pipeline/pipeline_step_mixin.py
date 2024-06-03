@@ -17,6 +17,9 @@ from ..utils import raise_error
 from .utils import check_ext_dependencies
 
 
+__all__ = ["PipelineStepMixin"]
+
+
 class PipelineStepMixin:
     """Mixin class for a pipeline step."""
 

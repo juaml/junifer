@@ -10,3 +10,12 @@ from .camcan_vbm import JuselessDataladCamCANVBM
 from .ixi_vbm import JuselessDataladIXIVBM
 from .ucla import JuselessUCLA
 from .ukb_vbm import JuselessDataladUKBVBM
+
+
+__all__ = [
+    "JuselessDataladAOMICID1000VBM",
+    "JuselessDataladCamCANVBM",
+    "JuselessDataladIXIVBM",
+    "JuselessUCLA",
+    "JuselessDataladUKBVBM",
+]

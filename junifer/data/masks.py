@@ -35,6 +35,16 @@ from .utils import closest_resolution
 if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
+
+__all__ = [
+    "compute_brain_mask",
+    "register_mask",
+    "list_masks",
+    "get_mask",
+    "load_mask",
+]
+
+
 # Path to the masks
 _masks_path = Path(__file__).parent / "masks"
 

@@ -9,6 +9,9 @@ from typing import List
 from .logging import logger, raise_error
 
 
+__all__ = ["run_ext_cmd"]
+
+
 def run_ext_cmd(name: str, cmd: List[str]) -> None:
     """Run external command via subprocess.
 

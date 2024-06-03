@@ -14,6 +14,9 @@ from ..sphere_aggregation import SphereAggregation
 from .falff_base import ALFFBase
 
 
+__all__ = ["ALFFSpheres"]
+
+
 @register_marker
 class ALFFSpheres(ALFFBase):
     """Class for computing ALFF / fALFF on spheres.

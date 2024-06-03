@@ -15,6 +15,9 @@ if TYPE_CHECKING:
     from junifer.storage import BaseFeatureStorage
 
 
+__all__ = ["BaseMarker"]
+
+
 class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
     """Abstract base class for all markers.
 

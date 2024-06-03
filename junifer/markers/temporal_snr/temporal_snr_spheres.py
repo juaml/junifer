@@ -11,6 +11,9 @@ from ..utils import raise_error
 from .temporal_snr_base import TemporalSNRBase
 
 
+__all__ = ["TemporalSNRSpheres"]
+
+
 @register_marker
 class TemporalSNRSpheres(TemporalSNRBase):
     """Class for temporal signal-to-noise ratio using coordinates (spheres).

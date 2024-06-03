@@ -16,6 +16,14 @@ from ..pipeline import WorkDirManager
 from ..utils import logger, raise_error, run_ext_cmd
 
 
+__all__ = [
+    "register_coordinates",
+    "list_coordinates",
+    "get_coordinates",
+    "load_coordinates",
+]
+
+
 # Path to the VOIs
 _vois_path = Path(__file__).parent / "VOIs"
 

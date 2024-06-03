@@ -14,6 +14,9 @@ from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
 
 
+__all__ = ["SampleEntropy"]
+
+
 @register_marker
 class SampleEntropy(ComplexityBase):
     """Class for sample entropy of a time series.

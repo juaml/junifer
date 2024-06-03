@@ -14,6 +14,9 @@ from ..pattern import PatternDataGrabber
 from ..utils import raise_error
 
 
+__all__ = ["HCP1200"]
+
+
 @register_datagrabber
 class HCP1200(PatternDataGrabber):
     """Concrete implementation for pattern-based data fetching of HCP1200.

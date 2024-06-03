@@ -29,6 +29,9 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image
 
 
+__all__ = ["ALFFBase"]
+
+
 class ALFFBase(BaseMarker):
     """Base class for (fractional) Amplitude Low Frequency Fluctuation.
 

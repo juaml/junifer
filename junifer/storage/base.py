@@ -15,6 +15,9 @@ from ..utils import raise_error
 from .utils import process_meta
 
 
+__all__ = ["BaseFeatureStorage"]
+
+
 class BaseFeatureStorage(ABC):
     """Abstract base class for feature storage.
 

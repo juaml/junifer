@@ -14,6 +14,9 @@ from ...utils import raise_error
 from ..base import BaseMarker
 
 
+__all__ = ["FunctionalConnectivityBase"]
+
+
 class FunctionalConnectivityBase(BaseMarker):
     """Abstract base class for functional connectivity markers.
 

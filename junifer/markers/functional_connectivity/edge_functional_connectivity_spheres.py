@@ -12,6 +12,9 @@ from ..utils import _ets, raise_error
 from .functional_connectivity_base import FunctionalConnectivityBase
 
 
+__all__ = ["EdgeCentricFCSpheres"]
+
+
 @register_marker
 class EdgeCentricFCSpheres(FunctionalConnectivityBase):
     """Class for edge-centric FC using coordinates (spheres).

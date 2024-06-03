@@ -7,6 +7,9 @@ import numpy as np
 from ..utils.logging import logger
 
 
+__all__ = ["closest_resolution"]
+
+
 def closest_resolution(
     resolution: Optional[Union[float, int]],
     valid_resolution: Union[List[float], List[int], np.ndarray],

@@ -14,6 +14,9 @@ from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
 
 
+__all__ = ["RangeEntropyAUC"]
+
+
 @register_marker
 class RangeEntropyAUC(ComplexityBase):
     """Class for AUC of range entropy values of a time series over r = 0 to 1.

@@ -24,6 +24,9 @@ if TYPE_CHECKING:
     import numpy as np
 
 
+__all__ = ["ComplexityBase"]
+
+
 class ComplexityBase(BaseMarker):
     """Base class for complexity computation.
 

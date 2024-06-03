@@ -14,6 +14,9 @@ from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
 
 
+__all__ = ["HurstExponent"]
+
+
 @register_marker
 class HurstExponent(ComplexityBase):
     """Class for Hurst exponent of a time series.

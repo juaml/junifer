@@ -14,6 +14,9 @@ from ..utils import logger, raise_error, warn_with_log
 from .base import BaseMarker
 
 
+__all__ = ["SphereAggregation"]
+
+
 @register_marker
 class SphereAggregation(BaseMarker):
     """Class for sphere aggregation.

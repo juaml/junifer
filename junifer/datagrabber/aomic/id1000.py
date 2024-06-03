@@ -14,6 +14,9 @@ from ...api.decorators import register_datagrabber
 from ..pattern_datalad import PatternDataladDataGrabber
 
 
+__all__ = ["DataladAOMICID1000"]
+
+
 @register_datagrabber
 class DataladAOMICID1000(PatternDataladDataGrabber):
     """Concrete implementation for datalad-based data fetching of AOMIC ID1000.

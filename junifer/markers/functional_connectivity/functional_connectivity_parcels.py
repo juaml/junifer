@@ -12,6 +12,9 @@ from ..parcel_aggregation import ParcelAggregation
 from .functional_connectivity_base import FunctionalConnectivityBase
 
 
+__all__ = ["FunctionalConnectivityParcels"]
+
+
 @register_marker
 class FunctionalConnectivityParcels(FunctionalConnectivityBase):
     """Class for functional connectivity using parcellations.

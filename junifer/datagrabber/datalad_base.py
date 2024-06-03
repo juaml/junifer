@@ -21,6 +21,9 @@ from ..utils import logger, raise_error, warn_with_log
 from .base import BaseDataGrabber
 
 
+__all__ = ["DataladDataGrabber"]
+
+
 class DataladDataGrabber(BaseDataGrabber):
     """Abstract base class for datalad-based data fetching.
 

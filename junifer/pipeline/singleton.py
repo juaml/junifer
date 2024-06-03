@@ -6,6 +6,9 @@
 from typing import Any, Dict, Type
 
 
+__all__ = ["singleton"]
+
+
 def singleton(cls: Type) -> Type:
     """Make a class singleton.
 

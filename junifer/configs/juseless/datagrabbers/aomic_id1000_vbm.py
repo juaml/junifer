@@ -11,6 +11,9 @@ from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataladDataGrabber
 
 
+__all__ = ["JuselessDataladAOMICID1000VBM"]
+
+
 @register_datagrabber
 class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
     """Concrete implementation for Juseless AOMIC ID1000 VBM data fetching.

@@ -12,6 +12,9 @@ from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataladDataGrabber
 
 
+__all__ = ["JuselessDataladCamCANVBM"]
+
+
 @register_datagrabber
 class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
     """Concrete implementation for Juseless CamCAN VBM data fetching.

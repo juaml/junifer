@@ -11,6 +11,9 @@ from ..utils import raise_error
 from .base import BaseDataGrabber
 
 
+__all__ = ["MultipleDataGrabber"]
+
+
 class MultipleDataGrabber(BaseDataGrabber):
     """Concrete implementation for multi sourced data fetching.
 
