@@ -299,8 +299,10 @@ For input we can accept <code class="docutils literal notranslate"><span class="
 <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
+
 <span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;T1w&quot;</span><span class="p">,</span> <span class="s2">&quot;T2w&quot;</span><span class="p">,</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">]</span>
+
 
 <span class="o">...</span>
 </pre></div>
@@ -309,8 +311,10 @@ For input we can accept <code class="docutils literal notranslate"><span class="
 completeness.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 
+
 <span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">input_type</span>
+
 
 <span class="o">...</span>
 </pre></div>
@@ -341,6 +345,7 @@ JSON format, and JSON only supports these types.</p>
 
 <span class="o">...</span>
 
+
 <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">fwhm</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;fast&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
@@ -348,6 +353,7 @@ JSON format, and JSON only supports these types.</p>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">fwhm</span> <span class="o">=</span> <span class="n">fwhm</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">)</span>
+
 
 <span class="o">...</span>
 </pre></div>
@@ -395,15 +401,17 @@ want to pass <code class="docutils literal notranslate"><span class="pre">None</
 
 <span class="o">...</span>
 
+
 <span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="nb">input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">extra_input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-     <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nimg</span><span class="o">.</span><span class="n">smooth_img</span><span class="p">(</span><span class="n">imgs</span><span class="o">=</span><span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="n">fwhm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fwhm</span><span class="p">)</span>
-     <span class="k">return</span> <span class="nb">input</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nimg</span><span class="o">.</span><span class="n">smooth_img</span><span class="p">(</span><span class="n">imgs</span><span class="o">=</span><span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="n">fwhm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fwhm</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">input</span><span class="p">,</span> <span class="kc">None</span>
 
- <span class="o">...</span>
+
+<span class="o">...</span>
 </pre></div>
 </div>
 </section>

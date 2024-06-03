@@ -82,10 +82,10 @@ parcellation to use. Thus, we can define the ``__init__`` method as follows:
 .. code-block:: python
 
     def __init__(
-       self,
-       parcellation: str,
-       on: str | list[str] | None = None,
-       name: str | None = None,
+        self,
+        parcellation: str,
+        on: str | list[str] | None = None,
+        name: str | None = None,
     ) -> None:
         self.parcellation = parcellation
         super().__init__(on=on, name=name)
@@ -137,9 +137,9 @@ the ``store`` method.
 
 
     def compute(
-       self,
-       input: dict[str, Any],
-       extra_input: dict[str, Any] | None = None,
+        self,
+        input: dict[str, Any],
+        extra_input: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         # Get the data
         data = input["data"]
@@ -207,10 +207,10 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
         _DEPENDENCIES = {"nilearn", "numpy"}
 
         def __init__(
-           self,
-           parcellation: str,
-           on: str | list[str] | None = None,
-           name: str | None = None,
+            self,
+            parcellation: str,
+            on: str | list[str] | None = None,
+            name: str | None = None,
         ) -> None:
             self.parcellation = parcellation
             super().__init__(on=on, name=name)
@@ -225,9 +225,9 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
                 return "vector"
 
         def compute(
-           self,
-           input: dict[str, Any],
-           extra_input: dict[str, Any] | None = None,
+            self,
+            input: dict[str, Any],
+            extra_input: dict[str, Any] | None = None,
         ) -> dict[str, Any]:
             # Get the data
             data = input["data"]
@@ -269,7 +269,6 @@ Template for a custom Marker
 
     @register_marker
     class TemplateMarker(BaseMarker):
-
         def __init__(self, on=None, name=None):
             # TODO: add marker-specific parameters
             super().__init__(on=on, name=name)
