@@ -43,8 +43,10 @@ For input we can accept ``T1w``, ``T2w`` and ``BOLD``
 
     ...
 
+
     def get_valid_inputs(self) -> list[str]:
         return ["T1w", "T2w", "BOLD"]
+
 
     ...
 
@@ -55,8 +57,10 @@ completeness.
 
     ...
 
+
     def get_output_type(self, input_type: str) -> str:
         return input_type
+
 
     ...
 
@@ -90,6 +94,7 @@ you configure it. Our class will have the following arguments:
 
     ...
 
+
     def __init__(
         self,
         fwhm: int | float | ArrayLike | Literal["fast"] | None,
@@ -97,6 +102,7 @@ you configure it. Our class will have the following arguments:
     ) -> None:
         self.fwhm = fwhm
         super().__init__(on=on)
+
 
     ...
 
@@ -147,15 +153,18 @@ and it has two return values:
 
     ...
 
+
     def preprocess(
         self,
         input: dict[str, Any],
         extra_input: dict[str, Any] | None = None,
     ) -> tuple[dict[str, Any], dict[str, Any] | None]:
-         input["data"] = nimg.smooth_img(imgs=input["data"], fwhm=self.fwhm)
-         return input, None
+        input["data"] = nimg.smooth_img(imgs=input["data"], fwhm=self.fwhm)
+        return input, None
 
-     ...
+
+    ...
+
 
 Step 4: Finalise the Preprocessor
 ---------------------------------

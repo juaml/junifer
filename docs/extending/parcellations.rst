@@ -83,7 +83,7 @@ look like this:
       name="my_custom_parcellation",
       parcellation_path=path_to_parcellation,
       parcels_labels=my_labels,
-      space="MNI152NLin2009cAsym"
+      space="MNI152NLin2009cAsym",
   )
 
 We can run this code and it seems to work, however, how can we actually

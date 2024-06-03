@@ -70,10 +70,7 @@ with the DMN. Here, we use the DMN coordinates used in a
 .. code-block:: python
 
   dmn_coords = np.array(
-      [[0, -52, 18],
-      [-46, -68, 32],
-      [46, -68, 32],
-      [1, 50, -5]]
+      [[0, -52, 18], [-46, -68, 32], [46, -68, 32], [1, 50, -5]]
   )
   voi_names = [
       "Posterior Cingulate Cortex",
@@ -90,10 +87,7 @@ simply use this to register our coordinates:
 .. code-block:: python
 
   register_coordinates(
-      name="DMNCustom",
-      coordinates=dmn_coords,
-      voi_names=voi_names,
-      space="MNI"
+      name="DMNCustom", coordinates=dmn_coords, voi_names=voi_names, space="MNI"
   )
 
 Now, when we run this script, ``junifer`` registers these coordinates and we can
