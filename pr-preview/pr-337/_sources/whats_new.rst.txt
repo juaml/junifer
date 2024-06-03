@@ -8,8 +8,8 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.5.dev81 (2024-05-14)
---------------------------------
+Junifer 0.0.5.dev142 (2024-06-03)
+---------------------------------
 
 Bugfixes
 ^^^^^^^^
@@ -37,6 +37,16 @@ Improved Documentation
   Mandal`_ (:gh:`330`)
 
 
+Enhancements
+^^^^^^^^^^^^
+
+- Refactor DataGrabber ``patterns`` to make helper types like ``*_mask`` as
+  "nested types" of the actual data type by `Synchon Mandal`_ (:gh:`341`)
+- Adapt :class:`.DataladAOMICID1000`, :class:`.DataladAOMICPIOP1` and
+  :class:`.DataladAOMICPIOP2` to support ``FreeSurfer`` data type by `Synchon
+  Mandal`_ (:gh:`346`)
+
+
 Features
 ^^^^^^^^
 
@@ -47,6 +57,15 @@ Features
 - Add ``junifer list-elements`` to list out available elements for a
   DataGrabber based on filtering via ``--element`` by `Synchon Mandal`_
   (:gh:`323`)
+- Introduce new storage type ``scalar_table`` and adapt
+  :class:`.HDF5FeatureStorage` to support it by `Synchon Mandal`_ (:gh:`343`)
+- Add support for `BrainPrint
+  <https://github.com/Deep-MI/BrainPrint?tab=readme-ov-file>`_ marker by
+  `Synchon Mandal`_ (:gh:`344`)
+- Allow Unix path expansion directives to be used in
+  :class:`.PatternDataGrabber` ``patterns`` by `Synchon Mandal`_ (:gh:`345`)
+- Add support for ``FreeSurfer`` data type for :class:`.PatternDataGrabber` by
+  `Synchon Mandal`_ (:gh:`346`)
 
 
 Miscellaneous
