@@ -23,3 +23,4 @@ from .temporal_snr import (
     TemporalSNRParcels,
     TemporalSNRSpheres,
 )
+from .brainprint import BrainPrint

@@ -350,7 +350,7 @@ def test_get_mask_errors() -> None:
         with pytest.raises(ValueError, match=r"callable params"):
             get_mask(masks={"GM_prob0.2": {"param": 1}}, target_data=vbm_gm)
 
-        # Pass only parametesr to the intersection function
+        # Pass only parameters to the intersection function
         with pytest.raises(
             ValueError, match=r" At least one mask is required."
         ):
