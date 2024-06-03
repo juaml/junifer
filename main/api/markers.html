@@ -464,13 +464,15 @@ keys:</p>
 <dt class="sig sig-object py" id="junifer.markers.BaseMarker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">BaseMarker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BaseMarker" title="Link to this definition">#</a></dt>
 <dd><p>Abstract base class for all markers.</p>
+<p>For every interface that is required, one needs to provide a concrete
+implementation of this abstract class.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>on</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The kind of data to apply the marker to. By default, will work on all
-available data.</p>
+<dt><strong>on</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>The data type to apply the marker on. If None,
+will work on all available data types (default None).</p>
 </dd>
-<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. By default, it will use the class name as the
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use the class name as the
 name of the marker (default None).</p>
 </dd>
 </dl>
@@ -2549,40 +2551,6 @@ Physical Review E, 87(2), 022911.</p>
 
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="junifer.markers.complexity.find_spec">
-<span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">find_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">package</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.find_spec" title="Link to this definition">#</a></dt>
-<dd><p>Return the spec for the specified module.</p>
-<p>First, sys.modules is checked to see if the module was already imported. If
-so, then sys.modules[name].__spec__ is returned. If that happens to be
-set to None, then ValueError is raised. If the module is not in
-sys.modules, then sys.meta_path is searched for a suitable spec with the
-value of ‘path’ given to the finders. None is returned if no spec could
-be found.</p>
-<p>If the name is for submodule (contains a dot), the parent module is
-automatically imported.</p>
-<p>The name and package arguments work the same as importlib.import_module().
-In other words, relative module names (with leading dots) work.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="junifer.markers.complexity.raise_error">
-<span class="sig-prename descclassname"><span class="pre">junifer.markers.complexity.</span></span><span class="sig-name descname"><span class="pre">raise_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass=&lt;class</span> <span class="pre">'ValueError'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.complexity.raise_error" title="Link to this definition">#</a></dt>
-<dd><p>Raise error, but first log it.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>msg</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The message for the exception.</p>
-</dd>
-<dt><strong>klass</strong><span class="classifier"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subclass</span></code> of <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></a>, optional</span></dt><dd><p>The subclass of Exception to raise using (default ValueError).</p>
-</dd>
-<dt><strong>exception</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Exception</span></code></a>, optional</span></dt><dd><p>The original exception to follow up on (default None).</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 </section>
 
@@ -2756,8 +2724,6 @@ In other words, relative module names (with leading dots) work.</p>
 <li><a class="reference internal" href="#junifer.markers.complexity.WeightedPermEntropy.compute_complexity"><code class="docutils literal notranslate"><span class="pre">WeightedPermEntropy.compute_complexity()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer.markers.complexity.find_spec"><code class="docutils literal notranslate"><span class="pre">find_spec()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.complexity.raise_error"><code class="docutils literal notranslate"><span class="pre">raise_error()</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -69,7 +69,7 @@ Example in python format:
     strategy = {
         "motion": "basic",
         "wm_csf": "full",
-        "global_signal": "derivatives"
+        "global_signal": "derivatives",
     }
 
 or in YAML format:
@@ -85,11 +85,7 @@ The default value is to use all the *noise components* with the ``full`` *confou
 
 .. code-block:: python
 
-    strategy = {
-        "motion": "full",
-        "wm_csf": "full",
-        "global_signal": "full"
-    }
+    strategy = {"motion": "full", "wm_csf": "full", "global_signal": "full"}
 
 Other Parameters
 ~~~~~~~~~~~~~~~~

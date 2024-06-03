@@ -12,7 +12,7 @@ This is the *object* that traverses the steps of the pipeline. It is indeed a
 dictionary of dictionaries. The first level of keys are the :ref:`data types <data_types>`
 and the values are the corresponding information as dictionaries.
 
-.. code-block:: python
+.. code-block::
 
    {'BOLD': {...}, 'T1w': {...}}
 
@@ -24,7 +24,7 @@ The :ref:`Data Grabber <datagrabber>` step adds the ``path`` second-level key
 which gives the path to the file containing the data. The ``meta`` key in this
 step only contains information about the DataGrabber used.
 
-.. code-block:: python
+.. code-block::
 
    {'BOLD': {'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDataGrabber',
                                       'types': ['BOLD', 'T1w']},
@@ -41,7 +41,7 @@ The :ref:`Data Reader <datareader>` step adds the ``data`` second-level key
 which is the actual data loaded into memory. The ``meta`` key in this step
 adds information about the DataReader used to read the data.
 
-.. code-block:: python
+.. code-block::
 
    {'BOLD': {'data': <nibabel.nifti1.Nifti1Image object at 0x16b5d8910>,
              'meta': {'datagrabber': {'class': 'SPMAuditoryTestingDataGrabber',
@@ -58,6 +58,7 @@ adds information about the DataReader used to read the data.
                      'element': {'subject': 'sub001'}},
             'path': PosixPath('/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpe49321ce/sub001_T1w.nii.gz')}}
 
+
 The :ref:`Preprocess <preprocess>` step, if used, modifies the ``data``
 second-level key's value and appends the ``meta`` key with information about
 the preprocessor.
@@ -66,7 +67,7 @@ The :ref:`Marker <marker>` step removes the ``path`` second-level key,
 replaces the ``data`` second-level key's value with the marker's computed value
 and adds further keys needed for the storage, for example, ``col_names``.
 
-.. code-block:: python
+.. code-block::
 
    {'BOLD': {'col_names': ['root_sum_of_squares_ets'],
              'data': ...,

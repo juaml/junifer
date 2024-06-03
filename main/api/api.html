@@ -304,7 +304,7 @@
 <dd class="field-odd"><dl>
 <dt><strong>storage</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Storage to use. Must have a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> with the kind of
 storage to use. All other keys are passed to the storage
-init function.</p>
+constructor.</p>
 </dd>
 </dl>
 </dd>
@@ -354,7 +354,7 @@ if the <code class="docutils literal notranslate"><span class="pre">jobdir</span
 </dd>
 <dt><strong>datagrabber</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>DataGrabber to use. Must have a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> with the kind of
 DataGrabber to use. All other keys are passed to the DataGrabber
-init function.</p>
+constructor.</p>
 </dd>
 <dt><strong>markers</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>List of markers to extract. Each marker is a dict with at least two
 keys: <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">kind</span></code>. The <code class="docutils literal notranslate"><span class="pre">name</span></code> key is used to name the
@@ -364,11 +364,11 @@ marker calculation.</p>
 </dd>
 <dt><strong>storage</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Storage to use. Must have a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> with the kind of
 storage to use. All other keys are passed to the storage
-init function.</p>
+constructor.</p>
 </dd>
 <dt><strong>preprocessors</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>List of preprocessors to use. Each preprocessor is a dict with at
 least a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> specifying the preprocessor to use. All other keys
-are passed to the preprocessor init function (default None).</p>
+are passed to the preprocessor constructor (default None).</p>
 </dd>
 <dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a>, optional</span></dt><dd><p>Element(s) to process. Will be used to index the DataGrabber
 (default None).</p>
@@ -382,30 +382,6 @@ are passed to the preprocessor init function (default None).</p>
 <section id="module-junifer.api.decorators">
 <span id="decorators"></span><h2>Decorators<a class="headerlink" href="#module-junifer.api.decorators" title="Link to this heading">#</a></h2>
 <p>Provide decorators for api.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="junifer.api.decorators.register">
-<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register" title="Link to this definition">#</a></dt>
-<dd><p>Register a function to be used in a pipeline step.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the step.</p>
-</dd>
-<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the function.</p>
-</dd>
-<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>Class to be registered.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is invalid.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.api.decorators.register_datagrabber">
 <span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_datagrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register_datagrabber" title="Link to this definition">#</a></dt>
@@ -851,7 +827,6 @@ implementation of this abstract class.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-junifer.api.decorators">Decorators</a><ul>
-<li><a class="reference internal" href="#junifer.api.decorators.register"><code class="docutils literal notranslate"><span class="pre">register()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.decorators.register_datagrabber"><code class="docutils literal notranslate"><span class="pre">register_datagrabber()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.decorators.register_datareader"><code class="docutils literal notranslate"><span class="pre">register_datareader()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.decorators.register_marker"><code class="docutils literal notranslate"><span class="pre">register_marker()</span></code></a></li>
