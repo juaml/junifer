@@ -4,3 +4,6 @@
 # License: AGPL
 
 from .junifer_nifti_spheres_masker import JuniferNiftiSpheresMasker
+
+
+__all__ = ["JuniferNiftiSpheresMasker"]
