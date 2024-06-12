@@ -29,6 +29,9 @@ if TYPE_CHECKING:
     from pandas import DataFrame
 
 
+__all__ = ["JuniferNiftiSpheresMasker"]
+
+
 # New BSD License
 
 # Copyright (c) The nilearn developers.
