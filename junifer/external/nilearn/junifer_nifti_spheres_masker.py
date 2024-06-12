@@ -31,7 +31,7 @@ if TYPE_CHECKING:
 
 # New BSD License
 
-# Copyright (c) 2007 - 2022 The nilearn developers.
+# Copyright (c) The nilearn developers.
 # All rights reserved.
 
 
