@@ -4,12 +4,14 @@
 # License: AGPL
 
 import warnings
+from typing import List, Tuple
 
 import nibabel
 import numpy as np
 import pytest
 from nilearn._utils import data_gen
 from nilearn.image import get_data
+from nilearn.maskers import NiftiSpheresMasker
 from numpy.testing import assert_array_equal
 
 from junifer.external.nilearn import JuniferNiftiSpheresMasker
@@ -331,3 +333,76 @@ def test_nifti_spheres_masker_io_shapes() -> None:
         )
         test_data = masker.transform(img_4d)
         assert test_data.shape == (n_volumes, n_regions)
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        (10, 11, 12),
+        (10, 11, 12, 5),
+    ],
+)
+@pytest.mark.parametrize(
+    "radius, allow_overlap",
+    [
+        (2.0, True),
+        (2.0, False),
+        (3.0, True),
+        (4.0, True),
+        (5.0, True),
+    ],
+)
+@pytest.mark.parametrize(
+    "coords",
+    [
+        [(1, 1, 1)],
+        [(1, 1, 1), (4, 4, 4)],
+        [(1, 1, 1), (4, 4, 4), (10, 10, 10)],
+    ],
+)
+def test_junifer_and_nilearn_mean_agg_are_equal(
+    shape: Tuple[int, ...],
+    radius: float,
+    allow_overlap: bool,
+    coords: List[Tuple[int, int, int]],
+) -> None:
+    """Test junifer's masker behaves same as nilearn's when agg is mean.
+
+    Parameters
+    ----------
+    shape : tuple of int
+        The parametrized shape of the input image.
+    radius : float
+        The parametrized radius of the spheres.
+    allow_overlap : bool
+        The parametrized option to overlap spheres or not.
+    coords : list of tuple of int, int and int
+        The parametrized seeds.
+
+    """
+    # Set affine
+    affine = np.eye(4)
+    # Generate random image
+    input_img, mask_img = data_gen.generate_random_img(
+        shape=shape,
+        affine=affine,
+    )
+    # Compute junifer's version
+    junifer_masker = JuniferNiftiSpheresMasker(
+        seeds=coords,
+        radius=radius,
+        allow_overlap=allow_overlap,
+        mask_img=mask_img,
+    )
+    junifer_output = junifer_masker.fit_transform(input_img)
+    # Compute nilearn's version
+    nilearn_masker = NiftiSpheresMasker(
+        seeds=coords,
+        radius=radius,
+        allow_overlap=allow_overlap,
+        mask_img=mask_img,
+    )
+    nilearn_output = nilearn_masker.fit_transform(input_img)
+    # Checks
+    assert junifer_output.shape == nilearn_output.shape
+    np.testing.assert_almost_equal(junifer_output, nilearn_output)
