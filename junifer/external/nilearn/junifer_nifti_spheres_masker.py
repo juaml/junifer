@@ -99,6 +99,17 @@ def _apply_mask_and_get_affinity(
         Contains the boolean indices for each sphere.
         shape: (number of seeds, number of voxels)
 
+    Raises
+    ------
+    ValueError
+        If ``niimg`` and ``mask_img`` are both provided or
+        if overlap is detected between spheres.
+
+    Warns
+    -----
+    RuntimeWarning
+        If the provided images contain NaN, they will be converted to zeroes.
+
     """
     seeds = list(seeds)
 
