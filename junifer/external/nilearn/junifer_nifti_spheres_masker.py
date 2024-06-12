@@ -221,7 +221,7 @@ def _iter_signals_from_spheres(
     X, A = _apply_mask_and_get_affinity(
         seeds, niimg, radius, allow_overlap, mask_img=mask_img
     )
-    for _, row in enumerate(A.rows):
+    for row in A.rows:
         yield X[:, row]
 
 
