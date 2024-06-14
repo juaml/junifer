@@ -22,42 +22,48 @@ class EdgeCentricFCSpheres(FunctionalConnectivityBase):
     Parameters
     ----------
     coords : str
-        The name of the coordinates list to use. See
-        :func:`.list_coordinates` for options.
-    radius : float, optional
-        The radius of the sphere in mm. If None, the signal will be extracted
-        from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
-        for more information (default None).
+        The name of the coordinates list to use.
+        See :func:`.list_coordinates` for options.
+    radius : positive float, optional
+        The radius of the sphere around each coordinates in millimetres.
+        If None, the signal will be extracted from a single voxel.
+        See :class:`.JuniferNiftiSpheresMasker` for more information
+        (default None).
     allow_overlap : bool, optional
         Whether to allow overlapping spheres. If False, an error is raised if
-        the spheres overlap (default is False).
+        the spheres overlap (default False).
     agg_method : str, optional
-        The aggregation method to use.
-        See :func:`.get_aggfunc_by_name` for more information
-        (default None).
+        The method to perform aggregation using.
+        See :func:`.get_aggfunc_by_name` for options
+        (default "mean").
     agg_method_params : dict, optional
-        The parameters to pass to the aggregation method (default None).
-    cor_method : str, optional
-        The method to perform correlation using. Check valid options in
-        :class:`nilearn.connectome.ConnectivityMeasure` (default "covariance").
-    cor_method_params : dict, optional
-        Parameters to pass to the correlation function. Check valid options in
-        :class:`nilearn.connectome.ConnectivityMeasure` (default None).
+        Parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options
+        (default None).
+    conn_method : str, optional
+        The method to perform connectivity measure using.
+        See :class:`.JuniferConnectivityMeasure` for options
+        (default "correlation").
+    conn_method_params : dict, optional
+        Parameters to pass to :class:`.JuniferConnectivityMeasure`.
+        If None, ``{"empirical": True}`` will be used, which would mean
+        :class:`sklearn.covariance.EmpiricalCovariance` is used to compute
+        covariance. If usage of :class:`sklearn.covariance.LedoitWolf` is
+        desired, ``{"empirical": False}`` should be passed
+        (default None).
     masks : str, dict or list of dict or str, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
     name : str, optional
-        The name of the marker. By default, it will use
-        KIND_EdgeCentricFCSpheres where KIND is the kind of data it
-        was applied to (default None).
+        The name of the marker. If None, will use
+        ``BOLD_EdgeCentricFCSpheres`` (default None).
 
     References
     ----------
     .. [1] Jo et al. (2021)
-            Subject identification using
-            edge-centric functional connectivity
-            doi: https://doi.org/10.1016/j.neuroimage.2021.118204
+           Subject identification using edge-centric functional connectivity.
+           https://doi.org/10.1016/j.neuroimage.2021.118204
 
     """
 
@@ -68,8 +74,8 @@ class EdgeCentricFCSpheres(FunctionalConnectivityBase):
         allow_overlap: bool = False,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
-        cor_method: str = "covariance",
-        cor_method_params: Optional[Dict] = None,
+        conn_method: str = "correlation",
+        conn_method_params: Optional[Dict] = None,
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
@@ -81,8 +87,8 @@ class EdgeCentricFCSpheres(FunctionalConnectivityBase):
         super().__init__(
             agg_method=agg_method,
             agg_method_params=agg_method_params,
-            cor_method=cor_method,
-            cor_method_params=cor_method_params,
+            conn_method=conn_method,
+            conn_method_params=conn_method_params,
             masks=masks,
             name=name,
         )
