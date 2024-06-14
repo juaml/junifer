@@ -170,6 +170,7 @@ numpydoc_xref_ignore = {
     "Engine",
     "positive",
     "negative",
+    "estimator",
 }
 # numpydoc_validation_checks = {
 #     "all",
