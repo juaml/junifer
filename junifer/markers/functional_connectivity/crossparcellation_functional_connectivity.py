@@ -28,18 +28,24 @@ class CrossParcellationFC(BaseMarker):
         The name of the first parcellation.
     parcellation_two : str
         The name of the second parcellation.
-    aggregation_method : str, optional
-        The aggregation method (default "mean").
-    correlation_method : str, optional
+    agg_method : str, optional
+        The method to perform aggregation using.
+        See :func:`.get_aggfunc_by_name` for options
+        (default "mean").
+    agg_method_params : dict, optional
+        Parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options
+        (default None).
+    corr_method : str, optional
         Any method that can be passed to
-        :any:`pandas.DataFrame.corr` (default "pearson").
+        :meth:`pandas.DataFrame.corr` (default "pearson").
     masks : str, dict or list of dict or str, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
     name : str, optional
-        The name of the marker. If None, will use the class name
-        (default None).
+        The name of the marker. If None, will use
+        ``BOLD_CrossParcellationFC`` (default None).
 
     """
 
@@ -49,8 +55,9 @@ class CrossParcellationFC(BaseMarker):
         self,
         parcellation_one: str,
         parcellation_two: str,
-        aggregation_method: str = "mean",
-        correlation_method: str = "pearson",
+        agg_method: str = "mean",
+        agg_method_params: Optional[Dict] = None,
+        corr_method: str = "pearson",
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
@@ -60,8 +67,9 @@ class CrossParcellationFC(BaseMarker):
             )
         self.parcellation_one = parcellation_one
         self.parcellation_two = parcellation_two
-        self.aggregation_method = aggregation_method
-        self.correlation_method = correlation_method
+        self.agg_method = agg_method
+        self.agg_method_params = agg_method_params
+        self.corr_method = corr_method
         self.masks = masks
         super().__init__(on=["BOLD"], name=name)
 
@@ -132,13 +140,17 @@ class CrossParcellationFC(BaseMarker):
         # Initialize a ParcelAggregation
         parcellation_one_dict = ParcelAggregation(
             parcellation=self.parcellation_one,
-            method=self.aggregation_method,
+            method=self.agg_method,
+            method_params=self.agg_method_params,
             masks=self.masks,
+            on="BOLD",
         ).compute(input, extra_input=extra_input)
         parcellation_two_dict = ParcelAggregation(
             parcellation=self.parcellation_two,
-            method=self.aggregation_method,
+            method=self.agg_method,
+            method_params=self.agg_method_params,
             masks=self.masks,
+            on="BOLD",
         ).compute(input, extra_input=extra_input)
 
         parcellated_ts_one = parcellation_one_dict["data"]
@@ -149,7 +161,7 @@ class CrossParcellationFC(BaseMarker):
         result = _correlate_dataframes(
             pd.DataFrame(parcellated_ts_one),
             pd.DataFrame(parcellated_ts_two),
-            method=self.correlation_method,
+            method=self.corr_method,
         ).values
 
         return {
