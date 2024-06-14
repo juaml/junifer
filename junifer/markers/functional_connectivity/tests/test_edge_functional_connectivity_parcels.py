@@ -5,6 +5,9 @@
 # License: AGPL
 
 from pathlib import Path
+from typing import Dict
+
+import pytest
 
 from junifer.datareader import DefaultDataReader
 from junifer.markers.functional_connectivity import EdgeCentricFCParcels
@@ -12,35 +15,48 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
-def test_EdgeCentricFCParcels(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "conn_method_params",
+    [
+        {"empirical": False},
+        {"empirical": True},
+    ],
+)
+def test_EdgeCentricFCParcels(
+    tmp_path: Path,
+    conn_method_params: Dict[str, bool],
+) -> None:
     """Test EdgeCentricFCParcels.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    conn_method_params : dict
+        The parametrized parameters to connectivity measure method.
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
+        # Get element data
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        # Setup marker
         marker = EdgeCentricFCParcels(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
-            cor_method_params={"empirical": True},
+            conn_method="correlation",
+            conn_method_params=conn_method_params,
         )
         # Check correct output
         assert marker.get_output_type("BOLD") == "matrix"
-
         # Fit-transform the data
         edge_fc = marker.fit_transform(element_data)
         edge_fc_bold = edge_fc["BOLD"]
-
+        # Check output
         # For 16 ROIs we should get (16 * (16 -1) / 2) edges in the ETS
         n_edges = int(16 * (16 - 1) / 2)
         assert "data" in edge_fc_bold
         assert "row_names" in edge_fc_bold
         assert "col_names" in edge_fc_bold
-        assert edge_fc_bold["data"].shape[0] == n_edges
-        assert edge_fc_bold["data"].shape[1] == n_edges
+        assert edge_fc_bold["data"].shape == (n_edges, n_edges)
         assert len(set(edge_fc_bold["row_names"])) == n_edges
         assert len(set(edge_fc_bold["col_names"])) == n_edges
 
