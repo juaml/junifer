@@ -6,10 +6,13 @@
 # License: AGPL
 
 from pathlib import Path
+from typing import TYPE_CHECKING, Dict, Type
 
+import pytest
 from nilearn.connectome import ConnectivityMeasure
 from nilearn.maskers import NiftiLabelsMasker
 from numpy.testing import assert_array_almost_equal
+from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
 from junifer.data import get_parcellation
 from junifer.datareader import DefaultDataReader
@@ -20,19 +23,42 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
-def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
+if TYPE_CHECKING:
+    from sklearn.base import BaseEstimator
+
+
+@pytest.mark.parametrize(
+    "conn_method_params, cov_estimator",
+    [
+        ({"empirical": False}, LedoitWolf(store_precision=False)),
+        ({"empirical": True}, EmpiricalCovariance(store_precision=False)),
+    ],
+)
+def test_FunctionalConnectivityParcels(
+    tmp_path: Path,
+    conn_method_params: Dict[str, bool],
+    cov_estimator: Type["BaseEstimator"],
+) -> None:
     """Test FunctionalConnectivityParcels.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    conn_method_params : dict
+        The parametrized parameters to connectivity measure method.
+    cov_estimator : estimator object
+        The parametrized covariance estimator.
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
+        # Get element data
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        # Setup marker
         marker = FunctionalConnectivityParcels(
-            parcellation="TianxS1x3TxMNInonlinear2009cAsym"
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
+            conn_method="correlation",
+            conn_method_params=conn_method_params,
         )
         # Check correct output
         assert "matrix" == marker.get_output_type(
@@ -65,7 +91,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
         )
         # Compute the connectivity measure
         connectivity_measure = ConnectivityMeasure(
-            kind="covariance"
+            cov_estimator=cov_estimator, kind="correlation"  # type: ignore
         ).fit_transform([extracted_timeseries])[0]
 
         # Check that FC are almost equal
@@ -73,11 +99,6 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
             connectivity_measure, fc_bold["data"], decimal=3
         )
 
-        # Check empirical correlation method parameters
-        marker = FunctionalConnectivityParcels(
-            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
-            cor_method_params={"empirical": True},
-        )
         # Store
         storage = SQLiteFeatureStorage(
             uri=tmp_path / "test_fc_parcels.sqlite", upsert="ignore"
