@@ -10,9 +10,9 @@ from nilearn import image, masking
 from nilearn._utils.class_inspect import get_params
 from nilearn._utils.niimg import img_data_dtype
 from nilearn._utils.niimg_conversions import (
-    _safe_get_data,
     check_niimg_3d,
     check_niimg_4d,
+    safe_get_data,
 )
 from nilearn.maskers import NiftiSpheresMasker
 from nilearn.maskers.base_masker import _filter_and_extract
@@ -104,7 +104,7 @@ def _apply_mask_and_get_affinity(
 
     # Compute world coordinates of all in-mask voxels.
     if niimg is None:
-        mask, affine = masking._load_mask_img(mask_img)
+        mask, affine = masking.load_mask_img(mask_img)
         # Get coordinate for all voxels inside of mask
         mask_coords = np.asarray(np.nonzero(mask)).T.tolist()
         X = None
@@ -118,21 +118,21 @@ def _apply_mask_and_get_affinity(
             target_shape=niimg.shape[:3],
             interpolation="nearest",
         )
-        mask, _ = masking._load_mask_img(mask_img)
+        mask, _ = masking.load_mask_img(mask_img)
         mask_coords = list(zip(*np.where(mask != 0)))
 
-        X = masking._apply_mask_fmri(niimg, mask_img)
+        X = masking.apply_mask_fmri(niimg, mask_img)
 
     elif niimg is not None:
         affine = niimg.affine
-        if np.isnan(np.sum(_safe_get_data(niimg))):
+        if np.isnan(np.sum(safe_get_data(niimg))):
             warn_with_log(
                 "The imgs you have fed into fit_transform() contains NaN "
                 "values which will be converted to zeroes."
             )
-            X = _safe_get_data(niimg, True).reshape([-1, niimg.shape[3]]).T
+            X = safe_get_data(niimg, True).reshape([-1, niimg.shape[3]]).T
         else:
-            X = _safe_get_data(niimg).reshape([-1, niimg.shape[3]]).T
+            X = safe_get_data(niimg).reshape([-1, niimg.shape[3]]).T
 
         mask_coords = list(np.ndindex(niimg.shape[:3]))
 
