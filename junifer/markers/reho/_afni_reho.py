@@ -181,7 +181,7 @@ class AFNIReHo:
         convert_cmd = [
             "3dAFNItoNIFTI",
             f"-prefix {reho_afni_to_nifti_out_path.resolve()}",
-            f"{reho_out_path_prefix}+tlrc.BRIK",
+            f"{reho_out_path_prefix}+orig.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_cmd)
