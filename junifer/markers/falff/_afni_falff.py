@@ -124,7 +124,7 @@ class AFNIALFF:
         convert_alff_cmd = [
             "3dAFNItoNIFTI",
             f"-prefix {alff_afni_to_nifti_out_path.resolve()}",
-            f"{alff_falff_out_path_prefix}_ALFF+tlrc.BRIK",
+            f"{alff_falff_out_path_prefix}_ALFF+orig.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_alff_cmd)
@@ -136,7 +136,7 @@ class AFNIALFF:
         convert_falff_cmd = [
             "3dAFNItoNIFTI",
             f"-prefix {falff_afni_to_nifti_out_path.resolve()}",
-            f"{alff_falff_out_path_prefix}_fALFF+tlrc.BRIK",
+            f"{alff_falff_out_path_prefix}_fALFF+orig.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_falff_cmd)
