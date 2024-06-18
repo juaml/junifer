@@ -29,9 +29,12 @@ if TYPE_CHECKING:
     from pandas import DataFrame
 
 
+__all__ = ["JuniferNiftiSpheresMasker"]
+
+
 # New BSD License
 
-# Copyright (c) 2007 - 2022 The nilearn developers.
+# Copyright (c) The nilearn developers.
 # All rights reserved.
 
 
@@ -98,6 +101,17 @@ def _apply_mask_and_get_affinity(
     A : scipy.sparse.lil_matrix
         Contains the boolean indices for each sphere.
         shape: (number of seeds, number of voxels)
+
+    Raises
+    ------
+    ValueError
+        If ``niimg`` and ``mask_img`` are both provided or
+        if overlap is detected between spheres.
+
+    Warns
+    -----
+    RuntimeWarning
+        If the provided images contain NaN, they will be converted to zeroes.
 
     """
     seeds = list(seeds)
@@ -210,7 +224,7 @@ def _iter_signals_from_spheres(
     X, A = _apply_mask_and_get_affinity(
         seeds, niimg, radius, allow_overlap, mask_img=mask_img
     )
-    for _, row in enumerate(A.rows):
+    for row in A.rows:
         yield X[:, row]
 
 
