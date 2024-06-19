@@ -105,7 +105,7 @@ class AFNISmoothing:
         convert_cmd = [
             "3dAFNItoNIFTI",
             f"-prefix {blur_afni_to_nifti_out_path.resolve()}",
-            f"{blur_out_path_prefix}+tlrc.BRIK",
+            f"{blur_out_path_prefix}+orig.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_cmd)
