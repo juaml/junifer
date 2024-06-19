@@ -10,10 +10,10 @@ computational clusters. This is done by adding the ``queue`` section in the
 :ref:`codeless` file and executing the  ``junifer queue`` command.
 
 While junifer is meant to support `HTCondor`_, `SLURM`_ and local queueing
-using `GNU Parallel`_, only ``HTCondor`` and ``GNU Parallel`` are currently
-supported. This will be implemented in future releases of ``junifer``. If you are
-in immediate need of any of these schedulers, please create an issue on the
-`junifer github`_ repository.
+using `GNU Parallel`_, only HTCondor is currently supported. This will be
+implemented in future releases of ``junifer``. If you are in immediate need of
+any of these schedulers, please create an issue on the `junifer github`_
+repository.
 
 The ``queue`` section of the :ref:`codeless` must start by defining the
 following general parameters:
@@ -22,8 +22,8 @@ following general parameters:
   folder where the job files will be created, as well as any relevant file.
   Depending on the scheduler, it will also be listed in the queueing system
   with this name.
-* ``kind``: The kind of scheduler to be used. Currently, only ``HTCondor`` and
-  ``GNUParallelLocal`` are supported.
+* ``kind``: The kind of scheduler to be used. Currently, only ``HTCondor`` is
+  supported.
 
 Example in YAML:
 
@@ -48,9 +48,7 @@ jobs are finished.
 
 The following parameters are available for HTCondor:
 
-* ``pre_run``: Extra shell commands to run before ``junifer run``.
-* ``pre_collect``: Extra shell commands to run before ``junifer collect``.
-* ``env``: Definition of the Python environment. It has the following parameters:
+* ``env``: Definition of the Python environment. It must provide two variables:
 
   * ``kind``: This is the kind of virtual environment to use:
 
@@ -62,9 +60,6 @@ The following parameters are available for HTCondor:
     environment is used. It should be the name when ``conda`` is used and
     the absolute or relative path to the virtualenv when ``venv`` is used.
     If relative path is used then it should be relative to the YAML.
-
-  * ``shell``: This is the shell to use. Only ``bash`` and ``zsh`` are supported
-    as of now.
 
 * ``mem``: Memory to be used by the job. It must be provided as a string with
   the units (e.g., ``"2GB"``).
@@ -98,77 +93,9 @@ Example in YAML:
     env:
       kind: conda
       name: junifer
-      shell: zsh
     mem: 8G
     disk: 2G
     collect: "yes"  # wrap it in string to avoid boolean
-
-Alternatively, if you use ``venv``, the YAML would look like so:
-
-.. code-block:: yaml
-
-  queue:
-    jobname: TestHTCondorQueue
-    kind: HTCondor
-    env:
-      kind: venv
-      name: /home/me/junifer-venv  # should be at the level above `bin/activate`
-      shell: zsh
-    mem: 8G
-    disk: 2G
-    collect: "yes"  # wrap it in string to avoid boolean
-
-.. _queueing_local:
-
-GNUParallelLocal
-----------------
-
-When using GNU Parallel, ``junifer`` will run only in local mode and leverage
-maximum computational power of whatever hardware it is run on.
-
-The following parameters are available for GNUParallelLocal:
-
-* ``pre_run``: Extra shell commands to run before ``junifer run``.
-* ``pre_collect``: Extra shell commands to run before ``junifer collect``.
-* ``env``: Definition of the Python environment. It has the following parameters:
-
-  * ``kind``: This is the kind of virtual environment to use:
-
-    * ``conda``
-    * ``venv``
-    * ``local`` (no virtual environment)
-
-  * ``name``: This is the name of the environment to use in case a virtual
-    environment is used. It should be the name when ``conda`` is used and
-    the absolute or relative path to the virtualenv when ``venv`` is used.
-    If relative path is used then it should be relative to the YAML.
-
-  * ``shell``: This is the shell to use. Only ``bash`` and ``zsh`` are supported
-    as of now.
-
-Example in YAML:
-
-.. code-block:: yaml
-
-  queue:
-    jobname: TestGNUParallelLocalQueue
-    kind: GNUParallelLocal
-    env:
-      kind: conda
-      name: junifer
-      shell: zsh
-
-Alternatively, if you use ``venv``, the YAML would look like so:
-
-.. code-block:: yaml
-
-  queue:
-    jobname: TestGNUParallelLocalQueue
-    kind: GNUParallelLocal
-    env:
-      kind: venv
-      name: /home/me/junifer-venv  # should be at the level above `bin/activate`
-      shell: zsh
 
 Once the :ref:`codeless` file is ready, including the ``queue`` section, you can
 queue the jobs by executing the ``junifer queue`` command.
