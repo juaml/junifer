@@ -4,9 +4,12 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-try:  # pragma: no cover
+import sys
+
+
+if sys.version_info < (3, 9):  # pragma: no cover
     from importlib_metadata import packages_distributions
-except ImportError:
+else:
     from importlib.metadata import packages_distributions
 
 

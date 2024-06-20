@@ -3,10 +3,13 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-try:
-    from importlib.metadata import packages_distributions
-except ImportError:  # pragma: no cover
+import sys
+
+
+if sys.version_info < (3, 9):  # pragma: no cover
     from importlib_metadata import packages_distributions
+else:
+    from importlib.metadata import packages_distributions
 
 import uuid
 from copy import deepcopy

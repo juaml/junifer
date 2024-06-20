@@ -4,13 +4,15 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-try:
+import sys
+
+
+if sys.version_info < (3, 12):
     from distutils.version import LooseVersion
-except ImportError:  # pragma: no cover
+else:  # pragma: no cover
     from looseversion import LooseVersion
 
 import logging
-import sys
 from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Dict, NoReturn, Optional, Type, Union
