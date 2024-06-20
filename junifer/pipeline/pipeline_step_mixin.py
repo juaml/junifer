@@ -7,7 +7,7 @@
 import sys
 
 
-if sys.version_info < (3, 9):  # pragma: no cover
+if sys.version_info < (3, 10):  # pragma: no cover
     from importlib_metadata import packages_distributions
 else:
     from importlib.metadata import packages_distributions
