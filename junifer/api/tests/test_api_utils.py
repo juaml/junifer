@@ -50,7 +50,7 @@ def test_get_dependency_information_short() -> None:
         "looseversion",
     ]
 
-    if sys.version_info < (3, 9):
+    if sys.version_info < (3, 11):
         dependency_list.append("importlib_metadata")
 
     assert frozenset(dependency_information.keys()) == frozenset(
