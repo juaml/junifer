@@ -336,10 +336,10 @@
 computational clusters. This is done by adding the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section in the
 <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less Configuration</span></a> file and executing the  <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">queue</span></code> command.</p>
 <p>While junifer is meant to support <a class="reference external" href="https://research.cs.wisc.edu/htcondor/">HTCondor</a>, <a class="reference external" href="https://slurm.schedmd.com">SLURM</a> and local queueing
-using <a class="reference external" href="https://www.gnu.org/software/parallel/">GNU Parallel</a>, only HTCondor is currently supported. This will be
-implemented in future releases of <code class="docutils literal notranslate"><span class="pre">junifer</span></code>. If you are in immediate need of
-any of these schedulers, please create an issue on the <a class="reference external" href="https://github.com/juaml/junifer">junifer github</a>
-repository.</p>
+using <a class="reference external" href="https://www.gnu.org/software/parallel/">GNU Parallel</a>, only <code class="docutils literal notranslate"><span class="pre">HTCondor</span></code> and <code class="docutils literal notranslate"><span class="pre">GNU</span> <span class="pre">Parallel</span></code> are currently
+supported. This will be implemented in future releases of <code class="docutils literal notranslate"><span class="pre">junifer</span></code>. If you are
+in immediate need of any of these schedulers, please create an issue on the
+<a class="reference external" href="https://github.com/juaml/junifer">junifer github</a> repository.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">queue</span></code> section of the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less Configuration</span></a> must start by defining the
 following general parameters:</p>
 <ul class="simple">
@@ -347,8 +347,8 @@ following general parameters:</p>
 folder where the job files will be created, as well as any relevant file.
 Depending on the scheduler, it will also be listed in the queueing system
 with this name.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: The kind of scheduler to be used. Currently, only <code class="docutils literal notranslate"><span class="pre">HTCondor</span></code> is
-supported.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: The kind of scheduler to be used. Currently, only <code class="docutils literal notranslate"><span class="pre">HTCondor</span></code> and
+<code class="docutils literal notranslate"><span class="pre">GNUParallelLocal</span></code> are supported.</p></li>
 </ul>
 <p>Example in YAML:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span>
@@ -365,7 +365,9 @@ supported.</p></li>
 jobs are finished.</p>
 <p>The following parameters are available for HTCondor:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">env</span></code>: Definition of the Python environment. It must provide two variables:</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">pre_run</span></code>: Extra shell commands to run before <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">run</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pre_collect</span></code>: Extra shell commands to run before <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">env</span></code>: Definition of the Python environment. It has the following parameters:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: This is the kind of virtual environment to use:</p>
 <ul>
@@ -378,6 +380,8 @@ jobs are finished.</p>
 environment is used. It should be the name when <code class="docutils literal notranslate"><span class="pre">conda</span></code> is used and
 the absolute or relative path to the virtualenv when <code class="docutils literal notranslate"><span class="pre">venv</span></code> is used.
 If relative path is used then it should be relative to the YAML.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shell</span></code>: This is the shell to use. Only <code class="docutils literal notranslate"><span class="pre">bash</span></code> and <code class="docutils literal notranslate"><span class="pre">zsh</span></code> are supported
+as of now.</p></li>
 </ul>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mem</span></code>: Memory to be used by the job. It must be provided as a string with
@@ -410,9 +414,70 @@ all of the individual element jobs are successful.</p></li>
 <span class="w">  </span><span class="nt">env</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer</span>
+<span class="w">    </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zsh</span>
 <span class="w">  </span><span class="nt">mem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8G</span>
 <span class="w">  </span><span class="nt">disk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2G</span>
 <span class="w">  </span><span class="nt">collect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w">  </span><span class="c1"># wrap it in string to avoid boolean</span>
+</pre></div>
+</div>
+<p>Alternatively, if you use <code class="docutils literal notranslate"><span class="pre">venv</span></code>, the YAML would look like so:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">jobname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TestHTCondorQueue</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTCondor</span>
+<span class="w">  </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">venv</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/me/junifer-venv</span><span class="w">  </span><span class="c1"># should be at the level above `bin/activate`</span>
+<span class="w">    </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zsh</span>
+<span class="w">  </span><span class="nt">mem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8G</span>
+<span class="w">  </span><span class="nt">disk</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2G</span>
+<span class="w">  </span><span class="nt">collect</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;yes&quot;</span><span class="w">  </span><span class="c1"># wrap it in string to avoid boolean</span>
+</pre></div>
+</div>
+</section>
+<section id="gnuparallellocal">
+<span id="queueing-local"></span><h2><span class="section-number">5.4.2. </span>GNUParallelLocal<a class="headerlink" href="#gnuparallellocal" title="Link to this heading">¶</a></h2>
+<p>When using GNU Parallel, <code class="docutils literal notranslate"><span class="pre">junifer</span></code> will run only in local mode and leverage
+maximum computational power of whatever hardware it is run on.</p>
+<p>The following parameters are available for GNUParallelLocal:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pre_run</span></code>: Extra shell commands to run before <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">run</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pre_collect</span></code>: Extra shell commands to run before <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">env</span></code>: Definition of the Python environment. It has the following parameters:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code>: This is the kind of virtual environment to use:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">conda</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">venv</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">local</span></code> (no virtual environment)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>: This is the name of the environment to use in case a virtual
+environment is used. It should be the name when <code class="docutils literal notranslate"><span class="pre">conda</span></code> is used and
+the absolute or relative path to the virtualenv when <code class="docutils literal notranslate"><span class="pre">venv</span></code> is used.
+If relative path is used then it should be relative to the YAML.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shell</span></code>: This is the shell to use. Only <code class="docutils literal notranslate"><span class="pre">bash</span></code> and <code class="docutils literal notranslate"><span class="pre">zsh</span></code> are supported
+as of now.</p></li>
+</ul>
+</li>
+</ul>
+<p>Example in YAML:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">jobname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TestGNUParallelLocalQueue</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GNUParallelLocal</span>
+<span class="w">  </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conda</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer</span>
+<span class="w">    </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zsh</span>
+</pre></div>
+</div>
+<p>Alternatively, if you use <code class="docutils literal notranslate"><span class="pre">venv</span></code>, the YAML would look like so:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">queue</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">jobname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TestGNUParallelLocalQueue</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GNUParallelLocal</span>
+<span class="w">  </span><span class="nt">env</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">venv</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/home/me/junifer-venv</span><span class="w">  </span><span class="c1"># should be at the level above `bin/activate`</span>
+<span class="w">    </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zsh</span>
 </pre></div>
 </div>
 <p>Once the <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less Configuration</span></a> file is ready, including the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section, you can
@@ -491,6 +556,7 @@ elements will be queued.</p></li>
             <ul>
 <li><a class="reference internal" href="#">5.4. Queueing Jobs (HPC, HTC)</a><ul>
 <li><a class="reference internal" href="#queueing-condor">5.4.1. HTCondor</a></li>
+<li><a class="reference internal" href="#gnuparallellocal">5.4.2. GNUParallelLocal</a></li>
 </ul>
 </li>
 </ul>
