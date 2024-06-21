@@ -66,36 +66,43 @@ jobs:
         sudo tcsh @update.afni.binaries -package linux_ubuntu_16_64 -bindir /afni
         echo "/afni" >> $GITHUB_PATH
       if: matrix.python-version == 3.11
+      # Bypass AFNI installation failure
+      continue-on-error: true
     - name: Check AFNI
       run: |
         echo "Using AFNI : $(afni --version)"
       if: matrix.python-version == 3.11
+      # Bypass AFNI installation failure
+      continue-on-error: true
     - name: Install ANTs
       run: |
         sudo apt-get install -y -qq unzip
-        curl -fsSL -o ants.zip https://github.com/ANTsX/ANTs/releases/download/v2.5.1/ants-2.5.1-ubuntu-22.04-X64-gcc.zip
+        curl -fsSL -o ants.zip https://github.com/ANTsX/ANTs/releases/download/v2.5.2/ants-2.5.2-ubuntu-22.04-X64-gcc.zip
         unzip ants.zip -d /opt
-        mv /opt/ants-2.5.1/bin/* /opt/ants-2.5.1
+        mv /opt/ants-2.5.2/bin/* /opt/ants-2.5.2
         rm ants.zip
-        echo "/opt/ants-2.5.1" >> $GITHUB_PATH
+        echo "/opt/ants-2.5.2" >> $GITHUB_PATH
       if: matrix.python-version == 3.11
+      # Bypass ANTs installation failure
+      continue-on-error: true
     - name: Check ANTs
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
       if: matrix.python-version == 3.11
+      # Bypass ANTs installation failure
+      continue-on-error: true
     - name: Install FSL
       run: |
-        sudo apt-get install -y -qq python3
-        curl -fsSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | python3 - -d /opt/fsl-6.0.6.4 -V 6.0.6.4
+        curl -fsSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | python - -d /opt/fsl/
         FSLOUTPUTTYPE="NIFTI_GZ"
         FSLMULTIFILEQUIT="TRUE"
-        FSLTCLSH="/opt/fsl-6.0.6.4/bin/fsltclsh"
-        FSLWISH="/opt/fsl-6.0.6.4/bin/fslwish"
+        FSLTCLSH="/opt/fsl/bin/fsltclsh"
+        FSLWISH="/opt/fsl/bin/fslwish"
         FSLLOCKDIR=""
         FSLMACHINELIST=""
         FSLREMOTECALL=""
         FSLGECUDAQ="cuda.q"
-        echo "/opt/fsl-6.0.6.4" >> $GITHUB_PATH
+        echo "/opt/fsl" >> $GITHUB_PATH
       if: matrix.python-version == 3.11
       # Bypass FSL installation failure
       continue-on-error: true
