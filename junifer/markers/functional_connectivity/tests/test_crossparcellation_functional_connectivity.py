@@ -27,7 +27,7 @@ def test_init() -> None:
         CrossParcellationFC(
             parcellation_one="a",
             parcellation_two="a",
-            correlation_method="pearson",
+            corr_method="pearson",
         )
 
 
@@ -57,7 +57,7 @@ def test_compute(tmp_path: Path) -> None:
         crossparcellation = CrossParcellationFC(
             parcellation_one=parcellation_one,
             parcellation_two=parcellation_two,
-            correlation_method="spearman",
+            corr_method="spearman",
         )
         out = crossparcellation.compute(element_data["BOLD"])
         assert out["data"].shape == (200, 100)
@@ -83,7 +83,7 @@ def test_store(tmp_path: Path) -> None:
         crossparcellation = CrossParcellationFC(
             parcellation_one=parcellation_one,
             parcellation_two=parcellation_two,
-            correlation_method="spearman",
+            corr_method="spearman",
         )
         storage = SQLiteFeatureStorage(
             uri=tmp_path / "test_crossparcellation.sqlite", upsert="ignore"

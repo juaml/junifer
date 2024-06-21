@@ -4,6 +4,7 @@
 # License: AGPL
 
 from .junifer_nifti_spheres_masker import JuniferNiftiSpheresMasker
+from .junifer_connectivity_measure import JuniferConnectivityMeasure
 
 
-__all__ = ["JuniferNiftiSpheresMasker"]
+__all__ = ["JuniferNiftiSpheresMasker", "JuniferConnectivityMeasure"]

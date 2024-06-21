@@ -5,6 +5,9 @@
 # License: AGPL
 
 from pathlib import Path
+from typing import Dict
+
+import pytest
 
 from junifer.datareader import DefaultDataReader
 from junifer.markers.functional_connectivity import EdgeCentricFCSpheres
@@ -12,27 +15,43 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
-def test_EdgeCentricFCSpheres(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "conn_method_params",
+    [
+        {"empirical": False},
+        {"empirical": True},
+    ],
+)
+def test_EdgeCentricFCSpheres(
+    tmp_path: Path,
+    conn_method_params: Dict[str, bool],
+) -> None:
     """Test EdgeCentricFCSpheres.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    conn_method_params : dict
+        The parametrized parameters to connectivity measure method.
 
     """
     with SPMAuditoryTestingDataGrabber() as dg:
+        # Get element data
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
+        # Setup marker
         marker = EdgeCentricFCSpheres(
-            coords="DMNBuckner", radius=5.0, cor_method="correlation"
+            coords="DMNBuckner",
+            radius=5.0,
+            conn_method="correlation",
+            conn_method_params=conn_method_params,
         )
         # Check correct output
         assert marker.get_output_type("BOLD") == "matrix"
-
         # Fit-transform the data
         edge_fc = marker.fit_transform(element_data)
         edge_fc_bold = edge_fc["BOLD"]
-
+        # Check output
         # There are six DMNBuckner coordinates, so
         # for 6 ROIs we should get (6 * (6 -1) / 2) edges in the ETS
         n_edges = int(6 * (6 - 1) / 2)
@@ -43,13 +62,6 @@ def test_EdgeCentricFCSpheres(tmp_path: Path) -> None:
         assert len(set(edge_fc_bold["row_names"])) == n_edges
         assert len(set(edge_fc_bold["col_names"])) == n_edges
 
-        # Check empirical correlation method parameters
-        marker = EdgeCentricFCSpheres(
-            coords="DMNBuckner",
-            radius=5.0,
-            cor_method="correlation",
-            cor_method_params={"empirical": True},
-        )
         # Store
         storage = SQLiteFeatureStorage(
             uri=tmp_path / "test_edge_fc_spheres.sqlite", upsert="ignore"
