@@ -22,6 +22,7 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 from junifer.data.masks import (
     _available_masks,
+    _load_ukb_mask,
     _load_vickery_patil_mask,
     compute_brain_mask,
     get_mask,
@@ -212,6 +213,7 @@ def test_register_mask(
     [
         "GM_prob0.2",
         "GM_prob0.2_cortex",
+        "UKB_15K_GM",
     ],
 )
 def test_list_masks_correct(mask_name: str) -> None:
@@ -289,6 +291,21 @@ def test_vickery_patil_error() -> None:
     """Test error for Vickery-Patil mask."""
     with pytest.raises(ValueError, match=r"find a Vickery-Patil mask "):
         _load_vickery_patil_mask(name="wrong", resolution=2.0)
+
+
+def test_ukb() -> None:
+    """Test UKB mask."""
+    mask, mask_fname, space = load_mask("UKB_15K_GM", resolution=2.0)
+    assert_array_almost_equal(mask.header["pixdim"][1:4], 2.0)  # type: ignore
+    assert space == "MNI152NLin6Asym"
+    assert mask_fname is not None
+    assert mask_fname.name == "UKB_15K_GM_template.nii.gz"
+
+
+def test_ukb_error() -> None:
+    """Test error for UKB mask."""
+    with pytest.raises(ValueError, match=r"find a UKB mask "):
+        _load_ukb_mask(name="wrong")
 
 
 def test_get_mask() -> None:
