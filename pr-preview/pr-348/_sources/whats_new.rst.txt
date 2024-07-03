@@ -8,7 +8,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.5.dev190 (2024-06-21)
+Junifer 0.0.5.dev191 (2024-07-03)
 ---------------------------------
 
 Bugfixes
@@ -24,6 +24,19 @@ Bugfixes
   types requirement by `Synchon Mandal`_ (:gh:`339`)
 - Remove extra dimension from masks warped via ANTs by `Synchon Mandal`_
   (:gh:`340`)
+
+
+API Changes
+^^^^^^^^^^^
+
+- For :class:`.CrossParcellationFC`, ``aggregation_method`` and
+  ``correlation_method`` have been renamed to ``agg_method`` and
+  ``corr_method`` respectively and ``agg_method_params`` has been added; for
+  ``FunctionalConnectivityBase``, :class:`.FunctionalConnectivityParcels`,
+  :class:`.FunctionalConnectivitySpheres`, :class:`.EdgeCentricFCParcels` and
+  :class:`.EdgeCentricFCSpheres`, ``cor_method`` and ``cor_method_params`` have
+  been renamed to ``conn_method`` and ``conn_method_params`` by `Synchon
+  Mandal`_ (:gh:`348`)
 
 
 Improved Documentation
@@ -49,6 +62,10 @@ Enhancements
 - Adapt :class:`.DataladAOMICID1000`, :class:`.DataladAOMICPIOP1` and
   :class:`.DataladAOMICPIOP2` to support ``FreeSurfer`` data type by `Synchon
   Mandal`_ (:gh:`346`)
+- ``FunctionalConnectivity``-family Markers now use
+  :class:`sklearn.covariance.EmpiricalCovariance` as the default covariance
+  estimator and ``correlation`` as the default connecivity matrix kind by
+  `Synchon Mandal`_ (:gh:`348`)
 
 
 Features
@@ -70,6 +87,8 @@ Features
   :class:`.PatternDataGrabber` ``patterns`` by `Synchon Mandal`_ (:gh:`345`)
 - Add support for ``FreeSurfer`` data type for :class:`.PatternDataGrabber` by
   `Synchon Mandal`_ (:gh:`346`)
+- Introduce :class:`.JuniferConnectivityMeasure` for customising functional
+  connectivity matrix kinds and measurements by `Synchon Mandal`_ (:gh:`348`)
 
 
 Miscellaneous
