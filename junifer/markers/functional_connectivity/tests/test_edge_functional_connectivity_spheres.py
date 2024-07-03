@@ -27,11 +27,13 @@ def test_EdgeCentricFCSpheres(tmp_path: Path) -> None:
             coords="DMNBuckner", radius=5.0, cor_method="correlation"
         )
         # Check correct output
-        assert marker.get_output_type("BOLD") == "matrix"
+        assert "matrix" == marker.get_output_type(
+            input_type="BOLD", output_feature="functional_connectivity"
+        )
 
         # Fit-transform the data
         edge_fc = marker.fit_transform(element_data)
-        edge_fc_bold = edge_fc["BOLD"]
+        edge_fc_bold = edge_fc["BOLD"]["functional_connectivity"]
 
         # There are six DMNBuckner coordinates, so
         # for 6 ROIs we should get (6 * (6 -1) / 2) edges in the ETS
@@ -57,5 +59,6 @@ def test_EdgeCentricFCSpheres(tmp_path: Path) -> None:
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_EdgeCentricFCSpheres" for x in features.values()
+            x["name"] == "BOLD_EdgeCentricFCSpheres_functional_connectivity"
+            for x in features.values()
         )

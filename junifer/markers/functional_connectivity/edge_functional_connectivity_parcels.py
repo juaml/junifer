@@ -98,23 +98,29 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : the actual computed values as a numpy.ndarray
-            * ``col_names`` : the column labels for the computed values as list
+            * ``aggregation`` : dictionary with the following keys:
+
+                - ``data`` : ROI values as ``numpy.ndarray``
+                - ``col_names`` : ROI labels as list of str
 
         """
-        parcel_aggregation = ParcelAggregation(
+        # Perform aggregation
+        aggregation = ParcelAggregation(
             parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
             on="BOLD",
-        )
-
-        bold_aggregated = parcel_aggregation.compute(
-            input, extra_input=extra_input
-        )
+        ).compute(input, extra_input=extra_input)
+        # Compute edgewise timeseries
         ets, edge_names = _ets(
-            bold_aggregated["data"], bold_aggregated["col_names"]
+            bold_ts=aggregation["aggregation"]["data"],
+            roi_names=aggregation["aggregation"]["col_names"],
         )
 
-        return {"data": ets, "col_names": edge_names}
+        return {
+            "aggregation": {
+                "data": ets,
+                "col_names": edge_names,
+            },
+        }

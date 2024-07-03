@@ -35,11 +35,13 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym"
         )
         # Check correct output
-        assert marker.get_output_type("BOLD") == "matrix"
+        assert "matrix" == marker.get_output_type(
+            input_type="BOLD", output_feature="functional_connectivity"
+        )
 
         # Fit-transform the data
         fc = marker.fit_transform(element_data)
-        fc_bold = fc["BOLD"]
+        fc_bold = fc["BOLD"]["functional_connectivity"]
 
         assert "data" in fc_bold
         assert "row_names" in fc_bold
@@ -83,6 +85,7 @@ def test_FunctionalConnectivityParcels(tmp_path: Path) -> None:
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_FunctionalConnectivityParcels"
+            x["name"]
+            == "BOLD_FunctionalConnectivityParcels_functional_connectivity"
             for x in features.values()
         )

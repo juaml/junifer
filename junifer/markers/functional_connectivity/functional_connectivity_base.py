@@ -47,6 +47,12 @@ class FunctionalConnectivityBase(BaseMarker):
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "scikit-learn"}
 
+    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+        "BOLD": {
+            "functional_connectivity": "matrix",
+        },
+    }
+
     def __init__(
         self,
         agg_method: str = "mean",
@@ -80,33 +86,6 @@ class FunctionalConnectivityBase(BaseMarker):
             klass=NotImplementedError,
         )
 
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker.
-
-        """
-        return ["BOLD"]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        """
-        return "matrix"
-
     def compute(
         self,
         input: Dict[str, Any],
@@ -128,13 +107,16 @@ class FunctionalConnectivityBase(BaseMarker):
         Returns
         -------
         dict
-            The computed result as dictionary. The following keys will be
-            included in the dictionary:
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : functional connectivity matrix as a ``numpy.ndarray``.
-            * ``row_names`` : row names as a list
-            * ``col_names`` : column names as a list
-            * ``matrix_kind`` : the kind of matrix (tril, triu or full)
+            * ``functional_connectivity`` : dictionary with the following keys:
+
+              - ``data`` : functional connectivity matrix as ``numpy.ndarray``
+              - ``row_names`` : ROI labels as list of str
+              - ``col_names`` : ROI labels as list of str
+              - ``matrix_kind`` : the kind of matrix (tril, triu or full)
 
         """
         # Perform necessary aggregation
@@ -148,10 +130,14 @@ class FunctionalConnectivityBase(BaseMarker):
         else:
             connectivity = ConnectivityMeasure(kind=self.cor_method)
         # Create dictionary for output
-        out = {}
-        out["data"] = connectivity.fit_transform([aggregation["data"]])[0]
-        # Create column names
-        out["row_names"] = aggregation["col_names"]
-        out["col_names"] = aggregation["col_names"]
-        out["matrix_kind"] = "tril"
-        return out
+        return {
+            "functional_connectivity": {
+                "data": connectivity.fit_transform(
+                    [aggregation["aggregation"]["data"]]
+                )[0],
+                # Create column names
+                "row_names": aggregation["aggregation"]["col_names"],
+                "col_names": aggregation["aggregation"]["col_names"],
+                "matrix_kind": "tril",
+            },
+        }
