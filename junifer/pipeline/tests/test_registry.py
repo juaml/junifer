@@ -101,7 +101,7 @@ def test_get_class():
     register(step="datagrabber", name="bar", klass=str)
     # Get class
     obj = get_class(step="datagrabber", name="bar")
-    assert obj == str
+    assert isinstance(obj, str)
 
 
 # TODO: possible parametrization?
