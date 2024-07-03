@@ -84,7 +84,7 @@ def test_marker_collection() -> None:
         for t_marker in markers:
             t_name = t_marker.name
             assert "BOLD" in out[t_name]
-            t_bold = out[t_name]["BOLD"]
+            t_bold = out[t_name]["BOLD"]["aggregation"]
             assert "data" in t_bold
             assert "col_names" in t_bold
             assert "meta" in t_bold
@@ -107,7 +107,8 @@ def test_marker_collection() -> None:
         for t_marker in markers:
             t_name = t_marker.name
             assert_array_equal(
-                out[t_name]["BOLD"]["data"], out2[t_name]["BOLD"]["data"]
+                out[t_name]["BOLD"]["aggregation"]["data"],
+                out2[t_name]["BOLD"]["aggregation"]["data"],
             )
 
 
@@ -201,20 +202,20 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     feature_md5 = next(iter(features.keys()))
     t_feature = storage.read_df(feature_md5=feature_md5)
     fname = "tian_mean"
-    t_data = out[fname]["BOLD"]["data"]  # type: ignore
-    cols = out[fname]["BOLD"]["col_names"]  # type: ignore
+    t_data = out[fname]["BOLD"]["aggregation"]["data"]  # type: ignore
+    cols = out[fname]["BOLD"]["aggregation"]["col_names"]  # type: ignore
     assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
 
     feature_md5 = list(features.keys())[1]
     t_feature = storage.read_df(feature_md5=feature_md5)
     fname = "tian_std"
-    t_data = out[fname]["BOLD"]["data"]  # type: ignore
-    cols = out[fname]["BOLD"]["col_names"]  # type: ignore
+    t_data = out[fname]["BOLD"]["aggregation"]["data"]  # type: ignore
+    cols = out[fname]["BOLD"]["aggregation"]["col_names"]  # type: ignore
     assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
 
     feature_md5 = list(features.keys())[2]
     t_feature = storage.read_df(feature_md5=feature_md5)
     fname = "tian_trim_mean90"
-    t_data = out[fname]["BOLD"]["data"]  # type: ignore
-    cols = out[fname]["BOLD"]["col_names"]  # type: ignore
+    t_data = out[fname]["BOLD"]["aggregation"]["data"]  # type: ignore
+    cols = out[fname]["BOLD"]["aggregation"]["col_names"]  # type: ignore
     assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
