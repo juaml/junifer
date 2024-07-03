@@ -20,11 +20,13 @@ def test_TemporalSNRParcels_computation() -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym"
         )
         # Check correct output
-        assert marker.get_output_type("BOLD") == "vector"
+        assert "vector" == marker.get_output_type(
+            input_type="BOLD", output_feature="tsnr"
+        )
 
         # Fit-transform the data
         tsnr_parcels = marker.fit_transform(element_data)
-        tsnr_parcels_bold = tsnr_parcels["BOLD"]
+        tsnr_parcels_bold = tsnr_parcels["BOLD"]["tsnr"]
 
         assert "data" in tsnr_parcels_bold
         assert "col_names" in tsnr_parcels_bold
@@ -51,5 +53,6 @@ def test_TemporalSNRParcels_storage(tmp_path: Path) -> None:
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_TemporalSNRParcels" for x in features.values()
+            x["name"] == "BOLD_TemporalSNRParcels_tsnr"
+            for x in features.values()
         )

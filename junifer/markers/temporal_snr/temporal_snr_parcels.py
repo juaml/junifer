@@ -77,16 +77,16 @@ class TemporalSNRParcels(TemporalSNRBase):
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : ROI-wise temporal SNR as a ``numpy.ndarray``
-            * ``col_names`` : the ROI labels for the computed values as list
+            * ``aggregation`` : dictionary with the following keys:
+
+                - ``data`` : ROI-wise tSNR values as ``numpy.ndarray``
+                - ``col_names`` : ROI labels as list of str
 
         """
-        parcel_aggregation = ParcelAggregation(
+        return ParcelAggregation(
             parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
             on="BOLD",
-        )
-        # Return the 2D timeseries after parcel aggregation
-        return parcel_aggregation.compute(input=input, extra_input=extra_input)
+        ).compute(input=input, extra_input=extra_input)
