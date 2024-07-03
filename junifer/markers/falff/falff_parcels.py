@@ -26,8 +26,6 @@ class ALFFParcels(ALFFBase):
     parcellation : str or list of str
         The name(s) of the parcellation(s). Check valid options by calling
         :func:`.list_parcellations`.
-    fractional : bool
-        Whether to compute fractional ALFF.
     using : {"junifer", "afni"}
         Implementation to use for computing ALFF:
 
@@ -73,7 +71,6 @@ class ALFFParcels(ALFFBase):
     def __init__(
         self,
         parcellation: Union[str, List[str]],
-        fractional: bool,
         using: str,
         highpass: float = 0.01,
         lowpass: float = 0.1,
@@ -85,7 +82,6 @@ class ALFFParcels(ALFFBase):
     ) -> None:
         # Superclass init first to validate `using` parameter
         super().__init__(
-            fractional=fractional,
             highpass=highpass,
             lowpass=lowpass,
             using=using,
@@ -114,33 +110,63 @@ class ALFFParcels(ALFFBase):
         Returns
         -------
         dict
-            The computed result as dictionary. The dictionary has the following
-            keys:
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : the actual computed values as a numpy.ndarray
-            * ``col_names`` : the column labels for the computed values as list
+            * ``alff`` : dictionary with the following keys:
+
+              - ``data`` : ROI values as ``numpy.ndarray``
+              - ``col_names`` : ROI labels as list of str
+
+            * ``falff`` : dictionary with the following keys:
+
+              - ``data`` : ROI values as ``numpy.ndarray``
+              - ``col_names`` : ROI labels as list of str
 
         """
         logger.info("Calculating ALFF / fALFF for parcels")
 
-        # Compute ALFF / fALFF
-        output_data, output_file_path = self._compute(input_data=input)
-
-        # Initialize parcel aggregation
-        parcel_aggregation = ParcelAggregation(
-            parcellation=self.parcellation,
-            method=self.agg_method,
-            method_params=self.agg_method_params,
-            masks=self.masks,
-            on="BOLD",
-        )
-        # Perform aggregation on ALFF / fALFF
-        parcel_aggregation_input = dict(input.items())
-        parcel_aggregation_input["data"] = output_data
-        parcel_aggregation_input["path"] = output_file_path
-        output = parcel_aggregation.compute(
-            input=parcel_aggregation_input,
-            extra_input=extra_input,
+        # Compute ALFF + fALFF
+        alff_output, falff_output, alff_output_path, falff_output_path = (
+            self._compute(input_data=input)
         )
 
-        return output
+        # Perform aggregation on ALFF + fALFF
+        aggregation_alff_input = dict(input.items())
+        aggregation_falff_input = dict(input.items())
+        aggregation_alff_input["data"] = alff_output
+        aggregation_falff_input["data"] = falff_output
+        aggregation_alff_input["path"] = alff_output_path
+        aggregation_falff_input["path"] = falff_output_path
+
+        return {
+            "alff": {
+                **ParcelAggregation(
+                    parcellation=self.parcellation,
+                    method=self.agg_method,
+                    method_params=self.agg_method_params,
+                    masks=self.masks,
+                    on="BOLD",
+                ).compute(
+                    input=aggregation_alff_input,
+                    extra_input=extra_input,
+                )[
+                    "aggregation"
+                ],
+            },
+            "falff": {
+                **ParcelAggregation(
+                    parcellation=self.parcellation,
+                    method=self.agg_method,
+                    method_params=self.agg_method_params,
+                    masks=self.masks,
+                    on="BOLD",
+                ).compute(
+                    input=aggregation_falff_input,
+                    extra_input=extra_input,
+                )[
+                    "aggregation"
+                ],
+            },
+        }

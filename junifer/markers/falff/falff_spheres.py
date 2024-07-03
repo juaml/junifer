@@ -26,8 +26,6 @@ class ALFFSpheres(ALFFBase):
     coords : str
         The name of the coordinates list to use. See
         :func:`.list_coordinates` for options.
-    fractional : bool
-        Whether to compute fractional ALFF.
     using : {"junifer", "afni"}
         Implementation to use for computing ALFF:
 
@@ -80,7 +78,6 @@ class ALFFSpheres(ALFFBase):
     def __init__(
         self,
         coords: str,
-        fractional: bool,
         using: str,
         radius: Optional[float] = None,
         allow_overlap: bool = False,
@@ -94,7 +91,6 @@ class ALFFSpheres(ALFFBase):
     ) -> None:
         # Superclass init first to validate `using` parameter
         super().__init__(
-            fractional=fractional,
             highpass=highpass,
             lowpass=lowpass,
             using=using,
@@ -125,35 +121,67 @@ class ALFFSpheres(ALFFBase):
         Returns
         -------
         dict
-            The computed result as dictionary. The dictionary has the following
-            keys:
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : the actual computed values as a numpy.ndarray
-            * ``col_names`` : the column labels for the computed values as list
+            * ``alff`` : dictionary with the following keys:
+
+              - ``data`` : ROI values as ``numpy.ndarray``
+              - ``col_names`` : ROI labels as list of str
+
+            * ``falff`` : dictionary with the following keys:
+
+              - ``data`` : ROI values as ``numpy.ndarray``
+              - ``col_names`` : ROI labels as list of str
 
         """
         logger.info("Calculating ALFF / fALFF for spheres")
 
-        # Compute ALFF / fALFF
-        output_data, output_file_path = self._compute(input_data=input)
-
-        # Initialize sphere aggregation
-        sphere_aggregation = SphereAggregation(
-            coords=self.coords,
-            radius=self.radius,
-            allow_overlap=self.allow_overlap,
-            method=self.agg_method,
-            method_params=self.agg_method_params,
-            masks=self.masks,
-            on="BOLD",
+        # Compute ALFF + fALFF
+        alff_output, falff_output, alff_output_path, falff_output_path = (
+            self._compute(input_data=input)
         )
+
         # Perform aggregation on ALFF / fALFF
-        sphere_aggregation_input = dict(input.items())
-        sphere_aggregation_input["data"] = output_data
-        sphere_aggregation_input["path"] = output_file_path
-        output = sphere_aggregation.compute(
-            input=sphere_aggregation_input,
-            extra_input=extra_input,
-        )
+        aggregation_alff_input = dict(input.items())
+        aggregation_falff_input = dict(input.items())
+        aggregation_alff_input["data"] = alff_output
+        aggregation_falff_input["data"] = falff_output
+        aggregation_alff_input["path"] = alff_output_path
+        aggregation_falff_input["path"] = falff_output_path
 
-        return output
+        return {
+            "alff": {
+                **SphereAggregation(
+                    coords=self.coords,
+                    radius=self.radius,
+                    allow_overlap=self.allow_overlap,
+                    method=self.agg_method,
+                    method_params=self.agg_method_params,
+                    masks=self.masks,
+                    on="BOLD",
+                ).compute(
+                    input=aggregation_alff_input,
+                    extra_input=extra_input,
+                )[
+                    "aggregation"
+                ],
+            },
+            "falff": {
+                **SphereAggregation(
+                    coords=self.coords,
+                    radius=self.radius,
+                    allow_overlap=self.allow_overlap,
+                    method=self.agg_method,
+                    method_params=self.agg_method_params,
+                    masks=self.masks,
+                    on="BOLD",
+                ).compute(
+                    input=aggregation_falff_input,
+                    extra_input=extra_input,
+                )[
+                    "aggregation"
+                ],
+            },
+        }

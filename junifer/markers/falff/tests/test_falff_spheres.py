@@ -21,6 +21,28 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 COORDINATES = "DMNBuckner"
 
 
+@pytest.mark.parametrize(
+    "feature",
+    [
+        "alff",
+        "falff",
+    ],
+)
+def test_ALFFSpheres_get_output_type(feature: str) -> None:
+    """Test ALFFSpheres get_output_type().
+
+    Parameters
+    ----------
+    feature : str
+        The parametrized feature name.
+
+    """
+    assert "vector" == ALFFSpheres(
+        coords=COORDINATES,
+        using="junifer",
+    ).get_output_type(input_type="BOLD", output_feature=feature)
+
+
 def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
     """Test ALFFSpheres.
 
@@ -41,7 +63,6 @@ def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             # Initialize marker
             marker = ALFFSpheres(
                 coords=COORDINATES,
-                fractional=False,
                 using="junifer",
                 radius=5.0,
             )
@@ -52,15 +73,16 @@ def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 
             # Get BOLD output
             assert "BOLD" in output
-            output_bold = output["BOLD"]
-            # Assert BOLD output keys
-            assert "data" in output_bold
-            assert "col_names" in output_bold
+            for feature in output["BOLD"].keys():
+                output_bold = output["BOLD"][feature]
+                # Assert BOLD output keys
+                assert "data" in output_bold
+                assert "col_names" in output_bold
 
-            output_bold_data = output_bold["data"]
-            # Assert BOLD output data dimension
-            assert output_bold_data.ndim == 2
-            assert output_bold_data.shape == (1, 6)
+                output_bold_data = output_bold["data"]
+                # Assert BOLD output data dimension
+                assert output_bold_data.ndim == 2
+                assert output_bold_data.shape == (1, 6)
 
             # Reset log capture
             caplog.clear()
@@ -78,18 +100,13 @@ def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires AFNI to be in PATH"
 )
-@pytest.mark.parametrize(
-    "fractional", [True, False], ids=["fractional", "non-fractional"]
-)
-def test_ALFFSpheres_comparison(tmp_path: Path, fractional: bool) -> None:
+def test_ALFFSpheres_comparison(tmp_path: Path) -> None:
     """Test ALFFSpheres implementation comparison.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
-    fractional : bool
-        Whether to compute fractional ALFF or not.
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
@@ -100,7 +117,6 @@ def test_ALFFSpheres_comparison(tmp_path: Path, fractional: bool) -> None:
         # Initialize marker
         junifer_marker = ALFFSpheres(
             coords=COORDINATES,
-            fractional=fractional,
             using="junifer",
             radius=5.0,
         )
@@ -112,7 +128,6 @@ def test_ALFFSpheres_comparison(tmp_path: Path, fractional: bool) -> None:
         # Initialize marker
         afni_marker = ALFFSpheres(
             coords=COORDINATES,
-            fractional=fractional,
             using="afni",
             radius=5.0,
         )
@@ -121,9 +136,10 @@ def test_ALFFSpheres_comparison(tmp_path: Path, fractional: bool) -> None:
         # Get BOLD output
         afni_output_bold = afni_output["BOLD"]
 
-        # Check for Pearson correlation coefficient
-        r, _ = sp.stats.pearsonr(
-            junifer_output_bold["data"][0],
-            afni_output_bold["data"][0],
-        )
-        assert r > 0.99
+        for feature in afni_output_bold.keys():
+            # Check for Pearson correlation coefficient
+            r, _ = sp.stats.pearsonr(
+                junifer_output_bold[feature]["data"][0],
+                afni_output_bold[feature]["data"][0],
+            )
+            assert r > 0.99
