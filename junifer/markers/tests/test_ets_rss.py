@@ -26,8 +26,9 @@ def test_compute() -> None:
     with PartlyCloudyTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Compute the RSSETSMarker
-        marker = RSSETSMarker(parcellation=PARCELLATION)
-        rss_ets = marker.compute(element_data["BOLD"])
+        rss_ets = RSSETSMarker(parcellation=PARCELLATION).compute(
+            element_data["BOLD"]
+        )
 
         # Compare with nilearn
         # Load testing parcellation
@@ -41,14 +42,14 @@ def test_compute() -> None:
             element_data["BOLD"]["data"]
         )
         # Assert the dimension of timeseries
-        assert extacted_timeseries.shape[0] == len(rss_ets["data"])
+        assert extacted_timeseries.shape[0] == len(rss_ets["rss_ets"]["data"])
 
 
 def test_get_output_type() -> None:
     """Test RSS ETS get_output_type()."""
     assert "timeseries" == RSSETSMarker(
         parcellation=PARCELLATION
-    ).get_output_type("BOLD")
+    ).get_output_type(input_type="BOLD", output_feature="rss_ets")
 
 
 def test_store(tmp_path: Path) -> None:
@@ -61,12 +62,17 @@ def test_store(tmp_path: Path) -> None:
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
+        # Get element data
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
-        # Compute the RSSETSMarker
-        marker = RSSETSMarker(parcellation=PARCELLATION)
         # Create storage
         storage = SQLiteFeatureStorage(tmp_path / "test_rss_ets.sqlite")
-        # Store
-        marker.fit_transform(input=element_data, storage=storage)
+        # Compute the RSSETSMarker and store
+        _ = RSSETSMarker(parcellation=PARCELLATION).fit_transform(
+            input=element_data, storage=storage
+        )
+        # Retrieve features
         features = storage.list_features()
-        assert any(x["name"] == "BOLD_RSSETSMarker" for x in features.values())
+        # Check marker name
+        assert any(
+            x["name"] == "BOLD_RSSETSMarker_rss_ets" for x in features.values()
+        )
