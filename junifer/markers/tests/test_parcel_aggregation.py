@@ -23,16 +23,63 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
-def test_ParcelAggregation_input_output() -> None:
-    """Test ParcelAggregation input and output types."""
-    marker = ParcelAggregation(
-        parcellation="Schaefer100x7", method="mean", on="VBM_GM"
-    )
-    for in_, out_ in [("VBM_GM", "vector"), ("BOLD", "timeseries")]:
-        assert marker.get_output_type(in_) == out_
+@pytest.mark.parametrize(
+    "input_type, storage_type",
+    [
+        (
+            "T1w",
+            "vector",
+        ),
+        (
+            "T2w",
+            "vector",
+        ),
+        (
+            "BOLD",
+            "timeseries",
+        ),
+        (
+            "VBM_GM",
+            "vector",
+        ),
+        (
+            "VBM_WM",
+            "vector",
+        ),
+        (
+            "VBM_CSF",
+            "vector",
+        ),
+        (
+            "fALFF",
+            "vector",
+        ),
+        (
+            "GCOR",
+            "vector",
+        ),
+        (
+            "LCOR",
+            "vector",
+        ),
+    ],
+)
+def test_ParcelAggregation_input_output(
+    input_type: str, storage_type: str
+) -> None:
+    """Test ParcelAggregation input and output types.
 
-    with pytest.raises(ValueError, match="Unknown input"):
-        marker.get_output_type("unknown")
+    Parameters
+    ----------
+    input_type : str
+        The parametrized input type.
+    storage_type : str
+        The parametrized storage type.
+
+    """
+    assert storage_type == ParcelAggregation(
+        parcellation="Schaefer100x7", method="mean", on=input_type
+    ).get_output_type(input_type=input_type, output_feature="aggregation")
 
 
 def test_ParcelAggregation_3D() -> None:
@@ -85,8 +132,8 @@ def test_ParcelAggregation_3D() -> None:
         )
 
         parcel_agg_mean_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
         # Check that arrays are almost equal
         assert_array_equal(parcel_agg_mean_bold_data, manual)
         assert_array_almost_equal(nifti_labels_masked_bold, manual)
@@ -113,8 +160,8 @@ def test_ParcelAggregation_3D() -> None:
             on="BOLD",
         )
         parcel_agg_std_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
         assert parcel_agg_std_bold_data.ndim == 2
         assert parcel_agg_std_bold_data.shape[0] == 1
         assert_array_equal(parcel_agg_std_bold_data, manual)
@@ -139,7 +186,7 @@ def test_ParcelAggregation_3D() -> None:
         )
         parcel_agg_trim_mean_bold_data = marker.fit_transform(element_data)[
             "BOLD"
-        ]["data"]
+        ]["aggregation"]["data"]
         assert parcel_agg_trim_mean_bold_data.ndim == 2
         assert parcel_agg_trim_mean_bold_data.shape[0] == 1
         assert_array_equal(parcel_agg_trim_mean_bold_data, manual)
@@ -154,8 +201,8 @@ def test_ParcelAggregation_4D():
             parcellation="TianxS1x3TxMNInonlinear2009cAsym", method="mean"
         )
         parcel_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         # Compare with nilearn
         # Load testing parcellation
@@ -204,7 +251,8 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_ParcelAggregation" for x in features.values()
+            x["name"] == "BOLD_ParcelAggregation_aggregation"
+            for x in features.values()
         )
 
     # Store 4D
@@ -221,7 +269,8 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_ParcelAggregation" for x in features.values()
+            x["name"] == "BOLD_ParcelAggregation_aggregation"
+            for x in features.values()
         )
 
 
@@ -241,8 +290,8 @@ def test_ParcelAggregation_3D_mask() -> None:
             ..., 0:1
         ]
         parcel_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         # Compare with nilearn
         # Load testing parcellation
@@ -316,8 +365,8 @@ def test_ParcelAggregation_3D_mask_computed() -> None:
             on="BOLD",
         )
         parcel_agg_mean_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         assert parcel_agg_mean_bold_data.ndim == 2
         assert parcel_agg_mean_bold_data.shape[0] == 1
@@ -397,7 +446,9 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
             name="tian_mean",
             on="BOLD",
         )
-        orig_mean = marker_original.fit_transform(element_data)["BOLD"]
+        orig_mean = marker_original.fit_transform(element_data)["BOLD"][
+            "aggregation"
+        ]
 
         orig_mean_data = orig_mean["data"]
         assert orig_mean_data.ndim == 2
@@ -417,7 +468,9 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
         # No warnings should be raised
         with warnings.catch_warnings():
             warnings.simplefilter("error", category=UserWarning)
-            split_mean = marker_split.fit_transform(element_data)["BOLD"]
+            split_mean = marker_split.fit_transform(element_data)["BOLD"][
+                "aggregation"
+            ]
 
         split_mean_data = split_mean["data"]
 
@@ -497,7 +550,9 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
             name="tian_mean",
             on="BOLD",
         )
-        orig_mean = marker_original.fit_transform(element_data)["BOLD"]
+        orig_mean = marker_original.fit_transform(element_data)["BOLD"][
+            "aggregation"
+        ]
 
         orig_mean_data = orig_mean["data"]
         assert orig_mean_data.ndim == 2
@@ -515,7 +570,9 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
         )
         # Warning should be raised
         with pytest.warns(RuntimeWarning, match="overlapping voxels"):
-            split_mean = marker_split.fit_transform(element_data)["BOLD"]
+            split_mean = marker_split.fit_transform(element_data)["BOLD"][
+                "aggregation"
+            ]
 
         split_mean_data = split_mean["data"]
 
@@ -602,7 +659,9 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
             name="tian_mean",
             on="BOLD",
         )
-        orig_mean = marker_original.fit_transform(element_data)["BOLD"]
+        orig_mean = marker_original.fit_transform(element_data)["BOLD"][
+            "aggregation"
+        ]
 
         orig_mean_data = orig_mean["data"]
         assert orig_mean_data.ndim == 2
@@ -621,7 +680,9 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
 
         # Warning should be raised
         with pytest.warns(RuntimeWarning, match="duplicated labels."):
-            split_mean = marker_split.fit_transform(element_data)["BOLD"]
+            split_mean = marker_split.fit_transform(element_data)["BOLD"][
+                "aggregation"
+            ]
 
         split_mean_data = split_mean["data"]
 
@@ -653,8 +714,8 @@ def test_ParcelAggregation_4D_agg_time():
             on="BOLD",
         )
         parcel_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         # Compare with nilearn
         # Loading testing parcellation
@@ -689,8 +750,8 @@ def test_ParcelAggregation_4D_agg_time():
             on="BOLD",
         )
         parcel_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         assert parcel_agg_bold_data.ndim == 2
         assert_array_equal(
