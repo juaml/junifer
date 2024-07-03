@@ -210,7 +210,17 @@ class PipelineStepMixin:
         # Validate input
         fit_input = self.validate_input(input=input)
         # Validate output type
-        outputs = [self.get_output_type(t_input) for t_input in fit_input]
+        # Nested output type for marker
+        if hasattr(self, "_MARKER_INOUT_MAPPINGS"):
+            outputs = list(
+                {
+                    val
+                    for t_input in fit_input
+                    for val in self._MARKER_INOUT_MAPPINGS[t_input].values()
+                }
+            )
+        else:
+            outputs = [self.get_output_type(t_input) for t_input in fit_input]
         return outputs
 
     def fit_transform(
