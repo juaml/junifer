@@ -5,6 +5,7 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
+from copy import deepcopy
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
@@ -35,6 +36,8 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     Raises
     ------
+    AttributeError
+        If the marker does not have `_MARKER_INOUT_MAPPINGS` attribute.
     ValueError
         If required input data type(s) is(are) not found.
 
@@ -45,6 +48,12 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         on: Optional[Union[List[str], str]] = None,
         name: Optional[str] = None,
     ) -> None:
+        # Check for missing mapping attribute
+        if not hasattr(self, "_MARKER_INOUT_MAPPINGS"):
+            raise_error(
+                msg=("Missing `_MARKER_INOUT_MAPPINGS` for the marker"),
+                klass=AttributeError,
+            )
         # Use all data types if not provided
         if on is None:
             on = self.get_valid_inputs()
@@ -88,7 +97,6 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             )
         return [x for x in self._on if x in input]
 
-    @abstractmethod
     def get_valid_inputs(self) -> List[str]:
         """Get valid data types for input.
 
@@ -98,30 +106,25 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             The list of data types that can be used as input for this marker.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement get_valid_inputs().",
-            klass=NotImplementedError,
-        )
+        return list(self._MARKER_INOUT_MAPPINGS.keys())
 
-    @abstractmethod
-    def get_output_type(self, input_type: str) -> str:
+    def get_output_type(self, input_type: str, output_feature: str) -> str:
         """Get output type.
 
         Parameters
         ----------
         input_type : str
             The data type input to the marker.
+        output_feature : str
+            The feature output of the marker.
 
         Returns
         -------
         str
-            The storage type output by the marker.
+            The storage type output of the marker.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement get_output_type().",
-            klass=NotImplementedError,
-        )
+        return self._MARKER_INOUT_MAPPINGS[input_type][output_feature]
 
     @abstractmethod
     def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
@@ -154,6 +157,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
     def store(
         self,
         type_: str,
+        feature: str,
         out: Dict[str, Any],
         storage: "BaseFeatureStorage",
     ) -> None:
@@ -163,13 +167,15 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         ----------
         type_ : str
             The data type to store.
+        feature : str
+            The feature to store.
         out : dict
             The computed result as a dictionary to store.
         storage : storage-like
             The storage class, for example, SQLiteFeatureStorage.
 
         """
-        output_type_ = self.get_output_type(type_)
+        output_type_ = self.get_output_type(type_, feature)
         logger.debug(f"Storing {output_type_} in {storage}")
         storage.store(kind=output_type_, **out)
 
@@ -213,15 +219,35 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
                 t_meta["type"] = type_
                 # Compute marker
                 t_out = self.compute(input=t_input, extra_input=extra_input)
-                t_out["meta"] = t_meta
-                # Update metadata for step
-                self.update_meta(t_out, "marker")
-                # Check storage
-                if storage is not None:
-                    logger.info(f"Storing in {storage}")
-                    self.store(type_=type_, out=t_out, storage=storage)
-                else:
-                    logger.info("No storage specified, returning dictionary")
-                    out[type_] = t_out
+                # Initialize empty dictionary if no storage object is provided
+                if storage is None:
+                    out[type_] = {}
+                # Store individual features
+                for feature_name, feature_data in t_out.items():
+                    # Make deep copy of the feature data for manipulation
+                    feature_data_copy = deepcopy(feature_data)
+                    # Make deep copy of metadata and add to feature data
+                    feature_data_copy["meta"] = deepcopy(t_meta)
+                    # Update metadata for the feature,
+                    # feature data is not manipulated, only meta
+                    self.update_meta(feature_data_copy, "marker")
+                    # Update marker feature's metadata name
+                    feature_data_copy["meta"]["marker"][
+                        "name"
+                    ] += f"_{feature_name}"
+
+                    if storage is not None:
+                        logger.info(f"Storing in {storage}")
+                        self.store(
+                            type_=type_,
+                            feature=feature_name,
+                            out=feature_data_copy,
+                            storage=storage,
+                        )
+                    else:
+                        logger.info(
+                            "No storage specified, returning dictionary"
+                        )
+                        out[type_][feature_name] = feature_data_copy
 
         return out

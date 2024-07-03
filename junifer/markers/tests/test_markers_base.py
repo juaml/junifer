@@ -20,27 +20,27 @@ def test_base_marker_subclassing() -> None:
 
     # Create concrete class
     class MyBaseMarker(BaseMarker):
+
+        _MARKER_INOUT_MAPPINGS = {  # noqa: RUF012
+            "BOLD": {
+                "feat_1": "timeseries",
+            },
+        }
+
         def __init__(self, on, name=None) -> None:
             self.parameter = 1
             super().__init__(on, name)
 
-        def get_valid_inputs(self):
-            return ["BOLD", "T1w"]
-
-        def get_output_type(self, input):
-            if input == "BOLD":
-                return "timeseries"
-            raise ValueError(f"Cannot compute output type for {input}")
-
         def compute(self, input, extra_input):
             return {
-                "data": "data",
-                "columns": "columns",
-                "row_names": "row_names",
+                "feat_1": {
+                    "data": "data",
+                    "col_names": ["columns"],
+                },
             }
 
-    with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
-        MyBaseMarker(on=["BOLD", "T2w"])
+    with pytest.raises(ValueError, match=r"cannot be computed on \['T1w'\]"):
+        MyBaseMarker(on=["BOLD", "T1w"])
 
     # Create input for marker
     input_ = {
@@ -64,12 +64,11 @@ def test_base_marker_subclassing() -> None:
     output = marker.fit_transform(input=input_)  # process
     # Check output
     assert "BOLD" in output
-    assert "data" in output["BOLD"]
-    assert "columns" in output["BOLD"]
-    assert "row_names" in output["BOLD"]
+    assert "data" in output["BOLD"]["feat_1"]
+    assert "col_names" in output["BOLD"]["feat_1"]
 
-    assert "meta" in output["BOLD"]
-    meta = output["BOLD"]["meta"]
+    assert "meta" in output["BOLD"]["feat_1"]
+    meta = output["BOLD"]["feat_1"]["meta"]
     assert "datagrabber" in meta
     assert "element" in meta
     assert "datareader" in meta
