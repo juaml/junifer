@@ -40,13 +40,14 @@ def test_compute() -> None:
         # Compute the marker
         feature_map = marker.fit_transform(element_data)
         # Assert the dimension of timeseries
-        assert feature_map["BOLD"]["data"].ndim == 2
+        assert feature_map["BOLD"]["complexity"]["data"].ndim == 2
 
 
 def test_get_output_type() -> None:
     """Test RangeEntropy get_output_type()."""
-    marker = RangeEntropy(parcellation=PARCELLATION)
-    assert marker.get_output_type("BOLD") == "vector"
+    assert "vector" == RangeEntropy(parcellation=PARCELLATION).get_output_type(
+        input_type="BOLD", output_feature="complexity"
+    )
 
 
 @pytest.mark.skipif(
