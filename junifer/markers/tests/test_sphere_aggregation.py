@@ -25,14 +25,65 @@ COORDS = "DMNBuckner"
 RADIUS = 8
 
 
-def test_SphereAggregation_input_output() -> None:
-    """Test SphereAggregation input and output types."""
-    marker = SphereAggregation(coords="DMNBuckner", method="mean", on="VBM_GM")
-    for in_, out_ in [("VBM_GM", "vector"), ("BOLD", "timeseries")]:
-        assert marker.get_output_type(in_) == out_
+@pytest.mark.parametrize(
+    "input_type, storage_type",
+    [
+        (
+            "T1w",
+            "vector",
+        ),
+        (
+            "T2w",
+            "vector",
+        ),
+        (
+            "BOLD",
+            "timeseries",
+        ),
+        (
+            "VBM_GM",
+            "vector",
+        ),
+        (
+            "VBM_WM",
+            "vector",
+        ),
+        (
+            "VBM_CSF",
+            "vector",
+        ),
+        (
+            "fALFF",
+            "vector",
+        ),
+        (
+            "GCOR",
+            "vector",
+        ),
+        (
+            "LCOR",
+            "vector",
+        ),
+    ],
+)
+def test_SphereAggregation_input_output(
+    input_type: str, storage_type: str
+) -> None:
+    """Test SphereAggregation input and output types.
 
-    with pytest.raises(ValueError, match="Unknown input"):
-        marker.get_output_type("unknown")
+    Parameters
+    ----------
+    input_type : str
+        The parametrized input type.
+    storage_type : str
+        The parametrized storage type.
+
+    """
+    assert storage_type == SphereAggregation(
+        coords="DMNBuckner",
+        method="mean",
+        on=input_type,
+    ).get_output_type(input_type=input_type, output_feature="aggregation")
 
 
 def test_SphereAggregation_3D() -> None:
@@ -44,8 +95,8 @@ def test_SphereAggregation_3D() -> None:
             coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
         )
         sphere_agg_vbm_gm_data = marker.fit_transform(element_data)["VBM_GM"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         # Compare with nilearn
         # Load testing coordinates
@@ -76,8 +127,8 @@ def test_SphereAggregation_4D() -> None:
             coords=COORDS, method="mean", radius=RADIUS, on="BOLD"
         )
         sphere_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         # Compare with nilearn
         # Load testing coordinates
@@ -120,7 +171,8 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "VBM_GM_SphereAggregation" for x in features.values()
+            x["name"] == "VBM_GM_SphereAggregation_aggregation"
+            for x in features.values()
         )
 
     # Store 4D
@@ -135,7 +187,8 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_SphereAggregation" for x in features.values()
+            x["name"] == "BOLD_SphereAggregation_aggregation"
+            for x in features.values()
         )
 
 
@@ -152,8 +205,8 @@ def test_SphereAggregation_3D_mask() -> None:
             masks="compute_brain_mask",
         )
         sphere_agg_vbm_gm_data = marker.fit_transform(element_data)["VBM_GM"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         # Compare with nilearn
         # Load testing coordinates
@@ -195,8 +248,8 @@ def test_SphereAggregation_4D_agg_time() -> None:
             on="BOLD",
         )
         sphere_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         # Compare with nilearn
         # Load testing coordinates
@@ -231,8 +284,8 @@ def test_SphereAggregation_4D_agg_time() -> None:
             on="BOLD",
         )
         sphere_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
-            "data"
-        ]
+            "aggregation"
+        ]["data"]
 
         assert sphere_agg_bold_data.ndim == 2
         assert_array_equal(
