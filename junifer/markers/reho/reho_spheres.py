@@ -140,11 +140,14 @@ class ReHoSpheres(ReHoBase):
         Returns
         -------
         dict
-            The computed result as dictionary. The dictionary has the following
-            keys:
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : the actual computed values as a 1D numpy.ndarray
-            * ``col_names`` : the column labels for the spheres as a list
+            * ``reho`` : dictionary with the following keys:
+
+              - ``data`` : ROI values as ``numpy.ndarray``
+              - ``col_names`` : ROI labels as list of str
 
         """
         logger.info("Calculating ReHo for spheres")
@@ -160,7 +163,10 @@ class ReHoSpheres(ReHoBase):
         else:
             reho_map, reho_file_path = self._compute(input_data=input)
 
-        # Initialize sphere aggregation
+        # Perform aggregation on reho map
+        aggregation_input = dict(input.items())
+        aggregation_input["data"] = reho_map
+        aggregation_input["path"] = reho_file_path
         sphere_aggregation = SphereAggregation(
             coords=self.coords,
             radius=self.radius,
@@ -169,14 +175,14 @@ class ReHoSpheres(ReHoBase):
             method_params=self.agg_method_params,
             masks=self.masks,
             on="BOLD",
-        )
-        # Perform aggregation on reho map
-        sphere_aggregation_input = dict(input.items())
-        sphere_aggregation_input["data"] = reho_map
-        sphere_aggregation_input["path"] = reho_file_path
-        output = sphere_aggregation.compute(
-            input=sphere_aggregation_input, extra_input=extra_input
-        )
-        # Only use the first row and expand row dimension
-        output["data"] = output["data"][0][np.newaxis, :]
-        return output
+        ).compute(input=aggregation_input, extra_input=extra_input)
+
+        return {
+            "reho": {
+                # Only use the first row and expand row dimension
+                "data": sphere_aggregation["aggregation"]["data"][0][
+                    np.newaxis, :
+                ],
+                "col_names": sphere_aggregation["aggregation"]["col_names"],
+            }
+        }

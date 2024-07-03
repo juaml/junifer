@@ -125,11 +125,14 @@ class ReHoParcels(ReHoBase):
         Returns
         -------
         dict
-            The computed result as dictionary. The dictionary has the following
-            keys:
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : the actual computed values as a 1D numpy.ndarray
-            * ``col_names`` : the column labels for the parcels as a list
+            * ``reho`` : dictionary with the following keys:
+
+              - ``data`` : ROI values as ``numpy.ndarray``
+              - ``col_names`` : ROI labels as list of str
 
         """
         logger.info("Calculating ReHo for parcels")
@@ -145,22 +148,27 @@ class ReHoParcels(ReHoBase):
         else:
             reho_map, reho_file_path = self._compute(input_data=input)
 
-        # Initialize parcel aggregation
+        # Perform aggregation on reho map
+        aggregation_input = dict(input.items())
+        aggregation_input["data"] = reho_map
+        aggregation_input["path"] = reho_file_path
         parcel_aggregation = ParcelAggregation(
             parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
             on="BOLD",
-        )
-        # Perform aggregation on reho map
-        parcel_aggregation_input = dict(input.items())
-        parcel_aggregation_input["data"] = reho_map
-        parcel_aggregation_input["path"] = reho_file_path
-        output = parcel_aggregation.compute(
-            input=parcel_aggregation_input,
+        ).compute(
+            input=aggregation_input,
             extra_input=extra_input,
         )
-        # Only use the first row and expand row dimension
-        output["data"] = output["data"][0][np.newaxis, :]
-        return output
+
+        return {
+            "reho": {
+                # Only use the first row and expand row dimension
+                "data": parcel_aggregation["aggregation"]["data"][0][
+                    np.newaxis, :
+                ],
+                "col_names": parcel_aggregation["aggregation"]["col_names"],
+            }
+        }
