@@ -54,8 +54,9 @@ class MultipleDataGrabber(BaseDataGrabber):
                 first_patterns = datagrabbers[0].patterns
                 for dg in datagrabbers[1:]:
                     for data_type in set(types):
-                        patterns = dg.patterns
-                        dtype_pattern = patterns[data_type]
+                        dtype_pattern = dg.patterns.get(data_type)
+                        if dtype_pattern is None:
+                            continue
                         # Check if first-level keys of data type are same
                         if (
                             dtype_pattern.keys()
