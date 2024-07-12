@@ -8,7 +8,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.5.dev187 (2024-07-12)
+Junifer 0.0.5.dev189 (2024-07-12)
 ---------------------------------
 
 Bugfixes
@@ -24,6 +24,14 @@ Bugfixes
   types requirement by `Synchon Mandal`_ (:gh:`339`)
 - Remove extra dimension from masks warped via ANTs by `Synchon Mandal`_
   (:gh:`340`)
+
+
+API Changes
+^^^^^^^^^^^
+
+- Add ``partial_pattern_ok`` argument to :class:`.PatternDataGrabber` to not
+  raise error on missing mandatory key checks for data types by `Synchon
+  Mandal`_ (:gh:`351`)
 
 
 Improved Documentation
@@ -49,6 +57,8 @@ Enhancements
 - Adapt :class:`.DataladAOMICID1000`, :class:`.DataladAOMICPIOP1` and
   :class:`.DataladAOMICPIOP2` to support ``FreeSurfer`` data type by `Synchon
   Mandal`_ (:gh:`346`)
+- Adapt :class:`.MultipleDataGrabber` to handle "nested types" introduced in
+  :gh:`341` by `Synchon Mandal`_ (:gh:`351`)
 
 
 Features
@@ -70,6 +80,8 @@ Features
   :class:`.PatternDataGrabber` ``patterns`` by `Synchon Mandal`_ (:gh:`345`)
 - Add support for ``FreeSurfer`` data type for :class:`.PatternDataGrabber` by
   `Synchon Mandal`_ (:gh:`346`)
+- Introduce :class:`.PatternValidationMixin` to simplify validation for
+  pattern-based DataGrabbers by `Synchon Mandal`_ (:gh:`351`)
 
 
 Miscellaneous
