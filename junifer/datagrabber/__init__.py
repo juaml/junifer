@@ -17,6 +17,7 @@ from .hcp1200 import HCP1200, DataladHCP1200
 from .multiple import MultipleDataGrabber
 from .dmcc13_benchmark import DMCC13Benchmark
 
+from .pattern_validation_mixin import PatternValidationMixin
 
 __all__ = [
     "BaseDataGrabber",
@@ -30,4 +31,5 @@ __all__ = [
     "DataladHCP1200",
     "MultipleDataGrabber",
     "DMCC13Benchmark",
+    "PatternValidationMixin",
 ]
