@@ -178,6 +178,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         )
         self.replacements = replacements
         self.patterns = patterns
+        self.partial_pattern_ok = partial_pattern_ok
 
         # Validate confounds format
         if (
@@ -446,14 +447,26 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         for t_idx in reversed(order):
             t_type = self.types[t_idx]
             types_element = set()
-            # Get the pattern
+
+            # Get the pattern dict
             t_pattern = self.patterns[t_type]
+            # Conditional fetch of base pattern for getting elements
+            pattern = None
+            # Try for data type pattern
+            pattern = t_pattern.get("pattern")
+            # Try for nested data type pattern
+            if pattern is None and self.partial_pattern_ok:
+                for v in t_pattern.values():
+                    if isinstance(v, dict) and "pattern" in v:
+                        pattern = v["pattern"]
+                        break
+
             # Replace the pattern
             (
                 re_pattern,
                 glob_pattern,
                 t_replacements,
-            ) = self._replace_patterns_regex(t_pattern["pattern"])
+            ) = self._replace_patterns_regex(pattern)
             for fname in self.datadir.glob(glob_pattern):
                 suffix = fname.relative_to(self.datadir).as_posix()
                 m = re.match(re_pattern, suffix)
