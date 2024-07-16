@@ -8,7 +8,7 @@
 from typing import Dict, List, Tuple, Union
 
 from ..api.decorators import register_datagrabber
-from ..utils import raise_error
+from ..utils import deep_update, raise_error
 from .base import BaseDataGrabber
 
 
@@ -101,7 +101,7 @@ class MultipleDataGrabber(BaseDataGrabber):
         metas = []
         for dg in self._datagrabbers:
             t_out = dg[element]
-            out.update(t_out)
+            deep_update(out, t_out)
             # Now get the meta for this datagrabber
             t_meta = {}
             dg.update_meta(t_meta, "datagrabber")
