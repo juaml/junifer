@@ -163,6 +163,10 @@ _available_masks: Dict[str, Dict[str, Any]] = {
         "func": compute_epi_mask,
         "space": "inherit",
     },
+    "UKB_15K_GM": {
+        "family": "UKB",
+        "space": "MNI152NLin6Asym",
+    },
 }
 
 
@@ -567,6 +571,8 @@ def load_mask(
     elif t_family == "Callable":
         mask_img = mask_definition["func"]
         mask_fname = None
+    elif t_family == "UKB":
+        mask_fname = _load_ukb_mask(name)
     else:
         raise_error(f"I don't know about the {t_family} mask family.")
 
@@ -630,5 +636,35 @@ def _load_vickery_patil_mask(
 
     # Set path for masks
     mask_fname = _masks_path / "vickery-patil" / mask_fname
+
+    return mask_fname
+
+
+def _load_ukb_mask(name: str) -> Path:
+    """Load UKB mask.
+
+    Parameters
+    ----------
+    name : {"UKB_15K_GM"}
+        The name of the mask.
+
+    Returns
+    -------
+    pathlib.Path
+        File path to the mask image.
+
+    Raises
+    ------
+    ValueError
+        If ``name`` is invalid.
+
+    """
+    if name == "UKB_15K_GM":
+        mask_fname = "UKB_15K_GM_template.nii.gz"
+    else:
+        raise_error(f"Cannot find a UKB mask called {name}")
+
+    # Set path for masks
+    mask_fname = _masks_path / "ukb" / mask_fname
 
     return mask_fname
