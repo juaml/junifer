@@ -70,8 +70,8 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # List all the features
     print(db.list_features())
     # Read extracted features
-    df_vbm = db.read_df(feature_name="BOLD_Schaefer100x17_RSSETS")
+    df_rssets = db.read_df(feature_name="BOLD_Schaefer100x17_RSSET_rss_ets")
 
 ###############################################################################
 # Now we take a look at the dataframe
-df_vbm.head()
+df_rssets.head()
