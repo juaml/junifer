@@ -28,11 +28,13 @@ def test_EdgeCentricFCParcels(tmp_path: Path) -> None:
             cor_method_params={"empirical": True},
         )
         # Check correct output
-        assert marker.get_output_type("BOLD") == "matrix"
+        assert "matrix" == marker.get_output_type(
+            input_type="BOLD", output_feature="functional_connectivity"
+        )
 
         # Fit-transform the data
         edge_fc = marker.fit_transform(element_data)
-        edge_fc_bold = edge_fc["BOLD"]
+        edge_fc_bold = edge_fc["BOLD"]["functional_connectivity"]
 
         # For 16 ROIs we should get (16 * (16 -1) / 2) edges in the ETS
         n_edges = int(16 * (16 - 1) / 2)
@@ -51,5 +53,6 @@ def test_EdgeCentricFCParcels(tmp_path: Path) -> None:
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_EdgeCentricFCParcels" for x in features.values()
+            x["name"] == "BOLD_EdgeCentricFCParcels_functional_connectivity"
+            for x in features.values()
         )

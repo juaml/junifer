@@ -5,24 +5,17 @@
 Creating Markers
 ================
 
-Computing a marker (a.k.a. *feature*) is the main goal of ``junifer``. While we
-aim to provide as many Markers as possible, it might be the case that the Marker
-you are looking for is not available. In this case, you can create your own Marker
-by following this tutorial.
+Computing a marker (a.k.a. *feature(s)*) is the main goal of ``junifer``. While
+we aim to provide as many Markers as possible, it might be the case that the
+Marker you are looking for is not available. In this case, you can create your
+own Marker by following this tutorial.
 
 Most of the functionality of a ``junifer`` Marker has been taken care by the
-:class:`.BaseMarker` class. Thus, only a few methods are required:
+:class:`.BaseMarker` class. Thus, only a few methods and class attributes are
+required:
 
-#. ``get_valid_inputs``: The method to obtain the list of valid inputs for the
-   Marker. This is used to check that the inputs provided by the user are
-   valid. This method should return a list of strings, representing
-   :ref:`data types <data_types>`.
-#. ``get_output_type``: The method to obtain the output type of the Marker.
-   This is used to check that the output of the Marker is compatible with the
-   storage. This method should return a string, representing
-   :ref:`storage types <storage_types>`.
-#. ``compute``: The method that given the data, computes the Marker.
 #. ``__init__``: The initialisation method, where the Marker is configured.
+#. ``compute``: The method that given the data, computes the Marker.
 
 As an example, we will develop a ``ParcelMean`` Marker, a Marker that first
 applies a parcellation and then computes the mean of the data in each parcel.
@@ -35,24 +28,26 @@ Step 1: Configure input and output
 
 This step is quite simple: we need to define the input and output of the Marker.
 Based on the current :ref:`data types <data_types>`, we can have ``BOLD``,
-``VBM_WM`` and ``VBM_GM`` as valid inputs.
+``VBM_WM`` and ``VBM_GM`` as valid inputs. The output of the Marker depends on
+the input. For ``BOLD``, it will be ``timeseries``, while for the rest of the
+inputs, it will be ``vector``. Thus, we have a class attribute like so:
 
 .. code-block:: python
 
-    def get_valid_inputs(self) -> list[str]:
-        return ["BOLD", "VBM_WM", "VBM_GM"]
-
-The output of the Marker depends on the input. For ``BOLD``, it will be
-``timeseries``, while for the rest of the inputs, it will be ``vector``. Thus,
-we can define the output as:
-
-.. code-block:: python
-
-    def get_output_type(self, input_type: str) -> str:
-        if input_type == "BOLD":
-            return "timeseries"
-        else:
-            return "vector"
+    # NOTE: data type -> feature -> storage type
+    # You can have multiple features for one data type,
+    # each feature having same or different storage type
+    _MARKER_INOUT_MAPPINGS = {
+        "BOLD": {
+            "parcel_mean": "timeseries",
+        },
+        "VBM_WM": {
+            "parcel_mean": "vector",
+        },
+        "VBM_GM": {
+            "parcel_mean": "vector",
+        },
+    }
 
 .. _extending_markers_init:
 
@@ -119,7 +114,8 @@ arguments:
 Following the example, we will compute the mean of the data in each parcel using
 :class:`nilearn.maskers.NiftiLabelsMasker`. Importantly, the output of the
 compute function must be a dictionary. This dictionary will later be passed onto
-the ``store`` method.
+the ``store`` method. The dictionary's first level of keys would the feature name
+and the values would be a dictionary of storage type specific key-value pairs.
 
 .. hint::
 
@@ -162,11 +158,13 @@ the ``store`` method.
         # mask the data
         out_values = masker.fit_transform([data])
 
-        # Create the output dictionary
-        out = {"data": out_values, "col_names": t_labels}
-
-        return out
-
+        # Create and return the output dictionary
+        return {
+            "parcel_mean": {
+                "data": out_values,
+                "col_names": t_labels,
+            },
+        }
 
 .. _extending_markers_finalize:
 
@@ -193,11 +191,11 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
 
 .. code-block:: python
 
-    from typing import Any
+    from typing import Any, ClassVar
 
     from junifer.api.decorators import register_marker
     from junifer.data import get_parcellation
-    from junifer.markers.base import BaseMarker
+    from junifer.markers import BaseMarker
     from nilearn.maskers import NiftiLabelsMasker
 
 
@@ -205,6 +203,18 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
     class ParcelMean(BaseMarker):
 
         _DEPENDENCIES = {"nilearn", "numpy"}
+
+        _MARKER_INOUT_MAPPINGS: ClassVar[dict[str, dict[str, str]]] = {
+            "BOLD": {
+                "parcel_mean": "timeseries",
+            },
+            "VBM_WM": {
+                "parcel_mean": "vector",
+            },
+            "VBM_GM": {
+                "parcel_mean": "vector",
+            },
+        }
 
         def __init__(
             self,
@@ -214,15 +224,6 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
         ) -> None:
             self.parcellation = parcellation
             super().__init__(on=on, name=name)
-
-        def get_valid_inputs(self) -> list[str]:
-            return ["BOLD", "VBM_WM", "VBM_GM"]
-
-        def get_output_type(self, input_type: str) -> str:
-            if input_type == "BOLD":
-                return "timeseries"
-            else:
-                return "vector"
 
         def compute(
             self,
@@ -250,11 +251,13 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
             # mask the data
             out_values = masker.fit_transform([data])
 
-            # Create the output dictionary
-            out = {"data": out_values, "col_names": t_labels}
-
-            return out
-
+            # Create and return the output dictionary
+            return {
+                "parcel_mean": {
+                    "data": out_values,
+                    "col_names": t_labels,
+                },
+            }
 
 .. _extending_markers_template:
 
@@ -269,22 +272,16 @@ Template for a custom Marker
 
     @register_marker
     class TemplateMarker(BaseMarker):
+
+        # TODO: add the dependencies
+        _DEPENDENCIES = {}
+
+        # TODO: add the input-output mappings
+        _MARKER_INOUT_MAPPINGS = {}
+
         def __init__(self, on=None, name=None):
             # TODO: add marker-specific parameters
             super().__init__(on=on, name=name)
 
-        def get_valid_inputs(self):
-            # TODO: Complete with the valid inputs
-            valid = []
-            return valid
-
-        def get_output_type(self, input_type):
-            # TODO: Return the valid output type for each input type
-            pass
-
         def compute(self, input, extra_input):
             # TODO: compute the marker and create the output dictionary
-
-            # Create the output dictionary
-            out = {"data": None, "col_names": None}
-            return out

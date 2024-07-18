@@ -92,11 +92,13 @@ class TemporalSNRSpheres(TemporalSNRBase):
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : VOI-wise temporal SNR as a ``numpy.ndarray``
-            * ``col_names`` : the VOI labels for the computed values as list
+            * ``aggregation`` : dictionary with the following keys:
+
+                - ``data`` : ROI-wise tSNR values as ``numpy.ndarray``
+                - ``col_names`` : ROI labels as list of str
 
         """
-        sphere_aggregation = SphereAggregation(
+        return SphereAggregation(
             coords=self.coords,
             radius=self.radius,
             allow_overlap=self.allow_overlap,
@@ -104,6 +106,4 @@ class TemporalSNRSpheres(TemporalSNRBase):
             method_params=self.agg_method_params,
             masks=self.masks,
             on="BOLD",
-        )
-        # Return the 2D timeseries after sphere aggregation
-        return sphere_aggregation.compute(input=input, extra_input=extra_input)
+        ).compute(input=input, extra_input=extra_input)

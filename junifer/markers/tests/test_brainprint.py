@@ -13,16 +13,29 @@ from junifer.markers import BrainPrint
 from junifer.pipeline.utils import _check_freesurfer
 
 
-def test_get_output_type() -> None:
-    """Test BrainPrint get_output_type()."""
-    marker = BrainPrint()
-    assert marker.get_output_type("FreeSurfer") == "vector"
+@pytest.mark.parametrize(
+    "feature, storage_type",
+    [
+        ("eigenvalues", "scalar_table"),
+        ("areas", "vector"),
+        ("volumes", "vector"),
+        ("distances", "vector"),
+    ],
+)
+def test_get_output_type(feature: str, storage_type: str) -> None:
+    """Test BrainPrint get_output_type().
 
+    Parameters
+    ----------
+    feature : str
+        The parametrized feature name.
+    storage_type : str
+        The parametrized storage type.
 
-def test_validate() -> None:
-    """Test BrainPrint validate()."""
-    marker = BrainPrint()
-    assert set(marker.validate(["FreeSurfer"])) == {"scalar_table", "vector"}
+    """
+    assert storage_type == BrainPrint().get_output_type(
+        input_type="FreeSurfer", output_feature=feature
+    )
 
 
 @pytest.mark.skipif(
@@ -39,9 +52,7 @@ def test_compute() -> None:
         element = dg["sub-0001"]
         # Fetch element data
         element_data = DefaultDataReader().fit_transform(element)
-        # Initialize the marker
-        marker = BrainPrint()
-        # Compute the marker
-        feature_map = marker.fit_transform(element_data)
+        # Compute marker
+        feature_map = BrainPrint().fit_transform(element_data)
         # Assert the output keys
         assert {"eigenvalues", "areas", "volumes"} == set(feature_map.keys())

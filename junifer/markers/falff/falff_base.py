@@ -37,8 +37,6 @@ class ALFFBase(BaseMarker):
 
     Parameters
     ----------
-    fractional : bool
-        Whether to compute fractional ALFF.
     highpass : positive float
         Highpass cutoff frequency.
     lowpass : positive float
@@ -85,9 +83,15 @@ class ALFFBase(BaseMarker):
         },
     ]
 
+    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+        "BOLD": {
+            "alff": "vector",
+            "falff": "vector",
+        },
+    }
+
     def __init__(
         self,
-        fractional: bool,
         highpass: float,
         lowpass: float,
         using: str,
@@ -110,45 +114,12 @@ class ALFFBase(BaseMarker):
             )
         self.using = using
         self.tr = tr
-        self.fractional = fractional
-
-        # Create a name based on the class name if none is provided
-        if name is None:
-            suffix = "_fractional" if fractional else ""
-            name = f"{self.__class__.__name__}{suffix}"
         super().__init__(on="BOLD", name=name)
-
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker.
-
-        """
-        return ["BOLD"]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        """
-        return "vector"
 
     def _compute(
         self,
         input_data: Dict[str, Any],
-    ) -> Tuple["Nifti1Image", Path]:
+    ) -> Tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute ALFF and fALFF.
 
         Parameters
@@ -161,9 +132,13 @@ class ALFFBase(BaseMarker):
         Returns
         -------
         Niimg-like object
-            The ALFF / fALFF as NIfTI.
+            The ALFF as NIfTI.
+        Niimg-like object
+            The fALFF as NIfTI.
         pathlib.Path
-            The path to the ALFF / fALFF as NIfTI.
+            The path to the ALFF as NIfTI.
+        pathlib.Path
+            The path to the fALFF as NIfTI.
 
         """
         logger.debug("Calculating ALFF and fALFF")
@@ -186,11 +161,7 @@ class ALFFBase(BaseMarker):
         # parcellation / coordinates to native space, else the
         # path should be passed for use later if required.
         # TODO(synchon): will be taken care in #292
-        if input_data["space"] == "native" and self.fractional:
-            return falff, input_data["path"]
-        elif input_data["space"] == "native" and not self.fractional:
-            return alff, input_data["path"]
-        elif input_data["space"] != "native" and self.fractional:
-            return falff, falff_path
+        if input_data["space"] == "native":
+            return alff, falff, input_data["path"], input_data["path"]
         else:
-            return alff, alff_path
+            return alff, falff, alff_path, falff_path

@@ -63,6 +63,36 @@ class ParcelAggregation(BaseMarker):
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "numpy"}
 
+    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+        "T1w": {
+            "aggregation": "vector",
+        },
+        "T2w": {
+            "aggregation": "vector",
+        },
+        "BOLD": {
+            "aggregation": "timeseries",
+        },
+        "VBM_GM": {
+            "aggregation": "vector",
+        },
+        "VBM_WM": {
+            "aggregation": "vector",
+        },
+        "VBM_CSF": {
+            "aggregation": "vector",
+        },
+        "fALFF": {
+            "aggregation": "vector",
+        },
+        "GCOR": {
+            "aggregation": "vector",
+        },
+        "LCOR": {
+            "aggregation": "vector",
+        },
+    }
+
     def __init__(
         self,
         parcellation: Union[str, List[str]],
@@ -96,61 +126,6 @@ class ParcelAggregation(BaseMarker):
         self.time_method = time_method
         self.time_method_params = time_method_params or {}
 
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker.
-
-        """
-        return [
-            "T1w",
-            "T2w",
-            "BOLD",
-            "VBM_GM",
-            "VBM_WM",
-            "VBM_CSF",
-            "fALFF",
-            "GCOR",
-            "LCOR",
-        ]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        Raises
-        ------
-        ValueError
-            If the ``input_type`` is invalid.
-
-        """
-
-        if input_type in [
-            "VBM_GM",
-            "VBM_WM",
-            "VBM_CSF",
-            "fALFF",
-            "GCOR",
-            "LCOR",
-        ]:
-            return "vector"
-        elif input_type == "BOLD":
-            return "timeseries"
-        else:
-            raise_error(f"Unknown input kind for {input_type}")
-
     def compute(
         self, input: Dict[str, Any], extra_input: Optional[Dict] = None
     ) -> Dict:
@@ -174,8 +149,10 @@ class ParcelAggregation(BaseMarker):
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : the actual computed values as a numpy.ndarray
-            * ``col_names`` : the column labels for the computed values as list
+            * ``aggregation`` : dictionary with the following keys:
+
+                - ``data`` : ROI values as ``numpy.ndarray``
+                - ``col_names`` : ROI labels as list of str
 
         Warns
         -----
@@ -253,5 +230,9 @@ class ParcelAggregation(BaseMarker):
                     "available."
                 )
         # Format the output
-        out = {"data": out_values, "col_names": labels}
-        return out
+        return {
+            "aggregation": {
+                "data": out_values,
+                "col_names": labels,
+            },
+        }

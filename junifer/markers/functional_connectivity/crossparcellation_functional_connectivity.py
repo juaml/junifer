@@ -45,6 +45,12 @@ class CrossParcellationFC(BaseMarker):
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}
 
+    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+        "BOLD": {
+            "functional_connectivity": "matrix",
+        },
+    }
+
     def __init__(
         self,
         parcellation_one: str,
@@ -64,33 +70,6 @@ class CrossParcellationFC(BaseMarker):
         self.correlation_method = correlation_method
         self.masks = masks
         super().__init__(on=["BOLD"], name=name)
-
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker
-
-        """
-        return ["BOLD"]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        """
-        return "matrix"
 
     def compute(
         self,
@@ -118,10 +97,14 @@ class CrossParcellationFC(BaseMarker):
             to the user or stored in the storage by calling the store method
             with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : the correlation values between the two parcellations
-              as a numpy.ndarray
-            * ``col_names`` : the ROIs for first parcellation as a list
-            * ``row_names`` : the ROIs for second parcellation as a list
+            * ``functional_connectivity`` : dictionary with the following keys:
+
+              - ``data`` : correlation between the two parcellations as
+                           ``numpy.ndarray``
+              - ``col_names`` : ROI labels for first parcellation as list of
+                                str
+              - ``row_names`` : ROI labels for second parcellation as list of
+                                str
 
         """
         logger.debug(
@@ -129,31 +112,32 @@ class CrossParcellationFC(BaseMarker):
             f" {self.parcellation_one} and "
             f"{self.parcellation_two} parcellations."
         )
-        # Initialize a ParcelAggregation
-        parcellation_one_dict = ParcelAggregation(
+        # Perform aggregation using two parcellations
+        aggregation_parcellation_one = ParcelAggregation(
             parcellation=self.parcellation_one,
             method=self.aggregation_method,
             masks=self.masks,
         ).compute(input, extra_input=extra_input)
-        parcellation_two_dict = ParcelAggregation(
+        aggregation_parcellation_two = ParcelAggregation(
             parcellation=self.parcellation_two,
             method=self.aggregation_method,
             masks=self.masks,
         ).compute(input, extra_input=extra_input)
 
-        parcellated_ts_one = parcellation_one_dict["data"]
-        parcellated_ts_two = parcellation_two_dict["data"]
-        # columns should be named after parcellation 1
-        # rows should be named after parcellation 2
-
-        result = _correlate_dataframes(
-            pd.DataFrame(parcellated_ts_one),
-            pd.DataFrame(parcellated_ts_two),
-            method=self.correlation_method,
-        ).values
-
         return {
-            "data": result,
-            "col_names": parcellation_one_dict["col_names"],
-            "row_names": parcellation_two_dict["col_names"],
+            "functional_connectivity": {
+                "data": _correlate_dataframes(
+                    pd.DataFrame(
+                        aggregation_parcellation_one["aggregation"]["data"]
+                    ),
+                    pd.DataFrame(
+                        aggregation_parcellation_two["aggregation"]["data"]
+                    ),
+                    method=self.correlation_method,
+                ).values,
+                # Columns should be named after parcellation 1
+                "col_names": aggregation_parcellation_one["col_names"],
+                # Rows should be named after parcellation 2
+                "row_names": aggregation_parcellation_two["col_names"],
+            },
         }

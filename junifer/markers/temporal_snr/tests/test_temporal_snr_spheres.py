@@ -20,11 +20,13 @@ def test_TemporalSNRSpheres_computation() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         marker = TemporalSNRSpheres(coords="DMNBuckner", radius=5.0)
         # Check correct output
-        assert marker.get_output_type("BOLD") == "vector"
+        assert "vector" == marker.get_output_type(
+            input_type="BOLD", output_feature="tsnr"
+        )
 
         # Fit-transform the data
         tsnr_spheres = marker.fit_transform(element_data)
-        tsnr_spheres_bold = tsnr_spheres["BOLD"]
+        tsnr_spheres_bold = tsnr_spheres["BOLD"]["tsnr"]
 
         assert "data" in tsnr_spheres_bold
         assert "col_names" in tsnr_spheres_bold
@@ -49,7 +51,8 @@ def test_TemporalSNRSpheres_storage(tmp_path: Path) -> None:
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_TemporalSNRSpheres" for x in features.values()
+            x["name"] == "BOLD_TemporalSNRSpheres_tsnr"
+            for x in features.values()
         )
 
 

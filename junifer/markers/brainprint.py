@@ -3,21 +3,9 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import sys
-
-
-if sys.version_info < (3, 11):  # pragma: no cover
-    from importlib_metadata import packages_distributions
-else:
-    from importlib.metadata import packages_distributions
-
 import uuid
-from copy import deepcopy
-from importlib.util import find_spec
-from itertools import chain
 from pathlib import Path
 from typing import (
-    TYPE_CHECKING,
     Any,
     ClassVar,
     Dict,
@@ -37,13 +25,8 @@ from ..external.BrainPrint.brainprint.brainprint import (
 )
 from ..external.BrainPrint.brainprint.surfaces import surf_to_vtk
 from ..pipeline import WorkDirManager
-from ..pipeline.utils import check_ext_dependencies
-from ..utils import logger, raise_error, run_ext_cmd
+from ..utils import logger, run_ext_cmd
 from .base import BaseMarker
-
-
-if TYPE_CHECKING:
-    from junifer.storage import BaseFeatureStorage
 
 
 __all__ = ["BrainPrint"]
@@ -99,6 +82,15 @@ class BrainPrint(BaseMarker):
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"lapy", "numpy"}
 
+    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+        "FreeSurfer": {
+            "eigenvalues": "scalar_table",
+            "areas": "vector",
+            "volumes": "vector",
+            "distances": "vector",
+        }
+    }
+
     def __init__(
         self,
         num: int = 50,
@@ -120,117 +112,6 @@ class BrainPrint(BaseMarker):
         self.asymmetry_distance = asymmetry_distance
         self.use_cholmod = use_cholmod
         super().__init__(name=name, on="FreeSurfer")
-
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker.
-
-        """
-        return ["FreeSurfer"]
-
-    # TODO: kept for making this class concrete; should be removed later
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        """
-        return "vector"
-
-    # TODO: overridden to allow multiple outputs from single data type; should
-    # be removed later
-    def validate(self, input: List[str]) -> List[str]:
-        """Validate the the pipeline step.
-
-        Parameters
-        ----------
-        input : list of str
-            The input to the pipeline step.
-
-        Returns
-        -------
-        list of str
-            The output of the pipeline step.
-
-        """
-
-        def _check_dependencies(obj) -> None:
-            """Check obj._DEPENDENCIES.
-
-            Parameters
-            ----------
-            obj : object
-                Object to check _DEPENDENCIES of.
-
-            Raises
-            ------
-            ImportError
-                If the pipeline step object is missing dependencies required
-                for its working.
-
-            """
-            # Check if _DEPENDENCIES attribute is found;
-            # (markers and preprocessors will have them but not datareaders
-            # as of now)
-            dependencies_not_found = []
-            if hasattr(obj, "_DEPENDENCIES"):
-                # Check if dependencies are importable
-                for dependency in obj._DEPENDENCIES:
-                    # First perform an easy check
-                    if find_spec(dependency) is None:
-                        # Then check mapped names
-                        if dependency not in list(
-                            chain.from_iterable(
-                                packages_distributions().values()
-                            )
-                        ):
-                            dependencies_not_found.append(dependency)
-            # Raise error if any dependency is not found
-            if dependencies_not_found:
-                raise_error(
-                    msg=(
-                        f"{dependencies_not_found} are not installed but are "
-                        f"required for using {obj.__class__.__name__}."
-                    ),
-                    klass=ImportError,
-                )
-
-        def _check_ext_dependencies(obj) -> None:
-            """Check obj._EXT_DEPENDENCIES.
-
-            Parameters
-            ----------
-            obj : object
-                Object to check _EXT_DEPENDENCIES of.
-
-            """
-            # Check if _EXT_DEPENDENCIES attribute is found;
-            # (some markers and preprocessors might have them)
-            if hasattr(obj, "_EXT_DEPENDENCIES"):
-                for dependency in obj._EXT_DEPENDENCIES:
-                    check_ext_dependencies(**dependency)
-
-        # Check dependencies
-        _check_dependencies(self)
-        # Check external dependencies
-        # _check_ext_dependencies(self)
-        # Validate input
-        _ = self.validate_input(input=input)
-        # Validate output type
-        outputs = ["scalar_table", "vector"]
-        return outputs
 
     def _create_aseg_surface(
         self,
@@ -426,6 +307,27 @@ class BrainPrint(BaseMarker):
             ),
         }
 
+    def _fix_nan(
+        self,
+        input_data: List[Union[float, str, npt.ArrayLike]],
+    ) -> np.ndarray:
+        """Convert BrainPrint output with string NaN to ``numpy.nan``.
+
+        Parameters
+        ----------
+        input_data : list of str, float or numpy.ndarray-like
+            The data to convert.
+
+        Returns
+        -------
+        np.ndarray
+            The converted data as ``numpy.ndarray``.
+
+        """
+        arr = np.asarray(input_data)
+        arr[arr == "NaN"] = np.nan
+        return arr.astype(np.float64)
+
     def compute(
         self,
         input: Dict[str, Any],
@@ -443,16 +345,32 @@ class BrainPrint(BaseMarker):
         Returns
         -------
         dict
-            The computed result as dictionary. The dictionary has the following
-            keys:
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
 
-            * ``eigenvalues`` : dict of surface labels (str) and eigenvalues
-                                (``np.ndarray``)
-            * ``eigenvectors`` : dict of surface labels (str) and eigenvectors
-                                 (``np.ndarray``) if ``keep_eigenvectors=True``
-                                 else None
-            * ``distances`` : dict of ``{left_label}_{right_label}`` (str) and
-                              distance (float) if ``asymmetry=True`` else None
+            * ``eigenvalues`` : dictionary with the following keys:
+
+                - ``data`` : eigenvalues as ``np.ndarray``
+                - ``col_names`` : surface labels as list of str
+                - ``row_names`` : eigenvalue count labels as list of str
+                - ``row_header_col_name`` : "eigenvalue"
+                                ()
+            * ``areas`` : dictionary with the following keys:
+
+                - ``data`` : areas as ``np.ndarray``
+                - ``col_names`` : surface labels as list of str
+
+            * ``volumes`` : dictionary with the following keys:
+
+                - ``data`` : volumes as ``np.ndarray``
+                - ``col_names`` : surface labels as list of str
+
+            * ``distances`` : dictionary with the following keys
+                              if ``asymmetry = True``:
+
+                - ``data`` : distances as ``np.ndarray``
+                - ``col_names`` : surface labels as list of str
 
         References
         ----------
@@ -539,130 +457,3 @@ class BrainPrint(BaseMarker):
                 "col_names": list(distances.keys()),
             }
         return output
-
-    def _fix_nan(
-        self,
-        input_data: List[Union[float, str, npt.ArrayLike]],
-    ) -> np.ndarray:
-        """Convert BrainPrint output with string NaN to ``numpy.nan``.
-
-        Parameters
-        ----------
-        input_data : list of str, float or numpy.ndarray-like
-            The data to convert.
-
-        Returns
-        -------
-        np.ndarray
-            The converted data as ``numpy.ndarray``.
-
-        """
-        arr = np.asarray(input_data)
-        arr[arr == "NaN"] = np.nan
-        return arr.astype(np.float64)
-
-    # TODO: overridden to allow storing multiple outputs from single input;
-    # should be removed later
-    def store(
-        self,
-        type_: str,
-        feature: str,
-        out: Dict[str, Any],
-        storage: "BaseFeatureStorage",
-    ) -> None:
-        """Store.
-
-        Parameters
-        ----------
-        type_ : str
-            The data type to store.
-        feature : {"eigenvalues", "distances", "areas", "volumes"}
-            The feature name to store.
-        out : dict
-            The computed result as a dictionary to store.
-        storage : storage-like
-            The storage class, for example, SQLiteFeatureStorage.
-
-        Raises
-        ------
-        ValueError
-            If ``feature`` is invalid.
-
-        """
-        if feature == "eigenvalues":
-            output_type = "scalar_table"
-        elif feature in ["distances", "areas", "volumes"]:
-            output_type = "vector"
-        else:
-            raise_error(f"Unknown feature: {feature}")
-
-        logger.debug(f"Storing {output_type} in {storage}")
-        storage.store(kind=output_type, **out)
-
-    # TODO: overridden to allow storing multiple outputs from single input;
-    # should be removed later
-    def _fit_transform(
-        self,
-        input: Dict[str, Dict],
-        storage: Optional["BaseFeatureStorage"] = None,
-    ) -> Dict:
-        """Fit and transform.
-
-        Parameters
-        ----------
-        input : dict
-            The Junifer Data object.
-        storage : storage-like, optional
-            The storage class, for example, SQLiteFeatureStorage.
-
-        Returns
-        -------
-        dict
-            The processed output as a dictionary. If `storage` is provided,
-            empty dictionary is returned.
-
-        """
-        out = {}
-        for type_ in self._on:
-            if type_ in input.keys():
-                logger.info(f"Computing {type_}")
-                t_input = input[type_]
-                extra_input = input.copy()
-                extra_input.pop(type_)
-                t_meta = t_input["meta"].copy()
-                t_meta["type"] = type_
-
-                # Returns multiple features
-                t_out = self.compute(input=t_input, extra_input=extra_input)
-
-                if storage is None:
-                    out[type_] = {}
-
-                for feature_name, feature_data in t_out.items():
-                    # Make deep copy of the feature data for manipulation
-                    feature_data_copy = deepcopy(feature_data)
-                    # Make deep copy of metadata and add to feature data
-                    feature_data_copy["meta"] = deepcopy(t_meta)
-                    # Update metadata for the feature,
-                    # feature data is not manipulated, only meta
-                    self.update_meta(feature_data_copy, "marker")
-                    # Update marker feature's metadata name
-                    feature_data_copy["meta"]["marker"][
-                        "name"
-                    ] += f"_{feature_name}"
-
-                    if storage is not None:
-                        logger.info(f"Storing in {storage}")
-                        self.store(
-                            type_=type_,
-                            feature=feature_name,
-                            out=feature_data_copy,
-                            storage=storage,
-                        )
-                    else:
-                        logger.info(
-                            "No storage specified, returning dictionary"
-                        )
-                        out[type_][feature_name] = feature_data_copy
-
-        return out

@@ -39,6 +39,12 @@ class TemporalSNRBase(BaseMarker):
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}
 
+    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+        "BOLD": {
+            "tsnr": "vector",
+        },
+    }
+
     def __init__(
         self,
         agg_method: str = "mean",
@@ -61,33 +67,6 @@ class TemporalSNRBase(BaseMarker):
             klass=NotImplementedError,
         )
 
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker.
-
-        """
-        return ["BOLD"]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        """
-        return "vector"
-
     def compute(
         self,
         input: Dict[str, Any],
@@ -107,11 +86,14 @@ class TemporalSNRBase(BaseMarker):
         Returns
         -------
         dict
-            The computed result as dictionary. The following keys will be
-            included in the dictionary:
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
 
-            * ``data`` : the computed values as a ``numpy.ndarray``
-            * ``col_names`` : the column labels for the computed values as list
+            * ``tsnr`` : dictionary with the following keys:
+
+              - ``data`` : computed tSNR as ``numpy.ndarray``
+              - ``col_names`` : ROI labels as list of str
 
         """
         # Calculate voxelwise temporal signal-to-noise ratio in an image
@@ -129,4 +111,10 @@ class TemporalSNRBase(BaseMarker):
             mask_img=mask_img,
         )
         # Perform necessary aggregation and return
-        return self.aggregate(input=input, extra_input=extra_input)
+        return {
+            "tsnr": {
+                **self.aggregate(input=input, extra_input=extra_input)[
+                    "aggregation"
+                ]
+            }
+        }

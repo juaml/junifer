@@ -62,6 +62,12 @@ class ReHoBase(BaseMarker):
         },
     ]
 
+    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+        "BOLD": {
+            "reho": "vector",
+        },
+    }
+
     def __init__(
         self,
         using: str,
@@ -75,33 +81,6 @@ class ReHoBase(BaseMarker):
             )
         self.using = using
         super().__init__(on="BOLD", name=name)
-
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker.
-
-        """
-        return ["BOLD"]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        """
-        return "vector"
 
     def _compute(
         self,

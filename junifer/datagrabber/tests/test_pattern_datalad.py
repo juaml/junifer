@@ -15,13 +15,13 @@ from junifer.datagrabber import PatternDataladDataGrabber
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
-        "commit": "522dfb203afcd2cd55799bf347f9b211919a7338",
-        "id": "fec92475-d9c0-4409-92ba-f041b6a12c40",
+        "commit": "b87897cbe51bf0ee5514becaa5c7dd76491db5ad",
+        "id": "8fddff30-6993-420a-9d1e-b5b028c59468",
     },
     "example_bids_ses": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids-ses",
-        "commit": "3d08d55d1faad4f12ab64ac9497544a0d924d47a",
-        "id": "c83500d0-532f-45be-baf1-0dab703bdc2a",
+        "commit": "6b163aa98af76a9eac0272273c27e14127850181",
+        "id": "715c17cf-a1b9-42d6-9af8-9f74c1a4a724",
     },
 }
 

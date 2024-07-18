@@ -42,6 +42,11 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
                 parcellation="TianxS1x3TxMNInonlinear2009cAsym",
                 using="junifer",
             )
+            # Check correct output
+            assert "vector" == marker.get_output_type(
+                input_type="BOLD", output_feature="reho"
+            )
+
             # Fit transform marker on data
             output = marker.fit_transform(element_data)
 
@@ -49,7 +54,7 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 
             # Get BOLD output
             assert "BOLD" in output
-            output_bold = output["BOLD"]
+            output_bold = output["BOLD"]["reho"]
             # Assert BOLD output keys
             assert "data" in output_bold
             assert "col_names" in output_bold
@@ -102,14 +107,14 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
         # Fit transform marker on data
         junifer_output = junifer_marker.fit_transform(element_data)
         # Get BOLD output
-        junifer_output_bold = junifer_output["BOLD"]
+        junifer_output_bold = junifer_output["BOLD"]["reho"]
 
         # Initialize marker
         afni_marker = ReHoParcels(parcellation="Schaefer100x7", using="afni")
         # Fit transform marker on data
         afni_output = afni_marker.fit_transform(element_data)
         # Get BOLD output
-        afni_output_bold = afni_output["BOLD"]
+        afni_output_bold = afni_output["BOLD"]["reho"]
 
         # Check for Pearson correlation coefficient
         r, _ = sp.stats.pearsonr(

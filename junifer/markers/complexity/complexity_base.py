@@ -53,6 +53,12 @@ class ComplexityBase(BaseMarker):
 
     _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "neurokit2"}
 
+    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+        "BOLD": {
+            "complexity": "vector",
+        },
+    }
+
     def __init__(
         self,
         parcellation: Union[str, List[str]],
@@ -78,33 +84,6 @@ class ComplexityBase(BaseMarker):
             klass=NotImplementedError,
         )
 
-    def get_valid_inputs(self) -> List[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this marker.
-
-        """
-        return ["BOLD"]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        """
-        return "vector"
-
     def compute(
         self,
         input: Dict[str, Any],
@@ -124,29 +103,30 @@ class ComplexityBase(BaseMarker):
         Returns
         -------
         dict
-            The computed result as dictionary. The following keys will be
-            included in the dictionary:
+            The computed result as dictionary. This will be either returned
+            to the user or stored in the storage by calling the store method
+            with this as a parameter. The dictionary has the following keys:
 
-           * ``data`` : ROI-wise complexity measures as ``numpy.ndarray``
-           * ``col_names`` : ROI labels for the complexity measures as list
+           *  ``complexity`` : dictionary with the following keys:
+
+                - ``data`` : ROI-wise complexity measures as ``numpy.ndarray``
+                - ``col_names`` : ROI labels as list of str
 
         """
-        # Initialize a ParcelAggregation
+        # Extract the 2D time series using ParcelAggregation
         parcel_aggregation = ParcelAggregation(
             parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
             on="BOLD",
-        )
-        # Extract the 2D time series using parcel aggregation
-        parcel_aggregation_map = parcel_aggregation.compute(
-            input=input, extra_input=extra_input
-        )
-
+        ).compute(input=input, extra_input=extra_input)
         # Compute complexity measure
-        parcel_aggregation_map["data"] = self.compute_complexity(
-            parcel_aggregation_map["data"]
-        )
-
-        return parcel_aggregation_map
+        return {
+            "complexity": {
+                "data": self.compute_complexity(
+                    parcel_aggregation["aggregation"]["data"]
+                ),
+                "col_names": parcel_aggregation["aggregation"]["col_names"],
+            }
+        }

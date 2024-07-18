@@ -33,10 +33,11 @@ def test_init() -> None:
 
 def test_get_output_type() -> None:
     """Test CrossParcellationFC get_output_type()."""
-    crossparcellation = CrossParcellationFC(
+    assert "matrix" == CrossParcellationFC(
         parcellation_one=parcellation_one, parcellation_two=parcellation_two
+    ).get_output_type(
+        input_type="BOLD", output_feature="functional_connectivity"
     )
-    assert "matrix" == crossparcellation.get_output_type("BOLD")
 
 
 @pytest.mark.skipif(
@@ -59,7 +60,9 @@ def test_compute(tmp_path: Path) -> None:
             parcellation_two=parcellation_two,
             correlation_method="spearman",
         )
-        out = crossparcellation.compute(element_data["BOLD"])
+        out = crossparcellation.compute(element_data["BOLD"])[
+            "functional_connectivity"
+        ]
         assert out["data"].shape == (200, 100)
         assert len(out["col_names"]) == 100
         assert len(out["row_names"]) == 200
@@ -92,5 +95,6 @@ def test_store(tmp_path: Path) -> None:
         crossparcellation.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
-            x["name"] == "BOLD_CrossParcellationFC" for x in features.values()
+            x["name"] == "BOLD_CrossParcellationFC_functional_connectivity"
+            for x in features.values()
         )
