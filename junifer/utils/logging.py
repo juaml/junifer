@@ -45,11 +45,13 @@ _logging_types = {
 }
 
 
+# Copied over from stdlib and tweaked to our use-case.
 def _showwarning(message, category, filename, lineno, file=None, line=None):
     s = warnings.formatwarning(message, category, filename, lineno, line)
     logger.warning(str(s))
 
 
+# Overwrite warnings display to integrate with logging
 warnings.showwarning = _showwarning
 
 
@@ -334,5 +336,4 @@ def warn_with_log(
         The warning subclass (default RuntimeWarning).
 
     """
-    # logger.warning(msg)
     warn(msg, category=category, stacklevel=2)
