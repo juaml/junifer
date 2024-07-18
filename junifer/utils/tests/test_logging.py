@@ -9,6 +9,7 @@ import logging
 from pathlib import Path
 
 import pytest
+
 from junifer.utils.logging import (
     _close_handlers,
     configure_logging,
