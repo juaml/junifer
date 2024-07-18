@@ -70,7 +70,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # List all the features
     print(db.list_features())
     # Read extracted features
-    df_rssets = db.read_df(feature_name="BOLD_Schaefer100x17_RSSET_rss_ets")
+    df_rssets = db.read_df(feature_name="BOLD_Schaefer200x17_RSSETS_rss_ets")
 
 ###############################################################################
 # Now we take a look at the dataframe
