@@ -52,7 +52,14 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
 
 
 # Overwrite warnings display to integrate with logging
-warnings.showwarning = _showwarning
+
+
+def capture_warnings():
+    """Capture warnings and log them."""
+    warnings.showwarning = _showwarning
+
+
+capture_warnings()
 
 
 class WrapStdOut(logging.StreamHandler):
