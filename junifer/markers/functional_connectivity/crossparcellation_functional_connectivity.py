@@ -136,8 +136,12 @@ class CrossParcellationFC(BaseMarker):
                     method=self.correlation_method,
                 ).values,
                 # Columns should be named after parcellation 1
-                "col_names": aggregation_parcellation_one["col_names"],
+                "col_names": aggregation_parcellation_one["aggregation"][
+                    "col_names"
+                ],
                 # Rows should be named after parcellation 2
-                "row_names": aggregation_parcellation_two["col_names"],
+                "row_names": aggregation_parcellation_two["aggregation"][
+                    "col_names"
+                ],
             },
         }
