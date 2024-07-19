@@ -26,7 +26,5 @@ on them outside the context as long as the actual data is in the memory and the
 Python runtime has not garbage-collected it.
 
 If you are interested in using already provided Markers, please go to
-:doc:`../builtin`. And, if you want to implement your own Marker, you need to
-provide concrete implementation of :class:`.BaseMarker`. Specifically, you
-need to override ``get_valid_inputs``, ``get_output_type`` and ``compute``
-methods.
+:doc:`../builtin`. And, if you want to implement your own Marker, please check
+out :doc:`../extending/marker`.
