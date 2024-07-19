@@ -7,9 +7,9 @@
 from abc import abstractmethod
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
-from nilearn.connectome import ConnectivityMeasure
-from sklearn.covariance import EmpiricalCovariance
+from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
+from ...external.nilearn import JuniferConnectivityMeasure
 from ...utils import raise_error
 from ..base import BaseMarker
 
@@ -23,25 +23,31 @@ class FunctionalConnectivityBase(BaseMarker):
     Parameters
     ----------
     agg_method : str, optional
-        The method to perform aggregation using. Check valid options in
-        :func:`.get_aggfunc_by_name` (default "mean").
+        The method to perform aggregation using.
+        Check valid options in :func:`.get_aggfunc_by_name`
+        (default "mean").
     agg_method_params : dict, optional
-        Parameters to pass to the aggregation function. Check valid options in
-        :func:`.get_aggfunc_by_name` (default None).
-    cor_method : str, optional
-        The method to perform correlation using. Check valid options in
-        :class:`nilearn.connectome.ConnectivityMeasure`
-        (default "covariance").
-    cor_method_params : dict, optional
-        Parameters to pass to the correlation function. Check valid options in
-        :class:`nilearn.connectome.ConnectivityMeasure` (default None).
+        Parameters to pass to the aggregation function.
+        Check valid options in :func:`.get_aggfunc_by_name`
+        (default None).
+    conn_method : str, optional
+        The method to perform connectivity measure using.
+        Check valid options in :class:`.JuniferConnectivityMeasure`
+        (default "correlation").
+    conn_method_params : dict, optional
+        Parameters to pass to :class:`.JuniferConnectivityMeasure`.
+        If None, ``{"empirical": True}`` will be used, which would mean
+        :class:`sklearn.covariance.EmpiricalCovariance` is used to compute
+        covariance. If usage of :class:`sklearn.covariance.LedoitWolf` is
+        desired, ``{"empirical": False}`` should be passed
+        (default None).
     masks : str, dict or list of dict or str, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
     name : str, optional
-        The name of the marker. If None, will use the class name (default
-        None).
+        The name of the marker. If None, will use ``BOLD_<class_name>``
+        (default None).
 
     """
 
@@ -57,19 +63,18 @@ class FunctionalConnectivityBase(BaseMarker):
         self,
         agg_method: str = "mean",
         agg_method_params: Optional[Dict] = None,
-        cor_method: str = "covariance",
-        cor_method_params: Optional[Dict] = None,
+        conn_method: str = "correlation",
+        conn_method_params: Optional[Dict] = None,
         masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
-        self.cor_method = cor_method
-        self.cor_method_params = cor_method_params or {}
-
-        # default to nilearn behavior
-        self.cor_method_params["empirical"] = self.cor_method_params.get(
-            "empirical", False
+        self.conn_method = conn_method
+        self.conn_method_params = conn_method_params or {}
+        # Reverse of nilearn behavior
+        self.conn_method_params["empirical"] = self.conn_method_params.get(
+            "empirical", True
         )
         self.masks = masks
         super().__init__(on="BOLD", name=name)
@@ -121,14 +126,21 @@ class FunctionalConnectivityBase(BaseMarker):
         """
         # Perform necessary aggregation
         aggregation = self.aggregate(input, extra_input=extra_input)
-        # Compute correlation
-        if self.cor_method_params["empirical"]:
-            connectivity = ConnectivityMeasure(
-                cov_estimator=EmpiricalCovariance(),  # type: ignore
-                kind=self.cor_method,
-            )
+        # Set covariance estimator
+        if self.conn_method_params["empirical"]:
+            cov_estimator = EmpiricalCovariance(store_precision=False)
         else:
-            connectivity = ConnectivityMeasure(kind=self.cor_method)
+            cov_estimator = LedoitWolf(store_precision=False)
+        # Compute correlation
+        connectivity = JuniferConnectivityMeasure(
+            cov_estimator=cov_estimator,
+            kind=self.conn_method,
+            **{
+                k: v
+                for k, v in self.conn_method_params.items()
+                if k != "empirical"
+            },
+        )
         # Create dictionary for output
         return {
             "functional_connectivity": {
