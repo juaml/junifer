@@ -15,7 +15,7 @@ import numpy as np
 from ..api.decorators import register_datagrabber
 from ..utils import logger, raise_error
 from .base import BaseDataGrabber
-from .utils import validate_patterns, validate_replacements
+from .pattern_validation_mixin import PatternValidationMixin
 
 
 __all__ = ["PatternDataGrabber"]
@@ -26,7 +26,7 @@ _CONFOUNDS_FORMATS = ("fmriprep", "adhoc")
 
 
 @register_datagrabber
-class PatternDataGrabber(BaseDataGrabber):
+class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
     """Concrete implementation for pattern-based data fetching.
 
     Implements a DataGrabber that understands patterns to grab data.
@@ -142,6 +142,13 @@ class PatternDataGrabber(BaseDataGrabber):
         The directory where the data is / will be stored.
     confounds_format : {"fmriprep", "adhoc"} or None, optional
         The format of the confounds for the dataset (default None).
+    partial_pattern_ok : bool, optional
+        Whether to raise error if partial pattern for a data type is found.
+        This allows to bypass mandatory key check and issue a warning
+        instead of raising error. This allows one to have a DataGrabber
+        with data types without the corresponding mandatory keys and is
+        powerful when used with :class:`.MultipleDataGrabber`
+        (default True).
 
     Raises
     ------
@@ -157,17 +164,21 @@ class PatternDataGrabber(BaseDataGrabber):
         replacements: Union[List[str], str],
         datadir: Union[str, Path],
         confounds_format: Optional[str] = None,
+        partial_pattern_ok: bool = False,
     ) -> None:
-        # Validate patterns
-        validate_patterns(types=types, patterns=patterns)
-        self.patterns = patterns
-
         # Convert replacements to list if not already
         if not isinstance(replacements, list):
             replacements = [replacements]
-        # Validate replacements
-        validate_replacements(replacements=replacements, patterns=patterns)
+        # Validate patterns
+        self.validate_patterns(
+            types=types,
+            replacements=replacements,
+            patterns=patterns,
+            partial_pattern_ok=partial_pattern_ok,
+        )
         self.replacements = replacements
+        self.patterns = patterns
+        self.partial_pattern_ok = partial_pattern_ok
 
         # Validate confounds format
         if (
@@ -436,14 +447,26 @@ class PatternDataGrabber(BaseDataGrabber):
         for t_idx in reversed(order):
             t_type = self.types[t_idx]
             types_element = set()
-            # Get the pattern
+
+            # Get the pattern dict
             t_pattern = self.patterns[t_type]
+            # Conditional fetch of base pattern for getting elements
+            pattern = None
+            # Try for data type pattern
+            pattern = t_pattern.get("pattern")
+            # Try for nested data type pattern
+            if pattern is None and self.partial_pattern_ok:
+                for v in t_pattern.values():
+                    if isinstance(v, dict) and "pattern" in v:
+                        pattern = v["pattern"]
+                        break
+
             # Replace the pattern
             (
                 re_pattern,
                 glob_pattern,
                 t_replacements,
-            ) = self._replace_patterns_regex(t_pattern["pattern"])
+            ) = self._replace_patterns_regex(pattern)
             for fname in self.datadir.glob(glob_pattern):
                 suffix = fname.relative_to(self.datadir).as_posix()
                 m = re.match(re_pattern, suffix)

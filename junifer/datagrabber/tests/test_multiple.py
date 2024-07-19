@@ -25,28 +25,26 @@ def test_MultipleDataGrabber() -> None:
     repo_uri = _testing_dataset["example_bids_ses"]["uri"]
     rootdir = "example_bids_ses"
     replacements = ["subject", "session"]
-    pattern1 = {
-        "T1w": {
-            "pattern": (
-                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
-            ),
-            "space": "native",
-        },
-    }
-    pattern2 = {
-        "BOLD": {
-            "pattern": (
-                "{subject}/{session}/func/"
-                "{subject}_{session}_task-rest_bold.nii.gz"
-            ),
-            "space": "MNI152NLin6Asym",
-        },
-    }
+
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri,
         types=["T1w"],
-        patterns=pattern1,
+        patterns={
+            "T1w": {
+                "pattern": (
+                    "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+                ),
+                "space": "native",
+                "mask": {
+                    "pattern": (
+                        "{subject}/{session}/anat/{subject}_{session}_"
+                        "brain_mask.nii.gz"
+                    ),
+                    "space": "native",
+                },
+            },
+        },
         replacements=replacements,
     )
 
@@ -54,7 +52,22 @@ def test_MultipleDataGrabber() -> None:
         rootdir=rootdir,
         uri=repo_uri,
         types=["BOLD"],
-        patterns=pattern2,
+        patterns={
+            "BOLD": {
+                "pattern": (
+                    "{subject}/{session}/func/"
+                    "{subject}_{session}_task-rest_bold.nii.gz"
+                ),
+                "space": "MNI152NLin6Asym",
+                "mask": {
+                    "pattern": (
+                        "{subject}/{session}/func/"
+                        "{subject}_{session}_task-rest_brain_mask.nii.gz"
+                    ),
+                    "space": "MNI152NLin6Asym",
+                },
+            },
+        },
         replacements=replacements,
     )
 
@@ -73,14 +86,17 @@ def test_MultipleDataGrabber() -> None:
     with dg:
         subs = list(dg)
         assert set(subs) == set(expected_subs)
-
+        # Check data type
         elem = dg[("sub-01", "ses-01")]
+        # Check data types
         assert "T1w" in elem
         assert "BOLD" in elem
+        # Check meta
         assert "meta" in elem["BOLD"]
         meta = elem["BOLD"]["meta"]["datagrabber"]
         assert "class" in meta
         assert meta["class"] == "MultipleDataGrabber"
+        # Check datagrabbers
         assert "datagrabbers" in meta
         assert len(meta["datagrabbers"]) == 2
         assert meta["datagrabbers"][0]["class"] == "PatternDataladDataGrabber"
@@ -89,40 +105,37 @@ def test_MultipleDataGrabber() -> None:
 
 def test_MultipleDataGrabber_no_intersection() -> None:
     """Test MultipleDataGrabber without intersection (0 elements)."""
-    repo_uri1 = _testing_dataset["example_bids"]["uri"]
-    repo_uri2 = _testing_dataset["example_bids_ses"]["uri"]
     rootdir = "example_bids_ses"
     replacements = ["subject", "session"]
-    pattern1 = {
-        "T1w": {
-            "pattern": (
-                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
-            ),
-            "space": "native",
-        },
-    }
-    pattern2 = {
-        "BOLD": {
-            "pattern": (
-                "{subject}/{session}/func/"
-                "{subject}_{session}_task-rest_bold.nii.gz"
-            ),
-            "space": "MNI152NLin6Asym",
-        },
-    }
+
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=repo_uri1,
+        uri=_testing_dataset["example_bids"]["uri"],
         types=["T1w"],
-        patterns=pattern1,
+        patterns={
+            "T1w": {
+                "pattern": (
+                    "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+                ),
+                "space": "native",
+            },
+        },
         replacements=replacements,
     )
 
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=repo_uri2,
+        uri=_testing_dataset["example_bids_ses"]["uri"],
         types=["BOLD"],
-        patterns=pattern2,
+        patterns={
+            "BOLD": {
+                "pattern": (
+                    "{subject}/{session}/func/"
+                    "{subject}_{session}_task-rest_bold.nii.gz"
+                ),
+                "space": "MNI152NLin6Asym",
+            },
+        },
         replacements=replacements,
     )
 
@@ -135,23 +148,19 @@ def test_MultipleDataGrabber_no_intersection() -> None:
 
 def test_MultipleDataGrabber_get_item() -> None:
     """Test MultipleDataGrabber get_item() error."""
-    repo_uri1 = _testing_dataset["example_bids"]["uri"]
-    rootdir = "example_bids_ses"
-    replacements = ["subject", "session"]
-    pattern1 = {
-        "T1w": {
-            "pattern": (
-                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
-            ),
-            "space": "native",
-        },
-    }
     dg1 = PatternDataladDataGrabber(
-        rootdir=rootdir,
-        uri=repo_uri1,
+        rootdir="example_bids_ses",
+        uri=_testing_dataset["example_bids"]["uri"],
         types=["T1w"],
-        patterns=pattern1,
-        replacements=replacements,
+        patterns={
+            "T1w": {
+                "pattern": (
+                    "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+                ),
+                "space": "native",
+            },
+        },
+        replacements=["subject", "session"],
     )
 
     dg = MultipleDataGrabber([dg1])
@@ -161,43 +170,111 @@ def test_MultipleDataGrabber_get_item() -> None:
 
 def test_MultipleDataGrabber_validation() -> None:
     """Test MultipleDataGrabber init validation."""
-    repo_uri1 = _testing_dataset["example_bids"]["uri"]
-    repo_uri2 = _testing_dataset["example_bids_ses"]["uri"]
     rootdir = "example_bids_ses"
-    replacement1 = ["subject", "session"]
-    replacement2 = ["subject"]
-    pattern1 = {
-        "T1w": {
-            "pattern": (
-                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
-            ),
-            "space": "native",
-        },
-    }
-    pattern2 = {
-        "BOLD": {
-            "pattern": "{subject}/func/{subject}_task-rest_bold.nii.gz",
-            "space": "MNI152NLin6Asym",
-        },
-    }
+
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=repo_uri1,
+        uri=_testing_dataset["example_bids"]["uri"],
         types=["T1w"],
-        patterns=pattern1,
-        replacements=replacement1,
+        patterns={
+            "T1w": {
+                "pattern": (
+                    "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+                ),
+                "space": "native",
+            },
+        },
+        replacements=["subject", "session"],
     )
 
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=repo_uri2,
+        uri=_testing_dataset["example_bids_ses"]["uri"],
         types=["BOLD"],
-        patterns=pattern2,
-        replacements=replacement2,
+        patterns={
+            "BOLD": {
+                "pattern": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
+        },
+        replacements=["subject"],
     )
 
-    with pytest.raises(ValueError, match="different element key"):
+    with pytest.raises(RuntimeError, match="have different element keys"):
         MultipleDataGrabber([dg1, dg2])
 
-    with pytest.raises(ValueError, match="overlapping types"):
+    with pytest.raises(RuntimeError, match="have overlapping mandatory"):
         MultipleDataGrabber([dg1, dg1])
+
+
+def test_MultipleDataGrabber_partial_pattern() -> None:
+    """Test MultipleDataGrabber partial pattern."""
+    repo_uri = _testing_dataset["example_bids_ses"]["uri"]
+    rootdir = "example_bids_ses"
+    replacements = ["subject", "session"]
+
+    dg1 = PatternDataladDataGrabber(
+        rootdir=rootdir,
+        uri=repo_uri,
+        types=["BOLD"],
+        patterns={
+            "BOLD": {
+                "pattern": (
+                    "{subject}/{session}/func/"
+                    "{subject}_{session}_task-rest_bold.nii.gz"
+                ),
+                "space": "MNI152NLin6Asym",
+            },
+        },
+        replacements=replacements,
+    )
+
+    dg2 = PatternDataladDataGrabber(
+        rootdir=rootdir,
+        uri=repo_uri,
+        types=["BOLD"],
+        patterns={
+            "BOLD": {
+                "confounds": {
+                    "pattern": (
+                        "{subject}/{session}/func/"
+                        "{subject}_{session}_task-rest_"
+                        "confounds_regressors.tsv"
+                    ),
+                    "format": "fmriprep",
+                },
+            },
+        },
+        replacements=["subject", "session"],
+        partial_pattern_ok=True,
+    )
+
+    dg = MultipleDataGrabber([dg1, dg2])
+
+    types = dg.get_types()
+    assert "BOLD" in types
+
+    expected_subs = [
+        (f"sub-{i:02d}", f"ses-{j:02d}")
+        for j in range(1, 3)
+        for i in range(1, 10)
+    ]
+
+    with dg:
+        subs = list(dg)
+        assert set(subs) == set(expected_subs)
+        # Fetch element
+        elem = dg[("sub-01", "ses-01")]
+        # Check data type and nested data type
+        assert "BOLD" in elem
+        assert "confounds" in elem["BOLD"]
+        # Check meta
+        assert "meta" in elem["BOLD"]
+        meta = elem["BOLD"]["meta"]["datagrabber"]
+        assert "class" in meta
+        assert meta["class"] == "MultipleDataGrabber"
+        # Check datagrabbers
+        assert "datagrabbers" in meta
+        assert len(meta["datagrabbers"]) == 2
+        assert meta["datagrabbers"][0]["class"] == "PatternDataladDataGrabber"
+        assert meta["datagrabbers"][1]["class"] == "PatternDataladDataGrabber"

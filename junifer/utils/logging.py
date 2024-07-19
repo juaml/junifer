@@ -13,6 +13,7 @@ else:  # pragma: no cover
     from looseversion import LooseVersion
 
 import logging
+import warnings
 from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
 from typing import Dict, NoReturn, Optional, Type, Union
@@ -42,6 +43,23 @@ _logging_types = {
     "WARNING": logging.WARNING,
     "ERROR": logging.ERROR,
 }
+
+
+# Copied over from stdlib and tweaked to our use-case.
+def _showwarning(message, category, filename, lineno, file=None, line=None):
+    s = warnings.formatwarning(message, category, filename, lineno, line)
+    logger.warning(str(s))
+
+
+# Overwrite warnings display to integrate with logging
+
+
+def capture_warnings():
+    """Capture warnings and log them."""
+    warnings.showwarning = _showwarning
+
+
+capture_warnings()
 
 
 class WrapStdOut(logging.StreamHandler):
@@ -325,5 +343,4 @@ def warn_with_log(
         The warning subclass (default RuntimeWarning).
 
     """
-    logger.warning(msg)
     warn(msg, category=category, stacklevel=2)

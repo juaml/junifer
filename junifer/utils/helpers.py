@@ -3,13 +3,14 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import collections.abc
 import subprocess
-from typing import List
+from typing import Dict, List
 
 from .logging import logger, raise_error
 
 
-__all__ = ["run_ext_cmd"]
+__all__ = ["run_ext_cmd", "deep_update"]
 
 
 def run_ext_cmd(name: str, cmd: List[str]) -> None:
@@ -54,3 +55,30 @@ def run_ext_cmd(name: str, cmd: List[str]) -> None:
             ),
             klass=RuntimeError,
         )
+
+
+def deep_update(d: Dict, u: Dict) -> Dict:
+    """Deep update `d` with `u`.
+
+    From: "https://stackoverflow.com/questions/3232943/update-value-of-a-nested
+    -dictionary-of-varying-depth"
+
+    Parameters
+    ----------
+    d : dict
+        The dictionary to deep-update.
+    u : dict
+        The dictionary to deep-update `d` with.
+
+    Returns
+    -------
+    dict
+        The updated dictionary.
+
+    """
+    for k, v in u.items():
+        if isinstance(v, collections.abc.Mapping):
+            d[k] = deep_update(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d

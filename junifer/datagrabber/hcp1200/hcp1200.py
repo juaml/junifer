@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import Dict, List, Union
 
 from ...api.decorators import register_datagrabber
+from ...utils import raise_error
 from ..pattern import PatternDataGrabber
-from ..utils import raise_error
 
 
 __all__ = ["HCP1200"]

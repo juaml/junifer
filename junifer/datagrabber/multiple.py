@@ -7,13 +7,15 @@
 
 from typing import Dict, List, Tuple, Union
 
-from ..utils import raise_error
+from ..api.decorators import register_datagrabber
+from ..utils import deep_update, raise_error
 from .base import BaseDataGrabber
 
 
 __all__ = ["MultipleDataGrabber"]
 
 
+@register_datagrabber
 class MultipleDataGrabber(BaseDataGrabber):
     """Concrete implementation for multi sourced data fetching.
 
@@ -27,19 +29,53 @@ class MultipleDataGrabber(BaseDataGrabber):
     **kwargs
         Keyword arguments passed to superclass.
 
+    Raises
+    ------
+    RuntimeError
+        If ``datagrabbers`` have different element keys or
+        overlapping data types or nested data types.
+
     """
 
     def __init__(self, datagrabbers: List[BaseDataGrabber], **kwargs) -> None:
         # Check datagrabbers consistency
-        # 1) same element keys
+        # Check for same element keys
         first_keys = datagrabbers[0].get_element_keys()
         for dg in datagrabbers[1:]:
             if dg.get_element_keys() != first_keys:
-                raise_error("DataGrabbers have different element keys.")
-        # 2) no overlapping types
+                raise_error(
+                    msg="DataGrabbers have different element keys",
+                    klass=RuntimeError,
+                )
+        # Check for no overlapping types (and nested data types)
         types = [x for dg in datagrabbers for x in dg.get_types()]
         if len(types) != len(set(types)):
-            raise_error("DataGrabbers have overlapping types.")
+            if all(hasattr(dg, "patterns") for dg in datagrabbers):
+                first_patterns = datagrabbers[0].patterns
+                for dg in datagrabbers[1:]:
+                    for data_type in set(types):
+                        dtype_pattern = dg.patterns.get(data_type)
+                        if dtype_pattern is None:
+                            continue
+                        # Check if first-level keys of data type are same
+                        if (
+                            dtype_pattern.keys()
+                            == first_patterns[data_type].keys()
+                        ):
+                            raise_error(
+                                msg=(
+                                    "DataGrabbers have overlapping mandatory "
+                                    "and / or optional key(s) for data type: "
+                                    f"`{data_type}`"
+                                ),
+                                klass=RuntimeError,
+                            )
+            else:
+                # Can't check further
+                raise_error(
+                    msg="DataGrabbers have overlapping types",
+                    klass=RuntimeError,
+                )
         self._datagrabbers = datagrabbers
 
     def __getitem__(self, element: Union[str, Tuple]) -> Dict:
@@ -65,7 +101,7 @@ class MultipleDataGrabber(BaseDataGrabber):
         metas = []
         for dg in self._datagrabbers:
             t_out = dg[element]
-            out.update(t_out)
+            deep_update(out, t_out)
             # Now get the meta for this datagrabber
             t_meta = {}
             dg.update_meta(t_meta, "datagrabber")

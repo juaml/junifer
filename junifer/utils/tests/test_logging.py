@@ -145,8 +145,16 @@ def test_log_file(tmp_path: Path) -> None:
         assert any("Warn3 message" in line for line in lines)
         assert any("Error3 message" in line for line in lines)
 
+    # This should raise a warning (test that it was raised)
     with pytest.warns(RuntimeWarning, match=r"Warn raised"):
         warn_with_log("Warn raised")
+
+    # This should log the warning (workaround for pytest messing with logging)
+    from junifer.utils.logging import capture_warnings
+
+    capture_warnings()
+
+    warn_with_log("Warn raised 2")
     with pytest.raises(ValueError, match=r"Error raised"):
         raise_error("Error raised")
     with open(tmp_path / "test4.log") as f:

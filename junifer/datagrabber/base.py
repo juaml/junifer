@@ -11,7 +11,6 @@ from typing import Dict, Iterator, List, Tuple, Union
 
 from ..pipeline import UpdateMetaMixin
 from ..utils import logger, raise_error
-from .utils import validate_types
 
 
 __all__ = ["BaseDataGrabber"]
@@ -30,16 +29,21 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
     datadir : str or pathlib.Path
         The directory where the data is / will be stored.
 
-    Attributes
-    ----------
-    datadir : pathlib.Path
-        The directory where the data is / will be stored.
+    Raises
+    ------
+    TypeError
+        If ``types`` is not a list or if the values are not string.
 
     """
 
     def __init__(self, types: List[str], datadir: Union[str, Path]) -> None:
         # Validate types
-        validate_types(types)
+        if not isinstance(types, list):
+            raise_error(msg="`types` must be a list", klass=TypeError)
+        if any(not isinstance(x, str) for x in types):
+            raise_error(
+                msg="`types` must be a list of strings", klass=TypeError
+            )
         self.types = types
 
         # Convert str to Path
