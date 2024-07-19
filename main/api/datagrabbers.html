@@ -371,9 +371,9 @@ implementation of this abstract class.</p>
 </dd>
 </dl>
 </dd>
-<dt class="field-even">Attributes<span class="colon">:</span></dt>
-<dd class="field-even"><dl>
-<dt><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.datadir" title="junifer.datagrabber.BaseDataGrabber.datadir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datadir</span></code></a><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>Get data directory path.</p>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TypeError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">types</span></code> is not a list or if the values are not string.</p>
 </dd>
 </dl>
 </dd>
@@ -935,6 +935,13 @@ DataGrabbers.</p>
 </dd>
 </dl>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">datagrabbers</span></code> have different element keys or
+overlapping data types or nested data types.</p>
+</dd>
+</dl>
+</dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_element_keys">
@@ -1010,7 +1017,7 @@ specified element.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">PatternDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patterns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datadir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confounds_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">PatternDataGrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patterns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datadir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confounds_format</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial_pattern_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber" title="Link to this definition">¶</a></dt>
 <dd><p>Concrete implementation for pattern-based data fetching.</p>
 <p>Implements a DataGrabber that understands patterns to grab data.</p>
 <dl class="field-list">
@@ -1117,6 +1124,13 @@ to be a list of all possible replacements.</p>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The directory where the data is / will be stored.</p>
 </dd>
 <dt><strong>confounds_format</strong><span class="classifier">{“fmriprep”, “adhoc”} or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>The format of the confounds for the dataset (default None).</p>
+</dd>
+<dt><strong>partial_pattern_ok</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to raise error if partial pattern for a data type is found.
+This allows to bypass mandatory key check and issue a warning
+instead of raising error. This allows one to have a DataGrabber
+with data types without the corresponding mandatory keys and is
+powerful when used with <a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a>
+(default True).</p>
 </dd>
 </dl>
 </dd>
@@ -1325,6 +1339,45 @@ the datalad dataset will be cloned into a temporary directory
 </div>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.PatternValidationMixin">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">PatternValidationMixin</span></span><a class="headerlink" href="#junifer.datagrabber.PatternValidationMixin" title="Link to this definition">¶</a></dt>
+<dd><p>Mixin class for pattern validation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.PatternValidationMixin.validate_patterns">
+<span class="sig-name descname"><span class="pre">validate_patterns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacements</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patterns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial_pattern_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternValidationMixin.validate_patterns" title="Link to this definition">¶</a></dt>
+<dd><p>Validate the patterns.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>types</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data types to check patterns of.</p>
+</dd>
+<dt><strong>replacements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The replacements to be replaced in the patterns.</p>
+</dd>
+<dt><strong>patterns</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The patterns to validate.</p>
+</dd>
+<dt><strong>partial_pattern_ok</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to raise error if partial pattern for a data type is found.
+If False, a warning is issued instead of raising an error
+(default False).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TypeError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">patterns</span></code> is not a dictionary.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If length of <code class="docutils literal notranslate"><span class="pre">types</span></code> and <code class="docutils literal notranslate"><span class="pre">patterns</span></code> are different or
+if <code class="docutils literal notranslate"><span class="pre">patterns</span></code> is missing entries from <code class="docutils literal notranslate"><span class="pre">types</span></code> or
+if unknown data type is found in <code class="docutils literal notranslate"><span class="pre">patterns</span></code> or
+if data type pattern key contains ‘*’ as value.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -1438,6 +1491,10 @@ the datalad dataset will be cloned into a temporary directory
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataladDataGrabber"><code class="docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.PatternValidationMixin"><code class="docutils literal notranslate"><span class="pre">PatternValidationMixin</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.datagrabber.PatternValidationMixin.validate_patterns"><code class="docutils literal notranslate"><span class="pre">PatternValidationMixin.validate_patterns()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

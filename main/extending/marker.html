@@ -355,23 +355,16 @@
         <article role="main" id="furo-main-content">
           <section id="creating-markers">
 <span id="extending-markers"></span><h1><span class="section-number">7.3. </span>Creating Markers<a class="headerlink" href="#creating-markers" title="Link to this heading">¶</a></h1>
-<p>Computing a marker (a.k.a. <em>feature</em>) is the main goal of <code class="docutils literal notranslate"><span class="pre">junifer</span></code>. While we
-aim to provide as many Markers as possible, it might be the case that the Marker
-you are looking for is not available. In this case, you can create your own Marker
-by following this tutorial.</p>
+<p>Computing a marker (a.k.a. <em>feature(s)</em>) is the main goal of <code class="docutils literal notranslate"><span class="pre">junifer</span></code>. While
+we aim to provide as many Markers as possible, it might be the case that the
+Marker you are looking for is not available. In this case, you can create your
+own Marker by following this tutorial.</p>
 <p>Most of the functionality of a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> Marker has been taken care by the
-<a class="reference internal" href="../api/markers.html#junifer.markers.BaseMarker" title="junifer.markers.BaseMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseMarker</span></code></a> class. Thus, only a few methods are required:</p>
+<a class="reference internal" href="../api/markers.html#junifer.markers.BaseMarker" title="junifer.markers.BaseMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseMarker</span></code></a> class. Thus, only a few methods and class attributes are
+required:</p>
 <ol class="arabic simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">get_valid_inputs</span></code>: The method to obtain the list of valid inputs for the
-Marker. This is used to check that the inputs provided by the user are
-valid. This method should return a list of strings, representing
-<a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">get_output_type</span></code>: The method to obtain the output type of the Marker.
-This is used to check that the output of the Marker is compatible with the
-storage. This method should return a string, representing
-<a class="reference internal" href="../understanding/storage.html#storage-types"><span class="std std-ref">storage types</span></a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">compute</span></code>: The method that given the data, computes the Marker.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">__init__</span></code>: The initialisation method, where the Marker is configured.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compute</span></code>: The method that given the data, computes the Marker.</p></li>
 </ol>
 <p>As an example, we will develop a <code class="docutils literal notranslate"><span class="pre">ParcelMean</span></code> Marker, a Marker that first
 applies a parcellation and then computes the mean of the data in each parcel.
@@ -380,19 +373,23 @@ This is a very simple example, but it will show you how to create a new Marker.<
 <span id="extending-markers-input-output"></span><h2><span class="section-number">7.3.1. </span>Step 1: Configure input and output<a class="headerlink" href="#step-1-configure-input-and-output" title="Link to this heading">¶</a></h2>
 <p>This step is quite simple: we need to define the input and output of the Marker.
 Based on the current <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a>, we can have <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>,
-<code class="docutils literal notranslate"><span class="pre">VBM_WM</span></code> and <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> as valid inputs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_WM&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_GM&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-<p>The output of the Marker depends on the input. For <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, it will be
-<code class="docutils literal notranslate"><span class="pre">timeseries</span></code>, while for the rest of the inputs, it will be <code class="docutils literal notranslate"><span class="pre">vector</span></code>. Thus,
-we can define the output as:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">input_type</span> <span class="o">==</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;timeseries&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;vector&quot;</span>
+<code class="docutils literal notranslate"><span class="pre">VBM_WM</span></code> and <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> as valid inputs. The output of the Marker depends on
+the input. For <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, it will be <code class="docutils literal notranslate"><span class="pre">timeseries</span></code>, while for the rest of the
+inputs, it will be <code class="docutils literal notranslate"><span class="pre">vector</span></code>. Thus, we have a class attribute like so:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># NOTE: data type -&gt; feature -&gt; storage type</span>
+<span class="c1"># You can have multiple features for one data type,</span>
+<span class="c1"># each feature having same or different storage type</span>
+<span class="n">_MARKER_INOUT_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="s2">&quot;timeseries&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;VBM_WM&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;VBM_GM&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -453,7 +450,8 @@ useful if you want to use other data to compute the Marker.</p></li>
 <p>Following the example, we will compute the mean of the data in each parcel using
 <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.maskers.NiftiLabelsMasker.html#nilearn.maskers.NiftiLabelsMasker" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiLabelsMasker</span></code></a>. Importantly, the output of the
 compute function must be a dictionary. This dictionary will later be passed onto
-the <code class="docutils literal notranslate"><span class="pre">store</span></code> method.</p>
+the <code class="docutils literal notranslate"><span class="pre">store</span></code> method. The dictionary’s first level of keys would the feature name
+and the values would be a dictionary of storage type specific key-value pairs.</p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>To simplify the <code class="docutils literal notranslate"><span class="pre">store</span></code> method, define keys of the dictionary based on the
@@ -493,10 +491,13 @@ be <code class="docutils literal notranslate"><span class="pre">data</span></cod
     <span class="c1"># mask the data</span>
     <span class="n">out_values</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
 
-    <span class="c1"># Create the output dictionary</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span> <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">}</span>
-
-    <span class="k">return</span> <span class="n">out</span>
+    <span class="c1"># Create and return the output dictionary</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span>
+            <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -516,11 +517,11 @@ following dependencies:</p>
 </pre></div>
 </div>
 <p>Finally, we need to register the Marker using the <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ClassVar</span>
 
 <span class="kn">from</span> <span class="nn">junifer.api.decorators</span> <span class="kn">import</span> <span class="n">register_marker</span>
 <span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">get_parcellation</span>
-<span class="kn">from</span> <span class="nn">junifer.markers.base</span> <span class="kn">import</span> <span class="n">BaseMarker</span>
+<span class="kn">from</span> <span class="nn">junifer.markers</span> <span class="kn">import</span> <span class="n">BaseMarker</span>
 <span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
 
 
@@ -528,6 +529,18 @@ following dependencies:</p>
 <span class="k">class</span> <span class="nc">ParcelMean</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
 
     <span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
+
+    <span class="n">_MARKER_INOUT_MAPPINGS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="s2">&quot;timeseries&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VBM_WM&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;VBM_GM&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="s2">&quot;vector&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -537,15 +550,6 @@ following dependencies:</p>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parcellation</span> <span class="o">=</span> <span class="n">parcellation</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_WM&quot;</span><span class="p">,</span> <span class="s2">&quot;VBM_GM&quot;</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">input_type</span> <span class="o">==</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;timeseries&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;vector&quot;</span>
 
     <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -573,10 +577,13 @@ following dependencies:</p>
         <span class="c1"># mask the data</span>
         <span class="n">out_values</span> <span class="o">=</span> <span class="n">masker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
 
-        <span class="c1"># Create the output dictionary</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span> <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">}</span>
-
-        <span class="k">return</span> <span class="n">out</span>
+        <span class="c1"># Create and return the output dictionary</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span>
+                <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
 </pre></div>
 </div>
 </section>
@@ -588,25 +595,19 @@ following dependencies:</p>
 
 <span class="nd">@register_marker</span>
 <span class="k">class</span> <span class="nc">TemplateMarker</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
+
+    <span class="c1"># TODO: add the dependencies</span>
+    <span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># TODO: add the input-output mappings</span>
+    <span class="n">_MARKER_INOUT_MAPPINGS</span> <span class="o">=</span> <span class="p">{}</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># TODO: add marker-specific parameters</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">on</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_valid_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># TODO: Complete with the valid inputs</span>
-        <span class="n">valid</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">return</span> <span class="n">valid</span>
-
-    <span class="k">def</span> <span class="nf">get_output_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_type</span><span class="p">):</span>
-        <span class="c1"># TODO: Return the valid output type for each input type</span>
-        <span class="k">pass</span>
-
     <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">extra_input</span><span class="p">):</span>
         <span class="c1"># TODO: compute the marker and create the output dictionary</span>
-
-        <span class="c1"># Create the output dictionary</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-        <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
 </section>
