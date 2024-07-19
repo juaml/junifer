@@ -334,6 +334,169 @@
 <span id="nilearn"></span><h1><span class="section-number">9.4.1. </span>Nilearn<a class="headerlink" href="#module-junifer.external.nilearn" title="Link to this heading">¶</a></h1>
 <p>Custom objects adapted from nilearn.</p>
 <dl class="py class">
+<dt class="sig sig-object py" id="junifer.external.nilearn.JuniferConnectivityMeasure">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.external.nilearn.</span></span><span class="sig-name descname"><span class="pre">JuniferConnectivityMeasure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cov_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">EmpiricalCovariance(store_precision=False)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'correlation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discard_diagonal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">standardize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.external.nilearn.JuniferConnectivityMeasure" title="Link to this definition">¶</a></dt>
+<dd><p>Class for custom ConnectivityMeasure.</p>
+<p>Differs from <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a> in the
+following ways:</p>
+<ul class="simple">
+<li><p>default <code class="docutils literal notranslate"><span class="pre">cov_estimator</span></code> is
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EmpiricalCovariance.html#sklearn.covariance.EmpiricalCovariance" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.EmpiricalCovariance</span></code></a></p></li>
+<li><p>default <code class="docutils literal notranslate"><span class="pre">kind</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;correlation&quot;</span></code></p></li>
+</ul>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>cov_estimator</strong><span class="classifier">estimator object, optional</span></dt><dd><p>The covariance estimator
+(default <code class="docutils literal notranslate"><span class="pre">EmpiricalCovariance(store_precision=False)</span></code>).</p>
+</dd>
+<dt><strong>kind</strong><span class="classifier">{“covariance”, “correlation”, “partial correlation”,             “tangent”, “precision”}, optional</span></dt><dd><p>The matrix kind. For the use of <code class="docutils literal notranslate"><span class="pre">&quot;tangent&quot;</span></code> see <a class="reference internal" href="#rca87a6b1d4a1-1" id="id1">[1]</a>
+(default “correlation”).</p>
+</dd>
+<dt><strong>vectorize</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, connectivity matrices are reshaped into 1D arrays and only
+their flattened lower triangular parts are returned (default False).</p>
+</dd>
+<dt><strong>discard_diagonal</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, vectorized connectivity coefficients do not include the
+matrices diagonal elements. Used only when vectorize is set to True
+(default False).</p>
+</dd>
+<dt><strong>standardize</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If standardize is True, the data are centered and normed: their mean
+is put to 0 and their variance is put to 1 in the time dimension
+(default True).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Added to control passing value to <code class="docutils literal notranslate"><span class="pre">standardize</span></code> of
+<code class="docutils literal notranslate"><span class="pre">signal.clean</span></code> to call new behavior since passing <code class="docutils literal notranslate"><span class="pre">&quot;zscore&quot;</span></code> or
+True (default) is deprecated. This parameter will be deprecated in
+version 0.13 and removed in version 0.15.</p>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="rca87a6b1d4a1-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Varoquaux, G., Baronnet, F., Kleinschmidt, A. et al.
+Detection of brain functional-connectivity difference in
+post-stroke patients using group-level covariance modeling.
+In Tianzi Jiang, Nassir Navab, Josien P. W. Pluim, and
+Max A. Viergever, editors, Medical image computing and
+computer-assisted intervention - MICCAI 2010, Lecture notes
+in computer science, Pages 200-208. Berlin, Heidelberg, 2010.
+Springer.
+doi:10/cn2h9c.</p>
+</div>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>cov_estimator_</strong><span class="classifier">estimator object</span></dt><dd><p>A new covariance estimator with the same parameters as
+<code class="docutils literal notranslate"><span class="pre">cov_estimator</span></code>.</p>
+</dd>
+<dt><strong>mean_</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The mean connectivity matrix across subjects. For <code class="docutils literal notranslate"><span class="pre">&quot;tangent&quot;</span></code> kind,
+it is the geometric mean of covariances (a group covariance
+matrix that captures information from both correlation and partial
+correlation matrices). For other values for <code class="docutils literal notranslate"><span class="pre">kind</span></code>, it is the
+mean of the corresponding matrices.</p>
+</dd>
+<dt><strong>whitening_</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.0)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The inverted square-rooted geometric mean of the covariance matrices.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.external.nilearn.JuniferConnectivityMeasure.set_inverse_transform_request">
+<span class="sig-name descname"><span class="pre">set_inverse_transform_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagonal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.external.nilearn.JuniferConnectivityMeasure.set_inverse_transform_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.set_config.html#sklearn.set_config" title="(in scikit-learn v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code></a>).
+Please see <a class="reference external" href="https://scikit-learn.org/stable/metadata_routing.html#metadata-routing" title="(in scikit-learn v1.5)"><span class="xref std std-ref">User Guide</span></a> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>connectivities</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#True" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">True</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#False" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">False</span></code></a>, or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">connectivities</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code>.</p>
+</dd>
+<dt><strong>diagonal</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#True" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">True</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#False" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">False</span></code></a>, or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">diagonal</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">inverse_transform</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.external.nilearn.JuniferConnectivityMeasure.set_transform_request">
+<span class="sig-name descname"><span class="pre">set_transform_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.external.nilearn.JuniferConnectivityMeasure.set_transform_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">transform</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.set_config.html#sklearn.set_config" title="(in scikit-learn v1.5)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code></a>).
+Please see <a class="reference external" href="https://scikit-learn.org/stable/metadata_routing.html#metadata-routing" title="(in scikit-learn v1.5)"><span class="xref std std-ref">User Guide</span></a> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">transform</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">transform</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html#sklearn.pipeline.Pipeline" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code></a>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>confounds</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#True" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">True</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/constants.html#False" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">False</span></code></a>, or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>,                     default=sklearn.utils.metadata_routing.UNCHANGED</span></dt><dd><p>Metadata routing for <code class="docutils literal notranslate"><span class="pre">confounds</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">transform</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>self</strong><span class="classifier">object</span></dt><dd><p>The updated object.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="junifer.external.nilearn.JuniferNiftiSpheresMasker">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.external.nilearn.</span></span><span class="sig-name descname"><span class="pre">JuniferNiftiSpheresMasker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seeds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_img=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_func=&lt;function</span> <span class="pre">mean&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlap=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.external.nilearn.JuniferNiftiSpheresMasker" title="Link to this definition">¶</a></dt>
 <dd><p>Class for custom NiftiSpheresMasker.</p>
@@ -496,7 +659,7 @@ sub-estimator of a meta-estimator, e.g. used inside a
 If a 3D niimg is provided, a singleton dimension will be added to
 the output to represent the single scan in the niimg.</p>
 </dd>
-<dt><strong>confounds</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1218.gfc8fc82233)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>, optional</span></dt><dd><p>This parameter is passed to <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.signal.clean.html#nilearn.signal.clean" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.signal.clean()</span></code></a>.
+<dt><strong>confounds</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1223.gc3b72aae6f)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>, optional</span></dt><dd><p>This parameter is passed to <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.signal.clean.html#nilearn.signal.clean" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.signal.clean()</span></code></a>.
 Please see the related documentation for details.
 shape: (number of scans, number of confounds)</p>
 </dd>
@@ -586,6 +749,11 @@ inputs.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">9.4.1. Nilearn</a><ul>
+<li><a class="reference internal" href="#junifer.external.nilearn.JuniferConnectivityMeasure"><code class="docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.external.nilearn.JuniferConnectivityMeasure.set_inverse_transform_request"><code class="docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure.set_inverse_transform_request()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.external.nilearn.JuniferConnectivityMeasure.set_transform_request"><code class="docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure.set_transform_request()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#junifer.external.nilearn.JuniferNiftiSpheresMasker"><code class="docutils literal notranslate"><span class="pre">JuniferNiftiSpheresMasker</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.external.nilearn.JuniferNiftiSpheresMasker.inverse_transform"><code class="docutils literal notranslate"><span class="pre">JuniferNiftiSpheresMasker.inverse_transform()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.external.nilearn.JuniferNiftiSpheresMasker.set_inverse_transform_request"><code class="docutils literal notranslate"><span class="pre">JuniferNiftiSpheresMasker.set_inverse_transform_request()</span></code></a></li>

@@ -37,7 +37,7 @@ with OasisVBMTestingDataGrabber() as dg:
     feature = marker.fit_transform(element_data)
     # Print the output
     print(feature.keys())
-    print(feature["VBM_GM"]["data"].shape)  # Shape is (1 x parcels)
+    print(feature["VBM_GM"]["aggregation"]["data"].shape)  # Shape is (1 x parcels)
 
 ###############################################################################
 # Perform parcel aggregation on BOLD data (4D) from SPM Auditory dataset
@@ -54,4 +54,4 @@ with SPMAuditoryTestingDataGrabber() as dg:
     feature = marker.fit_transform(element_data)
     # Print the output
     print(feature.keys())
-    print(feature["BOLD"]["data"].shape)  # Shape is (timepoints x parcels)
+    print(feature["BOLD"]["aggregation"]["data"].shape)  # Shape is (timepoints x parcels)

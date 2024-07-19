@@ -335,15 +335,13 @@
 <p>Markers for feature extraction.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.ALFFParcels">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">ALFFParcels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fractional</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">using</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highpass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowpass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ALFFParcels" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">ALFFParcels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">using</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highpass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowpass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ALFFParcels" title="Link to this definition">¶</a></dt>
 <dd><p>Class for ALFF / fALFF on parcels.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
 <a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_parcellations()</span></code></a>.</p>
-</dd>
-<dt><strong>fractional</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether to compute fractional ALFF.</p>
 </dd>
 <dt><strong>using</strong><span class="classifier">{“junifer”, “afni”}</span></dt><dd><p>Implementation to use for computing ALFF:</p>
 <ul class="simple">
@@ -399,11 +397,22 @@ details.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. The dictionary has the following
-keys:</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
+to the user or stored in the storage by calling the store method
+with this as a parameter. The dictionary has the following keys:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the computed values as list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alff</span></code> : dictionary with the following keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">falff</span></code> : dictionary with the following keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</li>
 </ul>
 </dd>
 </dl>
@@ -415,15 +424,13 @@ keys:</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.ALFFSpheres">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">ALFFSpheres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fractional</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">using</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highpass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowpass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ALFFSpheres" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">ALFFSpheres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">using</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highpass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowpass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ALFFSpheres" title="Link to this definition">¶</a></dt>
 <dd><p>Class for computing ALFF / fALFF on spheres.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>coords</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the coordinates list to use. See
 <a class="reference internal" href="data.html#junifer.data.coordinates.list_coordinates" title="junifer.data.coordinates.list_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_coordinates()</span></code></a> for options.</p>
-</dd>
-<dt><strong>fractional</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a></span></dt><dd><p>Whether to compute fractional ALFF.</p>
 </dd>
 <dt><strong>using</strong><span class="classifier">{“junifer”, “afni”}</span></dt><dd><p>Implementation to use for computing ALFF:</p>
 <ul class="simple">
@@ -486,11 +493,22 @@ details.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. The dictionary has the following
-keys:</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
+to the user or stored in the storage by calling the store method
+with this as a parameter. The dictionary has the following keys:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the computed values as list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">alff</span></code> : dictionary with the following keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">falff</span></code> : dictionary with the following keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</li>
 </ul>
 </dd>
 </dl>
@@ -519,6 +537,8 @@ name of the marker (default None).</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AttributeError</span></code></a></dt><dd><p>If the marker does not have <cite>_MARKER_INOUT_MAPPINGS</cite> attribute.</p>
+</dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If required input data type(s) is(are) not found.</p>
 </dd>
 </dl>
@@ -554,18 +574,20 @@ with this as a parameter.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.markers.BaseMarker.get_output_type">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BaseMarker.get_output_type" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_feature</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BaseMarker.get_output_type" title="Link to this definition">¶</a></dt>
 <dd><p>Get output type.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the marker.</p>
 </dd>
+<dt><strong>output_feature</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The feature output of the marker.</p>
+</dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The storage type output by the marker.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The storage type output of the marker.</p>
 </dd>
 </dl>
 </dd>
@@ -574,7 +596,7 @@ with this as a parameter.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.markers.BaseMarker.get_valid_inputs">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BaseMarker.get_valid_inputs" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BaseMarker.get_valid_inputs" title="Link to this definition">¶</a></dt>
 <dd><p>Get valid data types for input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -588,12 +610,14 @@ with this as a parameter.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.markers.BaseMarker.store">
-<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BaseMarker.store" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BaseMarker.store" title="Link to this definition">¶</a></dt>
 <dd><p>Store.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>type_</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type to store.</p>
+</dd>
+<dt><strong>feature</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The feature to store.</p>
 </dd>
 <dt><strong>out</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The computed result as a dictionary to store.</p>
 </dd>
@@ -686,22 +710,48 @@ None).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl>
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. The dictionary has the following
-keys:</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
+to the user or stored in the storage by calling the store method
+with this as a parameter. The dictionary has the following keys:</p>
 <ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">eigenvalues</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : eigenvalues as <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : surface labels as list of str</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">row_names</span></code> : eigenvalue count labels as list of str</p></li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">eigenvalues</span></code><span class="classifier">dict of surface labels (str) and eigenvalues</span></dt><dd><p>(<code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>)</p>
+<dt><code class="docutils literal notranslate"><span class="pre">row_header_col_name</span></code><span class="classifier">“eigenvalue”</span></dt><dd><p>()</p>
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">eigenvectors</span></code><span class="classifier">dict of surface labels (str) and eigenvectors</span></dt><dd><p>(<code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code>) if <code class="docutils literal notranslate"><span class="pre">keep_eigenvectors=True</span></code>
-else None</p>
-</dd>
-</dl>
+</ul>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">areas</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : areas as <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : surface labels as list of str</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">volumes</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : volumes as <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : surface labels as list of str</p></li>
+</ul>
+</div></blockquote>
 </li>
 <li><dl>
-<dt><code class="docutils literal notranslate"><span class="pre">distances</span></code><span class="classifier">dict of <code class="docutils literal notranslate"><span class="pre">{left_label}_{right_label}</span></code> (str) and</span></dt><dd><p>distance (float) if <code class="docutils literal notranslate"><span class="pre">asymmetry=True</span></code> else None</p>
+<dt><code class="docutils literal notranslate"><span class="pre">distances</span></code><span class="classifier">dictionary with the following keys</span></dt><dd><blockquote>
+<div><p>if <code class="docutils literal notranslate"><span class="pre">asymmetry</span> <span class="pre">=</span> <span class="pre">True</span></code>:</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : distances as <code class="docutils literal notranslate"><span class="pre">np.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : surface labels as list of str</p></li>
+</ul>
 </dd>
 </dl>
 </li>
@@ -730,91 +780,11 @@ Computer-Aided Design, Volume 38, Issue 4, Pages 342-366.
 </div>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.BrainPrint.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BrainPrint.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the marker.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The storage type output by the marker.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.BrainPrint.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BrainPrint.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this marker.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.BrainPrint.store">
-<span class="sig-name descname"><span class="pre">store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BrainPrint.store" title="Link to this definition">¶</a></dt>
-<dd><p>Store.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>type_</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type to store.</p>
-</dd>
-<dt><strong>feature</strong><span class="classifier">{“eigenvalues”, “distances”, “areas”, “volumes”}</span></dt><dd><p>The feature name to store.</p>
-</dd>
-<dt><strong>out</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The computed result as a dictionary to store.</p>
-</dd>
-<dt><strong>storage</strong><span class="classifier">storage-like</span></dt><dd><p>The storage class, for example, SQLiteFeatureStorage.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">feature</span></code> is invalid.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.BrainPrint.validate">
-<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.BrainPrint.validate" title="Link to this definition">¶</a></dt>
-<dd><p>Validate the the pipeline step.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The input to the pipeline step.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The output of the pipeline step.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.CrossParcellationFC">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">CrossParcellationFC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation_one</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellation_two</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aggregation_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correlation_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pearson'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.CrossParcellationFC" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">CrossParcellationFC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation_one</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parcellation_two</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corr_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pearson'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.CrossParcellationFC" title="Link to this definition">¶</a></dt>
 <dd><p>Class for calculating parcel-wise correlations with 2 parcellations.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -823,17 +793,23 @@ Computer-Aided Design, Volume 38, Issue 4, Pages 342-366.
 </dd>
 <dt><strong>parcellation_two</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the second parcellation.</p>
 </dd>
-<dt><strong>aggregation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method (default “mean”).</p>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
+(default “mean”).</p>
 </dd>
-<dt><strong>correlation_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Any method that can be passed to
-<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v3.0.0.dev0+1218.gfc8fc82233)"><code class="xref any docutils literal notranslate"><span class="pre">pandas.DataFrame.corr</span></code></a> (default “pearson”).</p>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
+(default None).</p>
+</dd>
+<dt><strong>corr_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Any method that can be passed to
+<a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.corr.html#pandas.DataFrame.corr" title="(in pandas v3.0.0.dev0+1223.gc3b72aae6f)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pandas.DataFrame.corr()</span></code></a> (default “pearson”).</p>
 </dd>
 <dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
 signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
 If None, will not apply any mask (default None).</p>
 </dd>
-<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use the class name
-(default None).</p>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use
+<code class="docutils literal notranslate"><span class="pre">BOLD_CrossParcellationFC</span></code> (default None).</p>
 </dd>
 </dl>
 </dd>
@@ -861,45 +837,26 @@ of ROIs in (parcellation_two, parcellation_one).</p>
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the correlation values between the two parcellations
-as a numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the ROIs for first parcellation as a list</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">row_names</span></code> : the ROIs for second parcellation as a list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">functional_connectivity</span></code> : dictionary with the following keys:</p>
+<ul>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">data</span></code><span class="classifier">correlation between the two parcellations as</span></dt><dd><p><code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">col_names</span></code><span class="classifier">ROI labels for first parcellation as list of</span></dt><dd><p>str</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">row_names</span></code><span class="classifier">ROI labels for second parcellation as list of</span></dt><dd><p>str</p>
+</dd>
+</dl>
+</li>
 </ul>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.CrossParcellationFC.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.CrossParcellationFC.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the marker.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The storage type output by the marker.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.CrossParcellationFC.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.CrossParcellationFC.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this marker</p>
+</li>
+</ul>
 </dd>
 </dl>
 </dd>
@@ -910,34 +867,39 @@ as a numpy.ndarray</p></li>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.EdgeCentricFCParcels">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">EdgeCentricFCParcels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'covariance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.EdgeCentricFCParcels" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">EdgeCentricFCParcels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'correlation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.EdgeCentricFCParcels" title="Link to this definition">¶</a></dt>
 <dd><p>Class for edge-centric FC using parcellations.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
-<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_parcellations()</span></code></a>.</p>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s) to use.
+See <a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_parcellations()</span></code></a> for options.</p>
 </dd>
-<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation of BOLD time series.
-Check valid options in <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
 (default “mean”).</p>
 </dd>
-<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
-<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> (default None).</p>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
+(default None).</p>
 </dd>
-<dt><strong>cor_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform correlation. Check valid options in
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a>
-(default “covariance”).</p>
+<dt><strong>conn_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform connectivity measure using.
+See <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a> for options
+(default “correlation”).</p>
 </dd>
-<dt><strong>cor_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the correlation function. Check valid options in
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a> (default None).</p>
+<dt><strong>conn_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a>.
+If None, <code class="docutils literal notranslate"><span class="pre">{&quot;empirical&quot;:</span> <span class="pre">True}</span></code> will be used, which would mean
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EmpiricalCovariance.html#sklearn.covariance.EmpiricalCovariance" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.EmpiricalCovariance</span></code></a> is used to compute
+covariance. If usage of <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.LedoitWolf.html#sklearn.covariance.LedoitWolf" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.LedoitWolf</span></code></a> is
+desired, <code class="docutils literal notranslate"><span class="pre">{&quot;empirical&quot;:</span> <span class="pre">False}</span></code> should be passed
+(default None).</p>
 </dd>
 <dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
 signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
 If None, will not apply any mask (default None).</p>
 </dd>
-<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use the class name (default
-None).</p>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use
+<code class="docutils literal notranslate"><span class="pre">BOLD_EdgeCentricFCParcels</span></code> (default None).</p>
 </dd>
 </dl>
 </dd>
@@ -947,9 +909,8 @@ None).</p>
 <div class="citation" id="r4722cbf5d0a7-1" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
 <p>Jo et al. (2021)
-Subject identification using
-edge-centric functional connectivity
-doi: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2021.118204">https://doi.org/10.1016/j.neuroimage.2021.118204</a></p>
+Subject identification using edge-centric functional connectivity.
+<a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2021.118204">https://doi.org/10.1016/j.neuroimage.2021.118204</a></p>
 </div>
 </div>
 <dl class="py method">
@@ -970,13 +931,19 @@ confounds if available (default None).</p>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the computed values as list</p></li>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </dd>
 </dl>
@@ -988,40 +955,47 @@ with this as a parameter. The dictionary has the following keys:</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.EdgeCentricFCSpheres">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">EdgeCentricFCSpheres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'covariance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.EdgeCentricFCSpheres" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">EdgeCentricFCSpheres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'correlation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.EdgeCentricFCSpheres" title="Link to this definition">¶</a></dt>
 <dd><p>Class for edge-centric FC using coordinates (spheres).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>coords</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the coordinates list to use. See
-<a class="reference internal" href="data.html#junifer.data.coordinates.list_coordinates" title="junifer.data.coordinates.list_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_coordinates()</span></code></a> for options.</p>
+<dt><strong>coords</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the coordinates list to use.
+See <a class="reference internal" href="data.html#junifer.data.coordinates.list_coordinates" title="junifer.data.coordinates.list_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_coordinates()</span></code></a> for options.</p>
 </dd>
-<dt><strong>radius</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The radius of the sphere in mm. If None, the signal will be extracted
-from a single voxel. See <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.maskers.NiftiSpheresMasker.html#nilearn.maskers.NiftiSpheresMasker" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiSpheresMasker</span></code></a>
-for more information (default None).</p>
-</dd>
-<dt><strong>allow_overlap</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to allow overlapping spheres. If False, an error is raised if
-the spheres overlap (default is False).</p>
-</dd>
-<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method to use.
-See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for more information
+<dt><strong>radius</strong><span class="classifier">positive <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The radius of the sphere around each coordinates in millimetres.
+If None, the signal will be extracted from a single voxel.
+See <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferNiftiSpheresMasker" title="junifer.external.nilearn.JuniferNiftiSpheresMasker"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferNiftiSpheresMasker</span></code></a> for more information
 (default None).</p>
 </dd>
-<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The parameters to pass to the aggregation method (default None).</p>
+<dt><strong>allow_overlap</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to allow overlapping spheres. If False, an error is raised if
+the spheres overlap (default False).</p>
 </dd>
-<dt><strong>cor_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform correlation using. Check valid options in
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a> (default “covariance”).</p>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
+(default “mean”).</p>
 </dd>
-<dt><strong>cor_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the correlation function. Check valid options in
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a> (default None).</p>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
+(default None).</p>
+</dd>
+<dt><strong>conn_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform connectivity measure using.
+See <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a> for options
+(default “correlation”).</p>
+</dd>
+<dt><strong>conn_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a>.
+If None, <code class="docutils literal notranslate"><span class="pre">{&quot;empirical&quot;:</span> <span class="pre">True}</span></code> will be used, which would mean
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EmpiricalCovariance.html#sklearn.covariance.EmpiricalCovariance" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.EmpiricalCovariance</span></code></a> is used to compute
+covariance. If usage of <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.LedoitWolf.html#sklearn.covariance.LedoitWolf" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.LedoitWolf</span></code></a> is
+desired, <code class="docutils literal notranslate"><span class="pre">{&quot;empirical&quot;:</span> <span class="pre">False}</span></code> should be passed
+(default None).</p>
 </dd>
 <dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
 signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
 If None, will not apply any mask (default None).</p>
 </dd>
-<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. By default, it will use
-KIND_EdgeCentricFCSpheres where KIND is the kind of data it
-was applied to (default None).</p>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use
+<code class="docutils literal notranslate"><span class="pre">BOLD_EdgeCentricFCSpheres</span></code> (default None).</p>
 </dd>
 </dl>
 </dd>
@@ -1031,9 +1005,8 @@ was applied to (default None).</p>
 <div class="citation" id="r404a445cf1a4-1" role="doc-biblioentry">
 <span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
 <p>Jo et al. (2021)
-Subject identification using
-edge-centric functional connectivity
-doi: <a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2021.118204">https://doi.org/10.1016/j.neuroimage.2021.118204</a></p>
+Subject identification using edge-centric functional connectivity.
+<a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2021.118204">https://doi.org/10.1016/j.neuroimage.2021.118204</a></p>
 </div>
 </div>
 <dl class="py method">
@@ -1054,13 +1027,19 @@ confounds if available (default None).</p>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the computed values as list</p></li>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </dd>
 </dl>
@@ -1072,33 +1051,39 @@ with this as a parameter. The dictionary has the following keys:</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivityParcels">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">FunctionalConnectivityParcels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'covariance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityParcels" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">FunctionalConnectivityParcels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parcellation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'correlation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivityParcels" title="Link to this definition">¶</a></dt>
 <dd><p>Class for functional connectivity using parcellations.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s). Check valid options by calling
-<a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_parcellations()</span></code></a>.</p>
+<dt><strong>parcellation</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name(s) of the parcellation(s) to use.
+See <a class="reference internal" href="data.html#junifer.data.parcellations.list_parcellations" title="junifer.data.parcellations.list_parcellations"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_parcellations()</span></code></a> for options.</p>
 </dd>
-<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using. Check valid options in
-<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> (default “mean”).</p>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
+(default “mean”).</p>
 </dd>
-<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function. Check valid options in
-<a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> (default None).</p>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
+(default None).</p>
 </dd>
-<dt><strong>cor_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform correlation using. Check valid options in
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a>
-(default “covariance”).</p>
+<dt><strong>conn_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform connectivity measure using.
+See <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a> for options
+(default “correlation”).</p>
 </dd>
-<dt><strong>cor_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the correlation function. Check valid options in
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a> (default None).</p>
+<dt><strong>conn_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a>.
+If None, <code class="docutils literal notranslate"><span class="pre">{&quot;empirical&quot;:</span> <span class="pre">True}</span></code> will be used, which would mean
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EmpiricalCovariance.html#sklearn.covariance.EmpiricalCovariance" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.EmpiricalCovariance</span></code></a> is used to compute
+covariance. If usage of <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.LedoitWolf.html#sklearn.covariance.LedoitWolf" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.LedoitWolf</span></code></a> is
+desired, <code class="docutils literal notranslate"><span class="pre">{&quot;empirical&quot;:</span> <span class="pre">False}</span></code> should be passed
+(default None).</p>
 </dd>
 <dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
 signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
 If None, will not apply any mask (default None).</p>
 </dd>
-<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use the class name (default
-None).</p>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use
+<code class="docutils literal notranslate"><span class="pre">BOLD_FunctionalConnectivityParcels</span></code> (default None).</p>
 </dd>
 </dl>
 </dd>
@@ -1121,13 +1106,19 @@ confounds if available (default None).</p>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the computed values as list</p></li>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </dd>
 </dl>
@@ -1139,40 +1130,47 @@ with this as a parameter. The dictionary has the following keys:</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.markers.FunctionalConnectivitySpheres">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">FunctionalConnectivitySpheres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'covariance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cor_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivitySpheres" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.markers.</span></span><span class="sig-name descname"><span class="pre">FunctionalConnectivitySpheres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_overlap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agg_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'correlation'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn_method_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.FunctionalConnectivitySpheres" title="Link to this definition">¶</a></dt>
 <dd><p>Class for functional connectivity using coordinates (spheres).</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>coords</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the coordinates list to use. See
-<a class="reference internal" href="data.html#junifer.data.coordinates.list_coordinates" title="junifer.data.coordinates.list_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_coordinates()</span></code></a> for options.</p>
+<dt><strong>coords</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the coordinates list to use.
+See <a class="reference internal" href="data.html#junifer.data.coordinates.list_coordinates" title="junifer.data.coordinates.list_coordinates"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_coordinates()</span></code></a> for options.</p>
 </dd>
-<dt><strong>radius</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The radius of the sphere in mm. If None, the signal will be extracted
-from a single voxel. See <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.maskers.NiftiSpheresMasker.html#nilearn.maskers.NiftiSpheresMasker" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.maskers.NiftiSpheresMasker</span></code></a>
-for more information (default None).</p>
-</dd>
-<dt><strong>allow_overlap</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to allow overlapping spheres. If False, an error is raised if
-the spheres overlap (default is False).</p>
-</dd>
-<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The aggregation method to use.
-See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for more information
+<dt><strong>radius</strong><span class="classifier">positive <a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The radius of the sphere around each coordinates in millimetres.
+If None, the signal will be extracted from a single voxel.
+See <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferNiftiSpheresMasker" title="junifer.external.nilearn.JuniferNiftiSpheresMasker"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferNiftiSpheresMasker</span></code></a> for more information
 (default None).</p>
 </dd>
-<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The parameters to pass to the aggregation method (default None).</p>
+<dt><strong>allow_overlap</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to allow overlapping spheres. If False, an error is raised if
+the spheres overlap (default False).</p>
 </dd>
-<dt><strong>cor_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform correlation using. Check valid options in
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a> (default “covariance”).</p>
+<dt><strong>agg_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform aggregation using.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
+(default “mean”).</p>
 </dd>
-<dt><strong>cor_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the correlation function. Check valid options in
-<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.connectome.ConnectivityMeasure.html#nilearn.connectome.ConnectivityMeasure" title="(in Nilearn)"><code class="xref py py-class docutils literal notranslate"><span class="pre">nilearn.connectome.ConnectivityMeasure</span></code></a> (default None).</p>
+<dt><strong>agg_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the aggregation function.
+See <a class="reference internal" href="stats.html#junifer.stats.get_aggfunc_by_name" title="junifer.stats.get_aggfunc_by_name"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_aggfunc_by_name()</span></code></a> for options
+(default None).</p>
+</dd>
+<dt><strong>conn_method</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The method to perform connectivity measure using.
+See <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a> for options
+(default “correlation”).</p>
+</dd>
+<dt><strong>conn_method_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>Parameters to pass to <a class="reference internal" href="nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a>.
+If None, <code class="docutils literal notranslate"><span class="pre">{&quot;empirical&quot;:</span> <span class="pre">True}</span></code> will be used, which would mean
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EmpiricalCovariance.html#sklearn.covariance.EmpiricalCovariance" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.EmpiricalCovariance</span></code></a> is used to compute
+covariance. If usage of <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.LedoitWolf.html#sklearn.covariance.LedoitWolf" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.LedoitWolf</span></code></a> is
+desired, <code class="docutils literal notranslate"><span class="pre">{&quot;empirical&quot;:</span> <span class="pre">False}</span></code> should be passed
+(default None).</p>
 </dd>
 <dt><strong>masks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The specification of the masks to apply to regions before extracting
 signals. Check <a class="reference internal" href="../using/masks.html#using-masks"><span class="std std-ref">Using Masks</span></a> for more details.
 If None, will not apply any mask (default None).</p>
 </dd>
-<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. By default, it will use
-KIND_FunctionalConnectivitySpheres where KIND is the kind of data it
-was applied to (default None).</p>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the marker. If None, will use
+<code class="docutils literal notranslate"><span class="pre">BOLD_FunctionalConnectivitySpheres</span></code> (default None).</p>
 </dd>
 </dl>
 </dd>
@@ -1195,13 +1193,19 @@ confounds if available (default None).</p>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the computed values as list</p></li>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </dd>
 </dl>
@@ -1338,13 +1342,19 @@ confounds if available (default None).</p>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the computed values as list</p></li>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </dd>
 </dl>
@@ -1352,46 +1362,6 @@ with this as a parameter. The dictionary has the following keys:</p>
 <dt class="field-odd">Warns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeWarning" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeWarning</span></code></a></dt><dd><p>If time aggregation is required but only time point is available.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.ParcelAggregation.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ParcelAggregation.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the marker.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The storage type output by the marker.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">input_type</span></code> is invalid.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.ParcelAggregation.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.ParcelAggregation.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this marker.</p>
 </dd>
 </dl>
 </dd>
@@ -1444,8 +1414,9 @@ check <a class="reference external" href="https://github.com/brain-networks/edge
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. The dictionary has the following
-keys:</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
+to the user or stored in the storage by calling the store method
+with this as a parameter. The dictionary has the following keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the computed values as list</p></li>
@@ -1464,40 +1435,6 @@ functional connectivity
 doi: 10.1073/pnas.2005531117</p>
 </div>
 </div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.RSSETSMarker.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.RSSETSMarker.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the marker.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The storage type output by the marker.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.RSSETSMarker.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.RSSETSMarker.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this marker.</p>
-</dd>
-</dl>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>
@@ -1622,11 +1559,16 @@ If None, will not apply any mask (default None).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. The dictionary has the following
-keys:</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
+to the user or stored in the storage by calling the store method
+with this as a parameter. The dictionary has the following keys:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a 1D numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the parcels as a list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reho</span></code> : dictionary with the following keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</li>
 </ul>
 </dd>
 </dl>
@@ -1767,11 +1709,16 @@ If None, will not apply any mask (default None).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. The dictionary has the following
-keys:</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
+to the user or stored in the storage by calling the store method
+with this as a parameter. The dictionary has the following keys:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a 1D numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the spheres as a list</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reho</span></code> : dictionary with the following keys:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</li>
 </ul>
 </dd>
 </dl>
@@ -1849,13 +1796,19 @@ confounds if available (default None).</p>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : the actual computed values as a numpy.ndarray</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the column labels for the computed values as list</p></li>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </dd>
 </dl>
@@ -1863,46 +1816,6 @@ with this as a parameter. The dictionary has the following keys:</p>
 <dt class="field-odd">Warns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeWarning" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeWarning</span></code></a></dt><dd><p>If time aggregation is required but only time point is available.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.SphereAggregation.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.SphereAggregation.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the marker.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The storage type output by the marker.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">input_type</span></code> is invalid.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.markers.SphereAggregation.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.markers.SphereAggregation.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this marker.</p>
 </dd>
 </dl>
 </dd>
@@ -1955,13 +1868,19 @@ confounds if available (default None).</p>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI-wise temporal SNR as a <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the ROI labels for the computed values as list</p></li>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI-wise tSNR values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </dd>
 </dl>
@@ -2023,13 +1942,19 @@ confounds if available (default None).</p>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
+<dd class="field-even"><dl>
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. This will be either returned
 to the user or stored in the storage by calling the store method
 with this as a parameter. The dictionary has the following keys:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : VOI-wise temporal SNR as a <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : the VOI labels for the computed values as list</p></li>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">aggregation</span></code> : dictionary with the following keys:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> : ROI-wise tSNR values as <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">col_names</span></code> : ROI labels as list of str</p></li>
+</ul>
+</div></blockquote>
+</li>
 </ul>
 </dd>
 </dl>
@@ -2668,16 +2593,10 @@ Physical Review E, 87(2), 022911.</p>
 </li>
 <li><a class="reference internal" href="#junifer.markers.BrainPrint"><code class="docutils literal notranslate"><span class="pre">BrainPrint</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.markers.BrainPrint.compute"><code class="docutils literal notranslate"><span class="pre">BrainPrint.compute()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.BrainPrint.get_output_type"><code class="docutils literal notranslate"><span class="pre">BrainPrint.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.BrainPrint.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">BrainPrint.get_valid_inputs()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.BrainPrint.store"><code class="docutils literal notranslate"><span class="pre">BrainPrint.store()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.BrainPrint.validate"><code class="docutils literal notranslate"><span class="pre">BrainPrint.validate()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.markers.CrossParcellationFC"><code class="docutils literal notranslate"><span class="pre">CrossParcellationFC</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.markers.CrossParcellationFC.compute"><code class="docutils literal notranslate"><span class="pre">CrossParcellationFC.compute()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.CrossParcellationFC.get_output_type"><code class="docutils literal notranslate"><span class="pre">CrossParcellationFC.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.CrossParcellationFC.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">CrossParcellationFC.get_valid_inputs()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.markers.EdgeCentricFCParcels"><code class="docutils literal notranslate"><span class="pre">EdgeCentricFCParcels</span></code></a><ul>
@@ -2703,14 +2622,10 @@ Physical Review E, 87(2), 022911.</p>
 </li>
 <li><a class="reference internal" href="#junifer.markers.ParcelAggregation"><code class="docutils literal notranslate"><span class="pre">ParcelAggregation</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.markers.ParcelAggregation.compute"><code class="docutils literal notranslate"><span class="pre">ParcelAggregation.compute()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.ParcelAggregation.get_output_type"><code class="docutils literal notranslate"><span class="pre">ParcelAggregation.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.ParcelAggregation.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">ParcelAggregation.get_valid_inputs()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.markers.RSSETSMarker"><code class="docutils literal notranslate"><span class="pre">RSSETSMarker</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.markers.RSSETSMarker.compute"><code class="docutils literal notranslate"><span class="pre">RSSETSMarker.compute()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.RSSETSMarker.get_output_type"><code class="docutils literal notranslate"><span class="pre">RSSETSMarker.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.RSSETSMarker.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">RSSETSMarker.get_valid_inputs()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.markers.ReHoParcels"><code class="docutils literal notranslate"><span class="pre">ReHoParcels</span></code></a><ul>
@@ -2723,8 +2638,6 @@ Physical Review E, 87(2), 022911.</p>
 </li>
 <li><a class="reference internal" href="#junifer.markers.SphereAggregation"><code class="docutils literal notranslate"><span class="pre">SphereAggregation</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.markers.SphereAggregation.compute"><code class="docutils literal notranslate"><span class="pre">SphereAggregation.compute()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.SphereAggregation.get_output_type"><code class="docutils literal notranslate"><span class="pre">SphereAggregation.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.markers.SphereAggregation.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">SphereAggregation.get_valid_inputs()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.markers.TemporalSNRParcels"><code class="docutils literal notranslate"><span class="pre">TemporalSNRParcels</span></code></a><ul>

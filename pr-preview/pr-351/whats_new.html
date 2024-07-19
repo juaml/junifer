@@ -332,8 +332,8 @@
         <article role="main" id="furo-main-content">
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
-<section id="junifer-0-0-5-dev200-2024-07-18">
-<h2><span class="section-number">14.1. </span>Junifer 0.0.5.dev200 (2024-07-18)<a class="headerlink" href="#junifer-0-0-5-dev200-2024-07-18" title="Link to this heading">¶</a></h2>
+<section id="junifer-0-0-5-dev240-2024-07-19">
+<h2><span class="section-number">14.1. </span>Junifer 0.0.5.dev240 (2024-07-19)<a class="headerlink" href="#junifer-0-0-5-dev240-2024-07-19" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -352,6 +352,17 @@ types requirement by <a class="reference external" href="https://github.com/sync
 <section id="api-changes">
 <h3><span class="section-number">14.1.2. </span>API Changes<a class="headerlink" href="#api-changes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
+<li><p>For <a class="reference internal" href="api/markers.html#junifer.markers.CrossParcellationFC" title="junifer.markers.CrossParcellationFC"><code class="xref py py-class docutils literal notranslate"><span class="pre">CrossParcellationFC</span></code></a>, <code class="docutils literal notranslate"><span class="pre">aggregation_method</span></code> and
+<code class="docutils literal notranslate"><span class="pre">correlation_method</span></code> have been renamed to <code class="docutils literal notranslate"><span class="pre">agg_method</span></code> and
+<code class="docutils literal notranslate"><span class="pre">corr_method</span></code> respectively and <code class="docutils literal notranslate"><span class="pre">agg_method_params</span></code> has been added; for
+<code class="docutils literal notranslate"><span class="pre">FunctionalConnectivityBase</span></code>, <a class="reference internal" href="api/markers.html#junifer.markers.FunctionalConnectivityParcels" title="junifer.markers.FunctionalConnectivityParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalConnectivityParcels</span></code></a>,
+<a class="reference internal" href="api/markers.html#junifer.markers.FunctionalConnectivitySpheres" title="junifer.markers.FunctionalConnectivitySpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalConnectivitySpheres</span></code></a>, <a class="reference internal" href="api/markers.html#junifer.markers.EdgeCentricFCParcels" title="junifer.markers.EdgeCentricFCParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeCentricFCParcels</span></code></a> and
+<a class="reference internal" href="api/markers.html#junifer.markers.EdgeCentricFCSpheres" title="junifer.markers.EdgeCentricFCSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeCentricFCSpheres</span></code></a>, <code class="docutils literal notranslate"><span class="pre">cor_method</span></code> and <code class="docutils literal notranslate"><span class="pre">cor_method_params</span></code> have
+been renamed to <code class="docutils literal notranslate"><span class="pre">conn_method</span></code> and <code class="docutils literal notranslate"><span class="pre">conn_method_params</span></code> by <a class="reference external" href="https://github.com/synchon">Synchon
+Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/348">#348</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fractional</span></code> parameter for <code class="docutils literal notranslate"><span class="pre">ALFFBase</span></code>, <a class="reference internal" href="api/markers.html#junifer.markers.ALFFParcels" title="junifer.markers.ALFFParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFParcels</span></code></a> and
+<a class="reference internal" href="api/markers.html#junifer.markers.ALFFSpheres" title="junifer.markers.ALFFSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFSpheres</span></code></a> have been removed in favour of returning both ALFF and
+fALFF by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/349">#349</a>)</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">partial_pattern_ok</span></code> argument to <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> to not
 raise error on missing mandatory key checks for data types by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/351">#351</a>)</p></li>
@@ -380,6 +391,11 @@ aggregation function behaves exactly as
 <li><p>Adapt <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICID1000" title="junifer.datagrabber.DataladAOMICID1000"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a>, <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a> and
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> to support <code class="docutils literal notranslate"><span class="pre">FreeSurfer</span></code> data type by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/346">#346</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivity</span></code>-family Markers now use
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EmpiricalCovariance.html#sklearn.covariance.EmpiricalCovariance" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.EmpiricalCovariance</span></code></a> as the default covariance
+estimator and <code class="docutils literal notranslate"><span class="pre">correlation</span></code> as the default connecivity matrix kind by
+<a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/348">#348</a>)</p></li>
+<li><p>Enable Markers to output multiple features by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/349">#349</a>)</p></li>
 <li><p>Add support for <code class="docutils literal notranslate"><span class="pre">UKB_15K_GM</span></code> mask by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/350">#350</a>)</p></li>
 <li><p>Adapt <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a> to handle “nested types” introduced in
 <a class="reference external" href="https://github.com/juaml/junifer/issues/341">#341</a> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/351">#351</a>)</p></li>
@@ -403,6 +419,8 @@ DataGrabber based on filtering via <code class="docutils literal notranslate"><s
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> <code class="docutils literal notranslate"><span class="pre">patterns</span></code> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/345">#345</a>)</p></li>
 <li><p>Add support for <code class="docutils literal notranslate"><span class="pre">FreeSurfer</span></code> data type for <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> by
 <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/346">#346</a>)</p></li>
+<li><p>Introduce <a class="reference internal" href="api/nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a> for customising functional
+connectivity matrix kinds and measurements by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/348">#348</a>)</p></li>
 <li><p>Introduce <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternValidationMixin" title="junifer.datagrabber.PatternValidationMixin"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternValidationMixin</span></code></a> to simplify validation for
 pattern-based DataGrabbers and <a class="reference internal" href="api/utils.html#junifer.utils.deep_update" title="junifer.utils.deep_update"><code class="xref py py-func docutils literal notranslate"><span class="pre">deep_update()</span></code></a> for updating dictionary
 with varying width and depth by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/351">#351</a>)</p></li>
@@ -422,6 +440,8 @@ necessary dependency version and conditional checks by <a class="reference exter
 <code class="docutils literal notranslate"><span class="pre">mri_binarize</span></code>, <code class="docutils literal notranslate"><span class="pre">mri_pretess</span></code>, <code class="docutils literal notranslate"><span class="pre">mri_mc</span></code> and <code class="docutils literal notranslate"><span class="pre">mris_convert</span></code> by
 <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/342">#342</a>)</p></li>
 <li><p>Update core and docs dependencies by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/347">#347</a>)</p></li>
+<li><p>Integrate <code class="docutils literal notranslate"><span class="pre">warnings</span></code> with <code class="docutils literal notranslate"><span class="pre">logging</span></code> respecting filters by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="reference external" href="https://github.com/juaml/junifer/issues/351">#351</a>)</p></li>
 </ul>
 </section>
 <section id="deprecations-and-removals">
@@ -1044,7 +1064,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-0-0-5-dev200-2024-07-18">14.1. Junifer 0.0.5.dev200 (2024-07-18)</a><ul>
+<li><a class="reference internal" href="#junifer-0-0-5-dev240-2024-07-19">14.1. Junifer 0.0.5.dev240 (2024-07-19)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
