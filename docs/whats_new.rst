@@ -8,6 +8,127 @@ What's new
 
 .. towncrier release notes start
 
+Junifer 0.0.5 (2024-07-22)
+--------------------------
+
+Bugfixes
+^^^^^^^^
+
+- Remove extra dimension from parcellations warped via ANTs to other template
+  spaces by `Synchon Mandal`_ (:gh:`324`)
+- Remove extra dimension from parcellations warped via ANTs when merging
+  parcellations by `Synchon Mandal`_ (:gh:`331`)
+- Fix ``junifer reset`` to properly delete storage directory and handle
+  ``junifer_jobs`` deletion if not empty by `Synchon Mandal`_ (:gh:`332`)
+- Fix validation failure of multiple Preprocessors with different input data
+  types requirement by `Synchon Mandal`_ (:gh:`339`)
+- Remove extra dimension from masks warped via ANTs by `Synchon Mandal`_
+  (:gh:`340`)
+
+
+API Changes
+^^^^^^^^^^^
+
+- For :class:`.CrossParcellationFC`, ``aggregation_method`` and
+  ``correlation_method`` have been renamed to ``agg_method`` and
+  ``corr_method`` respectively and ``agg_method_params`` has been added; for
+  ``FunctionalConnectivityBase``, :class:`.FunctionalConnectivityParcels`,
+  :class:`.FunctionalConnectivitySpheres`, :class:`.EdgeCentricFCParcels` and
+  :class:`.EdgeCentricFCSpheres`, ``cor_method`` and ``cor_method_params`` have
+  been renamed to ``conn_method`` and ``conn_method_params`` by `Synchon
+  Mandal`_ (:gh:`348`)
+- ``fractional`` parameter for ``ALFFBase``, :class:`.ALFFParcels` and
+  :class:`.ALFFSpheres` have been removed in favour of returning both ALFF and
+  fALFF by `Synchon Mandal`_ (:gh:`349`)
+- Add ``partial_pattern_ok`` argument to :class:`.PatternDataGrabber` to not
+  raise error on missing mandatory key checks for data types by `Synchon
+  Mandal`_ (:gh:`351`)
+
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Improve sub-package level docstrings to better reflect their purposes by
+  `Synchon Mandal`_ (:gh:`115`)
+- Update "Queueing Jobs (HPC, HTC)" section by `Synchon Mandal`_ (:gh:`327`)
+- Add missing DataGrabber ``types`` options in respective docstrings of
+  :class:`.DataladAOMICID1000`, :class:`.DataladAOMICPIOP1`,
+  :class:`.DataladAOMICPIOP2` and :class:`.DMCC13Benchmark` by `Synchon
+  Mandal`_ (:gh:`330`)
+
+
+Enhancements
+^^^^^^^^^^^^
+
+- Add test to be sure that :class:`.JuniferNiftiSpheresMasker` with mean
+  aggregation function behaves exactly as
+  :class:`nilearn.maskers.NiftiSpheresMasker` by `Synchon Mandal`_ (:gh:`136`)
+- Refactor DataGrabber ``patterns`` to make helper types like ``*_mask`` as
+  "nested types" of the actual data type by `Synchon Mandal`_ (:gh:`341`)
+- Adapt :class:`.DataladAOMICID1000`, :class:`.DataladAOMICPIOP1` and
+  :class:`.DataladAOMICPIOP2` to support ``FreeSurfer`` data type by `Synchon
+  Mandal`_ (:gh:`346`)
+- ``FunctionalConnectivity``-family Markers now use
+  :class:`sklearn.covariance.EmpiricalCovariance` as the default covariance
+  estimator and ``correlation`` as the default connecivity matrix kind by
+  `Synchon Mandal`_ (:gh:`348`)
+- Enable Markers to output multiple features by `Synchon Mandal`_ (:gh:`349`)
+- Add support for ``UKB_15K_GM`` mask by `Synchon Mandal`_ (:gh:`350`)
+- Adapt :class:`.MultipleDataGrabber` to handle "nested types" introduced in
+  :gh:`341` by `Synchon Mandal`_ (:gh:`351`)
+
+
+Features
+^^^^^^^^
+
+- Introduce :class:`.Smoothing` for smoothing / blurring images as a
+  preprocessing step by `Synchon Mandal`_ (:gh:`161`)
+- Add support for choosing between ``bash`` and ``zsh`` shells when queueing by
+  `Synchon Mandal`_ (:gh:`273`)
+- Add ``junifer list-elements`` to list out available elements for a
+  DataGrabber based on filtering via ``--element`` by `Synchon Mandal`_
+  (:gh:`323`)
+- Introduce new storage type ``scalar_table`` and adapt
+  :class:`.HDF5FeatureStorage` to support it by `Synchon Mandal`_ (:gh:`343`)
+- Add support for `BrainPrint
+  <https://github.com/Deep-MI/BrainPrint?tab=readme-ov-file>`_ marker by
+  `Synchon Mandal`_ (:gh:`344`)
+- Allow Unix path expansion directives to be used in
+  :class:`.PatternDataGrabber` ``patterns`` by `Synchon Mandal`_ (:gh:`345`)
+- Add support for ``FreeSurfer`` data type for :class:`.PatternDataGrabber` by
+  `Synchon Mandal`_ (:gh:`346`)
+- Introduce :class:`.JuniferConnectivityMeasure` for customising functional
+  connectivity matrix kinds and measurements by `Synchon Mandal`_ (:gh:`348`)
+- Introduce :class:`.PatternValidationMixin` to simplify validation for
+  pattern-based DataGrabbers and :func:`.deep_update` for updating dictionary
+  with varying width and depth by `Synchon Mandal`_ (:gh:`351`)
+
+
+Miscellaneous
+^^^^^^^^^^^^^
+
+- Improve CI to allow external tool installation to fail gracefully and update
+  necessary dependency version and conditional checks by `Synchon Mandal`_
+  (:gh:`318`)
+- Update ``pre-commit`` dependency versions, add ``blacken-docs`` to
+  ``pre-commit``, add ``__all__`` for modules, sub-packages and package, update
+  ``ruff`` and ``pytest`` configs in ``pyproject.toml`` by `Synchon Mandal`_
+  (:gh:`337`)
+- Add support for accessing FreeSurfer via Docker wrapper along with
+  ``mri_binarize``, ``mri_pretess``, ``mri_mc`` and ``mris_convert`` by
+  `Synchon Mandal`_ (:gh:`342`)
+- Update core and docs dependencies by `Synchon Mandal`_ (:gh:`347`)
+- Integrate ``warnings`` with ``logging`` respecting filters by `Fede
+  Raimondo`_ (:gh:`351`)
+
+
+Deprecations and Removals
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Remove ``Power`` coordinates, ``fetch_icbm152_brain_gm_mask`` mask,
+  ``BOLDWarper`` Preprocessor by `Synchon Mandal`_ (:gh:`336`)
+
+
 Junifer 0.0.4 (2024-04-05)
 --------------------------
 
