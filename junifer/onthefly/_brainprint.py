@@ -127,6 +127,7 @@ def reweight(
         pd.concat(
             [exploded_count_idx_df] * len(eigenvalues_df.columns), axis=1
         )
+        .reset_index()
         .drop("subject", axis=1, inplace=False)
         .to_numpy()
     )
