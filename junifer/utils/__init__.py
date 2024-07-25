@@ -4,19 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .fs import make_executable
-from .logging import configure_logging, logger, raise_error, warn_with_log
-from .helpers import run_ext_cmd, deep_update
-from ._yaml import yaml
+import lazy_loader as lazy
 
 
-__all__ = [
-    "make_executable",
-    "configure_logging",
-    "logger",
-    "raise_error",
-    "warn_with_log",
-    "run_ext_cmd",
-    "deep_update",
-    "yaml",
-]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
