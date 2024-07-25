@@ -14,8 +14,7 @@ from typing import Dict, List, Optional, Tuple, Union
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from ..datagrabber.base import BaseDataGrabber
 from ..markers.base import BaseMarker
-from ..markers.collection import MarkerCollection
-from ..pipeline import WorkDirManager
+from ..pipeline import MarkerCollection, WorkDirManager
 from ..pipeline.registry import build
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage

@@ -7,16 +7,16 @@
 from collections import Counter
 from typing import TYPE_CHECKING, Dict, List, Optional
 
-from ..datareader.default import DefaultDataReader
-from ..markers.base import BaseMarker
+from ..datareader import DefaultDataReader
 from ..pipeline import PipelineStepMixin, WorkDirManager
-from ..preprocess.base import BasePreprocessor
-from ..storage.base import BaseFeatureStorage
 from ..utils import logger, raise_error
 
 
 if TYPE_CHECKING:
     from junifer.datagrabber import BaseDataGrabber
+    from junifer.markers import BaseMarker
+    from junifer.preprocess import BasePreprocessor
+    from junifer.storage import BaseFeatureStorage
 
 
 __all__ = ["MarkerCollection"]
@@ -45,10 +45,10 @@ class MarkerCollection:
 
     def __init__(
         self,
-        markers: List[BaseMarker],
+        markers: List["BaseMarker"],
         datareader: Optional[PipelineStepMixin] = None,
-        preprocessors: Optional[List[BasePreprocessor]] = None,
-        storage: Optional[BaseFeatureStorage] = None,
+        preprocessors: Optional[List["BasePreprocessor"]] = None,
+        storage: Optional["BaseFeatureStorage"] = None,
     ):
         # Check that the markers have different names
         marker_names = [m.name for m in markers]
