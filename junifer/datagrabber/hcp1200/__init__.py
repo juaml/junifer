@@ -3,8 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .hcp1200 import HCP1200
-from .datalad_hcp1200 import DataladHCP1200
+import lazy_loader as lazy
 
 
-__all__ = ["HCP1200", "DataladHCP1200"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
