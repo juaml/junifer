@@ -4,7 +4,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-
 from importlib.util import find_spec
 
 from ..utils import raise_error
@@ -17,21 +16,6 @@ if find_spec("neurokit2") is None:
         klass=ImportError,
     )
 else:
-    # Import markers
-    from .hurst_exponent import HurstExponent
-    from .range_entropy import RangeEntropy
-    from .range_entropy_auc import RangeEntropyAUC
-    from .perm_entropy import PermEntropy
-    from .weighted_perm_entropy import WeightedPermEntropy
-    from .sample_entropy import SampleEntropy
-    from .multiscale_entropy_auc import MultiscaleEntropyAUC
+    import lazy_loader as lazy
 
-    __all__ = [
-        "HurstExponent",
-        "RangeEntropy",
-        "RangeEntropyAUC",
-        "PermEntropy",
-        "WeightedPermEntropy",
-        "SampleEntropy",
-        "MultiscaleEntropyAUC",
-    ]
+    __getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
