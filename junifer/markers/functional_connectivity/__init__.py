@@ -3,17 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .functional_connectivity_parcels import FunctionalConnectivityParcels
-from .functional_connectivity_spheres import FunctionalConnectivitySpheres
-from .crossparcellation_functional_connectivity import CrossParcellationFC
-from .edge_functional_connectivity_parcels import EdgeCentricFCParcels
-from .edge_functional_connectivity_spheres import EdgeCentricFCSpheres
+import lazy_loader as lazy
 
 
-__all__ = [
-    "FunctionalConnectivityParcels",
-    "FunctionalConnectivitySpheres",
-    "CrossParcellationFC",
-    "EdgeCentricFCParcels",
-    "EdgeCentricFCSpheres",
-]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
