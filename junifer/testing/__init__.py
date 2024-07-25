@@ -4,8 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from . import datagrabbers
-from .utils import get_testing_data
+import lazy_loader as lazy
 
 
-__all__ = ["datagrabbers", "get_testing_data"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
