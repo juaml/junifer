@@ -3,8 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .reho_parcels import ReHoParcels
-from .reho_spheres import ReHoSpheres
+import lazy_loader as lazy
 
 
-__all__ = ["ReHoParcels", "ReHoSpheres"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
