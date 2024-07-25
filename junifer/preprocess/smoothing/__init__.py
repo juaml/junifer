@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .smoothing import Smoothing
+import lazy_loader as lazy
 
 
-__all__ = ["Smoothing"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
