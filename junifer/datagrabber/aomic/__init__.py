@@ -4,9 +4,7 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from .id1000 import DataladAOMICID1000
-from .piop1 import DataladAOMICPIOP1
-from .piop2 import DataladAOMICPIOP2
+import lazy_loader as lazy
 
 
-__all__ = ["DataladAOMICID1000", "DataladAOMICPIOP1", "DataladAOMICPIOP2"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

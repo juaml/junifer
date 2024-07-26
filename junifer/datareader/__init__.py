@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .default import DefaultDataReader
+import lazy_loader as lazy
 
 
-__all__ = ["DefaultDataReader"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

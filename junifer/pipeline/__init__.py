@@ -3,15 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from . import registry
-from .pipeline_step_mixin import PipelineStepMixin
-from .update_meta_mixin import UpdateMetaMixin
-from .workdir_manager import WorkDirManager
+import lazy_loader as lazy
 
 
-__all__ = [
-    "registry",
-    "PipelineStepMixin",
-    "UpdateMetaMixin",
-    "WorkDirManager",
-]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

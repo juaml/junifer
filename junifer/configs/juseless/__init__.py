@@ -3,7 +3,7 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from . import datagrabbers
+import lazy_loader as lazy
 
 
-__all__ = ["datagrabbers"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
