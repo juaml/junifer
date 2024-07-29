@@ -143,7 +143,7 @@ class BrainPrint(BaseMarker):
         mri_binarize_cmd = [
             "mri_binarize",
             f"--i {aseg_path.resolve()}",
-            f"--match {''.join(indices)}",
+            f"--match {' '.join(indices)}",
             f"--o {mri_binarize_output_path.resolve()}",
         ]
         # Call mri_binarize command
