@@ -5,6 +5,7 @@
 
 import collections.abc
 import subprocess
+import sys
 from typing import Dict, List
 
 from .logging import logger, raise_error
@@ -45,13 +46,13 @@ def run_ext_cmd(name: str, cmd: List[str]) -> None:
     if process.returncode == 0:
         logger.info(
             f"{name} command succeeded with the following output:\n"
-            f"{process.stdout}"
+            f"{process.stdout.decode(sys.stdout.encoding)}"
         )
     else:
         raise_error(
             msg=(
                 f"{name} command failed with the following error:\n"
-                f"{process.stdout}"
+                f"{process.stdout.decode(sys.stdout.encoding)}"
             ),
             klass=RuntimeError,
         )
