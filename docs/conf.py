@@ -53,6 +53,7 @@ extensions = [
     "gh_substitutions",  # custom GitHub substitutions
     "sphinx_copybutton",  # copy button for code blocks
     "sphinxcontrib.mermaid",  # mermaid support
+    "sphinxcontrib.towncrier.ext",  # towncrier fragment support
 ]
 
 if use_multiversion:
@@ -197,3 +198,9 @@ smv_rebuild_tags = False
 smv_tag_whitelist = r"^v\d+\.\d+.\d+$"
 smv_branch_whitelist = r"main"
 smv_released_pattern = r"^tags/v.*$"
+
+# -- sphinxcontrib-towncrier configuration -----------------------------------
+
+towncrier_draft_autoversion_mode = "draft"
+towncrier_draft_include_empty = True
+towncrier_draft_working_directory = curdir.parent
