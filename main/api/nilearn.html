@@ -367,6 +367,7 @@ following ways:</p>
 <li><p>default <code class="docutils literal notranslate"><span class="pre">cov_estimator</span></code> is
 <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EmpiricalCovariance.html#sklearn.covariance.EmpiricalCovariance" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.EmpiricalCovariance</span></code></a></p></li>
 <li><p>default <code class="docutils literal notranslate"><span class="pre">kind</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;correlation&quot;</span></code></p></li>
+<li><p>supports Spearman’s correlation via <code class="docutils literal notranslate"><span class="pre">kind=&quot;spearman</span> <span class="pre">correlation&quot;</span></code></p></li>
 </ul>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -374,7 +375,9 @@ following ways:</p>
 <dt><strong>cov_estimator</strong><span class="classifier">estimator object, optional</span></dt><dd><p>The covariance estimator
 (default <code class="docutils literal notranslate"><span class="pre">EmpiricalCovariance(store_precision=False)</span></code>).</p>
 </dd>
-<dt><strong>kind</strong><span class="classifier">{“covariance”, “correlation”, “partial correlation”,             “tangent”, “precision”}, optional</span></dt><dd><p>The matrix kind. For the use of <code class="docutils literal notranslate"><span class="pre">&quot;tangent&quot;</span></code> see <a class="reference internal" href="#rca87a6b1d4a1-1" id="id1">[1]</a>
+<dt><strong>kind</strong><span class="classifier">{“covariance”, “correlation”, “spearman correlation”,             “partial correlation”, “tangent”, “precision”}, optional</span></dt><dd><p>The matrix kind. The default value uses Pearson’s correlation.
+If <code class="docutils literal notranslate"><span class="pre">&quot;spearman</span> <span class="pre">correlation&quot;</span></code> is used, the data will be ranked before
+estimating the covariance. For the use of <code class="docutils literal notranslate"><span class="pre">&quot;tangent&quot;</span></code> see <a class="reference internal" href="#rca87a6b1d4a1-1" id="id1">[1]</a>
 (default “correlation”).</p>
 </dd>
 <dt><strong>vectorize</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, connectivity matrices are reshaped into 1D arrays and only
