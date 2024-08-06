@@ -383,7 +383,7 @@ for example, <code class="docutils literal notranslate"><span class="pre">bctpy_
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1283.g0d12b44315)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1298.g70bb855cbb)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -397,6 +397,75 @@ for example, <code class="docutils literal notranslate"><span class="pre">bctpy_
 <li><p><code class="docutils literal notranslate"><span class="pre">bct.eigenvector_centrality_und</span></code></p></li>
 </ul>
 <p>Using other functions may fail and require tweaking.</p>
+</dd></dl>
+
+<p id="module-junifer.onthefly.brainprint">Provide onthefly functions for BrainPrint post-analysis.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.onthefly.brainprint.normalize">
+<span class="sig-prename descclassname"><span class="pre">junifer.onthefly.brainprint.</span></span><span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.onthefly.brainprint.normalize" title="Link to this definition">¶</a></dt>
+<dd><p>Read stored brainprint data and normalize either surfaces or volumes.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>storage</strong><span class="classifier">storage-like</span></dt><dd><p>The storage class, for example, <a class="reference internal" href="storage.html#junifer.storage.HDF5FeatureStorage" title="junifer.storage.HDF5FeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">HDF5FeatureStorage</span></code></a>.</p>
+</dd>
+<dt><strong>features</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The feature names or MD5 hashes to read as dict.
+The dict should have the keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;areas&quot;</span></code> (if <code class="docutils literal notranslate"><span class="pre">kind=&quot;surface&quot;</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;volumes&quot;</span></code> (if <code class="docutils literal notranslate"><span class="pre">kind=&quot;volume&quot;</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;eigenvalues&quot;</span></code></p></li>
+</ul>
+<p>and the corresponding value for each of the keys is again
+a dict with the keys:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;feature_name&quot;</span></code> : str or None</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;feature_md5&quot;</span></code> : str or None</p></li>
+</ul>
+<p>Either one of <code class="docutils literal notranslate"><span class="pre">&quot;feature_name&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;feature_md5&quot;</span></code> needs to be
+not None for each first-level key, but both keys are mandatory.</p>
+</dd>
+<dt><strong>kind</strong><span class="classifier">{“surface”, “volume”}</span></dt><dd><p>The kind of normalization.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1298.g70bb855cbb)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">kind</span></code> is invalid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.onthefly.brainprint.reweight">
+<span class="sig-prename descclassname"><span class="pre">junifer.onthefly.brainprint.</span></span><span class="sig-name descname"><span class="pre">reweight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.onthefly.brainprint.reweight" title="Link to this definition">¶</a></dt>
+<dd><p>Read stored brainprint data and reweight eigenvalues.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>storage</strong><span class="classifier">storage-like</span></dt><dd><p>The storage class, for example, <a class="reference internal" href="storage.html#junifer.storage.HDF5FeatureStorage" title="junifer.storage.HDF5FeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">HDF5FeatureStorage</span></code></a>.</p>
+</dd>
+<dt><strong>feature_name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>Name of the feature to read (default None).</p>
+</dd>
+<dt><strong>feature_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>MD5 hash of the feature to read (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1298.g70bb855cbb)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -458,6 +527,8 @@ for example, <code class="docutils literal notranslate"><span class="pre">bctpy_
             <ul>
 <li><a class="reference internal" href="#">9.2.11. On-the-fly</a><ul>
 <li><a class="reference internal" href="#junifer.onthefly.read_transform"><code class="docutils literal notranslate"><span class="pre">read_transform()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.onthefly.brainprint.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.onthefly.brainprint.reweight"><code class="docutils literal notranslate"><span class="pre">reweight()</span></code></a></li>
 </ul>
 </li>
 </ul>
