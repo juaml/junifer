@@ -314,6 +314,7 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
     * default ``cov_estimator`` is
       :class:`sklearn.covariance.EmpiricalCovariance`
     * default ``kind`` is ``"correlation"``
+    * supports Spearman's correlation via ``kind="spearman correlation"``
 
     Parameters
     ----------
@@ -322,10 +323,10 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
         (default ``EmpiricalCovariance(store_precision=False)``).
     kind : {"covariance", "correlation", "spearman correlation", \
             "partial correlation", "tangent", "precision"}, optional
-        The matrix kind. For the use of ``"tangent"`` see [1]_
-        (default "correlation", which will use Pearson's correlation).
-        If "spearman correlation" is used, the data will be ranked before
-        estimating the covariance.
+        The matrix kind. The default value uses Pearson's correlation.
+        If ``"spearman correlation"`` is used, the data will be ranked before
+        estimating the covariance. For the use of ``"tangent"`` see [1]_
+        (default "correlation").
     vectorize : bool, optional
         If True, connectivity matrices are reshaped into 1D arrays and only
         their flattened lower triangular parts are returned (default False).
