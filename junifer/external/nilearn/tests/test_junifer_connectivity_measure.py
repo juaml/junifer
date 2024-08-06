@@ -71,6 +71,7 @@ CONNECTIVITY_KINDS = (
     "tangent",
     "precision",
     "partial correlation",
+    "spearman correlation",
 )
 
 N_FEATURES = 49
