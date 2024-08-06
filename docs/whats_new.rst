@@ -6,6 +6,8 @@
 What's new
 ==========
 
+.. towncrier-draft-entries::
+
 .. towncrier release notes start
 
 Junifer 0.0.5 (2024-07-22)
