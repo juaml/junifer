@@ -13,7 +13,7 @@ from nilearn.connectome import (
     prec_to_partial,
     sym_matrix_to_vec,
 )
-from scipy import linalg
+from scipy import linalg, stats
 from sklearn.base import clone
 from sklearn.covariance import EmpiricalCovariance
 
@@ -320,10 +320,12 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
     cov_estimator : estimator object, optional
         The covariance estimator
         (default ``EmpiricalCovariance(store_precision=False)``).
-    kind : {"covariance", "correlation", "partial correlation", \
-            "tangent", "precision"}, optional
+    kind : {"covariance", "correlation", "spearman correlation", \
+            "partial correlation", "tangent", "precision"}, optional
         The matrix kind. For the use of ``"tangent"`` see [1]_
-        (default "correlation").
+        (default "correlation", which will use Pearson's correlation).
+        If "spearman correlation" is used, the data will be ranked before
+        estimating the covariance.
     vectorize : bool, optional
         If True, connectivity matrices are reshaped into 1D arrays and only
         their flattened lower triangular parts are returned (default False).
@@ -400,17 +402,22 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
             self.cov_estimator_ = clone(self.cov_estimator)
 
         # Compute all the matrices, stored in "connectivities"
-        if self.kind == "correlation":
-            covariances_std = [
-                self.cov_estimator_.fit(
-                    signal.standardize_signal(
-                        x,
-                        detrend=False,
-                        standardize=self.standardize,
-                    )
-                ).covariance_
-                for x in X
-            ]
+        if self.kind in ["correlation", "spearman correlation"]:
+            covariances_std = []
+            for x in X:
+                x = signal.standardize_signal(
+                    x,
+                    detrend=False,
+                    standardize=self.standardize,
+                )
+
+                # rank data if spearman correlation
+                # before calculating covariance
+                if self.kind == "spearman correlation":
+                    x = stats.rankdata(x, axis=0)
+
+                covariances_std.append(self.cov_estimator_.fit(x).covariance_)
+
             connectivities = [cov_to_corr(cov) for cov in covariances_std]
         else:
             covariances = [self.cov_estimator_.fit(x).covariance_ for x in X]
