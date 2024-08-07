@@ -6,17 +6,7 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Path setup --------------------------------------------------------------
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
-
-import sys
+import datetime
 from pathlib import Path
 
 
@@ -28,14 +18,22 @@ try:
 except ImportError:
     pass
 
-curdir = Path(__file__).parent
-sys.path.append((curdir / "sphinxext").as_posix())
+
+# -- Path setup --------------------------------------------------------------
+
+PROJECT_ROOT_DIR = Path(__file__).parents[1].resolve()
 
 # -- Project information -----------------------------------------------------
 
-project = "junifer"
-copyright = "2023, Authors of junifer"
-author = "Fede Raimondo"
+github_url = "https://github.com"
+github_repo_org = "juaml"
+github_repo_name = "junifer"
+github_repo_slug = f"{github_repo_org}/{github_repo_name}"
+github_repo_url = f"{github_url}/{github_repo_slug}"
+
+project = github_repo_name
+author = f"{project} Contributors"
+copyright = f"{datetime.date.today().year}, {author}"
 
 # -- General configuration ---------------------------------------------------
 
@@ -203,4 +201,4 @@ smv_released_pattern = r"^tags/v.*$"
 
 towncrier_draft_autoversion_mode = "draft"
 towncrier_draft_include_empty = True
-towncrier_draft_working_directory = curdir.parent
+towncrier_draft_working_directory = PROJECT_ROOT_DIR
