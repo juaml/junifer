@@ -54,11 +54,11 @@ extensions = [
     "sphinx.ext.autodoc",  # include documentation from docstrings
     "sphinx.ext.autosummary",  # generate autodoc summaries
     "sphinx.ext.doctest",  # test snippets in the documentation
+    "sphinx.ext.extlinks",  # markup to shorten external links
     "sphinx.ext.intersphinx",  # link to other projects` documentation
     "sphinx.ext.mathjax",  # math support for HTML outputs in Sphinx
     "sphinx_gallery.gen_gallery",  # HTML gallery of examples
     "numpydoc",  # support for NumPy style docstrings
-    "gh_substitutions",  # custom GitHub substitutions
     "sphinx_copybutton",  # copy button for code blocks
     "sphinxcontrib.mermaid",  # mermaid support
     "sphinxcontrib.towncrier.ext",  # towncrier fragment support
@@ -154,6 +154,12 @@ intersphinx_mapping = {
     "pandas": ("https://pandas.pydata.org/pandas-docs/dev", None),
     # "sqlalchemy": ("https://docs.sqlalchemy.org/en/20/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+}
+
+# -- sphinx.ext.extlinks configuration ---------------------------------------
+
+extlinks = {
+    "gh": (f"{github_repo_url}/issues/%s", "#%s"),
 }
 
 # -- numpydoc configuration --------------------------------------------------
