@@ -17,6 +17,7 @@ from setuptools_scm import get_version
 use_multiversion = False
 try:
     import sphinx_multiversion  # noqa: F401
+
     use_multiversion = True
 except ImportError:
     pass
@@ -100,7 +101,6 @@ nitpick_ignore_regex = [
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = "furo"
-
 html_title = "junifer documentation"
 html_logo = "./images/junifer_logo.png"
 
