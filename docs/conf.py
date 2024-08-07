@@ -6,36 +6,45 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Path setup --------------------------------------------------------------
-
-# If extensions (or modules to document with autodoc) are in another directory,
-# add these directories to sys.path here. If the directory is relative to the
-# documentation root, use os.path.abspath to make it absolute, like shown here.
-#
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
-
-import sys
+import datetime
+from functools import partial
 from pathlib import Path
+
+from setuptools_scm import get_version
 
 
 # Check if sphinx-multiversion is installed
 use_multiversion = False
 try:
     import sphinx_multiversion  # noqa: F401
+
     use_multiversion = True
 except ImportError:
     pass
 
-curdir = Path(__file__).parent
-sys.path.append((curdir / "sphinxext").as_posix())
+
+# -- Path setup --------------------------------------------------------------
+
+PROJECT_ROOT_DIR = Path(__file__).parents[1].resolve()
+get_scm_version = partial(get_version, root=PROJECT_ROOT_DIR)
 
 # -- Project information -----------------------------------------------------
 
-project = "junifer"
-copyright = "2023, Authors of junifer"
-author = "Fede Raimondo"
+github_url = "https://github.com"
+github_repo_org = "juaml"
+github_repo_name = "junifer"
+github_repo_slug = f"{github_repo_org}/{github_repo_name}"
+github_repo_url = f"{github_url}/{github_repo_slug}"
+
+project = github_repo_name
+author = f"{project} Contributors"
+copyright = f"{datetime.date.today().year}, {author}"
+
+# The version along with dev tag
+release = get_scm_version(
+    version_scheme="guess-next-dev",
+    local_scheme="no-local-version",
+)
 
 # -- General configuration ---------------------------------------------------
 
@@ -43,16 +52,19 @@ author = "Fede Raimondo"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    # Built-in extensions:
     "sphinx.ext.autodoc",  # include documentation from docstrings
     "sphinx.ext.autosummary",  # generate autodoc summaries
     "sphinx.ext.doctest",  # test snippets in the documentation
+    "sphinx.ext.extlinks",  # markup to shorten external links
     "sphinx.ext.intersphinx",  # link to other projects` documentation
     "sphinx.ext.mathjax",  # math support for HTML outputs in Sphinx
+    # Third-party extensions:
     "sphinx_gallery.gen_gallery",  # HTML gallery of examples
     "numpydoc",  # support for NumPy style docstrings
-    "gh_substitutions",  # custom GitHub substitutions
     "sphinx_copybutton",  # copy button for code blocks
     "sphinxcontrib.mermaid",  # mermaid support
+    "sphinxcontrib.towncrier.ext",  # towncrier fragment support
 ]
 
 if use_multiversion:
@@ -88,11 +100,8 @@ nitpick_ignore_regex = [
 
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages. See the documentation for
-# a list of builtin themes.
-#
 html_theme = "furo"
-
+html_title = "junifer documentation"
 html_logo = "./images/junifer_logo.png"
 
 # These paths are either relative to html_static_path
@@ -146,6 +155,12 @@ intersphinx_mapping = {
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
 }
 
+# -- sphinx.ext.extlinks configuration ---------------------------------------
+
+extlinks = {
+    "gh": (f"{github_repo_url}/issues/%s", "#%s"),
+}
+
 # -- numpydoc configuration --------------------------------------------------
 
 numpydoc_show_class_members = False
@@ -197,3 +212,9 @@ smv_rebuild_tags = False
 smv_tag_whitelist = r"^v\d+\.\d+.\d+$"
 smv_branch_whitelist = r"main"
 smv_released_pattern = r"^tags/v.*$"
+
+# -- sphinxcontrib-towncrier configuration -----------------------------------
+
+towncrier_draft_autoversion_mode = "draft"
+towncrier_draft_include_empty = True
+towncrier_draft_working_directory = PROJECT_ROOT_DIR
