@@ -51,12 +51,14 @@ release = get_scm_version(
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    # Built-in extensions:
     "sphinx.ext.autodoc",  # include documentation from docstrings
     "sphinx.ext.autosummary",  # generate autodoc summaries
     "sphinx.ext.doctest",  # test snippets in the documentation
     "sphinx.ext.extlinks",  # markup to shorten external links
     "sphinx.ext.intersphinx",  # link to other projects` documentation
     "sphinx.ext.mathjax",  # math support for HTML outputs in Sphinx
+    # Third-party extensions:
     "sphinx_gallery.gen_gallery",  # HTML gallery of examples
     "numpydoc",  # support for NumPy style docstrings
     "sphinx_copybutton",  # copy button for code blocks
@@ -97,9 +99,6 @@ nitpick_ignore_regex = [
 
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages. See the documentation for
-# a list of builtin themes.
-#
 html_theme = "furo"
 
 html_title = "junifer documentation"
