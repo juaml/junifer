@@ -7,7 +7,10 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import datetime
+from functools import partial
 from pathlib import Path
+
+from setuptools_scm import get_version
 
 
 # Check if sphinx-multiversion is installed
@@ -22,6 +25,7 @@ except ImportError:
 # -- Path setup --------------------------------------------------------------
 
 PROJECT_ROOT_DIR = Path(__file__).parents[1].resolve()
+get_scm_version = partial(get_version, root=PROJECT_ROOT_DIR)
 
 # -- Project information -----------------------------------------------------
 
@@ -34,6 +38,12 @@ github_repo_url = f"{github_url}/{github_repo_slug}"
 project = github_repo_name
 author = f"{project} Contributors"
 copyright = f"{datetime.date.today().year}, {author}"
+
+# The version along with dev tag
+release = get_scm_version(
+    version_scheme="guess-next-dev",
+    local_scheme="no-local-version",
+)
 
 # -- General configuration ---------------------------------------------------
 
@@ -92,6 +102,7 @@ nitpick_ignore_regex = [
 #
 html_theme = "furo"
 
+html_title = "junifer documentation"
 html_logo = "./images/junifer_logo.png"
 
 # These paths are either relative to html_static_path

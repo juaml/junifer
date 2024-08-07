@@ -6,7 +6,7 @@
 What's new
 ==========
 
-.. towncrier-draft-entries::
+.. towncrier-draft-entries:: |release|
 
 .. towncrier release notes start
 
