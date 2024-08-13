@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5.5.1. Masks" href="masks.html" /><link rel="prev" title="5.2. Running Jobs" href="running.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="5.6.1. Masks" href="masks.html" /><link rel="prev" title="5.2. Running Jobs" href="running.html" />
 
     <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
-        <title>5.4. Queueing Jobs (HPC, HTC) - junifer documentation</title>
+        <title>5.5. Queueing Jobs (HPC, HTC) - junifer documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -239,8 +239,9 @@
 <li class="toctree-l2"><a class="reference internal" href="codeless.html">5.1. Code-less Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running.html">5.2. Running Jobs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="running.html#collecting-results">5.3. Collecting Results</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.4. Queueing Jobs (HPC, HTC)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="masks.html">5.5.1. Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="running.html#analysing-results">5.4. Analysing Results</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">5.5. Queueing Jobs (HPC, HTC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="masks.html">5.6.1. Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline Components</a></li>
@@ -355,7 +356,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <section id="queueing-jobs-hpc-htc">
-<span id="queueing"></span><h1><span class="section-number">5.4. </span>Queueing Jobs (HPC, HTC)<a class="headerlink" href="#queueing-jobs-hpc-htc" title="Link to this heading">¶</a></h1>
+<span id="queueing"></span><h1><span class="section-number">5.5. </span>Queueing Jobs (HPC, HTC)<a class="headerlink" href="#queueing-jobs-hpc-htc" title="Link to this heading">¶</a></h1>
 <p>Yet another interesting feature of <code class="docutils literal notranslate"><span class="pre">junifer</span></code> is the ability to queue jobs on
 computational clusters. This is done by adding the <code class="docutils literal notranslate"><span class="pre">queue</span></code> section in the
 <a class="reference internal" href="codeless.html#codeless"><span class="std std-ref">Code-less Configuration</span></a> file and executing the  <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">queue</span></code> command.</p>
@@ -382,7 +383,7 @@ with this name.</p></li>
 </div>
 <p>The rest of the parameters depend on the scheduler you are using.</p>
 <section id="queueing-condor">
-<span id="id1"></span><h2><span class="section-number">5.4.1. </span>HTCondor<a class="headerlink" href="#queueing-condor" title="Link to this heading">¶</a></h2>
+<span id="id1"></span><h2><span class="section-number">5.5.1. </span>HTCondor<a class="headerlink" href="#queueing-condor" title="Link to this heading">¶</a></h2>
 <p>When using HTCondor, <code class="docutils literal notranslate"><span class="pre">junifer</span></code> will use a DAG to queue one job per element
 (<code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">run</span></code>). As an option, the DAG can include a final job
 (<code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">collect</span></code>) to collect the results once all of the individual element
@@ -459,7 +460,7 @@ all of the individual element jobs are successful.</p></li>
 </div>
 </section>
 <section id="gnuparallellocal">
-<span id="queueing-local"></span><h2><span class="section-number">5.4.2. </span>GNUParallelLocal<a class="headerlink" href="#gnuparallellocal" title="Link to this heading">¶</a></h2>
+<span id="queueing-local"></span><h2><span class="section-number">5.5.2. </span>GNUParallelLocal<a class="headerlink" href="#gnuparallellocal" title="Link to this heading">¶</a></h2>
 <p>When using GNU Parallel, <code class="docutils literal notranslate"><span class="pre">junifer</span></code> will run only in local mode and leverage
 maximum computational power of whatever hardware it is run on.</p>
 <p>The following parameters are available for GNUParallelLocal:</p>
@@ -533,7 +534,7 @@ elements will be queued.</p></li>
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title"><span class="section-number">5.5.1. </span>Masks</div>
+                <div class="title"><span class="section-number">5.6.1. </span>Masks</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -578,9 +579,9 @@ elements will be queued.</p></li>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">5.4. Queueing Jobs (HPC, HTC)</a><ul>
-<li><a class="reference internal" href="#queueing-condor">5.4.1. HTCondor</a></li>
-<li><a class="reference internal" href="#gnuparallellocal">5.4.2. GNUParallelLocal</a></li>
+<li><a class="reference internal" href="#">5.5. Queueing Jobs (HPC, HTC)</a><ul>
+<li><a class="reference internal" href="#queueing-condor">5.5.1. HTCondor</a></li>
+<li><a class="reference internal" href="#gnuparallellocal">5.5.2. GNUParallelLocal</a></li>
 </ul>
 </li>
 </ul>
