@@ -353,6 +353,9 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                     "Check if this file is really an fmriprep confounds file. "
                     "You can also deactivate spike (set spike = None)."
                 )
+            # NOTE: Check with @fraimondo about the spike mapping intent
+            # Add spike_name to FMRIPREP_VALID_NAMES
+            FMRIPREP_VALID_NAMES.append(spike_name)
         out = to_select, squares_to_compute, derivatives_to_compute, spike_name
         return out
 
