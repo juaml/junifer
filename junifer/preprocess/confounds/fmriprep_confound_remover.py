@@ -93,6 +93,9 @@ FMRIPREP_VALID_NAMES = [
     for t_list in x.values()
     for elem in t_list
 ]
+# NOTE: Check with @fraimondo about the spike mapping intent
+# Add spike_name to FMRIPREP_VALID_NAMES
+FMRIPREP_VALID_NAMES.append("framewise_displacement")
 
 
 @register_preprocessor
