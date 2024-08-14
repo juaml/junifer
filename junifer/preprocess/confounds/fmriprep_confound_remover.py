@@ -93,6 +93,9 @@ FMRIPREP_VALID_NAMES = [
     for t_list in x.values()
     for elem in t_list
 ]
+# NOTE: Check with @fraimondo about the spike mapping intent
+# Add spike_name to FMRIPREP_VALID_NAMES
+FMRIPREP_VALID_NAMES.append("framewise_displacement")
 
 
 @register_preprocessor
@@ -353,9 +356,6 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                     "Check if this file is really an fmriprep confounds file. "
                     "You can also deactivate spike (set spike = None)."
                 )
-            # NOTE: Check with @fraimondo about the spike mapping intent
-            # Add spike_name to FMRIPREP_VALID_NAMES
-            FMRIPREP_VALID_NAMES.append(spike_name)
         out = to_select, squares_to_compute, derivatives_to_compute, spike_name
         return out
 
