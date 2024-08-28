@@ -8,13 +8,22 @@ import importlib
 import importlib.util
 import sys
 from pathlib import Path
-from typing import Dict, Union
+from typing import Dict, List, Tuple, Union
 
-from ..utils.logging import logger, raise_error
-from .utils import yaml
+import pandas as pd
+from ruamel.yaml import YAML
+
+from ..utils import logger, raise_error, warn_with_log
 
 
-__all__ = ["parse_yaml"]
+__all__ = ["yaml", "parse_yaml", "parse_elements"]
+
+
+# Configure YAML class once for further use
+yaml = YAML()
+yaml.default_flow_style = False
+yaml.allow_unicode = True
+yaml.indent(mapping=2, sequence=4, offset=2)
 
 
 def parse_yaml(filepath: Union[str, Path]) -> Dict:
@@ -116,3 +125,92 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
                     )
 
     return contents
+
+
+def parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
+    """Parse elements from cli.
+
+    Parameters
+    ----------
+    element : tuple of str
+        The element(s) to operate on.
+    config : dict
+        The configuration to operate using.
+
+    Returns
+    -------
+    list or None
+        The element(s) as list or None.
+
+    Raises
+    ------
+    ValueError
+        If no element is found either in the command-line options or
+        the configuration file.
+
+    Warns
+    -----
+    RuntimeWarning
+        If elements are specified both via the command-line options and
+        the configuration file.
+
+    """
+    logger.debug(f"Parsing elements: {element}")
+    # Early return None to continue with all elements
+    if len(element) == 0:
+        return None
+    # Check if the element is a file for single element;
+    # if yes, then parse elements from it
+    if len(element) == 1 and Path(element[0]).resolve().is_file():
+        elements = _parse_elements_file(Path(element[0]).resolve())
+    else:
+        # Process multi-keyed elements
+        elements = [tuple(x.split(",")) if "," in x else x for x in element]
+    logger.debug(f"Parsed elements: {elements}")
+    if elements is not None and "elements" in config:
+        warn_with_log(
+            "One or more elements have been specified in both the command "
+            "line and in the config file. The command line has precedence "
+            "over the configuration file. That is, the elements specified "
+            "in the command line will be used. The elements specified in "
+            "the configuration file will be ignored. To remove this warning, "
+            "please remove the `elements` item from the configuration file."
+        )
+    elif elements is None:
+        # Check in config
+        elements = config.get("elements", None)
+        if elements is None:
+            raise_error(
+                "The `elements` key is set in the configuration, but its value"
+                " is `None`. It is likely that there is an empty `elements` "
+                "section in the yaml configuration file."
+            )
+    return elements
+
+
+def _parse_elements_file(filepath: Path) -> List[Tuple[str, ...]]:
+    """Parse elements from file.
+
+    Parameters
+    ----------
+    filepath : pathlib.Path
+        The path to the element file.
+
+    Returns
+    -------
+    list of tuple of str
+        The element(s) as list.
+
+    """
+    # Read CSV into dataframe
+    csv_df = pd.read_csv(
+        filepath,
+        header=None,  # no header  # type: ignore
+        index_col=False,  # no index column
+        dtype=str,
+        skipinitialspace=True,  # no leading space after delimiter
+    )
+    # Remove trailing whitespace in cell entries
+    csv_df_trimmed = csv_df.apply(lambda x: x.str.strip())
+    # Convert to list of tuple of str
+    return list(map(tuple, csv_df_trimmed.to_numpy()))

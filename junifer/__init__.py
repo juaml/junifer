@@ -6,6 +6,7 @@
 
 from . import (
     api,
+    cli,
     configs,
     data,
     datagrabber,
@@ -24,6 +25,7 @@ from ._version import __version__
 
 __all__ = [
     "api",
+    "cli",
     "configs",
     "data",
     "datagrabber",

@@ -1,4 +1,4 @@
-"""Provide tests for functions."""
+"""Provide tests for cli functions."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -13,7 +13,7 @@ import pytest
 from ruamel.yaml import YAML
 
 import junifer.testing.registry  # noqa: F401
-from junifer.api.functions import collect, list_elements, queue, reset, run
+from junifer.cli.functions import collect, list_elements, queue, reset, run
 from junifer.datagrabber.base import BaseDataGrabber
 from junifer.pipeline.registry import build
 

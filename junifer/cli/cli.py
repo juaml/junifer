@@ -8,120 +8,23 @@ import pathlib
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Tuple, Union
 
 import click
-import pandas as pd
 
-from ..utils.logging import (
+from ..utils import (
     configure_logging,
-    logger,
     raise_error,
-    warn_with_log,
 )
-from .functions import collect as api_collect
-from .functions import list_elements as api_list_elements
-from .functions import queue as api_queue
-from .functions import reset as api_reset
-from .functions import run as api_run
-from .parser import parse_yaml
+from . import functions as cli_func
+from .parser import parse_elements, parse_yaml, yaml
 from .utils import (
     _get_dependency_information,
     _get_environment_information,
     _get_junifer_version,
     _get_python_information,
     _get_system_information,
-    yaml,
 )
-
-
-def _parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
-    """Parse elements from cli.
-
-    Parameters
-    ----------
-    element : tuple of str
-        The element(s) to operate on.
-    config : dict
-        The configuration to operate using.
-
-    Returns
-    -------
-    list or None
-        The element(s) as list or None.
-
-    Raises
-    ------
-    ValueError
-        If no element is found either in the command-line options or
-        the configuration file.
-
-    Warns
-    -----
-    RuntimeWarning
-        If elements are specified both via the command-line options and
-        the configuration file.
-
-    """
-    logger.debug(f"Parsing elements: {element}")
-    # Early return None to continue with all elements
-    if len(element) == 0:
-        return None
-    # Check if the element is a file for single element;
-    # if yes, then parse elements from it
-    if len(element) == 1 and Path(element[0]).resolve().is_file():
-        elements = _parse_elements_file(Path(element[0]).resolve())
-    else:
-        # Process multi-keyed elements
-        elements = [tuple(x.split(",")) if "," in x else x for x in element]
-    logger.debug(f"Parsed elements: {elements}")
-    if elements is not None and "elements" in config:
-        warn_with_log(
-            "One or more elements have been specified in both the command "
-            "line and in the config file. The command line has precedence "
-            "over the configuration file. That is, the elements specified "
-            "in the command line will be used. The elements specified in "
-            "the configuration file will be ignored. To remove this warning, "
-            "please remove the `elements` item from the configuration file."
-        )
-    elif elements is None:
-        # Check in config
-        elements = config.get("elements", None)
-        if elements is None:
-            raise_error(
-                "The `elements` key is set in the configuration, but its value"
-                " is `None`. It is likely that there is an empty `elements` "
-                "section in the yaml configuration file."
-            )
-    return elements
-
-
-def _parse_elements_file(filepath: Path) -> List[Tuple[str, ...]]:
-    """Parse elements from file.
-
-    Parameters
-    ----------
-    filepath : pathlib.Path
-        The path to the element file.
-
-    Returns
-    -------
-    list of tuple of str
-        The element(s) as list.
-
-    """
-    # Read CSV into dataframe
-    csv_df = pd.read_csv(
-        filepath,
-        header=None,  # no header  # type: ignore
-        index_col=False,  # no index column
-        dtype=str,
-        skipinitialspace=True,  # no leading space after delimiter
-    )
-    # Remove trailing whitespace in cell entries
-    csv_df_trimmed = csv_df.apply(lambda x: x.str.strip())
-    # Convert to list of tuple of str
-    return list(map(tuple, csv_df_trimmed.to_numpy()))
 
 
 def _validate_verbose(
@@ -166,7 +69,7 @@ def _validate_verbose(
 
 @click.group()
 def cli() -> None:  # pragma: no cover
-    """CLI for JUelich NeuroImaging FEature extractoR."""
+    """JUelich NeuroImaging FEature extractoR."""
 
 
 @cli.command()
@@ -187,7 +90,7 @@ def cli() -> None:  # pragma: no cover
 def run(
     filepath: click.Path, element: Tuple[str], verbose: Union[str, int]
 ) -> None:
-    """Run command for CLI.
+    """Run feature extraction.
 
     \f
 
@@ -219,9 +122,9 @@ def run(
     if preprocessors is not None and not isinstance(preprocessors, list):
         preprocessors = [preprocessors]
     # Parse elements
-    elements = _parse_elements(element, config)
+    elements = parse_elements(element, config)
     # Perform operation
-    api_run(
+    cli_func.run(
         workdir=workdir,
         datagrabber=datagrabber,
         markers=markers,
@@ -246,7 +149,7 @@ def run(
     default="info",
 )
 def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
-    """Collect command for CLI.
+    """Collect extracted features.
 
     \f
 
@@ -263,7 +166,7 @@ def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
     config = parse_yaml(filepath)  # type: ignore
     storage = config["storage"]
     # Perform operation
-    api_collect(storage=storage)
+    cli_func.collect(storage=storage)
 
 
 @cli.command()
@@ -290,7 +193,7 @@ def queue(
     submit: bool,
     verbose: Union[str, int],
 ) -> None:
-    """Queue command for CLI.
+    """Queue feature extraction.
 
     \f
 
@@ -311,12 +214,12 @@ def queue(
     configure_logging(level=verbose)
     # TODO: add validation
     config = parse_yaml(filepath)  # type: ignore
-    elements = _parse_elements(element, config)
+    elements = parse_elements(element, config)
     if "queue" not in config:
         raise_error(f"No queue configuration found in {filepath}.")
     queue_config = config.pop("queue")
     kind = queue_config.pop("kind")
-    api_queue(
+    cli_func.queue(
         config=config,
         kind=kind,
         overwrite=overwrite,
@@ -329,7 +232,7 @@ def queue(
 @cli.command()
 @click.option("--long", "long_", is_flag=True)
 def wtf(long_: bool) -> None:
-    """Wtf command for CLI.
+    """WTF?!.
 
     \f
 
@@ -352,7 +255,7 @@ def wtf(long_: bool) -> None:
 @cli.command()
 @click.argument("subpkg", type=str)
 def selftest(subpkg: str) -> None:
-    """Selftest command for CLI.
+    """Selftest.
 
     \f
 
@@ -433,7 +336,7 @@ def reset(
     filepath: click.Path,
     verbose: Union[str, int],
 ) -> None:
-    """Reset command for CLI.
+    """Reset generated assets.
 
     \f
 
@@ -449,7 +352,7 @@ def reset(
     # Parse YAML
     config = parse_yaml(filepath)
     # Perform operation
-    api_reset(config)
+    cli_func.reset(config)
 
 
 @cli.command()
@@ -478,7 +381,7 @@ def list_elements(
     output_file: Optional[click.Path],
     verbose: Union[str, int],
 ) -> None:
-    """Element listing command for CLI.
+    """List elements of a dataset.
 
     \f
 
@@ -501,9 +404,9 @@ def list_elements(
     # Fetch datagrabber
     datagrabber = config["datagrabber"]
     # Parse elements
-    elements = _parse_elements(element, config)
+    elements = parse_elements(element, config)
     # Perform operation
-    listed_elements = api_list_elements(
+    listed_elements = cli_func.list_elements(
         datagrabber=datagrabber,
         elements=elements,
     )
@@ -517,7 +420,7 @@ def list_elements(
 
 @cli.group()
 def setup() -> None:  # pragma: no cover
-    """Configure commands for Junifer."""
+    """Configure external tools."""
     pass
 
 
