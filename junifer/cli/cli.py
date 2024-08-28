@@ -28,6 +28,23 @@ from .utils import (
 )
 
 
+__all__ = [
+    "cli",
+    "run",
+    "collect",
+    "queue",
+    "wtf",
+    "selftest",
+    "reset",
+    "list_elements",
+    "setup",
+    "afni_docker",
+    "fsl_docker",
+    "ants_docker",
+    "freesurfer_docker",
+]
+
+
 def _validate_verbose(
     ctx: click.Context, param: str, value: str
 ) -> Union[str, int]:
