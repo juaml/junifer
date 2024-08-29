@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from ..pipeline.registry import register
+from ..pipeline.registry import PipelineComponentRegistry
 from .datagrabbers import (
     OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
@@ -13,20 +13,17 @@ from .datagrabbers import (
 
 
 # Register testing DataGrabbers
-register(
+PipelineComponentRegistry().register(
     step="datagrabber",
-    name="OasisVBMTestingDataGrabber",
     klass=OasisVBMTestingDataGrabber,
 )
 
-register(
+PipelineComponentRegistry().register(
     step="datagrabber",
-    name="SPMAuditoryTestingDataGrabber",
     klass=SPMAuditoryTestingDataGrabber,
 )
 
-register(
+PipelineComponentRegistry().register(
     step="datagrabber",
-    name="PartlyCloudyTestingDataGrabber",
     klass=PartlyCloudyTestingDataGrabber,
 )
