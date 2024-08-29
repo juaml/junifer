@@ -15,7 +15,7 @@ License: BSD 3 clause
 import tempfile
 
 import junifer.testing.registry  # noqa: F401
-from junifer.api import collect, run
+from junifer.cli import collect, run
 from junifer.storage import SQLiteFeatureStorage
 from junifer.utils import configure_logging
 

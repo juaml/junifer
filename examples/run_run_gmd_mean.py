@@ -9,7 +9,7 @@ License: BSD 3 clause
 import tempfile
 
 import junifer.testing.registry  # noqa: F401
-from junifer.api import run
+from junifer.cli import run
 
 
 datagrabber = {

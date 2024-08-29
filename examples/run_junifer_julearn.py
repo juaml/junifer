@@ -19,7 +19,7 @@ import pandas as pd
 from julearn import run_cross_validation, PipelineCreator
 
 import junifer.testing.registry  # noqa: F401
-from junifer.api import collect, run
+from junifer.cli import collect, run
 from junifer.storage.sqlite import SQLiteFeatureStorage
 from junifer.utils import configure_logging
 

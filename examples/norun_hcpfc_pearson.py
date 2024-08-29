@@ -7,7 +7,7 @@ License: BSD 3 clause
 """
 
 
-from junifer.api import run
+from junifer.cli import run
 
 
 datagrabber = {
