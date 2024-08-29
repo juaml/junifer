@@ -7,7 +7,7 @@
 
 from typing import Type
 
-from ..pipeline.registry import register
+from ..pipeline import PipelineComponentRegistry
 
 
 __all__ = [
@@ -39,9 +39,8 @@ def register_datagrabber(klass: Type) -> Type:
     It should only be used as a decorator.
 
     """
-    register(
+    PipelineComponentRegistry().register(
         step="datagrabber",
-        name=klass.__name__,
         klass=klass,
     )
     return klass
@@ -67,9 +66,8 @@ def register_datareader(klass: Type) -> Type:
     It should only be used as a decorator.
 
     """
-    register(
+    PipelineComponentRegistry().register(
         step="datareader",
-        name=klass.__name__,
         klass=klass,
     )
     return klass
@@ -91,9 +89,8 @@ def register_preprocessor(klass: Type) -> Type:
         The unmodified input class.
 
     """
-    register(
+    PipelineComponentRegistry().register(
         step="preprocessing",
-        name=klass.__name__,
         klass=klass,
     )
     return klass
@@ -115,9 +112,8 @@ def register_marker(klass: Type) -> Type:
         The unmodified input class.
 
     """
-    register(
+    PipelineComponentRegistry().register(
         step="marker",
-        name=klass.__name__,
         klass=klass,
     )
     return klass
@@ -139,9 +135,8 @@ def register_storage(klass: Type) -> Type:
         The unmodified input class.
 
     """
-    register(
+    PipelineComponentRegistry().register(
         step="storage",
-        name=klass.__name__,
         klass=klass,
     )
     return klass
