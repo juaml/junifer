@@ -7,15 +7,17 @@
 
 import os
 import shutil
-import typing
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from ..datagrabber.base import BaseDataGrabber
 from ..markers.base import BaseMarker
-from ..pipeline import MarkerCollection, WorkDirManager
-from ..pipeline.registry import build
+from ..pipeline import (
+    MarkerCollection,
+    PipelineComponentRegistry,
+    WorkDirManager,
+)
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
 from ..utils import logger, raise_error, yaml
@@ -38,16 +40,12 @@ def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
         The DataGrabber.
 
     """
-    datagrabber_params = datagrabber_config.copy()
-    datagrabber_kind = datagrabber_params.pop("kind")
-    datagrabber = build(
+    return PipelineComponentRegistry().build_component_instance(
         step="datagrabber",
-        name=datagrabber_kind,
+        name=datagrabber_config.pop("kind"),
         baseclass=BaseDataGrabber,
-        init_params=datagrabber_params,
+        init_params=datagrabber_config,
     )
-    datagrabber = typing.cast(BaseDataGrabber, datagrabber)
-    return datagrabber
 
 
 def _get_preprocessor(preprocessing_config: Dict) -> BasePreprocessor:
@@ -64,16 +62,56 @@ def _get_preprocessor(preprocessing_config: Dict) -> BasePreprocessor:
         The preprocessor.
 
     """
-    preprocessor_params = preprocessing_config.copy()
-    preprocessor_kind = preprocessor_params.pop("kind")
-    preprocessor = build(
+    return PipelineComponentRegistry().build_component_instance(
         step="preprocessing",
-        name=preprocessor_kind,
+        name=preprocessing_config.pop("kind"),
         baseclass=BasePreprocessor,
-        init_params=preprocessor_params,
+        init_params=preprocessing_config,
     )
-    preprocessor = typing.cast(BasePreprocessor, preprocessor)
-    return preprocessor
+
+
+def _get_marker(marker_config: Dict) -> BaseMarker:
+    """Get Marker.
+
+    Parameters
+    ----------
+    marker_config : dict
+        The config to get the Marker using.
+
+    Returns
+    -------
+    object
+        The Marker.
+
+    """
+    return PipelineComponentRegistry().build_component_instance(
+        step="marker",
+        name=marker_config.pop("kind"),
+        baseclass=BaseMarker,
+        init_params=marker_config,
+    )
+
+
+def _get_storage(storage_config: Dict) -> BaseFeatureStorage:
+    """Get Storage.
+
+    Parameters
+    ----------
+    storage_config : dict
+        The config to get the Storage using.
+
+    Returns
+    -------
+    dict
+        The Storage.
+
+    """
+    return PipelineComponentRegistry().build_component_instance(
+        step="storage",
+        name=storage_config.pop("kind"),
+        baseclass=BaseFeatureStorage,
+        init_params=storage_config,
+    )
 
 
 def run(
@@ -125,39 +163,19 @@ def run(
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber)
 
-    # Copy to avoid changing the original dict
-    _markers = [x.copy() for x in markers]
-    built_markers = []
-    for t_marker in _markers:
-        kind = t_marker.pop("kind")
-        t_m = build(
-            step="marker",
-            name=kind,
-            baseclass=BaseMarker,
-            init_params=t_marker,
-        )
-        built_markers.append(t_m)
+    # Get markers to use
+    built_markers = [_get_marker(marker) for marker in markers]
 
     # Get storage engine to use
-    storage_params = storage.copy()
-    storage_kind = storage_params.pop("kind")
-    if "single_output" not in storage_params:
-        storage_params["single_output"] = False
-    storage_object = build(
-        step="storage",
-        name=storage_kind,
-        baseclass=BaseFeatureStorage,
-        init_params=storage_params,
-    )
-    storage_object = typing.cast(BaseFeatureStorage, storage_object)
+    if "single_output" not in storage:
+        storage["single_output"] = False
+    storage_object = _get_storage(storage)
 
     # Get preprocessor to use (if provided)
     if preprocessors is not None:
-        _preprocessors = [x.copy() for x in preprocessors]
-        built_preprocessors = []
-        for preprocessor in _preprocessors:
-            preprocessor_object = _get_preprocessor(preprocessor)
-            built_preprocessors.append(preprocessor_object)
+        built_preprocessors = [
+            _get_preprocessor(preprocessor) for preprocessor in preprocessors
+        ]
     else:
         built_preprocessors = None
 
@@ -192,19 +210,11 @@ def collect(storage: Dict) -> None:
         constructor.
 
     """
-    storage_params = storage.copy()
-    storage_kind = storage_params.pop("kind")
-    logger.info(f"Collecting data using {storage_kind}")
-    logger.debug(f"\tStorage params: {storage_params}")
-    if "single_output" not in storage_params:
-        storage_params["single_output"] = False
-    storage_object = build(
-        step="storage",
-        name=storage_kind,
-        baseclass=BaseFeatureStorage,
-        init_params=storage_params,
-    )
-    storage_object = typing.cast(BaseFeatureStorage, storage_object)
+    logger.info(f"Collecting data using {storage['kind']}")
+    logger.debug(f"\tStorage params: {storage}")
+    if "single_output" not in storage:
+        storage["single_output"] = False
+    storage_object = _get_storage(storage)
     logger.debug("Running storage.collect()")
     storage_object.collect()
     logger.info("Collect done")
