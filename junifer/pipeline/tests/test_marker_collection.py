@@ -1,4 +1,4 @@
-"""Provide tests for marker collection."""
+"""Provide tests for MarkerCollection."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
