@@ -49,17 +49,17 @@ def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
 
 
 def _get_preprocessor(preprocessing_config: Dict) -> BasePreprocessor:
-    """Get preprocessor.
+    """Get Preprocessor.
 
     Parameters
     ----------
     preprocessing_config : dict
-        The config to get the preprocessor using.
+        The config to get the Preprocessor using.
 
     Returns
     -------
     dict
-        The preprocessor.
+        The Preprocessor.
 
     """
     return PipelineComponentRegistry().build_component_instance(
@@ -185,6 +185,7 @@ def run(
         preprocessors=built_preprocessors,
         storage=storage_object,
     )
+    # Validate the marker collection for the datagrabber
     mc.validate(datagrabber_object)
 
     # Fit elements
