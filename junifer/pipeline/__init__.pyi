@@ -1,12 +1,12 @@
 __all__ = [
-    "registry",
+    "PipelineComponentRegistry",
     "PipelineStepMixin",
     "UpdateMetaMixin",
     "WorkDirManager",
     "MarkerCollection",
 ]
 
-from . import registry
+from .pipeline_component_registry import PipelineComponentRegistry
 from .pipeline_step_mixin import PipelineStepMixin
 from .update_meta_mixin import UpdateMetaMixin
 from .workdir_manager import WorkDirManager
