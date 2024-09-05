@@ -12,11 +12,11 @@ from typing import Optional, Tuple, Union
 
 import click
 
+from ..api import functions as cli_func
 from ..utils import (
     configure_logging,
     raise_error,
 )
-from . import functions as cli_func
 from .parser import parse_elements, parse_yaml, yaml
 from .utils import (
     _get_dependency_information,

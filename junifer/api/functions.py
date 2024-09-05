@@ -1,4 +1,4 @@
-"""Provide functions for cli."""
+"""Provide API functions."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -19,8 +19,7 @@ from ..pipeline import WorkDirManager
 from ..pipeline.registry import build
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
-from ..utils import logger, raise_error
-from .parser import yaml
+from ..utils import logger, raise_error, yaml
 
 
 __all__ = ["run", "collect", "queue", "reset", "list_elements"]
