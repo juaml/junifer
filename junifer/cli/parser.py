@@ -11,19 +11,11 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
 import pandas as pd
-from ruamel.yaml import YAML
 
-from ..utils import logger, raise_error, warn_with_log
-
-
-__all__ = ["yaml", "parse_yaml", "parse_elements"]
+from ..utils import logger, raise_error, warn_with_log, yaml
 
 
-# Configure YAML class once for further use
-yaml = YAML()
-yaml.default_flow_style = False
-yaml.allow_unicode = True
-yaml.indent(mapping=2, sequence=4, offset=2)
+__all__ = ["parse_yaml", "parse_elements"]
 
 
 def parse_yaml(filepath: Union[str, Path]) -> Dict:

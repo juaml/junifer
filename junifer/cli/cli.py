@@ -16,8 +16,9 @@ from ..api import functions as cli_func
 from ..utils import (
     configure_logging,
     raise_error,
+    yaml,
 )
-from .parser import parse_elements, parse_yaml, yaml
+from .parser import parse_elements, parse_yaml
 from .utils import (
     _get_dependency_information,
     _get_environment_information,
