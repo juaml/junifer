@@ -8,7 +8,7 @@ License: BSD 3 clause
 """
 
 
-from junifer.cli import run
+from junifer.api import run
 
 
 markers = [

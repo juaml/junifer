@@ -1,6 +1,6 @@
 CLI Functions
 =============
 
-.. automodule:: junifer.cli
+.. automodule:: junifer.cli.parser
    :members:
    :imported-members:

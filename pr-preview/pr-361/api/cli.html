@@ -332,51 +332,39 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="module-junifer.cli">
-<span id="cli-functions"></span><h1><span class="section-number">9.2.9. </span>CLI Functions<a class="headerlink" href="#module-junifer.cli" title="Link to this heading">¶</a></h1>
-<p>Junifer CLI.</p>
+          <section id="module-junifer.cli.parser">
+<span id="cli-functions"></span><h1><span class="section-number">9.2.9. </span>CLI Functions<a class="headerlink" href="#module-junifer.cli.parser" title="Link to this heading">¶</a></h1>
+<p>Provide functions for CLI parser.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="junifer.cli.collect">
-<span class="sig-prename descclassname"><span class="pre">junifer.cli.</span></span><span class="sig-name descname"><span class="pre">collect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.cli.collect" title="Link to this definition">¶</a></dt>
-<dd><p>Collect and store data.</p>
+<dt class="sig sig-object py" id="junifer.cli.parser.parse_elements">
+<span class="sig-prename descclassname"><span class="pre">junifer.cli.parser.</span></span><span class="sig-name descname"><span class="pre">parse_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.cli.parser.parse_elements" title="Link to this definition">¶</a></dt>
+<dd><p>Parse elements from cli.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>storage</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Storage to use. Must have a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> with the kind of
-storage to use. All other keys are passed to the storage
-constructor.</p>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The element(s) to operate on.</p>
+</dd>
+<dt><strong>config</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The configuration to operate using.</p>
 </dd>
 </dl>
 </dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="junifer.cli.queue">
-<span class="sig-prename descclassname"><span class="pre">junifer.cli.</span></span><span class="sig-name descname"><span class="pre">queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jobname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'junifer_job'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.cli.queue" title="Link to this definition">¶</a></dt>
-<dd><p>Queue a job to be executed later.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>config</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The configuration to be used for queueing the job.</p>
-</dd>
-<dt><strong>kind</strong><span class="classifier">{“HTCondor”, “GNUParallelLocal”}</span></dt><dd><p>The kind of job queue system to use.</p>
-</dd>
-<dt><strong>jobname</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The name of the job (default “junifer_job”).</p>
-</dd>
-<dt><strong>overwrite</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.12)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to overwrite if job directory already exists (default False).</p>
-</dd>
-<dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a>, optional</span></dt><dd><p>Element(s) to process. Will be used to index the DataGrabber
-(default None).</p>
-</dd>
-<dt><strong>**kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The keyword arguments to pass to the job queue system.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">kind</span></code> is invalid or
-if the <code class="docutils literal notranslate"><span class="pre">jobdir</span></code> exists and <code class="docutils literal notranslate"><span class="pre">overwrite</span> <span class="pre">=</span> <span class="pre">False</span></code>.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>The element(s) as list or None.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If no element is found either in the command-line options or
+the configuration file.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Warns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeWarning" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeWarning</span></code></a></dt><dd><p>If elements are specified both via the command-line options and
+the configuration file.</p>
 </dd>
 </dl>
 </dd>
@@ -384,34 +372,19 @@ if the <code class="docutils literal notranslate"><span class="pre">jobdir</span
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="junifer.cli.run">
-<span class="sig-prename descclassname"><span class="pre">junifer.cli.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datagrabber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.cli.run" title="Link to this definition">¶</a></dt>
-<dd><p>Run the pipeline on the selected element.</p>
+<dt class="sig sig-object py" id="junifer.cli.parser.parse_yaml">
+<span class="sig-prename descclassname"><span class="pre">junifer.cli.parser.</span></span><span class="sig-name descname"><span class="pre">parse_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.cli.parser.parse_yaml" title="Link to this definition">¶</a></dt>
+<dd><p>Parse YAML.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>workdir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>Directory where the pipeline will be executed.</p>
+<dt><strong>filepath</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.12)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The filepath to read from.</p>
 </dd>
-<dt><strong>datagrabber</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>DataGrabber to use. Must have a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> with the kind of
-DataGrabber to use. All other keys are passed to the DataGrabber
-constructor.</p>
+</dl>
 </dd>
-<dt><strong>markers</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>List of markers to extract. Each marker is a dict with at least two
-keys: <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">kind</span></code>. The <code class="docutils literal notranslate"><span class="pre">name</span></code> key is used to name the
-output marker. The <code class="docutils literal notranslate"><span class="pre">kind</span></code> key is used to specify the kind of marker
-to extract. The rest of the keys are used to pass parameters to the
-marker calculation.</p>
-</dd>
-<dt><strong>storage</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Storage to use. Must have a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> with the kind of
-storage to use. All other keys are passed to the storage
-constructor.</p>
-</dd>
-<dt><strong>preprocessors</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>List of preprocessors to use. Each preprocessor is a dict with at
-least a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> specifying the preprocessor to use. All other keys
-are passed to the preprocessor constructor (default None).</p>
-</dd>
-<dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a>, optional</span></dt><dd><p>Element(s) to process. Will be used to index the DataGrabber
-(default None).</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The contents represented as dictionary.</p>
 </dd>
 </dl>
 </dd>
@@ -476,9 +449,8 @@ are passed to the preprocessor constructor (default None).</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">9.2.9. CLI Functions</a><ul>
-<li><a class="reference internal" href="#junifer.cli.collect"><code class="docutils literal notranslate"><span class="pre">collect()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.cli.queue"><code class="docutils literal notranslate"><span class="pre">queue()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.cli.run"><code class="docutils literal notranslate"><span class="pre">run()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.cli.parser.parse_elements"><code class="docutils literal notranslate"><span class="pre">parse_elements()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.cli.parser.parse_yaml"><code class="docutils literal notranslate"><span class="pre">parse_yaml()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -490,7 +462,7 @@ are passed to the preprocessor constructor (default None).</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=cf57a421"></script>
+</div><script src="../_static/documentation_options.js?v=f5abba14"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
