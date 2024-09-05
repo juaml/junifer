@@ -1,4 +1,4 @@
-"""Provide tests for cli parser."""
+"""Provide tests for CLI parser."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>

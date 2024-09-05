@@ -1,4 +1,4 @@
-"""Provide tests for utils."""
+"""Provide tests for CLI utils."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL

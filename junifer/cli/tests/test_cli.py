@@ -1,4 +1,4 @@
-"""Provide tests for cli."""
+"""Provide tests for CLI."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>

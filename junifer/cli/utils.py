@@ -1,4 +1,4 @@
-"""Provide utility functions for the api sub-package."""
+"""Provide utility functions for the cli sub-package."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
