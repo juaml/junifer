@@ -93,16 +93,11 @@ jobs:
       continue-on-error: true
     - name: Install FSL
       run: |
-        curl -fsSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | python - -d /opt/fsl/
-        FSLOUTPUTTYPE="NIFTI_GZ"
-        FSLMULTIFILEQUIT="TRUE"
-        FSLTCLSH="/opt/fsl/bin/fsltclsh"
-        FSLWISH="/opt/fsl/bin/fslwish"
-        FSLLOCKDIR=""
-        FSLMACHINELIST=""
-        FSLREMOTECALL=""
-        FSLGECUDAQ="cuda.q"
-        echo "/opt/fsl" >> $GITHUB_PATH
+        curl -fsSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | python - -d /opt/fsl/ --skip_registration
+        echo "FSLDIR=/opt/fsl" >> $GITHUB_ENV
+        echo "FSLOUTPUTTYPE=NIFTI_GZ" >> $GITHUB_ENV
+        echo "FSLMULTIFILEQUIT=TRUE" >> $GITHUB_ENV
+        echo "/opt/fsl/bin" >> $GITHUB_PATH
       if: matrix.python-version == 3.11
       # Bypass FSL installation failure
       continue-on-error: true
