@@ -1,6 +1,14 @@
 API Functions
 =============
 
+Main Functions
+--------------
+
+.. automodule:: junifer.api.functions
+   :members:
+   :imported-members:
+
+
 Decorators
 ----------
 
