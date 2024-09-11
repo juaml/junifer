@@ -1,4 +1,4 @@
-"""Provide utility functions for the api sub-package."""
+"""Provide utility functions for the cli sub-package."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
@@ -9,17 +9,8 @@ import re
 from importlib.metadata import distribution
 from typing import Dict
 
-from ruamel.yaml import YAML
-
 from .._version import __version__
 from ..utils.logging import get_versions
-
-
-# Configure YAML class once for further use
-yaml = YAML()
-yaml.default_flow_style = False
-yaml.allow_unicode = True
-yaml.indent(mapping=2, sequence=4, offset=2)
 
 
 def _get_junifer_version() -> Dict[str, str]:

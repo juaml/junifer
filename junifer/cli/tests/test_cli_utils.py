@@ -1,4 +1,4 @@
-"""Provide tests for utils."""
+"""Provide tests for CLI utils."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
@@ -9,7 +9,7 @@ import sys
 import pytest
 
 from junifer._version import __version__
-from junifer.api.utils import (
+from junifer.cli.utils import (
     _get_dependency_information,
     _get_environment_information,
     _get_junifer_version,

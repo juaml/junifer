@@ -1,4 +1,4 @@
-"""Provide tests for cli."""
+"""Provide tests for CLI."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -11,8 +11,7 @@ import pytest
 from click.testing import CliRunner
 from ruamel.yaml import YAML
 
-from junifer.api.cli import (
-    _parse_elements_file,
+from junifer.cli.cli import (
     collect,
     list_elements,
     queue,
@@ -21,6 +20,7 @@ from junifer.api.cli import (
     selftest,
     wtf,
 )
+from junifer.cli.parser import _parse_elements_file
 
 
 # Configure YAML class

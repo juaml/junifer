@@ -25,6 +25,7 @@ Utilities
    stats
    pipeline
    api
+   cli
    utils
    testing
    onthefly

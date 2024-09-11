@@ -1,4 +1,4 @@
-"""Provide functions for cli."""
+"""Provide API functions."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
@@ -11,6 +11,7 @@ import typing
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
+from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from ..datagrabber.base import BaseDataGrabber
 from ..markers.base import BaseMarker
 from ..markers.collection import MarkerCollection
@@ -18,9 +19,7 @@ from ..pipeline import WorkDirManager
 from ..pipeline.registry import build
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
-from ..utils import logger, raise_error
-from .queue_context import GnuParallelLocalAdapter, HTCondorAdapter
-from .utils import yaml
+from ..utils import logger, raise_error, yaml
 
 
 __all__ = ["run", "collect", "queue", "reset", "list_elements"]

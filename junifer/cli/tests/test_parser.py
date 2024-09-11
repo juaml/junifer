@@ -1,4 +1,4 @@
-"""Provide tests for parser."""
+"""Provide tests for CLI parser."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from junifer.api.parser import parse_yaml
+from junifer.cli.parser import parse_yaml
 
 
 def test_parse_yaml_failure() -> None:
