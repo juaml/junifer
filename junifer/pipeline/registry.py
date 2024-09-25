@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import importlib
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from ..utils.logging import logger, raise_error
@@ -28,8 +29,64 @@ _VALID_STEPS: List[str] = [
     "storage",
 ]
 
+# Step to sub-package mapping
+_STEP_TO_SUBPKG_MAPPINGS = {
+    "datagrabber": "datagrabber",
+    "datareader": "datareader",
+    "preprocessing": "preprocess",
+    "marker": "markers",
+    "storage": "storage",
+}
+
 # Define registry for valid steps
-_REGISTRY: Dict[str, Dict[str, type]] = {x: {} for x in _VALID_STEPS}
+_REGISTRY: Dict[str, Dict[str, Union[str, type]]] = {
+    "datagrabber": {
+        "HCP1200": "HCP1200",
+        "BaseDataGrabber": "BaseDataGrabber",
+        "DataladAOMICID1000": "DataladAOMICID1000",
+        "DataladAOMICPIOP1": "DataladAOMICPIOP1",
+        "DataladAOMICPIOP2": "DataladAOMICPIOP2",
+        "DataladDataGrabber": "DataladDataGrabber",
+        "DataladHCP1200": "DataladHCP1200",
+        "DMCC13Benchmark": "DMCC13Benchmark",
+        "MultipleDataGrabber": "MultipleDataGrabber",
+        "PatternDataGrabber": "PatternDataGrabber",
+        "PatternDataladDataGrabber": "PatternDataladDataGrabber",
+    },
+    "datareader": {
+        "DefaultDataReader": "DefaultDataReader",
+    },
+    "preprocessing": {
+        "BasePreprocessor": "BasePreprocessor",
+        "Smoothing": "Smoothing",
+        "SpaceWarper": "SpaceWarper",
+        "fMRIPrepConfoundRemove": "fMRIPrepConfoundRemove",
+    },
+    "marker": {
+        "ALFFParcels": "ALFFParcels",
+        "ALFFSpheres": "ALFFSpheres",
+        "BaseMarker": "BaseMarker",
+        "BrainPrint": "BrainPrint",
+        "CrossParcellationFC": "CrossParcellationFC",
+        "EdgeCentricFCParcels": "EdgeCentricFCParcels",
+        "EdgeCentricFCSpheres": "EdgeCentricFCSpheres",
+        "FunctionalConnectivityParcels": "FunctionalConnectivityParcels",
+        "FunctionalConnectivitySpheres": "FunctionalConnectivitySpheres",
+        "ParcelAggregation": "ParcelAggregation",
+        "ReHoParcels": "ReHoParcels",
+        "ReHoSpheres": "ReHoSpheres",
+        "RSSETSMarker": "RSSETSMarker",
+        "SphereAggregation": "SphereAggregation",
+        "TemporalSNRParcels": "TemporalSNRParcels",
+        "TemporalSNRSpheres": "TemporalSNRSpheres",
+    },
+    "storage": {
+        "BaseFeatureStorage": "BaseFeatureStorage",
+        "HDF5FeatureStorage": "HDF5FeatureStorage",
+        "PandasBaseFeatureStorage": "PandasBaseFeatureStorage",
+        "SQLiteFeatureStorage": "SQLiteFeatureStorage",
+    },
+}
 
 
 def register(step: str, name: str, klass: type) -> None:
@@ -112,7 +169,18 @@ def get_class(step: str, name: str) -> type:
     if name not in _REGISTRY[step]:
         raise_error(msg=f"Invalid name: {name}", klass=ValueError)
 
-    return _REGISTRY[step][name]
+    # Check if first-time import, then import it
+    if isinstance(_REGISTRY[step][name], str):
+        klass = getattr(
+            importlib.import_module(
+                f"junifer.{_STEP_TO_SUBPKG_MAPPINGS[step]}"
+            ),
+            name,
+        )
+    else:
+        klass = _REGISTRY[step][name]
+
+    return klass
 
 
 def build(
