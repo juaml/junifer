@@ -25,7 +25,6 @@ from .utils import (
     _get_junifer_version,
     _get_python_information,
     _get_system_information,
-    _setup_component_registry,
 )
 
 
@@ -142,8 +141,6 @@ def run(
         preprocessors = [preprocessors]
     # Parse elements
     elements = parse_elements(element, config)
-    # Setup registry
-    _setup_component_registry()
     # Perform operation
     cli_func.run(
         workdir=workdir,
