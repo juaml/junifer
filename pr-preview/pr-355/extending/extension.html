@@ -352,11 +352,26 @@ and then run the <code class="docutils literal notranslate"><span class="pre">my
 This is the ideal place to include <code class="docutils literal notranslate"><span class="pre">junifer</span></code> extensions.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Some <code class="docutils literal notranslate"><span class="pre">junifer</span></code> commands will not consider files imported from files included
-in the <code class="docutils literal notranslate"><span class="pre">with</span></code> statement. If <code class="docutils literal notranslate"><span class="pre">my_file.py</span></code> imports <code class="docutils literal notranslate"><span class="pre">my_other_file.py</span></code>,
-some of the <code class="docutils literal notranslate"><span class="pre">junifer</span></code> commands will not consider <code class="docutils literal notranslate"><span class="pre">my_other_file.py</span></code>. Either
-place all the code in one file or add multiple files to the <code class="docutils literal notranslate"><span class="pre">with</span></code>
-statement.</p>
+<p>Some <code class="docutils literal notranslate"><span class="pre">junifer</span></code> commands will not consider files imported from files
+included in the <code class="docutils literal notranslate"><span class="pre">with</span></code> statement, unless this is known to junifer. If
+<code class="docutils literal notranslate"><span class="pre">my_file.py</span></code> imports <code class="docutils literal notranslate"><span class="pre">my_other_file.py</span></code>, the <code class="docutils literal notranslate"><span class="pre">run</span></code> command will work,
+but <code class="docutils literal notranslate"><span class="pre">queue</span></code> will not create a proper job. This is because we need to
+let junifer know that <code class="docutils literal notranslate"><span class="pre">my_other_file.py</span></code> is also part of the code. To do
+so, we need to include a special function in <code class="docutils literal notranslate"><span class="pre">my_file.py</span></code> which tells
+<code class="docutils literal notranslate"><span class="pre">junifer</span></code> about the dependencies of the module:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">junifer_module_deps</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">  </span><span class="sd">&quot;&quot;&quot;Return the dependencies of the module.</span>
+
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  list of str</span>
+<span class="sd">      The list of dependencies.</span>
+
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;my_other_file.py&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
 </div>
 </section>
 
@@ -409,7 +424,7 @@ statement.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=7570ed59"></script>
+</div><script src="../_static/documentation_options.js?v=f29b5a4f"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
