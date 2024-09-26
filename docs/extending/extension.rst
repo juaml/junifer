@@ -28,8 +28,24 @@ This is the ideal place to include ``junifer`` extensions.
 
 .. important::
 
-   Some ``junifer`` commands will not consider files imported from files included
-   in the ``with`` statement. If ``my_file.py`` imports ``my_other_file.py``,
-   some of the ``junifer`` commands will not consider ``my_other_file.py``. Either
-   place all the code in one file or add multiple files to the ``with``
-   statement.
+   Some ``junifer`` commands will not consider files imported from files
+   included in the ``with`` statement, unless this is known to junifer. If
+   ``my_file.py`` imports ``my_other_file.py``, the ``run`` command will work,
+   but ``queue`` will not create a proper job. This is because we need to 
+   let junifer know that ``my_other_file.py`` is also part of the code. To do
+   so, we need to include a special function in ``my_file.py`` which tells
+   ``junifer`` about the dependencies of the module:
+
+   .. code-block:: python
+      def junifer_module_deps() -> List[str]:
+        """Return the dependencies of the module.
+
+        Returns
+        -------
+        List[str]
+            The list of dependencies.
+
+        """
+
+        return ["my_other_file.py"]
+
