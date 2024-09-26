@@ -42,7 +42,7 @@ This is the ideal place to include ``junifer`` extensions.
 
         Returns
         -------
-        List[str]
+        list of str
             The list of dependencies.
 
         """
