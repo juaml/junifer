@@ -47,6 +47,7 @@ def test_get_dependency_information_short() -> None:
         "tqdm",
         "templateflow",
         "lapy",
+        "lazy_loader",
         "looseversion",
     ]
 
@@ -76,6 +77,7 @@ def test_get_dependency_information_long() -> None:
         "tqdm",
         "templateflow",
         "lapy",
+        "lazy_loader",
     ]
     for key in dependency_list:
         assert key in dependency_information_keys

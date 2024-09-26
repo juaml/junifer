@@ -4,8 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from . import decorators
-from .functions import collect, list_elements, reset, run, queue
+import lazy_loader as lazy
 
 
-__all__ = ["decorators", "collect", "queue", "run", "reset", "list_elements"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

@@ -3,9 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .queue_context_adapter import QueueContextAdapter
-from .htcondor_adapter import HTCondorAdapter
-from .gnu_parallel_local_adapter import GnuParallelLocalAdapter
+import lazy_loader as lazy
 
 
-__all__ = ["QueueContextAdapter", "HTCondorAdapter", "GnuParallelLocalAdapter"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

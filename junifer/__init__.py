@@ -4,38 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from . import (
-    api,
-    cli,
-    configs,
-    data,
-    datagrabber,
-    datareader,
-    markers,
-    pipeline,
-    preprocess,
-    stats,
-    storage,
-    utils,
-    external,
-    onthefly,
-)
-from ._version import __version__
+import lazy_loader as lazy
 
 
-__all__ = [
-    "api",
-    "cli",
-    "configs",
-    "data",
-    "datagrabber",
-    "datareader",
-    "markers",
-    "pipeline",
-    "preprocess",
-    "stats",
-    "storage",
-    "utils",
-    "external",
-    "onthefly",
-]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

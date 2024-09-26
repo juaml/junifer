@@ -1,4 +1,4 @@
-"""Provide tests for marker collection."""
+"""Provide tests for MarkerCollection."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
@@ -12,10 +12,9 @@ from numpy.testing import assert_array_equal
 from junifer.datareader.default import DefaultDataReader
 from junifer.markers import (
     FunctionalConnectivityParcels,
-    MarkerCollection,
     ParcelAggregation,
 )
-from junifer.pipeline import PipelineStepMixin
+from junifer.pipeline import MarkerCollection, PipelineStepMixin
 from junifer.preprocess import fMRIPrepConfoundRemover
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import (

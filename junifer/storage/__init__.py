@@ -4,15 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .base import BaseFeatureStorage
-from .pandas_base import PandasBaseFeatureStorage
-from .sqlite import SQLiteFeatureStorage
-from .hdf5 import HDF5FeatureStorage
+import lazy_loader as lazy
 
 
-__all__ = [
-    "BaseFeatureStorage",
-    "PandasBaseFeatureStorage",
-    "SQLiteFeatureStorage",
-    "HDF5FeatureStorage",
-]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

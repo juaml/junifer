@@ -3,8 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .junifer_nifti_spheres_masker import JuniferNiftiSpheresMasker
-from .junifer_connectivity_measure import JuniferConnectivityMeasure
+import lazy_loader as lazy
 
 
-__all__ = ["JuniferNiftiSpheresMasker", "JuniferConnectivityMeasure"]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

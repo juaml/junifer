@@ -1,8 +1,9 @@
-"""Junifer CLI."""
+"""Junifer CLI components."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .cli import cli
+import lazy_loader as lazy
 
-__all__ = ["cli"]
+
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)

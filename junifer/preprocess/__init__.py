@@ -5,15 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from .base import BasePreprocessor
-from .confounds import fMRIPrepConfoundRemover
-from .warping import SpaceWarper
-from .smoothing import Smoothing
+import lazy_loader as lazy
 
 
-__all__ = [
-    "BasePreprocessor",
-    "fMRIPrepConfoundRemover",
-    "SpaceWarper",
-    "Smoothing",
-]
+__getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
