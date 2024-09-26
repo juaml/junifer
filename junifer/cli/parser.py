@@ -65,14 +65,35 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:
                     raise_error(
                         f"File in 'with' section does not exist: {file_path}"
                     )
+                # Add the parent directory to the sys.path so that the
+                # any imports from this module work correctly
+                t_path = str(file_path.parent)
+                if t_path not in sys.path:
+                    sys.path.append(str(file_path.parent))
+
                 spec = importlib.util.spec_from_file_location(
                     t_module, file_path
                 )
                 module = importlib.util.module_from_spec(spec)  # type: ignore
                 sys.modules[t_module] = module
                 spec.loader.exec_module(module)  # type: ignore
+
                 # Add absolute path to final list
                 final_to_load.append(str(file_path.resolve()))
+
+                # Check if the module has junifer_module_deps function
+                if hasattr(module, "junifer_module_deps"):
+                    logger.debug(
+                        f"Module {t_module} has junifer_module_deps function"
+                    )
+                    # Get the dependencies
+                    deps = module.junifer_module_deps()
+                    # Add the dependencies to the final list
+                    for dep in deps:
+                        if dep not in final_to_load:
+                            final_to_load.append(
+                                str((file_path.parent / dep).resolve())
+                            )
             else:
                 logger.info(f"Importing module: {t_module}")
                 importlib.import_module(t_module)
