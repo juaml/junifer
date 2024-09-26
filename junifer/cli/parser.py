@@ -18,7 +18,7 @@ from ..utils import logger, raise_error, warn_with_log, yaml
 __all__ = ["parse_yaml", "parse_elements"]
 
 
-def parse_yaml(filepath: Union[str, Path]) -> Dict:
+def parse_yaml(filepath: Union[str, Path]) -> Dict:  # noqa: C901
     """Parse YAML.
 
     Parameters
