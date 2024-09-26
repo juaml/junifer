@@ -37,6 +37,7 @@ This is the ideal place to include ``junifer`` extensions.
    ``junifer`` about the dependencies of the module:
 
    .. code-block:: python
+
       def junifer_module_deps() -> List[str]:
         """Return the dependencies of the module.
 
