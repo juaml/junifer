@@ -6,9 +6,10 @@
 from pathlib import Path
 from typing import Any, Dict, Optional, Union
 
-import httpx
+import datalad.api as dl
 import nibabel as nib
 import numpy as np
+from datalad.support.exceptions import IncompleteResultsError
 from templateflow import api as tflow
 
 from ..utils import logger, raise_error
@@ -41,61 +42,82 @@ def get_xfm(
     Raises
     ------
     RuntimeError
-        If there is a problem fetching files.
+        If there is a problem cloning the xfm dataset or
+        if there is a problem fetching the xfm file.
 
     """
+    # Set default path for storage
     if xfms_dir is None:
         xfms_dir = Path().home() / "junifer" / "data" / "xfms"
-        logger.debug(f"Creating xfm directory at: {xfms_dir.resolve()}")
-        # Create default junifer data directory if not present
-        xfms_dir.mkdir(exist_ok=True, parents=True)
+
     # Convert str to Path
-    elif not isinstance(xfms_dir, Path):
+    if not isinstance(xfms_dir, Path):
         xfms_dir = Path(xfms_dir)
 
-    # Set local file prefix
-    xfm_file_prefix = f"{src}_to_{dst}"
-    # Set local file dir
-    xfm_file_dir = xfms_dir / xfm_file_prefix
-    # Create local directory if not present
-    xfm_file_dir.mkdir(exist_ok=True, parents=True)
-    # Set file name with extension
-    xfm_file = f"{src}_to_{dst}_Composite.h5"
-    # Set local file path
-    xfm_file_path = xfm_file_dir / xfm_file
-    # Check if the file exists
-    if xfm_file_path.exists():
-        logger.info(
-            f"Found existing xfm file for {src} to {dst} at "
-            f"{xfm_file_path.resolve()}"
+    # Check if the template xfms dataset is installed at storage path
+    is_installed = dl.Dataset(xfms_dir).is_installed()
+    # Use existing dataset
+    if is_installed:
+        logger.debug(
+            f"Found existing template xfms dataset at: {xfms_dir.resolve()}"
         )
-        return xfm_file_path
-
-    # Set URL
-    url = (
-        "https://gin.g-node.org/juaml/human-template-xfms/raw/main/xfms/"
-        f"{xfm_file_prefix}/{xfm_file}"
-    )
-    # Create the file before proceeding
-    xfm_file_path.touch()
-
-    logger.info(f"Downloading xfm file for {src} to {dst} from {url}")
-    # Steam response
-    with httpx.stream("GET", url) as resp:
+        # Set dataset
+        dataset = dl.Dataset(xfms_dir)
+    # Clone a fresh copy
+    else:
+        logger.debug(f"Cloning template xfms dataset to: {xfms_dir.resolve()}")
+        # Clone dataset
         try:
-            resp.raise_for_status()
-        except httpx.HTTPError as exc:
+            dataset = dl.clone(
+                "https://github.com/juaml/human-template-xfms.git",
+                path=xfms_dir,
+                result_renderer="disabled",
+            )
+        except IncompleteResultsError as e:
             raise_error(
-                f"Error response {exc.response.status_code} while "
-                f"requesting {exc.request.url!r}",
+                msg=f"Failed to clone dataset: {e.failed}",
                 klass=RuntimeError,
             )
         else:
-            with open(xfm_file_path, "ab") as f:
-                for chunk in resp.iter_bytes():
-                    f.write(chunk)
+            logger.debug(
+                f"Successfully cloned template xfms dataset to: "
+                f"{xfms_dir.resolve()}"
+            )
 
-    return xfm_file_path
+    # Set file path to retrieve
+    xfm_file_path = (
+        xfms_dir / "xfms" / f"{src}_to_{dst}" / f"{src}_to_{dst}_Composite.h5"
+    )
+
+    # Retrieve file
+    try:
+        got = dataset.get(xfm_file_path, result_renderer="disabled")
+    except IncompleteResultsError as e:
+        raise_error(
+            msg=f"Failed to get file from dataset: {e.failed}",
+            klass=RuntimeError,
+        )
+    else:
+        file_path = Path(got[0]["path"])
+        # Conditional logging based on file fetch
+        status = got[0]["status"]
+        if status == "ok":
+            logger.info(
+                f"Successfully fetched xfm file for {src} to {dst} at "
+                f"{file_path.resolve()}"
+            )
+            return file_path
+        elif status == "notneeded":
+            logger.info(
+                f"Found existing xfm file for {src} to {dst} at "
+                f"{file_path.resolve()}"
+            )
+            return file_path
+        else:
+            raise_error(
+                f"Failed to fetch xfm file for {src} to {dst} at "
+                f"{file_path.resolve()}"
+            )
 
 
 def get_template(
