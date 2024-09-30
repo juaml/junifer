@@ -60,7 +60,7 @@ _REGISTRY: Dict[str, Dict[str, Union[str, type]]] = {
         "BasePreprocessor": "BasePreprocessor",
         "Smoothing": "Smoothing",
         "SpaceWarper": "SpaceWarper",
-        "fMRIPrepConfoundRemove": "fMRIPrepConfoundRemove",
+        "fMRIPrepConfoundRemover": "fMRIPrepConfoundRemover",
     },
     "marker": {
         "ALFFParcels": "ALFFParcels",
