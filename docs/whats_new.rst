@@ -27,6 +27,7 @@ Bugfixes
 - Remove extra dimension from masks warped via ANTs by `Synchon Mandal`_
   (:gh:`340`)
 
+
 API Changes
 ^^^^^^^^^^^
 
