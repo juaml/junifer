@@ -26,7 +26,6 @@ Bugfixes
   types requirement by `Synchon Mandal`_ (:gh:`339`)
 - Remove extra dimension from masks warped via ANTs by `Synchon Mandal`_
   (:gh:`340`)
-- Add 'emomatching' task to :class:`DataladAOMICPIOP2` by `Leonard Sasse`_ (:gh:`370`)
 
 API Changes
 ^^^^^^^^^^^
