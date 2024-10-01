@@ -33,7 +33,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
            "FreeSurfer"} or list of the options, optional
         AOMIC data types. If None, all available data types are selected.
         (default None).
-    tasks : {"restingstate", "stopsignal", "workingmemory"} or \
+    tasks : {"restingstate", "stopsignal", "workingmemory", "emomatching"} or \
             list of the options, optional
         AOMIC PIOP2 task sessions. If None, all available task sessions are
         selected (default None).
@@ -59,6 +59,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             "restingstate",
             "stopsignal",
             "workingmemory",
+            "emomatching"
         ]
         # Set default tasks
         if tasks is None:
