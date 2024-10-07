@@ -5,8 +5,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
 import importlib
+from typing import TYPE_CHECKING, Dict, List, Mapping, Optional, Union
 
 from ..utils import logger, raise_error
 from .singleton import singleton
@@ -122,7 +122,7 @@ class PipelineComponentRegistry:
         return self._steps
 
     @property
-    def components(self) -> Dict[str, Dict[str, type]]:
+    def components(self) -> Mapping[str, Mapping[str, Union[str, type]]]:
         """Get registered components for valid pipeline steps."""
         return self._components
 
