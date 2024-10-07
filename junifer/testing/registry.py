@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from ..pipeline.registry import PipelineComponentRegistry
+from ..pipeline import PipelineComponentRegistry
 from .datagrabbers import (
     OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
