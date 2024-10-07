@@ -6,6 +6,7 @@
 # License: AGPL
 
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
+import importlib
 
 from ..utils import logger, raise_error
 from .singleton import singleton
@@ -40,6 +41,7 @@ class PipelineComponentRegistry:
 
     def __init__(self) -> None:
         """Initialize the class."""
+        # Valid steps for operation
         self._steps = [
             "datagrabber",
             "datareader",
@@ -47,7 +49,67 @@ class PipelineComponentRegistry:
             "marker",
             "storage",
         ]
-        self._components = {x: {} for x in self._steps}
+        # Step to sub-package mapping
+        self._step_to_subpkg_mappings = {
+            "datagrabber": "datagrabber",
+            "datareader": "datareader",
+            "preprocessing": "preprocess",
+            "marker": "markers",
+            "storage": "storage",
+        }
+        # Component registry for valid steps
+        self._components = {
+            "datagrabber": {
+                "HCP1200": "HCP1200",
+                "BaseDataGrabber": "BaseDataGrabber",
+                "DataladAOMICID1000": "DataladAOMICID1000",
+                "DataladAOMICPIOP1": "DataladAOMICPIOP1",
+                "DataladAOMICPIOP2": "DataladAOMICPIOP2",
+                "DataladDataGrabber": "DataladDataGrabber",
+                "DataladHCP1200": "DataladHCP1200",
+                "DMCC13Benchmark": "DMCC13Benchmark",
+                "MultipleDataGrabber": "MultipleDataGrabber",
+                "PatternDataGrabber": "PatternDataGrabber",
+                "PatternDataladDataGrabber": "PatternDataladDataGrabber",
+            },
+            "datareader": {
+                "DefaultDataReader": "DefaultDataReader",
+            },
+            "preprocessing": {
+                "BasePreprocessor": "BasePreprocessor",
+                "Smoothing": "Smoothing",
+                "SpaceWarper": "SpaceWarper",
+                "fMRIPrepConfoundRemover": "fMRIPrepConfoundRemover",
+            },
+            "marker": {
+                "ALFFParcels": "ALFFParcels",
+                "ALFFSpheres": "ALFFSpheres",
+                "BaseMarker": "BaseMarker",
+                "BrainPrint": "BrainPrint",
+                "CrossParcellationFC": "CrossParcellationFC",
+                "EdgeCentricFCParcels": "EdgeCentricFCParcels",
+                "EdgeCentricFCSpheres": "EdgeCentricFCSpheres",
+                "FunctionalConnectivityParcels": (
+                    "FunctionalConnectivityParcels"
+                ),
+                "FunctionalConnectivitySpheres": (
+                    "FunctionalConnectivitySpheres"
+                ),
+                "ParcelAggregation": "ParcelAggregation",
+                "ReHoParcels": "ReHoParcels",
+                "ReHoSpheres": "ReHoSpheres",
+                "RSSETSMarker": "RSSETSMarker",
+                "SphereAggregation": "SphereAggregation",
+                "TemporalSNRParcels": "TemporalSNRParcels",
+                "TemporalSNRSpheres": "TemporalSNRSpheres",
+            },
+            "storage": {
+                "BaseFeatureStorage": "BaseFeatureStorage",
+                "HDF5FeatureStorage": "HDF5FeatureStorage",
+                "PandasBaseFeatureStorage": "PandasBaseFeatureStorage",
+                "SQLiteFeatureStorage": "SQLiteFeatureStorage",
+            },
+        }
 
     def _check_valid_step(self, step: str) -> None:
         """Check if ``step`` is valid."""
@@ -161,7 +223,18 @@ class PipelineComponentRegistry:
         if name not in self._components[step]:
             raise_error(msg=f"Invalid name: {name}", klass=ValueError)
 
-        return self._components[step][name]
+        # Check if first-time import, then import it
+        if isinstance(self._components[step][name], str):
+            klass = getattr(
+                importlib.import_module(
+                    f"junifer.{self._step_to_subpkg_mappings[step]}"
+                ),
+                name,
+            )
+        else:
+            klass = self._components[step][name]
+
+        return klass
 
     def build_component_instance(
         self,
