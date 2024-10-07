@@ -59,7 +59,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             "restingstate",
             "stopsignal",
             "workingmemory",
-            "emomatching"
+            "emomatching",
         ]
         # Set default tasks
         if tasks is None:
