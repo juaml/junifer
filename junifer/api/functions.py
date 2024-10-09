@@ -161,20 +161,21 @@ def run(
         elements = [elements]
 
     # Get datagrabber to use
-    datagrabber_object = _get_datagrabber(datagrabber)
+    datagrabber_object = _get_datagrabber(datagrabber.copy())
 
     # Get markers to use
-    built_markers = [_get_marker(marker) for marker in markers]
+    built_markers = [_get_marker(marker) for marker in markers.copy()]
 
     # Get storage engine to use
     if "single_output" not in storage:
         storage["single_output"] = False
-    storage_object = _get_storage(storage)
+    storage_object = _get_storage(storage.copy())
 
     # Get preprocessor to use (if provided)
     if preprocessors is not None:
         built_preprocessors = [
-            _get_preprocessor(preprocessor) for preprocessor in preprocessors
+            _get_preprocessor(preprocessor)
+            for preprocessor in preprocessors.copy()
         ]
     else:
         built_preprocessors = None
@@ -215,7 +216,7 @@ def collect(storage: Dict) -> None:
     logger.debug(f"\tStorage params: {storage}")
     if "single_output" not in storage:
         storage["single_output"] = False
-    storage_object = _get_storage(storage)
+    storage_object = _get_storage(storage.copy())
     logger.debug("Running storage.collect()")
     storage_object.collect()
     logger.info("Collect done")
