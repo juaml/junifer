@@ -15,7 +15,7 @@ from ruamel.yaml import YAML
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, list_elements, queue, reset, run
 from junifer.datagrabber.base import BaseDataGrabber
-from junifer.pipeline.registry import build
+from junifer.pipeline import PipelineComponentRegistry
 
 
 # Configure YAML class
@@ -240,7 +240,7 @@ def test_run_and_collect(
         storage=storage,
     )
     # Get datagrabber
-    dg = build(
+    dg = PipelineComponentRegistry().build_component_instance(
         step="datagrabber", name=datagrabber["kind"], baseclass=BaseDataGrabber
     )
     elements = dg.get_elements()  # type: ignore
