@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
 
     steps:
     - name: Set up system
@@ -65,13 +65,13 @@ jobs:
         curl -O https://afni.nimh.nih.gov/pub/dist/bin/misc/@update.afni.binaries
         sudo tcsh @update.afni.binaries -package linux_ubuntu_16_64 -bindir /afni
         echo "/afni" >> $GITHUB_PATH
-      if: matrix.python-version == 3.11
+      if: matrix.python-version == 3.12
       # Bypass AFNI installation failure
       continue-on-error: true
     - name: Check AFNI
       run: |
         echo "Using AFNI : $(afni --version)"
-      if: matrix.python-version == 3.11
+      if: matrix.python-version == 3.12
       # Bypass AFNI installation failure
       continue-on-error: true
     - name: Install ANTs
@@ -82,13 +82,13 @@ jobs:
         mv /opt/ants-2.5.2/bin/* /opt/ants-2.5.2
         rm ants.zip
         echo "/opt/ants-2.5.2" >> $GITHUB_PATH
-      if: matrix.python-version == 3.11
+      if: matrix.python-version == 3.12
       # Bypass ANTs installation failure
       continue-on-error: true
     - name: Check ANTs
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
-      if: matrix.python-version == 3.11
+      if: matrix.python-version == 3.12
       # Bypass ANTs installation failure
       continue-on-error: true
     - name: Install FSL
@@ -98,13 +98,13 @@ jobs:
         echo "FSLOUTPUTTYPE=NIFTI_GZ" >> $GITHUB_ENV
         echo "FSLMULTIFILEQUIT=TRUE" >> $GITHUB_ENV
         echo "/opt/fsl/bin" >> $GITHUB_PATH
-      if: matrix.python-version == 3.11
+      if: matrix.python-version == 3.12
       # Bypass FSL installation failure
       continue-on-error: true
     - name: Check FSL
       run: |
         echo "Using FSL : $(flirt -version)"
-      if: matrix.python-version == 3.11
+      if: matrix.python-version == 3.12
       # Bypass FSL installation failure
       continue-on-error: true
     - name: Test with tox
@@ -116,4 +116,4 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
         flags: junifer
-      if: success() && matrix.python-version == 3.11
+      if: success() && matrix.python-version == 3.12
