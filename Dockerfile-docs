@@ -19,7 +19,9 @@ RUN apt-get update --allow-insecure-repositories && \
     bc
 
 # Install junifer in editable mode
-RUN pip install -e .[docs,neurokit2]
+RUN --mount=type=cache,target=/cache/pip \
+    PIP_CACHE_DIR=/cache/pip \
+    python -m pip install -e .[docs,neurokit2]
 
 # Add xfms
 COPY --from=ghcr.io/juaml/human-template-xfms:main /opt/xfms /root/junifer/data/xfms
