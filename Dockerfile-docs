@@ -11,7 +11,7 @@ COPY junifer/external/h5io/ /src/junifer/external/h5io/
 COPY pyproject.toml /src/pyproject.toml
 COPY README.md /src/README.md
 
-RUN apt-get update --allow-insecure-repositories && \
+RUN apt-get update && \
     apt-get install -y \
     pkg-config \
     libhdf5-dev \
@@ -32,5 +32,8 @@ COPY --from=antsx/ants:latest /opt/ants /opt/ants
 # Set env vars for ANTs
 ENV PATH="/opt/ants/bin:$PATH" \
     LD_LIBRARY_PATH="/opt/ants/lib"
+
+# Clean apt cache
+RUN apt-get autoremove --purge && apt-get clean
 
 WORKDIR /src/docs
