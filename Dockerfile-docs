@@ -1,32 +1,16 @@
 # syntax=docker/dockerfile:1
 
-ARG PYTHON_VERSION=3.12
-
-FROM python:${PYTHON_VERSION}-slim
+FROM debian:bookworm-slim
 
 LABEL org.opencontainers.image.source=https://github.com/juaml/junifer
 LABEL org.opencontainers.image.description="Junifer docs CI container image"
 LABEL org.opencontainers.image.licenses=AGPL-3.0-only
 
-COPY .git/ /opt/src/.git/
-COPY junifer/ /opt/src/junifer/
-COPY pyproject.toml /opt/src/pyproject.toml
-COPY README.md /opt/src/README.md
-
 RUN apt-get update && \
     apt-get install -y \
-    pkg-config \
+    # ANTs runtime stuff
     libhdf5-dev \
-    gcc \
-    git \
-    make \
     bc
-
-# Install junifer in editable mode
-RUN --mount=type=cache,target=/cache/pip \
-    cd /opt/src && \
-    PIP_CACHE_DIR=/cache/pip \
-    python -m pip install -e .[docs,neurokit2]
 
 # Add xfms
 COPY --from=ghcr.io/juaml/human-template-xfms:main /opt/xfms /root/junifer/data/xfms
