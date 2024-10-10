@@ -4,6 +4,10 @@ ARG PYTHON_VERSION=3.12
 
 FROM python:${PYTHON_VERSION}-slim
 
+LABEL org.opencontainers.image.source=https://github.com/juaml/junifer
+LABEL org.opencontainers.image.description="Junifer docs CI container image"
+LABEL org.opencontainers.image.licenses=AGPL-3.0-only
+
 WORKDIR /src
 COPY .git/ /src/.git/
 COPY junifer/ /src/junifer/
