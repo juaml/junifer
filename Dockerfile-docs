@@ -1,0 +1,34 @@
+# syntax=docker/dockerfile:1
+
+ARG PYTHON_VERSION=3.12
+
+FROM python:${PYTHON_VERSION}-slim
+
+WORKDIR /src
+COPY .git/ /src/.git/
+COPY junifer /src/junifer
+COPY pyproject.toml /src/pyproject.toml
+
+RUN apt-get update --allow-insecure-repositories && \
+    apt-get install -y \
+    pkg-config \
+    libhdf5-dev \
+    gcc \
+    git \
+    make \
+    bc
+
+# Install junifer in editable mode
+RUN --mount=type=cache,target=/cache/pip \
+    PIP_CACHE_DIR=/cache/pip \
+    pip install -e .[docs,neurokit2]
+
+# Add xfms
+COPY --from=ghcr.io/juaml/human-template-xfms:main /opt/xfms /root/junifer/data/xfms
+# Add ANTs
+COPY --from=antsx/ants:latest /opt/ants /opt/ants
+# Set env vars for ANTs
+ENV PATH="/opt/ants/bin:$PATH" \
+    LD_LIBRARY_PATH="/opt/ants/lib"
+
+WORKDIR /src/docs
