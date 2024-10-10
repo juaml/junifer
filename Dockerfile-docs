@@ -6,7 +6,7 @@ FROM python:${PYTHON_VERSION}-slim
 
 WORKDIR /src
 COPY .git/ /src/.git/
-COPY junifer /src/junifer
+COPY junifer/ /src/junifer/
 COPY pyproject.toml /src/pyproject.toml
 
 RUN apt-get update --allow-insecure-repositories && \
