@@ -8,12 +8,10 @@ LABEL org.opencontainers.image.source=https://github.com/juaml/junifer
 LABEL org.opencontainers.image.description="Junifer docs CI container image"
 LABEL org.opencontainers.image.licenses=AGPL-3.0-only
 
-WORKDIR /src
-COPY .git/ /src/.git/
-COPY junifer/ /src/junifer/
-COPY junifer/external/h5io/ /src/junifer/external/h5io/
-COPY pyproject.toml /src/pyproject.toml
-COPY README.md /src/README.md
+COPY .git/ /opt/src/.git/
+COPY junifer/ /opt/src/junifer/
+COPY pyproject.toml /opt/src/pyproject.toml
+COPY README.md /opt/src/README.md
 
 RUN apt-get update && \
     apt-get install -y \
@@ -26,6 +24,7 @@ RUN apt-get update && \
 
 # Install junifer in editable mode
 RUN --mount=type=cache,target=/cache/pip \
+    cd /opt/src && \
     PIP_CACHE_DIR=/cache/pip \
     python -m pip install -e .[docs,neurokit2]
 
@@ -39,5 +38,3 @@ ENV PATH="/opt/ants/bin:$PATH" \
 
 # Clean apt cache
 RUN apt-get autoremove --purge && apt-get clean
-
-WORKDIR /src/docs
