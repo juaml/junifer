@@ -1,0 +1,24 @@
+# syntax=docker/dockerfile:1
+
+FROM debian:bookworm-slim
+
+LABEL org.opencontainers.image.source=https://github.com/juaml/junifer
+LABEL org.opencontainers.image.description="Junifer docs CI container image"
+LABEL org.opencontainers.image.licenses=AGPL-3.0-only
+
+RUN apt-get update && \
+    apt-get install -y \
+    # ANTs runtime stuff
+    libhdf5-dev \
+    bc
+
+# Add xfms
+COPY --from=ghcr.io/juaml/human-template-xfms:main /opt/xfms /root/junifer/data/xfms
+# Add ANTs
+COPY --from=antsx/ants:latest /opt/ants /opt/ants
+# Set env vars for ANTs
+ENV PATH="/opt/ants/bin:$PATH" \
+    LD_LIBRARY_PATH="/opt/ants/lib"
+
+# Clean apt cache
+RUN apt-get autoremove --purge && apt-get clean
