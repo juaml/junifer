@@ -32,9 +32,9 @@ jobs:
         git \
         git-annex \
         make
-        # Symlink xfms directory
-        mkdir -p $HOME/junifer/data/xfms
-        ln -s /root/junifer/data/xfms $HOME/junifer/data/xfms
+        # Copy xfms directory
+        mkdir -p $HOME/junifer/data/xfms && \
+        cp -r /root/junifer/data/xfms $HOME/junifer/data/xfms
     - name: Checkout source
       uses: actions/checkout@v4
       with:
