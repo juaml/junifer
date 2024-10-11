@@ -18,8 +18,12 @@ concurrency: preview-${{ github.ref }}
 jobs:
   build-docs:
     runs-on: ubuntu-latest
+    # Use custom docs CI image
     container: ghcr.io/juaml/junifer-docs:main
     steps:
+    - name: Check ANTs
+      run: |
+        echo "Using ANTs : $(antsRegistration --version)"
     - name: Checkout source
       uses: actions/checkout@v4
       with:
@@ -45,9 +49,6 @@ jobs:
       run: |
         git config --global user.email "runner@github.com"
         git config --global user.name "GITHUB CI Runner"
-    - name: Check ANTs
-      run: |
-        echo "Using ANTs : $(antsRegistration --version)"
     - name: Test build docs
       run: |
         BUILDDIR=_build/main make -C docs/ local
