@@ -51,10 +51,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip setuptools wheel
         python -m pip install -e ".[docs,neurokit2]"
-    - name: Configure git for datalad
+    - name: Configure Git for DataLad
       run: |
-        git config --global user.email "runner@github.com"
-        git config --global user.name "GITHUB CI Runner"
+        git config --global user.email "junifer-runner@github.com"
+        git config --global user.name "GitHub Runner"
     - name: Test build docs
       run: |
         BUILDDIR=_build/main make -C docs/ local
