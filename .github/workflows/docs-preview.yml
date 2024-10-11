@@ -24,15 +24,11 @@ jobs:
     - name: Check ANTs
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
-    - name: Check for sudo
-      shell: bash
-      run: |
-        if type sudo >/dev/null 2>&1; then SUDO="sudo"; else SUDO=""; fi
-        echo "SUDO=$SUDO" >> $GITHUB_ENV
     # actions/checkout fails to identify Git as it's not in the CI image
     - name: Install Git
       run: |
-        $SUDO apt-get update -qq && apt-get install git
+        sudo apt-get -qq update
+        sudo apt-get -qq install git
     - name: Checkout source
       uses: actions/checkout@v4
       with:
