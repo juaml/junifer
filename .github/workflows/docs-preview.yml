@@ -24,6 +24,15 @@ jobs:
     - name: Check ANTs
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
+    - name: Check for sudo
+      shell: bash
+      run: |
+        if type sudo >/dev/null 2>&1; then SUDO="sudo"; else SUDO=""; fi
+        echo "SUDO=$SUDO" >> $GITHUB_ENV
+    # actions/checkout fails to identify Git as it's not in the CI image
+    - name: Install Git
+      run: |
+        $SUDO apt-get update -qq && apt-get install git
     - name: Checkout source
       uses: actions/checkout@v4
       with:
@@ -33,15 +42,9 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.x"
-    - name: Check for sudo
-      shell: bash
-      run: |
-        if type sudo >/dev/null 2>&1; then SUDO="sudo"; else SUDO=""; fi
-        echo "SUDO=$SUDO" >> $GITHUB_ENV
     - name: Install dependencies
       run: |
         $SUDO bash -c "$(curl -fsSL http://neuro.debian.net/_files/neurodebian-travis.sh)"
-        $SUDO apt-get update -qq
         $SUDO apt-get install git-annex-standalone
         python -m pip install --upgrade pip setuptools wheel
         python -m pip install -e ".[docs,neurokit2]"
