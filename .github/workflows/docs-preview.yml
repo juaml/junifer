@@ -27,8 +27,7 @@ jobs:
     # actions/checkout fails to identify Git as it's not in the CI image
     - name: Install Git
       run: |
-        sudo apt-get -qq update
-        sudo apt-get -qq install git
+        apt-get -qq update && apt-get -qq install -y git
     - name: Checkout source
       uses: actions/checkout@v4
       with:
