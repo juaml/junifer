@@ -18,6 +18,7 @@ concurrency: preview-${{ github.ref }}
 jobs:
   build-docs:
     runs-on: ubuntu-latest
+    container: ghcr.io/juaml/junifer-docs:main
     steps:
     - name: Checkout source
       uses: actions/checkout@v4
@@ -44,20 +45,9 @@ jobs:
       run: |
         git config --global user.email "runner@github.com"
         git config --global user.name "GITHUB CI Runner"
-    - name: Install ANTs
+    - name: Check ANTs
       run: |
-        echo "++ Add universe repo"
-        sudo add-apt-repository -y universe
-
-        echo "++ Update package manager info"
-        sudo apt-get update -qq
-
-        echo "++ Downloading ANTs"
-        curl -fsSL -o ants.zip https://github.com/ANTsX/ANTs/releases/download/v2.5.1/ants-2.5.1-ubuntu-22.04-X64-gcc.zip
-        unzip ants.zip -d /opt
-        mv /opt/ants-2.5.1/bin/* /opt/ants-2.5.1
-        rm ants.zip
-        echo "/opt/ants-2.5.1" >> $GITHUB_PATH
+        echo "Using ANTs : $(antsRegistration --version)"
     - name: Test build docs
       run: |
         BUILDDIR=_build/main make -C docs/ local
