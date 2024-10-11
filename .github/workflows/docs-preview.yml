@@ -39,8 +39,7 @@ jobs:
         python-version: "3.x"
     - name: Install dependencies
       run: |
-        apt-get -qq install -y curl git-annex
-        bash -c "$(curl -fsSL http://neuro.debian.net/_files/neurodebian-travis.sh)"
+        apt-get -qq install -y git-annex
         python -m pip install --upgrade pip setuptools wheel
         python -m pip install -e ".[docs,neurokit2]"
     - name: Configure git for datalad
