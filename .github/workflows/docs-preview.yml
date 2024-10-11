@@ -24,10 +24,16 @@ jobs:
     - name: Check ANTs
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
-    # actions/checkout fails to identify Git as it's not in the CI image
-    - name: Install Git
+    - name: Install system dependencies
       run: |
-        apt-get -qq update && apt-get -qq install -y git
+        # actions/checkout fails to identify Git as it's not in the CI image
+        apt-get -qq update && \
+        apt-get -qq install -y \
+        git \
+        git-annex \
+        make
+        # Symlink xfms directory
+        ln -s /opt/xfms $HOME/junifer/data/xfms
     - name: Checkout source
       uses: actions/checkout@v4
       with:
@@ -37,9 +43,8 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.x"
-    - name: Install dependencies
+    - name: Install Python dependencies
       run: |
-        apt-get -qq install -y git-annex make
         python -m pip install --upgrade pip setuptools wheel
         python -m pip install -e ".[docs,neurokit2]"
     - name: Configure git for datalad
