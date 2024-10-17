@@ -1,0 +1,71 @@
+# syntax=docker/dockerfile:1
+
+FROM python:3.12-slim
+
+LABEL org.opencontainers.image.source=https://github.com/juaml/junifer
+LABEL org.opencontainers.image.description="Junifer CI container image"
+LABEL org.opencontainers.image.licenses=AGPL-3.0-only
+
+RUN apt-get update && \
+    apt-get install -y \
+    pkg-config \
+    gcc \
+    git \
+    make \
+    curl \
+    # ANTs runtime stuff
+    libhdf5-dev \
+    bc \
+    # AFNI runtime stuff
+    libf2c2-dev \
+    libglew-dev \
+    libglib2.0-dev \
+    libglu1-mesa-dev \
+    libglw1-mesa-dev \
+    libgsl-dev \
+    libgts-dev \
+    libjpeg62-turbo-dev \
+    libmotif-dev \
+    libxi-dev \
+    libxmhtml-dev \
+    libxmu-dev \
+    libxpm-dev \
+    libxt-dev \
+    netpbm \
+    libjpeg-progs \
+    qhull-bin \
+    r-base \
+    tcsh \
+    xvfb \
+    # FSL runtime stuff
+    file \
+    dc \
+    libquadmath0 \
+    libgomp1
+
+# Add xfms
+COPY --from=ghcr.io/juaml/human-template-xfms:main /opt/xfms /root/junifer/data/xfms
+
+# Add ANTs
+COPY --from=antsx/ants:latest /opt/ants /opt/ants
+# Set env vars for ANTs
+ENV PATH="/opt/ants/bin:$PATH" \
+    LD_LIBRARY_PATH="/opt/ants/lib"
+
+# Add AFNI
+COPY --from=afni/afni_make_build:latest /opt/afni/install /opt/afni/bin
+# Set env vars for AFNI
+ENV PATH="/opt/afni/bin:$PATH"
+# Patch gsl
+RUN ln -s /usr/lib/x86_64-linux-gnu/libgsl.so.27 /usr/lib/x86_64-linux-gnu/libgsl.so.23
+
+# Add FSL
+RUN curl https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | \
+    python - -d /opt/fsl/ --skip_registration
+# Set env vars for FSL
+ENV FSLDIR="/opt/fsl" \
+    FSLOUTPUTTYPE="NIFTI_GZ" \
+    PATH="/opt/fsl/bin:$PATH"
+
+# Clean apt cache
+RUN apt-get autoremove --purge && apt-get clean
