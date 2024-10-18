@@ -13,7 +13,10 @@ jobs:
   build-docs:
     runs-on: ubuntu-latest
     # Use custom docs CI image
-    container: ghcr.io/juaml/junifer-docs:main
+    container:
+      image: ghcr.io/juaml/junifer-docs:main
+      # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
+      options: --user 1001
     steps:
     - name: Check ANTs
       run: |
