@@ -18,6 +18,8 @@ concurrency: preview-${{ github.ref }}
 jobs:
   build-docs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     # Use custom docs CI image
     container: ghcr.io/juaml/junifer-docs:main
     steps:
