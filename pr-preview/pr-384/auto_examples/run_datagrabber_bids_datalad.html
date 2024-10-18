@@ -340,14 +340,14 @@ store in a datalad remote sibling.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/__w/junifer/junifer/junifer/utils/logging.py:139: UserWarning: The &#39;__version__&#39; attribute is deprecated and will be removed in MarkupSafe 3.1. Use feature detection, or `importlib.metadata.version(&quot;markupsafe&quot;)`, instead.
   vstring = str(getattr(module, &quot;__version__&quot;, None))
-2024-10-18 11:04:32,050 - JUNIFER - INFO - ===== Lib Versions =====
-2024-10-18 11:04:32,050 - JUNIFER - INFO - numpy: 1.26.4
-2024-10-18 11:04:32,051 - JUNIFER - INFO - scipy: 1.14.1
-2024-10-18 11:04:32,051 - JUNIFER - INFO - pandas: 2.1.4
-2024-10-18 11:04:32,051 - JUNIFER - INFO - nilearn: 0.10.4
-2024-10-18 11:04:32,051 - JUNIFER - INFO - nibabel: 5.3.1
-2024-10-18 11:04:32,051 - JUNIFER - INFO - junifer: 0.0.6.dev153
-2024-10-18 11:04:32,051 - JUNIFER - INFO - ========================
+2024-10-18 12:10:03,917 - JUNIFER - INFO - ===== Lib Versions =====
+2024-10-18 12:10:03,918 - JUNIFER - INFO - numpy: 1.26.4
+2024-10-18 12:10:03,918 - JUNIFER - INFO - scipy: 1.14.1
+2024-10-18 12:10:03,918 - JUNIFER - INFO - pandas: 2.1.4
+2024-10-18 12:10:03,918 - JUNIFER - INFO - nilearn: 0.10.4
+2024-10-18 12:10:03,918 - JUNIFER - INFO - nibabel: 5.3.1
+2024-10-18 12:10:03,918 - JUNIFER - INFO - junifer: 0.0.6.dev154
+2024-10-18 12:10:03,918 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>The BIDS DataGrabber requires three parameters: the types of data we want,
@@ -387,17 +387,17 @@ In this case, each element of the DataGrabber is one session.</p>
         <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">elem</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-10-18 11:04:32,052 - JUNIFER - INFO - `datadir` is None, creating a temporary directory
-2024-10-18 11:04:32,053 - JUNIFER - INFO - `datadir` set to /tmp/tmpuncf1vvp/datadir
-sub-07
-sub-02
-sub-06
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-10-18 12:10:03,919 - JUNIFER - INFO - `datadir` is None, creating a temporary directory
+2024-10-18 12:10:03,920 - JUNIFER - INFO - `datadir` set to /tmp/tmp20hkd16g/datadir
 sub-05
-sub-01
-sub-03
 sub-04
+sub-02
+sub-01
+sub-07
 sub-08
 sub-09
+sub-06
+sub-03
 </pre></div>
 </div>
 <p>Another feature of the DataGrabber is the ability to get a specific
@@ -414,15 +414,15 @@ paths for the two types of data we want (T1w and BOLD).</p>
     <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sub01</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-10-18 11:04:35,371 - JUNIFER - INFO - `datadir` is None, creating a temporary directory
-2024-10-18 11:04:35,371 - JUNIFER - INFO - `datadir` set to /tmp/tmpkia2q7yu/datadir
-2024-10-18 11:04:38,201 - JUNIFER - INFO - Getting element sub-01
-2024-10-18 11:04:38,201 - JUNIFER - INFO - Resolving path from pattern for T1w
-2024-10-18 11:04:38,201 - JUNIFER - INFO - Resolving path from pattern for BOLD
-{&#39;T1w&#39;: {&#39;space&#39;: &#39;native&#39;, &#39;path&#39;: PosixPath(&#39;/tmp/tmpkia2q7yu/datadir/example_bids/sub-01/anat/sub-01_T1w.nii.gz&#39;), &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;replacements&#39;: [&#39;subject&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: {&#39;pattern&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;space&#39;: &#39;native&#39;}, &#39;BOLD&#39;: {&#39;pattern&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;, &#39;space&#39;: &#39;MNI152NLin6Asym&#39;}}, &#39;partial_pattern_ok&#39;: False, &#39;confounds_format&#39;: None, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_dirty&#39;: False, &#39;datalad_commit_id&#39;: &#39;b87897cbe51bf0ee5514becaa5c7dd76491db5ad&#39;, &#39;datalad_id&#39;: &#39;8fddff30-6993-420a-9d1e-b5b028c59468&#39;}, &#39;dependencies&#39;: set(), &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}, &#39;BOLD&#39;: {&#39;space&#39;: &#39;MNI152NLin6Asym&#39;, &#39;path&#39;: PosixPath(&#39;/tmp/tmpkia2q7yu/datadir/example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz&#39;), &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;replacements&#39;: [&#39;subject&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: {&#39;pattern&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;space&#39;: &#39;native&#39;}, &#39;BOLD&#39;: {&#39;pattern&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;, &#39;space&#39;: &#39;MNI152NLin6Asym&#39;}}, &#39;partial_pattern_ok&#39;: False, &#39;confounds_format&#39;: None, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_dirty&#39;: False, &#39;datalad_commit_id&#39;: &#39;b87897cbe51bf0ee5514becaa5c7dd76491db5ad&#39;, &#39;datalad_id&#39;: &#39;8fddff30-6993-420a-9d1e-b5b028c59468&#39;}, &#39;dependencies&#39;: set(), &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}}
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2024-10-18 12:10:08,044 - JUNIFER - INFO - `datadir` is None, creating a temporary directory
+2024-10-18 12:10:08,045 - JUNIFER - INFO - `datadir` set to /tmp/tmplnnfievw/datadir
+2024-10-18 12:10:11,956 - JUNIFER - INFO - Getting element sub-01
+2024-10-18 12:10:11,956 - JUNIFER - INFO - Resolving path from pattern for T1w
+2024-10-18 12:10:11,956 - JUNIFER - INFO - Resolving path from pattern for BOLD
+{&#39;T1w&#39;: {&#39;space&#39;: &#39;native&#39;, &#39;path&#39;: PosixPath(&#39;/tmp/tmplnnfievw/datadir/example_bids/sub-01/anat/sub-01_T1w.nii.gz&#39;), &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;replacements&#39;: [&#39;subject&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: {&#39;pattern&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;space&#39;: &#39;native&#39;}, &#39;BOLD&#39;: {&#39;pattern&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;, &#39;space&#39;: &#39;MNI152NLin6Asym&#39;}}, &#39;partial_pattern_ok&#39;: False, &#39;confounds_format&#39;: None, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_dirty&#39;: False, &#39;datalad_commit_id&#39;: &#39;b87897cbe51bf0ee5514becaa5c7dd76491db5ad&#39;, &#39;datalad_id&#39;: &#39;8fddff30-6993-420a-9d1e-b5b028c59468&#39;}, &#39;dependencies&#39;: set(), &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}, &#39;BOLD&#39;: {&#39;space&#39;: &#39;MNI152NLin6Asym&#39;, &#39;path&#39;: PosixPath(&#39;/tmp/tmplnnfievw/datadir/example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz&#39;), &#39;meta&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;PatternDataladDataGrabber&#39;, &#39;replacements&#39;: [&#39;subject&#39;], &#39;patterns&#39;: {&#39;T1w&#39;: {&#39;pattern&#39;: &#39;{subject}/anat/{subject}_T1w.nii.gz&#39;, &#39;space&#39;: &#39;native&#39;}, &#39;BOLD&#39;: {&#39;pattern&#39;: &#39;{subject}/func/{subject}_task-rest_bold.nii.gz&#39;, &#39;space&#39;: &#39;MNI152NLin6Asym&#39;}}, &#39;partial_pattern_ok&#39;: False, &#39;confounds_format&#39;: None, &#39;types&#39;: [&#39;T1w&#39;, &#39;BOLD&#39;], &#39;uri&#39;: &#39;https://gin.g-node.org/juaml/datalad-example-bids&#39;, &#39;datalad_dirty&#39;: False, &#39;datalad_commit_id&#39;: &#39;b87897cbe51bf0ee5514becaa5c7dd76491db5ad&#39;, &#39;datalad_id&#39;: &#39;8fddff30-6993-420a-9d1e-b5b028c59468&#39;}, &#39;dependencies&#39;: set(), &#39;element&#39;: {&#39;subject&#39;: &#39;sub-01&#39;}}}}
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 7.302 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 10.000 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-datagrabber-bids-datalad-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/ae8b74fda4d8d226fc88ec2d6eed37f3/run_datagrabber_bids_datalad.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_datagrabber_bids_datalad.ipynb</span></code></a></p>
@@ -486,7 +486,7 @@ paths for the two types of data we want (T1w and BOLD).</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=5fd708c8"></script>
+</div><script src="../_static/documentation_options.js?v=945e9805"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
