@@ -65,7 +65,7 @@ jobs:
       run: |
         # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
         git config --system --add safe.directory $(pwd)
-        tox
+        FSLOUTPUTTYPE=NIFTI_GZ tox
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
       with:
