@@ -1,4 +1,4 @@
-__all__ = ["datagrabbers", "get_testing_data"]
+__all__ = ["datagrabbers", "registry", "get_testing_data"]
 
-from . import datagrabbers
+from . import datagrabbers, registry
 from .utils import get_testing_data
