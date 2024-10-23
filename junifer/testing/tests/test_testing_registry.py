@@ -1,29 +1,20 @@
 """Provide tests for testing registry."""
 
-import importlib
-
-from junifer.pipeline import PipelineComponentRegistry
-
 
 def test_testing_registry() -> None:
     """Test testing registry."""
-    import junifer
+    from junifer.pipeline import PipelineComponentRegistry
 
-    importlib.reload(junifer.pipeline.pipeline_component_registry)
-    importlib.reload(junifer)
+    assert not {
+        "OasisVBMTestingDataGrabber",
+        "SPMAuditoryTestingDataGrabber",
+        "PartlyCloudyTestingDataGrabber",
+    }.issubset(set(PipelineComponentRegistry().step_components("datagrabber")))
 
-    step_components = PipelineComponentRegistry().step_components(
-        "datagrabber"
-    )
-    assert "OasisVBMTestingDataGrabber" not in step_components
-    assert "SPMAuditoryTestingDataGrabber" not in step_components
-    assert "PartlyCloudyTestingDataGrabber" not in step_components
+    from junifer.pipeline import PipelineComponentRegistry
 
-    importlib.import_module(junifer.testing.registry)
-
-    updated_step_components = PipelineComponentRegistry().step_components(
-        "datagrabber"
-    )
-    assert "OasisVBMTestingDataGrabber" in updated_step_components
-    assert "SPMAuditoryTestingDataGrabber" in updated_step_components
-    assert "PartlyCloudyTestingDataGrabber" in updated_step_components
+    assert {
+        "OasisVBMTestingDataGrabber",
+        "SPMAuditoryTestingDataGrabber",
+        "PartlyCloudyTestingDataGrabber",
+    }.issubset(set(PipelineComponentRegistry().step_components("datagrabber")))
