@@ -1,8 +1,4 @@
 __all__ = [
-    "list_coordinates",
-    "load_coordinates",
-    "register_coordinates",
-    "get_coordinates",
     "list_parcellations",
     "load_parcellation",
     "register_parcellation",
@@ -12,17 +8,12 @@ __all__ = [
     "load_mask",
     "register_mask",
     "get_mask",
+    "CoordinatesRegistry",
     "get_template",
     "get_xfm",
     "utils",
 ]
 
-from .coordinates import (
-    list_coordinates,
-    load_coordinates,
-    register_coordinates,
-    get_coordinates,
-)
 from .parcellations import (
     list_parcellations,
     load_parcellation,
@@ -37,6 +28,7 @@ from .masks import (
     register_mask,
     get_mask,
 )
+from .coordinates import CoordinatesRegistry
 
 from .template_spaces import get_template, get_xfm
 
