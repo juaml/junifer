@@ -57,7 +57,7 @@ def get_data(
     ----------
     kind : {"coordinates", "parcellation", "mask"}
         Kind of data to fetch and apply.
-    names : str or dict or list of them
+    names : str or dict or list of str / dict
         The registered name(s) of the data.
     target_data : dict
         The corresponding item of the data object to which the data
@@ -69,9 +69,9 @@ def get_data(
 
     Returns
     -------
-    tuple of numpy.ndarray and list of str for coordinates; \
-    tuple of nibabel.nifti1.Nifti1Image and list of str for parcellation; \
-    nibabel.nifti1.Nifti1Image for mask
+    tuple of numpy.ndarray, list of str; \
+    tuple of nibabel.nifti1.Nifti1Image, list of str; \
+    nibabel.nifti1.Nifti1Image
 
     Raises
     ------
@@ -156,11 +156,11 @@ def load_data(
 
     Returns
     -------
-    tuple of numpy.ndarray, list of str and str for coordinates; \
-    tuple of nibabel.nifti1.Nifti1Image, list of str, pathlib.Path and str \
-    for parcellation; \
+    tuple of numpy.ndarray, list of str, str; \
+    tuple of nibabel.nifti1.Nifti1Image or None, \
+    list of str, pathlib.Path, str; \
     tuple of nibabel.nifti1.Nifti1Image or callable or None, \
-    pathlib.Path or None and str for mask
+    pathlib.Path or None, str
 
     Raises
     ------
