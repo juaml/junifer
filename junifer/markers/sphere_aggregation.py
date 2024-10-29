@@ -24,8 +24,8 @@ class SphereAggregation(BaseMarker):
     Parameters
     ----------
     coords : str
-        The name of the coordinates list to use. See
-        :func:`.list_coordinates` for options.
+        The name of the coordinates list to use.
+        See :func:`.list_data` for options.
     radius : float, optional
         The radius of the sphere in millimeters. If None, the signal will be
         extracted from a single voxel. See

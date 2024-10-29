@@ -24,7 +24,7 @@ class FunctionalConnectivitySpheres(FunctionalConnectivityBase):
     ----------
     coords : str
         The name of the coordinates list to use.
-        See :func:`.list_coordinates` for options.
+        See :func:`.list_data` for options.
     radius : positive float, optional
         The radius of the sphere around each coordinates in millimetres.
         If None, the signal will be extracted from a single voxel.
