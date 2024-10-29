@@ -16,7 +16,7 @@ from nilearn.masking import compute_brain_mask
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 from scipy.stats import trim_mean
 
-from junifer.data import get_mask, get_parcellation, register_parcellation
+from junifer.data import MaskRegistry, ParcellationRegistry
 from junifer.datareader import DefaultDataReader
 from junifer.markers.parcel_aggregation import ParcelAggregation
 from junifer.storage import SQLiteFeatureStorage
@@ -98,8 +98,8 @@ def test_ParcelAggregation_3D() -> None:
 
         # Compare with nilearn
         # Load testing parcellation
-        testing_parcellation, _ = get_parcellation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+        testing_parcellation, _ = ParcellationRegistry().get(
+            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
             target_data=element_data["BOLD"],
         )
         # Binarize parcellation
@@ -206,8 +206,8 @@ def test_ParcelAggregation_4D():
 
         # Compare with nilearn
         # Load testing parcellation
-        testing_parcellation, _ = get_parcellation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+        testing_parcellation, _ = ParcellationRegistry().get(
+            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
             target_data=element_data["BOLD"],
         )
         # Extract data
@@ -295,12 +295,12 @@ def test_ParcelAggregation_3D_mask() -> None:
 
         # Compare with nilearn
         # Load testing parcellation
-        testing_parcellation, _ = get_parcellation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+        testing_parcellation, _ = ParcellationRegistry().get(
+            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
             target_data=element_data["BOLD"],
         )
         # Load mask
-        mask_img = get_mask(
+        mask_img = MaskRegistry().get(
             "compute_brain_mask", target_data=element_data["BOLD"]
         )
         # Extract data
@@ -328,8 +328,8 @@ def test_ParcelAggregation_3D_mask_computed() -> None:
 
         # Compare with nilearn
         # Load testing parcellation
-        testing_parcellation, _ = get_parcellation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+        testing_parcellation, _ = ParcellationRegistry().get(
+            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
             target_data=element_data["BOLD"],
         )
         # Get a mask
@@ -396,8 +396,8 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
         ]
 
         # Load testing parcellation
-        testing_parcellation, labels = get_parcellation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+        testing_parcellation, labels = ParcellationRegistry().get(
+            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
             target_data=element_data["BOLD"],
         )
 
@@ -424,14 +424,14 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
         nib.save(parcellation1_img, parcellation1_path)
         nib.save(parcellation2_img, parcellation2_path)
 
-        register_parcellation(
+        ParcellationRegistry().register(
             name="TianxS1x3TxMNInonlinear2009cAsym_low",
             parcellation_path=parcellation1_path,
             parcels_labels=labels1,
             space="MNI152NLin2009cAsym",
             overwrite=True,
         )
-        register_parcellation(
+        ParcellationRegistry().register(
             name="TianxS1x3TxMNInonlinear2009cAsym_high",
             parcellation_path=parcellation2_path,
             parcels_labels=labels2,
@@ -498,8 +498,8 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
         ]
 
         # Load testing parcellation
-        testing_parcellation, labels = get_parcellation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+        testing_parcellation, labels = ParcellationRegistry().get(
+            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
             target_data=element_data["BOLD"],
         )
 
@@ -528,14 +528,14 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
         nib.save(parcellation1_img, parcellation1_path)
         nib.save(parcellation2_img, parcellation2_path)
 
-        register_parcellation(
+        ParcellationRegistry().register(
             name="TianxS1x3TxMNInonlinear2009cAsym_low",
             parcellation_path=parcellation1_path,
             parcels_labels=labels1,
             space="MNI152NLin2009cAsym",
             overwrite=True,
         )
-        register_parcellation(
+        ParcellationRegistry().register(
             name="TianxS1x3TxMNInonlinear2009cAsym_high",
             parcellation_path=parcellation2_path,
             parcels_labels=labels2,
@@ -609,8 +609,8 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
         ]
 
         # Load testing parcellation
-        testing_parcellation, labels = get_parcellation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+        testing_parcellation, labels = ParcellationRegistry().get(
+            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
             target_data=element_data["BOLD"],
         )
 
@@ -637,14 +637,14 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
         nib.save(parcellation1_img, parcellation1_path)
         nib.save(parcellation2_img, parcellation2_path)
 
-        register_parcellation(
+        ParcellationRegistry().register(
             name="TianxS1x3TxMNInonlinear2009cAsym_low",
             parcellation_path=parcellation1_path,
             parcels_labels=labels1,
             space="MNI152NLin2009cAsym",
             overwrite=True,
         )
-        register_parcellation(
+        ParcellationRegistry().register(
             name="TianxS1x3TxMNInonlinear2009cAsym_high",
             parcellation_path=parcellation2_path,
             parcels_labels=labels2,
@@ -719,8 +719,8 @@ def test_ParcelAggregation_4D_agg_time():
 
         # Compare with nilearn
         # Loading testing parcellation
-        testing_parcellation, _ = get_parcellation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+        testing_parcellation, _ = ParcellationRegistry().get(
+            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
             target_data=element_data["BOLD"],
         )
         # Extract data

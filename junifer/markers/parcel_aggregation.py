@@ -11,7 +11,7 @@ from nilearn.image import math_img
 from nilearn.maskers import NiftiMasker
 
 from ..api.decorators import register_marker
-from ..data import get_mask, get_parcellation
+from ..data import get_data
 from ..stats import get_aggfunc_by_name
 from ..utils import logger, raise_error, warn_with_log
 from .base import BaseMarker
@@ -168,8 +168,9 @@ class ParcelAggregation(BaseMarker):
         )
 
         # Get parcellation tailored to target image
-        parcellation_img, labels = get_parcellation(
-            parcellation=self.parcellation,
+        parcellation_img, labels = get_data(
+            kind="parcellation",
+            names=self.parcellation,
             target_data=input,
             extra_input=extra_input,
         )
@@ -183,8 +184,11 @@ class ParcelAggregation(BaseMarker):
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
             # Get tailored mask
-            mask_img = get_mask(
-                masks=self.masks, target_data=input, extra_input=extra_input
+            mask_img = get_data(
+                kind="mask",
+                names=self.masks,
+                target_data=input,
+                extra_input=extra_input,
             )
             # Get "logical and" version of parcellation and mask
             parcellation_bin = math_img(

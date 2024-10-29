@@ -10,7 +10,7 @@ import pytest
 from nilearn.maskers import NiftiSpheresMasker
 from numpy.testing import assert_array_equal
 
-from junifer.data import get_coordinates, get_mask
+from junifer.data import CoordinatesRegistry, MaskRegistry
 from junifer.datareader import DefaultDataReader
 from junifer.markers.sphere_aggregation import SphereAggregation
 from junifer.storage import SQLiteFeatureStorage
@@ -100,7 +100,7 @@ def test_SphereAggregation_3D() -> None:
 
         # Compare with nilearn
         # Load testing coordinates
-        testing_coords, _ = get_coordinates(
+        testing_coords, _ = CoordinatesRegistry().get(
             coords=COORDS, target_data=element_data["VBM_GM"]
         )
         # Extract data
@@ -132,7 +132,7 @@ def test_SphereAggregation_4D() -> None:
 
         # Compare with nilearn
         # Load testing coordinates
-        testing_coords, _ = get_coordinates(
+        testing_coords, _ = CoordinatesRegistry().get(
             coords=COORDS, target_data=element_data["BOLD"]
         )
         # Extract data
@@ -210,11 +210,11 @@ def test_SphereAggregation_3D_mask() -> None:
 
         # Compare with nilearn
         # Load testing coordinates
-        testing_coords, _ = get_coordinates(
+        testing_coords, _ = CoordinatesRegistry().get(
             coords=COORDS, target_data=element_data["VBM_GM"]
         )
         # Load mask
-        mask_img = get_mask(
+        mask_img = MaskRegistry().get(
             "compute_brain_mask", target_data=element_data["VBM_GM"]
         )
         # Extract data
@@ -253,7 +253,7 @@ def test_SphereAggregation_4D_agg_time() -> None:
 
         # Compare with nilearn
         # Load testing coordinates
-        testing_coords, _ = get_coordinates(
+        testing_coords, _ = CoordinatesRegistry().get(
             coords=COORDS, target_data=element_data["BOLD"]
         )
         # Extract data
