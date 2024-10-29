@@ -167,7 +167,7 @@ class PipelineComponentRegistry:
         """
         # Verify step
         self._check_valid_step(step)
-        # Log and register
+        # Log and de-register
         name = klass.__name__
         logger.info(f"De-registering {name} in {step}")
         _ = self._components[step].pop(name)
