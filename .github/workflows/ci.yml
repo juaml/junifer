@@ -22,15 +22,12 @@ jobs:
 
     steps:
     - name: Check ANTs
-      if: matrix.python-version == 3.12
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
     - name: Check AFNI
-      if: matrix.python-version == 3.12
       run: |
         echo "Using AFNI : $(afni --version)"
     - name: Check FSL
-      if: matrix.python-version == 3.12
       run: |
         echo "Using FSL : $(flirt -version)"
     - name: Install system dependencies
@@ -65,6 +62,8 @@ jobs:
       run: |
         # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
         git config --system --add safe.directory $(pwd)
+        # Source fslconf before running susan
+        . ${FSLDIR}/etc/fslconf/fsl.sh
         tox
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
