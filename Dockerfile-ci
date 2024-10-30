@@ -63,9 +63,9 @@ RUN ln -s /usr/lib/x86_64-linux-gnu/libgsl.so.27 /usr/lib/x86_64-linux-gnu/libgs
 RUN curl https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | \
     python - -d /opt/fsl/ --skip_registration
 # Set env vars for FSL
-ENV FSLDIR="/opt/fsl" \
-    FSLOUTPUTTYPE="NIFTI_GZ" \
-    PATH="/opt/fsl/bin:$PATH"
+ENV FSLDIR=/opt/fsl \
+    FSLOUTPUTTYPE=NIFTI_GZ \
+    PATH="/opt/fsl/share/fsl/bin:$PATH"
 
 # Clean apt cache
 RUN apt-get autoremove --purge && apt-get clean
