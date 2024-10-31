@@ -259,18 +259,14 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/preprocessing.html">9.1.3. Pre-processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/markers.html">9.1.4. Markers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/storage.html">9.1.5. Storage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html">9.2.1. Parcellations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.coordinates">9.2.2. Coordinates</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.masks">9.2.3. Masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/data.html#module-junifer.data.template_spaces">9.2.4. Template Spaces</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">9.2.5. Stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">9.2.6. Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html#module-junifer.pipeline.registry">9.2.7. Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/api.html">9.2.8. API Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/cli.html">9.2.9. CLI Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">9.2.10. Utils</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">9.2.11. Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/onthefly.html">9.2.12. On-the-fly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/data.html">9.2.1. Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/stats.html">9.2.2. Stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/pipeline.html">9.2.3. Pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/api.html">9.2.4. API Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/cli.html">9.2.5. CLI Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/utils.html">9.2.6. Utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/testing.html">9.2.7. Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/onthefly.html">9.2.8. On-the-fly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/configs.html">9.3.1. Configs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/nilearn.html">9.4.1. Nilearn</a></li>
 </ul>
@@ -329,15 +325,25 @@ you know how to use these masks, and you checked whether the in-built masks
 suit your needs, and you have found that they don’t, you can come back here to
 learn how to use your own masks.</p>
 <p>The principle is fairly simple and quite similar to <a class="reference internal" href="parcellations.html#adding-parcellations"><span class="std std-ref">Adding Parcellations</span></a>
-and <a class="reference internal" href="coordinates.html#adding-coordinates"><span class="std std-ref">Adding Coordinates</span></a>. <code class="docutils literal notranslate"><span class="pre">junifer</span></code> provides a <a class="reference internal" href="../api/data.html#junifer.data.masks.register_mask" title="junifer.data.masks.register_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_mask()</span></code></a>
+and <a class="reference internal" href="coordinates.html#adding-coordinates"><span class="std std-ref">Adding Coordinates</span></a>. <code class="docutils literal notranslate"><span class="pre">junifer</span></code> provides a <a class="reference internal" href="../api/data.html#junifer.data.register_data" title="junifer.data.register_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_data()</span></code></a>
 function that lets you register your own custom masks. It consists of three
-positional arguments (<code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">mask_path</span></code> and <code class="docutils literal notranslate"><span class="pre">space</span></code>) and one optional
-keyword argument (<code class="docutils literal notranslate"><span class="pre">overwrite</span></code>).</p>
+positional arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">space</span></code></p></li>
+</ul>
+<p>and one optional keyword argument: <code class="docutils literal notranslate"><span class="pre">overwrite</span></code>.
+As the <code class="docutils literal notranslate"><span class="pre">kind</span></code> needs to be <code class="docutils literal notranslate"><span class="pre">&quot;mask&quot;</span></code>, we can check
+<code class="docutils literal notranslate"><span class="pre">MaskRegistry.register</span></code> for keyword arguments to be passed:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mask_path</span></code></p></li>
+</ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">name</span></code> argument is a string indicating the name of the mask. This name
 is used to refer to that mask in <code class="docutils literal notranslate"><span class="pre">junifer</span></code> internally in order to obtain the
 actual mask data and perform operations on it. For example, using the name you
-can load a mask after registration using the
-<a class="reference internal" href="../api/data.html#junifer.data.masks.load_mask" title="junifer.data.masks.load_mask"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_mask()</span></code></a> function.</p>
+can load a mask after registration using the <a class="reference internal" href="../api/data.html#junifer.data.load_data" title="junifer.data.load_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_data()</span></code></a> with
+<code class="docutils literal notranslate"><span class="pre">kind=&quot;mask&quot;</span></code>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">mask_path</span></code> should contain the path to a valid NIfTI image with binary
 voxel values (i.e. 0 or 1). This data can then be used by <code class="docutils literal notranslate"><span class="pre">junifer</span></code> to mask
 other MR images.</p>
@@ -349,14 +355,19 @@ other MR images.</p>
 look as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">register_mask</span>
+<span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">register_data</span>
 
 
 <span class="c1"># this path is only an example, of course use the correct path</span>
 <span class="c1"># on your system:</span>
 <span class="n">mask_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;..&quot;</span> <span class="o">/</span> <span class="s2">&quot;my_custom_mask.nii.gz&quot;</span>
 
-<span class="n">register_mask</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_custom_mask&quot;</span><span class="p">,</span> <span class="n">mask_path</span><span class="o">=</span><span class="n">mask_path</span><span class="p">,</span> <span class="n">space</span><span class="o">=</span><span class="s2">&quot;native&quot;</span><span class="p">)</span>
+<span class="n">register_data</span><span class="p">(</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;mask&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_custom_mask&quot;</span><span class="p">,</span>
+    <span class="n">mask_path</span><span class="o">=</span><span class="n">mask_path</span><span class="p">,</span>
+    <span class="n">space</span><span class="o">=</span><span class="s2">&quot;native&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p>Simple, right? Now we just have to configure a YAML file to register this mask
@@ -463,7 +474,7 @@ paths are interpreted by <code class="docutils literal notranslate"><span class=
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=5fd708c8"></script>
+</div><script src="../_static/documentation_options.js?v=2aa0d1fb"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
