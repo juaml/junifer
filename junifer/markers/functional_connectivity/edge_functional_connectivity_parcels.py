@@ -23,7 +23,7 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
     ----------
     parcellation : str or list of str
         The name(s) of the parcellation(s) to use.
-        See :func:`.list_parcellations` for options.
+        See :func:`.list_data` for options.
     agg_method : str, optional
         The method to perform aggregation using.
         See :func:`.get_aggfunc_by_name` for options

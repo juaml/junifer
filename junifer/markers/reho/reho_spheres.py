@@ -24,8 +24,8 @@ class ReHoSpheres(ReHoBase):
     Parameters
     ----------
     coords : str
-        The name of the coordinates list to use. See
-        :func:`.list_coordinates` for options.
+        The name of the coordinates list to use.
+        See :func:`.list_data` for options.
     using : {"junifer", "afni"}
         Implementation to use for computing ReHo:
 

@@ -190,10 +190,10 @@ API Changes
 - Modify ``preprocessor`` to ``preprocessors`` in :func:`.run` and
   ``preprocessing`` to ``preprocessors`` in :class:`.MarkerCollection` to
   accept multiple preprocessors by `Synchon Mandal`_ (:gh:`263`)
-- Add ``space`` parameter to :func:`.register_coordinates`,
-  :func:`.register_parcellation` and :func:`.register_mask` and return space
-  from :func:`.load_coordinates`, :func:`.load_parcellation` and
-  :func:`.load_mask` by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
+- Add ``space`` parameter to ``register_coordinates``,
+  ``register_parcellation`` and ``register_mask`` and return space
+  from ``load_coordinates``, ``load_parcellation`` and
+  ``load_mask`` by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
 - Add ``template_type`` parameter to :func:`.get_template` by `Synchon Mandal`_
   (:gh:`299`)
 - Change :meth:`.BasePreprocessor.preprocess` return values to preprocessed
@@ -245,7 +245,7 @@ Enhancements
   :func:`.get_aggfunc_by_name` by `Synchon Mandal`_ (:gh:`287`)
 - Adapt ``BOLDWarper`` to use FSL or ANTs depending on warp file
   extension by `Synchon Mandal`_ (:gh:`293`)
-- Rewrite :func:`.compute_brain_mask` to allow variable template fetching via
+- Rewrite ``compute_brain_mask`` to allow variable template fetching via
   templateflow, according to target data by `Synchon Mandal`_ (:gh:`299`)
 - Replace ``requests`` with ``httpx`` for fetching parcellations by `Synchon
   Mandal`_ (:gh:`300`)
@@ -285,9 +285,9 @@ Features
 - Introduce :class:`junifer.pipeline.WorkDirManager` singleton class to manage
   working and temporary directories across pipeline by `Synchon Mandal`_
   (:gh:`254`)
-- Introduce :func:`.get_parcellation` to fetch parcellation tailored for the
+- Introduce ``get_parcellation`` to fetch parcellation tailored for the
   data by `Synchon Mandal`_ (:gh:`264`)
-- Introduce :func:`.get_coordinates` to fetch coordinates tailored for the data
+- Introduce ``get_coordinates`` to fetch coordinates tailored for the data
   by `Synchon Mandal`_ (:gh:`265`)
 - Introduce ``junifer.preprocess.fsl.apply_warper._ApplyWarper`` to wrap FSL's
   ``applywarp`` by `Synchon Mandal`_ (:gh:`266`)
@@ -309,7 +309,7 @@ Features
 - Introduce :func:`.get_template` to fetch template space image tailored to a
   target data by `Synchon Mandal`_ (:gh:`298`)
 - Add support for on-the-fly template space transformation in
-  :func:`.get_parcellation` and :func:`.get_mask` to allow parcellation and
+  ``get_parcellation`` and ``get_mask`` to allow parcellation and
   mask in different template spaces to work with a ``DataGrabber``'s data in a
   specified template space. (:gh:`299`)
 - Introduce :class:`.SpaceWarper` for warping ``T1w``, ``BOLD``, ``VBM_GM``,
@@ -480,7 +480,7 @@ Bugfixes
 - Fix an issue with datalad cache and locks in which the overridden settings in
   Junifer were not propagated to subprocesses, resulting in using the default
   settings by `Fede Raimondo`_ (:gh:`199`)
-- Fix a bug in which :func:`.get_mask` fails for FunctionalConnectivityBase
+- Fix a bug in which ``get_mask`` fails for ``FunctionalConnectivityBase``
   class, because of missing extra_input parameter by `Leonard Sasse`_
   (:gh:`200`)
 - Fix the output of :class:`.RSSETSMarker` to be 2D by `Synchon Mandal`_
@@ -560,7 +560,7 @@ Features
 
 - Add :class:`.EdgeCentricFCParcels` and :class:`.EdgeCentricFCSpheres` by
   `Leonard Sasse`_ (:gh:`64`)
-- Expose a :func:`.merge_parcellations` function to merge a list of
+- Expose a ``merge_parcellations`` function to merge a list of
   parcellations by `Leonard Sasse`_ (:gh:`146`)
 - Add support for HDF5 feature storage via :class:`.HDF5FeatureStorage` by
   `Synchon Mandal`_ (:gh:`147`)
@@ -670,8 +670,8 @@ Features
   connectivity using a parcellation by `Amir Omidvarnia`_ and
   `Kaustubh R. Patil`_ (:gh:`41`)
 
-- Implement :func:`.register_coordinates`, :func:`.list_coordinates` and
-  :func:`.load_coordinates` by `Fede Raimondo`_ (:gh:`11`)
+- Implement ``register_coordinates``, ``list_coordinates`` and
+  ``load_coordinates`` by `Fede Raimondo`_ (:gh:`11`)
 
 - Add :class:`.DataladAOMICID1000` datagrabber for AOMIC ID1000 dataset
   including tests and creation of mock dataset for testing by

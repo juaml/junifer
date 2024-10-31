@@ -17,13 +17,22 @@ this?
 
 Since both of these use-cases are quite common, and not being able to use your
 favourite parcellation is of course quite a buzzkill, ``junifer`` actually
-provides the easy-to-use :func:`.register_parcellation` function to do just that.
+provides the easy-to-use :func:`.register_data` function to do just that.
 Let's try to understand the API reference and then use this function to register our
 own parcellation.
 
-From the API reference, we can see that it has 4 positional arguments
-(``name``, ``parcellation_path``, ``parcels_labels`` and ``space``) as well as
-one optional keyword argument (``overwrite``).
+From the API reference, we can see that it has 3 positional arguments:
+
+* ``kind``
+* ``name``
+* ``space``
+
+as well as one optional keyword argument: ``overwrite``.
+As the ``kind`` needs to be ``"parcellation"``, we can check
+``ParcellationRegistry.register`` for keyword arguments to be passed:
+
+* ``parcellation_path``
+* ``parcels_labels``
 
 The ``name`` of the parcellation is up to you and will be the name that
 ``junifer`` will use to refer to this particular parcellation. You can think of
@@ -64,10 +73,11 @@ look like this:
 
 .. code-block:: python
 
-  from junifer.data import register_parcellation
-
   from pathlib import Path
+
   import numpy as np
+  from junifer.data import register_data
+
 
   # these are of course just example paths, replace it with your own:
   path_to_parcellation = (
@@ -79,7 +89,8 @@ look like this:
 
   my_labels = list(np.loadtxt(path_to_labels, dtype=str))
 
-  register_parcellation(
+  register_data(
+      kind="parcellation",
       name="my_custom_parcellation",
       parcellation_path=path_to_parcellation,
       parcels_labels=my_labels,

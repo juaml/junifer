@@ -20,8 +20,8 @@ class TemporalSNRParcels(TemporalSNRBase):
     Parameters
     ----------
     parcellation : str or list of str
-        The name(s) of the parcellation(s). Check valid options by calling
-        :func:`.list_parcellations`.
+        The name(s) of the parcellation(s) to use.
+        See :func:`.list_data` for options.
     agg_method : str, optional
         The method to perform aggregation using. Check valid options in
         :func:`.get_aggfunc_by_name` (default "mean").

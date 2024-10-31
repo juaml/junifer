@@ -14,7 +14,7 @@ from nilearn.maskers import NiftiLabelsMasker
 from numpy.testing import assert_array_almost_equal
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
-from junifer.data import get_parcellation
+from junifer.data import ParcellationRegistry
 from junifer.datareader import DefaultDataReader
 from junifer.markers.functional_connectivity import (
     FunctionalConnectivityParcels,
@@ -78,8 +78,8 @@ def test_FunctionalConnectivityParcels(
 
         # Compare with nilearn
         # Load testing parcellation for the target data
-        testing_parcellation, _ = get_parcellation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+        testing_parcellation, _ = ParcellationRegistry().get(
+            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
             target_data=element_data["BOLD"],
         )
         # Extract timeseries

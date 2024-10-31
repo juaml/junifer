@@ -15,7 +15,7 @@ from nilearn.maskers import NiftiSpheresMasker
 from numpy.testing import assert_array_almost_equal
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
-from junifer.data import get_coordinates
+from junifer.data import CoordinatesRegistry
 from junifer.datareader import DefaultDataReader
 from junifer.markers.functional_connectivity import (
     FunctionalConnectivitySpheres,
@@ -80,7 +80,7 @@ def test_FunctionalConnectivitySpheres(
 
         # Compare with nilearn
         # Load testing coordinates for the target data
-        testing_coords, _ = get_coordinates(
+        testing_coords, _ = CoordinatesRegistry().get(
             coords="DMNBuckner", target_data=element_data["BOLD"]
         )
         # Extract timeseries

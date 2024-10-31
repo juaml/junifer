@@ -1,4 +1,4 @@
-"""Functions for parcellation manipulation."""
+"""Provide class and function for parcellation registry and manipulation."""
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Vera Komeyer <v.komeyer@fz-juelich.de>
@@ -9,8 +9,8 @@ import io
 import shutil
 import tarfile
 import tempfile
-import typing
 import zipfile
+from itertools import product
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
@@ -20,510 +20,487 @@ import numpy as np
 import pandas as pd
 from nilearn import datasets, image
 
-from ..pipeline import WorkDirManager
-from ..utils import logger, raise_error, run_ext_cmd, warn_with_log
-from .template_spaces import get_template, get_xfm
-from .utils import closest_resolution
+from ...pipeline.singleton import singleton
+from ...utils import logger, raise_error, warn_with_log
+from ..pipeline_data_registry_base import BasePipelineDataRegistry
+from ..utils import closest_resolution
+from ._ants_parcellation_warper import ANTsParcellationWarper
+from ._fsl_parcellation_warper import FSLParcellationWarper
 
 
 if TYPE_CHECKING:
-    from nibabel import Nifti1Image
+    from nibabel.nifti1 import Nifti1Image
 
 
 __all__ = [
-    "register_parcellation",
-    "list_parcellations",
-    "get_parcellation",
-    "load_parcellation",
+    "ParcellationRegistry",
     "merge_parcellations",
 ]
 
 
-# A dictionary containing all supported parcellations and their respective
-# valid parameters.
+@singleton
+class ParcellationRegistry(BasePipelineDataRegistry):
+    """Class for parcellation data registry.
 
-# Each entry is a dictionary that must contain at least the following keys:
-# * 'family': the parcellation's family name (e.g. 'Schaefer', 'SUIT')
-# * 'space': the parcellation's space (e.g., 'MNI', 'SUIT')
+    This class is a singleton and is used for managing available parcellation
+    data in a centralized manner.
 
-# Optional keys:
-# * 'valid_resolutions': a list of valid resolutions for the parcellation
-# (e.g. [1, 2])
+    """
 
-# TODO: have separate dictionary for built-in
-_available_parcellations: Dict[str, Dict[Any, Any]] = {
-    "SUITxSUIT": {"family": "SUIT", "space": "SUIT"},
-    "SUITxMNI": {"family": "SUIT", "space": "MNI152NLin6Asym"},
-}
+    def __init__(self) -> None:
+        """Initialize the class."""
+        # Each entry in registry is a dictionary that must contain at least
+        # the following keys:
+        # * 'family': the parcellation's family name (e.g., 'Schaefer', 'SUIT')
+        # * 'space': the parcellation's space (e.g., 'MNI', 'SUIT')
+        # and can also have optional key(s):
+        # * 'valid_resolutions': a list of valid resolutions for the
+        # parcellation (e.g., [1, 2])
+        # Make built-in and external dictionaries for validation later
+        self._builtin = {}
+        self._external = {}
 
-# Add Schaefer parcellation info
-for n_rois in range(100, 1001, 100):
-    for t_net in [7, 17]:
-        t_name = f"Schaefer{n_rois}x{t_net}"
-        _available_parcellations[t_name] = {
-            "family": "Schaefer",
-            "n_rois": n_rois,
-            "yeo_networks": t_net,
-            "space": "MNI152NLin6Asym",
-        }
-# Add Tian parcellation info
-for scale in range(1, 5):
-    t_name = f"TianxS{scale}x7TxMNI6thgeneration"
-    _available_parcellations[t_name] = {
-        "family": "Tian",
-        "scale": scale,
-        "magneticfield": "7T",
-        "space": "MNI152NLin6Asym",
-    }
-    t_name = f"TianxS{scale}x3TxMNI6thgeneration"
-    _available_parcellations[t_name] = {
-        "family": "Tian",
-        "scale": scale,
-        "magneticfield": "3T",
-        "space": "MNI152NLin6Asym",
-    }
-    t_name = f"TianxS{scale}x3TxMNInonlinear2009cAsym"
-    _available_parcellations[t_name] = {
-        "family": "Tian",
-        "scale": scale,
-        "magneticfield": "3T",
-        "space": "MNI152NLin2009cAsym",
-    }
-# Add AICHA parcellation info
-for version in (1, 2):
-    _available_parcellations[f"AICHA_v{version}"] = {
-        "family": "AICHA",
-        "version": version,
-        "space": "IXI549Space",
-    }
-# Add Shen parcellation info
-for year in (2013, 2015, 2019):
-    if year == 2013:
-        for n_rois in (50, 100, 150):
-            _available_parcellations[f"Shen_{year}_{n_rois}"] = {
-                "family": "Shen",
-                "year": 2013,
-                "n_rois": n_rois,
-                "space": "MNI152NLin2009cAsym",
+        # Add SUIT
+        self._builtin.update(
+            {
+                "SUITxSUIT": {"family": "SUIT", "space": "SUIT"},
+                "SUITxMNI": {"family": "SUIT", "space": "MNI152NLin6Asym"},
             }
-    elif year == 2015:
-        _available_parcellations["Shen_2015_268"] = {
-            "family": "Shen",
-            "year": 2015,
-            "n_rois": 268,
-            "space": "MNI152NLin2009cAsym",
-        }
-    elif year == 2019:
-        _available_parcellations["Shen_2019_368"] = {
-            "family": "Shen",
-            "year": 2019,
-            "n_rois": 368,
-            "space": "MNI152NLin2009cAsym",
-        }
-# Add Yan parcellation info
-for n_rois in range(100, 1001, 100):
-    # Add Yeo networks
-    for yeo_network in [7, 17]:
-        _available_parcellations[f"Yan{n_rois}xYeo{yeo_network}"] = {
-            "family": "Yan",
-            "n_rois": n_rois,
-            "yeo_networks": yeo_network,
-            "space": "MNI152NLin6Asym",
-        }
-    # Add Kong networks
-    _available_parcellations[f"Yan{n_rois}xKong17"] = {
-        "family": "Yan",
-        "n_rois": n_rois,
-        "kong_networks": 17,
-        "space": "MNI152NLin6Asym",
-    }
-# Add Brainnetome parcellation info
-for threshold in [0, 25, 50]:
-    _available_parcellations[f"Brainnetome_thr{threshold}"] = {
-        "family": "Brainnetome",
-        "threshold": threshold,
-        "space": "MNI152NLin6Asym",
-    }
-
-
-def register_parcellation(
-    name: str,
-    parcellation_path: Union[str, Path],
-    parcels_labels: List[str],
-    space: str,
-    overwrite: bool = False,
-) -> None:
-    """Register a custom user parcellation.
-
-    Parameters
-    ----------
-    name : str
-        The name of the parcellation.
-    parcellation_path : str or pathlib.Path
-        The path to the parcellation file.
-    parcels_labels : list of str
-        The list of labels for the parcellation.
-    space : str
-        The template space of the parcellation, for e.g., "MNI152NLin6Asym".
-    overwrite : bool, optional
-        If True, overwrite an existing parcellation with the same name.
-        Does not apply to built-in parcellations (default False).
-
-    Raises
-    ------
-    ValueError
-        If the parcellation name is already registered and overwrite is set to
-        False or if the parcellation name is a built-in parcellation.
-
-    """
-    # Check for attempt of overwriting built-in parcellations
-    if name in _available_parcellations:
-        if overwrite is True:
-            logger.info(f"Overwriting {name} parcellation")
-            if (
-                _available_parcellations[name]["family"]
-                != "CustomUserParcellation"
-            ):
-                raise_error(
-                    f"Cannot overwrite {name} parcellation. "
-                    "It is a built-in parcellation."
+        )
+        # Add Schaefer
+        for n_rois, t_net in product(range(100, 1001, 100), [7, 17]):
+            self._builtin.update(
+                {
+                    f"Schaefer{n_rois}x{t_net}": {
+                        "family": "Schaefer",
+                        "n_rois": n_rois,
+                        "yeo_networks": t_net,
+                        "space": "MNI152NLin6Asym",
+                    },
+                }
+            )
+        # Add Tian
+        for scale in range(1, 5):
+            self._builtin.update(
+                {
+                    f"TianxS{scale}x7TxMNI6thgeneration": {
+                        "family": "Tian",
+                        "scale": scale,
+                        "magneticfield": "7T",
+                        "space": "MNI152NLin6Asym",
+                    },
+                    f"TianxS{scale}x3TxMNI6thgeneration": {
+                        "family": "Tian",
+                        "scale": scale,
+                        "magneticfield": "3T",
+                        "space": "MNI152NLin6Asym",
+                    },
+                    f"TianxS{scale}x3TxMNInonlinear2009cAsym": {
+                        "family": "Tian",
+                        "scale": scale,
+                        "magneticfield": "3T",
+                        "space": "MNI152NLin2009cAsym",
+                    },
+                }
+            )
+        # Add AICHA
+        for version in (1, 2):
+            self._builtin.update(
+                {
+                    f"AICHA_v{version}": {
+                        "family": "AICHA",
+                        "version": version,
+                        "space": "IXI549Space",
+                    },
+                }
+            )
+        # Add Shen
+        for year in (2013, 2015, 2019):
+            if year == 2013:
+                for n_rois in (50, 100, 150):
+                    self._builtin.update(
+                        {
+                            f"Shen_{year}_{n_rois}": {
+                                "family": "Shen",
+                                "year": 2013,
+                                "n_rois": n_rois,
+                                "space": "MNI152NLin2009cAsym",
+                            },
+                        }
+                    )
+            elif year == 2015:
+                self._builtin.update(
+                    {
+                        "Shen_2015_268": {
+                            "family": "Shen",
+                            "year": 2015,
+                            "n_rois": 268,
+                            "space": "MNI152NLin2009cAsym",
+                        },
+                    }
                 )
+            elif year == 2019:
+                self._builtin.update(
+                    {
+                        "Shen_2019_368": {
+                            "family": "Shen",
+                            "year": 2019,
+                            "n_rois": 368,
+                            "space": "MNI152NLin2009cAsym",
+                        },
+                    }
+                )
+        # Add Yan
+        for n_rois, yeo_network in product(range(100, 1001, 100), [7, 17]):
+            self._builtin.update(
+                {
+                    f"Yan{n_rois}xYeo{yeo_network}": {
+                        "family": "Yan",
+                        "n_rois": n_rois,
+                        "yeo_networks": yeo_network,
+                        "space": "MNI152NLin6Asym",
+                    },
+                }
+            )
+            self._builtin.update(
+                {
+                    f"Yan{n_rois}xKong17": {
+                        "family": "Yan",
+                        "n_rois": n_rois,
+                        "kong_networks": 17,
+                        "space": "MNI152NLin6Asym",
+                    },
+                }
+            )
+        # Add Brainnetome
+        for threshold in [0, 25, 50]:
+            self._builtin.update(
+                {
+                    f"Brainnetome_thr{threshold}": {
+                        "family": "Brainnetome",
+                        "threshold": threshold,
+                        "space": "MNI152NLin6Asym",
+                    },
+                }
+            )
+
+        # Set built-in to registry
+        self._registry = self._builtin
+
+    def register(
+        self,
+        name: str,
+        parcellation_path: Union[str, Path],
+        parcels_labels: List[str],
+        space: str,
+        overwrite: bool = False,
+    ) -> None:
+        """Register a custom user parcellation.
+
+        Parameters
+        ----------
+        name : str
+            The name of the parcellation.
+        parcellation_path : str or pathlib.Path
+            The path to the parcellation file.
+        parcels_labels : list of str
+            The list of labels for the parcellation.
+        space : str
+            The template space of the parcellation, e.g., "MNI152NLin6Asym".
+        overwrite : bool, optional
+            If True, overwrite an existing parcellation with the same name.
+            Does not apply to built-in parcellations (default False).
+
+        Raises
+        ------
+        ValueError
+            If the parcellation ``name`` is already registered and
+            ``overwrite=False`` or
+            if the parcellation ``name`` is a built-in parcellation.
+
+        """
+        # Check for attempt of overwriting built-in parcellations
+        if name in self._builtin:
+            if overwrite:
+                logger.info(f"Overwriting parcellation: {name}")
+                if self._registry[name]["family"] != "CustomUserParcellation":
+                    raise_error(
+                        f"Parcellation: {name} already registered as "
+                        "built-in parcellation."
+                    )
+            else:
+                raise_error(
+                    f"Parcellation: {name} already registered. Set "
+                    "`overwrite=True` to update its value."
+                )
+        # Convert str to Path
+        if not isinstance(parcellation_path, Path):
+            parcellation_path = Path(parcellation_path)
+        logger.info(f"Registering parcellation: {name}")
+        # Add user parcellation info
+        self._external[name] = {
+            "path": parcellation_path,
+            "labels": parcels_labels,
+            "family": "CustomUserParcellation",
+            "space": space,
+        }
+        # Update registry
+        self._registry[name] = {
+            "path": parcellation_path,
+            "labels": parcels_labels,
+            "family": "CustomUserParcellation",
+            "space": space,
+        }
+
+    def deregister(self, name: str) -> None:
+        """De-register a custom user parcellation.
+
+        Parameters
+        ----------
+        name : str
+            The name of the parcellation.
+
+        """
+        logger.info(f"De-registering parcellation: {name}")
+        # Remove parcellation info
+        _ = self._external.pop(name)
+        # Update registry
+        _ = self._registry.pop(name)
+
+    def load(
+        self,
+        name: str,
+        parcellations_dir: Union[str, Path, None] = None,
+        resolution: Optional[float] = None,
+        path_only: bool = False,
+    ) -> Tuple[Optional["Nifti1Image"], List[str], Path, str]:
+        """Load parcellation and labels.
+
+        If it is a built-in parcellation and the file is not present in the
+        ``parcellations_dir`` directory, it will be downloaded.
+
+        Parameters
+        ----------
+        name : str
+            The name of the parcellation.
+        parcellations_dir : str or pathlib.Path, optional
+            Path where the parcellations files are stored. The default location
+            is "$HOME/junifer/data/parcellations" (default None).
+        resolution : float, optional
+            The desired resolution of the parcellation to load. If it is not
+            available, the closest resolution will be loaded. Preferably, use a
+            resolution higher than the desired one. By default, will load the
+            highest one (default None).
+        path_only : bool, optional
+            If True, the parcellation image will not be loaded (default False).
+
+        Returns
+        -------
+        Nifti1Image or None
+            Loaded parcellation image.
+        list of str
+            Parcellation labels.
+        pathlib.Path
+            File path to the parcellation image.
+        str
+            The space of the parcellation.
+
+        Raises
+        ------
+        ValueError
+            If ``name`` is invalid or
+            if the parcellation values and labels
+            don't have equal dimension or if the value range is invalid.
+
+        """
+        # Check for valid parcellation name
+        if name not in self._registry:
+            raise_error(
+                f"Parcellation: {name} not found. "
+                f"Valid options are: {self.list}"
+            )
+
+        # Copy parcellation definition to avoid edits in original object
+        parcellation_definition = self._registry[name].copy()
+        t_family = parcellation_definition.pop("family")
+        # Remove space conditionally
+        if t_family not in ["SUIT", "Tian"]:
+            space = parcellation_definition.pop("space")
         else:
-            raise_error(
-                f"Parcellation {name} already registered. Set "
-                "`overwrite=True` to update its value."
-            )
-    # Convert str to Path
-    if not isinstance(parcellation_path, Path):
-        parcellation_path = Path(parcellation_path)
-    # Add user parcellation info
-    _available_parcellations[name] = {
-        "path": str(parcellation_path.absolute()),
-        "labels": parcels_labels,
-        "family": "CustomUserParcellation",
-        "space": space,
-    }
+            space = parcellation_definition["space"]
 
-
-def list_parcellations() -> List[str]:
-    """List all the available parcellations.
-
-    Returns
-    -------
-    list of str
-        A list with all available parcellations.
-
-    """
-    return sorted(_available_parcellations.keys())
-
-
-def get_parcellation(
-    parcellation: List[str],
-    target_data: Dict[str, Any],
-    extra_input: Optional[Dict[str, Any]] = None,
-) -> Tuple["Nifti1Image", List[str]]:
-    """Get parcellation, tailored for the target image.
-
-    Parameters
-    ----------
-    parcellation : list of str
-        The name(s) of the parcellation(s).
-    target_data : dict
-        The corresponding item of the data object to which the parcellation
-        will be applied.
-    extra_input : dict, optional
-        The other fields in the data object. Useful for accessing other data
-        kinds that needs to be used in the computation of parcellations
-        (default None).
-
-    Returns
-    -------
-    Nifti1Image
-        The parcellation image.
-    list of str
-        Parcellation labels.
-
-    Raises
-    ------
-    RuntimeError
-        If warp / transformation file extension is not ".mat" or ".h5".
-    ValueError
-        If ``extra_input`` is None when ``target_data``'s space is native.
-
-    """
-    # Check pre-requirements for space manipulation
-    target_space = target_data["space"]
-    # Set target standard space to target space
-    target_std_space = target_space
-    # Extra data type requirement check if target space is native
-    if target_space == "native":
-        # Check for extra inputs
-        if extra_input is None:
-            raise_error(
-                "No extra input provided, requires `Warp` and `T1w` "
-                "data types in particular for transformation to "
-                f"{target_data['space']} space for further computation."
-            )
-        # Set target standard space to warp file space source
-        target_std_space = extra_input["Warp"]["src"]
-
-    # Get the min of the voxels sizes and use it as the resolution
-    target_img = target_data["data"]
-    resolution = np.min(target_img.header.get_zooms()[:3])
-
-    # Create component-scoped tempdir
-    tempdir = WorkDirManager().get_tempdir(prefix="parcellations")
-    # Create element-scoped tempdir so that warped parcellation is
-    # available later as nibabel stores file path reference for
-    # loading on computation
-    element_tempdir = WorkDirManager().get_element_tempdir(
-        prefix="parcellations"
-    )
-
-    # Load the parcellations
-    all_parcellations = []
-    all_labels = []
-    for name in parcellation:
-        img, labels, _, space = load_parcellation(
-            name=name,
-            resolution=resolution,
-        )
-
-        # Convert parcellation spaces if required
-        if space != target_std_space:
-            # Get xfm file
-            xfm_file_path = get_xfm(src=space, dst=target_std_space)
-            # Get target standard space template
-            target_std_space_template_img = get_template(
-                space=target_std_space,
-                target_data=target_data,
-                extra_input=extra_input,
-            )
-
-            # Save parcellation image to a component-scoped tempfile
-            parcellation_path = tempdir / f"{name}.nii.gz"
-            nib.save(img, parcellation_path)
-
-            # Save template
-            target_std_space_template_path = (
-                tempdir / f"{target_std_space}_T1w_{resolution}.nii.gz"
-            )
-            nib.save(
-                target_std_space_template_img, target_std_space_template_path
-            )
-
-            # Set warped parcellation path
-            warped_parcellation_path = element_tempdir / (
-                f"{name}_warped_from_{space}_to_" f"{target_std_space}.nii.gz"
-            )
-
-            logger.debug(
-                f"Using ANTs to warp {name} "
-                f"from {space} to {target_std_space}"
-            )
-            # Set antsApplyTransforms command
-            apply_transforms_cmd = [
-                "antsApplyTransforms",
-                "-d 3",
-                "-e 3",
-                "-n 'GenericLabel[NearestNeighbor]'",
-                f"-i {parcellation_path.resolve()}",
-                f"-r {target_std_space_template_path.resolve()}",
-                f"-t {xfm_file_path.resolve()}",
-                f"-o {warped_parcellation_path.resolve()}",
-            ]
-            # Call antsApplyTransforms
-            run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
-
-            raw_img = nib.load(warped_parcellation_path)
-            # Remove extra dimension added by ANTs
-            img = image.math_img("np.squeeze(img)", img=raw_img)
-
-        # Resample parcellation to target image
-        img_to_merge = image.resample_to_img(
-            source_img=img,
-            target_img=target_img,
-            interpolation="nearest",
-            copy=True,
-        )
-
-        all_parcellations.append(img_to_merge)
-        all_labels.append(labels)
-
-    # Avoid merging if there is only one parcellation
-    if len(all_parcellations) == 1:
-        resampled_parcellation_img = all_parcellations[0]
-        labels = all_labels[0]
-    # Parcellations are already transformed to target standard space
-    else:
-        resampled_parcellation_img, labels = merge_parcellations(
-            parcellations_list=all_parcellations,
-            parcellations_names=parcellation,
-            labels_lists=all_labels,
-        )
-
-    # Warp parcellation if target space is native
-    if target_space == "native":
-        # Save parcellation image to a component-scoped tempfile
-        prewarp_parcellation_path = tempdir / "prewarp_parcellation.nii.gz"
-        nib.save(resampled_parcellation_img, prewarp_parcellation_path)
-
-        # Create an element-scoped tempfile for warped output
-        warped_parcellation_path = (
-            element_tempdir / "parcellation_warped.nii.gz"
-        )
-
-        # Check for warp file type to use correct tool
-        warp_file_ext = extra_input["Warp"]["path"].suffix
-        if warp_file_ext == ".mat":
-            logger.debug("Using FSL for parcellation warping")
-            # Set applywarp command
-            applywarp_cmd = [
-                "applywarp",
-                "--interp=nn",
-                f"-i {prewarp_parcellation_path.resolve()}",
-                # use resampled reference
-                f"-r {target_data['reference_path'].resolve()}",
-                f"-w {extra_input['Warp']['path'].resolve()}",
-                f"-o {warped_parcellation_path.resolve()}",
-            ]
-            # Call applywarp
-            run_ext_cmd(name="applywarp", cmd=applywarp_cmd)
-
-        elif warp_file_ext == ".h5":
-            logger.debug("Using ANTs for parcellation warping")
-            # Set antsApplyTransforms command
-            apply_transforms_cmd = [
-                "antsApplyTransforms",
-                "-d 3",
-                "-e 3",
-                "-n 'GenericLabel[NearestNeighbor]'",
-                f"-i {prewarp_parcellation_path.resolve()}",
-                # use resampled reference
-                f"-r {target_data['reference_path'].resolve()}",
-                f"-t {extra_input['Warp']['path'].resolve()}",
-                f"-o {warped_parcellation_path.resolve()}",
-            ]
-            # Call antsApplyTransforms
-            run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
-
+        # Check if the parcellation family is custom or built-in
+        if t_family == "CustomUserParcellation":
+            parcellation_fname = Path(parcellation_definition["path"])
+            parcellation_labels = parcellation_definition["labels"]
         else:
-            raise_error(
-                msg=(
-                    "Unknown warp / transformation file extension: "
-                    f"{warp_file_ext}"
-                ),
-                klass=RuntimeError,
+            parcellation_fname, parcellation_labels = _retrieve_parcellation(
+                family=t_family,
+                parcellations_dir=parcellations_dir,
+                resolution=resolution,
+                **parcellation_definition,
             )
 
-        # Load nifti
-        resampled_parcellation_img = nib.load(warped_parcellation_path)
+        # Load parcellation image and values
+        logger.info(f"Loading parcellation: {parcellation_fname.absolute()!s}")
+        parcellation_img = None
+        if not path_only:
+            # Load image via nibabel
+            parcellation_img = nib.load(parcellation_fname)
+            # Get unique values
+            parcel_values = np.unique(parcellation_img.get_fdata())
+            # Check for dimension
+            if len(parcel_values) - 1 != len(parcellation_labels):
+                raise_error(
+                    f"Parcellation {name} has {len(parcel_values) - 1} "
+                    f"parcels but {len(parcellation_labels)} labels."
+                )
+            # Sort values
+            parcel_values.sort()
+            # Check if value range is invalid
+            if np.any(np.diff(parcel_values) != 1):
+                raise_error(
+                    f"Parcellation {name} must have all the values in the "
+                    f"range [0, {len(parcel_values)}]"
+                )
 
-    # Delete tempdir
-    WorkDirManager().delete_tempdir(tempdir)
+        return parcellation_img, parcellation_labels, parcellation_fname, space
 
-    return resampled_parcellation_img, labels  # type: ignore
+    def get(
+        self,
+        parcellations: Union[str, List[str]],
+        target_data: Dict[str, Any],
+        extra_input: Optional[Dict[str, Any]] = None,
+    ) -> Tuple["Nifti1Image", List[str]]:
+        """Get parcellation, tailored for the target image.
 
+        Parameters
+        ----------
+        parcellations : str or list of str
+            The name(s) of the parcellation(s).
+        target_data : dict
+            The corresponding item of the data object to which the parcellation
+            will be applied.
+        extra_input : dict, optional
+            The other fields in the data object. Useful for accessing other
+            data kinds that needs to be used in the computation of
+            parcellations (default None).
 
-def load_parcellation(
-    name: str,
-    parcellations_dir: Union[str, Path, None] = None,
-    resolution: Optional[float] = None,
-    path_only: bool = False,
-) -> Tuple[Optional["Nifti1Image"], List[str], Path, str]:
-    """Load a brain parcellation (including a label file).
+        Returns
+        -------
+        Nifti1Image
+            The parcellation image.
+        list of str
+            Parcellation labels.
 
-    If it is a built-in parcellation and the file is not present in the
-    ``parcellations_dir`` directory, it will be downloaded.
+        Raises
+        ------
+        RuntimeError
+            If warp / transformation file extension is not ".mat" or ".h5".
+        ValueError
+            If ``extra_input`` is None when ``target_data``'s space is native.
 
-    Parameters
-    ----------
-    name : str
-        The name of the parcellation. Check valid options by calling
-        :func:`.list_parcellations`.
-    parcellations_dir : str or pathlib.Path, optional
-        Path where the parcellations files are stored. The default location is
-        "$HOME/junifer/data/parcellations" (default None).
-    resolution : float, optional
-        The desired resolution of the parcellation to load. If it is not
-        available, the closest resolution will be loaded. Preferably, use a
-        resolution higher than the desired one. By default, will load the
-        highest one (default None).
-    path_only : bool, optional
-        If True, the parcellation image will not be loaded (default False).
+        """
+        # Check pre-requirements for space manipulation
+        target_space = target_data["space"]
+        # Set target standard space to target space
+        target_std_space = target_space
+        # Extra data type requirement check if target space is native
+        if target_space == "native":
+            # Check for extra inputs
+            if extra_input is None:
+                raise_error(
+                    "No extra input provided, requires `Warp` and `T1w` "
+                    "data types in particular for transformation to "
+                    f"{target_data['space']} space for further computation."
+                )
+            # Set target standard space to warp file space source
+            target_std_space = extra_input["Warp"]["src"]
 
-    Returns
-    -------
-    Nifti1Image or None
-        Loaded parcellation image.
-    list of str
-        Parcellation labels.
-    pathlib.Path
-        File path to the parcellation image.
-    str
-        The space of the parcellation.
+        # Get the min of the voxels sizes and use it as the resolution
+        target_img = target_data["data"]
+        resolution = np.min(target_img.header.get_zooms()[:3])
 
-    Raises
-    ------
-    ValueError
-        If ``name`` is invalid or if the parcellation values and labels
-        don't have equal dimension or if the value range is invalid.
+        # Convert parcellations to list if not already
+        if not isinstance(parcellations, list):
+            parcellations = [parcellations]
 
-    """
-    # Check for valid parcellation name
-    if name not in _available_parcellations:
-        raise_error(
-            f"Parcellation {name} not found. "
-            f"Valid options are: {list_parcellations()}"
-        )
-
-    # Copy parcellation definition to avoid edits in original object
-    parcellation_definition = _available_parcellations[name].copy()
-    t_family = parcellation_definition.pop("family")
-    # Remove space conditionally
-    if t_family not in ["SUIT", "Tian"]:
-        space = parcellation_definition.pop("space")
-    else:
-        space = parcellation_definition["space"]
-
-    # Check if the parcellation family is custom or built-in
-    if t_family == "CustomUserParcellation":
-        parcellation_fname = Path(parcellation_definition["path"])
-        parcellation_labels = parcellation_definition["labels"]
-    else:
-        parcellation_fname, parcellation_labels = _retrieve_parcellation(
-            family=t_family,
-            parcellations_dir=parcellations_dir,
-            resolution=resolution,
-            **parcellation_definition,
-        )
-
-    # Load parcellation image and values
-    logger.info(f"Loading parcellation {parcellation_fname.absolute()!s}")
-    parcellation_img = None
-    if path_only is False:
-        # Load image via nibabel
-        parcellation_img = nib.load(parcellation_fname)
-        # Get unique values
-        parcel_values = np.unique(parcellation_img.get_fdata())
-        # Check for dimension
-        if len(parcel_values) - 1 != len(parcellation_labels):
-            raise_error(
-                f"Parcellation {name} has {len(parcel_values) - 1} parcels "
-                f"but {len(parcellation_labels)} labels."
-            )
-        # Sort values
-        parcel_values.sort()
-        # Check if value range is invalid
-        if np.any(np.diff(parcel_values) != 1):
-            raise_error(
-                f"Parcellation {name} must have all the values in the range  "
-                f"[0, {len(parcel_values)}]."
+        # Load the parcellations and labels
+        all_parcellations = []
+        all_labels = []
+        for name in parcellations:
+            img, labels, _, space = self.load(
+                name=name,
+                resolution=resolution,
             )
 
-    # Type-cast to remove errors
-    parcellation_img = typing.cast("Nifti1Image", parcellation_img)
-    return parcellation_img, parcellation_labels, parcellation_fname, space
+            # Convert parcellation spaces if required
+            if space != target_std_space:
+                raw_img = ANTsParcellationWarper().warp(
+                    parcellation_name=name,
+                    parcellation_img=img,
+                    src=space,
+                    dst=target_std_space,
+                    target_data=target_data,
+                    extra_input=None,
+                )
+                # Remove extra dimension added by ANTs
+                img = image.math_img("np.squeeze(img)", img=raw_img)
+
+            # Resample parcellation to target image
+            img_to_merge = image.resample_to_img(
+                source_img=img,
+                target_img=target_img,
+                interpolation="nearest",
+                copy=True,
+            )
+
+            all_parcellations.append(img_to_merge)
+            all_labels.append(labels)
+
+        # Avoid merging if there is only one parcellation
+        if len(all_parcellations) == 1:
+            resampled_parcellation_img = all_parcellations[0]
+            labels = all_labels[0]
+        # Parcellations are already transformed to target standard space
+        else:
+            resampled_parcellation_img, labels = merge_parcellations(
+                parcellations_list=all_parcellations,
+                parcellations_names=parcellations,
+                labels_lists=all_labels,
+            )
+
+        # Warp parcellation if target space is native
+        if target_space == "native":
+            # extra_input check done earlier
+            # Check for warp file type to use correct tool
+            warp_file_ext = extra_input["Warp"]["path"].suffix
+            if warp_file_ext == ".mat":
+                resampled_parcellation_img = FSLParcellationWarper().warp(
+                    parcellation_name="native",
+                    parcellation_img=resampled_parcellation_img,
+                    target_data=target_data,
+                    extra_input=extra_input,
+                )
+            elif warp_file_ext == ".h5":
+                resampled_parcellation_img = ANTsParcellationWarper().warp(
+                    parcellation_name="native",
+                    parcellation_img=resampled_parcellation_img,
+                    src="",
+                    dst="T1w",
+                    target_data=target_data,
+                    extra_input=extra_input,
+                )
+            else:
+                raise_error(
+                    msg=(
+                        "Unknown warp / transformation file extension: "
+                        f"{warp_file_ext}"
+                    ),
+                    klass=RuntimeError,
+                )
+
+        return resampled_parcellation_img, labels
 
 
 def _retrieve_parcellation(

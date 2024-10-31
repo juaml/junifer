@@ -22,7 +22,7 @@ from nilearn import image as nimg
 from nilearn._utils.niimg_conversions import check_niimg_4d
 
 from ...api.decorators import register_preprocessor
-from ...data import get_mask
+from ...data import get_data
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 
@@ -546,8 +546,11 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         mask_img = None
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
-            mask_img = get_mask(
-                masks=self.masks, target_data=input, extra_input=extra_input
+            mask_img = get_data(
+                kind="mask",
+                names=self.masks,
+                target_data=input,
+                extra_input=extra_input,
             )
             # Return the BOLD mask and link it to the BOLD data type dict;
             # this allows to use "inherit" down the pipeline

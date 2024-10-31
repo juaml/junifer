@@ -1,41 +1,27 @@
 __all__ = [
-    "list_coordinates",
-    "load_coordinates",
-    "register_coordinates",
-    "get_coordinates",
-    "list_parcellations",
-    "load_parcellation",
-    "register_parcellation",
-    "merge_parcellations",
-    "get_parcellation",
-    "list_masks",
-    "load_mask",
-    "register_mask",
-    "get_mask",
+    "CoordinatesRegistry",
+    "ParcellationRegistry",
+    "MaskRegistry",
+    "get_data",
+    "list_data",
+    "load_data",
+    "register_data",
+    "deregister_data",
     "get_template",
     "get_xfm",
     "utils",
 ]
 
-from .coordinates import (
-    list_coordinates,
-    load_coordinates,
-    register_coordinates,
-    get_coordinates,
-)
-from .parcellations import (
-    list_parcellations,
-    load_parcellation,
-    register_parcellation,
-    merge_parcellations,
-    get_parcellation,
-)
+from .coordinates import CoordinatesRegistry
+from .parcellations import ParcellationRegistry
+from .masks import MaskRegistry
 
-from .masks import (
-    list_masks,
-    load_mask,
-    register_mask,
-    get_mask,
+from ._dispatch import (
+    get_data,
+    list_data,
+    load_data,
+    register_data,
+    deregister_data,
 )
 
 from .template_spaces import get_template, get_xfm

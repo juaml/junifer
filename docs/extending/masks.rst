@@ -14,16 +14,25 @@ suit your needs, and you have found that they don't, you can come back here to
 learn how to use your own masks.
 
 The principle is fairly simple and quite similar to :ref:`adding_parcellations`
-and :ref:`adding_coordinates`. ``junifer`` provides a :func:`.register_mask`
+and :ref:`adding_coordinates`. ``junifer`` provides a :func:`.register_data`
 function that lets you register your own custom masks. It consists of three
-positional arguments (``name``, ``mask_path`` and ``space``) and one optional
-keyword argument (``overwrite``).
+positional arguments:
+
+* ``kind``
+* ``name``
+* ``space``
+
+and one optional keyword argument: ``overwrite``.
+As the ``kind`` needs to be ``"mask"``, we can check
+``MaskRegistry.register`` for keyword arguments to be passed:
+
+* ``mask_path``
 
 The ``name`` argument is a string indicating the name of the mask. This name
 is used to refer to that mask in ``junifer`` internally in order to obtain the
 actual mask data and perform operations on it. For example, using the name you
-can load a mask after registration using the
-:func:`.load_mask` function.
+can load a mask after registration using the :func:`.load_data` with
+``kind="mask"``.
 
 The ``mask_path`` should contain the path to a valid NIfTI image with binary
 voxel values (i.e. 0 or 1). This data can then be used by ``junifer`` to mask
@@ -42,14 +51,19 @@ look as follows:
 
   from pathlib import Path
 
-  from junifer.data import register_mask
+  from junifer.data import register_data
 
 
   # this path is only an example, of course use the correct path
   # on your system:
   mask_path = Path("..") / ".." / "my_custom_mask.nii.gz"
 
-  register_mask(name="my_custom_mask", mask_path=mask_path, space="native")
+  register_data(
+      kind="mask",
+      name="my_custom_mask",
+      mask_path=mask_path,
+      space="native",
+  )
 
 Simple, right? Now we just have to configure a YAML file to register this mask
 so we can use it for :ref:`codeless configuration of junifer <codeless>`.

@@ -10,7 +10,7 @@ from pathlib import Path
 
 from nilearn.maskers import NiftiLabelsMasker
 
-from junifer.data import get_parcellation
+from junifer.data import ParcellationRegistry
 from junifer.datareader import DefaultDataReader
 from junifer.markers.ets_rss import RSSETSMarker
 from junifer.storage import SQLiteFeatureStorage
@@ -32,8 +32,8 @@ def test_compute() -> None:
 
         # Compare with nilearn
         # Load testing parcellation
-        test_parcellation, _ = get_parcellation(
-            parcellation=[PARCELLATION],
+        test_parcellation, _ = ParcellationRegistry().get(
+            parcellations=[PARCELLATION],
             target_data=element_data["BOLD"],
         )
         # Extract timeseries

@@ -20,15 +20,11 @@ from nilearn.masking import (
 )
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
-from junifer.data.masks import (
-    _available_masks,
+from junifer.data import MaskRegistry
+from junifer.data.masks import compute_brain_mask
+from junifer.data.masks._masks import (
     _load_ukb_mask,
     _load_vickery_patil_mask,
-    compute_brain_mask,
-    get_mask,
-    list_masks,
-    load_mask,
-    register_mask,
 )
 from junifer.datagrabber import DMCC13Benchmark
 from junifer.datareader import DefaultDataReader
@@ -71,7 +67,7 @@ def test_compute_brain_mask(mask_type: str, threshold: float) -> None:
             extra_input=None,
             mask_type=mask_type,
         )
-        assert isinstance(mask, nib.Nifti1Image)
+        assert isinstance(mask, nib.nifti1.Nifti1Image)
 
 
 @pytest.mark.skipif(
@@ -111,13 +107,13 @@ def test_compute_brain_mask_for_native(mask_type: str) -> None:
             extra_input=None,
             mask_type=mask_type,
         )
-        assert isinstance(mask, nib.Nifti1Image)
+        assert isinstance(mask, nib.nifti1.Nifti1Image)
 
 
-def test_register_mask_built_in_check() -> None:
+def test_register_built_in_check() -> None:
     """Test mask registration check for built-in masks."""
     with pytest.raises(ValueError, match=r"built-in mask"):
-        register_mask(
+        MaskRegistry().register(
             name="GM_prob0.2",
             mask_path="testmask.nii.gz",
             space="MNI",
@@ -125,39 +121,38 @@ def test_register_mask_built_in_check() -> None:
         )
 
 
-def test_list_masks_incorrect() -> None:
+def test_list_incorrect() -> None:
     """Test incorrect information check for list masks."""
-    masks = list_masks()
-    assert "testmask" not in masks
+    assert "testmask" not in MaskRegistry().list
 
 
-def test_register_mask_already_registered() -> None:
+def test_register_already_registered() -> None:
     """Test mask registration check for already registered."""
     # Register custom mask
-    register_mask(
+    MaskRegistry().register(
         name="testmask",
         mask_path="testmask.nii.gz",
         space="MNI",
     )
-    out = load_mask("testmask", path_only=True)
+    out = MaskRegistry().load("testmask", path_only=True)
     assert out[1] is not None
     assert out[1].name == "testmask.nii.gz"
 
     # Try registering again
     with pytest.raises(ValueError, match=r"already registered."):
-        register_mask(
+        MaskRegistry().register(
             name="testmask",
             mask_path="testmask.nii.gz",
             space="MNI",
         )
-    register_mask(
+    MaskRegistry().register(
         name="testmask",
         mask_path="testmask2.nii.gz",
         space="MNI",
         overwrite=True,
     )
 
-    out = load_mask("testmask", path_only=True)
+    out = MaskRegistry().load("testmask", path_only=True)
     assert out[1] is not None
     assert out[1].name == "testmask2.nii.gz"
 
@@ -170,7 +165,7 @@ def test_register_mask_already_registered() -> None:
         ("testmask_3", Path("testmask_3.nii.gz"), "MNI", True),
     ],
 )
-def test_register_mask(
+def test_register(
     name: str,
     mask_path: str,
     space: str,
@@ -191,17 +186,16 @@ def test_register_mask(
 
     """
     # Register custom mask
-    register_mask(
+    MaskRegistry().register(
         name=name,
         mask_path=mask_path,
         space=space,
         overwrite=overwrite,
     )
     # List available mask and check registration
-    masks = list_masks()
-    assert name in masks
+    assert name in MaskRegistry().list
     # Load registered mask
-    _, fname, mask_space = load_mask(name=name, path_only=True)
+    _, fname, mask_space = MaskRegistry().load(name=name, path_only=True)
     # Check values for registered mask
     assert fname is not None
     assert fname.name == f"{name}.nii.gz"
@@ -216,7 +210,7 @@ def test_register_mask(
         "UKB_15K_GM",
     ],
 )
-def test_list_masks_correct(mask_name: str) -> None:
+def test_list_correct(mask_name: str) -> None:
     """Test correct information check for list masks.
 
     Parameters
@@ -225,14 +219,13 @@ def test_list_masks_correct(mask_name: str) -> None:
         The parametrized mask name.
 
     """
-    masks = list_masks()
-    assert mask_name in masks
+    assert mask_name in MaskRegistry().list
 
 
-def test_load_mask_incorrect() -> None:
+def test_load_incorrect() -> None:
     """Test loading of invalid masks."""
     with pytest.raises(ValueError, match=r"not found"):
-        load_mask("wrongmask")
+        MaskRegistry().load("wrongmask")
 
 
 @pytest.mark.parametrize(
@@ -278,7 +271,7 @@ def test_vickery_patil(
         The parametrized name of the mask file.
 
     """
-    mask, mask_fname, space = load_mask(name, resolution=resolution)
+    mask, mask_fname, space = MaskRegistry().load(name, resolution=resolution)
     assert_array_almost_equal(
         mask.header["pixdim"][1:4], pixdim  # type: ignore
     )
@@ -295,7 +288,7 @@ def test_vickery_patil_error() -> None:
 
 def test_ukb() -> None:
     """Test UKB mask."""
-    mask, mask_fname, space = load_mask("UKB_15K_GM", resolution=2.0)
+    mask, mask_fname, space = MaskRegistry().load("UKB_15K_GM", resolution=2.0)
     assert_array_almost_equal(mask.header["pixdim"][1:4], 2.0)  # type: ignore
     assert space == "MNI152NLin6Asym"
     assert mask_fname is not None
@@ -308,18 +301,20 @@ def test_ukb_error() -> None:
         _load_ukb_mask(name="wrong")
 
 
-def test_get_mask() -> None:
-    """Test the get_mask function."""
+def test_get() -> None:
+    """Test tailored mask fetch."""
     with OasisVBMTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         vbm_gm = element_data["VBM_GM"]
         vbm_gm_img = vbm_gm["data"]
-        mask = get_mask(masks="compute_brain_mask", target_data=vbm_gm)
+        mask = MaskRegistry().get(
+            masks="compute_brain_mask", target_data=vbm_gm
+        )
 
         assert mask.shape == vbm_gm_img.shape
         assert_array_equal(mask.affine, vbm_gm_img.affine)
 
-        raw_mask_callable, _, _ = load_mask(
+        raw_mask_callable, _, _ = MaskRegistry().load(
             "compute_brain_mask", resolution=1.5
         )
         raw_mask_img = raw_mask_callable(vbm_gm)  # type: ignore
@@ -338,7 +333,7 @@ def test_mask_callable() -> None:
     def ident(x):
         return x
 
-    _available_masks["identity"] = {
+    MaskRegistry()._registry["identity"] = {
         "family": "Callable",
         "func": ident,
         "space": "MNI152Lin",
@@ -347,44 +342,48 @@ def test_mask_callable() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         vbm_gm = element_data["VBM_GM"]
         vbm_gm_img = vbm_gm["data"]
-        mask = get_mask(masks="identity", target_data=vbm_gm)
+        mask = MaskRegistry().get(masks="identity", target_data=vbm_gm)
 
         assert_array_equal(mask.get_fdata(), vbm_gm_img.get_fdata())
 
-    del _available_masks["identity"]
+    del MaskRegistry()._registry["identity"]
 
 
-def test_get_mask_errors() -> None:
-    """Test passing wrong parameters to get_mask."""
+def test_get_errors() -> None:
+    """Test passing wrong parameters to fetch mask."""
     with OasisVBMTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         vbm_gm = element_data["VBM_GM"]
         # Test wrong masks definitions (more than one key per dict)
         with pytest.raises(ValueError, match=r"only one key"):
-            get_mask(masks={"GM_prob0.2": {}, "Other": {}}, target_data=vbm_gm)
+            MaskRegistry().get(
+                masks={"GM_prob0.2": {}, "Other": {}}, target_data=vbm_gm
+            )
 
         # Test wrong masks definitions (pass paramaeters to non-callable mask)
         with pytest.raises(ValueError, match=r"callable params"):
-            get_mask(masks={"GM_prob0.2": {"param": 1}}, target_data=vbm_gm)
+            MaskRegistry().get(
+                masks={"GM_prob0.2": {"param": 1}}, target_data=vbm_gm
+            )
 
         # Pass only parameters to the intersection function
         with pytest.raises(
             ValueError, match=r" At least one mask is required."
         ):
-            get_mask(masks={"threshold": 1}, target_data=vbm_gm)
+            MaskRegistry().get(masks={"threshold": 1}, target_data=vbm_gm)
 
         # Pass parameters to the intersection function when only one mask
         with pytest.raises(
             ValueError, match=r"parameters to the intersection"
         ):
-            get_mask(
+            MaskRegistry().get(
                 masks=["compute_brain_mask", {"threshold": 1}],
                 target_data=vbm_gm,
             )
 
         # Test "inherited" masks error
         with pytest.raises(ValueError, match=r"provide `mask`"):
-            get_mask(masks="inherit", target_data=vbm_gm)
+            MaskRegistry().get(masks="inherit", target_data=vbm_gm)
 
 
 @pytest.mark.parametrize(
@@ -425,7 +424,7 @@ def test_nilearn_compute_masks(
         else:
             mask_spec = {mask_name: params}
 
-        mask = get_mask(masks=mask_spec, target_data=bold)
+        mask = MaskRegistry().get(masks=mask_spec, target_data=bold)
 
         assert_array_equal(mask.affine, bold_img.affine)
 
@@ -443,15 +442,15 @@ def test_nilearn_compute_masks(
         assert_array_equal(mask.get_fdata(), ni_mask.get_fdata())
 
 
-def test_get_mask_inherit() -> None:
-    """Test using the inherit mask functionality."""
+def test_get_inherit() -> None:
+    """Test mask fetch using the inherit mask functionality."""
     with SPMAuditoryTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Compute brain mask using nilearn
         gm_mask = compute_brain_mask(element_data["BOLD"], threshold=0.2)
 
         # Get mask using the compute_brain_mask function
-        mask1 = get_mask(
+        mask1 = MaskRegistry().get(
             masks={"compute_brain_mask": {"threshold": 0.2}},
             target_data=element_data["BOLD"],
         )
@@ -463,7 +462,7 @@ def test_get_mask_inherit() -> None:
             "data": gm_mask,
             "space": element_data["BOLD"]["space"],
         }
-        mask2 = get_mask(
+        mask2 = MaskRegistry().get(
             masks="inherit",
             target_data=bold_dict,
         )
@@ -479,7 +478,7 @@ def test_get_mask_inherit() -> None:
         (["compute_brain_mask", "compute_epi_mask"], {}),
     ],
 )
-def test_get_mask_multiple(
+def test_get_multiple(
     masks: Union[str, Dict, List[Union[Dict, str]]], params: Dict
 ) -> None:
     """Test getting multiple masks.
@@ -505,7 +504,7 @@ def test_get_mask_multiple(
         target_img = element_data["BOLD"]["data"]
         resolution = np.min(target_img.header.get_zooms()[:3])
 
-        computed = get_mask(
+        computed = MaskRegistry().get(
             masks=junifer_masks, target_data=element_data["BOLD"]
         )
 
@@ -516,16 +515,18 @@ def test_get_mask_multiple(
         mask_funcs = [
             x
             for x in masks_names
-            if _available_masks[x]["family"] == "Callable"
+            if MaskRegistry()._registry[x]["family"] == "Callable"
         ]
         mask_files = [
             x
             for x in masks_names
-            if _available_masks[x]["family"] != "Callable"
+            if MaskRegistry()._registry[x]["family"] != "Callable"
         ]
 
         mask_imgs = [
-            load_mask(t_mask, path_only=False, resolution=resolution)[0]
+            MaskRegistry().load(
+                t_mask, path_only=False, resolution=resolution
+            )[0]
             for t_mask in mask_files
         ]
 
@@ -533,10 +534,14 @@ def test_get_mask_multiple(
             # Bypass for custom mask
             if t_func == "compute_brain_mask":
                 mask_imgs.append(
-                    _available_masks[t_func]["func"](element_data["BOLD"])
+                    MaskRegistry()._registry[t_func]["func"](
+                        element_data["BOLD"]
+                    )
                 )
             else:
-                mask_imgs.append(_available_masks[t_func]["func"](target_img))
+                mask_imgs.append(
+                    MaskRegistry()._registry[t_func]["func"](target_img)
+                )
 
         mask_imgs = [
             resample_to_img(

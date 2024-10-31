@@ -7,7 +7,7 @@
 from typing import Any, ClassVar, Dict, List, Optional, Set, Union
 
 from ..api.decorators import register_marker
-from ..data import get_coordinates, get_mask
+from ..data import get_data
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
 from ..utils import logger, raise_error, warn_with_log
@@ -24,8 +24,8 @@ class SphereAggregation(BaseMarker):
     Parameters
     ----------
     coords : str
-        The name of the coordinates list to use. See
-        :func:`.list_coordinates` for options.
+        The name of the coordinates list to use.
+        See :func:`.list_data` for options.
     radius : float, optional
         The radius of the sphere in millimeters. If None, the signal will be
         extracted from a single voxel. See
@@ -177,8 +177,9 @@ class SphereAggregation(BaseMarker):
         )
 
         # Get seeds and labels tailored to target image
-        coords, labels = get_coordinates(
-            coords=self.coords,
+        coords, labels = get_data(
+            kind="coordinates",
+            names=self.coords,
             target_data=input,
             extra_input=extra_input,
         )
@@ -188,8 +189,11 @@ class SphereAggregation(BaseMarker):
         if self.masks is not None:
             logger.debug(f"Masking with {self.masks}")
             # Get tailored mask
-            mask_img = get_mask(
-                masks=self.masks, target_data=input, extra_input=extra_input
+            mask_img = get_data(
+                kind="mask",
+                names=self.masks,
+                target_data=input,
+                extra_input=extra_input,
             )
 
         # Initialize masker
