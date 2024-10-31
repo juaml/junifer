@@ -62,8 +62,6 @@ jobs:
       run: |
         # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
         git config --system --add safe.directory $(pwd)
-        # Source fslconf before running susan
-        . ${FSLDIR}/etc/fslconf/fsl.sh
         tox
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
