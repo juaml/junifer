@@ -13,8 +13,8 @@ ensuring that the features are not extracted from voxels that contain mostly
 white matter or cerebrospinal fluid, which could add noise to the BOLD signal.
 
 ``junifer`` provides a number of built-in masks, which can be listed using
-:func:`.list_masks`. Some masks are images, while other masks can be computed
-using :ref:`nilearn` functions.
+:func:`.list_data` with ``kind="mask"``. Some masks are images, while other
+masks can be computed using :ref:`nilearn` functions.
 
 For markers and steps that accept ``masks`` as an argument, the mask can be
 specified as a string, which will be the name of a built-in mask, or as a
