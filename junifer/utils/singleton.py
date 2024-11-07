@@ -4,7 +4,7 @@
 # License: AGPL
 
 from abc import ABCMeta
-from typing import Any, Dict, Type
+from typing import Any, ClassVar, Dict, Type
 
 
 __all__ = ["Singleton"]
@@ -20,7 +20,7 @@ class Singleton(type):
 
     """
 
-    instances: Dict = {}
+    instances: ClassVar[Dict] = {}
 
     def __call__(cls, *args: Any, **kwargs: Any) -> Type:
         """Get the only instance for a class.
@@ -39,7 +39,7 @@ class Singleton(type):
 
         """
         if cls not in cls.instances:
-            cls.instances[cls] = super(Singleton, cls).__call__(
+            cls.instances[cls] = super(Singleton, cls).__call__(  # noqa: UP008
                 *args, **kwargs
             )
 
