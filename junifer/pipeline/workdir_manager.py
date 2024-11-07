@@ -78,6 +78,7 @@ class WorkDirManager(metaclass=Singleton):
     def _cleanup(self) -> None:
         """Clean up the element and temporary directories."""
         if self._cleanup_dirs is False:
+            self._root_tempdir = None
             return
         # Remove element directory
         self.cleanup_elementdir()
@@ -192,6 +193,7 @@ class WorkDirManager(metaclass=Singleton):
 
         """
         if self._cleanup_dirs is False:
+            self._elementdir = None
             return
         if self._elementdir is not None:
             logger.debug(
