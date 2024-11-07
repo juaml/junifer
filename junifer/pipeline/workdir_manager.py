@@ -39,9 +39,9 @@ class WorkDirManager(metaclass=Singleton):
         The path to the element directory.
     root_tempdir : pathlib.Path or None
         The path to the root temporary directory.
-    cleanup : bool
-        If false, the directories are not cleaned up after the object is
-        destroyed. This is useful for debugging purposes. Default is True.
+    cleanup : bool, optional
+        If False, the directories are not cleaned up after the object is
+        destroyed. This is useful for debugging purposes (default True).
 
     """
 
