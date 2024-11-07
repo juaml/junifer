@@ -19,8 +19,8 @@ import scipy as sp
 from nilearn import image as nimg
 
 from ...pipeline import WorkDirManager
-from ...pipeline.singleton import singleton
 from ...utils import logger
+from ...utils.singleton import Singleton
 
 
 if TYPE_CHECKING:
@@ -30,8 +30,7 @@ if TYPE_CHECKING:
 __all__ = ["JuniferALFF"]
 
 
-@singleton
-class JuniferALFF:
+class JuniferALFF(metaclass=Singleton):
     """Class for computing ALFF using junifer.
 
     It's designed as a singleton with caching for efficient computation.

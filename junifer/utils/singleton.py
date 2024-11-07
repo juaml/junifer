@@ -3,13 +3,14 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from abc import ABCMeta
 from typing import Any, Dict, Type
 
 
-__all__ = ["singleton"]
+__all__ = ["Singleton"]
 
 
-def singleton(cls: Type) -> Type:
+class Singleton(type):
     """Make a class singleton.
 
     Parameters
@@ -17,15 +18,11 @@ def singleton(cls: Type) -> Type:
     cls : class
         The class to designate as singleton.
 
-    Returns
-    -------
-    class
-        The only instance of the class.
-
     """
+
     instances: Dict = {}
 
-    def get_instance(*args: Any, **kwargs: Any) -> Type:
+    def __call__(cls, *args: Any, **kwargs: Any) -> Type:
         """Get the only instance for a class.
 
         Parameters
@@ -41,8 +38,13 @@ def singleton(cls: Type) -> Type:
             The only instance of the class.
 
         """
-        if cls not in instances:
-            instances[cls] = cls(*args, **kwargs)
-        return instances[cls]
+        if cls not in cls.instances:
+            cls.instances[cls] = super(Singleton, cls).__call__(
+                *args, **kwargs
+            )
 
-    return get_instance
+        return cls.instances[cls]
+
+
+class ABCSingleton(ABCMeta, Singleton):
+    pass
