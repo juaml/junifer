@@ -129,6 +129,7 @@ class HCP1200(PatternDataGrabber):
                     ),
                     "src": "MNI152NLin6Asym",
                     "dst": "native",
+                    "warper": "fsl",
                 },
                 {
                     "pattern": (
@@ -136,6 +137,7 @@ class HCP1200(PatternDataGrabber):
                     ),
                     "src": "native",
                     "dst": "MNI152NLin6Asym",
+                    "warper": "fsl",
                 },
             ],
         }

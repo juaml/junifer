@@ -89,7 +89,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
           .. code-block:: none
 
             {
-              "mandatory": ["pattern", "src", "dst"],
+              "mandatory": ["pattern", "src", "dst", "warper"],
               "optional": []
             }
 
@@ -140,6 +140,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
                   "pattern": "...",
                   "src": "...",
                   "dst": "...",
+                  "warper": "...",
                 },
               ],
           }

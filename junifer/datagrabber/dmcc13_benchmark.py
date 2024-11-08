@@ -230,6 +230,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                             ),
                             "src": "MNI152NLin2009cAsym",
                             "dst": "native",
+                            "warper": "ants",
                         },
                         {
                             "pattern": (
@@ -239,6 +240,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                             ),
                             "src": "native",
                             "dst": "MNI152NLin2009cAsym",
+                            "warper": "ants",
                         },
                     ],
                 }

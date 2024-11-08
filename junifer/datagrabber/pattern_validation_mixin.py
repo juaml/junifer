@@ -36,7 +36,7 @@ PATTERNS_SCHEMA = {
         },
     },
     "Warp": {
-        "mandatory": ["pattern", "src", "dst"],
+        "mandatory": ["pattern", "src", "dst", "warper"],
         "optional": {},
     },
     "VBM_GM": {

@@ -213,6 +213,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
                             ),
                             "src": "MNI152NLin2009cAsym",
                             "dst": "native",
+                            "warper": "ants",
                         },
                         {
                             "pattern": (
@@ -222,6 +223,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
                             ),
                             "src": "native",
                             "dst": "MNI152NLin2009cAsym",
+                            "warper": "ants",
                         },
                     ],
                 }
