@@ -116,7 +116,12 @@ def test_DMCC13Benchmark(
             data_file_names.extend(
                 [
                     "sub-01_desc-preproc_T1w.nii.gz",
-                    "sub-01_from-MNI152NLin2009cAsym_to-T1w_mode-image_xfm.h5",
+                    [
+                        "sub-01_from-MNI152NLin2009cAsym_to-T1w"
+                        "_mode-image_xfm.h5",
+                        "sub-01_from-T1w_to-MNI152NLin2009cAsym"
+                        "_mode-image_xfm.h5",
+                    ],
                 ]
             )
         else:
@@ -127,14 +132,26 @@ def test_DMCC13Benchmark(
         for data_type, data_file_name in zip(data_types, data_file_names):
             # Assert data type
             assert data_type in out
-            # Assert data file path exists
-            assert out[data_type]["path"].exists()
-            # Assert data file path is a file
-            assert out[data_type]["path"].is_file()
-            # Assert data file name
-            assert out[data_type]["path"].name == data_file_name
-            # Assert metadata
-            assert "meta" in out[data_type]
+            # Conditional for Warp
+            if data_type == "Warp":
+                for idx, fname in enumerate(data_file_name):
+                    # Assert data file path exists
+                    assert out[data_type][idx]["path"].exists()
+                    # Assert data file path is a file
+                    assert out[data_type][idx]["path"].is_file()
+                    # Assert data file name
+                    assert out[data_type][idx]["path"].name == fname
+                    # Assert metadata
+                    assert "meta" in out[data_type][idx]
+            else:
+                # Assert data file path exists
+                assert out[data_type]["path"].exists()
+                # Assert data file path is a file
+                assert out[data_type]["path"].is_file()
+                # Assert data file name
+                assert out[data_type]["path"].name == data_file_name
+                # Assert metadata
+                assert "meta" in out[data_type]
 
         # Check BOLD nested data types
         for type_, file_name in zip(
