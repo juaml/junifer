@@ -9,7 +9,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, run_ext_cmd
+from ...utils import logger, raise_error, run_ext_cmd
 
 
 __all__ = ["FSLCoordinatesWarper"]
@@ -39,16 +39,30 @@ class FSLCoordinatesWarper:
             will be applied.
         extra_input : dict, optional
             The other fields in the data object. Useful for accessing other
-            data kinds that needs to be used in the computation of coordinates
-            (default None).
+            data kinds that needs to be used in the computation of coordinates.
 
         Returns
         -------
         numpy.ndarray
             The transformed coordinates.
 
+        Raises
+        ------
+        RuntimeError
+            If warp file path could not be found in ``extra_input``.
+
         """
         logger.debug("Using FSL for coordinates transformation")
+
+        # Get warp file path
+        warp_file_path = None
+        for entry in extra_input["Warp"]:
+            if entry["dst"] == "native":
+                warp_file_path = entry["path"]
+        if warp_file_path is None:
+            raise_error(
+                klass=RuntimeError, msg="Could not find correct warp file path"
+            )
 
         # Create element-specific tempdir for storing post-warping assets
         element_tempdir = WorkDirManager().get_element_tempdir(
@@ -72,7 +86,7 @@ class FSLCoordinatesWarper:
             "| img2imgcoord -mm",
             f"-src {target_data['path'].resolve()}",
             f"-dest {target_data['reference_path'].resolve()}",
-            f"-warp {extra_input['Warp']['path'].resolve()}",
+            f"-warp {warp_file_path.resolve()}",
             f"> {transformed_coords_path.resolve()};",
             f"sed -i 1d {transformed_coords_path.resolve()}",
         ]

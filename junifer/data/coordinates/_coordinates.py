@@ -311,7 +311,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         Raises
         ------
         RuntimeError
-            If warp / transformation file extension is not ".mat" or ".h5".
+            If warper could not be found in ``extra_input``.
         ValueError
             If ``extra_input`` is None when ``target_data``'s space is native.
 
@@ -329,27 +329,26 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     f"{target_data['space']} space for further computation."
                 )
 
-            # Check for warp file type to use correct tool
-            warp_file_ext = extra_input["Warp"]["path"].suffix
-            if warp_file_ext == ".mat":
+            # Check for warper to use correct tool
+            warper = None
+            for entry in extra_input["Warp"]:
+                if entry["dst"] == "native":
+                    warper = entry["warper"]
+            if warper is None:
+                raise_error(
+                    klass=RuntimeError, msg="Could not find correct warper"
+                )
+            if warper == "fsl":
                 seeds = FSLCoordinatesWarper().warp(
                     seeds=seeds,
                     target_data=target_data,
                     extra_input=extra_input,
                 )
-            elif warp_file_ext == ".h5":
+            elif warper == "ants":
                 seeds = ANTsCoordinatesWarper().warp(
                     seeds=seeds,
                     target_data=target_data,
                     extra_input=extra_input,
-                )
-            else:
-                raise_error(
-                    msg=(
-                        "Unknown warp / transformation file extension: "
-                        f"{warp_file_ext}"
-                    ),
-                    klass=RuntimeError,
                 )
 
         return seeds, labels

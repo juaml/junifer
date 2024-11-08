@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, Dict, Optional
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, run_ext_cmd
+from ...utils import logger, raise_error, run_ext_cmd
 from ..template_spaces import get_template, get_xfm
 
 
@@ -66,6 +66,11 @@ class ANTsMaskWarper:
         nibabel.nifti1.Nifti1Image
             The transformed mask image.
 
+        Raises
+        ------
+        RuntimeError
+            If warp file path could not be found in ``extra_input``.
+
         """
         # Create element-scoped tempdir so that warped mask is
         # available later as nibabel stores file path reference for
@@ -83,6 +88,17 @@ class ANTsMaskWarper:
         if dst == "T1w":
             logger.debug("Using ANTs for mask transformation")
 
+            # Get warp file path
+            warp_file_path = None
+            for entry in extra_input["Warp"]:
+                if entry["dst"] == "native":
+                    warp_file_path = entry["path"]
+            if warp_file_path is None:
+                raise_error(
+                    klass=RuntimeError,
+                    msg="Could not find correct warp file path",
+                )
+
             # Save existing mask image to a tempfile
             prewarp_mask_path = element_tempdir / "prewarp_mask.nii.gz"
             nib.save(mask_img, prewarp_mask_path)
@@ -98,7 +114,7 @@ class ANTsMaskWarper:
                 f"-i {prewarp_mask_path.resolve()}",
                 # use resampled reference
                 f"-r {target_data['reference_path'].resolve()}",
-                f"-t {extra_input['Warp']['path'].resolve()}",
+                f"-t {warp_file_path.resolve()}",
                 f"-o {warped_mask_path.resolve()}",
             ]
             # Call antsApplyTransforms

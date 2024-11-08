@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, Dict, Optional
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, run_ext_cmd
+from ...utils import logger, raise_error, run_ext_cmd
 from ..template_spaces import get_template, get_xfm
 
 
@@ -66,6 +66,11 @@ class ANTsParcellationWarper:
         nibabel.nifti1.Nifti1Image
             The transformed parcellation image.
 
+        Raises
+        ------
+        RuntimeError
+            If warp file path could not be found in ``extra_input``.
+
         """
         # Create element-scoped tempdir so that warped parcellation is
         # available later as nibabel stores file path reference for
@@ -82,6 +87,17 @@ class ANTsParcellationWarper:
         # Native space warping
         if dst == "T1w":
             logger.debug("Using ANTs for parcellation transformation")
+
+            # Get warp file path
+            warp_file_path = None
+            for entry in extra_input["Warp"]:
+                if entry["dst"] == "native":
+                    warp_file_path = entry["path"]
+            if warp_file_path is None:
+                raise_error(
+                    klass=RuntimeError,
+                    msg="Could not find correct warp file path",
+                )
 
             # Save existing parcellation image to a tempfile
             prewarp_parcellation_path = (
@@ -102,7 +118,7 @@ class ANTsParcellationWarper:
                 f"-i {prewarp_parcellation_path.resolve()}",
                 # use resampled reference
                 f"-r {target_data['reference_path'].resolve()}",
-                f"-t {extra_input['Warp']['path'].resolve()}",
+                f"-t {warp_file_path.resolve()}",
                 f"-o {warped_parcellation_path.resolve()}",
             ]
             # Call antsApplyTransforms

@@ -395,7 +395,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         Raises
         ------
         RuntimeError
-            If warp / transformation file extension is not ".mat" or ".h5".
+            If warper could not be found in ``extra_input``.
         ValueError
             If ``extra_input`` is None when ``target_data``'s space is native.
 
@@ -413,8 +413,16 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     "data types in particular for transformation to "
                     f"{target_data['space']} space for further computation."
                 )
-            # Set target standard space to warp file space source
-            target_std_space = extra_input["Warp"]["src"]
+            # Set target standard space to warp file space source and warper
+            warper = None
+            for entry in extra_input["Warp"]:
+                if entry["dst"] == "native":
+                    target_std_space = entry["src"]
+                    warper = entry["warper"]
+            if warper is None:
+                raise_error(
+                    klass=RuntimeError, msg="Could not find correct warper"
+                )
 
         # Get the min of the voxels sizes and use it as the resolution
         target_img = target_data["data"]
@@ -471,17 +479,15 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Warp parcellation if target space is native
         if target_space == "native":
-            # extra_input check done earlier
-            # Check for warp file type to use correct tool
-            warp_file_ext = extra_input["Warp"]["path"].suffix
-            if warp_file_ext == ".mat":
+            # extra_input check done earlier and warper exists
+            if warper == "fsl":
                 resampled_parcellation_img = FSLParcellationWarper().warp(
                     parcellation_name="native",
                     parcellation_img=resampled_parcellation_img,
                     target_data=target_data,
                     extra_input=extra_input,
                 )
-            elif warp_file_ext == ".h5":
+            elif warper == "ants":
                 resampled_parcellation_img = ANTsParcellationWarper().warp(
                     parcellation_name="native",
                     parcellation_img=resampled_parcellation_img,
@@ -489,14 +495,6 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     dst="T1w",
                     target_data=target_data,
                     extra_input=extra_input,
-                )
-            else:
-                raise_error(
-                    msg=(
-                        "Unknown warp / transformation file extension: "
-                        f"{warp_file_ext}"
-                    ),
-                    klass=RuntimeError,
                 )
 
         return resampled_parcellation_img, labels
