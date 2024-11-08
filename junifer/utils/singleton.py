@@ -1,13 +1,14 @@
 """Provide a singleton class to be used by pipeline components."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
+#          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
 from abc import ABCMeta
 from typing import Any, ClassVar, Dict, Type
 
 
-__all__ = ["Singleton"]
+__all__ = ["Singleton", "ABCSingleton"]
 
 
 class Singleton(type):
@@ -47,4 +48,6 @@ class Singleton(type):
 
 
 class ABCSingleton(ABCMeta, Singleton):
+    """Make an abstract class a singleton."""
+
     pass

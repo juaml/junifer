@@ -2,6 +2,7 @@
 
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
+
 import pytest
 
 from junifer.utils.singleton import Singleton
