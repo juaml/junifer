@@ -30,7 +30,7 @@ def hcpdg() -> Iterable[DataladHCP1200]:
         for t_elem in dg.get_elements():
             dg[t_elem]
         yield dg
-    shutil.rmtree(tmpdir, ignore_errors=True)
+    shutil.rmtree(tmpdir / "datadir", ignore_errors=True)
 
 
 @pytest.mark.parametrize(
