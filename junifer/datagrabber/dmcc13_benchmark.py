@@ -150,7 +150,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                 "mask": {
                     "pattern": (
                         "derivatives/fmriprep-1.3.2/{subject}/{session}/"
-                        "/func/{subject}_{session}_task-{task}_acq-mb4"
+                        "func/{subject}_{session}_task-{task}_acq-mb4"
                         "{phase_encoding}_run-{run}_"
                         "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
                     ),
