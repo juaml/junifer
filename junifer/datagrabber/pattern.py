@@ -127,11 +127,21 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
                 "pattern": "...",
                 "space": "...",
               },
-              "Warp": {
-                "pattern": "...",
-                "src": "...",
-                "dst": "...",
-              }
+          }
+
+        except ``Warp``, which needs to be a list of dictionaries as there can
+        be multiple spaces to warp (for example, with fMRIPrep):
+
+        .. code-block:: none
+
+          {
+              "Warp": [
+                {
+                  "pattern": "...",
+                  "src": "...",
+                  "dst": "...",
+                },
+              ],
           }
 
         taken from :class:`.HCP1200`.
@@ -380,42 +390,61 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
             t_pattern = self.patterns[t_type]
             # Copy data type dictionary in output
             out[t_type] = deepcopy(t_pattern)
-            # Iterate to check for nested "types" like mask
-            for k, v in t_pattern.items():
-                # Resolve pattern for base data type
-                if k == "pattern":
-                    logger.info(f"Resolving path from pattern for {t_type}")
-                    # Resolve pattern
-                    base_data_type_pattern_path = self._get_path_from_patterns(
-                        element=element,
-                        pattern=v,
-                        data_type=t_type,
-                    )
-                    # Remove pattern key
-                    out[t_type].pop("pattern")
-                    # Add path key
-                    out[t_type].update({"path": base_data_type_pattern_path})
-                # Resolve pattern for nested data type
-                if isinstance(v, dict) and "pattern" in v:
-                    # Set nested type key for easier access
-                    t_nested_type = f"{t_type}.{k}"
+            # Conditional for list dtype vals like Warp
+            if isinstance(t_pattern, list):
+                for idx, entry in enumerate(t_pattern):
                     logger.info(
-                        f"Resolving path from pattern for {t_nested_type}"
+                        f"Resolving path from pattern for {t_type}.{idx}"
                     )
                     # Resolve pattern
-                    nested_data_type_pattern_path = (
-                        self._get_path_from_patterns(
-                            element=element,
-                            pattern=v["pattern"],
-                            data_type=t_nested_type,
-                        )
+                    dtype_pattern_path = self._get_path_from_patterns(
+                        element=element,
+                        pattern=entry["pattern"],
+                        data_type=f"{t_type}.{idx}",
                     )
                     # Remove pattern key
-                    out[t_type][k].pop("pattern")
+                    out[t_type][idx].pop("pattern")
                     # Add path key
-                    out[t_type][k].update(
-                        {"path": nested_data_type_pattern_path}
-                    )
+                    out[t_type][idx].update({"path": dtype_pattern_path})
+            else:
+                # Iterate to check for nested "types" like mask
+                for k, v in t_pattern.items():
+                    # Resolve pattern for base data type
+                    if k == "pattern":
+                        logger.info(
+                            f"Resolving path from pattern for {t_type}"
+                        )
+                        # Resolve pattern
+                        base_dtype_pattern_path = self._get_path_from_patterns(
+                            element=element,
+                            pattern=v,
+                            data_type=t_type,
+                        )
+                        # Remove pattern key
+                        out[t_type].pop("pattern")
+                        # Add path key
+                        out[t_type].update({"path": base_dtype_pattern_path})
+                    # Resolve pattern for nested data type
+                    if isinstance(v, dict) and "pattern" in v:
+                        # Set nested type key for easier access
+                        t_nested_type = f"{t_type}.{k}"
+                        logger.info(
+                            f"Resolving path from pattern for {t_nested_type}"
+                        )
+                        # Resolve pattern
+                        nested_dtype_pattern_path = (
+                            self._get_path_from_patterns(
+                                element=element,
+                                pattern=v["pattern"],
+                                data_type=t_nested_type,
+                            )
+                        )
+                        # Remove pattern key
+                        out[t_type][k].pop("pattern")
+                        # Add path key
+                        out[t_type][k].update(
+                            {"path": nested_dtype_pattern_path}
+                        )
 
         return out
 

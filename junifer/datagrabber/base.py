@@ -96,7 +96,12 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         # Update metadata
         for _, t_val in out.items():
             self.update_meta(t_val, "datagrabber")
-            t_val["meta"]["element"] = named_element
+            # Conditional for list dtype vals like Warp
+            if isinstance(t_val, list):
+                for entry in t_val:
+                    entry["meta"]["element"] = named_element
+            else:
+                t_val["meta"]["element"] = named_element
 
         return out
 
