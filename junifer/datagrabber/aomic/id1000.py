@@ -169,15 +169,26 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
                             "space": "native",
                         },
                     },
-                    "Warp": {
-                        "pattern": (
-                            "derivatives/fmriprep/{subject}/anat/"
-                            "{subject}_from-MNI152NLin2009cAsym_to-T1w_"
-                            "mode-image_xfm.h5"
-                        ),
-                        "src": "MNI152NLin2009cAsym",
-                        "dst": "native",
-                    },
+                    "Warp": [
+                        {
+                            "pattern": (
+                                "derivatives/fmriprep/{subject}/anat/"
+                                "{subject}_from-MNI152NLin2009cAsym_to-T1w_"
+                                "mode-image_xfm.h5"
+                            ),
+                            "src": "MNI152NLin2009cAsym",
+                            "dst": "native",
+                        },
+                        {
+                            "pattern": (
+                                "derivatives/fmriprep/{subject}/anat/"
+                                "{subject}_from-T1w_to-MNI152NLin2009cAsym_"
+                                "mode-image_xfm.h5"
+                            ),
+                            "src": "native",
+                            "dst": "MNI152NLin2009cAsym",
+                        },
+                    ],
                 }
             )
         # Set default types
