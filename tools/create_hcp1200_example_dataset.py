@@ -44,11 +44,15 @@ if __name__ == "__main__":
             sub_warp_datadir = subdir / "MNINonLinear" / "xfms"
             # Create subject data directory
             sub_warp_datadir.mkdir(parents=True)
-            # Set subject data file
-            sub_warp_datafile = sub_warp_datadir / "standard2acpc_dc.nii.gz"
-            # Write subject data file
-            with open(sub_warp_datafile, "w") as f:
-                f.write("placeholder")
+            # Set subject data files
+            sub_warp_datafiles = [
+                sub_warp_datadir / "standard2acpc_dc.nii.gz",
+                sub_warp_datadir / "acpc_dc2standard.nii.gz",
+            ]
+            # Write subject data files
+            for datafile in sub_warp_datafiles:
+                with open(datafile, "w") as f:
+                    f.write("placeholder")
 
             # BOLD data
             for task, phase_encoding in product(
