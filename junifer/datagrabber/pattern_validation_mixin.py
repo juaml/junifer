@@ -132,7 +132,7 @@ class PatternValidationMixin:
 
         if any(not isinstance(x, str) for x in replacements):
             raise_error(
-                msg="`replacements` must be a list of strings.",
+                msg="`replacements` must be a list of strings",
                 klass=TypeError,
             )
 
@@ -152,11 +152,11 @@ class PatternValidationMixin:
                     warn_with_log(
                         f"Replacement: `{x}` is not part of any pattern, "
                         "things might not work as expected if you are unsure "
-                        "of what you are doing"
+                        "of what you are doing."
                     )
                 else:
                     raise_error(
-                        msg=f"Replacement: {x} is not part of any pattern."
+                        msg=f"Replacement: `{x}` is not part of any pattern"
                     )
 
         # Check that at least one pattern has all the replacements
@@ -176,7 +176,7 @@ class PatternValidationMixin:
                     at_least_one = True
         if not at_least_one and not partial_pattern_ok:
             raise_error(
-                msg="At least one pattern must contain all replacements."
+                msg="At least one pattern must contain all replacements"
             )
 
     def _validate_mandatory_keys(
@@ -219,7 +219,7 @@ class PatternValidationMixin:
                     warn_with_log(
                         f"Mandatory key: `{key}` not found for {data_type}, "
                         "things might not work as expected if you are unsure "
-                        "of what you are doing"
+                        "of what you are doing."
                     )
                 else:
                     raise_error(
@@ -227,7 +227,7 @@ class PatternValidationMixin:
                         klass=KeyError,
                     )
             else:
-                logger.debug(f"Mandatory key: `{key}` found for {data_type}")
+                logger.debug(f"Mandatory key: `{key}` found for {data_type}.")
 
     def _identify_stray_keys(
         self, keys: List[str], schema: List[str], data_type: str
