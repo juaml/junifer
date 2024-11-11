@@ -20,8 +20,8 @@ import numpy as np
 import pandas as pd
 from nilearn import datasets, image
 
-from ...pipeline.singleton import singleton
 from ...utils import logger, raise_error, warn_with_log
+from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..utils import closest_resolution
 from ._ants_parcellation_warper import ANTsParcellationWarper
@@ -38,8 +38,7 @@ __all__ = [
 ]
 
 
-@singleton
-class ParcellationRegistry(BasePipelineDataRegistry):
+class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
     """Class for parcellation data registry.
 
     This class is a singleton and is used for managing available parcellation

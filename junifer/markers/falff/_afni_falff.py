@@ -18,8 +18,8 @@ from typing import (
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
-from ...pipeline.singleton import singleton
 from ...utils import logger, run_ext_cmd
+from ...utils.singleton import Singleton
 
 
 if TYPE_CHECKING:
@@ -29,8 +29,7 @@ if TYPE_CHECKING:
 __all__ = ["AFNIALFF"]
 
 
-@singleton
-class AFNIALFF:
+class AFNIALFF(metaclass=Singleton):
     """Class for computing ALFF using AFNI.
 
     This class uses AFNI's 3dRSFC to compute ALFF. It's designed as a singleton

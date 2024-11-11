@@ -1,15 +1,17 @@
 """Provide a singleton class to be used by pipeline components."""
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
+#          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict, Type
+from abc import ABCMeta
+from typing import Any, ClassVar, Dict, Type
 
 
-__all__ = ["singleton"]
+__all__ = ["Singleton", "ABCSingleton"]
 
 
-def singleton(cls: Type) -> Type:
+class Singleton(type):
     """Make a class singleton.
 
     Parameters
@@ -17,15 +19,11 @@ def singleton(cls: Type) -> Type:
     cls : class
         The class to designate as singleton.
 
-    Returns
-    -------
-    class
-        The only instance of the class.
-
     """
-    instances: Dict = {}
 
-    def get_instance(*args: Any, **kwargs: Any) -> Type:
+    instances: ClassVar[Dict] = {}
+
+    def __call__(cls, *args: Any, **kwargs: Any) -> Type:
         """Get the only instance for a class.
 
         Parameters
@@ -41,8 +39,15 @@ def singleton(cls: Type) -> Type:
             The only instance of the class.
 
         """
-        if cls not in instances:
-            instances[cls] = cls(*args, **kwargs)
-        return instances[cls]
+        if cls not in cls.instances:
+            cls.instances[cls] = super(Singleton, cls).__call__(  # noqa: UP008
+                *args, **kwargs
+            )
 
-    return get_instance
+        return cls.instances[cls]
+
+
+class ABCSingleton(ABCMeta, Singleton):
+    """Make an abstract class a singleton."""
+
+    pass

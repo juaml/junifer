@@ -7,12 +7,13 @@ from abc import ABC, abstractmethod
 from typing import Any, List, Mapping
 
 from ..utils import raise_error
+from ..utils.singleton import ABCSingleton
 
 
 __all__ = ["BasePipelineDataRegistry"]
 
 
-class BasePipelineDataRegistry(ABC):
+class BasePipelineDataRegistry(ABC, metaclass=ABCSingleton):
     """Abstract base class for pipeline data registry.
 
     For every interface that is required, one needs to provide a concrete

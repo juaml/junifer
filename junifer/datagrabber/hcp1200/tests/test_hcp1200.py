@@ -3,6 +3,9 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import shutil
+import tempfile
+from pathlib import Path
 from typing import Iterable, Optional
 
 import pytest
@@ -17,7 +20,8 @@ URI = "https://gin.g-node.org/juaml/datalad-example-hcp1200"
 @pytest.fixture(scope="module")
 def hcpdg() -> Iterable[DataladHCP1200]:
     """Return a HCP1200 DataGrabber."""
-    dg = DataladHCP1200()
+    tmpdir = Path(tempfile.gettempdir())
+    dg = DataladHCP1200(datadir=tmpdir / "datadir")
     # Set URI to Gin
     dg.uri = URI
     # Set correct root directory
@@ -26,6 +30,7 @@ def hcpdg() -> Iterable[DataladHCP1200]:
         for t_elem in dg.get_elements():
             dg[t_elem]
         yield dg
+    shutil.rmtree(tmpdir / "datadir", ignore_errors=True)
 
 
 @pytest.mark.parametrize(

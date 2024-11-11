@@ -25,8 +25,8 @@ from nilearn.masking import (
     intersect_masks,
 )
 
-from ...pipeline.singleton import singleton
 from ...utils import logger, raise_error
+from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..template_spaces import get_template
 from ..utils import closest_resolution
@@ -126,8 +126,7 @@ def compute_brain_mask(
     return new_img_like(target_img, mask)  # type: ignore
 
 
-@singleton
-class MaskRegistry(BasePipelineDataRegistry):
+class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
     """Class for mask data registry.
 
     This class is a singleton and is used for managing available mask

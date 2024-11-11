@@ -10,14 +10,13 @@ from pathlib import Path
 from typing import Optional, Union
 
 from ..utils import logger
-from .singleton import singleton
+from ..utils.singleton import Singleton
 
 
 __all__ = ["WorkDirManager"]
 
 
-@singleton
-class WorkDirManager:
+class WorkDirManager(metaclass=Singleton):
     """Class for working directory manager.
 
     This class is a singleton and is used for managing temporary and working

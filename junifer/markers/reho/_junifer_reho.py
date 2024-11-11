@@ -20,8 +20,8 @@ from nilearn import image as nimg
 from nilearn import masking as nmask
 
 from ...pipeline import WorkDirManager
-from ...pipeline.singleton import singleton
 from ...utils import logger, raise_error
+from ...utils.singleton import Singleton
 
 
 if TYPE_CHECKING:
@@ -31,8 +31,7 @@ if TYPE_CHECKING:
 __all__ = ["JuniferReHo"]
 
 
-@singleton
-class JuniferReHo:
+class JuniferReHo(metaclass=Singleton):
     """Class for computing ReHo using junifer.
 
     It's designed as a singleton with caching for efficient computation.

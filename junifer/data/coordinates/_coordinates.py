@@ -11,8 +11,8 @@ import numpy as np
 import pandas as pd
 from numpy.typing import ArrayLike
 
-from ...pipeline.singleton import singleton
 from ...utils import logger, raise_error
+from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ._ants_coordinates_warper import ANTsCoordinatesWarper
 from ._fsl_coordinates_warper import FSLCoordinatesWarper
@@ -21,8 +21,7 @@ from ._fsl_coordinates_warper import FSLCoordinatesWarper
 __all__ = ["CoordinatesRegistry"]
 
 
-@singleton
-class CoordinatesRegistry(BasePipelineDataRegistry):
+class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
     """Class for coordinates data registry.
 
     This class is a singleton and is used for managing available coordinates

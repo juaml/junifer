@@ -9,7 +9,7 @@ import importlib
 from typing import TYPE_CHECKING, Dict, List, Mapping, Optional, Union
 
 from ..utils import logger, raise_error
-from .singleton import singleton
+from ..utils.singleton import Singleton
 
 
 if TYPE_CHECKING:
@@ -21,8 +21,7 @@ if TYPE_CHECKING:
 __all__ = ["PipelineComponentRegistry"]
 
 
-@singleton
-class PipelineComponentRegistry:
+class PipelineComponentRegistry(metaclass=Singleton):
     """Class for pipeline component registry.
 
     This class is a singleton and is used for managing pipeline components.
