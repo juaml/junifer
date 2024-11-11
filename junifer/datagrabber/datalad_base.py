@@ -7,7 +7,6 @@
 
 import atexit
 import os
-import shutil
 import tempfile
 from pathlib import Path
 from typing import Dict, Optional, Tuple, Union
@@ -17,6 +16,7 @@ import datalad.api as dl
 from datalad.support.exceptions import IncompleteResultsError
 from datalad.support.gitrepo import GitRepo
 
+from ..pipeline import WorkDirManager
 from ..utils import logger, raise_error, warn_with_log
 from .base import BaseDataGrabber
 
@@ -78,7 +78,8 @@ class DataladDataGrabber(BaseDataGrabber):
         if datadir is None:
             logger.info("`datadir` is None, creating a temporary directory")
             # Create temporary directory
-            tmpdir = Path(tempfile.mkdtemp())
+            tmpdir = WorkDirManager().get_tempdir(prefix="datalad")
+            self._tmpdir = tmpdir
             datadir = tmpdir / "datadir"
             datadir.mkdir(parents=True, exist_ok=False)
             logger.info(f"`datadir` set to {datadir}")
@@ -104,7 +105,6 @@ class DataladDataGrabber(BaseDataGrabber):
                 "Datalad locks set to "
                 f"{datalad.cfg.get('datalad.locations.locks')}"
             )
-            self._tmpdir = tmpdir
             atexit.register(self._rmtmpdir)
         # TODO: uri can be converted to a positional argument
         if uri is None:
@@ -129,7 +129,7 @@ class DataladDataGrabber(BaseDataGrabber):
         """Remove temporary directory if it exists."""
         if self._tmpdir.exists():
             logger.debug("Removing temporary directory")
-            shutil.rmtree(self._tmpdir)
+            WorkDirManager().delete_tempdir(self._tmpdir)
 
     @property
     def datadir(self) -> Path:
