@@ -317,8 +317,8 @@
         <article role="main" id="furo-main-content">
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
-<section id="junifer-release-2024-11-08">
-<h2><span class="section-number">14.1. </span>Junifer 0.0.6.dev213 (2024-11-08)<a class="headerlink" href="#junifer-release-2024-11-08" title="Link to this heading">¶</a></h2>
+<section id="junifer-release-2024-11-11">
+<h2><span class="section-number">14.1. </span>Junifer 0.0.6.dev231 (2024-11-11)<a class="headerlink" href="#junifer-release-2024-11-11" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -331,6 +331,8 @@ in <a class="reference internal" href="api/markers.html#junifer.markers.BrainPri
 <code class="docutils literal notranslate"><span class="pre">junifer.pipeline.registry</span></code> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/369">#369</a>)</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">'emomatching'</span></code> task to <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> by <a class="reference external" href="https://github.com/LeSasse">Leonard Sasse</a>
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/370">#370</a>)</p></li>
+<li><p>Use the <a class="reference internal" href="api/pipeline.html#junifer.pipeline.WorkDirManager" title="junifer.pipeline.WorkDirManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.pipeline.WorkDirManager</span></code></a> for temporary directories in
+the <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/386">#386</a>)</p></li>
 </ul>
 </section>
 <section id="api-changes">
@@ -364,6 +366,9 @@ by <a class="reference external" href="https://fraimondo.github.io">Fede Raimond
 other files by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/367">#367</a>)</p></li>
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">datalad</span></code>-enabled repository for template space transform files in
 <a class="reference internal" href="api/data.html#junifer.data.get_xfm" title="junifer.data.get_xfm"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_xfm()</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/368">#368</a>)</p></li>
+<li><p>Add a <code class="docutils literal notranslate"><span class="pre">cleanup</span></code> parameter to the <a class="reference internal" href="api/pipeline.html#junifer.pipeline.WorkDirManager" title="junifer.pipeline.WorkDirManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.pipeline.WorkDirManager</span></code></a>,
+which allows to disable cleaning up temporary directories by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/389">#389</a>)</p></li>
 </ul>
 </section>
 <section id="features">
@@ -400,6 +405,8 @@ the image by <a class="reference external" href="https://github.com/synchon">Syn
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/383">#383</a>)</p></li>
 <li><p>Improve docs publishing action and add a manual trigger for it by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/384">#384</a>)</p></li>
+<li><p>Refactor <code class="docutils literal notranslate"><span class="pre">Singleton</span></code> class to use a metaclass instead of a class decorator
+by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/391">#391</a>)</p></li>
 </ul>
 </section>
 </section>
@@ -1135,7 +1142,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-release-2024-11-08">14.1. Junifer 0.0.6.dev213 (2024-11-08)</a><ul>
+<li><a class="reference internal" href="#junifer-release-2024-11-11">14.1. Junifer 0.0.6.dev231 (2024-11-11)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
@@ -1201,7 +1208,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=85e69172"></script>
+</div><script src="_static/documentation_options.js?v=dff93f89"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
