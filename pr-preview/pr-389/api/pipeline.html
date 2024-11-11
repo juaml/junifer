@@ -385,26 +385,170 @@ check that the storage can handle the markers’ output.</p>
 
 </dd></dl>
 
-<dl class="py function">
+<dl class="py class">
 <dt class="sig sig-object py" id="junifer.pipeline.PipelineComponentRegistry">
-<span class="sig-prename descclassname"><span class="pre">junifer.pipeline.</span></span><span class="sig-name descname"><span class="pre">PipelineComponentRegistry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.PipelineComponentRegistry" title="Link to this definition">¶</a></dt>
-<dd><p>Get the only instance for a class.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.pipeline.</span></span><span class="sig-name descname"><span class="pre">PipelineComponentRegistry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.PipelineComponentRegistry" title="Link to this definition">¶</a></dt>
+<dd><p>Class for pipeline component registry.</p>
+<p>This class is a singleton and is used for managing pipeline components.
+It serves as a centralized registry for built-in and third-party pipeline
+components like datagrabbers, datareaders, preprocessors, markers and
+storage.</p>
+<dl class="field-list">
+<dt class="field-odd">Attributes<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.steps" title="junifer.pipeline.PipelineComponentRegistry.steps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">steps</span></code></a><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Get valid pipeline steps.</p>
+</dd>
+<dt><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.components" title="junifer.pipeline.PipelineComponentRegistry.components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">components</span></code></a><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>Get registered components for valid pipeline steps.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.PipelineComponentRegistry.build_component_instance">
+<span class="sig-name descname"><span class="pre">build_component_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">baseclass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.PipelineComponentRegistry.build_component_instance" title="Link to this definition">¶</a></dt>
+<dd><p>Build an instance of class registered as <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>*args</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a></span></dt><dd><p>The positional arguments to pass to the class.</p>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the pipeline step.</p>
 </dd>
-<dt><strong>**kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The keyword arguments to pass to the class.</p>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the component.</p>
+</dd>
+<dt><strong>baseclass</strong><span class="classifier">class</span></dt><dd><p>Base class to be checked against.</p>
+</dd>
+<dt><strong>init_params</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Parameters to pass to the class constructor (default None).</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>class</dt><dd><p>The only instance of the class.</p>
+<dt>object</dt><dd><p>An instance of the class registered as <code class="docutils literal notranslate"><span class="pre">name</span></code> under <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RuntimeError</span></code></a></dt><dd><p>If there is a problem creating the instance.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the created object with the given name is not a subclass of the
+base class <code class="docutils literal notranslate"><span class="pre">baseclass</span></code>.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="junifer.pipeline.PipelineComponentRegistry.components">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">components</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.13)"><span class="pre">Mapping</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Mapping" title="(in Python v3.13)"><span class="pre">Mapping</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.13)"><span class="pre">type</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#junifer.pipeline.PipelineComponentRegistry.components" title="Link to this definition">¶</a></dt>
+<dd><p>Get registered components for valid pipeline steps.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.PipelineComponentRegistry.deregister">
+<span class="sig-name descname"><span class="pre">deregister</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.PipelineComponentRegistry.deregister" title="Link to this definition">¶</a></dt>
+<dd><p>De-register <code class="docutils literal notranslate"><span class="pre">klass</span></code> under <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the pipeline step. For valid steps, check <a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.steps" title="junifer.pipeline.PipelineComponentRegistry.steps"><code class="xref py py-meth docutils literal notranslate"><span class="pre">steps()</span></code></a>.</p>
+</dd>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>Class to be de-registered.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is invalid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.PipelineComponentRegistry.get_class">
+<span class="sig-name descname"><span class="pre">get_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.PipelineComponentRegistry.get_class" title="Link to this definition">¶</a></dt>
+<dd><p>Get the class registered under <code class="docutils literal notranslate"><span class="pre">name</span></code> for <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the pipeline step.</p>
+</dd>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the component.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>class</dt><dd><p>Registered class.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> or <code class="docutils literal notranslate"><span class="pre">name</span></code> is invalid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.PipelineComponentRegistry.register">
+<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.PipelineComponentRegistry.register" title="Link to this definition">¶</a></dt>
+<dd><p>Register <code class="docutils literal notranslate"><span class="pre">klass</span></code> under <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the pipeline step. For valid steps, check <a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.steps" title="junifer.pipeline.PipelineComponentRegistry.steps"><code class="xref py py-meth docutils literal notranslate"><span class="pre">steps()</span></code></a>.</p>
+</dd>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>Class to be registered.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is invalid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.PipelineComponentRegistry.step_components">
+<span class="sig-name descname"><span class="pre">step_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.PipelineComponentRegistry.step_components" title="Link to this definition">¶</a></dt>
+<dd><p>Get registered components for <code class="docutils literal notranslate"><span class="pre">step</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>step</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>Name of the pipeline step.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>List of registered component classes.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the <code class="docutils literal notranslate"><span class="pre">step</span></code> is invalid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="junifer.pipeline.PipelineComponentRegistry.steps">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#junifer.pipeline.PipelineComponentRegistry.steps" title="Link to this definition">¶</a></dt>
+<dd><p>Get valid pipeline steps.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -526,26 +670,147 @@ pipeline step.</p>
 
 </dd></dl>
 
-<dl class="py function">
+<dl class="py class">
 <dt class="sig sig-object py" id="junifer.pipeline.WorkDirManager">
-<span class="sig-prename descclassname"><span class="pre">junifer.pipeline.</span></span><span class="sig-name descname"><span class="pre">WorkDirManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.WorkDirManager" title="Link to this definition">¶</a></dt>
-<dd><p>Get the only instance for a class.</p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.pipeline.</span></span><span class="sig-name descname"><span class="pre">WorkDirManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.WorkDirManager" title="Link to this definition">¶</a></dt>
+<dd><p>Class for working directory manager.</p>
+<p>This class is a singleton and is used for managing temporary and working
+directories used across the pipeline by datagrabbers, preprocessors,
+markers and so on. It maintains a single super-directory and provides
+directories on-demand and cleans after itself thus keeping the user
+filesystem clean.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>*args</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a></span></dt><dd><p>The positional arguments to pass to the class.</p>
+<dt><strong>workdir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>The path to the super-directory. If None, “TMPDIR/junifer” is used
+where TMPDIR is the platform-dependent temporary directory.</p>
 </dd>
-<dt><strong>**kwargs</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The keyword arguments to pass to the class.</p>
+</dl>
+</dd>
+<dt class="field-even">Attributes<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt><a class="reference internal" href="#junifer.pipeline.WorkDirManager.workdir" title="junifer.pipeline.WorkDirManager.workdir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">workdir</span></code></a><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>Get working directory.</p>
+</dd>
+<dt><a class="reference internal" href="#junifer.pipeline.WorkDirManager.elementdir" title="junifer.pipeline.WorkDirManager.elementdir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elementdir</span></code></a><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>Get element directory.</p>
+</dd>
+<dt><a class="reference internal" href="#junifer.pipeline.WorkDirManager.root_tempdir" title="junifer.pipeline.WorkDirManager.root_tempdir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">root_tempdir</span></code></a><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></span></dt><dd><p>Get root temporary directory.</p>
+</dd>
+<dt><strong>cleanup</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.13)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If False, the directories are not cleaned up after the object is
+destroyed. This is useful for debugging purposes (default True).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Initialize the class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.WorkDirManager.cleanup_elementdir">
+<span class="sig-name descname"><span class="pre">cleanup_elementdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.WorkDirManager.cleanup_elementdir" title="Link to this definition">¶</a></dt>
+<dd><p>Clean up element directory.</p>
+<p>It should preferably be used after fitting a marker or something
+similar in the element-specific scope. If called between components,
+can lead to required intermediate files not being found.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.WorkDirManager.delete_element_tempdir">
+<span class="sig-name descname"><span class="pre">delete_element_tempdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tempdir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.WorkDirManager.delete_element_tempdir" title="Link to this definition">¶</a></dt>
+<dd><p>Delete an element-scoped temporary directory.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>tempdir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The temporary directory path to be deleted.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.WorkDirManager.delete_tempdir">
+<span class="sig-name descname"><span class="pre">delete_tempdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tempdir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.WorkDirManager.delete_tempdir" title="Link to this definition">¶</a></dt>
+<dd><p>Delete a component-scoped temporary directory.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>tempdir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The temporary directory path to be deleted.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="junifer.pipeline.WorkDirManager.elementdir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elementdir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></em><a class="headerlink" href="#junifer.pipeline.WorkDirManager.elementdir" title="Link to this definition">¶</a></dt>
+<dd><p>Get element directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.WorkDirManager.get_element_tempdir">
+<span class="sig-name descname"><span class="pre">get_element_tempdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.WorkDirManager.get_element_tempdir" title="Link to this definition">¶</a></dt>
+<dd><p>Get an element-scoped temporary directory.</p>
+<p>This directory should be available only for the lifetime of an
+element.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>prefix</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The temporary directory prefix. If None, a default prefix is used
+(default None).</p>
+</dd>
+<dt><strong>suffix</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The temporary directory suffix. If None, no suffix is added
+(default None).</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>class</dt><dd><p>The only instance of the class.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></dt><dd><p>The path to the temporary directory.</p>
 </dd>
 </dl>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.pipeline.WorkDirManager.get_tempdir">
+<span class="sig-name descname"><span class="pre">get_tempdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.pipeline.WorkDirManager.get_tempdir" title="Link to this definition">¶</a></dt>
+<dd><p>Get a component-scoped temporary directory.</p>
+<p>This directory should be available only for the lifetime of a component
+like a preprocessor or marker.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>prefix</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The temporary directory prefix. If None, a default prefix is used
+(default None).</p>
+</dd>
+<dt><strong>suffix</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The temporary directory suffix. If None, no suffix is added
+(default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></dt><dd><p>The path to the temporary directory.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="junifer.pipeline.WorkDirManager.root_tempdir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">root_tempdir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></em><a class="headerlink" href="#junifer.pipeline.WorkDirManager.root_tempdir" title="Link to this definition">¶</a></dt>
+<dd><p>Get root temporary directory.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="junifer.pipeline.WorkDirManager.workdir">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">workdir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></em><a class="headerlink" href="#junifer.pipeline.WorkDirManager.workdir" title="Link to this definition">¶</a></dt>
+<dd><p>Get working directory.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -611,7 +876,16 @@ pipeline step.</p>
 <li><a class="reference internal" href="#junifer.pipeline.MarkerCollection.validate"><code class="docutils literal notranslate"><span class="pre">MarkerCollection.validate()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry"><code class="docutils literal notranslate"><span class="pre">PipelineComponentRegistry()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry"><code class="docutils literal notranslate"><span class="pre">PipelineComponentRegistry</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.build_component_instance"><code class="docutils literal notranslate"><span class="pre">PipelineComponentRegistry.build_component_instance()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.components"><code class="docutils literal notranslate"><span class="pre">PipelineComponentRegistry.components</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.deregister"><code class="docutils literal notranslate"><span class="pre">PipelineComponentRegistry.deregister()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.get_class"><code class="docutils literal notranslate"><span class="pre">PipelineComponentRegistry.get_class()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.register"><code class="docutils literal notranslate"><span class="pre">PipelineComponentRegistry.register()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.step_components"><code class="docutils literal notranslate"><span class="pre">PipelineComponentRegistry.step_components()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.PipelineComponentRegistry.steps"><code class="docutils literal notranslate"><span class="pre">PipelineComponentRegistry.steps</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#junifer.pipeline.PipelineStepMixin"><code class="docutils literal notranslate"><span class="pre">PipelineStepMixin</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.pipeline.PipelineStepMixin.fit_transform"><code class="docutils literal notranslate"><span class="pre">PipelineStepMixin.fit_transform()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.pipeline.PipelineStepMixin.get_output_type"><code class="docutils literal notranslate"><span class="pre">PipelineStepMixin.get_output_type()</span></code></a></li>
@@ -623,7 +897,17 @@ pipeline step.</p>
 <li><a class="reference internal" href="#junifer.pipeline.UpdateMetaMixin.update_meta"><code class="docutils literal notranslate"><span class="pre">UpdateMetaMixin.update_meta()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager"><code class="docutils literal notranslate"><span class="pre">WorkDirManager()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager"><code class="docutils literal notranslate"><span class="pre">WorkDirManager</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager.cleanup_elementdir"><code class="docutils literal notranslate"><span class="pre">WorkDirManager.cleanup_elementdir()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager.delete_element_tempdir"><code class="docutils literal notranslate"><span class="pre">WorkDirManager.delete_element_tempdir()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager.delete_tempdir"><code class="docutils literal notranslate"><span class="pre">WorkDirManager.delete_tempdir()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager.elementdir"><code class="docutils literal notranslate"><span class="pre">WorkDirManager.elementdir</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager.get_element_tempdir"><code class="docutils literal notranslate"><span class="pre">WorkDirManager.get_element_tempdir()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager.get_tempdir"><code class="docutils literal notranslate"><span class="pre">WorkDirManager.get_tempdir()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager.root_tempdir"><code class="docutils literal notranslate"><span class="pre">WorkDirManager.root_tempdir</span></code></a></li>
+<li><a class="reference internal" href="#junifer.pipeline.WorkDirManager.workdir"><code class="docutils literal notranslate"><span class="pre">WorkDirManager.workdir</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -635,7 +919,7 @@ pipeline step.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=16669f01"></script>
+</div><script src="../_static/documentation_options.js?v=35f5ac0e"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
