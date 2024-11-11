@@ -39,15 +39,20 @@ class WorkDirManager(metaclass=Singleton):
         The path to the element directory.
     root_tempdir : pathlib.Path or None
         The path to the root temporary directory.
+    cleanup : bool, optional
+        If False, the directories are not cleaned up after the object is
+        destroyed. This is useful for debugging purposes (default True).
 
     """
 
-    def __init__(self, workdir: Optional[Union[str, Path]] = None) -> None:
+    def __init__(
+        self, workdir: Optional[Union[str, Path]] = None, cleanup=True
+    ) -> None:
         """Initialize the class."""
         self._workdir = Path(workdir) if isinstance(workdir, str) else workdir
         self._elementdir = None
         self._root_tempdir = None
-
+        self._cleanup_dirs = cleanup
         self._set_default_workdir()
 
     def _set_default_workdir(self) -> None:
@@ -72,6 +77,9 @@ class WorkDirManager(metaclass=Singleton):
 
     def _cleanup(self) -> None:
         """Clean up the element and temporary directories."""
+        if self._cleanup_dirs is False:
+            self._root_tempdir = None
+            return
         # Remove element directory
         self.cleanup_elementdir()
         # Remove root temporary directory
@@ -171,6 +179,8 @@ class WorkDirManager(metaclass=Singleton):
             The temporary directory path to be deleted.
 
         """
+        if self._cleanup_dirs is False:
+            return
         logger.debug(f"Deleting element temporary directory at {tempdir}")
         shutil.rmtree(tempdir, ignore_errors=True)
 
@@ -182,6 +192,9 @@ class WorkDirManager(metaclass=Singleton):
         can lead to required intermediate files not being found.
 
         """
+        if self._cleanup_dirs is False:
+            self._elementdir = None
+            return
         if self._elementdir is not None:
             logger.debug(
                 "Deleting element directory at "
@@ -244,5 +257,7 @@ class WorkDirManager(metaclass=Singleton):
             The temporary directory path to be deleted.
 
         """
+        if self._cleanup_dirs is False:
+            return
         logger.debug(f"Deleting temporary directory at {tempdir}")
         shutil.rmtree(tempdir, ignore_errors=True)
