@@ -157,9 +157,8 @@ The ``Warp`` data type provides the warp or transformation file (can be linear,
 non-linear or linear + non-linear transform) for the purpose. For ``using``
 parameter, you can pass either ``fsl`` or ``ants`` depending on the warp or
 transformation file format. You can also provide ``auto`` to ``using`` in which
-case either ``FSL`` or ``ANTs`` will be used based on the preferred warping tool
-or the one available as provided by the DataGrabber. This also requires that
-both the tools are in the ``PATH``.
+case either ``FSL`` or ``ANTs`` will be used based on the file format provided
+by the DataGrabber. This also requires that both the tools are in the ``PATH``.
 
 And finally, you would need to set the ``on`` parameter to ``BOLD`` to make it
 clear which data type you intend to warp, as the :class:`.SpaceWarper` is also
