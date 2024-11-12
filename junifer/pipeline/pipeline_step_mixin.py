@@ -197,17 +197,13 @@ class PipelineStepMixin:
                         if dependency["using"] == obj.using:
                             depends_on = dependency["depends_on"]
                             # Conditional to make `using="auto"` work
-                            if isinstance(depends_on, list):
-                                for entry in depends_on:
-                                    # Check dependencies
-                                    _check_dependencies(entry)
-                                    # Check external dependencies
-                                    _check_ext_dependencies(entry)
-                            else:
+                            if not isinstance(depends_on, list):
+                                depends_on = [depends_on]
+                            for entry in depends_on:
                                 # Check dependencies
-                                _check_dependencies(depends_on)
+                                _check_dependencies(entry)
                                 # Check external dependencies
-                                _check_ext_dependencies(depends_on)
+                                _check_ext_dependencies(entry)
 
         # Check dependencies
         _check_dependencies(self)
