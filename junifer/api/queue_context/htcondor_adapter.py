@@ -6,7 +6,7 @@
 import shutil
 import textwrap
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 from ...utils import logger, make_executable, raise_error, run_ext_cmd
 from .queue_context_adapter import QueueContextAdapter
@@ -78,10 +78,10 @@ class HTCondorAdapter(QueueContextAdapter):
         job_name: str,
         job_dir: Path,
         yaml_config_path: Path,
-        elements: List[Union[str, Tuple]],
+        elements: list[Union[str, tuple]],
         pre_run: Optional[str] = None,
         pre_collect: Optional[str] = None,
-        env: Optional[Dict[str, str]] = None,
+        env: Optional[dict[str, str]] = None,
         verbose: str = "info",
         cpus: int = 1,
         mem: str = "8G",
@@ -115,7 +115,7 @@ class HTCondorAdapter(QueueContextAdapter):
         )
         self._dag_path = self._job_dir / f"{self._job_name}.dag"
 
-    def _check_env(self, env: Optional[Dict[str, str]]) -> None:
+    def _check_env(self, env: Optional[dict[str, str]]) -> None:
         """Check value of env parameter on init.
 
         Parameters

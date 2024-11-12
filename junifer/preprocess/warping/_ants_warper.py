@@ -6,7 +6,6 @@
 from typing import (
     Any,
     ClassVar,
-    Dict,
 )
 
 import nibabel as nib
@@ -40,10 +39,10 @@ class ANTsWarper:
 
     def preprocess(
         self,
-        input: Dict[str, Any],
-        extra_input: Dict[str, Any],
+        input: dict[str, Any],
+        extra_input: dict[str, Any],
         reference: str,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Preprocess using ANTs.
 
         Parameters

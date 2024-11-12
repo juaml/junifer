@@ -4,7 +4,8 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
-from typing import Any, List, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 from ..utils import raise_error
 from ..utils.singleton import ABCSingleton
@@ -38,7 +39,7 @@ class BasePipelineDataRegistry(ABC, metaclass=ABCSingleton):
         return self._registry
 
     @property
-    def list(self) -> List[str]:
+    def list(self) -> list[str]:
         """List available pipeline data keys."""
         return sorted(self._registry.keys())
 

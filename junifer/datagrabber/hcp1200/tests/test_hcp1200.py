@@ -5,8 +5,9 @@
 
 import shutil
 import tempfile
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable, Optional
+from typing import Optional
 
 import pytest
 

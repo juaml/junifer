@@ -6,7 +6,6 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import List
 
 import nibabel as nib
 import numpy as np
@@ -171,7 +170,7 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
 def test_register(
     name: str,
     parcellation_path: str,
-    parcels_labels: List[str],
+    parcels_labels: list[str],
     space: str,
     overwrite: bool,
 ) -> None:

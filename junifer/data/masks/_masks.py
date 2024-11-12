@@ -9,10 +9,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
     Optional,
-    Tuple,
     Union,
 )
 
@@ -46,8 +43,8 @@ _masks_path = Path(__file__).parent
 
 
 def compute_brain_mask(
-    target_data: Dict[str, Any],
-    extra_input: Optional[Dict[str, Any]] = None,
+    target_data: dict[str, Any],
+    extra_input: Optional[dict[str, Any]] = None,
     mask_type: str = "brain",
     threshold: float = 0.5,
 ) -> "Nifti1Image":
@@ -266,7 +263,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         name: str,
         resolution: Optional[float] = None,
         path_only: bool = False,
-    ) -> Tuple[Optional[Union["Nifti1Image", Callable]], Optional[Path], str]:
+    ) -> tuple[Optional[Union["Nifti1Image", Callable]], Optional[Path], str]:
         """Load mask.
 
         Parameters
@@ -332,9 +329,9 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
     def get(  # noqa: C901
         self,
-        masks: Union[str, Dict, List[Union[Dict, str]]],
-        target_data: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
+        masks: Union[str, dict, list[Union[dict, str]]],
+        target_data: dict[str, Any],
+        extra_input: Optional[dict[str, Any]] = None,
     ) -> "Nifti1Image":
         """Get mask, tailored for the target image.
 

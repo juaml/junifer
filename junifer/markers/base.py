@@ -6,7 +6,7 @@
 
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..typing import StorageLike
@@ -42,7 +42,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     def __init__(
         self,
-        on: Optional[Union[List[str], str]] = None,
+        on: Optional[Union[list[str], str]] = None,
         name: Optional[str] = None,
     ) -> None:
         # Check for missing mapping attribute
@@ -65,7 +65,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             raise_error(f"{self.name} cannot be computed on {wrong_on}")
         self._on = on
 
-    def validate_input(self, input: List[str]) -> List[str]:
+    def validate_input(self, input: list[str]) -> list[str]:
         """Validate input.
 
         Parameters
@@ -94,7 +94,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             )
         return [x for x in self._on if x in input]
 
-    def get_valid_inputs(self) -> List[str]:
+    def get_valid_inputs(self) -> list[str]:
         """Get valid data types for input.
 
         Returns
@@ -124,7 +124,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         return self._MARKER_INOUT_MAPPINGS[input_type][output_feature]
 
     @abstractmethod
-    def compute(self, input: Dict, extra_input: Optional[Dict] = None) -> Dict:
+    def compute(self, input: dict, extra_input: Optional[dict] = None) -> dict:
         """Compute.
 
         Parameters
@@ -155,7 +155,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         self,
         type_: str,
         feature: str,
-        out: Dict[str, Any],
+        out: dict[str, Any],
         storage: StorageLike,
     ) -> None:
         """Store.
@@ -178,9 +178,9 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     def _fit_transform(
         self,
-        input: Dict[str, Dict],
+        input: dict[str, dict],
         storage: Optional[StorageLike] = None,
-    ) -> Dict:
+    ) -> dict:
         """Fit and transform.
 
         Parameters

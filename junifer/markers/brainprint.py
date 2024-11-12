@@ -8,8 +8,6 @@ from pathlib import Path
 from typing import (
     Any,
     ClassVar,
-    Dict,
-    List,
     Optional,
     Union,
 )
@@ -117,7 +115,7 @@ class BrainPrint(BaseMarker):
         self,
         aseg_path: Path,
         norm_path: Path,
-        indices: List,
+        indices: list,
     ) -> Path:
         """Generate a surface from the aseg and label files.
 
@@ -193,7 +191,7 @@ class BrainPrint(BaseMarker):
         self,
         aseg_path: Path,
         norm_path: Path,
-    ) -> Dict[str, Path]:
+    ) -> dict[str, Path]:
         """Create surfaces from FreeSurfer aseg labels.
 
         Parameters
@@ -268,7 +266,7 @@ class BrainPrint(BaseMarker):
         rh_white_path: Path,
         lh_pial_path: Path,
         rh_pial_path: Path,
-    ) -> Dict[str, Path]:
+    ) -> dict[str, Path]:
         """Create cortical surfaces from FreeSurfer labels.
 
         Parameters
@@ -309,7 +307,7 @@ class BrainPrint(BaseMarker):
 
     def _fix_nan(
         self,
-        input_data: List[Union[float, str, npt.ArrayLike]],
+        input_data: list[Union[float, str, npt.ArrayLike]],
     ) -> np.ndarray:
         """Convert BrainPrint output with string NaN to ``numpy.nan``.
 
@@ -330,9 +328,9 @@ class BrainPrint(BaseMarker):
 
     def compute(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict] = None,
-    ) -> Dict:
+        input: dict[str, Any],
+        extra_input: Optional[dict] = None,
+    ) -> dict:
         """Compute.
 
         Parameters

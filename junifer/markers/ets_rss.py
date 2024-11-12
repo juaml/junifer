@@ -6,7 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 import numpy as np
 
@@ -56,10 +56,10 @@ class RSSETSMarker(BaseMarker):
 
     def __init__(
         self,
-        parcellation: Union[str, List[str]],
+        parcellation: Union[str, list[str]],
         agg_method: str = "mean",
-        agg_method_params: Optional[Dict] = None,
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
+        agg_method_params: Optional[dict] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
@@ -70,9 +70,9 @@ class RSSETSMarker(BaseMarker):
 
     def compute(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict] = None,
-    ) -> Dict:
+        input: dict[str, Any],
+        extra_input: Optional[dict] = None,
+    ) -> dict:
         """Compute.
 
         Take a timeseries of brain areas, and calculate timeseries for each

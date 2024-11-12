@@ -6,7 +6,8 @@
 # License: AGPL
 
 import importlib
-from typing import Dict, List, Mapping, Optional, Union
+from collections.abc import Mapping
+from typing import Optional, Union
 
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 from ..utils import logger, raise_error
@@ -111,7 +112,7 @@ class PipelineComponentRegistry(metaclass=Singleton):
             raise_error(msg=f"Invalid step: {step}", klass=ValueError)
 
     @property
-    def steps(self) -> List[str]:
+    def steps(self) -> list[str]:
         """Get valid pipeline steps."""
         return self._steps
 
@@ -166,7 +167,7 @@ class PipelineComponentRegistry(metaclass=Singleton):
         logger.info(f"De-registering {name} in {step}")
         _ = self._components[step].pop(name)
 
-    def step_components(self, step: str) -> List[str]:
+    def step_components(self, step: str) -> list[str]:
         """Get registered components for ``step``.
 
         Parameters
@@ -235,7 +236,7 @@ class PipelineComponentRegistry(metaclass=Singleton):
         step: str,
         name: str,
         baseclass: type,
-        init_params: Optional[Dict] = None,
+        init_params: Optional[dict] = None,
     ) -> Union[DataGrabberLike, PreprocessorLike, MarkerLike, StorageLike]:
         """Build an instance of class registered as ``name``.
 

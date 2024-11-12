@@ -4,7 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, Iterable, List, Tuple, Union
+from collections.abc import Iterable
+from typing import Union
 
 import numpy as np
 import pytest
@@ -198,7 +199,7 @@ def test_process_meta_invalid_metadata_key() -> None:
         ),
     ],
 )
-def test_process_meta_element(meta: Dict, elements: List[str]) -> None:
+def test_process_meta_element(meta: dict, elements: list[str]) -> None:
     """Test metadata element after processing.
 
     Parameters
@@ -215,7 +216,7 @@ def test_process_meta_element(meta: Dict, elements: List[str]) -> None:
     assert "A" in processed_meta
     assert "B" in processed_meta
     assert "element" not in processed_meta
-    assert isinstance(processed_meta["dependencies"], Dict)
+    assert isinstance(processed_meta["dependencies"], dict)
     assert all(
         x in processed_meta["dependencies"] for x in meta["dependencies"]
     )
@@ -232,7 +233,7 @@ def test_process_meta_element(meta: Dict, elements: List[str]) -> None:
         ({"subject": 1, "session": 2}, "element_1_2_"),
     ],
 )
-def test_element_to_prefix(element: Dict, prefix: str) -> None:
+def test_element_to_prefix(element: dict, prefix: str) -> None:
     """Test converting element to prefix (for file naming).
 
     Parameters
@@ -320,7 +321,7 @@ def test_element_to_prefix_invalid_type() -> None:
     ],
 )
 def test_store_matrix_checks(
-    params: Dict[str, Union[str, bool, Tuple[int, int], int]], err_msg: str
+    params: dict[str, Union[str, bool, tuple[int, int], int]], err_msg: str
 ) -> None:
     """Test matrix storing parameter checks.
 
@@ -401,9 +402,9 @@ def test_store_matrix_checks(
     ],
 )
 def test_matrix_to_vector(
-    params: Dict[str, Union[np.ndarray, Iterable[str], str, bool]],
+    params: dict[str, Union[np.ndarray, Iterable[str], str, bool]],
     expected_data: np.ndarray,
-    expected_columns: List[str],
+    expected_columns: list[str],
 ) -> None:
     """Test matrix to vector.
 

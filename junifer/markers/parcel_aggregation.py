@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 import numpy as np
 from nilearn.image import math_img
@@ -96,13 +96,13 @@ class ParcelAggregation(BaseMarker):
 
     def __init__(
         self,
-        parcellation: Union[str, List[str]],
+        parcellation: Union[str, list[str]],
         method: str,
-        method_params: Optional[Dict[str, Any]] = None,
+        method_params: Optional[dict[str, Any]] = None,
         time_method: Optional[str] = None,
-        time_method_params: Optional[Dict[str, Any]] = None,
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
-        on: Union[List[str], str, None] = None,
+        time_method_params: Optional[dict[str, Any]] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
+        on: Union[list[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
         if not isinstance(parcellation, list):
@@ -128,8 +128,8 @@ class ParcelAggregation(BaseMarker):
         self.time_method_params = time_method_params or {}
 
     def compute(
-        self, input: Dict[str, Any], extra_input: Optional[Dict] = None
-    ) -> Dict:
+        self, input: dict[str, Any], extra_input: Optional[dict] = None
+    ) -> dict:
         """Compute.
 
         Parameters

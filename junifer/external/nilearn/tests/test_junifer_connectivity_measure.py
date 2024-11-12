@@ -6,7 +6,7 @@
 import copy
 import warnings
 from math import cosh, exp, log, sinh, sqrt
-from typing import TYPE_CHECKING, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 import numpy as np
 import pytest
@@ -149,7 +149,7 @@ def random_spd(
 
 def _signals(
     n_subjects: int = N_SUBJECTS,
-) -> Tuple[List[np.ndarray], np.ndarray]:
+) -> tuple[list[np.ndarray], np.ndarray]:
     """Generate signals and compute covariances while applying confounds.
 
     Parameters
@@ -178,7 +178,7 @@ def _signals(
 
 
 @pytest.fixture
-def signals() -> List[np.ndarray]:
+def signals() -> list[np.ndarray]:
     """Return signals as list of np.ndarray."""
     return _signals(N_SUBJECTS)[0]
 
@@ -186,7 +186,7 @@ def signals() -> List[np.ndarray]:
 @pytest.fixture
 def signals_and_covariances(
     cov_estimator: Union[LedoitWolf, EmpiricalCovariance]
-) -> Tuple[List[np.ndarray], List[float]]:
+) -> tuple[list[np.ndarray], list[float]]:
     """Return signals and covariances for a covariance estimator.
 
     Parameters
@@ -417,7 +417,7 @@ def grad_geometric_mean(
     init: Optional["ArrayLike"] = None,
     max_iter: int = 10,
     tol: float = 1e-7,
-) -> List[float]:
+) -> list[float]:
     """Compute gradient of geometric mean.
 
     Return the norm of the covariant derivative at each iteration step
@@ -615,8 +615,8 @@ def test_connectivity_measure_errors():
 @pytest.mark.parametrize("kind", CONNECTIVITY_KINDS)
 def test_connectivity_measure_generic(
     kind: str,
-    cov_estimator: Type["BaseEstimator"],
-    signals_and_covariances: Tuple[List[np.ndarray], List[float]],
+    cov_estimator: type["BaseEstimator"],
+    signals_and_covariances: tuple[list[np.ndarray], list[float]],
 ) -> None:
     """Test generic JuniferConnectivityMeasure.
 
@@ -778,8 +778,8 @@ def _assert_connectivity_partial_correlation(connectivities, covs) -> None:
 )
 def test_connectivity_measure_specific_for_each_kind(
     kind: str,
-    cov_estimator: Type["BaseEstimator"],
-    signals_and_covariances: Tuple[List[np.ndarray], List[float]],
+    cov_estimator: type["BaseEstimator"],
+    signals_and_covariances: tuple[list[np.ndarray], list[float]],
 ) -> None:
     """Test connectivity matrix for each kind.
 
@@ -812,7 +812,7 @@ def test_connectivity_measure_specific_for_each_kind(
 
 @pytest.mark.parametrize("kind", CONNECTIVITY_KINDS)
 def test_connectivity_measure_check_mean(
-    kind: str, signals: List[np.ndarray]
+    kind: str, signals: list[np.ndarray]
 ) -> None:
     """Test mean of connectivity matrix for each kind.
 
@@ -846,7 +846,7 @@ def test_connectivity_measure_check_mean(
 
 @pytest.mark.parametrize("kind", CONNECTIVITY_KINDS)
 def test_connectivity_measure_check_vectorization_option(
-    kind: str, signals: List[np.ndarray]
+    kind: str, signals: list[np.ndarray]
 ) -> None:
     """Test vectorization of connectivity matrix for each kind.
 
@@ -879,7 +879,7 @@ def test_connectivity_measure_check_vectorization_option(
     ["covariance", "correlation", "precision", "partial correlation"],
 )
 def test_connectivity_measure_check_inverse_transformation(
-    kind: str, signals: List[np.ndarray]
+    kind: str, signals: list[np.ndarray]
 ) -> None:
     """Test inverse transform.
 
@@ -915,7 +915,7 @@ def test_connectivity_measure_check_inverse_transformation(
     ["covariance", "correlation", "precision", "partial correlation"],
 )
 def test_connectivity_measure_check_inverse_transformation_discard_diag(
-    kind: str, signals: List[np.ndarray]
+    kind: str, signals: list[np.ndarray]
 ) -> None:
     """Test diagonal for inverse transform.
 
@@ -957,7 +957,7 @@ def test_connectivity_measure_check_inverse_transformation_discard_diag(
 
 
 def test_connectivity_measure_inverse_transform_tangent(
-    signals: List[np.ndarray],
+    signals: list[np.ndarray],
 ) -> None:
     """Test that for 'tangent' kind, covariance matrices are reconstructed.
 
@@ -1067,7 +1067,7 @@ def test_confounds_connectivity_measure_errors() -> None:
 
 
 def test_connectivity_measure_standardize(
-    signals: List[np.ndarray],
+    signals: list[np.ndarray],
 ) -> None:
     """Check warning is raised and then suppressed with setting standardize.
 

@@ -5,7 +5,7 @@
 # License: AGPL
 
 import subprocess
-from typing import Any, List, Optional
+from typing import Any, Optional
 
 from junifer.utils.logging import raise_error, warn_with_log
 
@@ -71,7 +71,7 @@ def check_ext_dependencies(
     return found
 
 
-def _check_afni(commands: Optional[List[str]] = None) -> bool:
+def _check_afni(commands: Optional[list[str]] = None) -> bool:
     """Check if AFNI is present in the system.
 
     Parameters
@@ -131,7 +131,7 @@ def _check_afni(commands: Optional[List[str]] = None) -> bool:
     return afni_found
 
 
-def _check_fsl(commands: Optional[List[str]] = None) -> bool:
+def _check_fsl(commands: Optional[list[str]] = None) -> bool:
     """Check if FSL is present in the system.
 
     Parameters
@@ -193,7 +193,7 @@ def _check_fsl(commands: Optional[List[str]] = None) -> bool:
     return fsl_found
 
 
-def _check_ants(commands: Optional[List[str]] = None) -> bool:
+def _check_ants(commands: Optional[list[str]] = None) -> bool:
     """Check if ANTs is present in the system.
 
     Parameters
@@ -253,7 +253,7 @@ def _check_ants(commands: Optional[List[str]] = None) -> bool:
     return ants_found
 
 
-def _check_freesurfer(commands: Optional[List[str]] = None) -> bool:
+def _check_freesurfer(commands: Optional[list[str]] = None) -> bool:
     """Check if FreeSurfer is present in the system.
 
     Parameters

@@ -5,7 +5,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -135,7 +135,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         self,
         name: str,
         coordinates: ArrayLike,
-        voi_names: List[str],
+        voi_names: list[str],
         space: str,
         overwrite: Optional[bool] = False,
     ) -> None:
@@ -236,7 +236,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Update registry
         _ = self._registry.pop(name)
 
-    def load(self, name: str) -> Tuple[ArrayLike, List[str], str]:
+    def load(self, name: str) -> tuple[ArrayLike, list[str], str]:
         """Load coordinates.
 
         Parameters
@@ -285,9 +285,9 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
     def get(
         self,
         coords: str,
-        target_data: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[ArrayLike, List[str]]:
+        target_data: dict[str, Any],
+        extra_input: Optional[dict[str, Any]] = None,
+    ) -> tuple[ArrayLike, list[str]]:
         """Get coordinates, tailored for the target data.
 
         Parameters

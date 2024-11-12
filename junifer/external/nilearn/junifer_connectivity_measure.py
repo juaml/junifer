@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Callable, List, Optional
+from typing import Callable, Optional
 
 import numpy as np
 from nilearn import signal
@@ -186,7 +186,7 @@ def _map_eigenvalues(
 
 
 def _geometric_mean(
-    matrices: List[np.ndarray],
+    matrices: list[np.ndarray],
     init: Optional[np.ndarray] = None,
     max_iter: int = 10,
     tol: Optional[float] = 1e-7,

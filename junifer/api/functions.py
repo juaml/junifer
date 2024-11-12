@@ -8,7 +8,7 @@
 import os
 import shutil
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from ..datagrabber import BaseDataGrabber
@@ -27,7 +27,7 @@ from ..utils import logger, raise_error, yaml
 __all__ = ["run", "collect", "queue", "reset", "list_elements"]
 
 
-def _get_datagrabber(datagrabber_config: Dict) -> DataGrabberLike:
+def _get_datagrabber(datagrabber_config: dict) -> DataGrabberLike:
     """Get DataGrabber.
 
     Parameters
@@ -49,7 +49,7 @@ def _get_datagrabber(datagrabber_config: Dict) -> DataGrabberLike:
     )
 
 
-def _get_preprocessor(preprocessing_config: Dict) -> PreprocessorLike:
+def _get_preprocessor(preprocessing_config: dict) -> PreprocessorLike:
     """Get Preprocessor.
 
     Parameters
@@ -71,7 +71,7 @@ def _get_preprocessor(preprocessing_config: Dict) -> PreprocessorLike:
     )
 
 
-def _get_marker(marker_config: Dict) -> MarkerLike:
+def _get_marker(marker_config: dict) -> MarkerLike:
     """Get Marker.
 
     Parameters
@@ -93,7 +93,7 @@ def _get_marker(marker_config: Dict) -> MarkerLike:
     )
 
 
-def _get_storage(storage_config: Dict) -> StorageLike:
+def _get_storage(storage_config: dict) -> StorageLike:
     """Get Storage.
 
     Parameters
@@ -117,11 +117,11 @@ def _get_storage(storage_config: Dict) -> StorageLike:
 
 def run(
     workdir: Union[str, Path],
-    datagrabber: Dict,
-    markers: List[Dict],
-    storage: Dict,
-    preprocessors: Optional[List[Dict]] = None,
-    elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
+    datagrabber: dict,
+    markers: list[dict],
+    storage: dict,
+    preprocessors: Optional[list[dict]] = None,
+    elements: Union[str, list[Union[str, tuple]], tuple, None] = None,
 ) -> None:
     """Run the pipeline on the selected element.
 
@@ -202,7 +202,7 @@ def run(
                 mc.fit(datagrabber_object[t_element])
 
 
-def collect(storage: Dict) -> None:
+def collect(storage: dict) -> None:
     """Collect and store data.
 
     Parameters
@@ -224,12 +224,12 @@ def collect(storage: Dict) -> None:
 
 
 def queue(
-    config: Dict,
+    config: dict,
     kind: str,
     jobname: str = "junifer_job",
     overwrite: bool = False,
-    elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
-    **kwargs: Union[str, int, bool, Dict, Tuple, List],
+    elements: Union[str, list[Union[str, tuple]], tuple, None] = None,
+    **kwargs: Union[str, int, bool, dict, tuple, list],
 ) -> None:
     """Queue a job to be executed later.
 
@@ -316,7 +316,7 @@ def queue(
                 elements = dg.get_elements()
     # Listify elements
     if not isinstance(elements, list):
-        elements: List[Union[str, Tuple]] = [elements]
+        elements: list[Union[str, tuple]] = [elements]
 
     # Check job queueing system
     adapter = None
@@ -341,7 +341,7 @@ def queue(
     logger.info("Queue done")
 
 
-def reset(config: Dict) -> None:
+def reset(config: dict) -> None:
     """Reset the storage and jobs directory.
 
     Parameters
@@ -380,8 +380,8 @@ def reset(config: Dict) -> None:
 
 
 def list_elements(
-    datagrabber: Dict,
-    elements: Union[str, List[Union[str, Tuple]], Tuple, None] = None,
+    datagrabber: dict,
+    elements: Union[str, list[Union[str, tuple]], tuple, None] = None,
 ) -> str:
     """List elements of the datagrabber filtered using `elements`.
 

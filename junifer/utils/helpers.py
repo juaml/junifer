@@ -6,7 +6,6 @@
 import collections.abc
 import subprocess
 import sys
-from typing import Dict, List
 
 from .logging import logger, raise_error
 
@@ -14,7 +13,7 @@ from .logging import logger, raise_error
 __all__ = ["run_ext_cmd", "deep_update"]
 
 
-def run_ext_cmd(name: str, cmd: List[str]) -> None:
+def run_ext_cmd(name: str, cmd: list[str]) -> None:
     """Run external command via subprocess.
 
     Parameters
@@ -58,7 +57,7 @@ def run_ext_cmd(name: str, cmd: List[str]) -> None:
         )
 
 
-def deep_update(d: Dict, u: Dict) -> Dict:
+def deep_update(d: dict, u: dict) -> dict:
     """Deep update `d` with `u`.
 
     From: "https://stackoverflow.com/questions/3232943/update-value-of-a-nested

@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, Optional
+from typing import Optional
 
 import numpy as np
 import pytest
@@ -25,7 +25,7 @@ from junifer.stats import count, get_aggfunc_by_name, select, winsorized_mean
         ("mode", {"keepdims": True}),
     ],
 )
-def test_get_aggfunc_by_name(name: str, params: Optional[Dict]) -> None:
+def test_get_aggfunc_by_name(name: str, params: Optional[dict]) -> None:
     """Test aggregation function retrieval by name.
 
     Parameters

@@ -8,7 +8,7 @@ import pathlib
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional, Tuple, Union
+from typing import Optional, Union
 
 import click
 
@@ -106,7 +106,7 @@ def cli() -> None:  # pragma: no cover
     default="info",
 )
 def run(
-    filepath: click.Path, element: Tuple[str], verbose: Union[str, int]
+    filepath: click.Path, element: tuple[str], verbose: Union[str, int]
 ) -> None:
     """Run feature extraction.
 
@@ -395,7 +395,7 @@ def reset(
 )
 def list_elements(
     filepath: click.Path,
-    element: Tuple[str],
+    element: tuple[str],
     output_file: Optional[click.Path],
     verbose: Union[str, int],
 ) -> None:

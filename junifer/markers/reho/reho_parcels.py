@@ -4,7 +4,7 @@
 # License: AGPL
 
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 
@@ -92,12 +92,12 @@ class ReHoParcels(ReHoBase):
 
     def __init__(
         self,
-        parcellation: Union[str, List[str]],
+        parcellation: Union[str, list[str]],
         using: str,
-        reho_params: Optional[Dict] = None,
+        reho_params: Optional[dict] = None,
         agg_method: str = "mean",
-        agg_method_params: Optional[Dict] = None,
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
+        agg_method_params: Optional[dict] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         # Superclass init first to validate `using` parameter
@@ -110,9 +110,9 @@ class ReHoParcels(ReHoBase):
 
     def compute(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        input: dict[str, Any],
+        extra_input: Optional[dict[str, Any]] = None,
+    ) -> dict[str, Any]:
         """Compute.
 
         Parameters

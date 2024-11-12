@@ -9,9 +9,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Dict,
     Optional,
-    Tuple,
 )
 
 from ...typing import ConditionalDependencies, MarkerInOutMappings
@@ -82,9 +80,9 @@ class ReHoBase(BaseMarker):
 
     def _compute(
         self,
-        input_data: Dict[str, Any],
+        input_data: dict[str, Any],
         **reho_params: Any,
-    ) -> Tuple["Nifti1Image", Path]:
+    ) -> tuple["Nifti1Image", Path]:
         """Compute voxel-wise ReHo.
 
         Calculates Kendall's W per voxel using neighborhood voxels.

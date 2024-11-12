@@ -5,7 +5,7 @@
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 import pytest
 
@@ -44,7 +44,7 @@ def test_GnuParallelLocalAdapter_env_shell_error() -> None:
     ],
 )
 def test_GnuParallelLocalAdapter_elements(
-    elements: List[Union[str, Tuple]],
+    elements: list[Union[str, tuple]],
     expected_text: str,
 ) -> None:
     """Test GnuParallelLocalAdapter elements().
@@ -177,7 +177,7 @@ def test_GnuParallelLocalAdapter_prepare(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
-    env: Dict[str, str],
+    env: dict[str, str],
 ) -> None:
     """Test GnuParallelLocalAdapter prepare().
 

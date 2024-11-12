@@ -3,7 +3,6 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from typing import List
 
 import numpy as np
 import pytest
@@ -24,7 +23,7 @@ from junifer.data.utils import closest_resolution
     ],
 )
 def test_closest_resolution(
-    resolution: float, valid_resolutions: List[float], expected: float
+    resolution: float, valid_resolutions: list[float], expected: float
 ):
     """Test closest_resolution.
 

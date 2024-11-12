@@ -4,7 +4,6 @@
 # License: AGPL
 
 import warnings
-from typing import List, Tuple
 
 import nibabel
 import numpy as np
@@ -361,10 +360,10 @@ def test_nifti_spheres_masker_io_shapes() -> None:
     ],
 )
 def test_junifer_and_nilearn_mean_agg_are_equal(
-    shape: Tuple[int, ...],
+    shape: tuple[int, ...],
     radius: float,
     allow_overlap: bool,
-    coords: List[Tuple[int, int, int]],
+    coords: list[tuple[int, int, int]],
 ) -> None:
     """Test junifer's masker behaves same as nilearn's when agg is mean.
 

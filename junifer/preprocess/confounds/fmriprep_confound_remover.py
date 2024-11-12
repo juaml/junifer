@@ -8,10 +8,7 @@
 from typing import (
     Any,
     ClassVar,
-    Dict,
-    List,
     Optional,
-    Tuple,
     Union,
 )
 
@@ -156,14 +153,14 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
     def __init__(
         self,
-        strategy: Optional[Dict[str, str]] = None,
+        strategy: Optional[dict[str, str]] = None,
         spike: Optional[float] = None,
         detrend: bool = True,
         standardize: bool = True,
         low_pass: Optional[float] = None,
         high_pass: Optional[float] = None,
         t_r: Optional[float] = None,
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
     ) -> None:
         """Initialize the class."""
         if strategy is None:
@@ -211,7 +208,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             )
         super().__init__(on="BOLD", required_data_types=["BOLD"])
 
-    def get_valid_inputs(self) -> List[str]:
+    def get_valid_inputs(self) -> list[str]:
         """Get valid data types for input.
 
         Returns
@@ -240,7 +237,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         # Does not add any new keys
         return input_type
 
-    def _map_adhoc_to_fmriprep(self, input: Dict[str, Any]) -> None:
+    def _map_adhoc_to_fmriprep(self, input: dict[str, Any]) -> None:
         """Map the adhoc format to the fmpriprep format spec.
 
         Based on the spec, map the column names to match the fmriprep format.
@@ -270,8 +267,8 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         confounds_df.rename(columns=confounds_mapping, inplace=True)
 
     def _process_fmriprep_spec(
-        self, input: Dict[str, Any]
-    ) -> Tuple[List[str], Dict[str, str], Dict[str, str], str]:
+        self, input: dict[str, Any]
+    ) -> tuple[list[str], dict[str, str], dict[str, str], str]:
         """Process the fmpriprep format spec from the specified file.
 
         Based on the strategy, find the relevant column names in the dataframe,
@@ -359,7 +356,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         out = to_select, squares_to_compute, derivatives_to_compute, spike_name
         return out
 
-    def _pick_confounds(self, input: Dict[str, Any]) -> pd.DataFrame:
+    def _pick_confounds(self, input: dict[str, Any]) -> pd.DataFrame:
         """Select relevant confounds from the specified file.
 
         Parameters
@@ -418,7 +415,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
     def _validate_data(
         self,
-        input: Dict[str, Any],
+        input: dict[str, Any],
     ) -> None:
         """Validate input data.
 
@@ -506,9 +503,9 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
     def preprocess(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Dict[str, Any]]]]:
+        input: dict[str, Any],
+        extra_input: Optional[dict[str, Any]] = None,
+    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
         """Preprocess.
 
         Parameters

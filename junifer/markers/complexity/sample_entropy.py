@@ -4,7 +4,7 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Optional, Union
+from typing import Optional, Union
 
 import neurokit2 as nk
 import numpy as np
@@ -57,11 +57,11 @@ class SampleEntropy(ComplexityBase):
 
     def __init__(
         self,
-        parcellation: Union[str, List[str]],
+        parcellation: Union[str, list[str]],
         agg_method: str = "mean",
-        agg_method_params: Optional[Dict] = None,
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
-        params: Optional[Dict] = None,
+        agg_method_params: Optional[dict] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
+        params: Optional[dict] = None,
         name: Optional[str] = None,
     ) -> None:
         super().__init__(

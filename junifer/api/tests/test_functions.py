@@ -7,7 +7,7 @@
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 import pytest
 from ruamel.yaml import YAML
@@ -26,7 +26,7 @@ yaml.indent(mapping=2, sequence=4, offset=2)
 
 
 @pytest.fixture
-def datagrabber() -> Dict[str, str]:
+def datagrabber() -> dict[str, str]:
     """Return a datagrabber as a dictionary."""
     return {
         "kind": "PartlyCloudyTestingDataGrabber",
@@ -34,7 +34,7 @@ def datagrabber() -> Dict[str, str]:
 
 
 @pytest.fixture
-def markers() -> List[Dict[str, str]]:
+def markers() -> list[dict[str, str]]:
     """Return markers as a list of dictionary."""
     return [
         {
@@ -53,7 +53,7 @@ def markers() -> List[Dict[str, str]]:
 
 
 @pytest.fixture
-def storage() -> Dict[str, str]:
+def storage() -> dict[str, str]:
     """Return a storage as a dictionary."""
     return {
         "kind": "SQLiteFeatureStorage",
@@ -62,9 +62,9 @@ def storage() -> Dict[str, str]:
 
 def test_run_single_element(
     tmp_path: Path,
-    datagrabber: Dict[str, str],
-    markers: List[Dict[str, str]],
-    storage: Dict[str, str],
+    datagrabber: dict[str, str],
+    markers: list[dict[str, str]],
+    storage: dict[str, str],
 ) -> None:
     """Test run function with single element.
 
@@ -97,8 +97,8 @@ def test_run_single_element(
 
 def test_run_single_element_with_preprocessing(
     tmp_path: Path,
-    markers: List[Dict[str, str]],
-    storage: Dict[str, str],
+    markers: list[dict[str, str]],
+    storage: dict[str, str],
 ) -> None:
     """Test run function with single element and pre-processing.
 
@@ -137,9 +137,9 @@ def test_run_single_element_with_preprocessing(
 
 def test_run_multi_element_multi_output(
     tmp_path: Path,
-    datagrabber: Dict[str, str],
-    markers: List[Dict[str, str]],
-    storage: Dict[str, str],
+    datagrabber: dict[str, str],
+    markers: list[dict[str, str]],
+    storage: dict[str, str],
 ) -> None:
     """Test run function with multi element and multi output.
 
@@ -173,9 +173,9 @@ def test_run_multi_element_multi_output(
 
 def test_run_multi_element_single_output(
     tmp_path: Path,
-    datagrabber: Dict[str, str],
-    markers: List[Dict[str, str]],
-    storage: Dict[str, str],
+    datagrabber: dict[str, str],
+    markers: list[dict[str, str]],
+    storage: dict[str, str],
 ) -> None:
     """Test run function with multi element and single output.
 
@@ -210,9 +210,9 @@ def test_run_multi_element_single_output(
 
 def test_run_and_collect(
     tmp_path: Path,
-    datagrabber: Dict[str, str],
-    markers: List[Dict[str, str]],
-    storage: Dict[str, str],
+    datagrabber: dict[str, str],
+    markers: list[dict[str, str]],
+    storage: dict[str, str],
 ) -> None:
     """Test run and collect functions.
 
@@ -259,9 +259,9 @@ def test_queue_correct_yaml_config(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
-    datagrabber: Dict[str, str],
-    markers: List[Dict[str, str]],
-    storage: Dict[str, str],
+    datagrabber: dict[str, str],
+    markers: list[dict[str, str]],
+    storage: dict[str, str],
 ) -> None:
     """Test proper YAML config generation for queueing.
 
@@ -426,7 +426,7 @@ def test_queue_with_imports(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
-    with_: Union[str, List[str]],
+    with_: Union[str, list[str]],
 ) -> None:
     """Test queue with `with` imports.
 
@@ -477,7 +477,7 @@ def test_queue_with_elements(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
-    elements: Union[str, List[Union[str, Tuple[str]]], Tuple[str]],
+    elements: Union[str, list[Union[str, tuple[str]]], tuple[str]],
 ) -> None:
     """Test queue with elements.
 
@@ -508,7 +508,7 @@ def test_queue_without_elements(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
-    datagrabber: Dict[str, str],
+    datagrabber: dict[str, str],
 ) -> None:
     """Test queue without elements.
 
@@ -536,9 +536,9 @@ def test_queue_without_elements(
 
 def test_reset_run(
     tmp_path: Path,
-    datagrabber: Dict[str, str],
-    markers: List[Dict[str, str]],
-    storage: Dict[str, str],
+    datagrabber: dict[str, str],
+    markers: list[dict[str, str]],
+    storage: dict[str, str],
 ) -> None:
     """Test reset function for run.
 
@@ -580,9 +580,9 @@ def test_reset_run(
 def test_reset_queue(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
-    datagrabber: Dict[str, str],
-    markers: List[Dict[str, str]],
-    storage: Dict[str, str],
+    datagrabber: dict[str, str],
+    markers: list[dict[str, str]],
+    storage: dict[str, str],
     job_name: str,
 ) -> None:
     """Test reset function for queue.
@@ -647,8 +647,8 @@ def test_reset_queue(
     ],
 )
 def test_list_elements(
-    datagrabber: Dict[str, str],
-    elements: Optional[List[str]],
+    datagrabber: dict[str, str],
+    elements: Optional[list[str]],
 ) -> None:
     """Test elements listing.
 

@@ -6,8 +6,9 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Dict, Iterator, List, Tuple, Union
+from typing import Union
 
 from ..pipeline import UpdateMetaMixin
 from ..utils import logger, raise_error
@@ -36,7 +37,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
 
     """
 
-    def __init__(self, types: List[str], datadir: Union[str, Path]) -> None:
+    def __init__(self, types: list[str], datadir: Union[str, Path]) -> None:
         # Validate types
         if not isinstance(types, list):
             raise_error(msg="`types` must be a list", klass=TypeError)
@@ -67,8 +68,8 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         yield from self.get_elements()
 
     def __getitem__(
-        self, element: Union[str, Tuple[str, ...]]
-    ) -> Dict[str, Dict]:
+        self, element: Union[str, tuple[str, ...]]
+    ) -> dict[str, dict]:
         """Enable indexing support.
 
         Parameters
@@ -89,7 +90,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
             element = (element,)
         # Zip through element keys and actual values to construct element
         # access dictionary
-        named_element: Dict = dict(zip(self.get_element_keys(), element))
+        named_element: dict = dict(zip(self.get_element_keys(), element))
         logger.debug(f"Named element: {named_element}")
         # Fetch element
         out = self.get_item(**named_element)
@@ -113,7 +114,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         """Context exit."""
         return None
 
-    def get_types(self) -> List[str]:
+    def get_types(self) -> list[str]:
         """Get types.
 
         Returns
@@ -136,7 +137,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         """
         return self._datadir
 
-    def filter(self, selection: List[Union[str, Tuple[str]]]) -> Iterator:
+    def filter(self, selection: list[Union[str, tuple[str]]]) -> Iterator:
         """Filter elements to be grabbed.
 
         Parameters
@@ -151,7 +152,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
 
         """
 
-        def filter_func(element: Union[str, Tuple[str]]) -> bool:
+        def filter_func(element: Union[str, tuple[str]]) -> bool:
             """Filter element based on selection.
 
             Parameters
@@ -182,7 +183,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         yield from filter(filter_func, self.get_elements())
 
     @abstractmethod
-    def get_element_keys(self) -> List[str]:
+    def get_element_keys(self) -> list[str]:
         """Get element keys.
 
         For each item in the ``element`` tuple passed to ``__getitem__()``,
@@ -200,7 +201,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         )  # pragma: no cover
 
     @abstractmethod
-    def get_elements(self) -> List[Union[str, Tuple[str]]]:
+    def get_elements(self) -> list[Union[str, tuple[str]]]:
         """Get elements.
 
         Returns
@@ -217,7 +218,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         )  # pragma: no cover
 
     @abstractmethod
-    def get_item(self, **element: Dict) -> Dict[str, Dict]:
+    def get_item(self, **element: dict) -> dict[str, dict]:
         """Get the specified item from the dataset.
 
         Parameters

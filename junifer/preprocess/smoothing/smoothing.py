@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Tuple, Union
+from typing import Any, ClassVar, Optional, Union
 
 from ...api.decorators import register_preprocessor
 from ...typing import ConditionalDependencies
@@ -86,8 +86,8 @@ class Smoothing(BasePreprocessor):
     def __init__(
         self,
         using: str,
-        on: Union[List[str], str],
-        smoothing_params: Optional[Dict] = None,
+        on: Union[list[str], str],
+        smoothing_params: Optional[dict] = None,
     ) -> None:
         """Initialize the class."""
         # Validate `using` parameter
@@ -102,7 +102,7 @@ class Smoothing(BasePreprocessor):
         )
         super().__init__(on=on)
 
-    def get_valid_inputs(self) -> List[str]:
+    def get_valid_inputs(self) -> list[str]:
         """Get valid data types for input.
 
         Returns
@@ -133,9 +133,9 @@ class Smoothing(BasePreprocessor):
 
     def preprocess(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Dict[str, Any]]]]:
+        input: dict[str, Any],
+        extra_input: Optional[dict[str, Any]] = None,
+    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
         """Preprocess.
 
         Parameters

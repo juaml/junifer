@@ -5,7 +5,7 @@
 # License: AGPL
 
 from abc import ABCMeta
-from typing import Any, ClassVar, Dict, Type
+from typing import Any, ClassVar
 
 
 __all__ = ["Singleton", "ABCSingleton"]
@@ -21,9 +21,9 @@ class Singleton(type):
 
     """
 
-    instances: ClassVar[Dict] = {}
+    instances: ClassVar[dict] = {}
 
-    def __call__(cls, *args: Any, **kwargs: Any) -> Type:
+    def __call__(cls, *args: Any, **kwargs: Any) -> type:
         """Get the only instance for a class.
 
         Parameters

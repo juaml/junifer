@@ -5,7 +5,7 @@
 # License: AGPL
 
 from collections import Counter
-from typing import Dict, List, Optional
+from typing import Optional
 
 from ..datareader import DefaultDataReader
 from ..pipeline import PipelineStepMixin, WorkDirManager
@@ -39,9 +39,9 @@ class MarkerCollection:
 
     def __init__(
         self,
-        markers: List[MarkerLike],
+        markers: list[MarkerLike],
         datareader: Optional[PipelineStepMixin] = None,
-        preprocessors: Optional[List[PreprocessorLike]] = None,
+        preprocessors: Optional[list[PreprocessorLike]] = None,
         storage: Optional[StorageLike] = None,
     ):
         # Check that the markers have different names
@@ -59,7 +59,7 @@ class MarkerCollection:
         self._preprocessors = preprocessors
         self._storage = storage
 
-    def fit(self, input: Dict[str, Dict]) -> Optional[Dict]:
+    def fit(self, input: dict[str, dict]) -> Optional[dict]:
         """Fit the pipeline.
 
         Parameters

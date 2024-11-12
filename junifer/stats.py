@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Optional
 
 import numpy as np
 from scipy.stats import mode, trim_mean
@@ -17,7 +17,7 @@ __all__ = ["get_aggfunc_by_name", "count", "winsorized_mean", "select"]
 
 
 def get_aggfunc_by_name(
-    name: str, func_params: Optional[Dict[str, Any]] = None
+    name: str, func_params: Optional[dict[str, Any]] = None
 ) -> Callable:
     """Get an aggregation function by its name.
 
@@ -169,8 +169,8 @@ def winsorized_mean(
 def select(
     data: np.ndarray,
     axis: int = 0,
-    pick: Optional[List[int]] = None,
-    drop: Optional[List[int]] = None,
+    pick: Optional[list[int]] = None,
+    drop: Optional[list[int]] = None,
 ) -> np.ndarray:
     """Select a subset of the data.
 

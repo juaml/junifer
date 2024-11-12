@@ -6,7 +6,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataladDataGrabber
@@ -37,7 +37,7 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
-        sites: Union[str, List[str], None] = None,
+        sites: Union[str, list[str], None] = None,
     ) -> None:
         uri = (
             "ria+http://cat_12.5.ds.inm7.de"

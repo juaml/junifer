@@ -6,7 +6,6 @@
 
 import tempfile
 from pathlib import Path
-from typing import Dict, List
 
 import nibabel as nib
 from nilearn import datasets, image
@@ -35,7 +34,7 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
         types = ["VBM_GM"]
         super().__init__(types=types, datadir=datadir)
 
-    def get_element_keys(self) -> List[str]:
+    def get_element_keys(self) -> list[str]:
         """Get element keys.
 
         Returns
@@ -46,7 +45,7 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
         """
         return ["subject"]
 
-    def get_item(self, subject: str) -> Dict[str, Dict]:
+    def get_item(self, subject: str) -> dict[str, dict]:
         """Implement indexing support.
 
         Parameters
@@ -80,7 +79,7 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
         self._dataset = datasets.fetch_oasis_vbm(n_subjects=10)
         return self
 
-    def get_elements(self) -> List[str]:
+    def get_elements(self) -> list[str]:
         """Get elements.
 
         Returns
@@ -106,7 +105,7 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         types = ["BOLD", "T1w"]  # TODO: Check that they are T1w
         super().__init__(types=types, datadir=datadir)
 
-    def get_element_keys(self) -> List[str]:
+    def get_element_keys(self) -> list[str]:
         """Get element keys.
 
         Returns
@@ -117,7 +116,7 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         """
         return ["subject"]
 
-    def get_elements(self) -> List[str]:
+    def get_elements(self) -> list[str]:
         """Get elements.
 
         Returns
@@ -128,7 +127,7 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         """
         return [f"sub{x:03d}" for x in list(range(1, 11))]
 
-    def get_item(self, subject: str) -> Dict[str, Dict]:
+    def get_item(self, subject: str) -> dict[str, dict]:
         """Implement indexing support.
 
         Parameters
@@ -208,7 +207,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         )
         return self
 
-    def get_element_keys(self) -> List[str]:
+    def get_element_keys(self) -> list[str]:
         """Get element keys.
 
         Returns
@@ -219,7 +218,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         """
         return ["subject"]
 
-    def get_elements(self) -> List[str]:
+    def get_elements(self) -> list[str]:
         """Get elements.
 
         Returns
@@ -230,7 +229,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         """
         return [f"sub-{x:02d}" for x in list(range(1, 11))]
 
-    def get_item(self, subject: str) -> Dict[str, Dict]:
+    def get_item(self, subject: str) -> dict[str, dict]:
         """Implement indexing support.
 
         Parameters

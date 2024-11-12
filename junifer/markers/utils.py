@@ -8,7 +8,7 @@
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
-from typing import Callable, List, Optional, Tuple, Union
+from typing import Callable, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -19,8 +19,8 @@ from ..utils import raise_error
 
 def _ets(
     bold_ts: np.ndarray,
-    roi_names: Union[None, List[str]] = None,
-) -> Tuple[np.ndarray, Optional[List[str]]]:
+    roi_names: Union[None, list[str]] = None,
+) -> tuple[np.ndarray, Optional[list[str]]]:
     """Compute the edge-wise time series based on BOLD time series.
 
     Take a timeseries of brain areas, and calculate timeseries for each

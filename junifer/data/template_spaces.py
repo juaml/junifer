@@ -4,7 +4,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional, Union
 
 import datalad.api as dl
 import nibabel as nib
@@ -122,8 +122,8 @@ def get_xfm(
 
 def get_template(
     space: str,
-    target_data: Dict[str, Any],
-    extra_input: Optional[Dict[str, Any]] = None,
+    target_data: dict[str, Any],
+    extra_input: Optional[dict[str, Any]] = None,
     template_type: str = "T1w",
 ) -> nib.Nifti1Image:
     """Get template for the space, tailored for the target image.

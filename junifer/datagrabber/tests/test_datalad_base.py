@@ -4,7 +4,6 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Type
 
 import datalad.api as dl
 import pytest
@@ -27,7 +26,7 @@ _testing_dataset = {
 
 
 @pytest.fixture
-def concrete_datagrabber() -> Type[DataladDataGrabber]:
+def concrete_datagrabber() -> type[DataladDataGrabber]:
     """Return a concrete datalad-based DataGrabber.
 
     Returns
@@ -69,7 +68,7 @@ def concrete_datagrabber() -> Type[DataladDataGrabber]:
 
 
 def test_DataladDataGrabber_install_errors(
-    tmp_path: Path, concrete_datagrabber: Type
+    tmp_path: Path, concrete_datagrabber: type
 ) -> None:
     """Test DataladDataGrabber install errors / warnings.
 
@@ -108,7 +107,7 @@ def test_DataladDataGrabber_install_errors(
 
 
 def test_DataladDataGrabber_clone_cleanup(
-    tmp_path: Path, concrete_datagrabber: Type
+    tmp_path: Path, concrete_datagrabber: type
 ) -> None:
     """Test DataladDataGrabber clone and remove.
 
@@ -157,7 +156,7 @@ def test_DataladDataGrabber_clone_cleanup(
 
 
 def test_DataladDataGrabber_clone_create_cleanup(
-    concrete_datagrabber: Type,
+    concrete_datagrabber: type,
 ) -> None:
     """Test DataladDataGrabber tempdir clone and remove.
 
@@ -203,7 +202,7 @@ def test_DataladDataGrabber_clone_create_cleanup(
 
 
 def test_DataladDataGrabber_previously_cloned(
-    tmp_path: Path, concrete_datagrabber: Type
+    tmp_path: Path, concrete_datagrabber: type
 ) -> None:
     """Test DataladDataGrabber on cloned dataset.
 
@@ -272,7 +271,7 @@ def test_DataladDataGrabber_previously_cloned(
 
 
 def test_DataladDataGrabber_previously_cloned_and_get(
-    tmp_path: Path, concrete_datagrabber: Type
+    tmp_path: Path, concrete_datagrabber: type
 ) -> None:
     """Test DataladDataGrabber on cloned dataset with files present.
 
@@ -355,7 +354,7 @@ def test_DataladDataGrabber_previously_cloned_and_get(
 
 
 def test_DataladDataGrabber_previously_cloned_and_get_dirty(
-    tmp_path: Path, concrete_datagrabber: Type
+    tmp_path: Path, concrete_datagrabber: type
 ) -> None:
     """Test DataladDataGrabber on a dirty cloned dataset.
 

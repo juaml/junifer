@@ -9,7 +9,6 @@ from typing import (
     TYPE_CHECKING,
     ClassVar,
     Optional,
-    Tuple,
 )
 
 import nibabel as nib
@@ -52,7 +51,7 @@ class JuniferALFF(metaclass=Singleton):
         highpass: float,
         lowpass: float,
         tr: Optional[float],
-    ) -> Tuple["Nifti1Image", "Nifti1Image", Path, Path]:
+    ) -> tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute ALFF + fALFF map.
 
         Parameters

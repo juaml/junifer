@@ -4,7 +4,6 @@
 # License: AGPL
 
 import socket
-from typing import Tuple, Type
 
 import pytest
 from numpy.testing import assert_array_equal, assert_raises
@@ -29,7 +28,7 @@ from junifer.typing import DataGrabberLike
 def test_SpaceWarper_errors(
     using: str,
     reference: str,
-    error_type: Type[Exception],
+    error_type: type[Exception],
     error_msg: str,
 ) -> None:
     """Test SpaceWarper errors.
@@ -96,7 +95,7 @@ def test_SpaceWarper_errors(
     reason="only for juseless",
 )
 def test_SpaceWarper_native(
-    datagrabber: DataGrabberLike, element: Tuple[str, ...], using: str
+    datagrabber: DataGrabberLike, element: tuple[str, ...], using: str
 ) -> None:
     """Test SpaceWarper for native space warping.
 
@@ -160,7 +159,7 @@ def test_SpaceWarper_native(
 )
 def test_SpaceWarper_multi_mni(
     datagrabber: DataGrabberLike,
-    element: Tuple[str, ...],
+    element: tuple[str, ...],
     space: str,
 ) -> None:
     """Test SpaceWarper for MNI space warping.

@@ -6,7 +6,7 @@
 # License: AGPL
 
 import socket
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import pytest
 
@@ -53,7 +53,7 @@ def test_JuselessUCLA() -> None:
     ],
 )
 def test_JuselessUCLA_partial_data_access(
-    types: Union[str, List[str]],
+    types: Union[str, list[str]],
 ) -> None:
     """Test JuselessUCLA DataGrabber partial data access.
 
