@@ -21,7 +21,7 @@ from ...utils.singleton import Singleton
 
 
 if TYPE_CHECKING:
-    from nibabel import Nifti1Image
+    from nibabel.nifti1 import Nifti1Image
 
 
 __all__ = ["AFNIReHo"]
