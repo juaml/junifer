@@ -11,15 +11,15 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
-from ..datagrabber.base import BaseDataGrabber
-from ..markers.base import BaseMarker
+from ..datagrabber import BaseDataGrabber
+from ..markers import BaseMarker
 from ..pipeline import (
     MarkerCollection,
     PipelineComponentRegistry,
     WorkDirManager,
 )
-from ..preprocess.base import BasePreprocessor
-from ..storage.base import BaseFeatureStorage
+from ..preprocess import BasePreprocessor
+from ..storage import BaseFeatureStorage
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 from ..utils import logger, raise_error, yaml
 
