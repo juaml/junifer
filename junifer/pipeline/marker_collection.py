@@ -5,18 +5,12 @@
 # License: AGPL
 
 from collections import Counter
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from ..datareader import DefaultDataReader
 from ..pipeline import PipelineStepMixin, WorkDirManager
+from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 from ..utils import logger, raise_error
-
-
-if TYPE_CHECKING:
-    from junifer.datagrabber import BaseDataGrabber
-    from junifer.markers import BaseMarker
-    from junifer.preprocess import BasePreprocessor
-    from junifer.storage import BaseFeatureStorage
 
 
 __all__ = ["MarkerCollection"]
@@ -45,10 +39,10 @@ class MarkerCollection:
 
     def __init__(
         self,
-        markers: List["BaseMarker"],
+        markers: List[MarkerLike],
         datareader: Optional[PipelineStepMixin] = None,
-        preprocessors: Optional[List["BasePreprocessor"]] = None,
-        storage: Optional["BaseFeatureStorage"] = None,
+        preprocessors: Optional[List[PreprocessorLike]] = None,
+        storage: Optional[StorageLike] = None,
     ):
         # Check that the markers have different names
         marker_names = [m.name for m in markers]
@@ -111,7 +105,7 @@ class MarkerCollection:
 
         return None if self._storage else out
 
-    def validate(self, datagrabber: "BaseDataGrabber") -> None:
+    def validate(self, datagrabber: DataGrabberLike) -> None:
         """Validate the pipeline.
 
         Without doing any computation, check if the marker collection can

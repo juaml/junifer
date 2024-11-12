@@ -10,13 +10,11 @@ from typing import (
     Any,
     ClassVar,
     Dict,
-    List,
     Optional,
     Tuple,
-    Type,
-    Union,
 )
 
+from ...typing import ConditionalDependencies, MarkerInOutMappings
 from ...utils import logger, raise_error
 from ..base import BaseMarker
 from ._afni_reho import AFNIReHo
@@ -51,7 +49,7 @@ class ReHoBase(BaseMarker):
 
     """
 
-    _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
+    _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
             "using": "afni",
             "depends_on": AFNIReHo,
@@ -62,7 +60,7 @@ class ReHoBase(BaseMarker):
         },
     ]
 
-    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
         "BOLD": {
             "reho": "vector",
         },

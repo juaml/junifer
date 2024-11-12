@@ -3,11 +3,12 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, ClassVar, Dict, List, Optional, Tuple, Union
 
 from templateflow import api as tflow
 
 from ...api.decorators import register_preprocessor
+from ...typing import ConditionalDependencies
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 from ._ants_warper import ANTsWarper
@@ -46,7 +47,7 @@ class SpaceWarper(BasePreprocessor):
 
     """
 
-    _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
+    _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
             "using": "fsl",
             "depends_on": FSLWarper,

@@ -4,7 +4,7 @@
 # License: AGPL
 
 import socket
-from typing import TYPE_CHECKING, Tuple, Type
+from typing import Tuple, Type
 
 import pytest
 from numpy.testing import assert_array_equal, assert_raises
@@ -14,10 +14,7 @@ from junifer.datareader import DefaultDataReader
 from junifer.pipeline.utils import _check_ants, _check_fsl
 from junifer.preprocess import SpaceWarper
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
-
-
-if TYPE_CHECKING:
-    from junifer.datagrabber import BaseDataGrabber
+from junifer.typing import DataGrabberLike
 
 
 @pytest.mark.parametrize(
@@ -99,7 +96,7 @@ def test_SpaceWarper_errors(
     reason="only for juseless",
 )
 def test_SpaceWarper_native(
-    datagrabber: "BaseDataGrabber", element: Tuple[str, ...], using: str
+    datagrabber: DataGrabberLike, element: Tuple[str, ...], using: str
 ) -> None:
     """Test SpaceWarper for native space warping.
 
@@ -162,7 +159,7 @@ def test_SpaceWarper_native(
     _check_ants() is False, reason="requires ANTs to be in PATH"
 )
 def test_SpaceWarper_multi_mni(
-    datagrabber: "BaseDataGrabber",
+    datagrabber: DataGrabberLike,
     element: Tuple[str, ...],
     space: str,
 ) -> None:

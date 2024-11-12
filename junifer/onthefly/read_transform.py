@@ -4,22 +4,19 @@
 # License: AGPL
 
 
-from typing import TYPE_CHECKING, Dict, Optional, Tuple, Type
+from typing import Dict, Optional, Tuple
 
 import pandas as pd
 
+from ..typing import StorageLike
 from ..utils import logger, raise_error, warn_with_log
-
-
-if TYPE_CHECKING:
-    from junifer.storage import BaseFeatureStorage
 
 
 __all__ = ["read_transform"]
 
 
 def read_transform(
-    storage: Type["BaseFeatureStorage"],
+    storage: StorageLike,
     transform: str,
     feature_name: Optional[str] = None,
     feature_md5: Optional[str] = None,

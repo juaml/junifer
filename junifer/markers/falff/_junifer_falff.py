@@ -9,7 +9,6 @@ from typing import (
     TYPE_CHECKING,
     ClassVar,
     Optional,
-    Set,
     Tuple,
 )
 
@@ -19,6 +18,7 @@ import scipy as sp
 from nilearn import image as nimg
 
 from ...pipeline import WorkDirManager
+from ...typing import Dependencies
 from ...utils import logger
 from ...utils.singleton import Singleton
 
@@ -37,7 +37,7 @@ class JuniferALFF(metaclass=Singleton):
 
     """
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"numpy", "nilearn", "scipy"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn", "scipy"}
 
     def __del__(self) -> None:
         """Terminate the class."""

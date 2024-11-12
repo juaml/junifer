@@ -11,7 +11,6 @@ from typing import (
     Dict,
     List,
     Optional,
-    Set,
     Tuple,
     Union,
 )
@@ -23,6 +22,7 @@ from nilearn._utils.niimg_conversions import check_niimg_4d
 
 from ...api.decorators import register_preprocessor
 from ...data import get_data
+from ...typing import Dependencies
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 
@@ -152,7 +152,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
     """
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"numpy", "nilearn"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn"}
 
     def __init__(
         self,

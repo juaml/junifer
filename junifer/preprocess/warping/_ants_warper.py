@@ -7,9 +7,6 @@ from typing import (
     Any,
     ClassVar,
     Dict,
-    List,
-    Set,
-    Union,
 )
 
 import nibabel as nib
@@ -17,6 +14,7 @@ import numpy as np
 
 from ...data import get_template, get_xfm
 from ...pipeline import WorkDirManager
+from ...typing import Dependencies, ExternalDependencies
 from ...utils import logger, run_ext_cmd
 
 
@@ -31,14 +29,14 @@ class ANTsWarper:
 
     """
 
-    _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+    _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
             "name": "ants",
             "commands": ["ResampleImage", "antsApplyTransforms"],
         },
     ]
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"numpy", "nibabel"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nibabel"}
 
     def preprocess(
         self,

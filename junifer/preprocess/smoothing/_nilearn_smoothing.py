@@ -7,13 +7,13 @@ from typing import (
     TYPE_CHECKING,
     ClassVar,
     Literal,
-    Set,
     Union,
 )
 
 from nilearn import image as nimg
 from numpy.typing import ArrayLike
 
+from ...typing import Dependencies
 from ...utils import logger
 
 
@@ -31,7 +31,7 @@ class NilearnSmoothing:
 
     """
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
 
     def preprocess(
         self,

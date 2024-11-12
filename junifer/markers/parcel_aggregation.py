@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Set, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
 import numpy as np
 from nilearn.image import math_img
@@ -13,6 +13,7 @@ from nilearn.maskers import NiftiMasker
 from ..api.decorators import register_marker
 from ..data import get_data
 from ..stats import get_aggfunc_by_name
+from ..typing import Dependencies, MarkerInOutMappings
 from ..utils import logger, raise_error, warn_with_log
 from .base import BaseMarker
 
@@ -61,9 +62,9 @@ class ParcelAggregation(BaseMarker):
 
     """
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "numpy"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "numpy"}
 
-    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
         "T1w": {
             "aggregation": "vector",
         },

@@ -6,14 +6,11 @@
 
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
+from ..typing import StorageLike
 from ..utils import logger, raise_error
-
-
-if TYPE_CHECKING:
-    from junifer.storage import BaseFeatureStorage
 
 
 __all__ = ["BaseMarker"]
@@ -159,7 +156,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         type_: str,
         feature: str,
         out: Dict[str, Any],
-        storage: "BaseFeatureStorage",
+        storage: StorageLike,
     ) -> None:
         """Store.
 
@@ -182,7 +179,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
     def _fit_transform(
         self,
         input: Dict[str, Dict],
-        storage: Optional["BaseFeatureStorage"] = None,
+        storage: Optional[StorageLike] = None,
     ) -> Dict:
         """Fit and transform.
 

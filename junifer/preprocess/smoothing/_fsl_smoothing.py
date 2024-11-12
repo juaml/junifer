@@ -6,15 +6,12 @@
 from typing import (
     TYPE_CHECKING,
     ClassVar,
-    Dict,
-    List,
-    Set,
-    Union,
 )
 
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
+from ...typing import Dependencies, ExternalDependencies
 from ...utils import logger, run_ext_cmd
 
 
@@ -32,14 +29,14 @@ class FSLSmoothing:
 
     """
 
-    _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+    _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
             "name": "fsl",
             "commands": ["susan"],
         },
     ]
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nibabel"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"nibabel"}
 
     def preprocess(
         self,

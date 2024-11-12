@@ -11,7 +11,6 @@ from typing import (
     Dict,
     List,
     Optional,
-    Set,
     Union,
 )
 
@@ -25,6 +24,7 @@ from ..external.BrainPrint.brainprint.brainprint import (
 )
 from ..external.BrainPrint.brainprint.surfaces import surf_to_vtk
 from ..pipeline import WorkDirManager
+from ..typing import Dependencies, ExternalDependencies, MarkerInOutMappings
 from ..utils import logger, run_ext_cmd
 from .base import BaseMarker
 
@@ -68,7 +68,7 @@ class BrainPrint(BaseMarker):
 
     """
 
-    _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+    _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
             "name": "freesurfer",
             "commands": [
@@ -80,9 +80,9 @@ class BrainPrint(BaseMarker):
         },
     ]
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"lapy", "numpy"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"lapy", "numpy"}
 
-    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
         "FreeSurfer": {
             "eigenvalues": "scalar_table",
             "areas": "vector",

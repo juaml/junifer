@@ -8,6 +8,7 @@
 from typing import Type
 
 from ..pipeline import PipelineComponentRegistry
+from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 
 
 __all__ = [
@@ -19,7 +20,7 @@ __all__ = [
 ]
 
 
-def register_datagrabber(klass: Type) -> Type:
+def register_datagrabber(klass: DataGrabberLike) -> DataGrabberLike:
     """Register DataGrabber.
 
     Registers the DataGrabber so it can be used by name.
@@ -73,7 +74,7 @@ def register_datareader(klass: Type) -> Type:
     return klass
 
 
-def register_preprocessor(klass: Type) -> Type:
+def register_preprocessor(klass: PreprocessorLike) -> PreprocessorLike:
     """Preprocessor registration decorator.
 
     Registers the preprocessor so it can be used by name.
@@ -96,7 +97,7 @@ def register_preprocessor(klass: Type) -> Type:
     return klass
 
 
-def register_marker(klass: Type) -> Type:
+def register_marker(klass: MarkerLike) -> MarkerLike:
     """Marker registration decorator.
 
     Registers the marker so it can be used by name.
@@ -119,7 +120,7 @@ def register_marker(klass: Type) -> Type:
     return klass
 
 
-def register_storage(klass: Type) -> Type:
+def register_storage(klass: StorageLike) -> StorageLike:
     """Storage registration decorator.
 
     Registers the storage so it can be used by name.

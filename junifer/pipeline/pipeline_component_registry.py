@@ -6,16 +6,11 @@
 # License: AGPL
 
 import importlib
-from typing import TYPE_CHECKING, Dict, List, Mapping, Optional, Union
+from typing import Dict, List, Mapping, Optional, Union
 
+from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 from ..utils import logger, raise_error
 from ..utils.singleton import Singleton
-
-
-if TYPE_CHECKING:
-    from ..datagrabber import BaseDataGrabber
-    from ..storage import BaseFeatureStorage
-    from .pipeline_step_mixin import PipelineStepMixin
 
 
 __all__ = ["PipelineComponentRegistry"]
@@ -241,7 +236,7 @@ class PipelineComponentRegistry(metaclass=Singleton):
         name: str,
         baseclass: type,
         init_params: Optional[Dict] = None,
-    ) -> Union["BaseDataGrabber", "PipelineStepMixin", "BaseFeatureStorage"]:
+    ) -> Union[DataGrabberLike, PreprocessorLike, MarkerLike, StorageLike]:
         """Build an instance of class registered as ``name``.
 
         Parameters

@@ -8,16 +8,14 @@ from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     ClassVar,
-    Dict,
-    List,
     Optional,
     Tuple,
-    Union,
 )
 
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
+from ...typing import ExternalDependencies
 from ...utils import logger, run_ext_cmd
 from ...utils.singleton import Singleton
 
@@ -37,7 +35,7 @@ class AFNIALFF(metaclass=Singleton):
 
     """
 
-    _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+    _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
             "name": "afni",
             "commands": ["3dRSFC", "3dAFNItoNIFTI"],

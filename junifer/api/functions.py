@@ -20,13 +20,14 @@ from ..pipeline import (
 )
 from ..preprocess.base import BasePreprocessor
 from ..storage.base import BaseFeatureStorage
+from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 from ..utils import logger, raise_error, yaml
 
 
 __all__ = ["run", "collect", "queue", "reset", "list_elements"]
 
 
-def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
+def _get_datagrabber(datagrabber_config: Dict) -> DataGrabberLike:
     """Get DataGrabber.
 
     Parameters
@@ -48,7 +49,7 @@ def _get_datagrabber(datagrabber_config: Dict) -> BaseDataGrabber:
     )
 
 
-def _get_preprocessor(preprocessing_config: Dict) -> BasePreprocessor:
+def _get_preprocessor(preprocessing_config: Dict) -> PreprocessorLike:
     """Get Preprocessor.
 
     Parameters
@@ -70,7 +71,7 @@ def _get_preprocessor(preprocessing_config: Dict) -> BasePreprocessor:
     )
 
 
-def _get_marker(marker_config: Dict) -> BaseMarker:
+def _get_marker(marker_config: Dict) -> MarkerLike:
     """Get Marker.
 
     Parameters
@@ -92,7 +93,7 @@ def _get_marker(marker_config: Dict) -> BaseMarker:
     )
 
 
-def _get_storage(storage_config: Dict) -> BaseFeatureStorage:
+def _get_storage(storage_config: Dict) -> StorageLike:
     """Get Storage.
 
     Parameters
