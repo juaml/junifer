@@ -118,7 +118,8 @@ class FSLWarper:
         input["data"] = nib.load(applywarp_out_path)
         # Save resampled reference path
         input["reference_path"] = flirt_out_path
-
+        # Keep pre-warp space for further operations
+        input["prewarp_space"] = input["space"]
         # Use reference input's space as warped input's space
         input["space"] = extra_input["T1w"]["space"]
 
