@@ -114,7 +114,7 @@ def compute_brain_mask(
         space=target_std_space,
         target_data=target_data,
         extra_input=extra_input,
-        template_type=mask_type if mask_type in ["gm", "wm"] else "T1w",
+        template_type=mask_type,
     )
     # Resample template to target image
     target_img = target_data["data"]
