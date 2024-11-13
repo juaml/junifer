@@ -26,7 +26,7 @@ class ANTsCoordinatesWarper:
         self,
         seeds: ArrayLike,
         target_data: Dict[str, Any],
-        extra_input: Dict[str, Any],
+        warp_data: Dict[str, Any],
     ) -> ArrayLike:
         """Warp ``seeds`` to correct space.
 
@@ -37,10 +37,8 @@ class ANTsCoordinatesWarper:
         target_data : dict
             The corresponding item of the data object to which the coordinates
             will be applied.
-        extra_input : dict, optional
-            The other fields in the data object. Useful for accessing other
-            data kinds that needs to be used in the computation of coordinates
-            (default None).
+        warp_data : dict or None
+            The warp data item of the data object.
 
         Returns
         -------
@@ -79,7 +77,7 @@ class ANTsCoordinatesWarper:
             "-f 0",
             f"-i {pretransform_coordinates_path.resolve()}",
             f"-o {transformed_coords_path.resolve()}",
-            f"-t {extra_input['Warp']['path'].resolve()};",
+            f"-t {warp_data['path'].resolve()}",
         ]
         # Call antsApplyTransformsToPoints
         run_ext_cmd(

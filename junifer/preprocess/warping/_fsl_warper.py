@@ -14,7 +14,7 @@ import numpy as np
 
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies, ExternalDependencies
-from ...utils import logger, run_ext_cmd
+from ...utils import logger, raise_error, run_ext_cmd
 
 
 __all__ = ["FSLWarper"]
@@ -59,12 +59,27 @@ class FSLWarper:
             values and new ``reference_path`` key whose value points to the
             reference file used for warping.
 
+        Raises
+        ------
+        RuntimeError
+            If warp file path could not be found in ``extra_input``.
+
         """
         logger.debug("Using FSL for space warping")
 
         # Get the min of the voxel sizes from input and use it as the
         # resolution
         resolution = np.min(input["data"].header.get_zooms()[:3])
+
+        # Get warp file path
+        warp_file_path = None
+        for entry in extra_input["Warp"]:
+            if entry["dst"] == "native":
+                warp_file_path = entry["path"]
+        if warp_file_path is None:
+            raise_error(
+                klass=RuntimeError, msg="Could not find correct warp file path"
+            )
 
         # Create element-specific tempdir for storing post-warping assets
         element_tempdir = WorkDirManager().get_element_tempdir(
@@ -93,7 +108,7 @@ class FSLWarper:
             "--interp=spline",
             f"-i {input['path'].resolve()}",
             f"-r {flirt_out_path.resolve()}",  # use resampled reference
-            f"-w {extra_input['Warp']['path'].resolve()}",
+            f"-w {warp_file_path.resolve()}",
             f"-o {applywarp_out_path.resolve()}",
         ]
         # Call applywarp
@@ -103,7 +118,8 @@ class FSLWarper:
         input["data"] = nib.load(applywarp_out_path)
         # Save resampled reference path
         input["reference_path"] = flirt_out_path
-
+        # Keep pre-warp space for further operations
+        input["prewarp_space"] = input["space"]
         # Use reference input's space as warped input's space
         input["space"] = extra_input["T1w"]["space"]
 

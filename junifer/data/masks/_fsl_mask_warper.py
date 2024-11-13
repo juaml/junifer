@@ -31,7 +31,7 @@ class FSLMaskWarper:
         mask_name: str,
         mask_img: "Nifti1Image",
         target_data: Dict[str, Any],
-        extra_input: Dict[str, Any],
+        warp_data: Dict[str, Any],
     ) -> "Nifti1Image":
         """Warp ``mask_img`` to correct space.
 
@@ -44,10 +44,8 @@ class FSLMaskWarper:
         target_data : dict
             The corresponding item of the data object to which the mask
             will be applied.
-        extra_input : dict, optional
-            The other fields in the data object. Useful for accessing other
-            data kinds that needs to be used in the computation of mask
-            (default None).
+        warp_data : dict
+            The warp data item of the data object.
 
         Returns
         -------
@@ -77,7 +75,7 @@ class FSLMaskWarper:
             f"-i {prewarp_mask_path.resolve()}",
             # use resampled reference
             f"-r {target_data['reference_path'].resolve()}",
-            f"-w {extra_input['Warp']['path'].resolve()}",
+            f"-w {warp_data['path'].resolve()}",
             f"-o {warped_mask_path.resolve()}",
         ]
         # Call applywarp

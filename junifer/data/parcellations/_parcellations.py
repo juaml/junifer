@@ -23,7 +23,7 @@ from nilearn import datasets, image
 from ...utils import logger, raise_error, warn_with_log
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
-from ..utils import closest_resolution
+from ..utils import closest_resolution, get_native_warper
 from ._ants_parcellation_warper import ANTsParcellationWarper
 from ._fsl_parcellation_warper import FSLParcellationWarper
 
@@ -394,16 +394,12 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         Raises
         ------
-        RuntimeError
-            If warp / transformation file extension is not ".mat" or ".h5".
         ValueError
             If ``extra_input`` is None when ``target_data``'s space is native.
 
         """
         # Check pre-requirements for space manipulation
         target_space = target_data["space"]
-        # Set target standard space to target space
-        target_std_space = target_space
         # Extra data type requirement check if target space is native
         if target_space == "native":
             # Check for extra inputs
@@ -413,8 +409,16 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     "data types in particular for transformation to "
                     f"{target_data['space']} space for further computation."
                 )
+            # Get native space warper spec
+            warper_spec = get_native_warper(
+                target_data=target_data,
+                other_data=extra_input,
+            )
             # Set target standard space to warp file space source
-            target_std_space = extra_input["Warp"]["src"]
+            target_std_space = warper_spec["src"]
+        else:
+            # Set target standard space to target space
+            target_std_space = target_space
 
         # Get the min of the voxels sizes and use it as the resolution
         target_img = target_data["data"]
@@ -428,12 +432,14 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         all_parcellations = []
         all_labels = []
         for name in parcellations:
+            # Load parcellation
             img, labels, _, space = self.load(
                 name=name,
                 resolution=resolution,
             )
 
-            # Convert parcellation spaces if required
+            # Convert parcellation spaces if required;
+            # cannot be "native" due to earlier check
             if space != target_std_space:
                 raw_img = ANTsParcellationWarper().warp(
                     parcellation_name=name,
@@ -441,7 +447,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     src=space,
                     dst=target_std_space,
                     target_data=target_data,
-                    extra_input=None,
+                    warp_data=None,
                 )
                 # Remove extra dimension added by ANTs
                 img = image.math_img("np.squeeze(img)", img=raw_img)
@@ -471,32 +477,22 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Warp parcellation if target space is native
         if target_space == "native":
-            # extra_input check done earlier
-            # Check for warp file type to use correct tool
-            warp_file_ext = extra_input["Warp"]["path"].suffix
-            if warp_file_ext == ".mat":
+            # extra_input check done earlier and warper_spec exists
+            if warper_spec["warper"] == "fsl":
                 resampled_parcellation_img = FSLParcellationWarper().warp(
                     parcellation_name="native",
                     parcellation_img=resampled_parcellation_img,
                     target_data=target_data,
-                    extra_input=extra_input,
+                    warp_data=warper_spec,
                 )
-            elif warp_file_ext == ".h5":
+            elif warper_spec["warper"] == "ants":
                 resampled_parcellation_img = ANTsParcellationWarper().warp(
                     parcellation_name="native",
                     parcellation_img=resampled_parcellation_img,
                     src="",
-                    dst="T1w",
+                    dst="native",
                     target_data=target_data,
-                    extra_input=extra_input,
-                )
-            else:
-                raise_error(
-                    msg=(
-                        "Unknown warp / transformation file extension: "
-                        f"{warp_file_ext}"
-                    ),
-                    klass=RuntimeError,
+                    warp_data=warper_spec,
                 )
 
         return resampled_parcellation_img, labels

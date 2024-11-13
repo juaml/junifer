@@ -78,7 +78,11 @@ if __name__ == "__main__":
                 (
                     f"anat/sub-{sub:02d}_from-MNI152NLin2009cAsym_to-T1w_"
                     "mode-image_xfm.h5"
-                ),  # Warp
+                ),  # Warp to native
+                (
+                    f"anat/sub-{sub:02d}_from-T1w_to-MNI152NLin2009cAsym_"
+                    "mode-image_xfm.h5"
+                ),  # Warp from native
             ]
 
             # Tasks for functional data

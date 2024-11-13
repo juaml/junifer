@@ -31,7 +31,7 @@ class FSLParcellationWarper:
         parcellation_name: str,
         parcellation_img: "Nifti1Image",
         target_data: Dict[str, Any],
-        extra_input: Dict[str, Any],
+        warp_data: Dict[str, Any],
     ) -> "Nifti1Image":
         """Warp ``parcellation_img`` to correct space.
 
@@ -44,10 +44,8 @@ class FSLParcellationWarper:
         target_data : dict
             The corresponding item of the data object to which the parcellation
             will be applied.
-        extra_input : dict, optional
-            The other fields in the data object. Useful for accessing other
-            data kinds that needs to be used in the computation of parcellation
-            (default None).
+        warp_data : dict
+            The warp data item of the data object.
 
         Returns
         -------
@@ -81,7 +79,7 @@ class FSLParcellationWarper:
             f"-i {prewarp_parcellation_path.resolve()}",
             # use resampled reference
             f"-r {target_data['reference_path'].resolve()}",
-            f"-w {extra_input['Warp']['path'].resolve()}",
+            f"-w {warp_data['path'].resolve()}",
             f"-o {warped_parcellation_path.resolve()}",
         ]
         # Call applywarp

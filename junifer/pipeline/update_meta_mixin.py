@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict
+from typing import Dict, List, Union
 
 
 __all__ = ["UpdateMetaMixin"]
@@ -15,14 +15,14 @@ class UpdateMetaMixin:
 
     def update_meta(
         self,
-        input: Dict,
+        input: Union[Dict, List[Dict]],
         step_name: str,
     ) -> None:
         """Update metadata.
 
         Parameters
         ----------
-        input : dict
+        input : dict or list of dict
             The data object to update.
         step_name : str
             The name of the pipeline step.
@@ -36,17 +36,21 @@ class UpdateMetaMixin:
         for k, v in vars(self).items():
             if not k.startswith("_"):
                 t_meta[k] = v
-        # Add "meta" to the step's local context dict
-        if "meta" not in input:
-            input["meta"] = {}
-        # Add step name
-        input["meta"][step_name] = t_meta
-        # Add step dependencies
-        if "dependencies" not in input["meta"]:
-            input["meta"]["dependencies"] = set()
-        # Update step dependencies
-        dependencies = getattr(self, "_DEPENDENCIES", set())
-        if dependencies is not None:
-            if not isinstance(dependencies, (set, list)):
-                dependencies = {dependencies}
-            input["meta"]["dependencies"].update(dependencies)
+        # Conditional for list dtype vals like Warp
+        if not isinstance(input, list):
+            input = [input]
+        for entry in input:
+            # Add "meta" to the step's entry's local context dict
+            if "meta" not in entry:
+                entry["meta"] = {}
+            # Add step name
+            entry["meta"][step_name] = t_meta
+            # Add step dependencies
+            if "dependencies" not in entry["meta"]:
+                entry["meta"]["dependencies"] = set()
+            # Update step dependencies
+            dependencies = getattr(self, "_DEPENDENCIES", set())
+            if dependencies is not None:
+                if not isinstance(dependencies, (set, list)):
+                    dependencies = {dependencies}
+                entry["meta"]["dependencies"].update(dependencies)

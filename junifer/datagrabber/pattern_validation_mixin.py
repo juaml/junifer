@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from ..utils import logger, raise_error, warn_with_log
 
@@ -36,7 +36,7 @@ PATTERNS_SCHEMA = {
         },
     },
     "Warp": {
-        "mandatory": ["pattern", "src", "dst"],
+        "mandatory": ["pattern", "src", "dst", "warper"],
         "optional": {},
     },
     "VBM_GM": {
@@ -96,7 +96,7 @@ class PatternValidationMixin:
     def _validate_replacements(
         self,
         replacements: List[str],
-        patterns: Dict[str, Dict[str, str]],
+        patterns: Dict[str, Union[Dict[str, str], List[Dict[str, str]]]],
         partial_pattern_ok: bool,
     ) -> None:
         """Validate the replacements.
@@ -132,39 +132,51 @@ class PatternValidationMixin:
 
         if any(not isinstance(x, str) for x in replacements):
             raise_error(
-                msg="`replacements` must be a list of strings.",
+                msg="`replacements` must be a list of strings",
                 klass=TypeError,
             )
 
+        # Make a list of all patterns recursively
+        all_patterns = []
+        for dtype_val in patterns.values():
+            # Conditional for list dtype vals like Warp
+            if isinstance(dtype_val, list):
+                for entry in dtype_val:
+                    all_patterns.append(entry.get("pattern", ""))
+            else:
+                all_patterns.append(dtype_val.get("pattern", ""))
+        # Check for stray replacements
         for x in replacements:
-            if all(
-                x not in y
-                for y in [
-                    data_type_val.get("pattern", "")
-                    for data_type_val in patterns.values()
-                ]
-            ):
+            if all(x not in y for y in all_patterns):
                 if partial_pattern_ok:
                     warn_with_log(
                         f"Replacement: `{x}` is not part of any pattern, "
                         "things might not work as expected if you are unsure "
-                        "of what you are doing"
+                        "of what you are doing."
                     )
                 else:
                     raise_error(
-                        msg=f"Replacement: {x} is not part of any pattern."
+                        msg=f"Replacement: `{x}` is not part of any pattern"
                     )
 
         # Check that at least one pattern has all the replacements
         at_least_one = False
-        for data_type_val in patterns.values():
-            if all(
-                x in data_type_val.get("pattern", "") for x in replacements
-            ):
-                at_least_one = True
+        for dtype_val in patterns.values():
+            # Conditional for list dtype vals like Warp
+            if isinstance(dtype_val, list):
+                for entry in dtype_val:
+                    if all(
+                        x in entry.get("pattern", "") for x in replacements
+                    ):
+                        at_least_one = True
+            else:
+                if all(
+                    x in dtype_val.get("pattern", "") for x in replacements
+                ):
+                    at_least_one = True
         if not at_least_one and not partial_pattern_ok:
             raise_error(
-                msg="At least one pattern must contain all replacements."
+                msg="At least one pattern must contain all replacements"
             )
 
     def _validate_mandatory_keys(
@@ -207,7 +219,7 @@ class PatternValidationMixin:
                     warn_with_log(
                         f"Mandatory key: `{key}` not found for {data_type}, "
                         "things might not work as expected if you are unsure "
-                        "of what you are doing"
+                        "of what you are doing."
                     )
                 else:
                     raise_error(
@@ -215,7 +227,7 @@ class PatternValidationMixin:
                         klass=KeyError,
                     )
             else:
-                logger.debug(f"Mandatory key: `{key}` found for {data_type}")
+                logger.debug(f"Mandatory key: `{key}` found for {data_type}.")
 
     def _identify_stray_keys(
         self, keys: List[str], schema: List[str], data_type: str
@@ -251,7 +263,7 @@ class PatternValidationMixin:
         self,
         types: List[str],
         replacements: List[str],
-        patterns: Dict[str, Dict[str, str]],
+        patterns: Dict[str, Union[Dict[str, str], List[Dict[str, str]]]],
         partial_pattern_ok: bool = False,
     ) -> None:
         """Validate the patterns.
@@ -298,87 +310,185 @@ class PatternValidationMixin:
                 msg="`patterns` must contain all `types`", klass=ValueError
             )
         # Check against schema
-        for data_type_key, data_type_val in patterns.items():
+        for dtype_key, dtype_val in patterns.items():
             # Check if valid data type is provided
-            if data_type_key not in PATTERNS_SCHEMA:
+            if dtype_key not in PATTERNS_SCHEMA:
                 raise_error(
-                    f"Unknown data type: {data_type_key}, "
+                    f"Unknown data type: {dtype_key}, "
                     f"should be one of: {list(PATTERNS_SCHEMA.keys())}"
                 )
-            # Check mandatory keys for data type
-            self._validate_mandatory_keys(
-                keys=list(data_type_val),
-                schema=PATTERNS_SCHEMA[data_type_key]["mandatory"],
-                data_type=data_type_key,
-                partial_pattern_ok=partial_pattern_ok,
-            )
-            # Check optional keys for data type
-            for optional_key, optional_val in PATTERNS_SCHEMA[data_type_key][
-                "optional"
-            ].items():
-                if optional_key not in data_type_val:
-                    logger.debug(
-                        f"Optional key: `{optional_key}` missing for "
-                        f"{data_type_key}"
-                    )
-                else:
-                    logger.debug(
-                        f"Optional key: `{optional_key}` found for "
-                        f"{data_type_key}"
-                    )
-                    # Set nested type name for easier access
-                    nested_data_type = f"{data_type_key}.{optional_key}"
-                    nested_mandatory_keys_schema = PATTERNS_SCHEMA[
-                        data_type_key
-                    ]["optional"][optional_key]["mandatory"]
-                    nested_optional_keys_schema = PATTERNS_SCHEMA[
-                        data_type_key
-                    ]["optional"][optional_key]["optional"]
-                    # Check mandatory keys for nested type
+            # Conditional for list dtype vals like Warp
+            if isinstance(dtype_val, list):
+                for idx, entry in enumerate(dtype_val):
+                    # Check mandatory keys for data type
                     self._validate_mandatory_keys(
-                        keys=list(optional_val["mandatory"]),
-                        schema=nested_mandatory_keys_schema,
-                        data_type=nested_data_type,
+                        keys=list(entry),
+                        schema=PATTERNS_SCHEMA[dtype_key]["mandatory"],
+                        data_type=f"{dtype_key}.{idx}",
                         partial_pattern_ok=partial_pattern_ok,
                     )
-                    # Check optional keys for nested type
-                    for nested_optional_key in nested_optional_keys_schema:
-                        if nested_optional_key not in optional_val["optional"]:
+                    # Check optional keys for data type
+                    for optional_key, optional_val in PATTERNS_SCHEMA[
+                        dtype_key
+                    ]["optional"].items():
+                        if optional_key not in entry:
                             logger.debug(
-                                f"Optional key: `{nested_optional_key}` "
-                                f"missing for {nested_data_type}"
+                                f"Optional key: `{optional_key}` missing for "
+                                f"{dtype_key}.{idx}"
                             )
                         else:
                             logger.debug(
-                                f"Optional key: `{nested_optional_key}` found "
-                                f"for {nested_data_type}"
+                                f"Optional key: `{optional_key}` found for "
+                                f"{dtype_key}.{idx}"
                             )
-                    # Check stray key for nested data type
+                            # Set nested type name for easier access
+                            nested_dtype = f"{dtype_key}.{idx}.{optional_key}"
+                            nested_mandatory_keys_schema = PATTERNS_SCHEMA[
+                                dtype_key
+                            ]["optional"][optional_key]["mandatory"]
+                            nested_optional_keys_schema = PATTERNS_SCHEMA[
+                                dtype_key
+                            ]["optional"][optional_key]["optional"]
+                            # Check mandatory keys for nested type
+                            self._validate_mandatory_keys(
+                                keys=list(optional_val["mandatory"]),
+                                schema=nested_mandatory_keys_schema,
+                                data_type=nested_dtype,
+                                partial_pattern_ok=partial_pattern_ok,
+                            )
+                            # Check optional keys for nested type
+                            for (
+                                nested_optional_key
+                            ) in nested_optional_keys_schema:
+                                if (
+                                    nested_optional_key
+                                    not in optional_val["optional"]
+                                ):
+                                    logger.debug(
+                                        f"Optional key: "
+                                        f"`{nested_optional_key}` missing for "
+                                        f"{nested_dtype}"
+                                    )
+                                else:
+                                    logger.debug(
+                                        f"Optional key: "
+                                        f"`{nested_optional_key}` found for "
+                                        f"{nested_dtype}"
+                                    )
+                            # Check stray key for nested data type
+                            self._identify_stray_keys(
+                                keys=(
+                                    optional_val["mandatory"]
+                                    + optional_val["optional"]
+                                ),
+                                schema=(
+                                    nested_mandatory_keys_schema
+                                    + nested_optional_keys_schema
+                                ),
+                                data_type=nested_dtype,
+                            )
+                    # Check stray key for data type
                     self._identify_stray_keys(
-                        keys=optional_val["mandatory"]
-                        + optional_val["optional"],
-                        schema=nested_mandatory_keys_schema
-                        + nested_optional_keys_schema,
-                        data_type=nested_data_type,
+                        keys=list(entry.keys()),
+                        schema=(
+                            PATTERNS_SCHEMA[dtype_key]["mandatory"]
+                            + list(
+                                PATTERNS_SCHEMA[dtype_key]["optional"].keys()
+                            )
+                        ),
+                        data_type=dtype_key,
                     )
-            # Check stray key for data type
-            self._identify_stray_keys(
-                keys=list(data_type_val.keys()),
-                schema=(
-                    PATTERNS_SCHEMA[data_type_key]["mandatory"]
-                    + list(PATTERNS_SCHEMA[data_type_key]["optional"].keys())
-                ),
-                data_type=data_type_key,
-            )
-            # Wildcard check in patterns
-            if "}*" in data_type_val.get("pattern", ""):
-                raise_error(
-                    msg=(
-                        f"`{data_type_key}.pattern` must not contain `*` "
-                        "following a replacement"
-                    ),
-                    klass=ValueError,
+                    # Wildcard check in patterns
+                    if "}*" in entry.get("pattern", ""):
+                        raise_error(
+                            msg=(
+                                f"`{dtype_key}.pattern` must not contain `*` "
+                                "following a replacement"
+                            ),
+                            klass=ValueError,
+                        )
+            else:
+                # Check mandatory keys for data type
+                self._validate_mandatory_keys(
+                    keys=list(dtype_val),
+                    schema=PATTERNS_SCHEMA[dtype_key]["mandatory"],
+                    data_type=dtype_key,
+                    partial_pattern_ok=partial_pattern_ok,
                 )
+                # Check optional keys for data type
+                for optional_key, optional_val in PATTERNS_SCHEMA[dtype_key][
+                    "optional"
+                ].items():
+                    if optional_key not in dtype_val:
+                        logger.debug(
+                            f"Optional key: `{optional_key}` missing for "
+                            f"{dtype_key}."
+                        )
+                    else:
+                        logger.debug(
+                            f"Optional key: `{optional_key}` found for "
+                            f"{dtype_key}."
+                        )
+                        # Set nested type name for easier access
+                        nested_dtype = f"{dtype_key}.{optional_key}"
+                        nested_mandatory_keys_schema = PATTERNS_SCHEMA[
+                            dtype_key
+                        ]["optional"][optional_key]["mandatory"]
+                        nested_optional_keys_schema = PATTERNS_SCHEMA[
+                            dtype_key
+                        ]["optional"][optional_key]["optional"]
+                        # Check mandatory keys for nested type
+                        self._validate_mandatory_keys(
+                            keys=list(optional_val["mandatory"]),
+                            schema=nested_mandatory_keys_schema,
+                            data_type=nested_dtype,
+                            partial_pattern_ok=partial_pattern_ok,
+                        )
+                        # Check optional keys for nested type
+                        for nested_optional_key in nested_optional_keys_schema:
+                            if (
+                                nested_optional_key
+                                not in optional_val["optional"]
+                            ):
+                                logger.debug(
+                                    f"Optional key: `{nested_optional_key}` "
+                                    f"missing for {nested_dtype}"
+                                )
+                            else:
+                                logger.debug(
+                                    f"Optional key: `{nested_optional_key}` "
+                                    f"found for {nested_dtype}"
+                                )
+                        # Check stray key for nested data type
+                        self._identify_stray_keys(
+                            keys=(
+                                optional_val["mandatory"]
+                                + optional_val["optional"]
+                            ),
+                            schema=(
+                                nested_mandatory_keys_schema
+                                + nested_optional_keys_schema
+                            ),
+                            data_type=nested_dtype,
+                        )
+                # Check stray key for data type
+                self._identify_stray_keys(
+                    keys=list(dtype_val.keys()),
+                    schema=(
+                        PATTERNS_SCHEMA[dtype_key]["mandatory"]
+                        + list(PATTERNS_SCHEMA[dtype_key]["optional"].keys())
+                    ),
+                    data_type=dtype_key,
+                )
+                # Wildcard check in patterns
+                if "}*" in dtype_val.get("pattern", ""):
+                    raise_error(
+                        msg=(
+                            f"`{dtype_key}.pattern` must not contain `*` "
+                            "following a replacement"
+                        ),
+                        klass=ValueError,
+                    )
 
         # Validate replacements
         self._validate_replacements(

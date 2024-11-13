@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, Dict, Optional
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, run_ext_cmd
+from ...utils import logger, raise_error, run_ext_cmd
 from ..template_spaces import get_template, get_xfm
 
 
@@ -34,7 +34,7 @@ class ANTsParcellationWarper:
         src: str,
         dst: str,
         target_data: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
+        warp_data: Optional[Dict[str, Any]],
     ) -> "Nifti1Image":
         """Warp ``parcellation_img`` to correct space.
 
@@ -55,16 +55,19 @@ class ANTsParcellationWarper:
         target_data : dict
             The corresponding item of the data object to which the parcellation
             will be applied.
-        extra_input : dict, optional
-            The other fields in the data object. Useful for accessing other
-            data kinds that needs to be used in the computation of parcellation
-            (default None).
-
+        warp_data : dict or None
+            The warp data item of the data object. The value is unused if
+            ``dst!="T1w"``.
 
         Returns
         -------
         nibabel.nifti1.Nifti1Image
             The transformed parcellation image.
+
+        Raises
+        ------
+        ValueError
+            If ``warp_data`` is None when ``dst="T1w"``.
 
         """
         # Create element-scoped tempdir so that warped parcellation is
@@ -80,7 +83,11 @@ class ANTsParcellationWarper:
         )
 
         # Native space warping
-        if dst == "T1w":
+        if dst == "native":
+            # Warp data check
+            if warp_data is None:
+                raise_error("No `warp_data` provided")
+
             logger.debug("Using ANTs for parcellation transformation")
 
             # Save existing parcellation image to a tempfile
@@ -102,7 +109,7 @@ class ANTsParcellationWarper:
                 f"-i {prewarp_parcellation_path.resolve()}",
                 # use resampled reference
                 f"-r {target_data['reference_path'].resolve()}",
-                f"-t {extra_input['Warp']['path'].resolve()}",
+                f"-t {warp_data['path'].resolve()}",
                 f"-o {warped_parcellation_path.resolve()}",
             ]
             # Call antsApplyTransforms

@@ -14,6 +14,7 @@ from numpy.typing import ArrayLike
 from ...utils import logger, raise_error
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
+from ..utils import get_native_warper
 from ._ants_coordinates_warper import ANTsCoordinatesWarper
 from ._fsl_coordinates_warper import FSLCoordinatesWarper
 
@@ -311,7 +312,8 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         Raises
         ------
         RuntimeError
-            If warp / transformation file extension is not ".mat" or ".h5".
+            If warping specification required for warping using ANTs, is not
+            found.
         ValueError
             If ``extra_input`` is None when ``target_data``'s space is native.
 
@@ -329,27 +331,38 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     f"{target_data['space']} space for further computation."
                 )
 
-            # Check for warp file type to use correct tool
-            warp_file_ext = extra_input["Warp"]["path"].suffix
-            if warp_file_ext == ".mat":
+            # Get native space warper spec
+            warper_spec = get_native_warper(
+                target_data=target_data,
+                other_data=extra_input,
+            )
+            # Conditional for warping tool implementation
+            if warper_spec["warper"] == "fsl":
                 seeds = FSLCoordinatesWarper().warp(
                     seeds=seeds,
                     target_data=target_data,
-                    extra_input=extra_input,
+                    warp_data=warper_spec,
                 )
-            elif warp_file_ext == ".h5":
+            elif warper_spec["warper"] == "ants":
+                # Requires the inverse warp
+                inverse_warper_spec = get_native_warper(
+                    target_data=target_data,
+                    other_data=extra_input,
+                    inverse=True,
+                )
+                # Check warper
+                if inverse_warper_spec["warper"] != "ants":
+                    raise_error(
+                        klass=RuntimeError,
+                        msg=(
+                            "Warping specification mismatch for native space "
+                            "warping of coordinates using ANTs."
+                        ),
+                    )
                 seeds = ANTsCoordinatesWarper().warp(
                     seeds=seeds,
                     target_data=target_data,
-                    extra_input=extra_input,
-                )
-            else:
-                raise_error(
-                    msg=(
-                        "Unknown warp / transformation file extension: "
-                        f"{warp_file_ext}"
-                    ),
-                    klass=RuntimeError,
+                    warp_data=warper_spec,
                 )
 
         return seeds, labels

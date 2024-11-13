@@ -29,7 +29,7 @@ from ...utils import logger, raise_error
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..template_spaces import get_template
-from ..utils import closest_resolution
+from ..utils import closest_resolution, get_native_warper
 from ._ants_mask_warper import ANTsMaskWarper
 from ._fsl_mask_warper import FSLMaskWarper
 
@@ -105,14 +105,16 @@ def compute_brain_mask(
                 "data type to infer target template space."
             )
         # Set target standard space to warp file space source
-        target_std_space = extra_input["Warp"]["src"]
+        for entry in extra_input["Warp"]:
+            if entry["dst"] == "native":
+                target_std_space = entry["src"]
 
     # Fetch template in closest resolution
     template = get_template(
         space=target_std_space,
         target_data=target_data,
         extra_input=extra_input,
-        template_type=mask_type if mask_type in ["gm", "wm"] else "T1w",
+        template_type=mask_type,
     )
     # Resample template to target image
     target_img = target_data["data"]
@@ -357,8 +359,6 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         Raises
         ------
-        RuntimeError
-            If warp / transformation file extension is not ".mat" or ".h5".
         ValueError
             If extra key is provided in addition to mask name in ``masks`` or
             if no mask is provided or
@@ -372,8 +372,6 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         """
         # Check pre-requirements for space manipulation
         target_space = target_data["space"]
-        # Set target standard space to target space
-        target_std_space = target_space
         # Extra data type requirement check if target space is native
         if target_space == "native":
             # Check for extra inputs
@@ -383,8 +381,16 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     "data types in particular for transformation to "
                     f"{target_data['space']} space for further computation."
                 )
+            # Get native space warper spec
+            warper_spec = get_native_warper(
+                target_data=target_data,
+                other_data=extra_input,
+            )
             # Set target standard space to warp file space source
-            target_std_space = extra_input["Warp"]["src"]
+            target_std_space = warper_spec["src"]
+        else:
+            # Set target standard space to target space
+            target_std_space = target_space
 
         # Get the min of the voxels sizes and use it as the resolution
         target_img = target_data["data"]
@@ -489,7 +495,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                         src=mask_space,
                         dst=target_std_space,
                         target_data=target_data,
-                        extra_input=None,
+                        warp_data=None,
                     )
 
             all_masks.append(mask_img)
@@ -510,32 +516,22 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Warp mask if target data is native
         if target_space == "native":
-            # extra_input check done earlier
-            # Check for warp file type to use correct tool
-            warp_file_ext = extra_input["Warp"]["path"].suffix
-            if warp_file_ext == ".mat":
+            # extra_input check done earlier and warper_spec exists
+            if warper_spec["warper"] == "fsl":
                 mask_img = FSLMaskWarper().warp(
                     mask_name="native",
                     mask_img=mask_img,
                     target_data=target_data,
-                    extra_input=extra_input,
+                    warp_data=warper_spec,
                 )
-            elif warp_file_ext == ".h5":
+            elif warper_spec["warper"] == "ants":
                 mask_img = ANTsMaskWarper().warp(
                     mask_name="native",
                     mask_img=mask_img,
                     src="",
-                    dst="T1w",
+                    dst="native",
                     target_data=target_data,
-                    extra_input=extra_input,
-                )
-            else:
-                raise_error(
-                    msg=(
-                        "Unknown warp / transformation file extension: "
-                        f"{warp_file_ext}"
-                    ),
-                    klass=RuntimeError,
+                    warp_data=warper_spec,
                 )
 
         return mask_img

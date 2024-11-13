@@ -122,13 +122,24 @@ class HCP1200(PatternDataGrabber):
                 "pattern": "{subject}/T1w/T1w_acpc_dc_restore.nii.gz",
                 "space": "native",
             },
-            "Warp": {
-                "pattern": (
-                    "{subject}/MNINonLinear/xfms/standard2acpc_dc.nii.gz"
-                ),
-                "src": "MNI152NLin6Asym",
-                "dst": "native",
-            },
+            "Warp": [
+                {
+                    "pattern": (
+                        "{subject}/MNINonLinear/xfms/standard2acpc_dc.nii.gz"
+                    ),
+                    "src": "MNI152NLin6Asym",
+                    "dst": "native",
+                    "warper": "fsl",
+                },
+                {
+                    "pattern": (
+                        "{subject}/MNINonLinear/xfms/acpc_dc2standard.nii.gz"
+                    ),
+                    "src": "native",
+                    "dst": "MNI152NLin6Asym",
+                    "warper": "fsl",
+                },
+            ],
         }
         # The replacements
         replacements = ["subject", "task", "phase_encoding"]

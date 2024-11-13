@@ -26,7 +26,7 @@ class FSLCoordinatesWarper:
         self,
         seeds: ArrayLike,
         target_data: Dict[str, Any],
-        extra_input: Dict[str, Any],
+        warp_data: Dict[str, Any],
     ) -> ArrayLike:
         """Warp ``seeds`` to correct space.
 
@@ -37,10 +37,8 @@ class FSLCoordinatesWarper:
         target_data : dict
             The corresponding item of the data object to which the coordinates
             will be applied.
-        extra_input : dict, optional
-            The other fields in the data object. Useful for accessing other
-            data kinds that needs to be used in the computation of coordinates
-            (default None).
+        warp_data : dict
+            The warp data item of the data object.
 
         Returns
         -------
@@ -72,7 +70,7 @@ class FSLCoordinatesWarper:
             "| img2imgcoord -mm",
             f"-src {target_data['path'].resolve()}",
             f"-dest {target_data['reference_path'].resolve()}",
-            f"-warp {extra_input['Warp']['path'].resolve()}",
+            f"-warp {warp_data['path'].resolve()}",
             f"> {transformed_coords_path.resolve()};",
             f"sed -i 1d {transformed_coords_path.resolve()}",
         ]

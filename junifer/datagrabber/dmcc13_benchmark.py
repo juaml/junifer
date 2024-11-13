@@ -150,7 +150,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                 "mask": {
                     "pattern": (
                         "derivatives/fmriprep-1.3.2/{subject}/{session}/"
-                        "/func/{subject}_{session}_task-{task}_acq-mb4"
+                        "func/{subject}_{session}_task-{task}_acq-mb4"
                         "{phase_encoding}_run-{run}_"
                         "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
                     ),
@@ -221,15 +221,28 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                             "space": "native",
                         },
                     },
-                    "Warp": {
-                        "pattern": (
-                            "derivatives/fmriprep-1.3.2/{subject}/anat/"
-                            "{subject}_from-MNI152NLin2009cAsym_to-T1w_"
-                            "mode-image_xfm.h5"
-                        ),
-                        "src": "MNI152NLin2009cAsym",
-                        "dst": "native",
-                    },
+                    "Warp": [
+                        {
+                            "pattern": (
+                                "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                                "{subject}_from-MNI152NLin2009cAsym_to-T1w_"
+                                "mode-image_xfm.h5"
+                            ),
+                            "src": "MNI152NLin2009cAsym",
+                            "dst": "native",
+                            "warper": "ants",
+                        },
+                        {
+                            "pattern": (
+                                "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                                "{subject}_from-T1w_to-MNI152NLin2009cAsym_"
+                                "mode-image_xfm.h5"
+                            ),
+                            "src": "native",
+                            "dst": "MNI152NLin2009cAsym",
+                            "warper": "ants",
+                        },
+                    ],
                 }
             )
         # Set default types

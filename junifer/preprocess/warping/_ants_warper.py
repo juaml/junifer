@@ -15,7 +15,7 @@ import numpy as np
 from ...data import get_template, get_xfm
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies, ExternalDependencies
-from ...utils import logger, run_ext_cmd
+from ...utils import logger, raise_error, run_ext_cmd
 
 
 __all__ = ["ANTsWarper"]
@@ -63,6 +63,11 @@ class ANTsWarper:
             values and new ``reference_path`` key whose value points to the
             reference file used for warping.
 
+        Raises
+        ------
+        RuntimeError
+            If warp file path could not be found in ``extra_input``.
+
         """
         # Create element-specific tempdir for storing post-warping assets
         element_tempdir = WorkDirManager().get_element_tempdir(
@@ -76,6 +81,17 @@ class ANTsWarper:
             # Get the min of the voxel sizes from input and use it as the
             # resolution
             resolution = np.min(input["data"].header.get_zooms()[:3])
+
+            # Get warp file path
+            warp_file_path = None
+            for entry in extra_input["Warp"]:
+                if entry["dst"] == "native":
+                    warp_file_path = entry["path"]
+            if warp_file_path is None:
+                raise_error(
+                    klass=RuntimeError,
+                    msg="Could not find correct warp file path",
+                )
 
             # Create a tempfile for resampled reference output
             resample_image_out_path = (
@@ -105,7 +121,7 @@ class ANTsWarper:
                 f"-i {input['path'].resolve()}",
                 # use resampled reference
                 f"-r {resample_image_out_path.resolve()}",
-                f"-t {extra_input['Warp']['path'].resolve()}",
+                f"-t {warp_file_path.resolve()}",
                 f"-o {apply_transforms_out_path.resolve()}",
             ]
             # Call antsApplyTransforms
@@ -115,6 +131,8 @@ class ANTsWarper:
             input["data"] = nib.load(apply_transforms_out_path)
             # Save resampled reference path
             input["reference_path"] = resample_image_out_path
+            # Keep pre-warp space for further operations
+            input["prewarp_space"] = input["space"]
             # Use reference input's space as warped input's space
             input["space"] = extra_input["T1w"]["space"]
 
@@ -163,6 +181,9 @@ class ANTsWarper:
 
             # Modify target data
             input["data"] = nib.load(warped_output_path)
+            # Keep pre-warp space for further operations
+            input["prewarp_space"] = input["space"]
+            # Update warped input's space
             input["space"] = reference
 
         return input
