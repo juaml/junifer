@@ -332,7 +332,7 @@ best use of them.</p>
 <p>You have already seen this case handled by having a class attribute
 <code class="docutils literal notranslate"><span class="pre">_DEPENDENCIES</span></code> whose value is a set of all the package names that the
 component depends on. For example, for <a class="reference internal" href="../api/markers.html#junifer.markers.RSSETSMarker" title="junifer.markers.RSSETSMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">RSSETSMarker</span></code></a>, we have:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The type annotation is for documentation and static type checking purposes.
@@ -341,9 +341,9 @@ and others who use it will thank you.</p>
 </section>
 <section id="handling-external-dependencies-from-toolboxes">
 <span id="component-external-dependencies"></span><h2><span class="section-number">7.5.2. </span>Handling external dependencies from toolboxes<a class="headerlink" href="#handling-external-dependencies-from-toolboxes" title="Link to this heading">¶</a></h2>
-<p>You can also specify dependencies of external toolboxes like AFIN, FSL and ANTs,
+<p>You can also specify dependencies of external toolboxes like AFNI, FSL and ANTs,
 by having a class attribute like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ExternalDependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;afni&quot;</span><span class="p">,</span>
         <span class="s2">&quot;commands&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;3dReHo&quot;</span><span class="p">,</span> <span class="s2">&quot;3dAFNItoNIFTI&quot;</span><span class="p">],</span>
@@ -371,7 +371,7 @@ and letting the user know if some dependency is missing.</p>
 that it shows the problem a bit better and how we solve it:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SpaceWarper</span><span class="p">(</span><span class="n">BasePreprocessor</span><span class="p">):</span>
     <span class="c1"># docstring</span>
-    <span class="n">_CONDITIONAL_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">]]]]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">_CONDITIONAL_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ConditionalDependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;using&quot;</span><span class="p">:</span> <span class="s2">&quot;fsl&quot;</span><span class="p">,</span>
             <span class="s2">&quot;depends_on&quot;</span><span class="p">:</span> <span class="n">FSLWarper</span><span class="p">,</span>
@@ -379,6 +379,10 @@ that it shows the problem a bit better and how we solve it:</p>
         <span class="p">{</span>
             <span class="s2">&quot;using&quot;</span><span class="p">:</span> <span class="s2">&quot;ants&quot;</span><span class="p">,</span>
             <span class="s2">&quot;depends_on&quot;</span><span class="p">:</span> <span class="n">ANTsWarper</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;using&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;depends_on&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">FSLWarper</span><span class="p">,</span> <span class="n">ANTsWarper</span><span class="p">],</span>
         <span class="p">},</span>
     <span class="p">]</span>
 
@@ -393,25 +397,30 @@ that it shows the problem a bit better and how we solve it:</p>
 list of dictionaries with two keys:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">using</span></code> (str) : lowercased name of the toolbox</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">depends_on</span></code> (object) : a class which implements the particular tool’s use</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">depends_on</span></code> (object or list of objects) : a class or list of classes which implements the particular tool’s use</p></li>
 </ul>
 <p>It is mandatory to have the <code class="docutils literal notranslate"><span class="pre">using</span></code> positional argument in the constructor in
 this case as the validation starts with this and moves further. It is also
 mandatory to only allow the value of <code class="docutils literal notranslate"><span class="pre">using</span></code> argument to be one of them
 specified in the <code class="docutils literal notranslate"><span class="pre">using</span></code> key of <code class="docutils literal notranslate"><span class="pre">_CONDITIONAL_DEPENDENCIES</span></code> entries.</p>
+<p>For some cases, like we have here, it might be worth to have <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> for
+<code class="docutils literal notranslate"><span class="pre">&quot;using&quot;</span></code> which eases the choice of a particular tool by the user and
+instead lets <code class="docutils literal notranslate"><span class="pre">junifer</span></code> do it automatically. In that case, <code class="docutils literal notranslate"><span class="pre">&quot;depends_on&quot;</span></code>
+needs to be a list of the tool implementation classes. This also requires the
+user to have all the tools in the <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p>
 <p>For brevity, we only show the <code class="docutils literal notranslate"><span class="pre">FSLWarper</span></code> here but <code class="docutils literal notranslate"><span class="pre">ANTsWarper</span></code> looks very
 similar. <code class="docutils literal notranslate"><span class="pre">FSLWarper</span></code> looks like this (only the relevant part is shown here):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FSLWarper</span><span class="p">:</span>
     <span class="c1"># docstring</span>
 
-    <span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ExternalDependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;fsl&quot;</span><span class="p">,</span>
             <span class="s2">&quot;commands&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;flirt&quot;</span><span class="p">,</span> <span class="s2">&quot;applywarp&quot;</span><span class="p">],</span>
         <span class="p">},</span>
     <span class="p">]</span>
 
-    <span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;nibabel&quot;</span><span class="p">}</span>
+    <span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;nibabel&quot;</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -503,7 +512,7 @@ having this pattern.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8cce65a7"></script>
+</div><script src="../_static/documentation_options.js?v=69d0523a"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

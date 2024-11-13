@@ -1034,7 +1034,7 @@ specified element.</p>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;Warp&quot;</span></code> :</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
-  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;src&quot;, &quot;dst&quot;],
+  &quot;mandatory&quot;: [&quot;pattern&quot;, &quot;src&quot;, &quot;dst&quot;, &quot;warper&quot;],
   &quot;optional&quot;: []
 }
 </pre></div>
@@ -1070,11 +1070,20 @@ dictionary, for example:</p>
       &quot;pattern&quot;: &quot;...&quot;,
       &quot;space&quot;: &quot;...&quot;,
     },
-    &quot;Warp&quot;: {
-      &quot;pattern&quot;: &quot;...&quot;,
-      &quot;src&quot;: &quot;...&quot;,
-      &quot;dst&quot;: &quot;...&quot;,
-    }
+}
+</pre></div>
+</div>
+<p>except <code class="docutils literal notranslate"><span class="pre">Warp</span></code>, which needs to be a list of dictionaries as there can
+be multiple spaces to warp (for example, with fMRIPrep):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    &quot;Warp&quot;: [
+      {
+        &quot;pattern&quot;: &quot;...&quot;,
+        &quot;src&quot;: &quot;...&quot;,
+        &quot;dst&quot;: &quot;...&quot;,
+        &quot;warper&quot;: &quot;...&quot;,
+      },
+    ],
 }
 </pre></div>
 </div>
@@ -1468,7 +1477,7 @@ if data type pattern key contains ‘*’ as value.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8cce65a7"></script>
+</div><script src="../_static/documentation_options.js?v=69d0523a"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

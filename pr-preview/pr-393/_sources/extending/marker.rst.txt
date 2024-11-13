@@ -196,15 +196,16 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
     from junifer.api.decorators import register_marker
     from junifer.data import get_parcellation
     from junifer.markers import BaseMarker
+    from junifer.typing import Dependencies, MarkerInOutMappings
     from nilearn.maskers import NiftiLabelsMasker
 
 
     @register_marker
     class ParcelMean(BaseMarker):
 
-        _DEPENDENCIES = {"nilearn", "numpy"}
+        _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "numpy"}
 
-        _MARKER_INOUT_MAPPINGS: ClassVar[dict[str, dict[str, str]]] = {
+        _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
             "BOLD": {
                 "parcel_mean": "timeseries",
             },

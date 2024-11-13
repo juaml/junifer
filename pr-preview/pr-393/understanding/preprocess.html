@@ -454,19 +454,26 @@ parameters:</p>
 <p>To warp to subject’s native space, the dataset needs to provide <code class="docutils literal notranslate"><span class="pre">T1w</span></code> and
 <code class="docutils literal notranslate"><span class="pre">Warp</span></code> data types and the DataGrabber needs to at least have
 <code class="docutils literal notranslate"><span class="pre">[&quot;BOLD&quot;,</span> <span class="pre">&quot;T1w&quot;,</span> <span class="pre">&quot;Warp&quot;]</span></code> (if you are warping <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>) as the <code class="docutils literal notranslate"><span class="pre">types</span></code>
-parameter’s value. The <a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a>’s <code class="docutils literal notranslate"><span class="pre">reference</span></code> parameter needs
+parameter’s value.</p>
+<p>The <a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a>’s <code class="docutils literal notranslate"><span class="pre">reference</span></code> parameter needs
 to be set to <code class="docutils literal notranslate"><span class="pre">T1w</span></code>, which means that the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> data will be transformed
 using the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> as reference (it’s resampled internally to match the
-resolution of the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>). The <code class="docutils literal notranslate"><span class="pre">Warp</span></code> data type is new and it’s only purpose
-is to provide the warp or transformation file (can be linear, non-linear or
-linear + non-linear transform) for the purpose. For <code class="docutils literal notranslate"><span class="pre">using</span></code> parameter, you can
-pass either <code class="docutils literal notranslate"><span class="pre">&quot;fsl&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;ants&quot;</span></code> depending on the warp or transformation file
-format.</p>
+resolution of the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Warp</span></code> data type provides the warp or transformation file (can be linear,
+non-linear or linear + non-linear transform) for the purpose. For <code class="docutils literal notranslate"><span class="pre">using</span></code>
+parameter, you can pass either <code class="docutils literal notranslate"><span class="pre">fsl</span></code> or <code class="docutils literal notranslate"><span class="pre">ants</span></code> depending on the warp or
+transformation file format. You can also provide <code class="docutils literal notranslate"><span class="pre">auto</span></code> to <code class="docutils literal notranslate"><span class="pre">using</span></code> in which
+case either <code class="docutils literal notranslate"><span class="pre">FSL</span></code> or <code class="docutils literal notranslate"><span class="pre">ANTs</span></code> will be used based on the file format provided
+by the DataGrabber. This also requires that both the tools are in the <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p>
+<p>And finally, you would need to set the <code class="docutils literal notranslate"><span class="pre">on</span></code> parameter to <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> to make it
+clear which data type you intend to warp, as the <a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a> is also
+capable of warping <code class="docutils literal notranslate"><span class="pre">T1w</span></code>.</p>
 <p>An example YAML might look like this:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">preprocess</span><span class="p">:</span>
 <span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SpaceWarper</span>
 <span class="w">     </span><span class="nt">using</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fsl</span>
 <span class="w">     </span><span class="nt">reference</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T1w</span>
+<span class="w">     </span><span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOLD</span>
 </pre></div>
 </div>
 </section>
@@ -477,8 +484,8 @@ data type that you want to work on) in <code class="docutils literal notranslate
 you would like to compute features in <code class="docutils literal notranslate"><span class="pre">MNI152NLin2009cAsym</span></code> template space,
 you can also use the <a class="reference internal" href="../api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a> by setting the <code class="docutils literal notranslate"><span class="pre">reference</span></code>
 parameter to the template space’s name, in this case,
-<code class="docutils literal notranslate"><span class="pre">reference=&quot;MNI152NLin2009cAsym&quot;</span></code>. The <code class="docutils literal notranslate"><span class="pre">using</span></code> parameter needs to be set
-to <code class="docutils literal notranslate"><span class="pre">&quot;ants&quot;</span></code> as we need it to warp the data.</p>
+<code class="docutils literal notranslate"><span class="pre">reference:</span> <span class="pre">MNI152NLin2009cAsym</span></code>. The <code class="docutils literal notranslate"><span class="pre">using</span></code> parameter needs to be set
+to <code class="docutils literal notranslate"><span class="pre">ants</span></code> as we need it to warp the data.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We only support template spaces provided by <a class="reference external" href="https://www.templateflow.org">templateflow</a> and the naming
@@ -489,6 +496,7 @@ is similar except that we omit the <code class="docutils literal notranslate"><s
 <span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SpaceWarper</span>
 <span class="w">     </span><span class="nt">using</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ants</span>
 <span class="w">     </span><span class="nt">reference</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MNI152NLin2009cAsym</span>
+<span class="w">     </span><span class="nt">on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOLD</span>
 </pre></div>
 </div>
 </section>
@@ -573,7 +581,7 @@ is similar except that we omit the <code class="docutils literal notranslate"><s
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8cce65a7"></script>
+</div><script src="../_static/documentation_options.js?v=69d0523a"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
