@@ -9,7 +9,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, raise_error, run_ext_cmd
+from ...utils import logger, run_ext_cmd
 
 
 __all__ = ["ANTsCoordinatesWarper"]
@@ -26,7 +26,7 @@ class ANTsCoordinatesWarper:
         self,
         seeds: ArrayLike,
         target_data: Dict[str, Any],
-        extra_input: Dict[str, Any],
+        warp_data: Dict[str, Any],
     ) -> ArrayLike:
         """Warp ``seeds`` to correct space.
 
@@ -37,32 +37,16 @@ class ANTsCoordinatesWarper:
         target_data : dict
             The corresponding item of the data object to which the coordinates
             will be applied.
-        extra_input : dict, optional
-            The other fields in the data object. Useful for accessing other
-            data kinds that needs to be used in the computation of coordinates.
+        warp_data : dict or None
+            The warp data item of the data object.
 
         Returns
         -------
         numpy.ndarray
             The transformed coordinates.
 
-        Raises
-        ------
-        RuntimeError
-            If warp file path could not be found in ``extra_input``.
-
         """
         logger.debug("Using ANTs for coordinates transformation")
-
-        # Get warp file path
-        warp_file_path = None
-        for entry in extra_input["Warp"]:
-            if entry["dst"] == "native":
-                warp_file_path = entry["path"]
-        if warp_file_path is None:
-            raise_error(
-                klass=RuntimeError, msg="Could not find correct warp file path"
-            )
 
         # Create element-specific tempdir for storing post-warping assets
         element_tempdir = WorkDirManager().get_element_tempdir(
@@ -93,7 +77,7 @@ class ANTsCoordinatesWarper:
             "-f 0",
             f"-i {pretransform_coordinates_path.resolve()}",
             f"-o {transformed_coords_path.resolve()}",
-            f"-t {warp_file_path.resolve()}",
+            f"-t {warp_data['path'].resolve()}",
         ]
         # Call antsApplyTransformsToPoints
         run_ext_cmd(

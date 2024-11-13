@@ -499,7 +499,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                         src=mask_space,
                         dst=target_std_space,
                         target_data=target_data,
-                        extra_input=None,
+                        warp_data=None,
                     )
 
             all_masks.append(mask_img)
@@ -526,7 +526,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     mask_name="native",
                     mask_img=mask_img,
                     target_data=target_data,
-                    extra_input=extra_input,
+                    warp_data=warper_spec,
                 )
             elif warper == "ants":
                 mask_img = ANTsMaskWarper().warp(
@@ -535,7 +535,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     src="",
                     dst="T1w",
                     target_data=target_data,
-                    extra_input=extra_input,
+                    warp_data=warper_spec,
                 )
 
         return mask_img

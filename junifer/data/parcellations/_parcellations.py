@@ -449,7 +449,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     src=space,
                     dst=target_std_space,
                     target_data=target_data,
-                    extra_input=None,
+                    warp_data=None,
                 )
                 # Remove extra dimension added by ANTs
                 img = image.math_img("np.squeeze(img)", img=raw_img)
@@ -485,7 +485,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     parcellation_name="native",
                     parcellation_img=resampled_parcellation_img,
                     target_data=target_data,
-                    extra_input=extra_input,
+                    warp_data=warper_spec,
                 )
             elif warper == "ants":
                 resampled_parcellation_img = ANTsParcellationWarper().warp(
@@ -494,7 +494,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     src="",
                     dst="T1w",
                     target_data=target_data,
-                    extra_input=extra_input,
+                    warp_data=warper_spec,
                 )
 
         return resampled_parcellation_img, labels

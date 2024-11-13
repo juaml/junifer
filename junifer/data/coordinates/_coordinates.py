@@ -342,13 +342,13 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 seeds = FSLCoordinatesWarper().warp(
                     seeds=seeds,
                     target_data=target_data,
-                    extra_input=extra_input,
+                    warp_data=warper_spec,
                 )
             elif warper == "ants":
                 seeds = ANTsCoordinatesWarper().warp(
                     seeds=seeds,
                     target_data=target_data,
-                    extra_input=extra_input,
+                    warp_data=warper_spec,
                 )
 
         return seeds, labels

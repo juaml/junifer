@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, Dict
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, raise_error, run_ext_cmd
+from ...utils import logger, run_ext_cmd
 
 
 if TYPE_CHECKING:
@@ -31,7 +31,7 @@ class FSLMaskWarper:
         mask_name: str,
         mask_img: "Nifti1Image",
         target_data: Dict[str, Any],
-        extra_input: Dict[str, Any],
+        warp_data: Dict[str, Any],
     ) -> "Nifti1Image":
         """Warp ``mask_img`` to correct space.
 
@@ -44,32 +44,16 @@ class FSLMaskWarper:
         target_data : dict
             The corresponding item of the data object to which the mask
             will be applied.
-        extra_input : dict, optional
-            The other fields in the data object. Useful for accessing other
-            data kinds that needs to be used in the computation of mask.
+        warp_data : dict
+            The warp data item of the data object.
 
         Returns
         -------
         nibabel.nifti1.Nifti1Image
             The transformed mask image.
 
-        Raises
-        ------
-        RuntimeError
-            If warp file path could not be found in ``extra_input``.
-
         """
         logger.debug("Using FSL for mask transformation")
-
-        # Get warp file path
-        warp_file_path = None
-        for entry in extra_input["Warp"]:
-            if entry["dst"] == "native":
-                warp_file_path = entry["path"]
-        if warp_file_path is None:
-            raise_error(
-                klass=RuntimeError, msg="Could not find correct warp file path"
-            )
 
         # Create element-scoped tempdir so that warped mask is
         # available later as nibabel stores file path reference for
@@ -91,7 +75,7 @@ class FSLMaskWarper:
             f"-i {prewarp_mask_path.resolve()}",
             # use resampled reference
             f"-r {target_data['reference_path'].resolve()}",
-            f"-w {warp_file_path.resolve()}",
+            f"-w {warp_data['path'].resolve()}",
             f"-o {warped_mask_path.resolve()}",
         ]
         # Call applywarp
