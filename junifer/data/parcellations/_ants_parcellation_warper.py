@@ -83,7 +83,7 @@ class ANTsParcellationWarper:
         )
 
         # Native space warping
-        if dst == "T1w":
+        if dst == "native":
             # Warp data check
             if warp_data is None:
                 raise_error("No `warp_data` provided")

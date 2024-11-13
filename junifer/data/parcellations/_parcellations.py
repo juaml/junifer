@@ -490,7 +490,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     parcellation_name="native",
                     parcellation_img=resampled_parcellation_img,
                     src="",
-                    dst="T1w",
+                    dst="native",
                     target_data=target_data,
                     warp_data=warper_spec,
                 )

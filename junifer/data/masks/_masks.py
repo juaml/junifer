@@ -529,7 +529,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     mask_name="native",
                     mask_img=mask_img,
                     src="",
-                    dst="T1w",
+                    dst="native",
                     target_data=target_data,
                     warp_data=warper_spec,
                 )
