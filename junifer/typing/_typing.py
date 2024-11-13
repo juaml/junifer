@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from collections.abc import AbstractSet, MutableMapping, Sequence
+from collections.abc import MutableMapping, Sequence
 from typing import (
     TYPE_CHECKING,
     Union,
@@ -42,7 +42,7 @@ PipelineComponent = Union[
     "MarkerLike",
     "StorageLike",
 ]
-Dependencies = AbstractSet[str]
+Dependencies = set[str]
 ConditionalDependencies = Sequence[
     MutableMapping[
         str,
