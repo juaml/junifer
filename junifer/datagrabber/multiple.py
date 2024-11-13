@@ -8,6 +8,7 @@
 from typing import Dict, List, Tuple, Union
 
 from ..api.decorators import register_datagrabber
+from ..typing import DataGrabberLike
 from ..utils import deep_update, raise_error
 from .base import BaseDataGrabber
 
@@ -37,7 +38,7 @@ class MultipleDataGrabber(BaseDataGrabber):
 
     """
 
-    def __init__(self, datagrabbers: List[BaseDataGrabber], **kwargs) -> None:
+    def __init__(self, datagrabbers: List[DataGrabberLike], **kwargs) -> None:
         # Check datagrabbers consistency
         # Check for same element keys
         first_keys = datagrabbers[0].get_element_keys()

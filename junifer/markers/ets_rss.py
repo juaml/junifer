@@ -6,11 +6,12 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Set, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
 import numpy as np
 
 from ..api.decorators import register_marker
+from ..typing import Dependencies, MarkerInOutMappings
 from ..utils import logger
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
@@ -45,9 +46,9 @@ class RSSETSMarker(BaseMarker):
 
     """
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
 
-    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
         "BOLD": {
             "rss_ets": "timeseries",
         },

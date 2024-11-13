@@ -13,6 +13,7 @@ __all__ = [
     "external",
     "onthefly",
     "testing",
+    "typing",
     "__version__",
 ]
 
@@ -30,6 +31,7 @@ from . import (
     utils,
     external,
     testing,
+    typing,
     onthefly,
 )
 from ._version import __version__

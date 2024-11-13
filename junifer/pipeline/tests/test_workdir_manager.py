@@ -103,6 +103,7 @@ def test_workdir_manager_get_and_delete_tempdir(tmp_path: Path) -> None:
     # Should remove temporary directory
     assert workdir_mgr.root_tempdir is None
 
+
 def test_workdir_manager_no_cleanup(tmp_path: Path) -> None:
     """Test WorkDirManager correctly bypasses cleanup.
 

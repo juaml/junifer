@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     ClassVar,
-    Set,
     Tuple,
 )
 
@@ -20,12 +19,13 @@ from nilearn import image as nimg
 from nilearn import masking as nmask
 
 from ...pipeline import WorkDirManager
+from ...typing import Dependencies
 from ...utils import logger, raise_error
 from ...utils.singleton import Singleton
 
 
 if TYPE_CHECKING:
-    from nibabel import Nifti1Image
+    from nibabel.nifti1 import Nifti1Image
 
 
 __all__ = ["JuniferReHo"]
@@ -38,7 +38,7 @@ class JuniferReHo(metaclass=Singleton):
 
     """
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"numpy", "nilearn", "scipy"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn", "scipy"}
 
     def __del__(self) -> None:
         """Terminate the class."""

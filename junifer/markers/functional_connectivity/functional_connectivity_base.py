@@ -5,11 +5,12 @@
 
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Dict, List, Optional, Set, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
 from ...external.nilearn import JuniferConnectivityMeasure
+from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import raise_error
 from ..base import BaseMarker
 
@@ -51,9 +52,9 @@ class FunctionalConnectivityBase(BaseMarker):
 
     """
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "scikit-learn"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "scikit-learn"}
 
-    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
         "BOLD": {
             "functional_connectivity": "matrix",
         },

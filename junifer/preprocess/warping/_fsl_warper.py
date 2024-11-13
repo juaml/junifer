@@ -7,15 +7,13 @@ from typing import (
     Any,
     ClassVar,
     Dict,
-    List,
-    Set,
-    Union,
 )
 
 import nibabel as nib
 import numpy as np
 
 from ...pipeline import WorkDirManager
+from ...typing import Dependencies, ExternalDependencies
 from ...utils import logger, run_ext_cmd
 
 
@@ -30,14 +28,14 @@ class FSLWarper:
 
     """
 
-    _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+    _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
             "name": "fsl",
             "commands": ["flirt", "applywarp"],
         },
     ]
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"numpy", "nibabel"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nibabel"}
 
     def preprocess(
         self,

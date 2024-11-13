@@ -11,10 +11,10 @@ from typing import (
     Dict,
     List,
     Optional,
-    Set,
     Union,
 )
 
+from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import raise_error
 from ..base import BaseMarker
 from ..parcel_aggregation import ParcelAggregation
@@ -51,9 +51,9 @@ class ComplexityBase(BaseMarker):
 
     """
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn", "neurokit2"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "neurokit2"}
 
-    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
         "BOLD": {
             "complexity": "vector",
         },

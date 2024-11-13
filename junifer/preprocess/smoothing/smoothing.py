@@ -3,9 +3,10 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, ClassVar, Dict, List, Optional, Tuple, Union
 
 from ...api.decorators import register_preprocessor
+from ...typing import ConditionalDependencies
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 from ._afni_smoothing import AFNISmoothing
@@ -67,7 +68,7 @@ class Smoothing(BasePreprocessor):
 
     """
 
-    _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
+    _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
             "using": "nilearn",
             "depends_on": NilearnSmoothing,

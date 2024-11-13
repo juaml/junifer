@@ -4,11 +4,12 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Set, Union
+from typing import Any, ClassVar, Dict, List, Optional, Union
 
 import pandas as pd
 
 from ...api.decorators import register_marker
+from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import logger, raise_error
 from ..base import BaseMarker
 from ..parcel_aggregation import ParcelAggregation
@@ -49,9 +50,9 @@ class CrossParcellationFC(BaseMarker):
 
     """
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
 
-    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
         "BOLD": {
             "functional_connectivity": "matrix",
         },

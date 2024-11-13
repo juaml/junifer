@@ -3,23 +3,20 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Dict, Optional, Type
+from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
 
+from ..typing import StorageLike
 from ..utils import raise_error
-
-
-if TYPE_CHECKING:
-    from junifer.storage import BaseFeatureStorage
 
 
 __all__ = ["normalize", "reweight"]
 
 
 def normalize(
-    storage: Type["BaseFeatureStorage"],
+    storage: StorageLike,
     features: Dict[str, Dict[str, Optional[str]]],
     kind: str,
 ) -> pd.DataFrame:
@@ -89,7 +86,7 @@ def normalize(
 
 
 def reweight(
-    storage: Type["BaseFeatureStorage"],
+    storage: StorageLike,
     feature_name: Optional[str] = None,
     feature_md5: Optional[str] = None,
 ) -> pd.DataFrame:

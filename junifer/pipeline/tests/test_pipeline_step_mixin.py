@@ -5,12 +5,17 @@
 # License: AGPL
 
 import warnings
-from typing import ClassVar, Dict, List, Set, Type, Union
+from typing import ClassVar, Dict, List
 
 import pytest
 
 from junifer.pipeline.pipeline_step_mixin import PipelineStepMixin
 from junifer.pipeline.utils import _check_afni
+from junifer.typing import (
+    ConditionalDependencies,
+    Dependencies,
+    ExternalDependencies,
+)
 
 
 def test_PipelineStepMixin_correct_dependencies() -> None:
@@ -19,7 +24,7 @@ def test_PipelineStepMixin_correct_dependencies() -> None:
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _DEPENDENCIES: ClassVar[Set[str]] = {"math"}
+        _DEPENDENCIES: ClassVar[Dependencies] = {"math"}
 
         def validate_input(self, input: List[str]) -> List[str]:
             return input
@@ -40,7 +45,7 @@ def test_PipelineStepMixin_incorrect_dependencies() -> None:
     class IncorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _DEPENDENCIES: ClassVar[Set[str]] = {"foobar"}
+        _DEPENDENCIES: ClassVar[Dependencies] = {"foobar"}
 
         def validate_input(self, input: List[str]) -> List[str]:
             return input
@@ -65,7 +70,7 @@ def test_PipelineStepMixin_correct_ext_dependencies() -> None:
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _EXT_DEPENDENCIES: ClassVar[List[Dict[str, str]]] = [{"name": "afni"}]
+        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [{"name": "afni"}]
 
         def validate_input(self, input: List[str]) -> List[str]:
             return input
@@ -89,7 +94,7 @@ def test_PipelineStepMixin_ext_deps_correct_commands() -> None:
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
             {"name": "afni", "commands": ["3dReHo"]}
         ]
 
@@ -117,7 +122,7 @@ def test_PipelineStepMixin_ext_deps_incorrect_commands() -> None:
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
             {"name": "afni", "commands": ["3d"]}
         ]
 
@@ -141,7 +146,7 @@ def test_PipelineStepMixin_incorrect_ext_dependencies() -> None:
     class IncorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, bool]]]] = [
+        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
             {"name": "foobar", "optional": True}
         ]
 
@@ -163,14 +168,12 @@ def test_PipelineStepMixin_correct_conditional_dependencies() -> None:
     """Test fit-transform with correct conditional dependencies."""
 
     class Dependency:
-        _DEPENDENCIES: ClassVar[Set[str]] = {"math"}
+        _DEPENDENCIES: ClassVar[Dependencies] = {"math"}
 
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _CONDITIONAL_DEPENDENCIES: ClassVar[
-            List[Dict[str, Union[str, Type]]]
-        ] = [
+        _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
             {
                 "using": "math",
                 "depends_on": Dependency,
@@ -196,14 +199,12 @@ def test_PipelineStepMixin_incorrect_conditional_dependencies() -> None:
     """Test fit-transform with incorrect conditional dependencies."""
 
     class Dependency:
-        _DEPENDENCIES: ClassVar[Set[str]] = {"math"}
+        _DEPENDENCIES: ClassVar[Dependencies] = {"math"}
 
     class IncorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _CONDITIONAL_DEPENDENCIES: ClassVar[
-            List[Dict[str, Union[str, Type]]]
-        ] = [
+        _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
             {
                 "using": "math",
                 "depends_on": Dependency,
@@ -231,14 +232,12 @@ def test_PipelineStepMixin_correct_conditional_ext_dependencies() -> None:
     """Test fit-transform with correct conditional external dependencies."""
 
     class ExternalDependency:
-        _EXT_DEPENDENCIES: ClassVar[List[Dict[str, str]]] = [{"name": "afni"}]
+        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [{"name": "afni"}]
 
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _CONDITIONAL_DEPENDENCIES: ClassVar[
-            List[Dict[str, Union[str, Type]]]
-        ] = [
+        _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
             {
                 "using": "afni",
                 "depends_on": ExternalDependency,

@@ -12,13 +12,11 @@ from typing import (
     Any,
     ClassVar,
     Dict,
-    List,
     Optional,
     Tuple,
-    Type,
-    Union,
 )
 
+from ...typing import ConditionalDependencies, MarkerInOutMappings
 from ...utils.logging import logger, raise_error
 from ..base import BaseMarker
 from ._afni_falff import AFNIALFF
@@ -26,7 +24,7 @@ from ._junifer_falff import JuniferALFF
 
 
 if TYPE_CHECKING:
-    from nibabel import Nifti1Image
+    from nibabel.nifti1 import Nifti1Image
 
 
 __all__ = ["ALFFBase"]
@@ -72,7 +70,7 @@ class ALFFBase(BaseMarker):
 
     """
 
-    _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
+    _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
             "using": "afni",
             "depends_on": AFNIALFF,
@@ -83,7 +81,7 @@ class ALFFBase(BaseMarker):
         },
     ]
 
-    _MARKER_INOUT_MAPPINGS: ClassVar[Dict[str, Dict[str, str]]] = {
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
         "BOLD": {
             "alff": "vector",
             "falff": "vector",

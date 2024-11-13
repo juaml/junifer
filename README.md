@@ -39,6 +39,7 @@ The documentation is available at [https://juaml.github.io/junifer](https://juam
   * `preprocess`: Preprocessing module.
   * `storage`: Storage module.
   * `testing`: Testing components module.
+  * `typing`: Type hints module.
   * `utils`: Utilities module (e.g. logging).
 
 ## Installation
