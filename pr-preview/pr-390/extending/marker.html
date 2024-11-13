@@ -484,15 +484,16 @@ following dependencies:</p>
 <span class="kn">from</span> <span class="nn">junifer.api.decorators</span> <span class="kn">import</span> <span class="n">register_marker</span>
 <span class="kn">from</span> <span class="nn">junifer.data</span> <span class="kn">import</span> <span class="n">get_parcellation</span>
 <span class="kn">from</span> <span class="nn">junifer.markers</span> <span class="kn">import</span> <span class="n">BaseMarker</span>
+<span class="kn">from</span> <span class="nn">junifer.typing</span> <span class="kn">import</span> <span class="n">Dependencies</span><span class="p">,</span> <span class="n">MarkerInOutMappings</span>
 <span class="kn">from</span> <span class="nn">nilearn.maskers</span> <span class="kn">import</span> <span class="n">NiftiLabelsMasker</span>
 
 
 <span class="nd">@register_marker</span>
 <span class="k">class</span> <span class="nc">ParcelMean</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
 
-    <span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
+    <span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
 
-    <span class="n">_MARKER_INOUT_MAPPINGS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">_MARKER_INOUT_MAPPINGS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">MarkerInOutMappings</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="s2">&quot;timeseries&quot;</span><span class="p">,</span>
         <span class="p">},</span>
@@ -647,7 +648,7 @@ following dependencies:</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=2388252e"></script>
+</div><script src="../_static/documentation_options.js?v=c69612b3"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

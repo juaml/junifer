@@ -332,7 +332,7 @@ best use of them.</p>
 <p>You have already seen this case handled by having a class attribute
 <code class="docutils literal notranslate"><span class="pre">_DEPENDENCIES</span></code> whose value is a set of all the package names that the
 component depends on. For example, for <a class="reference internal" href="../api/markers.html#junifer.markers.RSSETSMarker" title="junifer.markers.RSSETSMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">RSSETSMarker</span></code></a>, we have:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The type annotation is for documentation and static type checking purposes.
@@ -343,7 +343,7 @@ and others who use it will thank you.</p>
 <span id="component-external-dependencies"></span><h2><span class="section-number">7.5.2. </span>Handling external dependencies from toolboxes<a class="headerlink" href="#handling-external-dependencies-from-toolboxes" title="Link to this heading">¶</a></h2>
 <p>You can also specify dependencies of external toolboxes like AFNI, FSL and ANTs,
 by having a class attribute like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ExternalDependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;afni&quot;</span><span class="p">,</span>
         <span class="s2">&quot;commands&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;3dReHo&quot;</span><span class="p">,</span> <span class="s2">&quot;3dAFNItoNIFTI&quot;</span><span class="p">],</span>
@@ -371,9 +371,7 @@ and letting the user know if some dependency is missing.</p>
 that it shows the problem a bit better and how we solve it:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SpaceWarper</span><span class="p">(</span><span class="n">BasePreprocessor</span><span class="p">):</span>
     <span class="c1"># docstring</span>
-    <span class="n">_CONDITIONAL_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span>
-        <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">]]]]</span>
-    <span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">_CONDITIONAL_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ConditionalDependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;using&quot;</span><span class="p">:</span> <span class="s2">&quot;fsl&quot;</span><span class="p">,</span>
             <span class="s2">&quot;depends_on&quot;</span><span class="p">:</span> <span class="n">FSLWarper</span><span class="p">,</span>
@@ -415,14 +413,14 @@ similar. <code class="docutils literal notranslate"><span class="pre">FSLWarper<
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FSLWarper</span><span class="p">:</span>
     <span class="c1"># docstring</span>
 
-    <span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ExternalDependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
             <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;fsl&quot;</span><span class="p">,</span>
             <span class="s2">&quot;commands&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;flirt&quot;</span><span class="p">,</span> <span class="s2">&quot;applywarp&quot;</span><span class="p">],</span>
         <span class="p">},</span>
     <span class="p">]</span>
 
-    <span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;nibabel&quot;</span><span class="p">}</span>
+    <span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;nibabel&quot;</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -514,7 +512,7 @@ having this pattern.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=2388252e"></script>
+</div><script src="../_static/documentation_options.js?v=c69612b3"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

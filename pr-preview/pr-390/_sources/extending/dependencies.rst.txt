@@ -28,7 +28,7 @@ component depends on. For example, for :class:`.RSSETSMarker`, we have:
 
 .. code-block:: python
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
 
 The type annotation is for documentation and static type checking purposes.
 Although not required, we highly recommend you use them, your future self
@@ -44,7 +44,7 @@ by having a class attribute like so:
 
 .. code-block:: python
 
-    _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+    _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
             "name": "afni",
             "commands": ["3dReHo", "3dAFNItoNIFTI"],
@@ -78,9 +78,7 @@ that it shows the problem a bit better and how we solve it:
 
     class SpaceWarper(BasePreprocessor):
         # docstring
-        _CONDITIONAL_DEPENDENCIES: ClassVar[
-            List[Dict[str, Union[str, Type, List[str], List[Type]]]]
-        ] = [
+        _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
             {
                 "using": "fsl",
                 "depends_on": FSLWarper,
@@ -128,14 +126,14 @@ similar. ``FSLWarper`` looks like this (only the relevant part is shown here):
     class FSLWarper:
         # docstring
 
-        _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
             {
                 "name": "fsl",
                 "commands": ["flirt", "applywarp"],
             },
         ]
 
-        _DEPENDENCIES: ClassVar[Set[str]] = {"numpy", "nibabel"}
+        _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nibabel"}
 
         def preprocess(
             self,
