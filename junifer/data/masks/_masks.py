@@ -47,7 +47,6 @@ _masks_path = Path(__file__).parent
 
 def compute_brain_mask(
     target_data: Dict[str, Any],
-    extra_input: Optional[Dict[str, Any]] = None,
     mask_type: str = "brain",
     threshold: float = 0.5,
 ) -> "Nifti1Image":
@@ -61,9 +60,6 @@ def compute_brain_mask(
     target_data : dict
         The corresponding item of the data object for which mask will be
         loaded.
-    extra_input : dict, optional
-        The other fields in the data object. Useful for accessing other data
-        types (default None).
     mask_type : {"brain", "gm", "wm"}, optional
         Type of mask to be computed:
 
@@ -94,26 +90,19 @@ def compute_brain_mask(
 
     # Check pre-requirements for space manipulation
     target_space = target_data["space"]
-    # Set target standard space to target space
-    target_std_space = target_space
-    # Extra data type requirement check if target space is native
+    # Conditional for native space-warped target data
     if target_space == "native":
-        # Check for extra inputs
-        if extra_input is None:
-            raise_error(
-                "No extra input provided, requires `Warp` "
-                "data type to infer target template space."
-            )
-        # Set target standard space to warp file space source
-        for entry in extra_input["Warp"]:
-            if entry["dst"] == "native":
-                target_std_space = entry["src"]
+        # prewarp_space is added in SpaceWarper and should be there
+        target_std_space = target_data["prewarp_space"]
+    else:
+        # Set target standard space to target space
+        target_std_space = target_space
 
     # Fetch template in closest resolution
     template = get_template(
         space=target_std_space,
         target_data=target_data,
-        extra_input=extra_input,
+        extra_input=None,
         template_type=mask_type,
     )
     # Resample template to target image
