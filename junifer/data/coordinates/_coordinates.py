@@ -14,6 +14,7 @@ from numpy.typing import ArrayLike
 from ...utils import logger, raise_error
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
+from ..utils import get_native_warper
 from ._ants_coordinates_warper import ANTsCoordinatesWarper
 from ._fsl_coordinates_warper import FSLCoordinatesWarper
 
@@ -311,7 +312,8 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         Raises
         ------
         RuntimeError
-            If warper could not be found in ``extra_input``.
+            If warping specification required for warping using ANTs, is not
+            found.
         ValueError
             If ``extra_input`` is None when ``target_data``'s space is native.
 
@@ -329,22 +331,34 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     f"{target_data['space']} space for further computation."
                 )
 
-            # Check for warper to use correct tool
-            warper = None
-            for entry in extra_input["Warp"]:
-                if entry["dst"] == "native":
-                    warper = entry["warper"]
-            if warper is None:
-                raise_error(
-                    klass=RuntimeError, msg="Could not find correct warper"
-                )
-            if warper == "fsl":
+            # Get native space warper spec
+            warper_spec = get_native_warper(
+                target_data=target_data,
+                other_data=extra_input,
+            )
+            # Conditional for warping tool implementation
+            if warper_spec["warper"] == "fsl":
                 seeds = FSLCoordinatesWarper().warp(
                     seeds=seeds,
                     target_data=target_data,
                     warp_data=warper_spec,
                 )
-            elif warper == "ants":
+            elif warper_spec["warper"] == "ants":
+                # Requires the inverse warp
+                inverse_warper_spec = get_native_warper(
+                    target_data=target_data,
+                    other_data=extra_input,
+                    inverse=True,
+                )
+                # Check warper
+                if inverse_warper_spec["warper"] != "ants":
+                    raise_error(
+                        klass=RuntimeError,
+                        msg=(
+                            "Warping specification mismatch for native space "
+                            "warping of coordinates using ANTs."
+                        ),
+                    )
                 seeds = ANTsCoordinatesWarper().warp(
                     seeds=seeds,
                     target_data=target_data,

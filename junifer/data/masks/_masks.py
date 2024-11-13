@@ -29,7 +29,7 @@ from ...utils import logger, raise_error
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..template_spaces import get_template
-from ..utils import closest_resolution
+from ..utils import closest_resolution, get_native_warper
 from ._ants_mask_warper import ANTsMaskWarper
 from ._fsl_mask_warper import FSLMaskWarper
 
@@ -359,8 +359,6 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         Raises
         ------
-        RuntimeError
-            If warper could not be found in ``extra_input``.
         ValueError
             If extra key is provided in addition to mask name in ``masks`` or
             if no mask is provided or
@@ -374,8 +372,6 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         """
         # Check pre-requirements for space manipulation
         target_space = target_data["space"]
-        # Set target standard space to target space
-        target_std_space = target_space
         # Extra data type requirement check if target space is native
         if target_space == "native":
             # Check for extra inputs
@@ -385,16 +381,16 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     "data types in particular for transformation to "
                     f"{target_data['space']} space for further computation."
                 )
-            # Set target standard space to warp file space source and warper
-            warper = None
-            for entry in extra_input["Warp"]:
-                if entry["dst"] == "native":
-                    target_std_space = entry["src"]
-                    warper = entry["warper"]
-            if warper is None:
-                raise_error(
-                    klass=RuntimeError, msg="Could not find correct warper"
-                )
+            # Get native space warper spec
+            warper_spec = get_native_warper(
+                target_data=target_data,
+                other_data=extra_input,
+            )
+            # Set target standard space to warp file space source
+            target_std_space = warper_spec["src"]
+        else:
+            # Set target standard space to target space
+            target_std_space = target_space
 
         # Get the min of the voxels sizes and use it as the resolution
         target_img = target_data["data"]
@@ -520,15 +516,15 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Warp mask if target data is native
         if target_space == "native":
-            # extra_input check done earlier and warper exists
-            if warper == "fsl":
+            # extra_input check done earlier and warper_spec exists
+            if warper_spec["warper"] == "fsl":
                 mask_img = FSLMaskWarper().warp(
                     mask_name="native",
                     mask_img=mask_img,
                     target_data=target_data,
                     warp_data=warper_spec,
                 )
-            elif warper == "ants":
+            elif warper_spec["warper"] == "ants":
                 mask_img = ANTsMaskWarper().warp(
                     mask_name="native",
                     mask_img=mask_img,

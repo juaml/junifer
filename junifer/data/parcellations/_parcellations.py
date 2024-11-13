@@ -23,7 +23,7 @@ from nilearn import datasets, image
 from ...utils import logger, raise_error, warn_with_log
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
-from ..utils import closest_resolution
+from ..utils import closest_resolution, get_native_warper
 from ._ants_parcellation_warper import ANTsParcellationWarper
 from ._fsl_parcellation_warper import FSLParcellationWarper
 
@@ -394,16 +394,12 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         Raises
         ------
-        RuntimeError
-            If warper could not be found in ``extra_input``.
         ValueError
             If ``extra_input`` is None when ``target_data``'s space is native.
 
         """
         # Check pre-requirements for space manipulation
         target_space = target_data["space"]
-        # Set target standard space to target space
-        target_std_space = target_space
         # Extra data type requirement check if target space is native
         if target_space == "native":
             # Check for extra inputs
@@ -413,16 +409,16 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     "data types in particular for transformation to "
                     f"{target_data['space']} space for further computation."
                 )
-            # Set target standard space to warp file space source and warper
-            warper = None
-            for entry in extra_input["Warp"]:
-                if entry["dst"] == "native":
-                    target_std_space = entry["src"]
-                    warper = entry["warper"]
-            if warper is None:
-                raise_error(
-                    klass=RuntimeError, msg="Could not find correct warper"
-                )
+            # Get native space warper spec
+            warper_spec = get_native_warper(
+                target_data=target_data,
+                other_data=extra_input,
+            )
+            # Set target standard space to warp file space source
+            target_std_space = warper_spec["src"]
+        else:
+            # Set target standard space to target space
+            target_std_space = target_space
 
         # Get the min of the voxels sizes and use it as the resolution
         target_img = target_data["data"]
@@ -436,12 +432,14 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         all_parcellations = []
         all_labels = []
         for name in parcellations:
+            # Load parcellation
             img, labels, _, space = self.load(
                 name=name,
                 resolution=resolution,
             )
 
-            # Convert parcellation spaces if required
+            # Convert parcellation spaces if required;
+            # cannot be "native" due to earlier check
             if space != target_std_space:
                 raw_img = ANTsParcellationWarper().warp(
                     parcellation_name=name,
@@ -479,15 +477,15 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Warp parcellation if target space is native
         if target_space == "native":
-            # extra_input check done earlier and warper exists
-            if warper == "fsl":
+            # extra_input check done earlier and warper_spec exists
+            if warper_spec["warper"] == "fsl":
                 resampled_parcellation_img = FSLParcellationWarper().warp(
                     parcellation_name="native",
                     parcellation_img=resampled_parcellation_img,
                     target_data=target_data,
                     warp_data=warper_spec,
                 )
-            elif warper == "ants":
+            elif warper_spec["warper"] == "ants":
                 resampled_parcellation_img = ANTsParcellationWarper().warp(
                     parcellation_name="native",
                     parcellation_img=resampled_parcellation_img,
