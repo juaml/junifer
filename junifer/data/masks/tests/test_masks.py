@@ -64,8 +64,8 @@ def test_compute_brain_mask(mask_type: str, threshold: float) -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         mask = compute_brain_mask(
             target_data=element_data["BOLD"],
-            extra_input=None,
             mask_type=mask_type,
+            threshold=threshold,
         )
         assert isinstance(mask, nib.nifti1.Nifti1Image)
 
@@ -104,7 +104,6 @@ def test_compute_brain_mask_for_native(mask_type: str) -> None:
         )
         mask = compute_brain_mask(
             target_data=element_data["BOLD"],
-            extra_input=None,
             mask_type=mask_type,
         )
         assert isinstance(mask, nib.nifti1.Nifti1Image)
