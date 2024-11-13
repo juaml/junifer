@@ -59,7 +59,8 @@ class ANTsCoordinatesWarper:
         )
         np.savetxt(
             pretransform_coordinates_path,
-            seeds,
+            # convert to LPS coordinate system
+            np.apply_along_axis(lambda x: x * [-1, -1, 1], 1, seeds),
             delimiter=",",
             # Add header while saving to make ANTs work
             header="x,y,z",
@@ -86,9 +87,13 @@ class ANTsCoordinatesWarper:
         )
 
         # Load coordinates
-        return np.loadtxt(
+        transformed_seeds = np.loadtxt(
             # Skip header when reading
             transformed_coords_path,
             delimiter=",",
             skiprows=1,
+        )
+        # convert to RAS coordinate system
+        return np.apply_along_axis(
+            lambda x: x * [-1, -1, 1], 1, transformed_seeds
         )
