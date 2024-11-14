@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Tuple, Union
+from typing import Union
 
 from ..api.decorators import register_datagrabber
 from ..typing import DataGrabberLike
@@ -38,7 +38,7 @@ class MultipleDataGrabber(BaseDataGrabber):
 
     """
 
-    def __init__(self, datagrabbers: List[DataGrabberLike], **kwargs) -> None:
+    def __init__(self, datagrabbers: list[DataGrabberLike], **kwargs) -> None:
         # Check datagrabbers consistency
         # Check for same element keys
         first_keys = datagrabbers[0].get_element_keys()
@@ -79,7 +79,7 @@ class MultipleDataGrabber(BaseDataGrabber):
                 )
         self._datagrabbers = datagrabbers
 
-    def __getitem__(self, element: Union[str, Tuple]) -> Dict:
+    def __getitem__(self, element: Union[str, tuple]) -> dict:
         """Implement indexing.
 
         Parameters
@@ -127,7 +127,7 @@ class MultipleDataGrabber(BaseDataGrabber):
             dg.__exit__(exc_type, exc_value, exc_traceback)
 
     # TODO: return type should be List[List[str]], but base type is List[str]
-    def get_types(self) -> List[str]:
+    def get_types(self) -> list[str]:
         """Get types.
 
         Returns
@@ -139,7 +139,7 @@ class MultipleDataGrabber(BaseDataGrabber):
         types = [x for dg in self._datagrabbers for x in dg.get_types()]
         return types
 
-    def get_element_keys(self) -> List[str]:
+    def get_element_keys(self) -> list[str]:
         """Get element keys.
 
         For each item in the ``element`` tuple passed to ``__getitem__()``,
@@ -153,7 +153,7 @@ class MultipleDataGrabber(BaseDataGrabber):
         """
         return self._datagrabbers[0].get_element_keys()
 
-    def get_elements(self) -> List:
+    def get_elements(self) -> list:
         """Get elements.
 
         Returns
@@ -171,7 +171,7 @@ class MultipleDataGrabber(BaseDataGrabber):
             elements.intersection_update(s)
         return list(elements)
 
-    def get_item(self, **_: Dict) -> Dict[str, Dict]:
+    def get_item(self, **_: dict) -> dict[str, dict]:
         """Get the specified item from the dataset.
 
         Parameters

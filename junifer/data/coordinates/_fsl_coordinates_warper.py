@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 from numpy.typing import ArrayLike
@@ -25,8 +25,8 @@ class FSLCoordinatesWarper:
     def warp(
         self,
         seeds: ArrayLike,
-        target_data: Dict[str, Any],
-        warp_data: Dict[str, Any],
+        target_data: dict[str, Any],
+        warp_data: dict[str, Any],
     ) -> ArrayLike:
         """Warp ``seeds`` to correct space.
 

@@ -9,7 +9,7 @@
 
 from itertools import product
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Union
 
 from ...api.decorators import register_datagrabber
 from ...utils import raise_error
@@ -50,8 +50,8 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
-        types: Union[str, List[str], None] = None,
-        tasks: Union[str, List[str], None] = None,
+        types: Union[str, list[str], None] = None,
+        tasks: Union[str, list[str], None] = None,
         native_t1w: bool = False,
     ) -> None:
         # Declare all tasks
@@ -245,7 +245,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             confounds_format="fmriprep",
         )
 
-    def get_elements(self) -> List:
+    def get_elements(self) -> list:
         """Implement fetching list of elements in the dataset.
 
         Returns
@@ -261,7 +261,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             elems.append((subject, task))
         return elems
 
-    def get_item(self, subject: str, task: str) -> Dict:
+    def get_item(self, subject: str, task: str) -> dict:
         """Index one element in the dataset.
 
         Parameters

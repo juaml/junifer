@@ -6,8 +6,8 @@
 
 import hashlib
 import json
+from collections.abc import Iterable
 from importlib.metadata import PackageNotFoundError, version
-from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
 
@@ -50,7 +50,7 @@ def get_dependency_version(dependency: str) -> str:
     return dep_version
 
 
-def _meta_hash(meta: Dict) -> str:
+def _meta_hash(meta: dict) -> str:
     """Compute the MD5 hash of the metadata.
 
     Parameters
@@ -78,7 +78,7 @@ def _meta_hash(meta: Dict) -> str:
     return meta_md5
 
 
-def process_meta(meta: Dict) -> Tuple[str, Dict, Dict]:
+def process_meta(meta: dict) -> tuple[str, dict, dict]:
     """Process the metadata for storage.
 
     It removes the key "element" and adds the "_element_keys" with the keys
@@ -109,7 +109,7 @@ def process_meta(meta: Dict) -> Tuple[str, Dict, Dict]:
     # Copy the metadata
     t_meta = meta.copy()
     # Remove key "element"
-    element: Dict = t_meta.pop("element", None)
+    element: dict = t_meta.pop("element", None)
     if element is None:
         raise_error(msg="`meta` must contain the key 'element'")
     if "marker" not in t_meta:
@@ -128,7 +128,7 @@ def process_meta(meta: Dict) -> Tuple[str, Dict, Dict]:
     return md5_hash, t_meta, element
 
 
-def element_to_prefix(element: Dict) -> str:
+def element_to_prefix(element: dict) -> str:
     """Convert the element metadata to prefix.
 
     Parameters
@@ -156,7 +156,7 @@ def element_to_prefix(element: Dict) -> str:
 def store_matrix_checks(
     matrix_kind: str,
     diagonal: bool,
-    data_shape: Tuple[int, int],
+    data_shape: tuple[int, int],
     row_names_len: int,
     col_names_len: int,
 ) -> None:
@@ -218,7 +218,7 @@ def matrix_to_vector(
     row_names: Iterable[str],
     matrix_kind: str,
     diagonal: bool,
-) -> Tuple[np.ndarray, List[str]]:
+) -> tuple[np.ndarray, list[str]]:
     """Convert matrix to vector based on parameters.
 
     Parameters

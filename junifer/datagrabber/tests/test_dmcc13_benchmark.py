@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import pytest
 
@@ -218,7 +218,7 @@ def test_DMCC13Benchmark(
     ],
 )
 def test_DMCC13Benchmark_partial_data_access(
-    types: Union[str, List[str]],
+    types: Union[str, list[str]],
     native_t1w: bool,
 ) -> None:
     """Test DMCC13Benchmark DataGrabber partial data access.

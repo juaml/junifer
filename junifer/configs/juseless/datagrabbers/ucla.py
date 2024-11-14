@@ -5,7 +5,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataGrabber
@@ -43,8 +43,8 @@ class JuselessUCLA(PatternDataGrabber):
         datadir: Union[
             str, Path
         ] = "/data/project/psychosis_thalamus/data/fmriprep",
-        types: Union[str, List[str], None] = None,
-        tasks: Union[str, List[str], None] = None,
+        types: Union[str, list[str], None] = None,
+        tasks: Union[str, list[str], None] = None,
     ) -> None:
         # Declare all tasks
         all_tasks = [
@@ -136,7 +136,7 @@ class JuselessUCLA(PatternDataGrabber):
             confounds_format="fmriprep",
         )
 
-    def get_elements(self) -> List:
+    def get_elements(self) -> list:
         """Implement fetching list of elements in the dataset.
 
         Returns

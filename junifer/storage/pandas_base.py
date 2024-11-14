@@ -5,8 +5,9 @@
 # License: AGPL
 
 import json
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Union
+from typing import Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -44,7 +45,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     ) -> None:
         super().__init__(uri=uri, single_output=single_output, **kwargs)
 
-    def get_valid_inputs(self) -> List[str]:
+    def get_valid_inputs(self) -> list[str]:
         """Get valid storage types for input.
 
         Returns
@@ -56,7 +57,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         """
         return ["matrix", "vector", "timeseries"]
 
-    def _meta_row(self, meta: Dict, meta_md5: str) -> pd.DataFrame:
+    def _meta_row(self, meta: dict, meta_md5: str) -> pd.DataFrame:
         """Convert the metadata to a pandas DataFrame.
 
         Parameters
@@ -80,7 +81,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
     @staticmethod
     def element_to_index(
-        element: Dict, n_rows: int = 1, rows_col_name: Optional[str] = None
+        element: dict, n_rows: int = 1, rows_col_name: Optional[str] = None
     ) -> Union[pd.Index, pd.MultiIndex]:
         """Convert the element metadata to index.
 
@@ -101,7 +102,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
         """
         # Make mapping between element access keys and values
-        elem_idx: Dict[str, Iterable[str]] = {
+        elem_idx: dict[str, Iterable[str]] = {
             k: [v] * n_rows for k, v in element.items()
         }
 
@@ -129,7 +130,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         return index
 
     def store_df(
-        self, meta_md5: str, element: Dict, df: Union[pd.DataFrame, pd.Series]
+        self, meta_md5: str, element: dict, df: Union[pd.DataFrame, pd.Series]
     ) -> None:
         """Implement pandas DataFrame storing.
 
@@ -157,8 +158,8 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     def _store_2d(
         self,
         meta_md5: str,
-        element: Dict,
-        data: Union[np.ndarray, List],
+        element: dict,
+        data: Union[np.ndarray, list],
         col_names: Optional[Iterable[str]] = None,
         rows_col_name: Optional[str] = None,
     ) -> None:
@@ -194,8 +195,8 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     def store_vector(
         self,
         meta_md5: str,
-        element: Dict,
-        data: Union[np.ndarray, List],
+        element: dict,
+        data: Union[np.ndarray, list],
         col_names: Optional[Iterable[str]] = None,
     ) -> None:
         """Store vector.
@@ -232,7 +233,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     def store_timeseries(
         self,
         meta_md5: str,
-        element: Dict,
+        element: dict,
         data: np.ndarray,
         col_names: Optional[Iterable[str]] = None,
     ) -> None:

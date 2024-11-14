@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Union
+from typing import Union
 
 
 __all__ = ["UpdateMetaMixin"]
@@ -15,7 +15,7 @@ class UpdateMetaMixin:
 
     def update_meta(
         self,
-        input: Union[Dict, List[Dict]],
+        input: Union[dict, list[dict]],
         step_name: str,
     ) -> None:
         """Update metadata.

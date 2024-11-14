@@ -5,7 +5,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Type
 
 from ..pipeline import PipelineComponentRegistry
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
@@ -47,7 +46,7 @@ def register_datagrabber(klass: DataGrabberLike) -> DataGrabberLike:
     return klass
 
 
-def register_datareader(klass: Type) -> Type:
+def register_datareader(klass: type) -> type:
     """Register DataReader.
 
     Registers the DataReader so it can be used by name.

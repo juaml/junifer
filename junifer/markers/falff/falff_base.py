@@ -11,9 +11,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Dict,
     Optional,
-    Tuple,
 )
 
 from ...typing import ConditionalDependencies, MarkerInOutMappings
@@ -116,8 +114,8 @@ class ALFFBase(BaseMarker):
 
     def _compute(
         self,
-        input_data: Dict[str, Any],
-    ) -> Tuple["Nifti1Image", "Nifti1Image", Path, Path]:
+        input_data: dict[str, Any],
+    ) -> tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute ALFF and fALFF.
 
         Parameters

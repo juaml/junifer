@@ -5,7 +5,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Callable, List, Tuple
+from typing import Callable
 
 import pytest
 from click.testing import CliRunner
@@ -42,7 +42,7 @@ runner = CliRunner()
     ],
 )
 def test_run_and_collect_commands(
-    tmp_path: Path, elements: Tuple[str, ...]
+    tmp_path: Path, elements: tuple[str, ...]
 ) -> None:
     """Test run and collect commands.
 
@@ -175,7 +175,7 @@ def test_run_using_element_file(tmp_path: Path, elements: str) -> None:
     ],
 )
 def test_multi_element_access(
-    tmp_path: Path, elements: str, expected_list: List[Tuple[str, ...]]
+    tmp_path: Path, elements: str, expected_list: list[tuple[str, ...]]
 ) -> None:
     """Test mulit-element parsing.
 
@@ -306,7 +306,7 @@ def test_reset(
     ],
 )
 def test_list_elements_stdout(
-    elements: Tuple[str, ...],
+    elements: tuple[str, ...],
 ) -> None:
     """Test elements listing to stdout.
 
@@ -344,7 +344,7 @@ def test_list_elements_stdout(
 )
 def test_list_elements_output_file(
     tmp_path: Path,
-    elements: Tuple[str, ...],
+    elements: tuple[str, ...],
 ) -> None:
     """Test elements listing to output file.
 

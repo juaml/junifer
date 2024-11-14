@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 import pandas as pd
 
@@ -63,9 +63,9 @@ class CrossParcellationFC(BaseMarker):
         parcellation_one: str,
         parcellation_two: str,
         agg_method: str = "mean",
-        agg_method_params: Optional[Dict] = None,
+        agg_method_params: Optional[dict] = None,
         corr_method: str = "pearson",
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         if parcellation_one == parcellation_two:
@@ -82,9 +82,9 @@ class CrossParcellationFC(BaseMarker):
 
     def compute(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict] = None,
-    ) -> Dict:
+        input: dict[str, Any],
+        extra_input: Optional[dict] = None,
+    ) -> dict:
         """Compute.
 
         Take a timeseries, parcellate them with two different parcellation

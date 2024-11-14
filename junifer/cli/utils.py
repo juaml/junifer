@@ -7,13 +7,12 @@ import os
 import platform as pl
 import re
 from importlib.metadata import distribution
-from typing import Dict
 
 from .._version import __version__
 from ..utils.logging import get_versions
 
 
-def _get_junifer_version() -> Dict[str, str]:
+def _get_junifer_version() -> dict[str, str]:
     """Get junifer version information.
 
     Returns
@@ -27,7 +26,7 @@ def _get_junifer_version() -> Dict[str, str]:
     }
 
 
-def _get_python_information() -> Dict[str, str]:
+def _get_python_information() -> dict[str, str]:
     """Get installed Python information.
 
     Parameters
@@ -42,7 +41,7 @@ def _get_python_information() -> Dict[str, str]:
     }
 
 
-def _get_dependency_information(long_: bool) -> Dict[str, str]:
+def _get_dependency_information(long_: bool) -> dict[str, str]:
     """Get Python environment dependency information.
 
     Parameters
@@ -87,7 +86,7 @@ def _get_dependency_information(long_: bool) -> Dict[str, str]:
     return pruned_dependency_versions
 
 
-def _get_system_information() -> Dict[str, str]:
+def _get_system_information() -> dict[str, str]:
     """Get system information.
 
     Returns
@@ -101,7 +100,7 @@ def _get_system_information() -> Dict[str, str]:
     }
 
 
-def _get_environment_information(long_: bool) -> Dict[str, str]:
+def _get_environment_information(long_: bool) -> dict[str, str]:
     """Get system environment information.
 
     Parameters

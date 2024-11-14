@@ -4,8 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from contextlib import nullcontext
-from typing import ContextManager, Dict, List, Union
+from contextlib import AbstractContextManager, nullcontext
+from typing import Union
 
 import pytest
 
@@ -186,10 +186,10 @@ from junifer.datagrabber.pattern_validation_mixin import PatternValidationMixin
     ],
 )
 def test_PatternValidationMixin(
-    types: Union[str, List[str], List[int]],
-    replacements: Union[str, List[str], List[int]],
-    patterns: Union[str, Dict[str, Dict[str, str]]],
-    expect: ContextManager,
+    types: Union[str, list[str], list[int]],
+    replacements: Union[str, list[str], list[int]],
+    patterns: Union[str, dict[str, dict[str, str]]],
+    expect: AbstractContextManager,
 ) -> None:
     """Test validation.
 

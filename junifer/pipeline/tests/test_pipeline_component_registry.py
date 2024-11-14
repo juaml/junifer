@@ -7,7 +7,6 @@
 
 import logging
 from abc import ABC
-from typing import Type
 
 import pytest
 
@@ -61,7 +60,7 @@ def test_pipeline_component_registry_components():
     ],
 )
 def test_pipeline_component_registry_register(
-    caplog: pytest.LogCaptureFixture, step: str, klass: Type
+    caplog: pytest.LogCaptureFixture, step: str, klass: type
 ) -> None:
     """Test register for PipelineComponentRegistry.
 
@@ -90,7 +89,7 @@ def test_pipeline_component_registry_register(
     ],
 )
 def test_pipeline_component_registry_deregister(
-    caplog: pytest.LogCaptureFixture, step: str, klass: Type
+    caplog: pytest.LogCaptureFixture, step: str, klass: type
 ) -> None:
     """Test de-register for PipelineComponentRegistry.
 

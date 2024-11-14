@@ -7,7 +7,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import pytest
 
@@ -35,8 +35,8 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomicpiop2"
 )
 def test_DataladAOMICPIOP2(
     type_: str,
-    nested_types: Optional[List[str]],
-    tasks: Optional[List[str]],
+    nested_types: Optional[list[str]],
+    tasks: Optional[list[str]],
 ) -> None:
     """Test DataladAOMICPIOP2 DataGrabber.
 
@@ -97,7 +97,7 @@ def test_DataladAOMICPIOP2(
     ],
 )
 def test_DataladAOMICPIOP2_partial_data_access(
-    types: Union[str, List[str]],
+    types: Union[str, list[str]],
 ) -> None:
     """Test DataladAOMICPIOP2 DataGrabber partial data access.
 

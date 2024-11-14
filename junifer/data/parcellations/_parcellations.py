@@ -12,7 +12,7 @@ import tempfile
 import zipfile
 from itertools import product
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 import httpx
 import nibabel as nib
@@ -190,7 +190,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         self,
         name: str,
         parcellation_path: Union[str, Path],
-        parcels_labels: List[str],
+        parcels_labels: list[str],
         space: str,
         overwrite: bool = False,
     ) -> None:
@@ -272,7 +272,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         parcellations_dir: Union[str, Path, None] = None,
         resolution: Optional[float] = None,
         path_only: bool = False,
-    ) -> Tuple[Optional["Nifti1Image"], List[str], Path, str]:
+    ) -> tuple[Optional["Nifti1Image"], list[str], Path, str]:
         """Load parcellation and labels.
 
         If it is a built-in parcellation and the file is not present in the
@@ -367,10 +367,10 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
     def get(
         self,
-        parcellations: Union[str, List[str]],
-        target_data: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple["Nifti1Image", List[str]]:
+        parcellations: Union[str, list[str]],
+        target_data: dict[str, Any],
+        extra_input: Optional[dict[str, Any]] = None,
+    ) -> tuple["Nifti1Image", list[str]]:
         """Get parcellation, tailored for the target image.
 
         Parameters
@@ -503,7 +503,7 @@ def _retrieve_parcellation(
     parcellations_dir: Union[str, Path, None] = None,
     resolution: Optional[float] = None,
     **kwargs,
-) -> Tuple[Path, List[str]]:
+) -> tuple[Path, list[str]]:
     """Retrieve a brain parcellation object from nilearn or online source.
 
     Only returns one parcellation per call. Call function multiple times for
@@ -647,7 +647,7 @@ def _retrieve_schaefer(
     resolution: Optional[float] = None,
     n_rois: Optional[int] = None,
     yeo_networks: int = 7,
-) -> Tuple[Path, List[str]]:
+) -> tuple[Path, list[str]]:
     """Retrieve Schaefer parcellation.
 
     Parameters
@@ -749,7 +749,7 @@ def _retrieve_tian(
     scale: Optional[int] = None,
     space: str = "MNI152NLin6Asym",
     magneticfield: str = "3T",
-) -> Tuple[Path, List[str]]:
+) -> tuple[Path, list[str]]:
     """Retrieve Tian parcellation.
 
     Parameters
@@ -923,7 +923,7 @@ def _retrieve_suit(
     parcellations_dir: Path,
     resolution: Optional[float],
     space: str = "MNI152NLin6Asym",
-) -> Tuple[Path, List[str]]:
+) -> tuple[Path, list[str]]:
     """Retrieve SUIT parcellation.
 
     Parameters
@@ -1049,7 +1049,7 @@ def _retrieve_aicha(
     parcellations_dir: Path,
     resolution: Optional[float] = None,
     version: int = 2,
-) -> Tuple[Path, List[str]]:
+) -> tuple[Path, list[str]]:
     """Retrieve AICHA parcellation.
 
     Parameters
@@ -1205,7 +1205,7 @@ def _retrieve_shen(  # noqa: C901
     resolution: Optional[float] = None,
     year: int = 2015,
     n_rois: int = 268,
-) -> Tuple[Path, List[str]]:
+) -> tuple[Path, list[str]]:
     """Retrieve Shen parcellation.
 
     Parameters
@@ -1410,7 +1410,7 @@ def _retrieve_yan(
     n_rois: Optional[int] = None,
     yeo_networks: Optional[int] = None,
     kong_networks: Optional[int] = None,
-) -> Tuple[Path, List[str]]:
+) -> tuple[Path, list[str]]:
     """Retrieve Yan parcellation.
 
     Parameters
@@ -1607,7 +1607,7 @@ def _retrieve_brainnetome(
     parcellations_dir: Path,
     resolution: Optional[float] = None,
     threshold: Optional[int] = None,
-) -> Tuple[Path, List[str]]:
+) -> tuple[Path, list[str]]:
     """Retrieve Brainnetome parcellation.
 
     Parameters
@@ -1720,10 +1720,10 @@ def _retrieve_brainnetome(
 
 
 def merge_parcellations(
-    parcellations_list: List["Nifti1Image"],
-    parcellations_names: List[str],
-    labels_lists: List[List[str]],
-) -> Tuple["Nifti1Image", List[str]]:
+    parcellations_list: list["Nifti1Image"],
+    parcellations_names: list[str],
+    labels_lists: list[list[str]],
+) -> tuple["Nifti1Image", list[str]]:
     """Merge all parcellations from a list into one parcellation.
 
     Parameters

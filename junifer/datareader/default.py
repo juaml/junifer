@@ -5,7 +5,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Optional, Union
 
 import nibabel as nib
 import pandas as pd
@@ -37,7 +37,7 @@ _readers["TSV"] = {"func": pd.read_csv, "params": {"sep": "\t"}}
 class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
     """Concrete implementation for common data reading."""
 
-    def validate_input(self, input: List[str]) -> List[str]:
+    def validate_input(self, input: list[str]) -> list[str]:
         """Validate input.
 
         Parameters
@@ -75,9 +75,9 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
 
     def _fit_transform(
         self,
-        input: Dict[str, Dict],
-        params: Optional[Dict] = None,
-    ) -> Dict:
+        input: dict[str, dict],
+        params: Optional[dict] = None,
+    ) -> dict:
         """Fit and transform.
 
         Parameters
@@ -165,7 +165,7 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
 
 
 def _read_data(
-    data_type: str, path: Path, read_params: Dict
+    data_type: str, path: Path, read_params: dict
 ) -> Union[nib.Nifti1Image, pd.DataFrame, None]:
     """Read data for data type.
 

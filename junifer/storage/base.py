@@ -5,8 +5,9 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Any, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -43,7 +44,7 @@ class BaseFeatureStorage(ABC):
     def __init__(
         self,
         uri: Union[str, Path],
-        storage_types: Union[List[str], str],
+        storage_types: Union[list[str], str],
         single_output: bool = True,
     ) -> None:
         self.uri = uri
@@ -61,7 +62,7 @@ class BaseFeatureStorage(ABC):
         self._valid_inputs = storage_types
         self.single_output = single_output
 
-    def get_valid_inputs(self) -> List[str]:
+    def get_valid_inputs(self) -> list[str]:
         """Get valid storage types for input.
 
         Returns
@@ -76,7 +77,7 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )
 
-    def validate(self, input_: List[str]) -> None:
+    def validate(self, input_: list[str]) -> None:
         """Validate the input to the pipeline step.
 
         Parameters
@@ -98,7 +99,7 @@ class BaseFeatureStorage(ABC):
             )
 
     @abstractmethod
-    def list_features(self) -> Dict[str, Dict[str, Any]]:
+    def list_features(self) -> dict[str, dict[str, Any]]:
         """List the features in the storage.
 
         Returns
@@ -119,8 +120,8 @@ class BaseFeatureStorage(ABC):
         self,
         feature_name: Optional[str] = None,
         feature_md5: Optional[str] = None,
-    ) -> Dict[
-        str, Union[str, List[Union[int, str, Dict[str, str]]], np.ndarray]
+    ) -> dict[
+        str, Union[str, list[Union[int, str, dict[str, str]]], np.ndarray]
     ]:
         """Read stored feature.
 
@@ -169,7 +170,7 @@ class BaseFeatureStorage(ABC):
         )
 
     @abstractmethod
-    def store_metadata(self, meta_md5: str, element: Dict, meta: Dict) -> None:
+    def store_metadata(self, meta_md5: str, element: dict, meta: dict) -> None:
         """Store metadata.
 
         Parameters
@@ -229,7 +230,7 @@ class BaseFeatureStorage(ABC):
     def store_matrix(
         self,
         meta_md5: str,
-        element: Dict,
+        element: dict,
         data: np.ndarray,
         col_names: Optional[Iterable[str]] = None,
         row_names: Optional[Iterable[str]] = None,
@@ -271,8 +272,8 @@ class BaseFeatureStorage(ABC):
     def store_vector(
         self,
         meta_md5: str,
-        element: Dict,
-        data: Union[np.ndarray, List],
+        element: dict,
+        data: Union[np.ndarray, list],
         col_names: Optional[Iterable[str]] = None,
     ) -> None:
         """Store vector.
@@ -297,7 +298,7 @@ class BaseFeatureStorage(ABC):
     def store_timeseries(
         self,
         meta_md5: str,
-        element: Dict,
+        element: dict,
         data: np.ndarray,
         col_names: Optional[Iterable[str]] = None,
     ) -> None:
@@ -323,7 +324,7 @@ class BaseFeatureStorage(ABC):
     def store_scalar_table(
         self,
         meta_md5: str,
-        element: Dict,
+        element: dict,
         data: np.ndarray,
         col_names: Optional[Iterable[str]] = None,
         row_names: Optional[Iterable[str]] = None,

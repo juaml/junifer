@@ -6,7 +6,6 @@
 
 from copy import deepcopy
 from pathlib import Path
-from typing import Dict, Tuple
 
 import h5py
 import numpy as np
@@ -874,7 +873,7 @@ def test_store_scalar_table(tmp_path: Path) -> None:
     assert_array_equal(read_df.values, data)
 
 
-def _create_data_to_store(n_elements: int, kind: str) -> Tuple[str, Dict]:
+def _create_data_to_store(n_elements: int, kind: str) -> tuple[str, dict]:
     """Create data to store.
 
     Parameters

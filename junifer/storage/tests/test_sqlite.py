@@ -5,7 +5,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -56,7 +56,7 @@ df_ignore = pd.DataFrame(
 
 
 def _read_sql(
-    table_name: str, uri: str, index_col: Union[str, List[str]]
+    table_name: str, uri: str, index_col: Union[str, list[str]]
 ) -> pd.DataFrame:
     """Read database table into a pandas DataFrame.
 

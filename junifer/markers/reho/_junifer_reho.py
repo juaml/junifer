@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     ClassVar,
-    Tuple,
 )
 
 import nibabel as nib
@@ -51,7 +50,7 @@ class JuniferReHo(metaclass=Singleton):
         self,
         data: "Nifti1Image",
         nneigh: int = 27,
-    ) -> Tuple["Nifti1Image", Path]:
+    ) -> tuple["Nifti1Image", Path]:
         """Compute ReHo map.
 
         Parameters

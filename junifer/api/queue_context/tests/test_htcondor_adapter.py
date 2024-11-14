@@ -5,7 +5,7 @@
 
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 import pytest
 
@@ -181,7 +181,7 @@ def test_HTCondorAdapter_run_collect(
     ],
 )
 def test_HTCondor_dag(
-    elements: List[Union[str, Tuple]], collect: str, expected_text: str
+    elements: list[Union[str, tuple]], collect: str, expected_text: str
 ) -> None:
     """Test HTCondorAdapter dag().
 
@@ -218,7 +218,7 @@ def test_HTCondorAdapter_prepare(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
-    env: Dict[str, str],
+    env: dict[str, str],
 ) -> None:
     """Test HTCondorAdapter prepare().
 

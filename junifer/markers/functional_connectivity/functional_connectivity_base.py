@@ -5,7 +5,7 @@
 
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
@@ -63,10 +63,10 @@ class FunctionalConnectivityBase(BaseMarker):
     def __init__(
         self,
         agg_method: str = "mean",
-        agg_method_params: Optional[Dict] = None,
+        agg_method_params: Optional[dict] = None,
         conn_method: str = "correlation",
-        conn_method_params: Optional[Dict] = None,
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
+        conn_method_params: Optional[dict] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.agg_method = agg_method
@@ -83,9 +83,9 @@ class FunctionalConnectivityBase(BaseMarker):
     @abstractmethod
     def aggregate(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        input: dict[str, Any],
+        extra_input: Optional[dict[str, Any]] = None,
+    ) -> dict[str, Any]:
         """Perform aggregation."""
         raise_error(
             msg="Concrete classes need to implement aggregate().",
@@ -94,9 +94,9 @@ class FunctionalConnectivityBase(BaseMarker):
 
     def compute(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict] = None,
-    ) -> Dict:
+        input: dict[str, Any],
+        extra_input: Optional[dict] = None,
+    ) -> dict:
         """Compute.
 
         Parameters

@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from ..api.decorators import register_marker
 from ..data import get_data
@@ -105,11 +105,11 @@ class SphereAggregation(BaseMarker):
         radius: Optional[float] = None,
         allow_overlap: bool = False,
         method: str = "mean",
-        method_params: Optional[Dict[str, Any]] = None,
+        method_params: Optional[dict[str, Any]] = None,
         time_method: Optional[str] = None,
-        time_method_params: Optional[Dict[str, Any]] = None,
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
-        on: Union[List[str], str, None] = None,
+        time_method_params: Optional[dict[str, Any]] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
+        on: Union[list[str], str, None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.coords = coords
@@ -136,9 +136,9 @@ class SphereAggregation(BaseMarker):
 
     def compute(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict] = None,
-    ) -> Dict:
+        input: dict[str, Any],
+        extra_input: Optional[dict] = None,
+    ) -> dict:
         """Compute.
 
         Parameters

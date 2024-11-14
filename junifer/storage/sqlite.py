@@ -6,7 +6,7 @@
 
 import json
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -92,7 +92,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Set upsert
         self._upsert = upsert
 
-    def get_engine(self, element: Optional[Dict] = None) -> "Engine":
+    def get_engine(self, element: Optional[dict] = None) -> "Engine":
         """Get engine.
 
         Parameters
@@ -209,7 +209,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                         msg=f"Invalid option {if_exists} for if_exists."
                     )
 
-    def list_features(self) -> Dict[str, Dict[str, Any]]:
+    def list_features(self) -> dict[str, dict[str, Any]]:
         """List the features in the storage.
 
         Returns
@@ -229,7 +229,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Format index names for retrieved data
         meta_df.index = meta_df.index.str.replace(r"meta_", "")
         # Convert dataframe to dictionary
-        out: Dict[str, Dict[str, str]] = meta_df.to_dict(
+        out: dict[str, dict[str, str]] = meta_df.to_dict(
             orient="index"
         )  # type: ignore
         # Format output
@@ -242,8 +242,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         self,
         feature_name: Optional[str] = None,
         feature_md5: Optional[str] = None,
-    ) -> Dict[
-        str, Union[str, List[Union[int, str, Dict[str, str]]], np.ndarray]
+    ) -> dict[
+        str, Union[str, list[Union[int, str, dict[str, str]]], np.ndarray]
     ]:
         """Read stored feature.
 
@@ -358,7 +358,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         df = df.set_index(index_names)
         return df
 
-    def store_metadata(self, meta_md5: str, element: Dict, meta: Dict) -> None:
+    def store_metadata(self, meta_md5: str, element: dict, meta: dict) -> None:
         """Implement metadata storing in the storage.
 
         Parameters
@@ -381,7 +381,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             self._save_upsert(meta_df, "meta", engine)
 
     def store_df(
-        self, meta_md5: str, element: Dict, df: Union[pd.DataFrame, pd.Series]
+        self, meta_md5: str, element: dict, df: Union[pd.DataFrame, pd.Series]
     ) -> None:
         """Implement pandas DataFrame storing.
 
@@ -434,10 +434,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     def store_matrix(
         self,
         meta_md5: str,
-        element: Dict,
+        element: dict,
         data: np.ndarray,
-        col_names: Optional[List[str]] = None,
-        row_names: Optional[List[str]] = None,
+        col_names: Optional[list[str]] = None,
+        row_names: Optional[list[str]] = None,
         matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:

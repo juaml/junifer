@@ -5,7 +5,6 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Dict
 
 import pytest
 
@@ -24,7 +23,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 )
 def test_EdgeCentricFCParcels(
     tmp_path: Path,
-    conn_method_params: Dict[str, bool],
+    conn_method_params: dict[str, bool],
 ) -> None:
     """Test EdgeCentricFCParcels.
 

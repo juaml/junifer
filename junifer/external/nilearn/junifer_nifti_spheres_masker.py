@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Callable, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Callable, Optional, Union
 
 import numpy as np
 from nilearn import image, masking
@@ -271,7 +271,7 @@ class _JuniferExtractionFunctor:
     def __call__(
         self,
         imgs: Union["Nifti1Image", "Nifti2Image"],
-    ) -> Tuple["ArrayLike", None]:
+    ) -> tuple["ArrayLike", None]:
         """Implement function call overloading.
 
         Parameters
@@ -372,9 +372,9 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
         self,
         imgs: Union["Nifti1Image", "Nifti2Image"],
         confounds: Union[
-            str, "Path", "ArrayLike", "DataFrame", List, None
+            str, "Path", "ArrayLike", "DataFrame", list, None
         ] = None,
-        sample_mask: Union["ArrayLike", List, Tuple, None] = None,
+        sample_mask: Union["ArrayLike", list, tuple, None] = None,
     ) -> "ArrayLike":
         """Extract signals from a single 4D niimg.
 

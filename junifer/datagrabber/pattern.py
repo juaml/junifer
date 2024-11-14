@@ -8,7 +8,7 @@
 import re
 from copy import deepcopy
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Optional, Union
 
 import numpy as np
 
@@ -170,9 +170,9 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
 
     def __init__(
         self,
-        types: List[str],
-        patterns: Dict[str, Dict[str, str]],
-        replacements: Union[List[str], str],
+        types: list[str],
+        patterns: dict[str, dict[str, str]],
+        replacements: Union[list[str], str],
         datadir: Union[str, Path],
         confounds_format: Optional[str] = None,
         partial_pattern_ok: bool = False,
@@ -215,7 +215,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
 
     def _replace_patterns_regex(
         self, pattern: str
-    ) -> Tuple[str, str, List[str]]:
+    ) -> tuple[str, str, list[str]]:
         """Replace the patterns in ``pattern`` with the named groups.
 
         It allows elements to be obtained from the filesystem.
@@ -261,7 +261,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
 
         return re_pattern, glob_pattern, t_replacements
 
-    def _replace_patterns_glob(self, element: Dict, pattern: str) -> str:
+    def _replace_patterns_glob(self, element: dict, pattern: str) -> str:
         """Replace ``pattern`` with the ``element`` so it can be globbed.
 
         Parameters
@@ -294,7 +294,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         return pattern.format(**element)
 
     def _get_path_from_patterns(
-        self, element: Dict, pattern: str, data_type: str
+        self, element: dict, pattern: str, data_type: str
     ) -> Path:
         """Get path from resolved patterns.
 
@@ -351,7 +351,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
 
         return path
 
-    def get_element_keys(self) -> List[str]:
+    def get_element_keys(self) -> list[str]:
         """Get element keys.
 
         For each item in the "element" tuple, this functions returns the
@@ -366,7 +366,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         """
         return self.replacements
 
-    def get_item(self, **element: str) -> Dict[str, Dict]:
+    def get_item(self, **element: str) -> dict[str, dict]:
         """Implement single element indexing for the datagrabber.
 
         This method constructs a real path to the requested item's data, by
@@ -449,7 +449,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
 
         return out
 
-    def get_elements(self) -> List:
+    def get_elements(self) -> list:
         """Implement fetching list of elements in the dataset.
 
         It will use regex to search for "replacements" in the "patterns" and

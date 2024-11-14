@@ -5,7 +5,7 @@
 # License: AGPL
 
 import warnings
-from typing import ClassVar, Dict, List
+from typing import ClassVar
 
 import pytest
 
@@ -26,13 +26,13 @@ def test_PipelineStepMixin_correct_dependencies() -> None:
 
         _DEPENDENCIES: ClassVar[Dependencies] = {"math"}
 
-        def validate_input(self, input: List[str]) -> List[str]:
+        def validate_input(self, input: list[str]) -> list[str]:
             return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
 
-        def _fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
+        def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
     mixer = CorrectMixer()
@@ -47,13 +47,13 @@ def test_PipelineStepMixin_incorrect_dependencies() -> None:
 
         _DEPENDENCIES: ClassVar[Dependencies] = {"foobar"}
 
-        def validate_input(self, input: List[str]) -> List[str]:
+        def validate_input(self, input: list[str]) -> list[str]:
             return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
 
-        def _fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
+        def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
     mixer = IncorrectMixer()
@@ -72,13 +72,13 @@ def test_PipelineStepMixin_correct_ext_dependencies() -> None:
 
         _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [{"name": "afni"}]
 
-        def validate_input(self, input: List[str]) -> List[str]:
+        def validate_input(self, input: list[str]) -> list[str]:
             return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
 
-        def _fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
+        def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
     mixer = CorrectMixer()
@@ -98,13 +98,13 @@ def test_PipelineStepMixin_ext_deps_correct_commands() -> None:
             {"name": "afni", "commands": ["3dReHo"]}
         ]
 
-        def validate_input(self, input: List[str]) -> List[str]:
+        def validate_input(self, input: list[str]) -> list[str]:
             return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
 
-        def _fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
+        def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
     mixer = CorrectMixer()
@@ -126,13 +126,13 @@ def test_PipelineStepMixin_ext_deps_incorrect_commands() -> None:
             {"name": "afni", "commands": ["3d"]}
         ]
 
-        def validate_input(self, input: List[str]) -> List[str]:
+        def validate_input(self, input: list[str]) -> list[str]:
             return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
 
-        def _fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
+        def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
     mixer = CorrectMixer()
@@ -150,13 +150,13 @@ def test_PipelineStepMixin_incorrect_ext_dependencies() -> None:
             {"name": "foobar", "optional": True}
         ]
 
-        def validate_input(self, input: List[str]) -> List[str]:
+        def validate_input(self, input: list[str]) -> list[str]:
             return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
 
-        def _fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
+        def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
     mixer = IncorrectMixer()
@@ -182,13 +182,13 @@ def test_PipelineStepMixin_correct_conditional_dependencies() -> None:
 
         using = "math"
 
-        def validate_input(self, input: List[str]) -> List[str]:
+        def validate_input(self, input: list[str]) -> list[str]:
             return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
 
-        def _fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
+        def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
     mixer = CorrectMixer()
@@ -211,13 +211,13 @@ def test_PipelineStepMixin_incorrect_conditional_dependencies() -> None:
             },
         ]
 
-        def validate_input(self, input: List[str]) -> List[str]:
+        def validate_input(self, input: list[str]) -> list[str]:
             return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
 
-        def _fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
+        def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
     mixer = IncorrectMixer()
@@ -246,13 +246,13 @@ def test_PipelineStepMixin_correct_conditional_ext_dependencies() -> None:
 
         using = "afni"
 
-        def validate_input(self, input: List[str]) -> List[str]:
+        def validate_input(self, input: list[str]) -> list[str]:
             return input
 
         def get_output_type(self, input_type: str) -> str:
             return input_type
 
-        def _fit_transform(self, input: Dict[str, Dict]) -> Dict[str, Dict]:
+        def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
     mixer = CorrectMixer()

@@ -4,7 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, MutableMapping, Optional, Union
+from collections.abc import MutableMapping
+from typing import Optional, Union
 
 import numpy as np
 
@@ -16,7 +17,7 @@ __all__ = ["closest_resolution", "get_native_warper"]
 
 def closest_resolution(
     resolution: Optional[Union[float, int]],
-    valid_resolution: Union[List[float], List[int], np.ndarray],
+    valid_resolution: Union[list[float], list[int], np.ndarray],
 ) -> Union[float, int]:
     """Find the closest resolution.
 
@@ -55,7 +56,7 @@ def get_native_warper(
     target_data: MutableMapping,
     other_data: MutableMapping,
     inverse: bool = False,
-) -> Dict:
+) -> dict:
     """Get correct warping specification for native space.
 
     Parameters

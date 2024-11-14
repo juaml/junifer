@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, Optional
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -17,7 +17,7 @@ __all__ = ["normalize", "reweight"]
 
 def normalize(
     storage: StorageLike,
-    features: Dict[str, Dict[str, Optional[str]]],
+    features: dict[str, dict[str, Optional[str]]],
     kind: str,
 ) -> pd.DataFrame:
     """Read stored brainprint data and normalize either surfaces or volumes.

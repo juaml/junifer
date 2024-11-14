@@ -8,10 +8,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Dict,
-    List,
     Optional,
-    Tuple,
     Union,
 )
 
@@ -40,15 +37,15 @@ def get_data(
     kind: str,
     names: Union[
         str,  # coordinates, parcellation, mask
-        List[str],  # parcellation, mask
-        Dict,  # mask
-        List[Dict],  # mask
+        list[str],  # parcellation, mask
+        dict,  # mask
+        list[dict],  # mask
     ],
-    target_data: Dict[str, Any],
-    extra_input: Optional[Dict[str, Any]] = None,
+    target_data: dict[str, Any],
+    extra_input: Optional[dict[str, Any]] = None,
 ) -> Union[
-    Tuple[ArrayLike, List[str]],  # coordinates
-    Tuple["Nifti1Image", List[str]],  # parcellation
+    tuple[ArrayLike, list[str]],  # coordinates
+    tuple["Nifti1Image", list[str]],  # parcellation
     "Nifti1Image",  # mask
 ]:
     """Get tailored ``kind`` for ``target_data``.
@@ -102,7 +99,7 @@ def get_data(
         raise_error(f"Unknown data kind: {kind}")
 
 
-def list_data(kind: str) -> List[str]:
+def list_data(kind: str) -> list[str]:
     """List available data for ``kind``.
 
     Parameters
@@ -137,9 +134,9 @@ def load_data(
     name: str,
     **kwargs,
 ) -> Union[
-    Tuple[ArrayLike, List[str], str],  # coordinates
-    Tuple[Optional["Nifti1Image"], List[str], Path, str],  # parcellation
-    Tuple[
+    tuple[ArrayLike, list[str], str],  # coordinates
+    tuple[Optional["Nifti1Image"], list[str], Path, str],  # parcellation
+    tuple[
         Optional[Union["Nifti1Image", Callable]], Optional[Path], str
     ],  # mask
 ]:

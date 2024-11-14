@@ -16,7 +16,7 @@ import logging
 import warnings
 from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
-from typing import Dict, NoReturn, Optional, Type, Union
+from typing import NoReturn, Optional, Union
 from warnings import warn
 
 import datalad
@@ -119,7 +119,7 @@ def _get_git_head(path: Path) -> str:
     return proc_stdout
 
 
-def get_versions() -> Dict:
+def get_versions() -> dict:
     """Import stuff and get versions if module.
 
     Returns
@@ -189,7 +189,7 @@ def _close_handlers(logger: logging.Logger) -> None:
             logger.removeHandler(handler)
 
 
-def _safe_log(versions: Dict, name: str) -> None:
+def _safe_log(versions: dict, name: str) -> None:
     """Log with safety.
 
     Parameters
@@ -308,7 +308,7 @@ def configure_logging(
 
 def raise_error(
     msg: str,
-    klass: Type[Exception] = ValueError,
+    klass: type[Exception] = ValueError,
     exception: Optional[Exception] = None,
 ) -> NoReturn:
     """Raise error, but first log it.
@@ -331,7 +331,7 @@ def raise_error(
 
 
 def warn_with_log(
-    msg: str, category: Optional[Type[Warning]] = RuntimeWarning
+    msg: str, category: Optional[type[Warning]] = RuntimeWarning
 ) -> None:
     """Warn, but first log it.
 

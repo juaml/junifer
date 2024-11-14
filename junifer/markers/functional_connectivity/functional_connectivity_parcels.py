@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Optional, Union
 
 from ...api.decorators import register_marker
 from ..parcel_aggregation import ParcelAggregation
@@ -55,12 +55,12 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
 
     def __init__(
         self,
-        parcellation: Union[str, List[str]],
+        parcellation: Union[str, list[str]],
         agg_method: str = "mean",
-        agg_method_params: Optional[Dict] = None,
+        agg_method_params: Optional[dict] = None,
         conn_method: str = "correlation",
-        conn_method_params: Optional[Dict] = None,
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
+        conn_method_params: Optional[dict] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.parcellation = parcellation
@@ -74,8 +74,8 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
         )
 
     def aggregate(
-        self, input: Dict[str, Any], extra_input: Optional[Dict] = None
-    ) -> Dict:
+        self, input: dict[str, Any], extra_input: Optional[dict] = None
+    ) -> dict:
         """Perform parcel aggregation.
 
         Parameters

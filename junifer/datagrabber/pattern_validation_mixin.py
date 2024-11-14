@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Dict, List, Union
+from typing import Union
 
 from ..utils import logger, raise_error, warn_with_log
 
@@ -72,7 +72,7 @@ PATTERNS_SCHEMA = {
 class PatternValidationMixin:
     """Mixin class for pattern validation."""
 
-    def _validate_types(self, types: List[str]) -> None:
+    def _validate_types(self, types: list[str]) -> None:
         """Validate the types.
 
         Parameters
@@ -95,8 +95,8 @@ class PatternValidationMixin:
 
     def _validate_replacements(
         self,
-        replacements: List[str],
-        patterns: Dict[str, Union[Dict[str, str], List[Dict[str, str]]]],
+        replacements: list[str],
+        patterns: dict[str, Union[dict[str, str], list[dict[str, str]]]],
         partial_pattern_ok: bool,
     ) -> None:
         """Validate the replacements.
@@ -181,8 +181,8 @@ class PatternValidationMixin:
 
     def _validate_mandatory_keys(
         self,
-        keys: List[str],
-        schema: List[str],
+        keys: list[str],
+        schema: list[str],
         data_type: str,
         partial_pattern_ok: bool = False,
     ) -> None:
@@ -230,7 +230,7 @@ class PatternValidationMixin:
                 logger.debug(f"Mandatory key: `{key}` found for {data_type}.")
 
     def _identify_stray_keys(
-        self, keys: List[str], schema: List[str], data_type: str
+        self, keys: list[str], schema: list[str], data_type: str
     ) -> None:
         """Identify stray keys.
 
@@ -261,9 +261,9 @@ class PatternValidationMixin:
 
     def validate_patterns(
         self,
-        types: List[str],
-        replacements: List[str],
-        patterns: Dict[str, Union[Dict[str, str], List[Dict[str, str]]]],
+        types: list[str],
+        replacements: list[str],
+        patterns: dict[str, Union[dict[str, str], list[dict[str, str]]]],
         partial_pattern_ok: bool = False,
     ) -> None:
         """Validate the patterns.

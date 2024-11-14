@@ -4,7 +4,7 @@
 # License: AGPL
 
 
-from typing import Dict, Optional, Tuple
+from typing import Optional
 
 import pandas as pd
 
@@ -20,8 +20,8 @@ def read_transform(
     transform: str,
     feature_name: Optional[str] = None,
     feature_md5: Optional[str] = None,
-    transform_args: Optional[Tuple] = None,
-    transform_kw_args: Optional[Dict] = None,
+    transform_args: Optional[tuple] = None,
+    transform_kw_args: Optional[dict] = None,
 ) -> pd.DataFrame:
     """Read stored feature and transform to specific statistical output.
 

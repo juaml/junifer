@@ -4,7 +4,7 @@
 # License: AGPL
 
 import uuid
-from typing import TYPE_CHECKING, Any, Dict
+from typing import TYPE_CHECKING, Any
 
 import nibabel as nib
 
@@ -30,8 +30,8 @@ class FSLParcellationWarper:
         self,
         parcellation_name: str,
         parcellation_img: "Nifti1Image",
-        target_data: Dict[str, Any],
-        warp_data: Dict[str, Any],
+        target_data: dict[str, Any],
+        warp_data: dict[str, Any],
     ) -> "Nifti1Image":
         """Warp ``parcellation_img`` to correct space.
 

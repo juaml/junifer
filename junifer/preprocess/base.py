@@ -5,7 +5,7 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
@@ -38,8 +38,8 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     def __init__(
         self,
-        on: Optional[Union[List[str], str]] = None,
-        required_data_types: Optional[Union[List[str], str]] = None,
+        on: Optional[Union[list[str], str]] = None,
+        required_data_types: Optional[Union[list[str], str]] = None,
     ) -> None:
         """Initialize the class."""
         # Use all data types if not provided
@@ -60,7 +60,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         else:
             self._required_data_types = required_data_types
 
-    def validate_input(self, input: List[str]) -> List[str]:
+    def validate_input(self, input: list[str]) -> list[str]:
         """Validate input.
 
         Parameters
@@ -90,7 +90,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         return [x for x in self._on if x in input]
 
     @abstractmethod
-    def get_valid_inputs(self) -> List[str]:
+    def get_valid_inputs(self) -> list[str]:
         """Get valid data types for input.
 
         Returns
@@ -128,9 +128,9 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
     @abstractmethod
     def preprocess(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict[str, Any]] = None,
-    ) -> Tuple[Dict[str, Any], Optional[Dict[str, Dict[str, Any]]]]:
+        input: dict[str, Any],
+        extra_input: Optional[dict[str, Any]] = None,
+    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
         """Preprocess.
 
         Parameters
@@ -160,8 +160,8 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     def _fit_transform(
         self,
-        input: Dict[str, Dict],
-    ) -> Dict:
+        input: dict[str, dict],
+    ) -> dict:
         """Fit and transform.
 
         Parameters

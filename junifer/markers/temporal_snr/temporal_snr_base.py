@@ -5,7 +5,7 @@
 
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from nilearn import image as nimg
 
@@ -49,8 +49,8 @@ class TemporalSNRBase(BaseMarker):
     def __init__(
         self,
         agg_method: str = "mean",
-        agg_method_params: Optional[Dict] = None,
-        masks: Union[str, Dict, List[Union[Dict, str]], None] = None,
+        agg_method_params: Optional[dict] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         self.agg_method = agg_method
@@ -60,8 +60,8 @@ class TemporalSNRBase(BaseMarker):
 
     @abstractmethod
     def aggregate(
-        self, input: Dict[str, Any], extra_input: Optional[Dict] = None
-    ) -> Dict[str, Any]:
+        self, input: dict[str, Any], extra_input: Optional[dict] = None
+    ) -> dict[str, Any]:
         """Perform aggregation."""
         raise_error(
             msg="Concrete classes need to implement aggregate().",
@@ -70,9 +70,9 @@ class TemporalSNRBase(BaseMarker):
 
     def compute(
         self,
-        input: Dict[str, Any],
-        extra_input: Optional[Dict] = None,
-    ) -> Dict:
+        input: dict[str, Any],
+        extra_input: Optional[dict] = None,
+    ) -> dict:
         """Compute.
 
         Parameters

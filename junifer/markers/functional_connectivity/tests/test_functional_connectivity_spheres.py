@@ -7,7 +7,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Dict, Type
+from typing import TYPE_CHECKING
 
 import pytest
 from nilearn.connectome import ConnectivityMeasure
@@ -37,8 +37,8 @@ if TYPE_CHECKING:
 )
 def test_FunctionalConnectivitySpheres(
     tmp_path: Path,
-    conn_method_params: Dict[str, bool],
-    cov_estimator: Type["BaseEstimator"],
+    conn_method_params: dict[str, bool],
+    cov_estimator: type["BaseEstimator"],
 ) -> None:
     """Test FunctionalConnectivitySpheres.
 

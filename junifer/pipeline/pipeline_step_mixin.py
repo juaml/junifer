@@ -15,7 +15,7 @@ else:
 
 from importlib.util import find_spec
 from itertools import chain
-from typing import Any, Dict, List
+from typing import Any
 
 from ..utils import raise_error
 from .utils import check_ext_dependencies
@@ -27,7 +27,7 @@ __all__ = ["PipelineStepMixin"]
 class PipelineStepMixin:
     """Mixin class for a pipeline step."""
 
-    def validate_input(self, input: List[str]) -> List[str]:
+    def validate_input(self, input: list[str]) -> list[str]:
         """Validate the input to the pipeline step.
 
         Parameters
@@ -74,8 +74,8 @@ class PipelineStepMixin:
 
     def _fit_transform(
         self,
-        input: Dict[str, Dict],
-    ) -> Dict[str, Dict]:
+        input: dict[str, dict],
+    ) -> dict[str, dict]:
         """Fit and transform.
 
         Parameters
@@ -94,7 +94,7 @@ class PipelineStepMixin:
             klass=NotImplementedError,
         )  # pragma: no cover
 
-    def validate(self, input: List[str]) -> List[str]:
+    def validate(self, input: list[str]) -> list[str]:
         """Validate the the pipeline step.
 
         Parameters
@@ -228,8 +228,8 @@ class PipelineStepMixin:
         return outputs
 
     def fit_transform(
-        self, input: Dict[str, Dict], **kwargs: Any
-    ) -> Dict[str, Dict]:
+        self, input: dict[str, dict], **kwargs: Any
+    ) -> dict[str, dict]:
         """Fit and transform.
 
         Parameters

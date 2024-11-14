@@ -8,7 +8,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import List, Union
+from typing import Union
 
 from ...api.decorators import register_datagrabber
 from ..pattern_datalad import PatternDataladDataGrabber
@@ -39,7 +39,7 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
-        types: Union[str, List[str], None] = None,
+        types: Union[str, list[str], None] = None,
         native_t1w: bool = False,
     ) -> None:
         # The patterns

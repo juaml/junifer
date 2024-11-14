@@ -8,7 +8,7 @@ import importlib
 import importlib.util
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Union
 
 import pandas as pd
 
@@ -18,7 +18,7 @@ from ..utils import logger, raise_error, warn_with_log, yaml
 __all__ = ["parse_yaml", "parse_elements"]
 
 
-def parse_yaml(filepath: Union[str, Path]) -> Dict:  # noqa: C901
+def parse_yaml(filepath: Union[str, Path]) -> dict:  # noqa: C901
     """Parse YAML.
 
     Parameters
@@ -140,7 +140,7 @@ def parse_yaml(filepath: Union[str, Path]) -> Dict:  # noqa: C901
     return contents
 
 
-def parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
+def parse_elements(element: tuple[str], config: dict) -> Union[list, None]:
     """Parse elements from cli.
 
     Parameters
@@ -201,7 +201,7 @@ def parse_elements(element: Tuple[str], config: Dict) -> Union[List, None]:
     return elements
 
 
-def _parse_elements_file(filepath: Path) -> List[Tuple[str, ...]]:
+def _parse_elements_file(filepath: Path) -> list[tuple[str, ...]]:
     """Parse elements from file.
 
     Parameters

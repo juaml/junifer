@@ -9,7 +9,6 @@ from typing import (
     TYPE_CHECKING,
     ClassVar,
     Optional,
-    Tuple,
 )
 
 import nibabel as nib
@@ -61,7 +60,7 @@ class AFNIReHo(metaclass=Singleton):
         box_x: Optional[int] = None,
         box_y: Optional[int] = None,
         box_z: Optional[int] = None,
-    ) -> Tuple["Nifti1Image", Path]:
+    ) -> tuple["Nifti1Image", Path]:
         """Compute ReHo map.
 
         Parameters

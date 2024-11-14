@@ -3,12 +3,9 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import MutableMapping, Sequence
 from typing import (
     TYPE_CHECKING,
-    AbstractSet,
-    MutableMapping,
-    Sequence,
-    Type,
     Union,
 )
 
@@ -34,10 +31,10 @@ __all__ = [
 ]
 
 
-DataGrabberLike = Type["BaseDataGrabber"]
-PreprocessorLike = Type["BasePreprocessor"]
-MarkerLike = Type["BaseMarker"]
-StorageLike = Type["BaseFeatureStorage"]
+DataGrabberLike = type["BaseDataGrabber"]
+PreprocessorLike = type["BasePreprocessor"]
+MarkerLike = type["BaseMarker"]
+StorageLike = type["BaseFeatureStorage"]
 PipelineComponent = Union[
     "DataGrabberLike",
     "DefaultDataReader",
@@ -45,7 +42,7 @@ PipelineComponent = Union[
     "MarkerLike",
     "StorageLike",
 ]
-Dependencies = AbstractSet[str]
+Dependencies = set[str]
 ConditionalDependencies = Sequence[
     MutableMapping[
         str,

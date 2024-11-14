@@ -5,7 +5,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import List
 
 import numpy as np
 import pandas as pd
@@ -47,7 +46,7 @@ def test_fMRIPrepConfoundRemover_init() -> None:
         ["T1w", "BOLD"],
     ],
 )
-def test_fMRIPrepConfoundRemover_validate_input(input_: List[str]) -> None:
+def test_fMRIPrepConfoundRemover_validate_input(input_: list[str]) -> None:
     """Test fMRIPrepConfoundRemover validate_input.
 
     Parameters

@@ -7,7 +7,7 @@
 
 from itertools import product
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Union
 
 from ...api.decorators import register_datagrabber
 from ...utils import raise_error
@@ -48,8 +48,8 @@ class HCP1200(PatternDataGrabber):
     def __init__(
         self,
         datadir: Union[str, Path],
-        tasks: Union[str, List[str], None] = None,
-        phase_encodings: Union[str, List[str], None] = None,
+        tasks: Union[str, list[str], None] = None,
+        phase_encodings: Union[str, list[str], None] = None,
         ica_fix: bool = False,
     ) -> None:
         # All tasks
@@ -66,10 +66,10 @@ class HCP1200(PatternDataGrabber):
         ]
         # Set default tasks
         if tasks is None:
-            self.tasks: List[str] = all_tasks
+            self.tasks: list[str] = all_tasks
         # Convert single task into list
         else:
-            if not isinstance(tasks, List):
+            if not isinstance(tasks, list):
                 tasks = [tasks]
             # Check for invalid task(s)
             for task in tasks:
@@ -78,7 +78,7 @@ class HCP1200(PatternDataGrabber):
                         f"'{task}' is not a valid HCP-YA fMRI task input. "
                         f"Valid task values can be any or all of {all_tasks}."
                     )
-            self.tasks: List[str] = tasks
+            self.tasks: list[str] = tasks
 
         # All phase encodings
         all_phase_encodings = ["LR", "RL"]
@@ -150,7 +150,7 @@ class HCP1200(PatternDataGrabber):
             replacements=replacements,
         )
 
-    def get_item(self, subject: str, task: str, phase_encoding: str) -> Dict:
+    def get_item(self, subject: str, task: str, phase_encoding: str) -> dict:
         """Implement single element indexing in the database.
 
         Parameters
@@ -180,7 +180,7 @@ class HCP1200(PatternDataGrabber):
             subject=subject, task=new_task, phase_encoding=phase_encoding
         )
 
-    def get_elements(self) -> List:
+    def get_elements(self) -> list:
         """Implement fetching list of elements in the dataset.
 
         Returns

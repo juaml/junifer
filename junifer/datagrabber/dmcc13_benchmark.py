@@ -5,7 +5,7 @@
 
 from itertools import product
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Union
 
 from ..api.decorators import register_datagrabber
 from ..utils import raise_error
@@ -59,11 +59,11 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
     def __init__(
         self,
         datadir: Union[str, Path, None] = None,
-        types: Union[str, List[str], None] = None,
-        sessions: Union[str, List[str], None] = None,
-        tasks: Union[str, List[str], None] = None,
-        phase_encodings: Union[str, List[str], None] = None,
-        runs: Union[str, List[str], None] = None,
+        types: Union[str, list[str], None] = None,
+        sessions: Union[str, list[str], None] = None,
+        tasks: Union[str, list[str], None] = None,
+        phase_encodings: Union[str, list[str], None] = None,
+        runs: Union[str, list[str], None] = None,
         native_t1w: bool = False,
     ) -> None:
         # Declare all sessions
@@ -271,7 +271,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         task: str,
         phase_encoding: str,
         run: str,
-    ) -> Dict:
+    ) -> dict:
         """Index one element in the dataset.
 
         Parameters
@@ -309,7 +309,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         )
         return out
 
-    def get_elements(self) -> List:
+    def get_elements(self) -> list:
         """Implement fetching list of subjects in the dataset.
 
         Returns

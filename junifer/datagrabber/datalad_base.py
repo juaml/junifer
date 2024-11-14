@@ -9,7 +9,7 @@ import atexit
 import os
 import tempfile
 from pathlib import Path
-from typing import Dict, Optional, Tuple, Union
+from typing import Optional, Union
 
 import datalad
 import datalad.api as dl
@@ -165,7 +165,7 @@ class DataladDataGrabber(BaseDataGrabber):
             raise_error("Could not get dataset ID from remote")
         return remote_id
 
-    def _dataset_get(self, out: Dict) -> Dict:
+    def _dataset_get(self, out: dict) -> dict:
         """Get the dataset found from the path in ``out``.
 
         Parameters
@@ -283,7 +283,7 @@ class DataladDataGrabber(BaseDataGrabber):
                 logger.debug(f"Dropping {f}")
                 self._dataset.drop(f, result_renderer="disabled")
 
-    def __getitem__(self, element: Union[str, Tuple]) -> Dict:
+    def __getitem__(self, element: Union[str, tuple]) -> dict:
         """Implement single element indexing in the Datalad database.
 
         It will first obtain the paths from the parent class and then
