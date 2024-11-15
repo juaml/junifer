@@ -44,23 +44,24 @@ _masks_path = Path(__file__).parent
 
 def compute_brain_mask(
     target_data: dict[str, Any],
-    extra_input: Optional[dict[str, Any]] = None,
+    warp_data: Optional[dict[str, Any]] = None,
     mask_type: str = "brain",
     threshold: float = 0.5,
 ) -> "Nifti1Image":
     """Compute the whole-brain, grey-matter or white-matter mask.
 
     This mask is calculated using the template space and resolution as found
-    in the ``target_data``.
+    in the ``target_data``. If target space is native, then the template is
+    warped to native and then thresholded.
 
     Parameters
     ----------
     target_data : dict
         The corresponding item of the data object for which mask will be
         loaded.
-    extra_input : dict, optional
-        The other fields in the data object. Useful for accessing other data
-        types (default None).
+    warp_data : dict or None, optional
+        The warp data item of the data object. Needs to be provided if
+        ``target_data`` is in native space (default None).
     mask_type : {"brain", "gm", "wm"}, optional
         Type of mask to be computed:
 
@@ -81,7 +82,7 @@ def compute_brain_mask(
     ------
     ValueError
         If ``mask_type`` is invalid or
-        if ``extra_input`` is None when ``target_data``'s space is native.
+        if ``warp_data`` is None when ``target_data``'s space is native.
 
     """
     logger.debug(f"Computing {mask_type} mask")
@@ -90,39 +91,45 @@ def compute_brain_mask(
         raise_error(f"Unknown mask type: {mask_type}")
 
     # Check pre-requirements for space manipulation
-    target_space = target_data["space"]
-    # Set target standard space to target space
-    target_std_space = target_space
-    # Extra data type requirement check if target space is native
-    if target_space == "native":
-        # Check for extra inputs
-        if extra_input is None:
-            raise_error(
-                "No extra input provided, requires `Warp` "
-                "data type to infer target template space."
-            )
-        # Set target standard space to warp file space source
-        for entry in extra_input["Warp"]:
-            if entry["dst"] == "native":
-                target_std_space = entry["src"]
+    if target_data["space"] == "native":
+        # Warp data check
+        if warp_data is None:
+            raise_error("No `warp_data` provided")
+        # Set space to fetch template using
+        target_std_space = warp_data["src"]
+    else:
+        # Set space to fetch template using
+        target_std_space = target_data["space"]
 
-    target_img = target_data["data"]
     # Fetch template in closest resolution
     template = get_template(
         space=target_std_space,
-        target_img=target_img,
-        extra_input=extra_input,
+        target_img=target_data["data"],
+        extra_input=None,
         template_type=mask_type,
     )
-    # Resample template to target image
-    resampled_template = resample_to_img(
-        source_img=template, target_img=target_img
-    )
 
-    # Threshold and get mask
+    # Resample and warp template if target space is native
+    if target_data["space"] == "native":
+        resampled_template = ANTsMaskWarper().warp(
+            mask_name=f"template_{target_std_space}_for_compute_brain_mask",
+            # use template here
+            mask_img=template,
+            src=target_std_space,
+            dst="native",
+            target_data=target_data,
+            warp_data=warp_data,
+        )
+    # Resample template to target image
+    else:
+        resampled_template = resample_to_img(
+            source_img=template, target_img=target_data["data"]
+        )
+
+    # Threshold resampled template and get mask
     mask = (get_data(resampled_template) >= threshold).astype("int8")
 
-    return new_img_like(target_img, mask)  # type: ignore
+    return new_img_like(target_data["data"], mask)  # type: ignore
 
 
 class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
