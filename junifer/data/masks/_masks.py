@@ -393,6 +393,9 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             # Set target standard space to warp file space source
             target_std_space = warper_spec["src"]
         else:
+            # Set warper_spec so that compute_brain_mask does not fail when
+            # target space is non-native
+            warper_spec = None
             # Set target standard space to target space
             target_std_space = target_space
 
@@ -405,31 +408,33 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             masks = [masks]
 
         # Check that masks passed as dicts have only one key
-        invalid_elements = [
+        invalid_mask_specs = [
             x for x in masks if isinstance(x, dict) and len(x) != 1
         ]
-        if len(invalid_elements) > 0:
+        if invalid_mask_specs:
             raise_error(
                 "Each of the masks dictionary must have only one key, "
                 "the name of the mask. The following dictionaries are "
-                f"invalid: {invalid_elements}"
+                f"invalid: {invalid_mask_specs}"
             )
 
-        # Check params for the intersection function
+        # Store params for nilearn.masking.intersect_mask()
         intersect_params = {}
-        true_masks = []
+        # Store all mask specs for further operations
+        mask_specs = []
         for t_mask in masks:
             if isinstance(t_mask, dict):
+                # Get params to pass to nilearn.masking.intersect_mask()
                 if "threshold" in t_mask:
                     intersect_params["threshold"] = t_mask["threshold"]
                     continue
-                elif "connected" in t_mask:
+                if "connected" in t_mask:
                     intersect_params["connected"] = t_mask["connected"]
                     continue
-            # All the other elements are masks
-            true_masks.append(t_mask)
+            # Add mask spec
+            mask_specs.append(t_mask)
 
-        if len(true_masks) == 0:
+        if not mask_specs:
             raise_error("No mask was passed. At least one mask is required.")
 
         # Get the nested mask data type for the input data type
@@ -437,7 +442,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Get all the masks
         all_masks = []
-        for t_mask in true_masks:
+        for t_mask in mask_specs:
             if isinstance(t_mask, dict):
                 mask_name = next(iter(t_mask.keys()))
                 mask_params = t_mask[mask_name]
@@ -461,20 +466,26 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 mask_object, _, mask_space = self.load(
                     mask_name, path_only=False, resolution=resolution
                 )
-                # Replace mask space with target space if mask's space is
-                # inherit
-                if mask_space == "inherit":
-                    mask_space = target_std_space
-                # If mask is callable like from nilearn
+                # If mask is callable like from nilearn; space will be inherit
+                # so no check for that
                 if callable(mask_object):
                     if mask_params is None:
                         mask_params = {}
                     # From nilearn
-                    if mask_name != "compute_brain_mask":
+                    if mask_name in [
+                        "compute_epi_mask",
+                        "compute_background_mask",
+                    ]:
                         mask_img = mask_object(target_img, **mask_params)
-                    # Not from nilearn
+                    # custom compute_brain_mask
+                    elif mask_name == "compute_brain_mask":
+                        mask_img = mask_object(
+                            target_data, warper_spec, **mask_params
+                        )
+                    # custom registered; arm kept for clarity
                     else:
-                        mask_img = mask_object(target_data, **mask_params)
+                        mask_img = mask_object(target_img, **mask_params)
+
                 # Mask is a Nifti1Image
                 else:
                     # Mask params provided
@@ -484,23 +495,43 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                             "Cannot pass callable params to a non-callable "
                             "mask."
                         )
-                    # Resample mask to target image
-                    mask_img = resample_to_img(
-                        source_img=mask_object,
-                        target_img=target_img,
-                        interpolation="nearest",
-                        copy=True,
-                    )
-                # Convert mask space if required
-                if mask_space != target_std_space:
-                    mask_img = ANTsMaskWarper().warp(
-                        mask_name=mask_name,
-                        mask_img=mask_img,
-                        src=mask_space,
-                        dst=target_std_space,
-                        target_data=target_data,
-                        warp_data=None,
-                    )
+                    # Resample and warp mask if target data is native
+                    if target_space == "native":
+                        mask_name = f"{mask_name}_to_native"
+                        # extra_input check done earlier and warper_spec exists
+                        if warper_spec["warper"] == "fsl":
+                            mask_img = FSLMaskWarper().warp(
+                                mask_name=mask_name,
+                                mask_img=mask_object,
+                                target_data=target_data,
+                                warp_data=warper_spec,
+                            )
+                        elif warper_spec["warper"] == "ants":
+                            mask_img = ANTsMaskWarper().warp(
+                                mask_name=mask_name,
+                                mask_img=mask_object,
+                                src="",
+                                dst="native",
+                                target_data=target_data,
+                                warp_data=warper_spec,
+                            )
+                    else:
+                        # Resample and warp mask
+                        if mask_space != target_std_space:
+                            mask_img = ANTsMaskWarper().warp(
+                                mask_name=mask_name,
+                                mask_img=mask_object,
+                                src=mask_space,
+                                dst=target_std_space,
+                                target_data=target_data,
+                                warp_data=warper_spec,
+                            )
+                        # Resample mask to target image
+                        else:
+                            mask_img = resample_to_img(
+                                source_img=mask_object,
+                                target_img=target_data["data"],
+                            )
 
             all_masks.append(mask_img)
 
@@ -510,33 +541,13 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             mask_img = intersect_masks(all_masks, **intersect_params)
         # Single mask
         else:
-            if len(intersect_params) > 0:
+            if intersect_params:
                 # Yes, I'm this strict!
                 raise_error(
                     "Cannot pass parameters to the intersection function "
                     "when there is only one mask."
                 )
             mask_img = all_masks[0]
-
-        # Warp mask if target data is native
-        if target_space == "native":
-            # extra_input check done earlier and warper_spec exists
-            if warper_spec["warper"] == "fsl":
-                mask_img = FSLMaskWarper().warp(
-                    mask_name="native",
-                    mask_img=mask_img,
-                    target_data=target_data,
-                    warp_data=warper_spec,
-                )
-            elif warper_spec["warper"] == "ants":
-                mask_img = ANTsMaskWarper().warp(
-                    mask_name="native",
-                    mask_img=mask_img,
-                    src="",
-                    dst="native",
-                    target_data=target_data,
-                    warp_data=warper_spec,
-                )
 
         return mask_img
 
