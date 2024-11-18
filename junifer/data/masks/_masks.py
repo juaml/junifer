@@ -495,6 +495,28 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                             "Cannot pass callable params to a non-callable "
                             "mask."
                         )
+
+                    # Resample and warp mask to standard space
+                    if mask_space != target_std_space:
+                        mask_img = ANTsMaskWarper().warp(
+                            mask_name=mask_name,
+                            mask_img=mask_object,
+                            src=mask_space,
+                            dst=target_std_space,
+                            target_data=target_data,
+                            warp_data=warper_spec,
+                        )
+
+                    else:
+                        # Resample mask to target image; no further warping
+                        if target_space != "native":
+                            mask_img = resample_to_img(
+                                source_img=mask_object,
+                                target_img=target_data["data"],
+                            )
+                        # Set mask_img in case no warping happens before this
+                        else:
+                            mask_img = mask_object
                     # Resample and warp mask if target data is native
                     if target_space == "native":
                         mask_name = f"{mask_name}_to_native"
@@ -502,35 +524,18 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                         if warper_spec["warper"] == "fsl":
                             mask_img = FSLMaskWarper().warp(
                                 mask_name=mask_name,
-                                mask_img=mask_object,
+                                mask_img=mask_img,
                                 target_data=target_data,
                                 warp_data=warper_spec,
                             )
                         elif warper_spec["warper"] == "ants":
                             mask_img = ANTsMaskWarper().warp(
                                 mask_name=mask_name,
-                                mask_img=mask_object,
+                                mask_img=mask_img,
                                 src="",
                                 dst="native",
                                 target_data=target_data,
                                 warp_data=warper_spec,
-                            )
-                    else:
-                        # Resample and warp mask
-                        if mask_space != target_std_space:
-                            mask_img = ANTsMaskWarper().warp(
-                                mask_name=mask_name,
-                                mask_img=mask_object,
-                                src=mask_space,
-                                dst=target_std_space,
-                                target_data=target_data,
-                                warp_data=warper_spec,
-                            )
-                        # Resample mask to target image
-                        else:
-                            mask_img = resample_to_img(
-                                source_img=mask_object,
-                                target_img=target_data["data"],
                             )
 
             all_masks.append(mask_img)
