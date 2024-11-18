@@ -28,8 +28,8 @@ jobs:
         git-annex \
         make \
         jq
-        # Copy xfms directory
-        mkdir -p $HOME/junifer/data/xfms && \
+    - name: Copy xfms directory
+        mkdir -p $HOME/junifer/data/xfms
         cp -ar /root/junifer/data/xfms/. $HOME/junifer/data/xfms/
     - name: Checkout source
       uses: actions/checkout@v4
