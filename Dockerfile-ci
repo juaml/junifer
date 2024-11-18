@@ -41,7 +41,8 @@ RUN apt-get update && \
     file \
     dc \
     libquadmath0 \
-    libgomp1
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Add xfms
 COPY --from=ghcr.io/juaml/human-template-xfms:main /opt/xfms /root/junifer/data/xfms
