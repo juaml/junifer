@@ -20,10 +20,10 @@ jobs:
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
     - name: Install system dependencies
+      # actions/checkout fails to identify Git as it's not in the CI image
       run: |
-        # actions/checkout fails to identify Git as it's not in the CI image
-        apt-get -qq update && \
-        apt-get -qq install -y \
+        sudo apt-get update
+        sudo apt-get install -y \
         git \
         git-annex \
         make \
@@ -31,7 +31,7 @@ jobs:
     - name: Copy xfms directory
         mkdir -p $HOME/junifer/data/xfms
         cp -ar /root/junifer/data/xfms/. $HOME/junifer/data/xfms/
-    - name: Checkout source
+    - name: Checkout repository
       uses: actions/checkout@v4
       with:
         # require all of history to see all tagged versions' docs
@@ -59,8 +59,8 @@ jobs:
           path: docs/_build
     - name: Build docs
       # Use the args we normally pass to sphinx-build, but run sphinx-multiversion
+      # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
       run: |
-        # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
         git config --system --add safe.directory $(pwd)
         make -C docs/ html
         touch docs/_build/.nojekyll
