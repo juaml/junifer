@@ -57,10 +57,12 @@ class ANTsCoordinatesWarper:
         pretransform_coordinates_path = (
             element_tempdir / "pretransform_coordinates.csv"
         )
+        # Convert LPS to RAS
+        seeds[:, 0] *= -1
+        seeds[:, 1] *= -1
         np.savetxt(
             pretransform_coordinates_path,
-            # convert to LPS coordinate system
-            np.apply_along_axis(lambda x: x * [-1, -1, 1], 1, seeds),
+            seeds,
             delimiter=",",
             # Add header while saving to make ANTs work
             header="x,y,z",
@@ -95,7 +97,8 @@ class ANTsCoordinatesWarper:
             delimiter=",",
             skiprows=1,
         )
-        # convert to RAS coordinate system
-        return np.apply_along_axis(
-            lambda x: x * [-1, -1, 1], 1, transformed_seeds
-        )
+        # Convert RAS to LPS
+        transformed_seeds[:, 0] *= -1
+        transformed_seeds[:, 1] *= -1
+
+        return transformed_seeds
