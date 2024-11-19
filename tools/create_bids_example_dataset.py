@@ -26,6 +26,8 @@ with TemporaryDirectory() as tmpdir_name:
         fnames = [
             f"anat/{t_sub}_T1w.nii.gz",
             f"anat/{t_sub}_brain_mask.nii.gz",
+            f"anat/{t_sub}_from-MNI152NLin2009cAsym_to-T1w_xfm.h5",
+            f"anat/{t_sub}_from-T1w_to-MNI152NLin2009cAsym_xfm.h5",
             f"func/{t_sub}_task-rest_bold.nii.gz",
             f"func/{t_sub}_task-rest_bold.json",
             f"func/{t_sub}_task-rest_brain_mask.nii.gz",
