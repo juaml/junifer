@@ -111,8 +111,12 @@ class MultipleDataGrabber(BaseDataGrabber):
 
         # Update all the metas again
         for kind in out:
-            self.update_meta(out[kind], "datagrabber")
-            out[kind]["meta"]["datagrabber"]["datagrabbers"] = metas
+            to_update = out[kind]
+            if not isinstance(to_update, list):
+                to_update = [to_update]
+            for t_kind in to_update:
+                self.update_meta(t_kind, "datagrabber")
+                t_kind["meta"]["datagrabber"]["datagrabbers"] = metas
         return out
 
     def __enter__(self) -> "MultipleDataGrabber":
