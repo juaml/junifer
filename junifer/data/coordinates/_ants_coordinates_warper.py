@@ -64,6 +64,8 @@ class ANTsCoordinatesWarper:
             delimiter=",",
             # Add header while saving to make ANTs work
             header="x,y,z",
+            # Remove comment tag for header
+            comments="",
         )
 
         # Create a tempfile for transformed coordinates output
