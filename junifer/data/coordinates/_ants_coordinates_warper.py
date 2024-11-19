@@ -55,7 +55,7 @@ class ANTsCoordinatesWarper:
 
         # Save existing coordinates to a tempfile
         pretransform_coordinates_path = (
-            element_tempdir / "pretransform_coordinates.txt"
+            element_tempdir / "pretransform_coordinates.csv"
         )
         np.savetxt(
             pretransform_coordinates_path,
@@ -68,7 +68,7 @@ class ANTsCoordinatesWarper:
 
         # Create a tempfile for transformed coordinates output
         transformed_coords_path = (
-            element_tempdir / "coordinates_transformed.txt"
+            element_tempdir / "coordinates_transformed.csv"
         )
         # Set antsApplyTransformsToPoints command
         apply_transforms_to_points_cmd = [
