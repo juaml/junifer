@@ -28,6 +28,7 @@ __all__ = [
     "ConditionalDependencies",
     "ExternalDependencies",
     "MarkerInOutMappings",
+    "DataGrabberPatterns",
 ]
 
 
@@ -56,3 +57,6 @@ ConditionalDependencies = Sequence[
 ]
 ExternalDependencies = Sequence[MutableMapping[str, Union[str, Sequence[str]]]]
 MarkerInOutMappings = MutableMapping[str, MutableMapping[str, str]]
+DataGrabberPatterns = dict[
+    str, Union[dict[str, str], Sequence[dict[str, str]]]
+]

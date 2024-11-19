@@ -13,6 +13,7 @@ from typing import Optional, Union
 import numpy as np
 
 from ..api.decorators import register_datagrabber
+from ..typing import DataGrabberPatterns
 from ..utils import logger, raise_error
 from .base import BaseDataGrabber
 from .pattern_validation_mixin import PatternValidationMixin
@@ -171,7 +172,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
     def __init__(
         self,
         types: list[str],
-        patterns: dict[str, dict[str, str]],
+        patterns: DataGrabberPatterns,
         replacements: Union[list[str], str],
         datadir: Union[str, Path],
         confounds_format: Optional[str] = None,
