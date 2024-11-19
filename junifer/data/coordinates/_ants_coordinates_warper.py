@@ -55,19 +55,24 @@ class ANTsCoordinatesWarper:
 
         # Save existing coordinates to a tempfile
         pretransform_coordinates_path = (
-            element_tempdir / "pretransform_coordinates.txt"
+            element_tempdir / "pretransform_coordinates.csv"
         )
+        # Convert LPS to RAS
+        seeds[:, 0] *= -1
+        seeds[:, 1] *= -1
         np.savetxt(
             pretransform_coordinates_path,
             seeds,
             delimiter=",",
             # Add header while saving to make ANTs work
             header="x,y,z",
+            # Remove comment tag for header
+            comments="",
         )
 
         # Create a tempfile for transformed coordinates output
         transformed_coords_path = (
-            element_tempdir / "coordinates_transformed.txt"
+            element_tempdir / "coordinates_transformed.csv"
         )
         # Set antsApplyTransformsToPoints command
         apply_transforms_to_points_cmd = [
@@ -86,9 +91,14 @@ class ANTsCoordinatesWarper:
         )
 
         # Load coordinates
-        return np.loadtxt(
+        transformed_seeds = np.loadtxt(
             # Skip header when reading
             transformed_coords_path,
             delimiter=",",
             skiprows=1,
         )
+        # Convert RAS to LPS
+        transformed_seeds[:, 0] *= -1
+        transformed_seeds[:, 1] *= -1
+
+        return transformed_seeds

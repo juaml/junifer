@@ -362,7 +362,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 seeds = ANTsCoordinatesWarper().warp(
                     seeds=seeds,
                     target_data=target_data,
-                    warp_data=warper_spec,
+                    warp_data=inverse_warper_spec,
                 )
 
         return seeds, labels
