@@ -13,6 +13,7 @@ from typing import Optional, Union
 import numpy as np
 
 from ..api.decorators import register_datagrabber
+from ..typing import DataGrabberPatterns
 from ..utils import logger, raise_error
 from .base import BaseDataGrabber
 from .pattern_validation_mixin import PatternValidationMixin
@@ -171,7 +172,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
     def __init__(
         self,
         types: list[str],
-        patterns: dict[str, dict[str, str]],
+        patterns: DataGrabberPatterns,
         replacements: Union[list[str], str],
         datadir: Union[str, Path],
         confounds_format: Optional[str] = None,
@@ -478,58 +479,63 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
             t_type = self.types[t_idx]
             types_element = set()
 
-            # Get the pattern dict
-            t_pattern = self.patterns[t_type]
-            # Conditional fetch of base pattern for getting elements
-            pattern = None
-            # Try for data type pattern
-            pattern = t_pattern.get("pattern")
-            # Try for nested data type pattern
-            if pattern is None and self.partial_pattern_ok:
-                for v in t_pattern.values():
-                    if isinstance(v, dict) and "pattern" in v:
-                        pattern = v["pattern"]
-                        break
+            # Data type dictionary
+            patterns = self.patterns[t_type]
+            # Conditional for list dtype vals like Warp
+            if not isinstance(patterns, list):
+                patterns = [patterns]
+            for t_pattern in patterns:
+                # Conditional fetch of base pattern for getting elements
+                pattern = None
+                # Try for data type pattern
+                pattern = t_pattern.get("pattern")
+                # Try for nested data type pattern
+                if pattern is None and self.partial_pattern_ok:
+                    for v in t_pattern.values():
+                        if isinstance(v, dict) and "pattern" in v:
+                            pattern = v["pattern"]
+                            break
 
-            # Replace the pattern
-            (
-                re_pattern,
-                glob_pattern,
-                t_replacements,
-            ) = self._replace_patterns_regex(pattern)
-            for fname in self.datadir.glob(glob_pattern):
-                suffix = fname.relative_to(self.datadir).as_posix()
-                m = re.match(re_pattern, suffix)
-                if m is not None:
-                    # Find the groups of replacements present in the pattern
-                    # If one replacement is not present, set it to None.
-                    # We will take care of this in the intersection
-                    t_element = tuple([m.group(k) for k in t_replacements])
-                    if len(self.replacements) == 1:
-                        t_element = t_element[0]
-                    types_element.add(t_element)
-            # TODO: does this make sense as elements is always None
-            if elements is None:
-                elements = types_element
-            else:
-                # Do the intersection by filtering out elements in which
-                # the replacements are not None
-                if t_replacements == self.replacements:
-                    elements.intersection(types_element)
+                # Replace the pattern
+                (
+                    re_pattern,
+                    glob_pattern,
+                    t_replacements,
+                ) = self._replace_patterns_regex(pattern)
+                for fname in self.datadir.glob(glob_pattern):
+                    suffix = fname.relative_to(self.datadir).as_posix()
+                    m = re.match(re_pattern, suffix)
+                    if m is not None:
+                        # Find the groups of replacements present in the
+                        # pattern. If one replacement is not present, set it
+                        # to None. We will take care of this in the
+                        # intersection.
+                        t_element = tuple([m.group(k) for k in t_replacements])
+                        if len(self.replacements) == 1:
+                            t_element = t_element[0]
+                        types_element.add(t_element)
+                # TODO: does this make sense as elements is always None
+                if elements is None:
+                    elements = types_element
                 else:
-                    t_repl_idx = [
-                        i
-                        for i, v in enumerate(self.replacements)
-                        if v in t_replacements
-                    ]
-                    new_elements = set()
-                    for t_element in elements:
-                        if (
-                            tuple(np.array(t_element)[t_repl_idx])
-                            in types_element
-                        ):
-                            new_elements.add(t_element)
-                    elements = new_elements
+                    # Do the intersection by filtering out elements in which
+                    # the replacements are not None
+                    if t_replacements == self.replacements:
+                        elements.intersection(types_element)
+                    else:
+                        t_repl_idx = [
+                            i
+                            for i, v in enumerate(self.replacements)
+                            if v in t_replacements
+                        ]
+                        new_elements = set()
+                        for t_element in elements:
+                            if (
+                                tuple(np.array(t_element)[t_repl_idx])
+                                in types_element
+                            ):
+                                new_elements.add(t_element)
+                        elements = new_elements
         if elements is None:
             elements = set()
         return list(elements)

@@ -3,8 +3,8 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Union
 
+from ..typing import DataGrabberPatterns
 from ..utils import logger, raise_error, warn_with_log
 
 
@@ -96,7 +96,7 @@ class PatternValidationMixin:
     def _validate_replacements(
         self,
         replacements: list[str],
-        patterns: dict[str, Union[dict[str, str], list[dict[str, str]]]],
+        patterns: DataGrabberPatterns,
         partial_pattern_ok: bool,
     ) -> None:
         """Validate the replacements.
@@ -263,7 +263,7 @@ class PatternValidationMixin:
         self,
         types: list[str],
         replacements: list[str],
-        patterns: dict[str, Union[dict[str, str], list[dict[str, str]]]],
+        patterns: DataGrabberPatterns,
         partial_pattern_ok: bool = False,
     ) -> None:
         """Validate the patterns.

@@ -29,7 +29,7 @@ def test_MultipleDataGrabber() -> None:
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri,
-        types=["T1w"],
+        types=["T1w", "Warp"],
         patterns={
             "T1w": {
                 "pattern": (
@@ -44,6 +44,28 @@ def test_MultipleDataGrabber() -> None:
                     "space": "native",
                 },
             },
+            "Warp": [
+                {
+                    "pattern": (
+                        "{subject}/{session}/anat/"
+                        "{subject}_{session}_from-MNI152NLin2009cAsym_to-T1w_"
+                        "xfm.h5"
+                    ),
+                    "src": "MNI152NLin2009cAsym",
+                    "dst": "native",
+                    "warper": "ants",
+                },
+                {
+                    "pattern": (
+                        "{subject}/{session}/anat/"
+                        "{subject}_{session}_from-T1w_to-MNI152NLin2009cAsym_"
+                        "xfm.h5"
+                    ),
+                    "src": "native",
+                    "dst": "MNI152NLin2009cAsym",
+                    "warper": "ants",
+                },
+            ],
         },
         replacements=replacements,
     )
@@ -75,6 +97,7 @@ def test_MultipleDataGrabber() -> None:
 
     types = dg.get_types()
     assert "T1w" in types
+    assert "Warp" in types
     assert "BOLD" in types
 
     expected_subs = [
@@ -90,6 +113,7 @@ def test_MultipleDataGrabber() -> None:
         elem = dg[("sub-01", "ses-01")]
         # Check data types
         assert "T1w" in elem
+        assert "Warp" in elem
         assert "BOLD" in elem
         # Check meta
         assert "meta" in elem["BOLD"]
@@ -111,7 +135,7 @@ def test_MultipleDataGrabber_no_intersection() -> None:
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=_testing_dataset["example_bids"]["uri"],
-        types=["T1w"],
+        types=["T1w", "Warp"],
         patterns={
             "T1w": {
                 "pattern": (
@@ -119,6 +143,28 @@ def test_MultipleDataGrabber_no_intersection() -> None:
                 ),
                 "space": "native",
             },
+            "Warp": [
+                {
+                    "pattern": (
+                        "{subject}/{session}/anat/"
+                        "{subject}_{session}_from-MNI152NLin2009cAsym_to-T1w_"
+                        "xfm.h5"
+                    ),
+                    "src": "MNI152NLin2009cAsym",
+                    "dst": "native",
+                    "warper": "ants",
+                },
+                {
+                    "pattern": (
+                        "{subject}/{session}/anat/"
+                        "{subject}_{session}_from-T1w_to-MNI152NLin2009cAsym_"
+                        "xfm.h5"
+                    ),
+                    "src": "native",
+                    "dst": "MNI152NLin2009cAsym",
+                    "warper": "ants",
+                },
+            ],
         },
         replacements=replacements,
     )

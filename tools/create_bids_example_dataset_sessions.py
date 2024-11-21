@@ -31,6 +31,8 @@ with TemporaryDirectory() as tmpdir_name:
             fnames = [
                 f"anat/{t_sub}_{t_ses}_T1w.nii.gz",
                 f"anat/{t_sub}_{t_ses}_brain_mask.nii.gz",
+                f"anat/{t_sub}_{t_ses}_from-MNI152NLin2009cAsym_to-T1w_xfm.h5",
+                f"anat/{t_sub}_{t_ses}_from-T1w_to-MNI152NLin2009cAsym_xfm.h5",
             ]
             if i_ses != 3:  # Session 3 does not have functional data
                 fnames.extend(

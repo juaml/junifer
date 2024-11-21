@@ -15,7 +15,7 @@ from junifer.datagrabber import PatternDataladDataGrabber
 _testing_dataset = {
     "example_bids": {
         "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
-        "commit": "b87897cbe51bf0ee5514becaa5c7dd76491db5ad",
+        "commit": "3f288c8725207ae0c9b3616e093e78cda192b570",
         "id": "8fddff30-6993-420a-9d1e-b5b028c59468",
     },
     "example_bids_ses": {
