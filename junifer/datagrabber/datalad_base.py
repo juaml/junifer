@@ -17,7 +17,7 @@ from datalad.support.exceptions import IncompleteResultsError
 from datalad.support.gitrepo import GitRepo
 
 from ..pipeline import WorkDirManager
-from ..utils import logger, raise_error, warn_with_log
+from ..utils import config, logger, raise_error, warn_with_log
 from .base import BaseDataGrabber
 
 
@@ -143,27 +143,49 @@ class DataladDataGrabber(BaseDataGrabber):
         """
         return super().datadir / self._rootdir
 
-    def _get_dataset_id_remote(self) -> str:
+    def _get_dataset_id_remote(self) -> tuple[str, bool]:
         """Get the dataset ID from the remote.
 
         Returns
         -------
         str
             The dataset ID.
+        bool
+            Whether the dataset is dirty.
+
+        Raises
+        ------
+        ValueError
+            If the dataset ID cannot be obtained from the remote.
 
         """
         remote_id = None
+        is_dirty = False
         with tempfile.TemporaryDirectory() as tmpdir:
-            logger.debug(f"Querying {self.uri} for dataset ID")
-            repo = GitRepo.clone(
-                self.uri, path=tmpdir, clone_options=["-n", "--depth=1"]
+            if not config.get("datagrabber.skipidcheck", False):
+                logger.debug(f"Querying {self.uri} for dataset ID")
+                repo = GitRepo.clone(
+                    self.uri, path=tmpdir, clone_options=["-n", "--depth=1"]
+                )
+                repo.checkout(name=".datalad/config", options=["HEAD"])
+                remote_id = repo.config.get("datalad.dataset.id", None)
+                logger.debug(f"Got remote dataset ID = {remote_id}")
+
+                if not config.get("datagrabber.skipdirtycheck", False):
+                    is_dirty = repo.dirty
+                else:
+                    logger.debug("Skipping dirty check")
+                    is_dirty = False
+            else:
+                logger.debug("Skipping dataset ID check")
+                remote_id = self._dataset.id
+                is_dirty = False
+            logger.debug(
+                f"Remote dataset is {'' if is_dirty else 'not'} dirty"
             )
-            repo.checkout(name=".datalad/config", options=["HEAD"])
-            remote_id = repo.config.get("datalad.dataset.id", None)
-            logger.debug(f"Got remote dataset ID = {remote_id}")
         if remote_id is None:
             raise_error("Could not get dataset ID from remote")
-        return remote_id
+        return remote_id, is_dirty
 
     def _dataset_get(self, out: dict) -> dict:
         """Get the dataset found from the path in ``out``.
@@ -238,7 +260,7 @@ class DataladDataGrabber(BaseDataGrabber):
             self._got_files = []
             self._dataset: dl.Dataset = dl.Dataset(self._datadir)
 
-            remote_id = self._get_dataset_id_remote()
+            remote_id, is_dirty = self._get_dataset_id_remote()
             if remote_id != self._dataset.id:
                 raise_error(
                     "Dataset already installed but with a different "
@@ -246,9 +268,8 @@ class DataladDataGrabber(BaseDataGrabber):
                 )
 
             # Check for dirty datasets:
-            status = self._dataset.status()
-            if any(x["state"] != "clean" for x in status):
-                self.datalad_dirty = True
+            self.datalad_dirty = is_dirty
+            if self.datalad_dirty:
                 warn_with_log(
                     "At least one file is not clean, Junifer will "
                     "consider this dataset as dirty."
