@@ -376,6 +376,8 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         """
         # Check pre-requirements for space manipulation
         target_space = target_data["space"]
+        logger.debug(f"Getting masks: {masks} in {target_space} space")
+
         # Extra data type requirement check if target space is native
         if target_space == "native":
             # Check for extra inputs
@@ -392,6 +394,9 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             )
             # Set target standard space to warp file space source
             target_std_space = warper_spec["src"]
+            logger.debug(
+                f"Target space is native. Will warp from {target_std_space}"
+            )
         else:
             # Set warper_spec so that compute_brain_mask does not fail when
             # target space is non-native
@@ -453,22 +458,40 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             # If mask is being inherited from the datagrabber or a
             # preprocessor, check that it's accessible
             if mask_name == "inherit":
+                logger.debug("Using inherited mask.")
                 if inherited_mask_item is None:
                     raise_error(
                         "Cannot inherit mask from the target data. Either the "
                         "DataGrabber or a Preprocessor does not provide "
                         "`mask` for the target data type."
                     )
+                logger.debug(
+                    f"Inherited mask is in {inherited_mask_item['space']} "
+                    "space."
+                )
                 mask_img = inherited_mask_item["data"]
+
+                if inherited_mask_item["space"] != target_space:
+                    raise_error(
+                        "Inherited mask space does not match target space."
+                    )
+                logger.debug("Resampling inherited mask to target image.")
+                # Resample inherited mask to target image
+                mask_img = resample_to_img(
+                    source_img=mask_img,
+                    target_img=target_data["data"],
+                )
             # Starting with new mask
             else:
                 # Load mask
+                logger.debug(f"Loading parcellation {t_mask}.")
                 mask_object, _, mask_space = self.load(
                     mask_name, path_only=False, resolution=resolution
                 )
                 # If mask is callable like from nilearn; space will be inherit
                 # so no check for that
                 if callable(mask_object):
+                    logger.debug("Computing mask (callable).")
                     if mask_params is None:
                         mask_params = {}
                     # From nilearn
@@ -498,6 +521,10 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
                     # Resample and warp mask to standard space
                     if mask_space != target_std_space:
+                        logger.debug(
+                            f"Warping {t_mask} to {target_std_space} space "
+                            "using ants."
+                        )
                         mask_img = ANTsMaskWarper().warp(
                             mask_name=mask_name,
                             mask_img=mask_object,
@@ -509,6 +536,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
                     else:
                         # Resample mask to target image; no further warping
+                        logger.debug(f"Resampling {t_mask} to target image.")
                         if target_space != "native":
                             mask_img = resample_to_img(
                                 source_img=mask_object,
@@ -519,6 +547,10 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                             mask_img = mask_object
                     # Resample and warp mask if target data is native
                     if target_space == "native":
+                        logger.debug(
+                            "Warping mask to native space using "
+                            f"{warper_spec['warper']}."
+                        )
                         mask_name = f"{mask_name}_to_native"
                         # extra_input check done earlier and warper_spec exists
                         if warper_spec["warper"] == "fsl":
@@ -543,6 +575,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Multiple masks, need intersection / union
         if len(all_masks) > 1:
             # Intersect / union of masks
+            logger.debug("Intersecting masks.")
             mask_img = intersect_masks(all_masks, **intersect_params)
         # Single mask
         else:

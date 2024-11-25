@@ -400,6 +400,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         """
         # Check pre-requirements for space manipulation
         target_space = target_data["space"]
+        logger.debug(f"Getting {parcellations} in{target_space} space.")
         # Extra data type requirement check if target space is native
         if target_space == "native":
             # Check for extra inputs
@@ -416,6 +417,9 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             )
             # Set target standard space to warp file space source
             target_std_space = warper_spec["src"]
+            logger.debug(
+                f"Target space is native. Will warp from {target_std_space}"
+            )
         else:
             # Set target standard space to target space
             target_std_space = target_space
@@ -433,6 +437,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         all_labels = []
         for name in parcellations:
             # Load parcellation
+            logger.debug(f"Loading parcellation {name}")
             img, labels, _, space = self.load(
                 name=name,
                 resolution=resolution,
@@ -441,6 +446,9 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             # Convert parcellation spaces if required;
             # cannot be "native" due to earlier check
             if space != target_std_space:
+                logger.debug(
+                    f"Warping {name} to {target_std_space} space using ants."
+                )
                 raw_img = ANTsParcellationWarper().warp(
                     parcellation_name=name,
                     parcellation_img=img,
@@ -452,6 +460,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 # Remove extra dimension added by ANTs
                 img = image.math_img("np.squeeze(img)", img=raw_img)
 
+            logger.debug(f"Resampling {name} to target image.")
             # Resample parcellation to target image
             img_to_merge = image.resample_to_img(
                 source_img=img,
@@ -469,6 +478,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             labels = all_labels[0]
         # Parcellations are already transformed to target standard space
         else:
+            logger.debug("Merging parcellations.")
             resampled_parcellation_img, labels = merge_parcellations(
                 parcellations_list=all_parcellations,
                 parcellations_names=parcellations,
@@ -477,6 +487,10 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Warp parcellation if target space is native
         if target_space == "native":
+            logger.debug(
+                "Warping parcellation to native space using "
+                f"{warper_spec['warper']}."
+            )
             # extra_input check done earlier and warper_spec exists
             if warper_spec["warper"] == "fsl":
                 resampled_parcellation_img = FSLParcellationWarper().warp(
@@ -1194,7 +1208,10 @@ def _retrieve_aicha(
 
     # Load labels
     labels = pd.read_csv(
-        parcellation_lname, sep="\t", header=None, skiprows=[0]  # type: ignore
+        parcellation_lname,
+        sep="\t",
+        header=None,
+        skiprows=[0],  # type: ignore
     )[0].to_list()
 
     return parcellation_fname, labels
