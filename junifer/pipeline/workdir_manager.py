@@ -30,6 +30,9 @@ class WorkDirManager(metaclass=Singleton):
     workdir : str or pathlib.Path, optional
         The path to the super-directory. If None, "TMPDIR/junifer" is used
         where TMPDIR is the platform-dependent temporary directory.
+    cleanup : bool, optional
+        If False, the directories are not cleaned up after the object is
+        destroyed. This is useful for debugging purposes (default True).
 
     Attributes
     ----------
@@ -39,14 +42,11 @@ class WorkDirManager(metaclass=Singleton):
         The path to the element directory.
     root_tempdir : pathlib.Path or None
         The path to the root temporary directory.
-    cleanup : bool, optional
-        If False, the directories are not cleaned up after the object is
-        destroyed. This is useful for debugging purposes (default True).
 
     """
 
     def __init__(
-        self, workdir: Optional[Union[str, Path]] = None, cleanup=True
+        self, workdir: Optional[Union[str, Path]] = None, cleanup: bool = True
     ) -> None:
         """Initialize the class."""
         self._workdir = Path(workdir) if isinstance(workdir, str) else workdir
