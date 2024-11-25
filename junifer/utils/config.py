@@ -27,12 +27,25 @@ class ConfigManager(metaclass=Singleton):
             if t_var.startswith("JUNIFER_"):
                 varname = t_var.replace("JUNIFER_", "")
                 varname = varname.lower()
-                varname.replace("_", ".")
+                varname = varname.replace("_", ".")
+                var_value = os.environ[t_var]
+                if var_value.lower() == "true":
+                    var_value = True
+                elif var_value.lower() == "false":
+                    var_value = False
+                else:
+                    try:
+                        var_value = int(var_value)
+                    except ValueError:
+                        try:
+                            var_value = float(var_value)
+                        except ValueError:
+                            pass
                 logger.debug(
                     f"Setting {varname} from environment to "
-                    f"{os.environ[t_var]}"
+                    f"{var_value} (type: {type(var_value)})"
                 )
-                self._config[varname] = os.environ[t_var]
+                self._config[varname] = var_value
 
     def get(self, key: str, default: Any = None) -> Any:
         """Get configuration parameter.
