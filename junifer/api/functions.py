@@ -143,7 +143,7 @@ def run(
         Storage to use. Must have a key ``kind`` with the kind of
         storage to use. All other keys are passed to the storage
         constructor.
-    preprocessors : list of dict, optional
+    preprocessors : list of dict or None, optional
         List of preprocessors to use. Each preprocessor is a dict with at
         least a key ``kind`` specifying the preprocessor to use. All other keys
         are passed to the preprocessor constructor (default None).
