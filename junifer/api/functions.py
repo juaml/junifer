@@ -121,7 +121,7 @@ def run(
     markers: list[dict],
     storage: dict,
     preprocessors: Optional[list[dict]] = None,
-    elements: Union[str, list[Union[str, tuple]], tuple, None] = None,
+    elements: Optional[list[tuple[str, ...]]] = None,
 ) -> None:
     """Run the pipeline on the selected element.
 
@@ -147,7 +147,7 @@ def run(
         List of preprocessors to use. Each preprocessor is a dict with at
         least a key ``kind`` specifying the preprocessor to use. All other keys
         are passed to the preprocessor constructor (default None).
-    elements : str or tuple or list of str or tuple, optional
+    elements : list of tuple or None, optional
         Element(s) to process. Will be used to index the DataGrabber
         (default None).
 
