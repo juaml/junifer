@@ -140,7 +140,9 @@ def parse_yaml(filepath: Union[str, Path]) -> dict:  # noqa: C901
     return contents
 
 
-def parse_elements(element: tuple[str], config: dict) -> Union[list, None]:
+def parse_elements(
+    element: tuple[str, ...], config: dict
+) -> Union[list[tuple[str, ...]], None]:
     """Parse elements from cli.
 
     Parameters
@@ -170,7 +172,7 @@ def parse_elements(element: tuple[str], config: dict) -> Union[list, None]:
     """
     logger.debug(f"Parsing elements: {element}")
     # Early return None to continue with all elements
-    if len(element) == 0:
+    if not element:
         return None
     # Check if the element is a file for single element;
     # if yes, then parse elements from it
