@@ -21,7 +21,7 @@ from ..pipeline import (
 from ..preprocess import BasePreprocessor
 from ..storage import BaseFeatureStorage
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
-from ..utils import logger, raise_error, yaml
+from ..utils import logger, raise_error, warn_with_log, yaml
 
 
 __all__ = ["collect", "list_elements", "queue", "reset", "run"]
@@ -116,7 +116,7 @@ def _get_storage(storage_config: dict) -> StorageLike:
 
 
 def run(
-    workdir: Union[str, Path],
+    workdir: Union[str, Path, dict],
     datagrabber: dict,
     markers: list[dict],
     storage: dict,
@@ -127,7 +127,7 @@ def run(
 
     Parameters
     ----------
-    workdir : str or pathlib.Path
+    workdir : str or pathlib.Path or dict
         Directory where the pipeline will be executed.
     datagrabber : dict
         DataGrabber to use. Must have a key ``kind`` with the kind of
@@ -151,15 +151,30 @@ def run(
         Element(s) to process. Will be used to index the DataGrabber
         (default None).
 
-    """
-    # Convert str to Path
-    if isinstance(workdir, str):
-        workdir = Path(workdir)
-    # Initiate working directory manager
-    WorkDirManager(workdir)
+    Raises
+    ------
+    ValueError
+        If ``workdir.cleanup=False`` when ``len(elements) > 1``.
 
-    if not isinstance(elements, list) and elements is not None:
-        elements = [elements]
+    """
+    # Conditional to handle workdir config
+    if isinstance(workdir, str | Path):
+        if isinstance(workdir, str):
+            workdir = {"workdir": Path(workdir), "cleanup": True}
+        else:
+            workdir = {"workdir": workdir, "cleanup": True}
+    elif isinstance(workdir, dict):
+        workdir["workdir"] = workdir.pop("path")
+
+    # Initiate working directory manager with correct variation
+    if not workdir["cleanup"]:
+        if elements is None or len(elements) > 1:
+            raise_error(
+                "Cannot disable `workdir.cleanup` as "
+                f"{len(elements) if elements is not None else 'all'} "
+                "elements will be processed"
+            )
+    WorkDirManager(**workdir)
 
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber.copy())
