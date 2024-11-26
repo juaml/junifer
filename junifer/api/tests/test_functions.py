@@ -116,7 +116,7 @@ def test_run_single_element_with_preprocessing(
     storage["uri"] = str((tmp_path / "out.sqlite").resolve())
     # Run operations
     run(
-        workdir=tmp_path,
+        workdir={"path": tmp_path, "cleanup": False},
         datagrabber={
             "kind": "PartlyCloudyTestingDataGrabber",
             "reduce_confounds": False,
@@ -287,7 +287,10 @@ def test_queue_correct_yaml_config(
             queue(
                 config={
                     "with": "junifer.testing.registry",
-                    "workdir": str(tmp_path.resolve()),
+                    "workdir": {
+                        "path": str(tmp_path.resolve()),
+                        "cleanup": True,
+                    },
                     "datagrabber": datagrabber,
                     "markers": markers,
                     "storage": storage,
@@ -448,7 +451,13 @@ def test_queue_with_imports(
         (tmp_path / "a.py").touch()
         with caplog.at_level(logging.DEBUG):
             queue(
-                config={"with": with_},
+                config={
+                    "with": with_,
+                    "workdir": {
+                        "path": str(tmp_path.resolve()),
+                        "cleanup": False,
+                    },
+                },
                 kind="HTCondor",
                 jobname="with_import_check",
                 elements=[("sub-001",)],
