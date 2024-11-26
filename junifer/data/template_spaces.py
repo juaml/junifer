@@ -16,7 +16,7 @@ from ..utils import logger, raise_error
 from .utils import closest_resolution
 
 
-__all__ = ["get_xfm", "get_template"]
+__all__ = ["get_template", "get_xfm"]
 
 
 def get_xfm(

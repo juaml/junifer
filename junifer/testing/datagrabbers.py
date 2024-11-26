@@ -15,8 +15,8 @@ from ..datagrabber.base import BaseDataGrabber
 
 __all__ = [
     "OasisVBMTestingDataGrabber",
-    "SPMAuditoryTestingDataGrabber",
     "PartlyCloudyTestingDataGrabber",
+    "SPMAuditoryTestingDataGrabber",
 ]
 
 

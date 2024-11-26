@@ -24,9 +24,9 @@ import datalad
 
 __all__ = [
     "WrapStdOut",
+    "configure_logging",
     "get_versions",
     "log_versions",
-    "configure_logging",
     "raise_error",
     "warn_with_log",
 ]

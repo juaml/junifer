@@ -15,7 +15,7 @@ import pandas as pd
 from ..utils import logger, raise_error, warn_with_log, yaml
 
 
-__all__ = ["parse_yaml", "parse_elements"]
+__all__ = ["parse_elements", "parse_yaml"]
 
 
 def parse_yaml(filepath: Union[str, Path]) -> dict:  # noqa: C901

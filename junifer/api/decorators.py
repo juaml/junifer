@@ -13,8 +13,8 @@ from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 __all__ = [
     "register_datagrabber",
     "register_datareader",
-    "register_preprocessor",
     "register_marker",
+    "register_preprocessor",
     "register_storage",
 ]
 

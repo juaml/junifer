@@ -19,16 +19,17 @@ if TYPE_CHECKING:
 
 
 __all__ = [
-    "DataGrabberLike",
-    "PreprocessorLike",
-    "MarkerLike",
-    "StorageLike",
-    "PipelineComponent",
-    "Dependencies",
     "ConditionalDependencies",
+    "ConfigVal",
+    "DataGrabberLike",
+    "DataGrabberPatterns",
+    "Dependencies",
     "ExternalDependencies",
     "MarkerInOutMappings",
-    "DataGrabberPatterns",
+    "MarkerLike",
+    "PipelineComponent",
+    "PreprocessorLike",
+    "StorageLike",
 ]
 
 
@@ -60,3 +61,4 @@ MarkerInOutMappings = MutableMapping[str, MutableMapping[str, str]]
 DataGrabberPatterns = dict[
     str, Union[dict[str, str], Sequence[dict[str, str]]]
 ]
+ConfigVal = Union[bool, int, float]

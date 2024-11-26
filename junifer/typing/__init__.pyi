@@ -9,6 +9,7 @@ __all__ = [
     "ExternalDependencies",
     "MarkerInOutMappings",
     "DataGrabberPatterns",
+    "ConfigVal",
 ]
 
 from ._typing import (
@@ -22,4 +23,5 @@ from ._typing import (
     ExternalDependencies,
     MarkerInOutMappings,
     DataGrabberPatterns,
+    ConfigVal,
 )

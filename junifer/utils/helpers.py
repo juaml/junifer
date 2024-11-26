@@ -10,7 +10,7 @@ import sys
 from .logging import logger, raise_error
 
 
-__all__ = ["run_ext_cmd", "deep_update"]
+__all__ = ["deep_update", "run_ext_cmd"]
 
 
 def run_ext_cmd(name: str, cmd: list[str]) -> None:

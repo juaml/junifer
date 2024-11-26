@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     from nibabel.nifti1 import Nifti1Image
 
 
-__all__ = ["compute_brain_mask", "MaskRegistry"]
+__all__ = ["MaskRegistry", "compute_brain_mask"]
 
 
 # Path to the masks

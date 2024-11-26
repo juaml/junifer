@@ -25,11 +25,11 @@ if TYPE_CHECKING:
 
 
 __all__ = [
+    "deregister_data",
     "get_data",
     "list_data",
     "load_data",
     "register_data",
-    "deregister_data",
 ]
 
 
