@@ -243,7 +243,7 @@ def queue(
     kind: str,
     jobname: str = "junifer_job",
     overwrite: bool = False,
-    elements: Union[str, list[Union[str, tuple]], tuple, None] = None,
+    elements: Optional[list[tuple[str, ...]]] = None,
     **kwargs: Union[str, int, bool, dict, tuple, list],
 ) -> None:
     """Queue a job to be executed later.
@@ -258,7 +258,7 @@ def queue(
         The name of the job (default "junifer_job").
     overwrite : bool, optional
         Whether to overwrite if job directory already exists (default False).
-    elements : str or tuple or list of str or tuple, optional
+    elements : list of tuple or None, optional
         Element(s) to process. Will be used to index the DataGrabber
         (default None).
     **kwargs : dict
@@ -405,7 +405,7 @@ def reset(config: dict) -> None:
 
 def list_elements(
     datagrabber: dict,
-    elements: Union[str, list[Union[str, tuple]], tuple, None] = None,
+    elements: Optional[list[tuple[str, ...]]] = None,
 ) -> str:
     """List elements of the datagrabber filtered using `elements`.
 
@@ -415,7 +415,7 @@ def list_elements(
         DataGrabber to index. Must have a key ``kind`` with the kind of
         DataGrabber to use. All other keys are passed to the DataGrabber
         constructor.
-    elements : str or tuple or list of str or tuple, optional
+    elements : list of tuple or None, optional
         Element(s) to filter using. Will be used to index the DataGrabber
         (default None).
 
