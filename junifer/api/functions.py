@@ -298,13 +298,14 @@ def queue(
     jobdir.mkdir(exist_ok=True, parents=True)
 
     # Check workdir config
-    if isinstance(config["workdir"], dict):
-        if not config["workdir"]["cleanup"]:
-            warn_with_log(
-                "`workdir.cleanup` will be set to True when queueing"
-            )
-        # Set cleanup
-        config["workdir"]["cleanup"] = True
+    if "workdir" in config:
+        if isinstance(config["workdir"], dict):
+            if not config["workdir"]["cleanup"]:
+                warn_with_log(
+                    "`workdir.cleanup` will be set to True when queueing"
+                )
+            # Set cleanup
+            config["workdir"]["cleanup"] = True
 
     # Load modules
     if "with" in config:
