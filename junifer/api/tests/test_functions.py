@@ -88,7 +88,7 @@ def test_run_single_element(
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        elements=["sub-01"],
+        elements=[("sub-01",)],
     )
     # Check files
     files = list(tmp_path.glob("*.sqlite"))
@@ -128,7 +128,7 @@ def test_run_single_element_with_preprocessing(
                 "kind": "fMRIPrepConfoundRemover",
             }
         ],
-        elements=["sub-01"],
+        elements=[("sub-01",)],
     )
     # Check files
     files = list(tmp_path.glob("*.sqlite"))
@@ -164,7 +164,7 @@ def test_run_multi_element_multi_output(
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        elements=["sub-01", "sub-03"],
+        elements=[("sub-01",), ("sub-03",)],
     )
     # Check files
     files = list(tmp_path.glob("*.sqlite"))
@@ -200,7 +200,7 @@ def test_run_multi_element_single_output(
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        elements=["sub-01", "sub-03"],
+        elements=[("sub-01",), ("sub-03",)],
     )
     # Check files
     files = list(tmp_path.glob("*.sqlite"))
@@ -342,7 +342,7 @@ def test_queue_invalid_job_queue(
         with monkeypatch.context() as m:
             m.chdir(tmp_path)
             queue(
-                config={"elements": ["sub-001"]},
+                config={"elements": [("sub-001",)]},
                 kind="ABC",
             )
 
@@ -366,13 +366,13 @@ def test_queue_assets_disallow_overwrite(
             m.chdir(tmp_path)
             # First generate assets
             queue(
-                config={"elements": ["sub-001"]},
+                config={"elements": [("sub-001",)]},
                 kind="HTCondor",
                 jobname="prevent_overwrite",
             )
             # Re-run to trigger error
             queue(
-                config={"elements": ["sub-001"]},
+                config={"elements": [("sub-001",)]},
                 kind="HTCondor",
                 jobname="prevent_overwrite",
             )
@@ -399,14 +399,14 @@ def test_queue_assets_allow_overwrite(
         m.chdir(tmp_path)
         # First generate assets
         queue(
-            config={"elements": ["sub-001"]},
+            config={"elements": [("sub-001",)]},
             kind="HTCondor",
             jobname="allow_overwrite",
         )
         with caplog.at_level(logging.INFO):
             # Re-run to overwrite
             queue(
-                config={"elements": ["sub-001"]},
+                config={"elements": [("sub-001",)]},
                 kind="HTCondor",
                 jobname="allow_overwrite",
                 overwrite=True,
@@ -451,7 +451,7 @@ def test_queue_with_imports(
                 config={"with": with_},
                 kind="HTCondor",
                 jobname="with_import_check",
-                elements="sub-001",
+                elements=[("sub-001",)],
             )
             assert "Copying" in caplog.text
             assert "Queue done" in caplog.text
@@ -465,10 +465,8 @@ def test_queue_with_imports(
 @pytest.mark.parametrize(
     "elements",
     [
-        "sub-001",
-        ["sub-001"],
-        ["sub-001", "sub-002"],
-        ("sub-001", "ses-001"),
+        [("sub-001",)],
+        [("sub-001",), ("sub-002",)],
         [("sub-001", "ses-001")],
         [("sub-001", "ses-001"), ("sub-001", "ses-002")],
     ],
@@ -477,7 +475,7 @@ def test_queue_with_elements(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
-    elements: Union[str, list[Union[str, tuple[str]]], tuple[str]],
+    elements: list[tuple[str, ...]],
 ) -> None:
     """Test queue with elements.
 
@@ -489,7 +487,7 @@ def test_queue_with_elements(
         The pytest.MonkeyPatch object.
     caplog : pytest.LogCaptureFixture
         The pytest.LogCaptureFixture object.
-    elements : str of list of str
+    elements : list of tuple
         The parametrized elements for the queue.
 
     """
@@ -562,7 +560,7 @@ def test_reset_run(
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        elements=["sub-01"],
+        elements=[("sub-01",)],
     )
     # Reset operation
     reset(config={"storage": storage})
@@ -642,13 +640,13 @@ def test_reset_queue(
 @pytest.mark.parametrize(
     "elements",
     [
-        ["sub-01"],
+        [("sub-01",)],
         None,
     ],
 )
 def test_list_elements(
     datagrabber: dict[str, str],
-    elements: Optional[list[str]],
+    elements: Optional[list[tuple[str, ...]]],
 ) -> None:
     """Test elements listing.
 
