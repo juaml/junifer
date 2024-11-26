@@ -3,11 +3,15 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+
 import os
 from typing import Any
 
 from .logging import logger
 from .singleton import Singleton
+
+
+__all__ = ["ConfigManager", "config"]
 
 
 class ConfigManager(metaclass=Singleton):
@@ -54,13 +58,12 @@ class ConfigManager(metaclass=Singleton):
         ----------
         key : str
             The configuration key.
-
-        default : Any, optional
+        default : any, optional
             The default value to return if the key is not found (default None).
 
         Returns
         -------
-        Any
+        any
             The configuration value.
 
         """
@@ -73,7 +76,7 @@ class ConfigManager(metaclass=Singleton):
         ----------
         key : str
             The configuration key.
-        value : Any
+        value : any
             The configuration value.
 
         """
@@ -81,4 +84,5 @@ class ConfigManager(metaclass=Singleton):
         self._config[key] = value
 
 
+# Initialize here to access from anywhere
 config = ConfigManager()
