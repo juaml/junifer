@@ -15,11 +15,11 @@ from ..utils.logging import logger, raise_error
 
 
 __all__ = [
-    "get_dependency_version",
-    "process_meta",
     "element_to_prefix",
-    "store_matrix_checks",
+    "get_dependency_version",
     "matrix_to_vector",
+    "process_meta",
+    "store_matrix_checks",
 ]
 
 

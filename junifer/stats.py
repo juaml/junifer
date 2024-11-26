@@ -13,7 +13,7 @@ from scipy.stats.mstats import winsorize
 from .utils import logger, raise_error
 
 
-__all__ = ["get_aggfunc_by_name", "count", "winsorized_mean", "select"]
+__all__ = ["count", "get_aggfunc_by_name", "select", "winsorized_mean"]
 
 
 def get_aggfunc_by_name(

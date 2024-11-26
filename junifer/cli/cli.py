@@ -29,19 +29,19 @@ from .utils import (
 
 
 __all__ = [
-    "cli",
-    "run",
-    "collect",
-    "queue",
-    "wtf",
-    "selftest",
-    "reset",
-    "list_elements",
-    "setup",
     "afni_docker",
-    "fsl_docker",
     "ants_docker",
+    "cli",
+    "collect",
     "freesurfer_docker",
+    "fsl_docker",
+    "list_elements",
+    "queue",
+    "reset",
+    "run",
+    "selftest",
+    "setup",
+    "wtf",
 ]
 
 

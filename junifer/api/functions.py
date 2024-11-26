@@ -24,7 +24,7 @@ from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 from ..utils import logger, raise_error, yaml
 
 
-__all__ = ["run", "collect", "queue", "reset", "list_elements"]
+__all__ = ["collect", "list_elements", "queue", "reset", "run"]
 
 
 def _get_datagrabber(datagrabber_config: dict) -> DataGrabberLike:

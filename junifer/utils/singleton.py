@@ -8,7 +8,7 @@ from abc import ABCMeta
 from typing import Any, ClassVar
 
 
-__all__ = ["Singleton", "ABCSingleton"]
+__all__ = ["ABCSingleton", "Singleton"]
 
 
 class Singleton(type):
