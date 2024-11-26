@@ -117,15 +117,16 @@ def run(
     filepath : click.Path
         The filepath to the configuration file.
     element : tuple of str
-        The element to operate on.
+        The element(s) to operate on.
     verbose : click.Choice
         The verbosity level: warning, info or debug (default "info").
 
     """
+    # Setup logging
     configure_logging(level=verbose)
     # TODO(synchon): add validation
     # Parse YAML
-    config = parse_yaml(filepath)  # type: ignore
+    config = parse_yaml(filepath)
     # Retrieve working directory
     workdir = config["workdir"]
     # Fetch datagrabber
@@ -179,9 +180,12 @@ def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
         The verbosity level: warning, info or debug (default "info").
 
     """
+    # Setup logging
     configure_logging(level=verbose)
     # TODO: add validation
-    config = parse_yaml(filepath)  # type: ignore
+    # Parse YAML
+    config = parse_yaml(filepath)
+    # Fetch storage
     storage = config["storage"]
     # Perform operation
     cli_func.collect(storage=storage)
@@ -206,7 +210,7 @@ def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
 )
 def queue(
     filepath: click.Path,
-    element: str,
+    element: tuple[str],
     overwrite: bool,
     submit: bool,
     verbose: Union[str, int],
@@ -219,8 +223,8 @@ def queue(
     ----------
     filepath : click.Path
         The filepath to the configuration file.
-    element : str
-        The element to operate using.
+    element : tuple of str
+        The element(s) to operate on.
     overwrite : bool
         Whether to overwrite existing directory.
     submit : bool
@@ -228,15 +232,26 @@ def queue(
     verbose : click.Choice
         The verbosity level: warning, info or debug (default "info").
 
+    Raises
+    ------
+    ValueError
+        If no ``queue`` section is found in the YAML.
+
     """
+    # Setup logging
     configure_logging(level=verbose)
     # TODO: add validation
+    # Parse YAML
     config = parse_yaml(filepath)  # type: ignore
-    elements = parse_elements(element, config)
+    # Check queue section
     if "queue" not in config:
         raise_error(f"No queue configuration found in {filepath}.")
+    # Parse elements
+    elements = parse_elements(element, config)
+    # Separate out queue section
     queue_config = config.pop("queue")
     kind = queue_config.pop("kind")
+    # Perform operation
     cli_func.queue(
         config=config,
         kind=kind,
@@ -366,6 +381,7 @@ def reset(
         The verbosity level: warning, info or debug (default "info").
 
     """
+    # Setup logging
     configure_logging(level=verbose)
     # Parse YAML
     config = parse_yaml(filepath)
@@ -408,7 +424,7 @@ def list_elements(
     filepath : click.Path
         The filepath to the configuration file.
     element : tuple of str
-        The element to operate on.
+        The element(s) to operate on.
     output_file : click.Path or None
         The path to write the output to. If not None, writing to
         stdout is not performed.
@@ -416,9 +432,10 @@ def list_elements(
         The verbosity level: warning, info or debug (default "info").
 
     """
+    # Setup logging
     configure_logging(level=verbose)
     # Parse YAML
-    config = parse_yaml(filepath)  # type: ignore
+    config = parse_yaml(filepath)
     # Fetch datagrabber
     datagrabber = config["datagrabber"]
     # Parse elements
