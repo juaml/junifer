@@ -20,6 +20,7 @@ if TYPE_CHECKING:
 
 __all__ = [
     "ConditionalDependencies",
+    "ConfigVal",
     "DataGrabberLike",
     "DataGrabberPatterns",
     "Dependencies",
@@ -60,3 +61,4 @@ MarkerInOutMappings = MutableMapping[str, MutableMapping[str, str]]
 DataGrabberPatterns = dict[
     str, Union[dict[str, str], Sequence[dict[str, str]]]
 ]
+ConfigVal = Union[bool, int, float]
