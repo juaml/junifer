@@ -5,7 +5,7 @@
 # License: AGPL
 
 from junifer.utils import config
-from junifer.utils.config import ConfigManager
+from junifer.utils._config import ConfigManager
 
 
 def test_config_manager_singleton() -> None:
