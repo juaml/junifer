@@ -275,15 +275,15 @@ class DataladDataGrabber(BaseDataGrabber):
                     f"ID: {self._dataset.id} (local) != {remote_id} (remote)"
                 )
 
-            # Check for dirty datasets:
+            # Conditional reporting on dataset dirtiness
             self.datalad_dirty = is_dirty
             if self.datalad_dirty:
                 warn_with_log(
-                    "At least one file is not clean, Junifer will "
-                    "consider this dataset as dirty."
+                    "At least one file is not clean, "
+                    f"marking dataset (id: {self._dataset.id}) as dirty."
                 )
             else:
-                logger.debug("Dataset is clean")
+                logger.debug(f"Dataset (id: {self._dataset.id}) is clean")
 
         else:
             logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
