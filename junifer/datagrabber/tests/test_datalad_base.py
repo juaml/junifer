@@ -262,7 +262,7 @@ def test_DataladDataGrabber_previously_cloned(
         meta = elem1["BOLD"]["meta"]
         assert "datagrabber" in meta
         assert "datalad_dirty" in meta["datagrabber"]
-        assert meta["datagrabber"]["datalad_dirty"] is False
+        assert meta["datagrabber"]["datalad_dirty"] is True
         assert "datalad_commit_id" in meta["datagrabber"]
         assert meta["datagrabber"]["datalad_commit_id"] == commit
         assert "datalad_id" in meta["datagrabber"]
@@ -342,7 +342,7 @@ def test_DataladDataGrabber_previously_cloned_and_get(
         meta = elem1["BOLD"]["meta"]
         assert "datagrabber" in meta
         assert "datalad_dirty" in meta["datagrabber"]
-        assert meta["datagrabber"]["datalad_dirty"] is False
+        assert meta["datagrabber"]["datalad_dirty"] is True
         assert "datalad_commit_id" in meta["datagrabber"]
         assert meta["datagrabber"]["datalad_commit_id"] == commit
         assert "datalad_id" in meta["datagrabber"]
