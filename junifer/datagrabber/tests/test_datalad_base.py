@@ -3,12 +3,14 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import warnings
 from pathlib import Path
 
 import datalad.api as dl
 import pytest
 
 from junifer.datagrabber import DataladDataGrabber
+from junifer.utils import config
 
 
 _testing_dataset = {
@@ -94,6 +96,12 @@ def test_DataladDataGrabber_install_errors(
     with pytest.raises(ValueError, match=r"different ID"):
         with dg:
             pass
+    # Set config to skip id check and test
+    config.set(key="datagrabber.skipidcheck", val=True)
+    with dg:
+        pass
+    # Reset config
+    config.delete("datagrabber.skipidcheck")
 
     elem1_t1w = datadir / "example_bids/sub-01/anat/sub-01_T1w.nii.gz"
     elem1_t1w.unlink()
@@ -104,6 +112,14 @@ def test_DataladDataGrabber_install_errors(
     with pytest.warns(RuntimeWarning, match=r"one file is not clean"):
         with dg:
             pass
+    # Set config to skip dirty check and test
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        config.set(key="datagrabber.skipdirtycheck", val=True)
+        with dg:
+            pass
+        # Reset config
+        config.delete("datagrabber.skipdirtycheck")
 
 
 def test_DataladDataGrabber_clone_cleanup(
