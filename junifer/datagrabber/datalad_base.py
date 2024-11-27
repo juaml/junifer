@@ -200,6 +200,11 @@ class DataladDataGrabber(BaseDataGrabber):
         dict
             The unmodified input dictionary.
 
+        Raises
+        ------
+        datalad.support.exceptions.IncompleteResultsError
+            If there is a datalad-related problem while fetching data.
+
         """
         to_get = []
         for type_val in out.values():
@@ -252,6 +257,8 @@ class DataladDataGrabber(BaseDataGrabber):
         ------
         ValueError
             If the dataset is already installed but with a different ID.
+        datalad.support.exceptions.IncompleteResultsError
+            If there is a datalad-related problem while cloning dataset.
 
         """
         isinstalled = dl.Dataset(self._datadir).is_installed()
@@ -260,6 +267,7 @@ class DataladDataGrabber(BaseDataGrabber):
             self._got_files = []
             self._dataset: dl.Dataset = dl.Dataset(self._datadir)
 
+            # Check if dataset is already installed with a different ID
             remote_id, is_dirty = self._get_dataset_id_remote()
             if remote_id != self._dataset.id:
                 raise_error(
