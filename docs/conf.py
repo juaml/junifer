@@ -96,6 +96,7 @@ nitpick_ignore_regex = [
     ("py:obj", "sqlalchemy.engine.Engine"),  # ignore sqlalchemy
     ("py:class", "pipeline.Pipeline"),  # nilearn
     ("py:obj", "neurokit2.*"),  # ignore neurokit2
+    ("py:obj", "datalad.*"),  # ignore datalad
 ]
 
 # -- Options for HTML output -------------------------------------------------
