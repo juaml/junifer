@@ -158,7 +158,7 @@ def run(
 
     """
     # Conditional to handle workdir config
-    if isinstance(workdir, str | Path):
+    if isinstance(workdir, (str, Path)):
         if isinstance(workdir, str):
             workdir = {"workdir": Path(workdir), "cleanup": True}
         else:
