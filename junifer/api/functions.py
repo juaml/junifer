@@ -21,7 +21,7 @@ from ..pipeline import (
 from ..preprocess import BasePreprocessor
 from ..storage import BaseFeatureStorage
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
-from ..utils import logger, raise_error, yaml
+from ..utils import logger, raise_error, warn_with_log, yaml
 
 
 __all__ = ["collect", "list_elements", "queue", "reset", "run"]
@@ -116,18 +116,18 @@ def _get_storage(storage_config: dict) -> StorageLike:
 
 
 def run(
-    workdir: Union[str, Path],
+    workdir: Union[str, Path, dict],
     datagrabber: dict,
     markers: list[dict],
     storage: dict,
     preprocessors: Optional[list[dict]] = None,
-    elements: Union[str, list[Union[str, tuple]], tuple, None] = None,
+    elements: Optional[list[tuple[str, ...]]] = None,
 ) -> None:
     """Run the pipeline on the selected element.
 
     Parameters
     ----------
-    workdir : str or pathlib.Path
+    workdir : str or pathlib.Path or dict
         Directory where the pipeline will be executed.
     datagrabber : dict
         DataGrabber to use. Must have a key ``kind`` with the kind of
@@ -143,23 +143,38 @@ def run(
         Storage to use. Must have a key ``kind`` with the kind of
         storage to use. All other keys are passed to the storage
         constructor.
-    preprocessors : list of dict, optional
+    preprocessors : list of dict or None, optional
         List of preprocessors to use. Each preprocessor is a dict with at
         least a key ``kind`` specifying the preprocessor to use. All other keys
         are passed to the preprocessor constructor (default None).
-    elements : str or tuple or list of str or tuple, optional
+    elements : list of tuple or None, optional
         Element(s) to process. Will be used to index the DataGrabber
         (default None).
 
-    """
-    # Convert str to Path
-    if isinstance(workdir, str):
-        workdir = Path(workdir)
-    # Initiate working directory manager
-    WorkDirManager(workdir)
+    Raises
+    ------
+    ValueError
+        If ``workdir.cleanup=False`` when ``len(elements) > 1``.
 
-    if not isinstance(elements, list) and elements is not None:
-        elements = [elements]
+    """
+    # Conditional to handle workdir config
+    if isinstance(workdir, (str, Path)):
+        if isinstance(workdir, str):
+            workdir = {"workdir": Path(workdir), "cleanup": True}
+        else:
+            workdir = {"workdir": workdir, "cleanup": True}
+    elif isinstance(workdir, dict):
+        workdir["workdir"] = workdir.pop("path")
+
+    # Initiate working directory manager with correct variation
+    if not workdir["cleanup"]:
+        if elements is None or len(elements) > 1:
+            raise_error(
+                "Cannot disable `workdir.cleanup` as "
+                f"{len(elements) if elements is not None else 'all'} "
+                "elements will be processed"
+            )
+    WorkDirManager(**workdir)
 
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber.copy())
@@ -228,7 +243,7 @@ def queue(
     kind: str,
     jobname: str = "junifer_job",
     overwrite: bool = False,
-    elements: Union[str, list[Union[str, tuple]], tuple, None] = None,
+    elements: Optional[list[tuple[str, ...]]] = None,
     **kwargs: Union[str, int, bool, dict, tuple, list],
 ) -> None:
     """Queue a job to be executed later.
@@ -243,7 +258,7 @@ def queue(
         The name of the job (default "junifer_job").
     overwrite : bool, optional
         Whether to overwrite if job directory already exists (default False).
-    elements : str or tuple or list of str or tuple, optional
+    elements : list of tuple or None, optional
         Element(s) to process. Will be used to index the DataGrabber
         (default None).
     **kwargs : dict
@@ -281,6 +296,16 @@ def queue(
             )
             shutil.rmtree(jobdir)
     jobdir.mkdir(exist_ok=True, parents=True)
+
+    # Check workdir config
+    if "workdir" in config:
+        if isinstance(config["workdir"], dict):
+            if not config["workdir"]["cleanup"]:
+                warn_with_log(
+                    "`workdir.cleanup` will be set to True when queueing"
+                )
+            # Set cleanup
+            config["workdir"]["cleanup"] = True
 
     # Load modules
     if "with" in config:
@@ -381,7 +406,7 @@ def reset(config: dict) -> None:
 
 def list_elements(
     datagrabber: dict,
-    elements: Union[str, list[Union[str, tuple]], tuple, None] = None,
+    elements: Optional[list[tuple[str, ...]]] = None,
 ) -> str:
     """List elements of the datagrabber filtered using `elements`.
 
@@ -391,7 +416,7 @@ def list_elements(
         DataGrabber to index. Must have a key ``kind`` with the kind of
         DataGrabber to use. All other keys are passed to the DataGrabber
         constructor.
-    elements : str or tuple or list of str or tuple, optional
+    elements : list of tuple or None, optional
         Element(s) to filter using. Will be used to index the DataGrabber
         (default None).
 
