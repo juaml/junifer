@@ -5,6 +5,7 @@
 #          Xuan Li <xu.li@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
+
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -35,22 +36,37 @@ with TemporaryDirectory() as tmpdir_name:
                     (sub_dir / dname).mkdir()
 
                 fnames = [
+                    # T1w native
+                    f"anat/{t_sub}_desc-preproc_T1w.nii.gz",
+                    # T1w MNI152NLin2009cAsym
                     (
                         f"anat/{t_sub}_space-MNI152NLin2009cAsym_desc-preproc"
                         "_T1w.nii.gz"
                     ),
+                    # T1w brain mask native
+                    f"anat/{t_sub}_desc-brain_mask.nii.gz",
+                    # T1w brain mask MNI152NLin2009cAsym
                     (
                         f"anat/{t_sub}_space-MNI152NLin2009cAsym_"
                         "desc-brain_mask.nii.gz"
                     ),
+                    # CSF native
+                    f"anat/{t_sub}_label-CSF_probseg.nii.gz",
+                    # CSF MNI152NLin2009cAsym
                     (
                         f"anat/{t_sub}_space-MNI152NLin2009cAsym_label-"
                         "CSF_probseg.nii.gz"
                     ),
+                    # GM native
+                    f"anat/{t_sub}_label-GM_probseg.nii.gz",
+                    # GM MNI152NLin2009cAsym
                     (
                         f"anat/{t_sub}_space-MNI152NLin2009cAsym_label-"
                         "GM_probseg.nii.gz"
                     ),
+                    # WM native
+                    f"anat/{t_sub}_label-WM_probseg.nii.gz",
+                    # WM MNI152NLin2009cAsym
                     (
                         f"anat/{t_sub}_space-MNI152NLin2009cAsym_label-"
                         "WM_probseg.nii.gz"
@@ -66,18 +82,35 @@ with TemporaryDirectory() as tmpdir_name:
                     "workingmemory_acq-seq",
                 ]
                 for t in tasks:
+                    # BOLD native
+                    fnames.append(
+                        f"func/{t_sub}_task-{t}_space-"
+                        "T1w_desc-preproc_bold.nii.gz"
+                    )
+                    # BOLD MNI152NLin2009cAsym
                     fnames.append(
                         f"func/{t_sub}_task-{t}_space-"
                         "MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
                     )
                     fnames.append(
                         f"func/{t_sub}_task-{t}_space-"
+                        "T1w_desc-preproc_bold.json"
+                    )
+                    fnames.append(
+                        f"func/{t_sub}_task-{t}_space-"
                         "MNI152NLin2009cAsym_desc-preproc_bold.json"
                     )
+                    # BOLD brain mask native
+                    fnames.append(
+                        f"func/{t_sub}_task-{t}_space-"
+                        "T1w_desc-brain_mask.nii.gz"
+                    )
+                    # BOLD brain mask MNI152NLin2009cAsym
                     fnames.append(
                         f"func/{t_sub}_task-{t}_space-"
                         "MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
                     )
+                    # BOLD confounds
                     fnames.append(
                         f"func/{t_sub}_task-{t}_desc-confounds"
                         "_regressors.tsv"
@@ -85,6 +118,15 @@ with TemporaryDirectory() as tmpdir_name:
                     fnames.append(
                         f"func/{t_sub}_task-{t}_desc-confounds"
                         "_regressors.json"
+                    )
+                    # BOLD reference native
+                    fnames.append(
+                        f"func/{t_sub}_task-{t}_" "space-T1w_boldref.nii.gz"
+                    )
+                    # BOLD reference MNI152NLin2009cAsym
+                    fnames.append(
+                        f"func/{t_sub}_task-{t}_"
+                        "space-MNI152NLin2009cAsym_boldref.nii.gz"
                     )
 
             elif dtype == "dwipreproc":
