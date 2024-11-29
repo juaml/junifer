@@ -55,7 +55,7 @@ class FSLWarper:
         -------
         dict
             The ``input`` dictionary with modified ``data`` and ``space`` key
-            values and new ``reference_path`` key whose value points to the
+            values and new ``reference`` key whose value points to the
             reference file used for warping.
 
         Raises
@@ -116,7 +116,7 @@ class FSLWarper:
         # Load nifti
         input["data"] = nib.load(applywarp_out_path)
         # Save resampled reference path
-        input["reference_path"] = flirt_out_path
+        input["reference"] = {"path": flirt_out_path}
         # Keep pre-warp space for further operations
         input["prewarp_space"] = input["space"]
         # Use reference input's space as warped input's space

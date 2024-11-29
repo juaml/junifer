@@ -78,7 +78,7 @@ class FSLParcellationWarper:
             "--interp=nn",
             f"-i {prewarp_parcellation_path.resolve()}",
             # use resampled reference
-            f"-r {target_data['reference_path'].resolve()}",
+            f"-r {target_data['reference']['path'].resolve()}",
             f"-w {warp_data['path'].resolve()}",
             f"-o {warped_parcellation_path.resolve()}",
         ]

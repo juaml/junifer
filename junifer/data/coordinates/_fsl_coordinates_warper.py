@@ -69,7 +69,7 @@ class FSLCoordinatesWarper:
             f"{pretransform_coordinates_path.resolve()}",
             "| img2imgcoord -mm",
             f"-src {target_data['path'].resolve()}",
-            f"-dest {target_data['reference_path'].resolve()}",
+            f"-dest {target_data['reference']['path'].resolve()}",
             f"-warp {warp_data['path'].resolve()}",
             f"> {transformed_coords_path.resolve()};",
             f"sed -i 1d {transformed_coords_path.resolve()}",

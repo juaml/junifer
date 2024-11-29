@@ -50,8 +50,9 @@ class ANTsParcellationWarper:
         dst : str
             The data type or template space to warp to.
             `"T1w"` is the only allowed data type and it uses the resampled T1w
-            found in ``target_data.reference_path``. The ``"reference_path"``
-            key is added when :class:`.SpaceWarper` is used.
+            found in ``target_data.reference``. The ``"reference"``
+            key is added if the :class:`.SpaceWarper` is used or if the
+            data is provided in native space.
         target_data : dict
             The corresponding item of the data object to which the parcellation
             will be applied.
@@ -87,6 +88,10 @@ class ANTsParcellationWarper:
             # Warp data check
             if warp_data is None:
                 raise_error("No `warp_data` provided")
+            if "reference" not in target_data:
+                raise_error("No `reference` provided")
+            if "path" not in target_data["reference"]:
+                raise_error("No `path` provided in `reference`")
 
             logger.debug("Using ANTs for parcellation transformation")
 
@@ -108,7 +113,7 @@ class ANTsParcellationWarper:
                 "-n 'GenericLabel[NearestNeighbor]'",
                 f"-i {prewarp_parcellation_path.resolve()}",
                 # use resampled reference
-                f"-r {target_data['reference_path'].resolve()}",
+                f"-r {target_data['reference']['path'].resolve()}",
                 f"-t {warp_data['path'].resolve()}",
                 f"-o {warped_parcellation_path.resolve()}",
             ]

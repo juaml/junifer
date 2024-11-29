@@ -59,7 +59,7 @@ class ANTsWarper:
         -------
         dict
             The ``input`` dictionary with modified ``data`` and ``space`` key
-            values and new ``reference_path`` key whose value points to the
+            values and new ``reference`` key whose value points to the
             reference file used for warping.
 
         Raises
@@ -129,7 +129,7 @@ class ANTsWarper:
             # Load nifti
             input["data"] = nib.load(apply_transforms_out_path)
             # Save resampled reference path
-            input["reference_path"] = resample_image_out_path
+            input["reference"] = {"path": resample_image_out_path}
             # Keep pre-warp space for further operations
             input["prewarp_space"] = input["space"]
             # Use reference input's space as warped input's space

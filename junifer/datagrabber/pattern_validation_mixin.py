@@ -33,6 +33,8 @@ PATTERNS_SCHEMA = {
                 "mandatory": ["pattern", "format"],
                 "optional": ["mappings"],
             },
+            "reference": {"mandatory": ["pattern"], "optional": []},
+            "prewarp_space": {"mandatory": [], "optional": []},
         },
     },
     "Warp": {
