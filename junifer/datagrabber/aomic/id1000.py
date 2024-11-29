@@ -206,7 +206,6 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         else:
             patterns["BOLD"]["prewarp_space"] = "native"
 
-
         # Use native T1w assets
         self.space = space
 
