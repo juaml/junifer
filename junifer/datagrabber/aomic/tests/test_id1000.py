@@ -18,20 +18,25 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomic1000"
 
 
 @pytest.mark.parametrize(
-    "type_, nested_types",
+    "type_, nested_types, space",
     [
-        ("BOLD", ["confounds", "mask"]),
-        ("T1w", ["mask"]),
-        ("VBM_CSF", None),
-        ("VBM_GM", None),
-        ("VBM_WM", None),
-        ("DWI", None),
-        ("FreeSurfer", None),
+        ("BOLD", ["confounds", "mask", "reference"], "MNI152NLin2009cAsym"),
+        ("BOLD", ["confounds", "mask", "reference"], "native"),
+        ("T1w", ["mask"], "MNI152NLin2009cAsym"),
+        ("T1w", ["mask"], "native"),
+        ("VBM_CSF", None, "MNI152NLin2009cAsym"),
+        ("VBM_CSF", None, "native"),
+        ("VBM_GM", None, "MNI152NLin2009cAsym"),
+        ("VBM_GM", None, "native"),
+        ("VBM_WM", None, "MNI152NLin2009cAsym"),
+        ("DWI", None, "MNI152NLin2009cAsym"),
+        ("FreeSurfer", None, "MNI152NLin2009cAsym"),
     ],
 )
 def test_DataladAOMICID1000(
     type_: str,
     nested_types: Optional[list[str]],
+    space: str,
 ) -> None:
     """Test DataladAOMICID1000 DataGrabber.
 
@@ -41,9 +46,11 @@ def test_DataladAOMICID1000(
         The parametrized type.
     nested_types : list of str or None
         The parametrized nested types.
+    space: str
+        The parametrized space.
 
     """
-    dg = DataladAOMICID1000(types=type_)
+    dg = DataladAOMICID1000(types=type_, space=space)
     # Set URI to Gin
     dg.uri = URI
 

@@ -18,25 +18,56 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomicpiop2"
 
 
 @pytest.mark.parametrize(
-    "type_, nested_types, tasks",
+    "type_, nested_types, tasks, space",
     [
-        ("BOLD", ["confounds", "mask"], None),
-        ("BOLD", ["confounds", "mask"], ["restingstate"]),
-        ("BOLD", ["confounds", "mask"], ["restingstate", "stopsignal"]),
-        ("BOLD", ["confounds", "mask"], ["workingmemory", "stopsignal"]),
-        ("BOLD", ["confounds", "mask"], ["workingmemory"]),
-        ("T1w", ["mask"], None),
-        ("VBM_CSF", None, None),
-        ("VBM_GM", None, None),
-        ("VBM_WM", None, None),
-        ("DWI", None, None),
-        ("FreeSurfer", None, None),
+        (
+            "BOLD",
+            ["confounds", "mask", "reference"],
+            None,
+            "MNI152NLin2009cAsym",
+        ),
+        ("BOLD", ["confounds", "mask", "reference"], None, "native"),
+        (
+            "BOLD",
+            ["confounds", "mask", "reference"],
+            ["restingstate"],
+            "MNI152NLin2009cAsym",
+        ),
+        (
+            "BOLD",
+            ["confounds", "mask", "reference"],
+            ["restingstate", "stopsignal"],
+            "MNI152NLin2009cAsym",
+        ),
+        (
+            "BOLD",
+            ["confounds", "mask", "reference"],
+            ["workingmemory", "stopsignal"],
+            "MNI152NLin2009cAsym",
+        ),
+        (
+            "BOLD",
+            ["confounds", "mask", "reference"],
+            ["workingmemory"],
+            "MNI152NLin2009cAsym",
+        ),
+        ("T1w", ["mask"], None, "MNI152NLin2009cAsym"),
+        ("T1w", ["mask"], None, "native"),
+        ("VBM_CSF", None, None, "MNI152NLin2009cAsym"),
+        ("VBM_CSF", None, None, "native"),
+        ("VBM_GM", None, None, "MNI152NLin2009cAsym"),
+        ("VBM_GM", None, None, "native"),
+        ("VBM_WM", None, None, "MNI152NLin2009cAsym"),
+        ("VBM_WM", None, None, "native"),
+        ("DWI", None, None, "MNI152NLin2009cAsym"),
+        ("FreeSurfer", None, None, "MNI152NLin2009cAsym"),
     ],
 )
 def test_DataladAOMICPIOP2(
     type_: str,
     nested_types: Optional[list[str]],
     tasks: Optional[list[str]],
+    space: str,
 ) -> None:
     """Test DataladAOMICPIOP2 DataGrabber.
 
@@ -48,9 +79,11 @@ def test_DataladAOMICPIOP2(
         The parametrized nested types.
     tasks : list of str or None
         The parametrized task values.
+    space: str
+        The parametrized space.
 
     """
-    dg = DataladAOMICPIOP2(types=type_, tasks=tasks)
+    dg = DataladAOMICPIOP2(types=type_, tasks=tasks, space=space)
     # Set URI to Gin
     dg.uri = URI
 
