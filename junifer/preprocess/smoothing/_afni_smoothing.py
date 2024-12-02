@@ -4,7 +4,7 @@
 # License: AGPL
 
 from typing import (
-    TYPE_CHECKING,
+    Any,
     ClassVar,
     Union,
 )
@@ -14,10 +14,6 @@ import nibabel as nib
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies, ExternalDependencies
 from ...utils import logger, run_ext_cmd
-
-
-if TYPE_CHECKING:
-    from nibabel.nifti1 import Nifti1Image
 
 
 __all__ = ["AFNISmoothing"]
@@ -41,23 +37,23 @@ class AFNISmoothing:
 
     def preprocess(
         self,
-        data: "Nifti1Image",
+        input: dict[str, Any],
         fwhm: Union[int, float],
-    ) -> "Nifti1Image":
+    ) -> dict[str, Any]:
         """Preprocess using AFNI.
 
         Parameters
         ----------
-        data : Niimg-like object
-            Image(s) to preprocess.
+        input : dict
+            A single input from the Junifer Data object in which to preprocess.
         fwhm : int or float
             Smooth until the value. AFNI estimates the smoothing and then
             applies smoothing to reach ``fwhm``.
 
         Returns
         -------
-        Niimg-like object
-            The preprocessed image(s).
+        dict
+            The ``input`` dictionary with updated values.
 
         Notes
         -----
@@ -71,18 +67,18 @@ class AFNISmoothing:
         """
         logger.info("Smoothing using AFNI")
 
-        # Create component-scoped tempdir
-        tempdir = WorkDirManager().get_tempdir(prefix="afni_smoothing")
-
-        # Save target data to a component-scoped tempfile
-        nifti_in_file_path = tempdir / "input.nii"  # needs to be .nii
-        nib.save(data, nifti_in_file_path)
+        # Create element-scoped tempdir so that the output is
+        # available later as nibabel stores file path reference for
+        # loading on computation
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="afni_smoothing"
+        )
 
         # Set 3dBlurToFWHM command
-        blur_out_path_prefix = tempdir / "blur"
+        blur_out_path_prefix = element_tempdir / "blur"
         blur_cmd = [
             "3dBlurToFWHM",
-            f"-input {nifti_in_file_path.resolve()}",
+            f"-input {input['path'].resolve()}",
             f"-prefix {blur_out_path_prefix.resolve()}",
             "-automask",
             f"-FWHM {fwhm}",
@@ -90,28 +86,34 @@ class AFNISmoothing:
         # Call 3dBlurToFWHM
         run_ext_cmd(name="3dBlurToFWHM", cmd=blur_cmd)
 
-        # Create element-scoped tempdir so that the blurred output is
-        # available later as nibabel stores file path reference for
-        # loading on computation
-        element_tempdir = WorkDirManager().get_element_tempdir(
-            prefix="afni_blur"
-        )
+        # Read header to get output suffix
+        header = input["data"].header
+        sform_code = header.get_sform(coded=True)[1]
+        if sform_code == 4:
+            output_suffix = "tlrc"
+        else:
+            output_suffix = "orig"
+
         # Convert afni to nifti
-        blur_afni_to_nifti_out_path = (
-            element_tempdir / "output.nii"  # needs to be .nii
+        blur_nifti_out_path = (
+            element_tempdir / "smoothed_data.nii"  # needs to be .nii
         )
         convert_cmd = [
             "3dAFNItoNIFTI",
-            f"-prefix {blur_afni_to_nifti_out_path.resolve()}",
-            f"{blur_out_path_prefix}+orig.BRIK",
+            f"-prefix {blur_nifti_out_path.resolve()}",
+            f"{blur_out_path_prefix}+{output_suffix}.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_cmd)
 
-        # Load nifti
-        output_data = nib.load(blur_afni_to_nifti_out_path)
+        logger.debug("Updating smoothed data")
+        input.update(
+            {
+                # Update path to sync with "data"
+                "path": blur_nifti_out_path,
+                # Load nifti
+                "data": nib.load(blur_nifti_out_path),
+            }
+        )
 
-        # Delete tempdir
-        WorkDirManager().delete_tempdir(tempdir)
-
-        return output_data  # type: ignore
+        return input

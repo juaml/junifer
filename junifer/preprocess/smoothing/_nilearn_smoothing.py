@@ -4,21 +4,19 @@
 # License: AGPL
 
 from typing import (
-    TYPE_CHECKING,
+    Any,
     ClassVar,
     Literal,
     Union,
 )
 
+import nibabel as nib
 from nilearn import image as nimg
 from numpy.typing import ArrayLike
 
+from ...pipeline import WorkDirManager
 from ...typing import Dependencies
 from ...utils import logger
-
-
-if TYPE_CHECKING:
-    from nibabel.nifti1 import Nifti1Image
 
 
 __all__ = ["NilearnSmoothing"]
@@ -35,15 +33,15 @@ class NilearnSmoothing:
 
     def preprocess(
         self,
-        data: "Nifti1Image",
+        input: dict[str, Any],
         fwhm: Union[int, float, ArrayLike, Literal["fast"], None],
-    ) -> "Nifti1Image":
+    ) -> dict[str, Any]:
         """Preprocess using nilearn.
 
         Parameters
         ----------
-        data : Niimg-like object
-            Image(s) to preprocess.
+        input : dict
+            A single input from the Junifer Data object in which to preprocess.
         fwhm : scalar, ``numpy.ndarray``, tuple or list of scalar, "fast" or \
                None
             Smoothing strength, as a full-width at half maximum, in
@@ -61,9 +59,32 @@ class NilearnSmoothing:
 
         Returns
         -------
-        Niimg-like object
-            The preprocessed image(s).
+        dict
+            The ``input`` dictionary with updated values.
 
         """
         logger.info("Smoothing using nilearn")
-        return nimg.smooth_img(imgs=data, fwhm=fwhm)  # type: ignore
+
+        # Create element-scoped tempdir so that the output is
+        # available later as nibabel stores file path reference for
+        # loading on computation
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="nilearn_smoothing"
+        )
+
+        smoothed_img = nimg.smooth_img(imgs=input["data"], fwhm=fwhm)
+
+        # Save smoothed output
+        smoothed_img_path = element_tempdir / "smoothed_data.nii.gz"
+        nib.save(smoothed_img, smoothed_img_path)
+
+        logger.debug("Updating smoothed data")
+        input.update(
+            {
+                # Update path to sync with "data"
+                "path": smoothed_img_path,
+                "data": smoothed_img,
+            }
+        )
+
+        return input

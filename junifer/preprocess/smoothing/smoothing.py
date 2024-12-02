@@ -164,12 +164,9 @@ class Smoothing(BasePreprocessor):
         elif self.using == "fsl":
             preprocessor = FSLSmoothing()
         # Smooth
-        output = preprocessor.preprocess(  # type: ignore
-            data=input["data"],
+        input = preprocessor.preprocess(
+            input=input,
             **self.smoothing_params,
         )
-
-        # Modify target data
-        input["data"] = output
 
         return input, None
