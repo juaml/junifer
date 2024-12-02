@@ -83,7 +83,7 @@ class JuniferALFF(metaclass=Singleton):
         niimg = nib.load(input_path)
         niimg_data = niimg.get_fdata().copy()
         if tr is None:
-            tr = float(niimg_data.header["pixdim"][4])  # type: ignore
+            tr = float(niimg.header["pixdim"][4])  # type: ignore
             logger.info(f"`tr` not provided, using `tr` from header: {tr}")
 
         # Bandpass the data within the lowpass and highpass cutoff freqs
