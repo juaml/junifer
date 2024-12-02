@@ -237,7 +237,7 @@ def _check_ants(commands: Optional[list[str]] = None) -> bool:
                 shell=True,  # is unsafe but kept for resolution via PATH
                 check=False,
             )
-            command_found = command_process.returncode == 0
+            command_found = command_process.returncode == 1
             commands_found_results[command] = (
                 "found" if command_found else "not found"
             )
