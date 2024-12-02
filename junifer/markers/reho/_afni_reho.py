@@ -50,7 +50,7 @@ class AFNIReHo(metaclass=Singleton):
     @lru_cache(maxsize=None, typed=True)
     def compute(
         self,
-        data: "Nifti1Image",
+        input_path: Path,
         nneigh: int = 27,
         neigh_rad: Optional[float] = None,
         neigh_x: Optional[float] = None,
@@ -65,8 +65,8 @@ class AFNIReHo(metaclass=Singleton):
 
         Parameters
         ----------
-        data : 4D Niimg-like object
-            Images to process.
+        input_path : pathlib.Path
+            Path to the input data.
         nneigh : {7, 19, 27}, optional
             Number of voxels in the neighbourhood, inclusive. Can be:
 
@@ -128,19 +128,17 @@ class AFNIReHo(metaclass=Singleton):
         """
         logger.debug("Creating cache for ReHo computation via AFNI")
 
-        # Create component-scoped tempdir
-        tempdir = WorkDirManager().get_tempdir(prefix="afni_reho")
-
-        # Save target data to a component-scoped tempfile
-        nifti_in_file_path = tempdir / "input.nii"  # needs to be .nii
-        nib.save(data, nifti_in_file_path)
+        # Create element-scoped tempdir
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="afni_reho"
+        )
 
         # Set 3dReHo command
-        reho_out_path_prefix = tempdir / "reho"
+        reho_out_path_prefix = element_tempdir / "output"
         reho_cmd = [
             "3dReHo",
             f"-prefix {reho_out_path_prefix.resolve()}",
-            f"-inset {nifti_in_file_path.resolve()}",
+            f"-inset {input_path.resolve()}",
         ]
         # Check ellipsoidal / cuboidal volume arguments
         if neigh_rad:
@@ -164,28 +162,19 @@ class AFNIReHo(metaclass=Singleton):
         # Call 3dReHo
         run_ext_cmd(name="3dReHo", cmd=reho_cmd)
 
-        # Create element-scoped tempdir so that the ReHo map is
-        # available later as nibabel stores file path reference for
-        # loading on computation
-        element_tempdir = WorkDirManager().get_element_tempdir(
-            prefix="afni_reho"
-        )
         # Convert afni to nifti
-        reho_afni_to_nifti_out_path = (
+        reho_nifti_out_path = (
             element_tempdir / "output.nii"  # needs to be .nii
         )
         convert_cmd = [
             "3dAFNItoNIFTI",
-            f"-prefix {reho_afni_to_nifti_out_path.resolve()}",
             f"{reho_out_path_prefix}+orig.BRIK",
+            f"-prefix {reho_nifti_out_path.resolve()}",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_cmd)
 
         # Load nifti
-        output_data = nib.load(reho_afni_to_nifti_out_path)
+        output_data = nib.load(reho_nifti_out_path)
 
-        # Delete tempdir
-        WorkDirManager().delete_tempdir(tempdir)
-
-        return output_data, reho_afni_to_nifti_out_path  # type: ignore
+        return output_data, reho_nifti_out_path

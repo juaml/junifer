@@ -48,15 +48,15 @@ class JuniferReHo(metaclass=Singleton):
     @lru_cache(maxsize=None, typed=True)
     def compute(
         self,
-        data: "Nifti1Image",
+        input_path: Path,
         nneigh: int = 27,
     ) -> tuple["Nifti1Image", Path]:
         """Compute ReHo map.
 
         Parameters
         ----------
-        data : 4D Niimg-like object
-            Images to process.
+        input_path : pathlib.Path
+            Path to the input data.
         nneigh : {7, 19, 27, 125}, optional
             Number of voxels in the neighbourhood, inclusive. Can be:
 
@@ -89,7 +89,8 @@ class JuniferReHo(metaclass=Singleton):
         logger.debug("Creating cache for ReHo computation via junifer")
 
         # Get scan data
-        niimg_data = data.get_fdata()
+        niimg = nib.load(input_path)
+        niimg_data = niimg.get_fdata().copy()
         # Get scan dimensions
         n_x, n_y, n_z, _ = niimg_data.shape
 
@@ -119,7 +120,7 @@ class JuniferReHo(metaclass=Singleton):
         # after #299 is merged
         # Calculate whole brain mask
         mni152_whole_brain_mask = nmask.compute_brain_mask(
-            target_img=data,
+            target_img=niimg,
             threshold=0.5,
             mask_type="whole-brain",
         )
@@ -227,7 +228,7 @@ class JuniferReHo(metaclass=Singleton):
 
         # Create new image like target image
         output_data = nimg.new_img_like(
-            ref_niimg=data,
+            ref_niimg=niimg,
             data=reho_map,
             copy_header=False,
         )

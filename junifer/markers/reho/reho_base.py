@@ -125,7 +125,7 @@ class ReHoBase(BaseMarker):
             estimator = JuniferReHo()
         # Compute reho
         reho_map, reho_map_path = estimator.compute(  # type: ignore
-            data=input_data["data"],
+            input_path=input_data["path"],
             **reho_params,
         )
 
