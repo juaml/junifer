@@ -128,5 +128,36 @@ class FSLWarper:
             }
         )
 
+        # Check for data type's mask and warp if found
+        if input.get("mask") is not None:
+            # Create a tempfile for warped mask output
+            applywarp_mask_out_path = element_tempdir / "warped_mask.nii.gz"
+            # Set applywarp command
+            applywarp_mask_cmd = [
+                "applywarp",
+                "--interp=nn",
+                f"-i {input['mask']['path'].resolve()}",
+                # use resampled reference
+                f"-r {input['reference']['path'].resolve()}",
+                f"-w {warp_file_path.resolve()}",
+                f"-o {applywarp_mask_out_path.resolve()}",
+            ]
+            # Call applywarp
+            run_ext_cmd(name="applywarp", cmd=applywarp_mask_cmd)
+
+            logger.debug("Updating warped mask data")
+            input.update(
+                {
+                    "mask": {
+                        # Update path to sync with "data"
+                        "path": applywarp_mask_out_path,
+                        # Load nifti
+                        "data": nib.load(applywarp_mask_out_path),
+                        # Use reference input's space as warped input mask's
+                        # space
+                        "space": extra_input["T1w"]["space"],
+                    }
+                }
+            )
 
         return input
