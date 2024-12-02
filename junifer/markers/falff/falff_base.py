@@ -146,7 +146,7 @@ class ALFFBase(BaseMarker):
             estimator = JuniferALFF()
         # Compute ALFF + fALFF
         alff, falff, alff_path, falff_path = estimator.compute(  # type: ignore
-            data=input_data["data"],
+            input_path=input_data["path"],
             highpass=self.highpass,
             lowpass=self.lowpass,
             tr=self.tr,
