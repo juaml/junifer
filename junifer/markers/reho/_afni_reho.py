@@ -162,14 +162,23 @@ class AFNIReHo(metaclass=Singleton):
         # Call 3dReHo
         run_ext_cmd(name="3dReHo", cmd=reho_cmd)
 
+        # Read header to get output suffix
+        niimg = nib.load(input_path)
+        header = niimg.header
+        sform_code = header.get_sform(coded=True)[1]
+        if sform_code == 4:
+            output_suffix = "tlrc"
+        else:
+            output_suffix = "orig"
+
         # Convert afni to nifti
         reho_nifti_out_path = (
             element_tempdir / "output.nii"  # needs to be .nii
         )
         convert_cmd = [
             "3dAFNItoNIFTI",
-            f"{reho_out_path_prefix}+orig.BRIK",
             f"-prefix {reho_nifti_out_path.resolve()}",
+            f"{reho_out_path_prefix}+{output_suffix}.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_cmd)

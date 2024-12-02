@@ -102,6 +102,15 @@ class AFNIALFF(metaclass=Singleton):
         # Call 3dRSFC
         run_ext_cmd(name="3dRSFC", cmd=bp_cmd)
 
+        # Read header to get output suffix
+        niimg = nib.load(input_path)
+        header = niimg.header
+        sform_code = header.get_sform(coded=True)[1]
+        if sform_code == 4:
+            output_suffix = "tlrc"
+        else:
+            output_suffix = "orig"
+        # Set params suffix
         params_suffix = f"_{highpass}_{lowpass}_{tr}"
 
         # Convert alff afni to nifti
@@ -110,8 +119,8 @@ class AFNIALFF(metaclass=Singleton):
         )  # needs to be .nii
         convert_alff_cmd = [
             "3dAFNItoNIFTI",
-            f"{alff_falff_out_path_prefix}_ALFF+orig.BRIK",
             f"-prefix {alff_nifti_out_path.resolve()}",
+            f"{lff_out_path_prefix}_ALFF+{output_suffix}.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_alff_cmd)
@@ -122,8 +131,8 @@ class AFNIALFF(metaclass=Singleton):
         )  # needs to be .nii
         convert_falff_cmd = [
             "3dAFNItoNIFTI",
-            f"{alff_falff_out_path_prefix}_fALFF+orig.BRIK",
             f"-prefix {falff_nifti_out_path.resolve()}",
+            f"{lff_out_path_prefix}_fALFF+{output_suffix}.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_falff_cmd)
