@@ -471,17 +471,44 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 )
                 # Remove extra dimension added by ANTs
                 img = image.math_img("np.squeeze(img)", img=raw_img)
+            else:
+                if target_space != "native":
+                    # No warping is going to happen, just resampling, because
+                    # we are in the correct space
+                    logger.debug(f"Resampling {name} to target image.")
+                    # Resample parcellation to target image
+                    img = image.resample_to_img(
+                        source_img=img,
+                        target_img=target_img,
+                        interpolation="nearest",
+                        copy=True,
+                    )
 
-            logger.debug(f"Resampling {name} to target image.")
-            # Resample parcellation to target image
-            img_to_merge = image.resample_to_img(
-                source_img=img,
-                target_img=target_img,
-                interpolation="nearest",
-                copy=True,
-            )
+            # Warp parcellation if target space is native
+            if target_space == "native":
+                logger.debug(
+                    "Warping parcellation to native space using "
+                    f"{warper_spec['warper']}."
+                )
+                # extra_input check done earlier and warper_spec exists
+                if warper_spec["warper"] == "fsl":
+                    img = FSLParcellationWarper().warp(
+                        parcellation_name="native",
+                        parcellation_img=img,
+                        target_data=target_data,
+                        warp_data=warper_spec,
+                    )
+                elif warper_spec["warper"] == "ants":
+                    img = ANTsParcellationWarper().warp(
+                        parcellation_name="native",
+                        parcellation_img=img,
+                        src="",
+                        dst="native",
+                        target_data=target_data,
+                        warp_data=warper_spec,
+                    )
 
-            all_parcellations.append(img_to_merge)
+            all_parcellations.append(img)
             all_labels.append(labels)
 
         # Avoid merging if there is only one parcellation
@@ -496,30 +523,6 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 parcellations_names=parcellations,
                 labels_lists=all_labels,
             )
-
-        # Warp parcellation if target space is native
-        if target_space == "native":
-            logger.debug(
-                "Warping parcellation to native space using "
-                f"{warper_spec['warper']}."
-            )
-            # extra_input check done earlier and warper_spec exists
-            if warper_spec["warper"] == "fsl":
-                resampled_parcellation_img = FSLParcellationWarper().warp(
-                    parcellation_name="native",
-                    parcellation_img=resampled_parcellation_img,
-                    target_data=target_data,
-                    warp_data=warper_spec,
-                )
-            elif warper_spec["warper"] == "ants":
-                resampled_parcellation_img = ANTsParcellationWarper().warp(
-                    parcellation_name="native",
-                    parcellation_img=resampled_parcellation_img,
-                    src="",
-                    dst="native",
-                    target_data=target_data,
-                    warp_data=warper_spec,
-                )
 
         return resampled_parcellation_img, labels
 
