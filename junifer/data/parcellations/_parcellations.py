@@ -269,6 +269,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
     def load(
         self,
         name: str,
+        target_space: str,
         parcellations_dir: Union[str, Path, None] = None,
         resolution: Optional[float] = None,
         path_only: bool = False,
@@ -282,6 +283,8 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         ----------
         name : str
             The name of the parcellation.
+        target_space : str
+            The desired space of the parcellation.
         parcellations_dir : str or pathlib.Path, optional
             Path where the parcellations files are stored. The default location
             is "$HOME/junifer/data/parcellations" (default None).
@@ -327,6 +330,14 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             space = parcellation_definition.pop("space")
         else:
             space = parcellation_definition["space"]
+
+        # Check and get highest resolution
+        if space != target_space:
+            logger.info(
+                f"Parcellation will be warped from {space} to {target_space} "
+                "using highest resolution"
+            )
+            resolution = None
 
         # Check if the parcellation family is custom or built-in
         if t_family == "CustomUserParcellation":
@@ -441,6 +452,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             img, labels, _, space = self.load(
                 name=name,
                 resolution=resolution,
+                target_space=target_space,
             )
 
             # Convert parcellation spaces if required;
