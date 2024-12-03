@@ -4,7 +4,7 @@
 # License: AGPL
 
 from typing import (
-    TYPE_CHECKING,
+    Any,
     ClassVar,
 )
 
@@ -13,10 +13,6 @@ import nibabel as nib
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies, ExternalDependencies
 from ...utils import logger, run_ext_cmd
-
-
-if TYPE_CHECKING:
-    from nibabel.nifti1 import Nifti1Image
 
 
 __all__ = ["FSLSmoothing"]
@@ -40,16 +36,16 @@ class FSLSmoothing:
 
     def preprocess(
         self,
-        data: "Nifti1Image",
+        input: dict[str, Any],
         brightness_threshold: float,
         fwhm: float,
-    ) -> "Nifti1Image":
+    ) -> dict[str, Any]:
         """Preprocess using FSL.
 
         Parameters
         ----------
-        data : Niimg-like object
-            Image(s) to preprocess.
+        input : dict
+            A single input from the Junifer Data object in which to preprocess.
         brightness_threshold : float
             Threshold to discriminate between noise and the underlying image.
             The value should be set greater than the noise level and less than
@@ -59,8 +55,8 @@ class FSLSmoothing:
 
         Returns
         -------
-        Niimg-like object
-            The preprocessed image(s).
+        dict
+            The ``input`` dictionary with updated values.
 
         Notes
         -----
@@ -76,24 +72,17 @@ class FSLSmoothing:
         """
         logger.info("Smoothing using FSL")
 
-        # Create component-scoped tempdir
-        tempdir = WorkDirManager().get_tempdir(prefix="fsl_smoothing")
-
-        # Save target data to a component-scoped tempfile
-        nifti_in_file_path = tempdir / "input.nii.gz"
-        nib.save(data, nifti_in_file_path)
-
         # Create element-scoped tempdir so that the output is
         # available later as nibabel stores file path reference for
         # loading on computation
         element_tempdir = WorkDirManager().get_element_tempdir(
             prefix="fsl_susan"
         )
-        susan_out_path = element_tempdir / "output.nii.gz"
+        susan_out_path = element_tempdir / "smoothed_data.nii.gz"
         # Set susan command
         susan_cmd = [
             "susan",
-            f"{nifti_in_file_path.resolve()}",
+            f"{input['path'].resolve()}",
             f"{brightness_threshold}",
             f"{fwhm}",
             "3",  # dimension
@@ -104,10 +93,14 @@ class FSLSmoothing:
         # Call susan
         run_ext_cmd(name="susan", cmd=susan_cmd)
 
-        # Load nifti
-        output_data = nib.load(susan_out_path)
+        logger.debug("Updating smoothed data")
+        input.update(
+            {
+                # Update path to sync with "data"
+                "path": susan_out_path,
+                # Load nifti
+                "data": nib.load(susan_out_path),
+            }
+        )
 
-        # Delete tempdir
-        WorkDirManager().delete_tempdir(tempdir)
-
-        return output_data  # type: ignore
+        return input

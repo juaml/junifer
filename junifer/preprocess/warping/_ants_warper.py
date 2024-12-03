@@ -58,9 +58,7 @@ class ANTsWarper:
         Returns
         -------
         dict
-            The ``input`` dictionary with modified ``data`` and ``space`` key
-            values and new ``reference`` key whose value points to the
-            reference file used for warping.
+            The ``input`` dictionary with updated values.
 
         Raises
         ------
@@ -110,7 +108,7 @@ class ANTsWarper:
             run_ext_cmd(name="ResampleImage", cmd=resample_image_cmd)
 
             # Create a tempfile for warped output
-            apply_transforms_out_path = element_tempdir / "output.nii.gz"
+            apply_transforms_out_path = element_tempdir / "warped_data.nii.gz"
             # Set antsApplyTransforms command
             apply_transforms_cmd = [
                 "antsApplyTransforms",
@@ -126,14 +124,59 @@ class ANTsWarper:
             # Call antsApplyTransforms
             run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
 
-            # Load nifti
-            input["data"] = nib.load(apply_transforms_out_path)
-            # Save resampled reference path
-            input["reference"] = {"path": resample_image_out_path}
-            # Keep pre-warp space for further operations
-            input["prewarp_space"] = input["space"]
-            # Use reference input's space as warped input's space
-            input["space"] = extra_input["T1w"]["space"]
+            logger.debug("Updating warped data")
+            input.update(
+                {
+                    # Update path to sync with "data"
+                    "path": apply_transforms_out_path,
+                    # Load nifti
+                    "data": nib.load(apply_transforms_out_path),
+                    # Use reference input's space as warped input's space
+                    "space": extra_input["T1w"]["space"],
+                    # Save resampled reference path
+                    "reference": {"path": resample_image_out_path},
+                    # Keep pre-warp space for further operations
+                    "prewarp_space": input["space"],
+                }
+            )
+
+            # Check for data type's mask and warp if found
+            if input.get("mask") is not None:
+                # Create a tempfile for warped mask output
+                apply_transforms_mask_out_path = (
+                    element_tempdir / "warped_mask.nii.gz"
+                )
+                # Set antsApplyTransforms command
+                apply_transforms_mask_cmd = [
+                    "antsApplyTransforms",
+                    "-d 3",
+                    "-e 3",
+                    "-n 'GenericLabel[NearestNeighbor]'",
+                    f"-i {input['mask']['path'].resolve()}",
+                    # use resampled reference
+                    f"-r {input['reference']['path'].resolve()}",
+                    f"-t {warp_file_path.resolve()}",
+                    f"-o {apply_transforms_mask_out_path.resolve()}",
+                ]
+                # Call antsApplyTransforms
+                run_ext_cmd(
+                    name="antsApplyTransforms", cmd=apply_transforms_mask_cmd
+                )
+
+                logger.debug("Updating warped mask data")
+                input.update(
+                    {
+                        "mask": {
+                            # Update path to sync with "data"
+                            "path": apply_transforms_mask_out_path,
+                            # Load nifti
+                            "data": nib.load(apply_transforms_mask_out_path),
+                            # Use reference input's space as warped input
+                            # mask's space
+                            "space": extra_input["T1w"]["space"],
+                        }
+                    }
+                )
 
         # Template space warping
         else:
@@ -149,16 +192,15 @@ class ANTsWarper:
                 target_data=input,
                 extra_input=None,
             )
-
-            # Create component-scoped tempdir
-            tempdir = WorkDirManager().get_tempdir(prefix="ants_warper")
             # Save template
-            template_space_img_path = tempdir / f"{reference}_T1w.nii.gz"
+            template_space_img_path = (
+                element_tempdir / f"{reference}_T1w.nii.gz"
+            )
             nib.save(template_space_img, template_space_img_path)
 
             # Create a tempfile for warped output
             warped_output_path = element_tempdir / (
-                f"data_warped_from_{input['space']}_to_" f"{reference}.nii.gz"
+                f"warped_data_from_{input['space']}_to_{reference}.nii.gz"
             )
 
             # Set antsApplyTransforms command
@@ -175,14 +217,58 @@ class ANTsWarper:
             # Call antsApplyTransforms
             run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
 
-            # Delete tempdir
-            WorkDirManager().delete_tempdir(tempdir)
+            logger.debug("Updating warped data")
+            input.update(
+                {
+                    # Update path to sync with "data"
+                    "path": warped_output_path,
+                    # Load nifti
+                    "data": nib.load(warped_output_path),
+                    # Update warped input's space
+                    "space": reference,
+                    # Save reference path
+                    "reference": {"path": template_space_img_path},
+                    # Keep pre-warp space for further operations
+                    "prewarp_space": input["space"],
+                }
+            )
 
-            # Modify target data
-            input["data"] = nib.load(warped_output_path)
-            # Keep pre-warp space for further operations
-            input["prewarp_space"] = input["space"]
-            # Update warped input's space
-            input["space"] = reference
+            # Check for data type's mask and warp if found
+            if input.get("mask") is not None:
+                # Create a tempfile for warped mask output
+                apply_transforms_mask_out_path = element_tempdir / (
+                    f"warped_mask_from_{input['space']}_to_"
+                    f"{reference}.nii.gz"
+                )
+                # Set antsApplyTransforms command
+                apply_transforms_mask_cmd = [
+                    "antsApplyTransforms",
+                    "-d 3",
+                    "-e 3",
+                    "-n 'GenericLabel[NearestNeighbor]'",
+                    f"-i {input['mask']['path'].resolve()}",
+                    # use resampled reference
+                    f"-r {input['reference']['path'].resolve()}",
+                    f"-t {xfm_file_path.resolve()}",
+                    f"-o {apply_transforms_mask_out_path.resolve()}",
+                ]
+                # Call antsApplyTransforms
+                run_ext_cmd(
+                    name="antsApplyTransforms", cmd=apply_transforms_mask_cmd
+                )
+
+                logger.debug("Updating warped mask data")
+                input.update(
+                    {
+                        "mask": {
+                            # Update path to sync with "data"
+                            "path": apply_transforms_mask_out_path,
+                            # Load nifti
+                            "data": nib.load(apply_transforms_mask_out_path),
+                            # Update warped input mask's space
+                            "space": reference,
+                        }
+                    }
+                )
 
         return input

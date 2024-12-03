@@ -12,6 +12,7 @@ from typing import (
     Union,
 )
 
+import nibabel as nib
 import numpy as np
 import pandas as pd
 from nilearn import image as nimg
@@ -19,6 +20,7 @@ from nilearn._utils.niimg_conversions import check_niimg_4d
 
 from ...api.decorators import register_preprocessor
 from ...data import get_data
+from ...pipeline import WorkDirManager
 from ...typing import Dependencies
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
@@ -539,9 +541,17 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             logger.info(
                 f"Read t_r from NIfTI header: {t_r}",
             )
+
+        # Create element-specific tempdir for storing generated data
+        # and / or mask
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="fmriprep_confound_remover"
+        )
+
         # Set mask data
         mask_img = None
         if self.masks is not None:
+            # Generate mask
             logger.debug(f"Masking with {self.masks}")
             mask_img = get_data(
                 kind="mask",
@@ -549,13 +559,21 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 target_data=input,
                 extra_input=extra_input,
             )
-            # Return the BOLD mask and link it to the BOLD data type dict;
+            # Save generated mask for use later
+            generated_mask_img_path = element_tempdir / "generated_mask.nii.gz"
+            nib.save(mask_img, generated_mask_img_path)
+
+            # Save BOLD mask and link it to the BOLD data type dict;
             # this allows to use "inherit" down the pipeline
             logger.debug("Setting `BOLD.mask`")
             input.update(
                 {
                     "mask": {
+                        # Update path to sync with "data"
+                        "path": generated_mask_img_path,
+                        # Update data
                         "data": mask_img,
+                        # Should be in the same space as target data
                         "space": input["space"],
                     }
                 }
@@ -566,7 +584,9 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         logger.debug(f"\tstandardize: {self.standardize}")
         logger.debug(f"\tlow_pass: {self.low_pass}")
         logger.debug(f"\thigh_pass: {self.high_pass}")
-        input["data"] = nimg.clean_img(
+
+        # Deconfound data
+        cleaned_img = nimg.clean_img(
             imgs=bold_img,
             detrend=self.detrend,
             standardize=self.standardize,
@@ -575,6 +595,19 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             high_pass=self.high_pass,
             t_r=t_r,
             mask_img=mask_img,
+        )
+        # Save deconfounded data
+        deconfounded_img_path = element_tempdir / "deconfounded_data.nii.gz"
+        nib.save(cleaned_img, deconfounded_img_path)
+
+        logger.debug("Updating `BOLD`")
+        input.update(
+            {
+                # Update path to sync with "data"
+                "path": deconfounded_img_path,
+                # Update data
+                "data": cleaned_img,
+            }
         )
 
         return input, None

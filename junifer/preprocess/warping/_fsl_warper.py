@@ -54,9 +54,7 @@ class FSLWarper:
         Returns
         -------
         dict
-            The ``input`` dictionary with modified ``data`` and ``space`` key
-            values and new ``reference`` key whose value points to the
-            reference file used for warping.
+            The ``input`` dictionary with updated values.
 
         Raises
         ------
@@ -100,26 +98,66 @@ class FSLWarper:
         run_ext_cmd(name="flirt", cmd=flirt_cmd)
 
         # Create a tempfile for warped output
-        applywarp_out_path = element_tempdir / "output.nii.gz"
+        applywarp_out_path = element_tempdir / "warped_data.nii.gz"
         # Set applywarp command
         applywarp_cmd = [
             "applywarp",
             "--interp=spline",
             f"-i {input['path'].resolve()}",
-            f"-r {flirt_out_path.resolve()}",  # use resampled reference
+            # use resampled reference
+            f"-r {flirt_out_path.resolve()}",
             f"-w {warp_file_path.resolve()}",
             f"-o {applywarp_out_path.resolve()}",
         ]
         # Call applywarp
         run_ext_cmd(name="applywarp", cmd=applywarp_cmd)
 
-        # Load nifti
-        input["data"] = nib.load(applywarp_out_path)
-        # Save resampled reference path
-        input["reference"] = {"path": flirt_out_path}
-        # Keep pre-warp space for further operations
-        input["prewarp_space"] = input["space"]
-        # Use reference input's space as warped input's space
-        input["space"] = extra_input["T1w"]["space"]
+        logger.debug("Updating warped data")
+        input.update(
+            {
+                # Update path to sync with "data"
+                "path": applywarp_out_path,
+                # Load nifti
+                "data": nib.load(applywarp_out_path),
+                # Use reference input's space as warped input's space
+                "space": extra_input["T1w"]["space"],
+                # Save resampled reference path
+                "reference": {"path": flirt_out_path},
+                # Keep pre-warp space for further operations
+                "prewarp_space": input["space"],
+            }
+        )
+
+        # Check for data type's mask and warp if found
+        if input.get("mask") is not None:
+            # Create a tempfile for warped mask output
+            applywarp_mask_out_path = element_tempdir / "warped_mask.nii.gz"
+            # Set applywarp command
+            applywarp_mask_cmd = [
+                "applywarp",
+                "--interp=nn",
+                f"-i {input['mask']['path'].resolve()}",
+                # use resampled reference
+                f"-r {input['reference']['path'].resolve()}",
+                f"-w {warp_file_path.resolve()}",
+                f"-o {applywarp_mask_out_path.resolve()}",
+            ]
+            # Call applywarp
+            run_ext_cmd(name="applywarp", cmd=applywarp_mask_cmd)
+
+            logger.debug("Updating warped mask data")
+            input.update(
+                {
+                    "mask": {
+                        # Update path to sync with "data"
+                        "path": applywarp_mask_out_path,
+                        # Load nifti
+                        "data": nib.load(applywarp_mask_out_path),
+                        # Use reference input's space as warped input mask's
+                        # space
+                        "space": extra_input["T1w"]["space"],
+                    }
+                }
+            )
 
         return input
