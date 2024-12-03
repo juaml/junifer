@@ -459,7 +459,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             # cannot be "native" due to earlier check
             if space != target_std_space:
                 logger.debug(
-                    f"Warping {name} to {target_std_space} space using ants."
+                    f"Warping {name} to {target_std_space} space using ANTs."
                 )
                 raw_img = ANTsParcellationWarper().warp(
                     parcellation_name=name,
