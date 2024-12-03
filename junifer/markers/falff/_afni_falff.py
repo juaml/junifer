@@ -50,7 +50,7 @@ class AFNIALFF(metaclass=Singleton):
     @lru_cache(maxsize=None, typed=True)
     def compute(
         self,
-        data: "Nifti1Image",
+        input_path: Path,
         highpass: float,
         lowpass: float,
         tr: Optional[float],
@@ -59,8 +59,8 @@ class AFNIALFF(metaclass=Singleton):
 
         Parameters
         ----------
-        data : 4D Niimg-like object
-            Images to process.
+        input_path : pathlib.Path
+            Path to the input data.
         highpass : positive float
             Highpass cutoff frequency.
         lowpass : positive float
@@ -82,19 +82,17 @@ class AFNIALFF(metaclass=Singleton):
         """
         logger.debug("Creating cache for ALFF computation via AFNI")
 
-        # Create component-scoped tempdir
-        tempdir = WorkDirManager().get_tempdir(prefix="afni_alff+falff")
-
-        # Save target data to a component-scoped tempfile
-        nifti_in_file_path = tempdir / "input.nii"  # needs to be .nii
-        nib.save(data, nifti_in_file_path)
+        # Create element-scoped tempdir
+        element_tempdir = WorkDirManager().get_element_tempdir(
+            prefix="afni_lff"
+        )
 
         # Set 3dRSFC command
-        alff_falff_out_path_prefix = tempdir / "alff_falff"
+        lff_out_path_prefix = element_tempdir / "output"
         bp_cmd = [
             "3dRSFC",
-            f"-prefix {alff_falff_out_path_prefix.resolve()}",
-            f"-input {nifti_in_file_path.resolve()}",
+            f"-prefix {lff_out_path_prefix.resolve()}",
+            f"-input {input_path.resolve()}",
             f"-band {highpass} {lowpass}",
             "-no_rsfa -nosat -nodetrend",
         ]
@@ -104,49 +102,48 @@ class AFNIALFF(metaclass=Singleton):
         # Call 3dRSFC
         run_ext_cmd(name="3dRSFC", cmd=bp_cmd)
 
-        # Create element-scoped tempdir so that the ALFF and fALFF maps are
-        # available later as nibabel stores file path reference for
-        # loading on computation
-        element_tempdir = WorkDirManager().get_element_tempdir(
-            prefix="afni_alff_falff"
-        )
-
+        # Read header to get output suffix
+        niimg = nib.load(input_path)
+        header = niimg.header
+        sform_code = header.get_sform(coded=True)[1]
+        if sform_code == 4:
+            output_suffix = "tlrc"
+        else:
+            output_suffix = "orig"
+        # Set params suffix
         params_suffix = f"_{highpass}_{lowpass}_{tr}"
 
         # Convert alff afni to nifti
-        alff_afni_to_nifti_out_path = (
-            element_tempdir / f"alff{params_suffix}_output.nii"
+        alff_nifti_out_path = (
+            element_tempdir / f"output_alff{params_suffix}.nii"
         )  # needs to be .nii
         convert_alff_cmd = [
             "3dAFNItoNIFTI",
-            f"-prefix {alff_afni_to_nifti_out_path.resolve()}",
-            f"{alff_falff_out_path_prefix}_ALFF+orig.BRIK",
+            f"-prefix {alff_nifti_out_path.resolve()}",
+            f"{lff_out_path_prefix}_ALFF+{output_suffix}.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_alff_cmd)
 
         # Convert falff afni to nifti
-        falff_afni_to_nifti_out_path = (
-            element_tempdir / f"falff{params_suffix}_output.nii"
+        falff_nifti_out_path = (
+            element_tempdir / f"output_falff{params_suffix}.nii"
         )  # needs to be .nii
         convert_falff_cmd = [
             "3dAFNItoNIFTI",
-            f"-prefix {falff_afni_to_nifti_out_path.resolve()}",
-            f"{alff_falff_out_path_prefix}_fALFF+orig.BRIK",
+            f"-prefix {falff_nifti_out_path.resolve()}",
+            f"{lff_out_path_prefix}_fALFF+{output_suffix}.BRIK",
         ]
         # Call 3dAFNItoNIFTI
         run_ext_cmd(name="3dAFNItoNIFTI", cmd=convert_falff_cmd)
 
         # Load nifti
-        alff_data = nib.load(alff_afni_to_nifti_out_path)
-        falff_data = nib.load(falff_afni_to_nifti_out_path)
-
-        # Delete tempdir
-        WorkDirManager().delete_tempdir(tempdir)
+        alff_data = nib.load(alff_nifti_out_path)
+        falff_data = nib.load(falff_nifti_out_path)
 
         return (
             alff_data,
             falff_data,
-            alff_afni_to_nifti_out_path,
-            falff_afni_to_nifti_out_path,
-        )  # type: ignore
+            alff_nifti_out_path,
+            falff_nifti_out_path,
+        )

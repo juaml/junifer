@@ -47,7 +47,7 @@ class JuniferALFF(metaclass=Singleton):
     @lru_cache(maxsize=None, typed=True)
     def compute(
         self,
-        data: "Nifti1Image",
+        input_path: Path,
         highpass: float,
         lowpass: float,
         tr: Optional[float],
@@ -56,8 +56,8 @@ class JuniferALFF(metaclass=Singleton):
 
         Parameters
         ----------
-        data : 4D Niimg-like object
-            Images to process.
+        input_path : pathlib.Path
+            Path to the input data.
         highpass : positive float
             Highpass cutoff frequency.
         lowpass : positive float
@@ -80,9 +80,10 @@ class JuniferALFF(metaclass=Singleton):
         logger.debug("Creating cache for ALFF computation via junifer")
 
         # Get scan data
-        niimg_data = data.get_fdata().copy()
+        niimg = nib.load(input_path)
+        niimg_data = niimg.get_fdata().copy()
         if tr is None:
-            tr = float(data.header["pixdim"][4])  # type: ignore
+            tr = float(niimg.header["pixdim"][4])  # type: ignore
             logger.info(f"`tr` not provided, using `tr` from header: {tr}")
 
         # Bandpass the data within the lowpass and highpass cutoff freqs
@@ -120,19 +121,17 @@ class JuniferALFF(metaclass=Singleton):
         # Calculate ALFF
         alff = numerator / np.sqrt(niimg_data.shape[-1])
         alff_data = nimg.new_img_like(
-            ref_niimg=data,
+            ref_niimg=niimg,
             data=alff,
         )
         falff_data = nimg.new_img_like(
-            ref_niimg=data,
+            ref_niimg=niimg,
             data=falff,
         )
 
-        # Create element-scoped tempdir so that the ALFF and fALFF maps are
-        # available later as nibabel stores file path reference for
-        # loading on computation
+        # Create element-scoped tempdir
         element_tempdir = WorkDirManager().get_element_tempdir(
-            prefix="junifer_alff+falff"
+            prefix="junifer_lff"
         )
         output_alff_path = element_tempdir / "output_alff.nii.gz"
         output_falff_path = element_tempdir / "output_falff.nii.gz"

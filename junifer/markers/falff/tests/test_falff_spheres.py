@@ -69,7 +69,9 @@ def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             # Fit transform marker on data
             output = marker.fit_transform(element_data)
 
-            assert "Creating cache" in caplog.text
+            # Tests for ALFFParcels run before this with the same data and that
+            # should create the cache
+            assert "Calculating ALFF and fALFF" in caplog.text
 
             # Get BOLD output
             assert "BOLD" in output
