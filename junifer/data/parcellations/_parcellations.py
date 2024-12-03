@@ -400,7 +400,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         """
         # Check pre-requirements for space manipulation
         target_space = target_data["space"]
-        logger.debug(f"Getting {parcellations} in{target_space} space.")
+        logger.debug(f"Getting {parcellations} in {target_space} space.")
         # Extra data type requirement check if target space is native
         if target_space == "native":
             # Check for extra inputs
