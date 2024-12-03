@@ -484,7 +484,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             # Starting with new mask
             else:
                 # Load mask
-                logger.debug(f"Loading parcellation {t_mask}.")
+                logger.debug(f"Loading mask {t_mask}.")
                 mask_object, _, mask_space = self.load(
                     mask_name, path_only=False, resolution=resolution
                 )
