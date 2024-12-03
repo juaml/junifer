@@ -76,8 +76,11 @@ def compute_brain_mask(
         The value under which the template is cut off (default 0.5).
     source : {"subject", "template"}, optional
         The source of the mask. If "subject", the mask is computed from the
-        subject's data (VBM_GM or VBM_WM). If "template", the mask is computed
-        from the template data (default "template").
+        subject's data (``VBM_GM`` or ``VBM_WM``). If "template", the mask is
+        computed from the template data (default "template").
+    extra_input : dict, optional
+         The other fields in the data object. Useful for accessing other data
+         types (default None).
 
     Returns
     -------
@@ -88,7 +91,13 @@ def compute_brain_mask(
     ------
     ValueError
         If ``mask_type`` is invalid or
-        if ``warp_data`` is None when ``target_data``'s space is native.
+        if ``source`` is invalid or
+        if ``source="subject"`` and ``mask_type`` is invalid or
+        if ``warp_data`` is None when ``target_data``'s space is native or
+        if ``extra_input`` is None when ``source="subject"`` or
+        if ``VBM_GM`` or ``VBM_WM`` data types are not in ``extra_input``
+        when ``source="subject"`` and ``mask_type`` is ``"gm"`` or ``"wm"``
+        respectively.
 
     """
     logger.debug(f"Computing {mask_type} mask")
@@ -115,6 +124,13 @@ def compute_brain_mask(
 
     if source == "subject":
         key = f"VBM_{mask_type.upper()}"
+        # Check for extra inputs
+        if extra_input is None:
+            raise_error(
+                f"No extra input provided, requires `{key}` "
+                "data type to infer target template data and space."
+            )
+        # Check for missing data type
         if key not in extra_input:
             raise_error(
                 f"Cannot compute {mask_type} from subject's data. "
@@ -533,8 +549,8 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     # custom compute_brain_mask
                     elif mask_name == "compute_brain_mask":
                         mask_img = mask_object(
-                            target_data,
-                            warper_spec,
+                            target_data=target_data,
+                            warp_data=warper_spec,
                             extra_input=extra_input,
                             **mask_params,
                         )
