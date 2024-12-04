@@ -472,7 +472,11 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 # Remove extra dimension added by ANTs
                 img = image.math_img("np.squeeze(img)", img=raw_img)
                 # Set correct affine as resolution won't be correct
-                img = image.resample_img(img, target_affine=target_img.affine)
+                img = image.resample_img(
+                    img=img,
+                    target_affine=target_img.affine,
+                    interpolation="nearest",
+                )
             else:
                 if target_space != "native":
                     # No warping is going to happen, just resampling, because
