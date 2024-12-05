@@ -780,15 +780,15 @@ data types that need to be used in the computation of data
 
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.data.get_template">
-<span class="sig-prename descclassname"><span class="pre">junifer.data.</span></span><span class="sig-name descname"><span class="pre">get_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T1w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.get_template" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">junifer.data.</span></span><span class="sig-name descname"><span class="pre">get_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'T1w'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.get_template" title="Link to this definition">¶</a></dt>
 <dd><p>Get template for the space, tailored for the target image.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>space</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the template space.</p>
 </dd>
-<dt><strong>target_data</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The corresponding item of the data object for which the template space
-will be loaded.</p>
+<dt><strong>target_img</strong><span class="classifier"><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v5.4.0.dev1+g3b1c7b37)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a></span></dt><dd><p>The corresponding image for which the template space will be loaded.
+This is used to obtain the best matching resolution.</p>
 </dd>
 <dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other data
 types (default None).</p>
@@ -1026,7 +1026,7 @@ if there is a problem fetching the xfm file.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=3dac7ba3"></script>
+</div><script src="../_static/documentation_options.js?v=d8b24c3e"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
