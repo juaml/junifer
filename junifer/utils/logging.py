@@ -314,6 +314,7 @@ def _can_use_color(handler: logging.Handler) -> bool:
             valid_terms = [
                 "xterm-256color",
                 "xterm-kitty",
+                "xterm-color",
             ]
             this_term = os.getenv("TERM", None)
             if this_term is not None:
