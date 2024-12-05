@@ -16,7 +16,7 @@ import logging
 import warnings
 from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
-from typing import NoReturn, Optional, Union
+from typing import ClassVar, NoReturn, Optional, Union
 from warnings import warn
 
 import datalad
@@ -78,6 +78,59 @@ class WrapStdOut(logging.StreamHandler):
             return getattr(sys.stdout, name)
         else:
             raise AttributeError(f"'file' object has not attribute '{name}'")
+
+
+class ColorFormatter(logging.Formatter):
+    """Color formatter for logging messages.
+
+    Parameters
+    ----------
+    fmt : str
+        The format string for the logging message.
+    datefmt : str, optional
+        The format string for the date.
+
+    """
+
+    BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
+
+    COLORS: ClassVar[dict[str, int]] = {
+        "WARNING": YELLOW,
+        "INFO": GREEN,
+        "DEBUG": BLUE,
+        "CRITICAL": MAGENTA,
+        "ERROR": RED,
+    }
+
+    RESET_SEQ: str = "\033[0m"
+    COLOR_SEQ: str = "\033[1;%dm"
+    BOLD_SEQ: str = "\033[1m"
+
+    def __init__(self, fmt: str, datefmt: Optional[str] = None) -> None:
+        """Initialize the ColorFormatter."""
+        logging.Formatter.__init__(self, fmt, datefmt)
+
+    def format(self, record: logging.LogRecord) -> str:
+        """Format the log record.
+
+        Parameters
+        ----------
+        record : logging.LogRecord
+            The log record to format.
+
+        Returns
+        -------
+        str
+            The formatted log record.
+
+        """
+        levelname = record.levelname
+        if levelname in self.COLORS:
+            levelname_color = (
+                self.COLOR_SEQ % (30 + self.COLORS[levelname]) + levelname
+            )
+            record.levelname = levelname_color + self.RESET_SEQ
+        return logging.Formatter.format(self, record)
 
 
 def _get_git_head(path: Path) -> str:
@@ -242,6 +295,7 @@ def configure_logging(
     fname: Optional[Union[str, Path]] = None,
     overwrite: Optional[bool] = None,
     output_format=None,
+    datalad_level: Union[int, str, None] = None,
 ) -> None:
     """Configure the logging functionality.
 
@@ -297,11 +351,19 @@ def configure_logging(
         #     "%(asctime)s [%(levelname)s] %(message)s "
         #     "(%(filename)s:%(lineno)s)"
         # )
-    formatter = logging.Formatter(fmt=output_format)
+    formatter = ColorFormatter(fmt=output_format)
 
     lh.setFormatter(formatter)  # set formatter
     logger.setLevel(level)  # set level
-    datalad.log.lgr.setLevel(level)  # set level for datalad
+
+    # Set datalad logging level accordingly
+    if datalad_level is not None:
+        if isinstance(datalad_level, str):
+            datalad_level = _logging_types[datalad_level]
+    else:
+        datalad_level = level
+    datalad.log.lgr.setLevel(datalad_level)  # set level for datalad
+
     logger.addHandler(lh)  # set handler
     log_versions()  # log versions of installed packages
 
