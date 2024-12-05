@@ -583,17 +583,17 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                             warp_data=warper_spec,
                         )
 
-                    else:
+                    if target_space != "native":
                         # Resample mask to target image; no further warping
                         logger.debug(f"Resampling {t_mask} to target image.")
-                        if target_space != "native":
-                            mask_img = resample_to_img(
-                                source_img=mask_object,
-                                target_img=target_data["data"],
-                            )
-                        # Set mask_img in case no warping happens before this
-                        else:
-                            mask_img = mask_object
+                        mask_img = resample_to_img(
+                            source_img=mask_object,
+                            target_img=target_data["data"],
+                        )
+                    # Set mask_img in case no warping happens before this
+                    else:
+                        mask_img = mask_object
+
                     # Resample and warp mask if target data is native
                     if target_space == "native":
                         logger.debug(
