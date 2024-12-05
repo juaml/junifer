@@ -61,7 +61,9 @@ def test_get_template(template_type: str) -> None:
         bold = element_data["BOLD"]
         # Get tailored parcellation
         tailored_template = get_template(
-            space=bold["space"], target_data=bold, template_type=template_type
+            space=bold["space"],
+            target_img=bold["data"],
+            template_type=template_type,
         )
         assert isinstance(tailored_template, nib.Nifti1Image)
 
@@ -74,7 +76,7 @@ def test_get_template_invalid_space() -> None:
         vbm_gm = element_data["VBM_GM"]
         # Get tailored parcellation
         with pytest.raises(ValueError, match="Unknown template space:"):
-            get_template(space="andromeda", target_data=vbm_gm)
+            get_template(space="andromeda", target_img=vbm_gm["data"])
 
 
 def test_get_template_invalid_template_type() -> None:
@@ -87,7 +89,7 @@ def test_get_template_invalid_template_type() -> None:
         with pytest.raises(ValueError, match="Unknown template type:"):
             get_template(
                 space=vbm_gm["space"],
-                target_data=vbm_gm,
+                target_img=vbm_gm["data"],
                 template_type="xenon",
             )
 
@@ -100,5 +102,7 @@ def test_get_template_closest_resolution() -> None:
         vbm_gm = element_data["VBM_GM"]
         # Change header resolution to fetch closest resolution
         element_data["VBM_GM"]["data"].header.set_zooms((3, 3, 3))
-        template = get_template(space=vbm_gm["space"], target_data=vbm_gm)
+        template = get_template(
+            space=vbm_gm["space"], target_img=vbm_gm["data"]
+        )
         assert isinstance(template, nib.Nifti1Image)
