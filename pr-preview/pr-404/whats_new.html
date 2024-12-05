@@ -317,8 +317,8 @@
         <article role="main" id="furo-main-content">
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
-<section id="junifer-release-2024-12-03">
-<h2><span class="section-number">14.1. </span>Junifer 0.0.6.dev336 (2024-12-03)<a class="headerlink" href="#junifer-release-2024-12-03" title="Link to this heading">¶</a></h2>
+<section id="junifer-release-2024-12-05">
+<h2><span class="section-number">14.1. </span>Junifer 0.0.6.dev346 (2024-12-05)<a class="headerlink" href="#junifer-release-2024-12-05" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -362,6 +362,10 @@ keys by <a class="reference external" href="https://github.com/synchon">Synchon 
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICID1000" title="junifer.datagrabber.DataladAOMICID1000"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a>, <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a> and
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> to fetch data in all available spaces by <a class="reference external" href="https://fraimondo.github.io">Fede
 Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/405">#405</a>)</p></li>
+<li><p>Introduce new CLI parameter <code class="docutils literal notranslate"><span class="pre">--verbose-datalad</span></code> to control <code class="docutils literal notranslate"><span class="pre">datalad</span></code>’s
+logging handler by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/412">#412</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_data</span></code> parameter of <a class="reference internal" href="api/data.html#junifer.data.get_template" title="junifer.data.get_template"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_template()</span></code></a> has been replaced with
+<code class="docutils literal notranslate"><span class="pre">target_img</span></code> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/413">#413</a>)</p></li>
 </ul>
 </section>
 <section id="improved-documentation">
@@ -426,6 +430,9 @@ global configuration by <a class="reference external" href="https://fraimondo.gi
 necessary data components by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/407">#407</a>)</p></li>
 <li><p>Allow masks to be warped, if found, in <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/408">#408</a>)</p></li>
+<li><p>Add support for coloured <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Formatter" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Formatter</span></code></a> to use with <code class="docutils literal notranslate"><span class="pre">junifer</span></code>’s
+<a class="reference external" href="https://docs.python.org/3/library/logging.handlers.html#logging.StreamHandler" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.StreamHandler</span></code></a> based on environment by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/412">#412</a>)</p></li>
 </ul>
 </section>
 <section id="miscellaneous">
@@ -1187,7 +1194,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-release-2024-12-03">14.1. Junifer 0.0.6.dev336 (2024-12-03)</a><ul>
+<li><a class="reference internal" href="#junifer-release-2024-12-05">14.1. Junifer 0.0.6.dev346 (2024-12-05)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
@@ -1253,7 +1260,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=65a5e51d"></script>
+</div><script src="_static/documentation_options.js?v=80bbd280"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
