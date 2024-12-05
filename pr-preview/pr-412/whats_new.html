@@ -318,7 +318,7 @@
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
 <section id="junifer-release-2024-12-05">
-<h2><span class="section-number">14.1. </span>Junifer 0.0.6.dev347 (2024-12-05)<a class="headerlink" href="#junifer-release-2024-12-05" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">14.1. </span>Junifer 0.0.6.dev329 (2024-12-05)<a class="headerlink" href="#junifer-release-2024-12-05" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -362,10 +362,6 @@ keys by <a class="reference external" href="https://github.com/synchon">Synchon 
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICID1000" title="junifer.datagrabber.DataladAOMICID1000"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a>, <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a> and
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> to fetch data in all available spaces by <a class="reference external" href="https://fraimondo.github.io">Fede
 Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/405">#405</a>)</p></li>
-<li><p><a class="reference internal" href="api/data.html#junifer.data.ParcellationRegistry.load" title="junifer.data.ParcellationRegistry.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ParcellationRegistry.load()</span></code></a> now has a new parameter <code class="docutils literal notranslate"><span class="pre">target_space</span></code>
-to provide parcellation in highest possible resolution if it does not match
-the space of the parcellation by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> and <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
-(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/411">#411</a>)</p></li>
 </ul>
 </section>
 <section id="improved-documentation">
@@ -392,25 +388,17 @@ which allows to disable cleaning up temporary directories by <a class="reference
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/389">#389</a>)</p></li>
 <li><p>Update <code class="docutils literal notranslate"><span class="pre">Warp</span></code> data type to be a list of dictionaries and adapt to allow
 multiple transforms to be specified by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/390">#390</a>)</p></li>
-<li><p>Refactor the masking logic in the pipeline to account for and optimise space
-transformations and merges by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> and <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
-(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/395">#395</a>)</p></li>
 <li><p>Allow <code class="docutils literal notranslate"><span class="pre">workdir</span></code> mapping form in YAML for easy debugging of single element
 <code class="docutils literal notranslate"><span class="pre">run</span></code> by disabling cleanup of <a class="reference internal" href="api/pipeline.html#junifer.pipeline.WorkDirManager" title="junifer.pipeline.WorkDirManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.pipeline.WorkDirManager</span></code></a> by
 <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/402">#402</a>)</p></li>
 <li><p>Use <a class="reference internal" href="api/utils.html#junifer.utils.ConfigManager" title="junifer.utils.ConfigManager"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.utils.ConfigManager()</span></code></a> to skip time-consuming dataset ID and
 dirty checks for <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/403">#403</a>)</p></li>
-<li><p>Enable <code class="docutils literal notranslate"><span class="pre">compute_brain_mask</span></code> to use subject-specific probseg files by <a class="reference external" href="https://fraimondo.github.io">Fede
-Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/404">#404</a>)</p></li>
 <li><p>Update <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICID1000" title="junifer.datagrabber.DataladAOMICID1000"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a>, <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a> and
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> to fetch data in all available spaces by <a class="reference external" href="https://fraimondo.github.io">Fede
 Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/405">#405</a>)</p></li>
 <li><p>Update Preprocessors to sync data their paths so that the results are
 idempotent by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/408">#408</a>)</p></li>
 <li><p>Ease asset storage for AFNI-based markers by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/409">#409</a>)</p></li>
-<li><p>Refactor the parcellation logic in the pipeline to account for and optimise
-space transformations and merges by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> and <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
-(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/411">#411</a>)</p></li>
 </ul>
 </section>
 <section id="features">
@@ -1194,7 +1182,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-release-2024-12-05">14.1. Junifer 0.0.6.dev347 (2024-12-05)</a><ul>
+<li><a class="reference internal" href="#junifer-release-2024-12-05">14.1. Junifer 0.0.6.dev329 (2024-12-05)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
@@ -1260,7 +1248,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=24c35699"></script>
+</div><script src="_static/documentation_options.js?v=e970969b"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
