@@ -318,6 +318,10 @@ def configure_logging(
         e.g., ``"%(asctime)s - %(levelname)s - %(message)s"``.
         If None, default string format is used
         (default ``"%(asctime)s - %(name)s - %(levelname)s - %(message)s"``).
+    datalad_level : int or {"DEBUG", "INFO", "WARNING", "ERROR"}, optional
+        The level of the messages to print for datalad. If string, it will be
+        interpreted as elements of logging. If None, it will be set as the
+        ``level`` parameter (default None).
 
     """
     _close_handlers(logger)  # close relevant logger handlers
