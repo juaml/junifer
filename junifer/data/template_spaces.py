@@ -122,7 +122,7 @@ def get_xfm(
 
 def get_template(
     space: str,
-    target_data: dict[str, Any],
+    target_img: nib.Nifti1Image,
     extra_input: Optional[dict[str, Any]] = None,
     template_type: str = "T1w",
 ) -> nib.Nifti1Image:
@@ -132,9 +132,9 @@ def get_template(
     ----------
     space : str
         The name of the template space.
-    target_data : dict
-        The corresponding item of the data object for which the template space
-        will be loaded.
+    target_img : Nifti1Image
+        The corresponding image for which the template space will be loaded.
+        This is used to obtain the best matching resolution.
     extra_input : dict, optional
         The other fields in the data object. Useful for accessing other data
         types (default None).
@@ -163,7 +163,6 @@ def get_template(
         raise_error(f"Unknown template type: {template_type}")
 
     # Get the min of the voxels sizes and use it as the resolution
-    target_img = target_data["data"]
     resolution = np.min(target_img.header.get_zooms()[:3]).astype(int)
 
     # Fetch available resolutions for the template
