@@ -37,6 +37,9 @@ class HTCondorAdapter(QueueContextAdapter):
         virtual environment of any kind (default None).
     verbose : str, optional
         The level of verbosity (default "info").
+    verbose_datalad : str or None, optional
+        The level of verbosity for datalad. If None, will be the same
+        as ``verbose`` (default None).
     cpus : int, optional
         The number of CPU cores to use (default 1).
     mem : str, optional
@@ -83,6 +86,7 @@ class HTCondorAdapter(QueueContextAdapter):
         pre_collect: Optional[str] = None,
         env: Optional[dict[str, str]] = None,
         verbose: str = "info",
+        verbose_datalad: Optional[str] = None,
         cpus: int = 1,
         mem: str = "8G",
         disk: str = "1G",
@@ -99,6 +103,7 @@ class HTCondorAdapter(QueueContextAdapter):
         self._pre_collect = pre_collect
         self._check_env(env)
         self._verbose = verbose
+        self._verbose_datalad = verbose_datalad
         self._cpus = cpus
         self._mem = mem
         self._disk = disk
@@ -201,10 +206,15 @@ class HTCondorAdapter(QueueContextAdapter):
 
     def run(self) -> str:
         """Return run commands."""
+        verbose_args = f"--verbose {self._verbose} "
+        if self._verbose_datalad is not None:
+            verbose_args = (
+                f"{verbose_args} --verbose-datalad {self._verbose_datalad} "
+            )
         junifer_run_args = (
             "run "
             f"{self._yaml_config_path.resolve()!s} "
-            f"--verbose {self._verbose} "
+            f"{verbose_args}"
             "--element $(element)"
         )
         log_dir_prefix = (
@@ -246,10 +256,16 @@ class HTCondorAdapter(QueueContextAdapter):
 
     def collect(self) -> str:
         """Return collect commands."""
+        verbose_args = f"--verbose {self._verbose} "
+        if self._verbose_datalad is not None:
+            verbose_args = (
+                f"{verbose_args} --verbose-datalad {self._verbose_datalad} "
+            )
+
         junifer_collect_args = (
             "collect "
             f"{self._yaml_config_path.resolve()!s} "
-            f"--verbose {self._verbose}"
+            f"{verbose_args}"
         )
         log_dir_prefix = f"{self._log_dir.resolve()!s}/junifer_collect"
         fixed = (

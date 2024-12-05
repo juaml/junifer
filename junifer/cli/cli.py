@@ -45,6 +45,32 @@ __all__ = [
 ]
 
 
+def _validate_optional_verbose(
+    ctx: click.Context, param: str, value: Optional[str]
+):
+    """Validate optional verbose option.
+
+    Parameters
+    ----------
+    ctx : click.Context
+        The context of the command.
+    param : str
+        The parameter to validate.
+    value : str
+        The value to validate.
+
+    Returns
+    -------
+    str or int or None
+        The validated value.
+
+    """
+    if value is None:
+        return value
+    else:
+        return _validate_verbose(ctx, param, value)
+
+
 def _validate_verbose(
     ctx: click.Context, param: str, value: str
 ) -> Union[str, int]:
@@ -105,8 +131,17 @@ def cli() -> None:  # pragma: no cover
     callback=_validate_verbose,
     default="info",
 )
+@click.option(
+    "--verbose-datalad",
+    type=click.UNPROCESSED,
+    callback=_validate_optional_verbose,
+    default=None,
+)
 def run(
-    filepath: click.Path, element: tuple[str], verbose: Union[str, int]
+    filepath: click.Path,
+    element: tuple[str],
+    verbose: Union[str, int],
+    verbose_datalad: Optional[Union[str, int]],
 ) -> None:
     """Run feature extraction.
 
@@ -120,10 +155,12 @@ def run(
         The element(s) to operate on.
     verbose : click.Choice
         The verbosity level: warning, info or debug (default "info").
+    verbose_datalad : click.Choice or None
+        The verbosity level for datalad: warning, info or debug (default None).
 
     """
     # Setup logging
-    configure_logging(level=verbose)
+    configure_logging(level=verbose, level_datalad=verbose_datalad)
     # TODO(synchon): add validation
     # Parse YAML
     config = parse_yaml(filepath)
@@ -167,7 +204,17 @@ def run(
     callback=_validate_verbose,
     default="info",
 )
-def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
+@click.option(
+    "--verbose-datalad",
+    type=click.UNPROCESSED,
+    callback=_validate_optional_verbose,
+    default=None,
+)
+def collect(
+    filepath: click.Path,
+    verbose: Union[str, int],
+    verbose_datalad: Union[str, int, None],
+) -> None:
     """Collect extracted features.
 
     \f
@@ -178,10 +225,12 @@ def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
         The filepath to the configuration file.
     verbose : click.Choice
         The verbosity level: warning, info or debug (default "info").
+    verbose_datalad : click.Choice or None
+        The verbosity level for datalad: warning, info or debug (default None).
 
     """
     # Setup logging
-    configure_logging(level=verbose)
+    configure_logging(level=verbose, level_datalad=verbose_datalad)
     # TODO: add validation
     # Parse YAML
     config = parse_yaml(filepath)
@@ -208,12 +257,19 @@ def collect(filepath: click.Path, verbose: Union[str, int]) -> None:
     callback=_validate_verbose,
     default="info",
 )
+@click.option(
+    "--verbose-datalad",
+    type=click.UNPROCESSED,
+    callback=_validate_optional_verbose,
+    default=None,
+)
 def queue(
     filepath: click.Path,
     element: tuple[str],
     overwrite: bool,
     submit: bool,
     verbose: Union[str, int],
+    verbose_datalad: Union[str, int, None],
 ) -> None:
     """Queue feature extraction.
 
@@ -231,6 +287,8 @@ def queue(
         Whether to submit the job.
     verbose : click.Choice
         The verbosity level: warning, info or debug (default "info").
+    verbose_datalad : click.Choice or None
+        The verbosity level for datalad: warning, info or debug (default None).
 
     Raises
     ------
@@ -239,7 +297,7 @@ def queue(
 
     """
     # Setup logging
-    configure_logging(level=verbose)
+    configure_logging(level=verbose, level_datalad=verbose_datalad)
     # TODO: add validation
     # Parse YAML
     config = parse_yaml(filepath)  # type: ignore
@@ -365,9 +423,16 @@ def selftest(subpkg: str) -> None:
     callback=_validate_verbose,
     default="info",
 )
+@click.option(
+    "--verbose-datalad",
+    type=click.UNPROCESSED,
+    callback=_validate_optional_verbose,
+    default=None,
+)
 def reset(
     filepath: click.Path,
     verbose: Union[str, int],
+    verbose_datalad: Union[str, int, None],
 ) -> None:
     """Reset generated assets.
 
@@ -379,10 +444,12 @@ def reset(
         The filepath to the configuration file.
     verbose : click.Choice
         The verbosity level: warning, info or debug (default "info").
+    verbose_datalad : click.Choice or None
+        The verbosity level for datalad: warning, info or debug (default None).
 
     """
     # Setup logging
-    configure_logging(level=verbose)
+    configure_logging(level=verbose, level_datalad=verbose_datalad)
     # Parse YAML
     config = parse_yaml(filepath)
     # Perform operation
@@ -409,11 +476,18 @@ def reset(
     callback=_validate_verbose,
     default="info",
 )
+@click.option(
+    "--verbose-datalad",
+    type=click.UNPROCESSED,
+    callback=_validate_optional_verbose,
+    default=None,
+)
 def list_elements(
     filepath: click.Path,
     element: tuple[str],
     output_file: Optional[click.Path],
     verbose: Union[str, int],
+    verbose_datalad: Union[str, int, None],
 ) -> None:
     """List elements of a dataset.
 
@@ -430,10 +504,12 @@ def list_elements(
         stdout is not performed.
     verbose : click.Choice
         The verbosity level: warning, info or debug (default "info").
+    verbose_datalad : click.Choice or None
+        The verbosity level for datalad: warning, info or debug (default None
 
     """
     # Setup logging
-    configure_logging(level=verbose)
+    configure_logging(level=verbose, level_datalad=verbose_datalad)
     # Parse YAML
     config = parse_yaml(filepath)
     # Fetch datagrabber

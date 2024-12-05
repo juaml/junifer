@@ -4,6 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import os
 import sys
 
 
@@ -16,7 +17,7 @@ import logging
 import warnings
 from pathlib import Path
 from subprocess import PIPE, Popen, TimeoutExpired
-from typing import NoReturn, Optional, Union
+from typing import ClassVar, NoReturn, Optional, Union
 from warnings import warn
 
 import datalad
@@ -78,6 +79,59 @@ class WrapStdOut(logging.StreamHandler):
             return getattr(sys.stdout, name)
         else:
             raise AttributeError(f"'file' object has not attribute '{name}'")
+
+
+class ColorFormatter(logging.Formatter):
+    """Color formatter for logging messages.
+
+    Parameters
+    ----------
+    fmt : str
+        The format string for the logging message.
+    datefmt : str, optional
+        The format string for the date.
+
+    """
+
+    BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
+
+    COLORS: ClassVar[dict[str, int]] = {
+        "WARNING": YELLOW,
+        "INFO": GREEN,
+        "DEBUG": BLUE,
+        "CRITICAL": MAGENTA,
+        "ERROR": RED,
+    }
+
+    RESET_SEQ: str = "\033[0m"
+    COLOR_SEQ: str = "\033[1;%dm"
+    BOLD_SEQ: str = "\033[1m"
+
+    def __init__(self, fmt: str, datefmt: Optional[str] = None) -> None:
+        """Initialize the ColorFormatter."""
+        logging.Formatter.__init__(self, fmt, datefmt)
+
+    def format(self, record: logging.LogRecord) -> str:
+        """Format the log record.
+
+        Parameters
+        ----------
+        record : logging.LogRecord
+            The log record to format.
+
+        Returns
+        -------
+        str
+            The formatted log record.
+
+        """
+        levelname = record.levelname
+        if levelname in self.COLORS:
+            levelname_color = (
+                self.COLOR_SEQ % (30 + self.COLORS[levelname]) + levelname
+            )
+            record.levelname = levelname_color + self.RESET_SEQ
+        return logging.Formatter.format(self, record)
 
 
 def _get_git_head(path: Path) -> str:
@@ -237,11 +291,51 @@ def log_versions(tbox_path: Optional[Path] = None) -> None:
         pass
 
 
+def _can_use_color(handler: logging.Handler) -> bool:
+    """Check if color can be used in the logging output.
+
+    Parameters
+    ----------
+    handler : logging.Handler
+        The logging handler to check for color support.
+
+    Returns
+    -------
+    bool
+        Whether color can be used in the logging output.
+
+    """
+    if isinstance(handler, logging.FileHandler):
+        # Do not use colors in file handlers
+        return False
+    else:
+        stream = handler.stream
+        if hasattr(stream, "isatty") and stream.isatty():
+            valid_terms = [
+                "xterm-256color",
+                "xterm-kitty",
+                "xterm-color",
+            ]
+            this_term = os.getenv("TERM", None)
+            if this_term is not None:
+                if this_term in valid_terms:
+                    return True
+                if this_term.endswith("256color") or this_term.endswith("256"):
+                    return True
+                if this_term == "dumb" and os.getenv("CI", False):
+                    return True
+            if os.getenv("COLORTERM", False):
+                return True
+        # No TTY, no color
+        return False
+
+
 def configure_logging(
     level: Union[int, str] = "WARNING",
     fname: Optional[Union[str, Path]] = None,
     overwrite: Optional[bool] = None,
     output_format=None,
+    level_datalad: Union[int, str, None] = None,
 ) -> None:
     """Configure the logging functionality.
 
@@ -264,6 +358,10 @@ def configure_logging(
         e.g., ``"%(asctime)s - %(levelname)s - %(message)s"``.
         If None, default string format is used
         (default ``"%(asctime)s - %(name)s - %(levelname)s - %(message)s"``).
+    level_datalad : int or {"DEBUG", "INFO", "WARNING", "ERROR"}, optional
+        The level of the messages to print for datalad. If string, it will be
+        interpreted as elements of logging. If None, it will be set as the
+        ``level`` parameter (default None).
 
     """
     _close_handlers(logger)  # close relevant logger handlers
@@ -297,11 +395,22 @@ def configure_logging(
         #     "%(asctime)s [%(levelname)s] %(message)s "
         #     "(%(filename)s:%(lineno)s)"
         # )
-    formatter = logging.Formatter(fmt=output_format)
+    if _can_use_color(lh):
+        formatter = ColorFormatter(fmt=output_format)
+    else:
+        formatter = logging.Formatter(fmt=output_format)
 
     lh.setFormatter(formatter)  # set formatter
     logger.setLevel(level)  # set level
-    datalad.log.lgr.setLevel(level)  # set level for datalad
+
+    # Set datalad logging level accordingly
+    if level_datalad is not None:
+        if isinstance(level_datalad, str):
+            level_datalad = _logging_types[level_datalad]
+    else:
+        level_datalad = level
+    datalad.log.lgr.setLevel(level_datalad)  # set level for datalad
+
     logger.addHandler(lh)  # set handler
     log_versions()  # log versions of installed packages
 
