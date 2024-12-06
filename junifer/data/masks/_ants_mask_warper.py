@@ -46,7 +46,7 @@ class ANTsMaskWarper:
             The mask image to transform.
         src : str
             The data type or template space to warp from.
-            It should be empty string if ``dst="T1w"``.
+            It should be empty string if ``dst="native"``.
         dst : str
             The data type or template space to warp to.
             `"native"` is the only allowed data type and it uses the resampled
@@ -58,7 +58,7 @@ class ANTsMaskWarper:
             will be applied.
         warp_data : dict or None
             The warp data item of the data object. The value is unused if
-            ``dst!="T1w"``.
+            ``dst!="native"``.
 
         Returns
         -------

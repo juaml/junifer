@@ -44,23 +44,24 @@ _masks_path = Path(__file__).parent
 
 def compute_brain_mask(
     target_data: dict[str, Any],
-    extra_input: Optional[dict[str, Any]] = None,
+    warp_data: Optional[dict[str, Any]] = None,
     mask_type: str = "brain",
     threshold: float = 0.5,
 ) -> "Nifti1Image":
     """Compute the whole-brain, grey-matter or white-matter mask.
 
     This mask is calculated using the template space and resolution as found
-    in the ``target_data``.
+    in the ``target_data``. If target space is native, then the template is
+    warped to native and then thresholded.
 
     Parameters
     ----------
     target_data : dict
         The corresponding item of the data object for which mask will be
         loaded.
-    extra_input : dict, optional
-        The other fields in the data object. Useful for accessing other data
-        types (default None).
+    warp_data : dict or None, optional
+        The warp data item of the data object. Needs to be provided if
+        ``target_data`` is in native space (default None).
     mask_type : {"brain", "gm", "wm"}, optional
         Type of mask to be computed:
 
@@ -81,7 +82,7 @@ def compute_brain_mask(
     ------
     ValueError
         If ``mask_type`` is invalid or
-        if ``extra_input`` is None when ``target_data``'s space is native.
+        if ``warp_data`` is None when ``target_data``'s space is native.
 
     """
     logger.debug(f"Computing {mask_type} mask")
@@ -90,39 +91,45 @@ def compute_brain_mask(
         raise_error(f"Unknown mask type: {mask_type}")
 
     # Check pre-requirements for space manipulation
-    target_space = target_data["space"]
-    # Set target standard space to target space
-    target_std_space = target_space
-    # Extra data type requirement check if target space is native
-    if target_space == "native":
-        # Check for extra inputs
-        if extra_input is None:
-            raise_error(
-                "No extra input provided, requires `Warp` "
-                "data type to infer target template space."
-            )
-        # Set target standard space to warp file space source
-        for entry in extra_input["Warp"]:
-            if entry["dst"] == "native":
-                target_std_space = entry["src"]
+    if target_data["space"] == "native":
+        # Warp data check
+        if warp_data is None:
+            raise_error("No `warp_data` provided")
+        # Set space to fetch template using
+        target_std_space = warp_data["src"]
+    else:
+        # Set space to fetch template using
+        target_std_space = target_data["space"]
 
-    target_img = target_data["data"]
     # Fetch template in closest resolution
     template = get_template(
         space=target_std_space,
-        target_img=target_img,
-        extra_input=extra_input,
+        target_img=target_data["data"],
+        extra_input=None,
         template_type=mask_type,
     )
-    # Resample template to target image
-    resampled_template = resample_to_img(
-        source_img=template, target_img=target_img
-    )
 
-    # Threshold and get mask
+    # Resample and warp template if target space is native
+    if target_data["space"] == "native":
+        resampled_template = ANTsMaskWarper().warp(
+            mask_name=f"template_{target_std_space}_for_compute_brain_mask",
+            # use template here
+            mask_img=template,
+            src=target_std_space,
+            dst="native",
+            target_data=target_data,
+            warp_data=warp_data,
+        )
+    # Resample template to target image
+    else:
+        resampled_template = resample_to_img(
+            source_img=template, target_img=target_data["data"]
+        )
+
+    # Threshold resampled template and get mask
     mask = (get_data(resampled_template) >= threshold).astype("int8")
 
-    return new_img_like(target_img, mask)  # type: ignore
+    return new_img_like(target_data["data"], mask)  # type: ignore
 
 
 class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
@@ -369,6 +376,8 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         """
         # Check pre-requirements for space manipulation
         target_space = target_data["space"]
+        logger.debug(f"Getting masks: {masks} in {target_space} space")
+
         # Extra data type requirement check if target space is native
         if target_space == "native":
             # Check for extra inputs
@@ -385,7 +394,13 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             )
             # Set target standard space to warp file space source
             target_std_space = warper_spec["src"]
+            logger.debug(
+                f"Target space is native. Will warp from {target_std_space}"
+            )
         else:
+            # Set warper_spec so that compute_brain_mask does not fail when
+            # target space is non-native
+            warper_spec = None
             # Set target standard space to target space
             target_std_space = target_space
 
@@ -398,31 +413,33 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             masks = [masks]
 
         # Check that masks passed as dicts have only one key
-        invalid_elements = [
+        invalid_mask_specs = [
             x for x in masks if isinstance(x, dict) and len(x) != 1
         ]
-        if len(invalid_elements) > 0:
+        if invalid_mask_specs:
             raise_error(
                 "Each of the masks dictionary must have only one key, "
                 "the name of the mask. The following dictionaries are "
-                f"invalid: {invalid_elements}"
+                f"invalid: {invalid_mask_specs}"
             )
 
-        # Check params for the intersection function
+        # Store params for nilearn.masking.intersect_mask()
         intersect_params = {}
-        true_masks = []
+        # Store all mask specs for further operations
+        mask_specs = []
         for t_mask in masks:
             if isinstance(t_mask, dict):
+                # Get params to pass to nilearn.masking.intersect_mask()
                 if "threshold" in t_mask:
                     intersect_params["threshold"] = t_mask["threshold"]
                     continue
-                elif "connected" in t_mask:
+                if "connected" in t_mask:
                     intersect_params["connected"] = t_mask["connected"]
                     continue
-            # All the other elements are masks
-            true_masks.append(t_mask)
+            # Add mask spec
+            mask_specs.append(t_mask)
 
-        if len(true_masks) == 0:
+        if not mask_specs:
             raise_error("No mask was passed. At least one mask is required.")
 
         # Get the nested mask data type for the input data type
@@ -430,7 +447,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Get all the masks
         all_masks = []
-        for t_mask in true_masks:
+        for t_mask in mask_specs:
             if isinstance(t_mask, dict):
                 mask_name = next(iter(t_mask.keys()))
                 mask_params = t_mask[mask_name]
@@ -441,33 +458,57 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             # If mask is being inherited from the datagrabber or a
             # preprocessor, check that it's accessible
             if mask_name == "inherit":
+                logger.debug("Using inherited mask.")
                 if inherited_mask_item is None:
                     raise_error(
                         "Cannot inherit mask from the target data. Either the "
                         "DataGrabber or a Preprocessor does not provide "
                         "`mask` for the target data type."
                     )
+                logger.debug(
+                    f"Inherited mask is in {inherited_mask_item['space']} "
+                    "space."
+                )
                 mask_img = inherited_mask_item["data"]
+
+                if inherited_mask_item["space"] != target_space:
+                    raise_error(
+                        "Inherited mask space does not match target space."
+                    )
+                logger.debug("Resampling inherited mask to target image.")
+                # Resample inherited mask to target image
+                mask_img = resample_to_img(
+                    source_img=mask_img,
+                    target_img=target_data["data"],
+                )
             # Starting with new mask
             else:
                 # Load mask
+                logger.debug(f"Loading mask {t_mask}.")
                 mask_object, _, mask_space = self.load(
                     mask_name, path_only=False, resolution=resolution
                 )
-                # Replace mask space with target space if mask's space is
-                # inherit
-                if mask_space == "inherit":
-                    mask_space = target_std_space
-                # If mask is callable like from nilearn
+                # If mask is callable like from nilearn; space will be inherit
+                # so no check for that
                 if callable(mask_object):
+                    logger.debug("Computing mask (callable).")
                     if mask_params is None:
                         mask_params = {}
                     # From nilearn
-                    if mask_name != "compute_brain_mask":
+                    if mask_name in [
+                        "compute_epi_mask",
+                        "compute_background_mask",
+                    ]:
                         mask_img = mask_object(target_img, **mask_params)
-                    # Not from nilearn
+                    # custom compute_brain_mask
+                    elif mask_name == "compute_brain_mask":
+                        mask_img = mask_object(
+                            target_data, warper_spec, **mask_params
+                        )
+                    # custom registered; arm kept for clarity
                     else:
-                        mask_img = mask_object(target_data, **mask_params)
+                        mask_img = mask_object(target_img, **mask_params)
+
                 # Mask is a Nifti1Image
                 else:
                     # Mask params provided
@@ -477,59 +518,74 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                             "Cannot pass callable params to a non-callable "
                             "mask."
                         )
-                    # Resample mask to target image
-                    mask_img = resample_to_img(
-                        source_img=mask_object,
-                        target_img=target_img,
-                        interpolation="nearest",
-                        copy=True,
-                    )
-                # Convert mask space if required
-                if mask_space != target_std_space:
-                    mask_img = ANTsMaskWarper().warp(
-                        mask_name=mask_name,
-                        mask_img=mask_img,
-                        src=mask_space,
-                        dst=target_std_space,
-                        target_data=target_data,
-                        warp_data=None,
-                    )
+
+                    # Resample and warp mask to standard space
+                    if mask_space != target_std_space:
+                        logger.debug(
+                            f"Warping {t_mask} to {target_std_space} space "
+                            "using ants."
+                        )
+                        mask_img = ANTsMaskWarper().warp(
+                            mask_name=mask_name,
+                            mask_img=mask_object,
+                            src=mask_space,
+                            dst=target_std_space,
+                            target_data=target_data,
+                            warp_data=warper_spec,
+                        )
+
+                    else:
+                        # Resample mask to target image; no further warping
+                        logger.debug(f"Resampling {t_mask} to target image.")
+                        if target_space != "native":
+                            mask_img = resample_to_img(
+                                source_img=mask_object,
+                                target_img=target_data["data"],
+                            )
+                        # Set mask_img in case no warping happens before this
+                        else:
+                            mask_img = mask_object
+                    # Resample and warp mask if target data is native
+                    if target_space == "native":
+                        logger.debug(
+                            "Warping mask to native space using "
+                            f"{warper_spec['warper']}."
+                        )
+                        mask_name = f"{mask_name}_to_native"
+                        # extra_input check done earlier and warper_spec exists
+                        if warper_spec["warper"] == "fsl":
+                            mask_img = FSLMaskWarper().warp(
+                                mask_name=mask_name,
+                                mask_img=mask_img,
+                                target_data=target_data,
+                                warp_data=warper_spec,
+                            )
+                        elif warper_spec["warper"] == "ants":
+                            mask_img = ANTsMaskWarper().warp(
+                                mask_name=mask_name,
+                                mask_img=mask_img,
+                                src="",
+                                dst="native",
+                                target_data=target_data,
+                                warp_data=warper_spec,
+                            )
 
             all_masks.append(mask_img)
 
         # Multiple masks, need intersection / union
         if len(all_masks) > 1:
             # Intersect / union of masks
+            logger.debug("Intersecting masks.")
             mask_img = intersect_masks(all_masks, **intersect_params)
         # Single mask
         else:
-            if len(intersect_params) > 0:
+            if intersect_params:
                 # Yes, I'm this strict!
                 raise_error(
                     "Cannot pass parameters to the intersection function "
                     "when there is only one mask."
                 )
             mask_img = all_masks[0]
-
-        # Warp mask if target data is native
-        if target_space == "native":
-            # extra_input check done earlier and warper_spec exists
-            if warper_spec["warper"] == "fsl":
-                mask_img = FSLMaskWarper().warp(
-                    mask_name="native",
-                    mask_img=mask_img,
-                    target_data=target_data,
-                    warp_data=warper_spec,
-                )
-            elif warper_spec["warper"] == "ants":
-                mask_img = ANTsMaskWarper().warp(
-                    mask_name="native",
-                    mask_img=mask_img,
-                    src="",
-                    dst="native",
-                    target_data=target_data,
-                    warp_data=warper_spec,
-                )
 
         return mask_img
 
