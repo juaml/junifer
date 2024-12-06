@@ -199,8 +199,20 @@ def compute_brain_mask(
                 target_data=target_data,
                 warp_data=warp_data,
             )
-    # Resample template to target image
     else:
+        # Warp template to correct space
+        if template_space != target_std_space:
+            logger.debug(
+                f"Warping template to {target_std_space} space using ANTs."
+            )
+            template = ANTsMaskWarper().warp(
+                mask_name=f"template_{target_std_space}_for_compute_brain_mask",
+                mask_img=template,
+                src=template_space,
+                dst=target_std_space,
+                target_data=target_data,
+                warp_data=None,
+            )
         # Resample template to target image
         resampled_template = nimg.resample_to_img(
             source_img=template,
