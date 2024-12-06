@@ -14,8 +14,8 @@ from typing import (
 )
 
 import nibabel as nib
+import nilearn.image as nimg
 import numpy as np
-from nilearn.image import get_data, new_img_like, resample_to_img
 from nilearn.masking import (
     compute_background_mask,
     compute_epi_mask,
@@ -48,6 +48,7 @@ def compute_brain_mask(
     mask_type: str = "brain",
     threshold: float = 0.5,
     source: str = "template",
+    template_space: Optional[str] = None,
     extra_input: Optional[dict[str, Any]] = None,
 ) -> "Nifti1Image":
     """Compute the whole-brain, grey-matter or white-matter mask.
@@ -78,6 +79,9 @@ def compute_brain_mask(
         The source of the mask. If "subject", the mask is computed from the
         subject's data (``VBM_GM`` or ``VBM_WM``). If "template", the mask is
         computed from the template data (default "template").
+    template_space : str, optional
+        The space of the template. If not provided, the space is inferred from
+        the ``target_data`` (default None).
     extra_input : dict, optional
          The other fields in the data object. Useful for accessing other data
          types (default None).
@@ -93,6 +97,7 @@ def compute_brain_mask(
         If ``mask_type`` is invalid or
         if ``source`` is invalid or
         if ``source="subject"`` and ``mask_type`` is invalid or
+        if ``template_space`` is provided when ``source="subject"`` or
         if ``warp_data`` is None when ``target_data``'s space is native or
         if ``extra_input`` is None when ``source="subject"`` or
         if ``VBM_GM`` or ``VBM_WM`` data types are not in ``extra_input``
@@ -110,6 +115,9 @@ def compute_brain_mask(
 
     if source == "subject" and mask_type not in ["gm", "wm"]:
         raise_error(f"Unknown mask type: {mask_type} for subject space")
+
+    if source == "subject" and template_space is not None:
+        raise_error("Cannot provide `template_space` when source is `subject`")
 
     # Check pre-requirements for space manipulation
     if target_data["space"] == "native":
@@ -138,15 +146,40 @@ def compute_brain_mask(
             )
         template = extra_input[key]["data"]
         template_space = extra_input[key]["space"]
+        logger.debug(f"Using {key} in {template_space} for mask computation.")
     else:
+        template_resolution = None
+        if template_space is None:
+            template_space = target_std_space
+        elif template_space != target_std_space:
+            # We re going to warp, so get the highest resolution
+            template_resolution = "highest"
+
         # Fetch template in closest resolution
         template = get_template(
-            space=target_std_space,
+            space=template_space,
             target_img=target_data["data"],
             extra_input=None,
             template_type=mask_type,
+            resolution=template_resolution,
         )
-        template_space = target_std_space
+
+    mask_name = f"template_{target_std_space}_for_compute_brain_mask"
+
+    # Warp template to correct space (MNI to MNI)
+    if template_space != "native" and template_space != target_std_space:
+        logger.debug(
+            f"Warping template to {target_std_space} space using ANTs."
+        )
+        template = ANTsMaskWarper().warp(
+            mask_name=mask_name,
+            mask_img=template,
+            src=template_space,
+            dst=target_std_space,
+            target_data=target_data,
+            warp_data=None,
+        )
+
     # Resample and warp template if target space is native
     if target_data["space"] == "native" and template_space != "native":
         if warp_data["warper"] == "fsl":
@@ -168,14 +201,16 @@ def compute_brain_mask(
             )
     # Resample template to target image
     else:
-        resampled_template = resample_to_img(
+        # Resample template to target image
+        resampled_template = nimg.resample_to_img(
             source_img=template, target_img=target_data["data"]
         )
 
     # Threshold resampled template and get mask
-    mask = (get_data(resampled_template) >= threshold).astype("int8")
-
-    return new_img_like(target_data["data"], mask)  # type: ignore
+    logger.debug("Thresholding template to get mask.")
+    mask = (nimg.get_data(resampled_template) >= threshold).astype("int8")
+    logger.debug("Mask computation from brain template complete.")
+    return nimg.new_img_like(target_data["data"], mask)  # type: ignore
 
 
 class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
@@ -523,7 +558,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     )
                 logger.debug("Resampling inherited mask to target image.")
                 # Resample inherited mask to target image
-                mask_img = resample_to_img(
+                mask_img = nimg.resample_to_img(
                     source_img=mask_img,
                     target_img=target_data["data"],
                 )
@@ -568,34 +603,41 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                             "mask."
                         )
 
+                    # Set here to simplify things later
+                    mask_img: nib.nifti1.Nifti1Image = mask_object
+
                     # Resample and warp mask to standard space
                     if mask_space != target_std_space:
                         logger.debug(
                             f"Warping {t_mask} to {target_std_space} space "
-                            "using ants."
+                            "using ANTs."
                         )
                         mask_img = ANTsMaskWarper().warp(
                             mask_name=mask_name,
-                            mask_img=mask_object,
+                            mask_img=mask_img,
                             src=mask_space,
                             dst=target_std_space,
                             target_data=target_data,
                             warp_data=warper_spec,
                         )
+                        # Remove extra dimension added by ANTs
+                        mask_img = nimg.math_img(
+                            "np.squeeze(img)", img=mask_img
+                        )
 
-                    else:
-                        # Resample mask to target image; no further warping
+                    if target_space != "native":
+                        # No warping is going to happen, just resampling,
+                        # because we are in the correct space
                         logger.debug(f"Resampling {t_mask} to target image.")
-                        if target_space != "native":
-                            mask_img = resample_to_img(
-                                source_img=mask_object,
-                                target_img=target_data["data"],
-                            )
-                        # Set mask_img in case no warping happens before this
-                        else:
-                            mask_img = mask_object
-                    # Resample and warp mask if target data is native
-                    if target_space == "native":
+                        mask_img = nimg.resample_to_img(
+                            source_img=mask_img,
+                            target_img=target_img,
+                        )
+                    else:
+                        # Warp mask if target space is native as
+                        # either the image is in the right non-native space or
+                        # it's warped from one non-native space to another
+                        # non-native space
                         logger.debug(
                             "Warping mask to native space using "
                             f"{warper_spec['warper']}."
