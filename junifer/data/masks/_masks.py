@@ -146,6 +146,7 @@ def compute_brain_mask(
             )
         template = extra_input[key]["data"]
         template_space = extra_input[key]["space"]
+        logger.debug(f"Using {key} in {template_space} for mask computation.")
     else:
         template_resolution = None
         if template_space is None:
@@ -162,6 +163,23 @@ def compute_brain_mask(
             template_type=mask_type,
             resolution=template_resolution,
         )
+
+    mask_name = f"template_{target_std_space}_for_compute_brain_mask"
+
+    # Warp template to correct space (MNI to MNI)
+    if template_space != "native" and template_space != target_std_space:
+        logger.debug(
+            f"Warping template to {target_std_space} space using ANTs."
+        )
+        template = ANTsMaskWarper().warp(
+            mask_name=mask_name,
+            mask_img=template,
+            src=template_space,
+            dst=target_std_space,
+            target_data=target_data,
+            warp_data=None,
+        )
+
     # Resample and warp template if target space is native
     if target_data["space"] == "native" and template_space != "native":
         if warp_data["warper"] == "fsl":
@@ -183,25 +201,15 @@ def compute_brain_mask(
             )
     # Resample template to target image
     else:
-        if template_space != target_std_space:
-            logger.debug(
-                f"Warping template to {target_std_space} space using ants."
-            )
-            template = ANTsMaskWarper().warp(
-                mask_name=f"template_{target_std_space}_for_compute_brain_mask",
-                mask_img=template,
-                src=template_space,
-                dst=target_std_space,
-                target_data=target_data,
-                warp_data=None,
-            )
+        # Resample template to target image
         resampled_template = nimg.resample_to_img(
             source_img=template, target_img=target_data["data"]
         )
 
     # Threshold resampled template and get mask
+    logger.debug("Thresholding template to get mask.")
     mask = (nimg.get_data(resampled_template) >= threshold).astype("int8")
-
+    logger.debug("Mask computation from brain template complete.")
     return nimg.new_img_like(target_data["data"], mask)  # type: ignore
 
 
