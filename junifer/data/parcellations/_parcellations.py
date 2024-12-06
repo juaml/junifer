@@ -269,6 +269,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
     def load(
         self,
         name: str,
+        target_space: str,
         parcellations_dir: Union[str, Path, None] = None,
         resolution: Optional[float] = None,
         path_only: bool = False,
@@ -282,6 +283,8 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         ----------
         name : str
             The name of the parcellation.
+        target_space : str
+            The desired space of the parcellation.
         parcellations_dir : str or pathlib.Path, optional
             Path where the parcellations files are stored. The default location
             is "$HOME/junifer/data/parcellations" (default None).
@@ -327,6 +330,14 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             space = parcellation_definition.pop("space")
         else:
             space = parcellation_definition["space"]
+
+        # Check and get highest resolution
+        if space != target_space:
+            logger.info(
+                f"Parcellation will be warped from {space} to {target_space} "
+                "using highest resolution"
+            )
+            resolution = None
 
         # Check if the parcellation family is custom or built-in
         if t_family == "CustomUserParcellation":
@@ -441,13 +452,14 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             img, labels, _, space = self.load(
                 name=name,
                 resolution=resolution,
+                target_space=target_space,
             )
 
             # Convert parcellation spaces if required;
             # cannot be "native" due to earlier check
             if space != target_std_space:
                 logger.debug(
-                    f"Warping {name} to {target_std_space} space using ants."
+                    f"Warping {name} to {target_std_space} space using ANTs."
                 )
                 raw_img = ANTsParcellationWarper().warp(
                     parcellation_name=name,
@@ -459,17 +471,50 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 )
                 # Remove extra dimension added by ANTs
                 img = image.math_img("np.squeeze(img)", img=raw_img)
+                # Set correct affine as resolution won't be correct
+                img = image.resample_img(
+                    img=img,
+                    target_affine=target_img.affine,
+                    interpolation="nearest",
+                )
+            else:
+                if target_space != "native":
+                    # No warping is going to happen, just resampling, because
+                    # we are in the correct space
+                    logger.debug(f"Resampling {name} to target image.")
+                    # Resample parcellation to target image
+                    img = image.resample_to_img(
+                        source_img=img,
+                        target_img=target_img,
+                        interpolation="nearest",
+                        copy=True,
+                    )
 
-            logger.debug(f"Resampling {name} to target image.")
-            # Resample parcellation to target image
-            img_to_merge = image.resample_to_img(
-                source_img=img,
-                target_img=target_img,
-                interpolation="nearest",
-                copy=True,
-            )
+            # Warp parcellation if target space is native
+            if target_space == "native":
+                logger.debug(
+                    "Warping parcellation to native space using "
+                    f"{warper_spec['warper']}."
+                )
+                # extra_input check done earlier and warper_spec exists
+                if warper_spec["warper"] == "fsl":
+                    img = FSLParcellationWarper().warp(
+                        parcellation_name="native",
+                        parcellation_img=img,
+                        target_data=target_data,
+                        warp_data=warper_spec,
+                    )
+                elif warper_spec["warper"] == "ants":
+                    img = ANTsParcellationWarper().warp(
+                        parcellation_name="native",
+                        parcellation_img=img,
+                        src="",
+                        dst="native",
+                        target_data=target_data,
+                        warp_data=warper_spec,
+                    )
 
-            all_parcellations.append(img_to_merge)
+            all_parcellations.append(img)
             all_labels.append(labels)
 
         # Avoid merging if there is only one parcellation
@@ -484,30 +529,6 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 parcellations_names=parcellations,
                 labels_lists=all_labels,
             )
-
-        # Warp parcellation if target space is native
-        if target_space == "native":
-            logger.debug(
-                "Warping parcellation to native space using "
-                f"{warper_spec['warper']}."
-            )
-            # extra_input check done earlier and warper_spec exists
-            if warper_spec["warper"] == "fsl":
-                resampled_parcellation_img = FSLParcellationWarper().warp(
-                    parcellation_name="native",
-                    parcellation_img=resampled_parcellation_img,
-                    target_data=target_data,
-                    warp_data=warper_spec,
-                )
-            elif warper_spec["warper"] == "ants":
-                resampled_parcellation_img = ANTsParcellationWarper().warp(
-                    parcellation_name="native",
-                    parcellation_img=resampled_parcellation_img,
-                    src="",
-                    dst="native",
-                    target_data=target_data,
-                    warp_data=warper_spec,
-                )
 
         return resampled_parcellation_img, labels
 
