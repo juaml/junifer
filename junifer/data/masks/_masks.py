@@ -568,6 +568,9 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                             "mask."
                         )
 
+                    # Set here to simplify things later
+                    mask_img: nib.nifti1.Nifti1Image = mask_object
+
                     # Resample and warp mask to standard space
                     if mask_space != target_std_space:
                         logger.debug(
@@ -576,26 +579,30 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                         )
                         mask_img = ANTsMaskWarper().warp(
                             mask_name=mask_name,
-                            mask_img=mask_object,
+                            mask_img=mask_img,
                             src=mask_space,
                             dst=target_std_space,
                             target_data=target_data,
                             warp_data=warper_spec,
                         )
+                        # Remove extra dimension added by ANTs
+                        mask_img = nimg.math_img(
+                            "np.squeeze(img)", img=mask_img
+                        )
 
                     if target_space != "native":
-                        # Resample mask to target image; no further warping
+                        # No warping is going to happen, just resampling,
+                        # because we are in the correct space
                         logger.debug(f"Resampling {t_mask} to target image.")
-                            source_img=mask_object,
-                            target_img=target_data["data"],
                         mask_img = nimg.resample_to_img(
+                            source_img=mask_img,
+                            target_img=target_img,
                         )
-                    # Set mask_img in case no warping happens before this
                     else:
-                        mask_img = mask_object
-
-                    # Resample and warp mask if target data is native
-                    if target_space == "native":
+                        # Warp mask if target space is native as
+                        # either the image is in the right non-native space or
+                        # it's warped from one non-native space to another
+                        # non-native space
                         logger.debug(
                             "Warping mask to native space using "
                             f"{warper_spec['warper']}."
