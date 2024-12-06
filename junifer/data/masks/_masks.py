@@ -165,33 +165,18 @@ def compute_brain_mask(
         )
 
     mask_name = f"template_{target_std_space}_for_compute_brain_mask"
-
-    # Warp template to correct space (MNI to MNI)
-    if template_space != "native" and template_space != target_std_space:
-        logger.debug(
-            f"Warping template to {target_std_space} space using ANTs."
-        )
-        template = ANTsMaskWarper().warp(
-            mask_name=mask_name,
-            mask_img=template,
-            src=template_space,
-            dst=target_std_space,
-            target_data=target_data,
-            warp_data=None,
-        )
-
     # Resample and warp template if target space is native
     if target_data["space"] == "native" and template_space != "native":
         if warp_data["warper"] == "fsl":
             resampled_template = FSLMaskWarper().warp(
-                mask_name=f"template_{target_std_space}_for_compute_brain_mask",
+                mask_name=mask_name,
                 mask_img=template,
                 target_data=target_data,
                 warp_data=warp_data,
             )
         elif warp_data["warper"] == "ants":
             resampled_template = ANTsMaskWarper().warp(
-                mask_name=f"template_{target_std_space}_for_compute_brain_mask",
+                mask_name=mask_name,
                 # use template here
                 mask_img=template,
                 src=target_std_space,
@@ -206,7 +191,7 @@ def compute_brain_mask(
                 f"Warping template to {target_std_space} space using ANTs."
             )
             template = ANTsMaskWarper().warp(
-                mask_name=f"template_{target_std_space}_for_compute_brain_mask",
+                mask_name=mask_name,
                 mask_img=template,
                 src=template_space,
                 dst=target_std_space,
