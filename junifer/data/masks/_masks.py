@@ -203,7 +203,9 @@ def compute_brain_mask(
     else:
         # Resample template to target image
         resampled_template = nimg.resample_to_img(
-            source_img=template, target_img=target_data["data"]
+            source_img=template,
+            target_img=target_data["data"],
+            interpolation=_get_interpolation_method(template),
         )
 
     # Threshold resampled template and get mask
@@ -561,6 +563,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 mask_img = nimg.resample_to_img(
                     source_img=mask_img,
                     target_img=target_data["data"],
+                    interpolation=_get_interpolation_method(mask_img),
                 )
             # Starting with new mask
             else:
@@ -632,6 +635,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                         mask_img = nimg.resample_to_img(
                             source_img=mask_img,
                             target_img=target_img,
+                            interpolation=_get_interpolation_method(mask_img),
                         )
                     else:
                         # Warp mask if target space is native as
@@ -761,3 +765,23 @@ def _load_ukb_mask(name: str) -> Path:
     mask_fname = _masks_path / "ukb" / mask_fname
 
     return mask_fname
+
+
+def _get_interpolation_method(img: "Nifti1Image") -> str:
+    """Get correct interpolation method for `img`.
+
+    Parameters
+    ----------
+    img : nibabel.nifti1.Nifti1Image
+        The image.
+
+    Returns
+    -------
+    str
+        The interpolation method.
+
+    """
+    if np.array_equal(np.unique(img.get_fdata()), [0, 1]):
+        return "nearest"
+    else:
+        return "continuous"
