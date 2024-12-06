@@ -14,8 +14,8 @@ from typing import (
 )
 
 import nibabel as nib
+import nilearn.image as nimg
 import numpy as np
-from nilearn.image import get_data, new_img_like, resample_to_img
 from nilearn.masking import (
     compute_background_mask,
     compute_epi_mask,
@@ -168,14 +168,14 @@ def compute_brain_mask(
             )
     # Resample template to target image
     else:
-        resampled_template = resample_to_img(
+        resampled_template = nimg.resample_to_img(
             source_img=template, target_img=target_data["data"]
         )
 
     # Threshold resampled template and get mask
-    mask = (get_data(resampled_template) >= threshold).astype("int8")
+    mask = (nimg.get_data(resampled_template) >= threshold).astype("int8")
 
-    return new_img_like(target_data["data"], mask)  # type: ignore
+    return nimg.new_img_like(target_data["data"], mask)  # type: ignore
 
 
 class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
@@ -523,7 +523,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     )
                 logger.debug("Resampling inherited mask to target image.")
                 # Resample inherited mask to target image
-                mask_img = resample_to_img(
+                mask_img = nimg.resample_to_img(
                     source_img=mask_img,
                     target_img=target_data["data"],
                 )
@@ -568,34 +568,41 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                             "mask."
                         )
 
+                    # Set here to simplify things later
+                    mask_img: nib.nifti1.Nifti1Image = mask_object
+
                     # Resample and warp mask to standard space
                     if mask_space != target_std_space:
                         logger.debug(
                             f"Warping {t_mask} to {target_std_space} space "
-                            "using ants."
+                            "using ANTs."
                         )
                         mask_img = ANTsMaskWarper().warp(
                             mask_name=mask_name,
-                            mask_img=mask_object,
+                            mask_img=mask_img,
                             src=mask_space,
                             dst=target_std_space,
                             target_data=target_data,
                             warp_data=warper_spec,
                         )
+                        # Remove extra dimension added by ANTs
+                        mask_img = nimg.math_img(
+                            "np.squeeze(img)", img=mask_img
+                        )
 
-                    else:
-                        # Resample mask to target image; no further warping
+                    if target_space != "native":
+                        # No warping is going to happen, just resampling,
+                        # because we are in the correct space
                         logger.debug(f"Resampling {t_mask} to target image.")
-                        if target_space != "native":
-                            mask_img = resample_to_img(
-                                source_img=mask_object,
-                                target_img=target_data["data"],
-                            )
-                        # Set mask_img in case no warping happens before this
-                        else:
-                            mask_img = mask_object
-                    # Resample and warp mask if target data is native
-                    if target_space == "native":
+                        mask_img = nimg.resample_to_img(
+                            source_img=mask_img,
+                            target_img=target_img,
+                        )
+                    else:
+                        # Warp mask if target space is native as
+                        # either the image is in the right non-native space or
+                        # it's warped from one non-native space to another
+                        # non-native space
                         logger.debug(
                             "Warping mask to native space using "
                             f"{warper_spec['warper']}."
