@@ -572,7 +572,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     if mask_space != target_std_space:
                         logger.debug(
                             f"Warping {t_mask} to {target_std_space} space "
-                            "using ants."
+                            "using ANTs."
                         )
                         mask_img = ANTsMaskWarper().warp(
                             mask_name=mask_name,
