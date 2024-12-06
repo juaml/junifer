@@ -185,7 +185,7 @@ def compute_brain_mask(
     else:
         if template_space != target_std_space:
             logger.debug(
-                f"Warping template to {target_std_space} space using ants."
+                f"Warping template to {target_std_space} space using ANTs."
             )
             template = ANTsMaskWarper().warp(
                 mask_name=f"template_{target_std_space}_for_compute_brain_mask",
