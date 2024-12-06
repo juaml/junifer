@@ -125,7 +125,7 @@ class ANTsMaskWarper:
             # Get template space image
             template_space_img = get_template(
                 space=dst,
-                target_data=target_data,
+                target_img=mask_img,
                 extra_input=None,
             )
             # Save template to a tempfile

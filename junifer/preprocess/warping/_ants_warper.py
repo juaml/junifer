@@ -189,7 +189,7 @@ class ANTsWarper:
             # Get template space image
             template_space_img = get_template(
                 space=reference,
-                target_data=input,
+                target_img=input["data"],
                 extra_input=None,
             )
             # Save template

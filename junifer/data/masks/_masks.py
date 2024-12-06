@@ -106,15 +106,15 @@ def compute_brain_mask(
             if entry["dst"] == "native":
                 target_std_space = entry["src"]
 
+    target_img = target_data["data"]
     # Fetch template in closest resolution
     template = get_template(
         space=target_std_space,
-        target_data=target_data,
+        target_img=target_img,
         extra_input=extra_input,
         template_type=mask_type,
     )
     # Resample template to target image
-    target_img = target_data["data"]
     resampled_template = resample_to_img(
         source_img=template, target_img=target_img
     )
