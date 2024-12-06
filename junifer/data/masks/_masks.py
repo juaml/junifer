@@ -14,8 +14,8 @@ from typing import (
 )
 
 import nibabel as nib
+import nilearn.image as nimg
 import numpy as np
-from nilearn.image import get_data, new_img_like, resample_to_img
 from nilearn.masking import (
     compute_background_mask,
     compute_epi_mask,
@@ -168,14 +168,14 @@ def compute_brain_mask(
             )
     # Resample template to target image
     else:
-        resampled_template = resample_to_img(
+        resampled_template = nimg.resample_to_img(
             source_img=template, target_img=target_data["data"]
         )
 
     # Threshold resampled template and get mask
-    mask = (get_data(resampled_template) >= threshold).astype("int8")
+    mask = (nimg.get_data(resampled_template) >= threshold).astype("int8")
 
-    return new_img_like(target_data["data"], mask)  # type: ignore
+    return nimg.new_img_like(target_data["data"], mask)  # type: ignore
 
 
 class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
@@ -523,7 +523,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     )
                 logger.debug("Resampling inherited mask to target image.")
                 # Resample inherited mask to target image
-                mask_img = resample_to_img(
+                mask_img = nimg.resample_to_img(
                     source_img=mask_img,
                     target_img=target_data["data"],
                 )
@@ -586,9 +586,9 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     if target_space != "native":
                         # Resample mask to target image; no further warping
                         logger.debug(f"Resampling {t_mask} to target image.")
-                        mask_img = resample_to_img(
                             source_img=mask_object,
                             target_img=target_data["data"],
+                        mask_img = nimg.resample_to_img(
                         )
                     # Set mask_img in case no warping happens before this
                     else:

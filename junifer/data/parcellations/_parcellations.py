@@ -16,9 +16,10 @@ from typing import TYPE_CHECKING, Any, Optional, Union
 
 import httpx
 import nibabel as nib
+import nilearn.image as nimg
 import numpy as np
 import pandas as pd
-from nilearn import datasets, image
+from nilearn import datasets
 
 from ...utils import logger, raise_error, warn_with_log
 from ...utils.singleton import Singleton
@@ -470,14 +471,14 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     warp_data=None,
                 )
                 # Remove extra dimension added by ANTs
-                img = image.math_img("np.squeeze(img)", img=raw_img)
+                img = nimg.math_img("np.squeeze(img)", img=raw_img)
 
             if target_space != "native":
                 # No warping is going to happen, just resampling, because
                 # we are in the correct space
                 logger.debug(f"Resampling {name} to target image.")
                 # Resample parcellation to target image
-                img = image.resample_to_img(
+                img = nimg.resample_to_img(
                     source_img=img,
                     target_img=target_img,
                     interpolation="nearest",
@@ -1801,7 +1802,7 @@ def merge_parcellations(
                 "The parcellations have different resolutions!"
                 "Resampling all parcellations to the first one in the list."
             )
-            t_parc = image.resample_to_img(
+            t_parc = nimg.resample_to_img(
                 t_parc, ref_parc, interpolation="nearest", copy=True
             )
 
@@ -1827,6 +1828,6 @@ def merge_parcellations(
             "parcellation that was first in the list."
         )
 
-    parcellation_img_res = image.new_img_like(parcellations_list[0], parc_data)
+    parcellation_img_res = nimg.new_img_like(parcellations_list[0], parc_data)
 
     return parcellation_img_res, labels
