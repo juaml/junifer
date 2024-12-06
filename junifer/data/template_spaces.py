@@ -188,7 +188,10 @@ def get_template(
     # Use the closest resolution if desired resolution is not found
     resolution = closest_resolution(resolution, available_resolutions)
 
-    logger.info(f"Downloading template {space} in resolution {resolution}")
+    logger.info(
+        f"Downloading template {space} ({template_type} in "
+        f"resolution {resolution}"
+    )
     # Retrieve template
     try:
         suffix = None
