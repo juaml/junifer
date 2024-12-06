@@ -48,6 +48,7 @@ def compute_brain_mask(
     mask_type: str = "brain",
     threshold: float = 0.5,
     source: str = "template",
+    template_space: Optional[str] = None,
     extra_input: Optional[dict[str, Any]] = None,
 ) -> "Nifti1Image":
     """Compute the whole-brain, grey-matter or white-matter mask.
@@ -78,6 +79,9 @@ def compute_brain_mask(
         The source of the mask. If "subject", the mask is computed from the
         subject's data (``VBM_GM`` or ``VBM_WM``). If "template", the mask is
         computed from the template data (default "template").
+    template_space : str, optional
+        The space of the template. If not provided, the space is inferred from
+        the ``target_data`` (default None).
     extra_input : dict, optional
          The other fields in the data object. Useful for accessing other data
          types (default None).
@@ -93,6 +97,7 @@ def compute_brain_mask(
         If ``mask_type`` is invalid or
         if ``source`` is invalid or
         if ``source="subject"`` and ``mask_type`` is invalid or
+        if ``template_space`` is provided when ``source="subject"`` or
         if ``warp_data`` is None when ``target_data``'s space is native or
         if ``extra_input`` is None when ``source="subject"`` or
         if ``VBM_GM`` or ``VBM_WM`` data types are not in ``extra_input``
@@ -110,6 +115,9 @@ def compute_brain_mask(
 
     if source == "subject" and mask_type not in ["gm", "wm"]:
         raise_error(f"Unknown mask type: {mask_type} for subject space")
+
+    if source == "subject" and template_space is not None:
+        raise_error("Cannot provide `template_space` when source is `subject`")
 
     # Check pre-requirements for space manipulation
     if target_data["space"] == "native":
@@ -139,14 +147,21 @@ def compute_brain_mask(
         template = extra_input[key]["data"]
         template_space = extra_input[key]["space"]
     else:
+        template_resolution = None
+        if template_space is None:
+            template_space = target_std_space
+        elif template_space != target_std_space:
+            # We re going to warp, so get the highest resolution
+            template_resolution = "highest"
+
         # Fetch template in closest resolution
         template = get_template(
-            space=target_std_space,
+            space=template_space,
             target_img=target_data["data"],
             extra_input=None,
             template_type=mask_type,
+            resolution=template_resolution,
         )
-        template_space = target_std_space
     # Resample and warp template if target space is native
     if target_data["space"] == "native" and template_space != "native":
         if warp_data["warper"] == "fsl":
@@ -168,6 +183,18 @@ def compute_brain_mask(
             )
     # Resample template to target image
     else:
+        if template_space != target_std_space:
+            logger.debug(
+                f"Warping template to {target_std_space} space using ants."
+            )
+            template = ANTsMaskWarper().warp(
+                mask_name=f"template_{target_std_space}_for_compute_brain_mask",
+                mask_img=template,
+                src=template_space,
+                dst=target_std_space,
+                target_data=target_data,
+                warp_data=None,
+            )
         resampled_template = nimg.resample_to_img(
             source_img=template, target_img=target_data["data"]
         )
