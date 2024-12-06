@@ -484,9 +484,10 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     interpolation="nearest",
                     copy=True,
                 )
-
-            # Warp parcellation if target space is native
-            if target_space == "native":
+            else:
+                # Warp parcellation if target space is native as either
+                # the image is in the right non-native space or it's
+                # warped from one non-native space to another non-native space
                 logger.debug(
                     "Warping parcellation to native space using "
                     f"{warper_spec['warper']}."
