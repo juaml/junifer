@@ -125,6 +125,7 @@ def get_template(
     target_img: nib.Nifti1Image,
     extra_input: Optional[dict[str, Any]] = None,
     template_type: str = "T1w",
+    resolution: Optional[Union[int, "str"]] = None,
 ) -> nib.Nifti1Image:
     """Get template for the space, tailored for the target image.
 
@@ -140,6 +141,10 @@ def get_template(
         types (default None).
     template_type : {"T1w", "brain", "gm", "wm", "csf"}, optional
         The template type to retrieve (default "T1w").
+    resolution : int or "highest", optional
+        The resolution of the template to fetch. If None, the closest
+        resolution to the target image is used (default None). If "highest",
+        the highest resolution is used.
 
     Returns
     -------
@@ -149,7 +154,8 @@ def get_template(
     Raises
     ------
     ValueError
-        If ``space`` or ``template_type`` is invalid.
+        If ``space`` or ``template_type`` is invalid or
+        if ``resolution`` is not at int or "highest".
     RuntimeError
         If required template is not found.
 
@@ -162,18 +168,30 @@ def get_template(
     if template_type not in ["T1w", "brain", "gm", "wm", "csf"]:
         raise_error(f"Unknown template type: {template_type}")
 
-    # Get the min of the voxels sizes and use it as the resolution
-    resolution = np.min(target_img.header.get_zooms()[:3]).astype(int)
+    if isinstance(resolution, str) and resolution != "highest":
+        raise_error(
+            "Invalid resolution value. Must be an integer or 'highest'"
+        )
 
     # Fetch available resolutions for the template
     available_resolutions = [
         int(min(val["zooms"]))
         for val in tflow.get_metadata(space)["res"].values()
     ]
+
+    # Get the min of the voxels sizes and use it as the resolution
+    if resolution is None:
+        resolution = np.min(target_img.header.get_zooms()[:3]).astype(int)
+    elif resolution == "highest":
+        resolution = 0
+
     # Use the closest resolution if desired resolution is not found
     resolution = closest_resolution(resolution, available_resolutions)
 
-    logger.info(f"Downloading template {space} in resolution {resolution}")
+    logger.info(
+        f"Downloading template {space} ({template_type} in "
+        f"resolution {resolution}"
+    )
     # Retrieve template
     try:
         suffix = None
