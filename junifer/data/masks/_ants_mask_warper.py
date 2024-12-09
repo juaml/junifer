@@ -41,7 +41,6 @@ def _get_interpolation_method(img: "Nifti1Image") -> str:
         return "LanczosWindowedSinc"
 
 
-
 class ANTsMaskWarper:
     """Class for mask space warping via ANTs.
 
