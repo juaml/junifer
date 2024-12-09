@@ -165,33 +165,18 @@ def compute_brain_mask(
         )
 
     mask_name = f"template_{target_std_space}_for_compute_brain_mask"
-
-    # Warp template to correct space (MNI to MNI)
-    if template_space != "native" and template_space != target_std_space:
-        logger.debug(
-            f"Warping template to {target_std_space} space using ANTs."
-        )
-        template = ANTsMaskWarper().warp(
-            mask_name=mask_name,
-            mask_img=template,
-            src=template_space,
-            dst=target_std_space,
-            target_data=target_data,
-            warp_data=None,
-        )
-
     # Resample and warp template if target space is native
     if target_data["space"] == "native" and template_space != "native":
         if warp_data["warper"] == "fsl":
             resampled_template = FSLMaskWarper().warp(
-                mask_name=f"template_{target_std_space}_for_compute_brain_mask",
+                mask_name=mask_name,
                 mask_img=template,
                 target_data=target_data,
                 warp_data=warp_data,
             )
         elif warp_data["warper"] == "ants":
             resampled_template = ANTsMaskWarper().warp(
-                mask_name=f"template_{target_std_space}_for_compute_brain_mask",
+                mask_name=mask_name,
                 # use template here
                 mask_img=template,
                 src=target_std_space,
@@ -199,11 +184,25 @@ def compute_brain_mask(
                 target_data=target_data,
                 warp_data=warp_data,
             )
-    # Resample template to target image
     else:
+        # Warp template to correct space
+        if template_space != target_std_space:
+            logger.debug(
+                f"Warping template to {target_std_space} space using ANTs."
+            )
+            template = ANTsMaskWarper().warp(
+                mask_name=mask_name,
+                mask_img=template,
+                src=template_space,
+                dst=target_std_space,
+                target_data=target_data,
+                warp_data=None,
+            )
         # Resample template to target image
         resampled_template = nimg.resample_to_img(
-            source_img=template, target_img=target_data["data"]
+            source_img=template,
+            target_img=target_data["data"],
+            interpolation=_get_interpolation_method(template),
         )
 
     # Threshold resampled template and get mask
@@ -561,6 +560,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 mask_img = nimg.resample_to_img(
                     source_img=mask_img,
                     target_img=target_data["data"],
+                    interpolation=_get_interpolation_method(mask_img),
                 )
             # Starting with new mask
             else:
@@ -632,6 +632,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                         mask_img = nimg.resample_to_img(
                             source_img=mask_img,
                             target_img=target_img,
+                            interpolation=_get_interpolation_method(mask_img),
                         )
                     else:
                         # Warp mask if target space is native as
@@ -761,3 +762,23 @@ def _load_ukb_mask(name: str) -> Path:
     mask_fname = _masks_path / "ukb" / mask_fname
 
     return mask_fname
+
+
+def _get_interpolation_method(img: "Nifti1Image") -> str:
+    """Get correct interpolation method for `img`.
+
+    Parameters
+    ----------
+    img : nibabel.nifti1.Nifti1Image
+        The image.
+
+    Returns
+    -------
+    str
+        The interpolation method.
+
+    """
+    if np.array_equal(np.unique(img.get_fdata()), [0, 1]):
+        return "nearest"
+    else:
+        return "continuous"

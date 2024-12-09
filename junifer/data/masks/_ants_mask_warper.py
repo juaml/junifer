@@ -7,6 +7,7 @@ import uuid
 from typing import TYPE_CHECKING, Any, Optional
 
 import nibabel as nib
+import numpy as np
 
 from ...pipeline import WorkDirManager
 from ...utils import logger, raise_error, run_ext_cmd
@@ -18,6 +19,26 @@ if TYPE_CHECKING:
 
 
 __all__ = ["ANTsMaskWarper"]
+
+
+def _get_interpolation_method(img: "Nifti1Image") -> str:
+    """Get correct interpolation method for `img`.
+
+    Parameters
+    ----------
+    img : nibabel.nifti1.Nifti1Image
+        The image.
+
+    Returns
+    -------
+    str
+        The interpolation method.
+
+    """
+    if np.array_equal(np.unique(img.get_fdata()), [0, 1]):
+        return "'GenericLabel[NearestNeighbor]'"
+    else:
+        return "LanczosWindowedSinc"
 
 
 class ANTsMaskWarper:
@@ -143,7 +164,7 @@ class ANTsMaskWarper:
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
-                "-n 'GenericLabel[NearestNeighbor]'",
+                f"-n {_get_interpolation_method(mask_img)}",
                 f"-i {prewarp_mask_path.resolve()}",
                 f"-r {template_space_img_path.resolve()}",
                 f"-t {xfm_file_path.resolve()}",
