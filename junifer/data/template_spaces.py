@@ -6,22 +6,19 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
-import datalad.api as dl
 import nibabel as nib
 import numpy as np
 from datalad.support.exceptions import IncompleteResultsError
 from templateflow import api as tflow
 
 from ..utils import logger, raise_error
-from .utils import closest_resolution
+from .utils import check_dataset, closest_resolution
 
 
 __all__ = ["get_template", "get_xfm"]
 
 
-def get_xfm(
-    src: str, dst: str, xfms_dir: Union[str, Path, None] = None
-) -> Path:  # pragma: no cover
+def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover
     """Fetch warp files to convert from ``src`` to ``dst``.
 
     Parameters
@@ -30,9 +27,6 @@ def get_xfm(
         The template space to transform from.
     dst : str
         The template space to transform to.
-    xfms_dir : str or pathlib.Path, optional
-        Path where the retrieved transformation files are stored.
-        The default location is "$HOME/junifer/data/xfms" (default None).
 
     Returns
     -------
@@ -42,51 +36,16 @@ def get_xfm(
     Raises
     ------
     RuntimeError
-        If there is a problem cloning the xfm dataset or
-        if there is a problem fetching the xfm file.
+        If there is a problem fetching the xfm file.
 
     """
-    # Set default path for storage
-    if xfms_dir is None:
-        xfms_dir = Path().home() / "junifer" / "data" / "xfms"
-
-    # Convert str to Path
-    if not isinstance(xfms_dir, Path):
-        xfms_dir = Path(xfms_dir)
-
-    # Check if the template xfms dataset is installed at storage path
-    is_installed = dl.Dataset(xfms_dir).is_installed()
-    # Use existing dataset
-    if is_installed:
-        logger.debug(
-            f"Found existing template xfms dataset at: {xfms_dir.resolve()}"
-        )
-        # Set dataset
-        dataset = dl.Dataset(xfms_dir)
-    # Clone a fresh copy
-    else:
-        logger.debug(f"Cloning template xfms dataset to: {xfms_dir.resolve()}")
-        # Clone dataset
-        try:
-            dataset = dl.clone(
-                "https://github.com/juaml/human-template-xfms.git",
-                path=xfms_dir,
-                result_renderer="disabled",
-            )
-        except IncompleteResultsError as e:
-            raise_error(
-                msg=f"Failed to clone dataset: {e.failed}",
-                klass=RuntimeError,
-            )
-        else:
-            logger.debug(
-                f"Successfully cloned template xfms dataset to: "
-                f"{xfms_dir.resolve()}"
-            )
-
+    # Get dataset
+    dataset = check_dataset()
+    # Set xfms dir
+    xfms_dir = dataset.pathobj / "xfms"
     # Set file path to retrieve
     xfm_file_path = (
-        xfms_dir / "xfms" / f"{src}_to_{dst}" / f"{src}_to_{dst}_Composite.h5"
+        xfms_dir / f"{src}_to_{dst}" / f"{src}_to_{dst}_Composite.h5"
     )
 
     # Retrieve file
