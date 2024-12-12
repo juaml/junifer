@@ -15,7 +15,12 @@ from datalad.support.exceptions import IncompleteResultsError
 from ..utils import config, logger, raise_error
 
 
-__all__ = ["check_dataset", "closest_resolution", "get_native_warper"]
+__all__ = [
+    "check_dataset",
+    "closest_resolution",
+    "fetch_file_via_datalad",
+    "get_native_warper",
+]
 
 
 def closest_resolution(
@@ -165,3 +170,48 @@ def check_dataset() -> dl.Dataset:
                 f"{data_dir.resolve()}"
             )
             return dataset
+
+
+def fetch_file_via_datalad(dataset: dl.Dataset, file_path: Path) -> Path:
+    """Fetch `file_path` from `dataset` via datalad.
+
+    Parameters
+    ----------
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch files from.
+    file_path : pathlib.Path
+        The file path to fetch.
+
+    Returns
+    -------
+    pathlib.Path
+        Resolved fetched file path.
+
+    Raises
+    ------
+    RuntimeError
+        If there is a problem fetching the file.
+
+    """
+    try:
+        got = dataset.get(file_path, result_renderer="disabled")
+    except IncompleteResultsError as e:
+        raise_error(
+            msg=f"Failed to get file from dataset: {e.failed}",
+            klass=RuntimeError,
+        )
+    else:
+        got_path = Path(got[0]["path"])
+        # Conditional logging based on file fetch
+        status = got[0]["status"]
+        if status == "ok":
+            logger.info(f"Successfully fetched file: {got_path.resolve()}")
+            return got_path
+        elif status == "notneeded":
+            logger.info(f"Found existing file: {got_path.resolve()}")
+            return got_path
+        else:
+            raise_error(
+                msg=f"Failed to fetch file: {got_path.resolve()}",
+                klass=RuntimeError,
+            )
