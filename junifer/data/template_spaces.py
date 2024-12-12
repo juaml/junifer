@@ -8,11 +8,10 @@ from typing import Any, Optional, Union
 
 import nibabel as nib
 import numpy as np
-from datalad.support.exceptions import IncompleteResultsError
 from templateflow import api as tflow
 
 from ..utils import logger, raise_error
-from .utils import check_dataset, closest_resolution
+from .utils import check_dataset, closest_resolution, fetch_file_via_datalad
 
 
 __all__ = ["get_template", "get_xfm"]
@@ -33,50 +32,18 @@ def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover
     pathlib.Path
         The path to the transformation file.
 
-    Raises
-    ------
-    RuntimeError
-        If there is a problem fetching the xfm file.
-
     """
     # Get dataset
     dataset = check_dataset()
-    # Set xfms dir
-    xfms_dir = dataset.pathobj / "xfms"
     # Set file path to retrieve
     xfm_file_path = (
-        xfms_dir / f"{src}_to_{dst}" / f"{src}_to_{dst}_Composite.h5"
+        dataset.pathobj
+        / "xfms"
+        / f"{src}_to_{dst}"
+        / f"{src}_to_{dst}_Composite.h5"
     )
-
     # Retrieve file
-    try:
-        got = dataset.get(xfm_file_path, result_renderer="disabled")
-    except IncompleteResultsError as e:
-        raise_error(
-            msg=f"Failed to get file from dataset: {e.failed}",
-            klass=RuntimeError,
-        )
-    else:
-        file_path = Path(got[0]["path"])
-        # Conditional logging based on file fetch
-        status = got[0]["status"]
-        if status == "ok":
-            logger.info(
-                f"Successfully fetched xfm file for {src} to {dst} at "
-                f"{file_path.resolve()}"
-            )
-            return file_path
-        elif status == "notneeded":
-            logger.info(
-                f"Found existing xfm file for {src} to {dst} at "
-                f"{file_path.resolve()}"
-            )
-            return file_path
-        else:
-            raise_error(
-                f"Failed to fetch xfm file for {src} to {dst} at "
-                f"{file_path.resolve()}"
-            )
+    return fetch_file_via_datalad(dataset=dataset, file_path=xfm_file_path)
 
 
 def get_template(
