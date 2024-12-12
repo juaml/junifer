@@ -138,7 +138,7 @@ def check_dataset() -> dl.Dataset:
     if data_dir is not None:
         data_dir = Path(data_dir)
     else:
-        data_dir = Path().home() / "junifer-data"
+        data_dir = Path().home() / "junifer_data"
 
     # Check if the dataset is installed at storage path;
     # else clone a fresh copy
