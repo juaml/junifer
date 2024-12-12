@@ -14,7 +14,7 @@ from numpy.typing import ArrayLike
 from ...utils import logger, raise_error
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
-from ..utils import get_native_warper
+from ..utils import check_dataset, fetch_file_via_datalad, get_native_warper
 from ._ants_coordinates_warper import ANTsCoordinatesWarper
 from ._fsl_coordinates_warper import FSLCoordinatesWarper
 
@@ -35,98 +35,97 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Each entry in registry is a dictionary that must contain at least
         # the following keys:
         # * 'space': the coordinates' space (e.g., 'MNI')
-        # The built-in coordinates are files that are shipped with the package
-        # in the data/VOIs directory. The user can also register their own
+        # The built-in coordinates are files that are shipped with the
+        # junifer-data dataset. The user can also register their own
         # coordinates, which will be stored as numpy arrays in the dictionary.
         # Make built-in and external dictionaries for validation later
         self._builtin = {}
         self._external = {}
 
-        # Path to the metadata of the VOIs
-        _vois_meta_path = Path(__file__).parent / "VOIs" / "meta"
-
-        self._builtin = {
-            "CogAC": {
-                "path": _vois_meta_path / "CogAC_VOIs.txt",
-                "space": "MNI",
-            },
-            "CogAR": {
-                "path": _vois_meta_path / "CogAR_VOIs.txt",
-                "space": "MNI",
-            },
-            "DMNBuckner": {
-                "path": _vois_meta_path / "DMNBuckner_VOIs.txt",
-                "space": "MNI",
-            },
-            "eMDN": {
-                "path": _vois_meta_path / "eMDN_VOIs.txt",
-                "space": "MNI",
-            },
-            "Empathy": {
-                "path": _vois_meta_path / "Empathy_VOIs.txt",
-                "space": "MNI",
-            },
-            "eSAD": {
-                "path": _vois_meta_path / "eSAD_VOIs.txt",
-                "space": "MNI",
-            },
-            "extDMN": {
-                "path": _vois_meta_path / "extDMN_VOIs.txt",
-                "space": "MNI",
-            },
-            "Motor": {
-                "path": _vois_meta_path / "Motor_VOIs.txt",
-                "space": "MNI",
-            },
-            "MultiTask": {
-                "path": _vois_meta_path / "MultiTask_VOIs.txt",
-                "space": "MNI",
-            },
-            "PhysioStress": {
-                "path": _vois_meta_path / "PhysioStress_VOIs.txt",
-                "space": "MNI",
-            },
-            "Rew": {
-                "path": _vois_meta_path / "Rew_VOIs.txt",
-                "space": "MNI",
-            },
-            "Somatosensory": {
-                "path": _vois_meta_path / "Somatosensory_VOIs.txt",
-                "space": "MNI",
-            },
-            "ToM": {
-                "path": _vois_meta_path / "ToM_VOIs.txt",
-                "space": "MNI",
-            },
-            "VigAtt": {
-                "path": _vois_meta_path / "VigAtt_VOIs.txt",
-                "space": "MNI",
-            },
-            "WM": {
-                "path": _vois_meta_path / "WM_VOIs.txt",
-                "space": "MNI",
-            },
-            "Power": {
-                "path": _vois_meta_path / "Power2011_MNI_VOIs.txt",
-                "space": "MNI",
-            },
-            "Power2011": {
-                "path": _vois_meta_path / "Power2011_MNI_VOIs.txt",
-                "space": "MNI",
-            },
-            "Dosenbach": {
-                "path": _vois_meta_path / "Dosenbach2010_MNI_VOIs.txt",
-                "space": "MNI",
-            },
-            "Power2013": {
-                "path": _vois_meta_path / "Power2013_MNI_VOIs.tsv",
-                "space": "MNI",
-            },
-            "AutobiographicalMemory": {
-                "path": _vois_meta_path / "AutobiographicalMemory_VOIs.txt",
-                "space": "MNI",
-            },
-        }
+        self._builtin.update(
+            {
+                "CogAC": {
+                    "file_path_suffix": "CogAC_VOIs.txt",
+                    "space": "MNI",
+                },
+                "CogAR": {
+                    "file_path_suffix": "CogAR_VOIs.txt",
+                    "space": "MNI",
+                },
+                "DMNBuckner": {
+                    "file_path_suffix": "DMNBuckner_VOIs.txt",
+                    "space": "MNI",
+                },
+                "eMDN": {
+                    "file_path_suffix": "eMDN_VOIs.txt",
+                    "space": "MNI",
+                },
+                "Empathy": {
+                    "file_path_suffix": "Empathy_VOIs.txt",
+                    "space": "MNI",
+                },
+                "eSAD": {
+                    "file_path_suffix": "eSAD_VOIs.txt",
+                    "space": "MNI",
+                },
+                "extDMN": {
+                    "file_path_suffix": "extDMN_VOIs.txt",
+                    "space": "MNI",
+                },
+                "Motor": {
+                    "file_path_suffix": "Motor_VOIs.txt",
+                    "space": "MNI",
+                },
+                "MultiTask": {
+                    "file_path_suffix": "MultiTask_VOIs.txt",
+                    "space": "MNI",
+                },
+                "PhysioStress": {
+                    "file_path_suffix": "PhysioStress_VOIs.txt",
+                    "space": "MNI",
+                },
+                "Rew": {
+                    "file_path_suffix": "Rew_VOIs.txt",
+                    "space": "MNI",
+                },
+                "Somatosensory": {
+                    "file_path_suffix": "Somatosensory_VOIs.txt",
+                    "space": "MNI",
+                },
+                "ToM": {
+                    "file_path_suffix": "ToM_VOIs.txt",
+                    "space": "MNI",
+                },
+                "VigAtt": {
+                    "file_path_suffix": "VigAtt_VOIs.txt",
+                    "space": "MNI",
+                },
+                "WM": {
+                    "file_path_suffix": "WM_VOIs.txt",
+                    "space": "MNI",
+                },
+                "Power": {
+                    "file_path_suffix": "Power2011_MNI_VOIs.txt",
+                    "space": "MNI",
+                },
+                "Power2011": {
+                    "file_path_suffix": "Power2011_MNI_VOIs.txt",
+                    "space": "MNI",
+                },
+                "Dosenbach": {
+                    "file_path_suffix": "Dosenbach2010_MNI_VOIs.txt",
+                    "space": "MNI",
+                },
+                "Power2013": {
+                    "file_path_suffix": "Power2013_MNI_VOIs.tsv",
+                    "space": "MNI",
+                },
+                "AutobiographicalMemory": {
+                    "file_path_suffix": "AutobiographicalMemory_VOIs.txt",
+                    "space": "MNI",
+                },
+            }
+        )
 
         # Set built-in to registry
         self._registry = self._builtin
@@ -257,6 +256,8 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         ------
         ValueError
             If ``name`` is invalid.
+        RuntimeError
+            If there is a problem fetching the coordinates file.
 
         """
         # Check for valid coordinates name
@@ -265,17 +266,37 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 f"Coordinates: {name} not found. "
                 f"Valid options are: {self.list}"
             )
-        # Load coordinates
+        # Load coordinates info
         t_coord = self._registry[name]
-        # Load data
-        if isinstance(t_coord.get("path"), Path):
-            logger.debug(f"Loading coordinates {t_coord['path'].absolute()!s}")
+
+        # Load data for in-built ones
+        if t_coord.get("file_path_suffix") is not None:
+            # Get dataset
+            dataset = check_dataset()
+            # Set file path to retrieve
+            coords_file_path = (
+                dataset.pathobj
+                / "coordinates"
+                / name
+                / t_coord["file_path_suffix"]
+            )
+            logger.debug(
+                f"Loading coordinates `{name}` from: "
+                f"{coords_file_path.absolute()!s}"
+            )
             # Load via pandas
-            df_coords = pd.read_csv(t_coord["path"], sep="\t", header=None)
+            df_coords = pd.read_csv(
+                fetch_file_via_datalad(
+                    dataset=dataset, file_path=coords_file_path
+                ),
+                sep="\t",
+                header=None,
+            )
             # Convert dataframe to numpy ndarray
             coords = df_coords.iloc[:, [0, 1, 2]].to_numpy()
             # Get label names
             names = list(df_coords.iloc[:, [3]].values[:, 0])
+        # Load data for external ones
         else:
             coords = t_coord["coords"]
             names = t_coord["voi_names"]
