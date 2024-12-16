@@ -21,7 +21,6 @@ def test_register_built_in_check() -> None:
             coordinates=np.zeros(2),
             voi_names=["1", "2"],
             space="MNI",
-            overwrite=True,
         )
 
 
@@ -32,7 +31,6 @@ def test_register_overwrite() -> None:
         coordinates=np.zeros((2, 3)),
         voi_names=["roi1", "roi2"],
         space="MNI",
-        overwrite=True,
     )
     with pytest.raises(ValueError, match=r"already registered"):
         CoordinatesRegistry().register(
@@ -40,6 +38,7 @@ def test_register_overwrite() -> None:
             coordinates=np.ones((2, 3)),
             voi_names=["roi2", "roi3"],
             space="MNI",
+            overwrite=False,
         )
 
     CoordinatesRegistry().register(
