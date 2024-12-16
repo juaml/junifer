@@ -44,10 +44,6 @@ if TYPE_CHECKING:
 __all__ = ["MaskRegistry", "compute_brain_mask"]
 
 
-# Path to the masks
-_masks_path = Path(__file__).parent
-
-
 def compute_brain_mask(
     target_data: dict[str, Any],
     warp_data: Optional[dict[str, Any]] = None,
