@@ -26,12 +26,18 @@ from ...utils import logger, raise_error
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..template_spaces import get_template
-from ..utils import closest_resolution, get_native_warper
+from ..utils import (
+    check_dataset,
+    closest_resolution,
+    fetch_file_via_datalad,
+    get_native_warper,
+)
 from ._ants_mask_warper import ANTsMaskWarper
 from ._fsl_mask_warper import FSLMaskWarper
 
 
 if TYPE_CHECKING:
+    from datalad.api import Dataset
     from nibabel.nifti1 import Nifti1Image
 
 
@@ -397,13 +403,21 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         mask_img = None
         if t_family == "CustomUserMask":
             mask_fname = Path(mask_definition["path"])
-        elif t_family == "Vickery-Patil":
-            mask_fname = _load_vickery_patil_mask(name, resolution)
         elif t_family == "Callable":
             mask_img = mask_definition["func"]
             mask_fname = None
-        elif t_family == "UKB":
-            mask_fname = _load_ukb_mask(name)
+        elif t_family in ["Vickery-Patil", "UKB"]:
+            # Get dataset
+            dataset = check_dataset()
+            # Load mask
+            if t_family == "Vickery-Patil":
+                mask_fname = _load_vickery_patil_mask(
+                    dataset=dataset,
+                    name=name,
+                    resolution=resolution,
+                )
+            elif t_family == "UKB":
+                mask_fname = _load_ukb_mask(dataset=dataset, name=name)
         else:
             raise_error(f"Unknown mask family: {t_family}")
 
@@ -685,6 +699,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
 
 def _load_vickery_patil_mask(
+    dataset: "Dataset",
     name: str,
     resolution: Optional[float] = None,
 ) -> Path:
@@ -692,6 +707,8 @@ def _load_vickery_patil_mask(
 
     Parameters
     ----------
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch mask from.
     name : {"GM_prob0.2", "GM_prob0.2_cortex"}
         The name of the mask.
     resolution : float, optional
@@ -712,6 +729,7 @@ def _load_vickery_patil_mask(
         ``name = "GM_prob0.2"``.
 
     """
+    # Check name
     if name == "GM_prob0.2":
         available_resolutions = [1.5, 3.0]
         to_load = closest_resolution(resolution, available_resolutions)
@@ -730,17 +748,20 @@ def _load_vickery_patil_mask(
     else:
         raise_error(f"Cannot find a Vickery-Patil mask called {name}")
 
-    # Set path for masks
-    mask_fname = _masks_path / "vickery-patil" / mask_fname
+    # Fetch file
+    return fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj / "masks" / "Vickery-Patil" / mask_fname,
+    )
 
-    return mask_fname
 
-
-def _load_ukb_mask(name: str) -> Path:
+def _load_ukb_mask(dataset: "Dataset", name: str) -> Path:
     """Load UKB mask.
 
     Parameters
     ----------
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch mask from.
     name : {"UKB_15K_GM"}
         The name of the mask.
 
@@ -755,15 +776,17 @@ def _load_ukb_mask(name: str) -> Path:
         If ``name`` is invalid.
 
     """
+    # Check name
     if name == "UKB_15K_GM":
         mask_fname = "UKB_15K_GM_template.nii.gz"
     else:
         raise_error(f"Cannot find a UKB mask called {name}")
 
-    # Set path for masks
-    mask_fname = _masks_path / "ukb" / mask_fname
-
-    return mask_fname
+    # Fetch file
+    return fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj / "masks" / "UKB" / mask_fname,
+    )
 
 
 def _get_interpolation_method(img: "Nifti1Image") -> str:
