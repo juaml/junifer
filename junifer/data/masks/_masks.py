@@ -326,13 +326,13 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         logger.info(f"Registering mask: {name}")
         # Add mask info
         self._external[name] = {
-            "path": str(mask_path.absolute()),
+            "path": mask_path,
             "family": "CustomUserMask",
             "space": space,
         }
         # Update registry
         self._registry[name] = {
-            "path": str(mask_path.absolute()),
+            "path": mask_path,
             "family": "CustomUserMask",
             "space": space,
         }
