@@ -4,7 +4,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from pathlib import Path
 from typing import Any, Optional
 
 import numpy as np
@@ -32,6 +31,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
     def __init__(self) -> None:
         """Initialize the class."""
+        super().__init__()
         # Each entry in registry is a dictionary that must contain at least
         # the following keys:
         # * 'space': the coordinates' space (e.g., 'MNI')
@@ -127,8 +127,8 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             }
         )
 
-        # Set built-in to registry
-        self._registry = self._builtin
+        # Update registry with built-in ones
+        self._registry.update(self._builtin)
 
     def register(
         self,
@@ -160,9 +160,9 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         Raises
         ------
         ValueError
-            If the coordinates ``name`` is already registered and
+            If the coordinates ``name`` is a built-in coordinates or
+            if the coordinates ``name`` is already registered and
             ``overwrite=False`` or
-            if the coordinates ``name`` is a built-in coordinates or
             if the ``coordinates`` is not a 2D array or
             if coordinate value does not have 3 components or
             if the ``voi_names`` shape does not match the
@@ -173,11 +173,12 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         """
         # Check for attempt of overwriting built-in coordinates
         if name in self._builtin:
-            if isinstance(self._registry[name].get("path"), Path):
-                raise_error(
-                    f"Coordinates: {name} already registered as built-in "
-                    "coordinates."
-                )
+            raise_error(
+                f"Coordinates: {name} already registered as built-in "
+                "coordinates."
+            )
+        # Check for attempt of overwriting external coordinates
+        if name in self._external:
             if overwrite:
                 logger.info(f"Overwriting coordinates: {name}")
             else:
@@ -185,7 +186,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     f"Coordinates: {name} already registered. "
                     "Set `overwrite=True` to update its value."
                 )
-
+        # Further checks
         if not isinstance(coordinates, np.ndarray):
             raise_error(
                 "Coordinates must be a `numpy.ndarray`, "
@@ -206,6 +207,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 f"Length of `voi_names` ({len(voi_names)}) does not match the "
                 f"number of `coordinates` ({coordinates.shape[0]})."
             )
+        # Registration
         logger.info(f"Registering coordinates: {name}")
         # Add coordinates info
         self._external[name] = {
