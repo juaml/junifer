@@ -230,6 +230,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
     def __init__(self) -> None:
         """Initialize the class."""
+        super().__init__()
         # Each entry in registry is a dictionary that must contain at least
         # the following keys:
         # * 'family': the mask's family name
@@ -246,38 +247,40 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         self._builtin = {}
         self._external = {}
 
-        self._builtin = {
-            "GM_prob0.2": {
-                "family": "Vickery-Patil",
-                "space": "IXI549Space",
-            },
-            "GM_prob0.2_cortex": {
-                "family": "Vickery-Patil",
-                "space": "IXI549Space",
-            },
-            "compute_brain_mask": {
-                "family": "Callable",
-                "func": compute_brain_mask,
-                "space": "inherit",
-            },
-            "compute_background_mask": {
-                "family": "Callable",
-                "func": compute_background_mask,
-                "space": "inherit",
-            },
-            "compute_epi_mask": {
-                "family": "Callable",
-                "func": compute_epi_mask,
-                "space": "inherit",
-            },
-            "UKB_15K_GM": {
-                "family": "UKB",
-                "space": "MNI152NLin6Asym",
-            },
-        }
+        self._builtin.update(
+            {
+                "GM_prob0.2": {
+                    "family": "Vickery-Patil",
+                    "space": "IXI549Space",
+                },
+                "GM_prob0.2_cortex": {
+                    "family": "Vickery-Patil",
+                    "space": "IXI549Space",
+                },
+                "compute_brain_mask": {
+                    "family": "Callable",
+                    "func": compute_brain_mask,
+                    "space": "inherit",
+                },
+                "compute_background_mask": {
+                    "family": "Callable",
+                    "func": compute_background_mask,
+                    "space": "inherit",
+                },
+                "compute_epi_mask": {
+                    "family": "Callable",
+                    "func": compute_epi_mask,
+                    "space": "inherit",
+                },
+                "UKB_15K_GM": {
+                    "family": "UKB",
+                    "space": "MNI152NLin6Asym",
+                },
+            }
+        )
 
-        # Set built-in to registry
-        self._registry = self._builtin
+        # Update registry with built-in ones
+        self._registry.update(self._builtin)
 
     def register(
         self,
@@ -303,19 +306,18 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         Raises
         ------
         ValueError
-            If the mask ``name`` is already registered and
-            ``overwrite=False`` or
-            if the mask ``name`` is a built-in mask.
+            If the mask ``name`` is a built-in mask or
+            if the mask ``name`` is already registered and
+            ``overwrite=False``.
 
         """
         # Check for attempt of overwriting built-in mask
         if name in self._builtin:
+            raise_error(f"Mask: {name} already registered as built-in mask.")
+        # Check for attempt of overwriting external coordinates
+        if name in self._external:
             if overwrite:
                 logger.info(f"Overwriting mask: {name}")
-                if self._registry[name]["family"] != "CustomUserMask":
-                    raise_error(
-                        f"Mask: {name} already registered as built-in mask."
-                    )
             else:
                 raise_error(
                     f"Mask: {name} already registered. Set `overwrite=True` "
@@ -324,6 +326,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Convert str to Path
         if not isinstance(mask_path, Path):
             mask_path = Path(mask_path)
+        # Registration
         logger.info(f"Registering mask: {name}")
         # Add mask info
         self._external[name] = {
