@@ -310,7 +310,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Check for attempt of overwriting built-in mask
         if name in self._builtin:
             raise_error(f"Mask: {name} already registered as built-in mask.")
-        # Check for attempt of overwriting external coordinates
+        # Check for attempt of overwriting external masks
         if name in self._external:
             if overwrite:
                 logger.info(f"Overwriting mask: {name}")
