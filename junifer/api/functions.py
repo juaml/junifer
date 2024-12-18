@@ -155,6 +155,8 @@ def run(
     ------
     ValueError
         If ``workdir.cleanup=False`` when ``len(elements) > 1``.
+    RuntimeError
+        If invalid element selectors are found.
 
     """
     # Conditional to handle workdir config
@@ -208,10 +210,22 @@ def run(
     # Fit elements
     with datagrabber_object:
         if elements is not None:
-            for t_element in datagrabber_object.filter(
-                elements  # type: ignore
-            ):
+            # Keep track of valid selectors
+            valid_elements = []
+            for t_element in datagrabber_object.filter(elements):
+                valid_elements.append(t_element)
                 mc.fit(datagrabber_object[t_element])
+            # Compute invalid selectors
+            invalid_elements = set(elements) - set(valid_elements)
+            # Report if invalid selectors are found
+            if invalid_elements:
+                raise_error(
+                    msg=(
+                        "The following element selectors are invalid:\n"
+                        f"{invalid_elements}"
+                    ),
+                    klass=RuntimeError,
+                )
         else:
             for t_element in datagrabber_object:
                 mc.fit(datagrabber_object[t_element])
