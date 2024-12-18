@@ -401,7 +401,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Check if the mask family is custom or built-in
         mask_img = None
         if t_family == "CustomUserMask":
-            mask_fname = Path(mask_definition["path"])
+            mask_fname = mask_definition["path"]
         elif t_family == "Callable":
             mask_img = mask_definition["func"]
             mask_fname = None
