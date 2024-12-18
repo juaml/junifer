@@ -116,7 +116,7 @@ def get_template(
 
     logger.info(
         f"Downloading template {space} ({template_type} in "
-        f"resolution {resolution}"
+        f"resolution {resolution})"
     )
     # Retrieve template
     try:
@@ -150,8 +150,10 @@ def get_template(
         )
     except Exception:  # noqa: BLE001
         raise_error(
-            f"Template {space} ({template_type}) with resolution {resolution} "
-            "not found",
+            msg=(
+                f"Template {space} ({template_type}) with resolution "
+                f"{resolution}) not found"
+            ),
             klass=RuntimeError,
         )
     else:
