@@ -157,4 +157,4 @@ def get_template(
             klass=RuntimeError,
         )
     else:
-        return nib.load(template_path)  # type: ignore
+        return nib.load(template_path)
