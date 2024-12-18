@@ -5,31 +5,30 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import io
-import shutil
-import tarfile
-import tempfile
-import zipfile
 from itertools import product
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional, Union
 
-import httpx
 import nibabel as nib
 import nilearn.image as nimg
 import numpy as np
 import pandas as pd
-from nilearn import datasets
 
 from ...utils import logger, raise_error, warn_with_log
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
-from ..utils import closest_resolution, get_native_warper
+from ..utils import (
+    check_dataset,
+    closest_resolution,
+    fetch_file_via_datalad,
+    get_native_warper,
+)
 from ._ants_parcellation_warper import ANTsParcellationWarper
 from ._fsl_parcellation_warper import FSLParcellationWarper
 
 
 if TYPE_CHECKING:
+    from datalad.api import Dataset
     from nibabel.nifti1 import Nifti1Image
 
 
@@ -49,6 +48,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
     def __init__(self) -> None:
         """Initialize the class."""
+        super().__init__()
         # Each entry in registry is a dictionary that must contain at least
         # the following keys:
         # * 'family': the parcellation's family name (e.g., 'Schaefer', 'SUIT')
@@ -56,6 +56,8 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # and can also have optional key(s):
         # * 'valid_resolutions': a list of valid resolutions for the
         # parcellation (e.g., [1, 2])
+        # The built-in coordinates are files that are shipped with the
+        # junifer-data dataset.
         # Make built-in and external dictionaries for validation later
         self._builtin = {}
         self._external = {}
@@ -63,8 +65,14 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Add SUIT
         self._builtin.update(
             {
-                "SUITxSUIT": {"family": "SUIT", "space": "SUIT"},
-                "SUITxMNI": {"family": "SUIT", "space": "MNI152NLin6Asym"},
+                "SUITxSUIT": {
+                    "family": "SUIT",
+                    "space": "SUIT",
+                },
+                "SUITxMNI": {
+                    "family": "SUIT",
+                    "space": "MNI152NLin6Asym",
+                },
             }
         )
         # Add Schaefer
@@ -72,7 +80,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             self._builtin.update(
                 {
                     f"Schaefer{n_rois}x{t_net}": {
-                        "family": "Schaefer",
+                        "family": "Schaefer2018",
                         "n_rois": n_rois,
                         "yeo_networks": t_net,
                         "space": "MNI152NLin6Asym",
@@ -84,19 +92,19 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             self._builtin.update(
                 {
                     f"TianxS{scale}x7TxMNI6thgeneration": {
-                        "family": "Tian",
+                        "family": "Melbourne",
                         "scale": scale,
                         "magneticfield": "7T",
                         "space": "MNI152NLin6Asym",
                     },
                     f"TianxS{scale}x3TxMNI6thgeneration": {
-                        "family": "Tian",
+                        "family": "Melbourne",
                         "scale": scale,
                         "magneticfield": "3T",
                         "space": "MNI152NLin6Asym",
                     },
                     f"TianxS{scale}x3TxMNInonlinear2009cAsym": {
-                        "family": "Tian",
+                        "family": "Melbourne",
                         "scale": scale,
                         "magneticfield": "3T",
                         "space": "MNI152NLin2009cAsym",
@@ -155,7 +163,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             self._builtin.update(
                 {
                     f"Yan{n_rois}xYeo{yeo_network}": {
-                        "family": "Yan",
+                        "family": "Yan2023",
                         "n_rois": n_rois,
                         "yeo_networks": yeo_network,
                         "space": "MNI152NLin6Asym",
@@ -165,7 +173,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             self._builtin.update(
                 {
                     f"Yan{n_rois}xKong17": {
-                        "family": "Yan",
+                        "family": "Yan2023",
                         "n_rois": n_rois,
                         "kong_networks": 17,
                         "space": "MNI152NLin6Asym",
@@ -184,8 +192,8 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                 }
             )
 
-        # Set built-in to registry
-        self._registry = self._builtin
+        # Update registry with built-in ones
+        self._registry.update(self._builtin)
 
     def register(
         self,
@@ -214,20 +222,21 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         Raises
         ------
         ValueError
-            If the parcellation ``name`` is already registered and
-            ``overwrite=False`` or
-            if the parcellation ``name`` is a built-in parcellation.
+            If the parcellation ``name`` is a built-in parcellation or
+            if the parcellation ``name`` is already registered and
+            ``overwrite=False``.
 
         """
         # Check for attempt of overwriting built-in parcellations
         if name in self._builtin:
+            raise_error(
+                f"Parcellation: {name} already registered as "
+                "built-in parcellation."
+            )
+        # Check for attempt of overwriting external parcellations
+        if name in self._external:
             if overwrite:
                 logger.info(f"Overwriting parcellation: {name}")
-                if self._registry[name]["family"] != "CustomUserParcellation":
-                    raise_error(
-                        f"Parcellation: {name} already registered as "
-                        "built-in parcellation."
-                    )
             else:
                 raise_error(
                     f"Parcellation: {name} already registered. Set "
@@ -236,6 +245,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Convert str to Path
         if not isinstance(parcellation_path, Path):
             parcellation_path = Path(parcellation_path)
+        # Registration
         logger.info(f"Registering parcellation: {name}")
         # Add user parcellation info
         self._external[name] = {
@@ -271,14 +281,10 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         self,
         name: str,
         target_space: str,
-        parcellations_dir: Union[str, Path, None] = None,
         resolution: Optional[float] = None,
         path_only: bool = False,
     ) -> tuple[Optional["Nifti1Image"], list[str], Path, str]:
         """Load parcellation and labels.
-
-        If it is a built-in parcellation and the file is not present in the
-        ``parcellations_dir`` directory, it will be downloaded.
 
         Parameters
         ----------
@@ -286,9 +292,6 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             The name of the parcellation.
         target_space : str
             The desired space of the parcellation.
-        parcellations_dir : str or pathlib.Path, optional
-            Path where the parcellations files are stored. The default location
-            is "$HOME/junifer/data/parcellations" (default None).
         resolution : float, optional
             The desired resolution of the parcellation to load. If it is not
             available, the closest resolution will be loaded. Preferably, use a
@@ -312,6 +315,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         ------
         ValueError
             If ``name`` is invalid or
+            if the parcellation family is invalid or
             if the parcellation values and labels
             don't have equal dimension or if the value range is invalid.
 
@@ -327,7 +331,7 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         parcellation_definition = self._registry[name].copy()
         t_family = parcellation_definition.pop("family")
         # Remove space conditionally
-        if t_family not in ["SUIT", "Tian"]:
+        if t_family not in ["SUIT", "Melbourne"]:
             space = parcellation_definition.pop("space")
         else:
             space = parcellation_definition["space"]
@@ -342,15 +346,66 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Check if the parcellation family is custom or built-in
         if t_family == "CustomUserParcellation":
-            parcellation_fname = Path(parcellation_definition["path"])
+            parcellation_fname = parcellation_definition["path"]
             parcellation_labels = parcellation_definition["labels"]
+        elif t_family in [
+            "Schaefer2018",
+            "SUIT",
+            "Melbourne",
+            "AICHA",
+            "Shen",
+            "Yan2023",
+            "Brainnetome",
+        ]:
+            # Get dataset
+            dataset = check_dataset()
+            # Load parcellation and labels
+            if t_family == "Schaefer2018":
+                parcellation_fname, parcellation_labels = _retrieve_schaefer(
+                    dataset=dataset,
+                    resolution=resolution,
+                    **parcellation_definition,
+                )
+            elif t_family == "SUIT":
+                parcellation_fname, parcellation_labels = _retrieve_suit(
+                    dataset=dataset,
+                    resolution=resolution,
+                    **parcellation_definition,
+                )
+            elif t_family == "Melbourne":
+                parcellation_fname, parcellation_labels = _retrieve_tian(
+                    dataset=dataset,
+                    resolution=resolution,
+                    **parcellation_definition,
+                )
+            elif t_family == "AICHA":
+                parcellation_fname, parcellation_labels = _retrieve_aicha(
+                    dataset=dataset,
+                    resolution=resolution,
+                    **parcellation_definition,
+                )
+            elif t_family == "Shen":
+                parcellation_fname, parcellation_labels = _retrieve_shen(
+                    dataset=dataset,
+                    resolution=resolution,
+                    **parcellation_definition,
+                )
+            elif t_family == "Yan2023":
+                parcellation_fname, parcellation_labels = _retrieve_yan(
+                    dataset=dataset,
+                    resolution=resolution,
+                    **parcellation_definition,
+                )
+            elif t_family == "Brainnetome":
+                parcellation_fname, parcellation_labels = (
+                    _retrieve_brainnetome(
+                        dataset=dataset,
+                        resolution=resolution,
+                        **parcellation_definition,
+                    )
+                )
         else:
-            parcellation_fname, parcellation_labels = _retrieve_parcellation(
-                family=t_family,
-                parcellations_dir=parcellations_dir,
-                resolution=resolution,
-                **parcellation_definition,
-            )
+            raise_error(f"Unknown parcellation family: {t_family}")
 
         # Load parcellation image and values
         logger.info(f"Loading parcellation: {parcellation_fname.absolute()!s}")
@@ -529,152 +584,8 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         return resampled_parcellation_img, labels
 
 
-def _retrieve_parcellation(
-    family: str,
-    parcellations_dir: Union[str, Path, None] = None,
-    resolution: Optional[float] = None,
-    **kwargs,
-) -> tuple[Path, list[str]]:
-    """Retrieve a brain parcellation object from nilearn or online source.
-
-    Only returns one parcellation per call. Call function multiple times for
-    different parameter specifications. Only retrieves parcellation if it is
-    not yet in parcellations_dir.
-
-    Parameters
-    ----------
-    family : {"Schaefer", "SUIT", "Tian", "AICHA", "Shen", "Yan"}
-        The name of the parcellation family.
-    parcellations_dir : str or pathlib.Path, optional
-        Path where the retrieved parcellations file are stored. The default
-        location is "$HOME/junifer/data/parcellations" (default None).
-    resolution : float, optional
-        The desired resolution of the parcellation to load. If it is not
-        available, the closest resolution will be loaded. Preferably, use a
-        resolution higher than the desired one. By default, will load the
-        highest one (default None).
-    **kwargs
-        Use to specify parcellation-specific keyword arguments found in the
-        following section.
-
-    Other Parameters
-    ----------------
-    * Schaefer :
-      ``n_rois`` : {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}
-            Granularity of parcellation to be used.
-       ``yeo_network`` : {7, 17}, optional
-            Number of Yeo networks to use (default 7).
-    * Tian :
-        ``scale`` : {1, 2, 3, 4}
-            Scale of parcellation (defines granularity).
-        ``space`` : {"MNI152NLin6Asym", "MNI152NLin2009cAsym"}, optional
-            Space of parcellation (default "MNI152NLin6Asym"). (For more
-            information see https://github.com/yetianmed/subcortex)
-        ``magneticfield`` : {"3T", "7T"}, optional
-            Magnetic field (default "3T").
-    * SUIT :
-        ``space`` : {"MNI152NLin6Asym", "SUIT"}, optional
-            Space of parcellation (default "MNI"). (For more information
-            see http://www.diedrichsenlab.org/imaging/suit.htm).
-    * AICHA :
-        ``version`` : {1, 2}, optional
-            Version of parcellation (default 2).
-    * Shen :
-        ``year`` : {2013, 2015, 2019}, optional
-            Year of the parcellation to use (default 2015).
-        ``n_rois`` : int, optional
-            Number of ROIs to use. Can be ``50, 100, or 150`` for
-            ``year = 2013`` but is fixed at ``268`` for ``year = 2015`` and at
-            ``368`` for ``year = 2019``.
-    * Yan :
-        ``n_rois`` : {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000}
-            Granularity of the parcellation to be used.
-        ``yeo_networks`` : {7, 17}, optional
-            Number of Yeo networks to use (default None).
-        ``kong_networks`` : {17}, optional
-            Number of Kong networks to use (default None).
-    * Brainnetome :
-        ``threshold`` : {0, 25, 50}
-            Threshold for the probabilistic maps of subregion.
-
-    Returns
-    -------
-    pathlib.Path
-        File path to the parcellation image.
-    list of str
-        Parcellation labels.
-
-    Raises
-    ------
-    ValueError
-        If the parcellation's name is invalid.
-
-    """
-    if parcellations_dir is None:
-        parcellations_dir = (
-            Path().home() / "junifer" / "data" / "parcellations"
-        )
-        # Create default junifer data directory if not present
-        parcellations_dir.mkdir(exist_ok=True, parents=True)
-    # Convert str to Path
-    elif not isinstance(parcellations_dir, Path):
-        parcellations_dir = Path(parcellations_dir)
-
-    logger.info(f"Fetching one of {family} parcellations.")
-
-    # Retrieval details per family
-    if family == "Schaefer":
-        parcellation_fname, parcellation_labels = _retrieve_schaefer(
-            parcellations_dir=parcellations_dir,
-            resolution=resolution,
-            **kwargs,
-        )
-    elif family == "SUIT":
-        parcellation_fname, parcellation_labels = _retrieve_suit(
-            parcellations_dir=parcellations_dir,
-            resolution=resolution,
-            **kwargs,
-        )
-    elif family == "Tian":
-        parcellation_fname, parcellation_labels = _retrieve_tian(
-            parcellations_dir=parcellations_dir,
-            resolution=resolution,
-            **kwargs,
-        )
-    elif family == "AICHA":
-        parcellation_fname, parcellation_labels = _retrieve_aicha(
-            parcellations_dir=parcellations_dir,
-            resolution=resolution,
-            **kwargs,
-        )
-    elif family == "Shen":
-        parcellation_fname, parcellation_labels = _retrieve_shen(
-            parcellations_dir=parcellations_dir,
-            resolution=resolution,
-            **kwargs,
-        )
-    elif family == "Yan":
-        parcellation_fname, parcellation_labels = _retrieve_yan(
-            parcellations_dir=parcellations_dir,
-            resolution=resolution,
-            **kwargs,
-        )
-    elif family == "Brainnetome":
-        parcellation_fname, parcellation_labels = _retrieve_brainnetome(
-            parcellations_dir=parcellations_dir,
-            resolution=resolution,
-            **kwargs,
-        )
-    else:
-        raise_error(
-            f"The provided parcellation name {family} cannot be retrieved."
-        )
-
-    return parcellation_fname, parcellation_labels
-
-
 def _retrieve_schaefer(
-    parcellations_dir: Path,
+    dataset: "Dataset",
     resolution: Optional[float] = None,
     n_rois: Optional[int] = None,
     yeo_networks: int = 7,
@@ -683,8 +594,8 @@ def _retrieve_schaefer(
 
     Parameters
     ----------
-    parcellations_dir : pathlib.Path
-        The path to the parcellation data directory.
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -706,8 +617,7 @@ def _retrieve_schaefer(
     Raises
     ------
     ValueError
-        If invalid value is provided for ``n_rois`` or ``yeo_networks`` or if
-        there is a problem fetching the parcellation.
+        If invalid value is provided for ``n_rois`` or ``yeo_networks``.
 
     """
     logger.info("Parcellation parameters:")
@@ -735,47 +645,40 @@ def _retrieve_schaefer(
     _valid_resolutions = [1, 2]
     resolution = closest_resolution(resolution, _valid_resolutions)
 
-    # Define parcellation and label file names
-    parcellation_fname = (
-        parcellations_dir
-        / "schaefer_2018"
+    # Fetch file paths
+    parcellation_img_path = fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj
+        / "parcellations"
+        / "Schaefer2018"
+        / "Yeo2011"
         / (
             f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order_"
             f"FSLMNI152_{resolution}mm.nii.gz"
-        )
+        ),
     )
-    parcellation_lname = (
-        parcellations_dir
-        / "schaefer_2018"
-        / (f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order.txt")
+    parcellation_label_path = fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj
+        / "parcellations"
+        / "Schaefer2018"
+        / "Yeo2011"
+        / (f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order.txt"),
     )
-
-    # Check existence of parcellation
-    if not (parcellation_fname.exists() and parcellation_lname.exists()):
-        logger.info(
-            "At least one of the parcellation files are missing. "
-            "Fetching using nilearn."
-        )
-        datasets.fetch_atlas_schaefer_2018(
-            n_rois=n_rois,
-            yeo_networks=yeo_networks,
-            resolution_mm=resolution,  # type: ignore we know it's 1 or 2
-            data_dir=parcellations_dir.resolve(),
-        )
 
     # Load labels
     labels = [
         "_".join(x.split("_")[1:])
-        for x in pd.read_csv(parcellation_lname, sep="\t", header=None)
+        for x in pd.read_csv(parcellation_label_path, sep="\t", header=None)
         .iloc[:, 1]
         .to_list()
     ]
 
-    return parcellation_fname, labels
+    return parcellation_img_path, labels
 
 
 def _retrieve_tian(
-    parcellations_dir: Path,
+    dataset: "Dataset",
     resolution: Optional[float] = None,
     scale: Optional[int] = None,
     space: str = "MNI152NLin6Asym",
@@ -785,8 +688,8 @@ def _retrieve_tian(
 
     Parameters
     ----------
-    parcellations_dir : pathlib.Path
-        The path to the parcellation data directory.
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -810,8 +713,6 @@ def _retrieve_tian(
 
     Raises
     ------
-    RuntimeError
-        If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``scale`` or ``magneticfield`` or
         ``space``.
@@ -832,13 +733,10 @@ def _retrieve_tian(
         )
 
     # Check resolution
-    _valid_resolutions = []  # avoid pylance error
     if magneticfield == "3T":
         _valid_spaces = ["MNI152NLin6Asym", "MNI152NLin2009cAsym"]
-        if space == "MNI152NLin6Asym":
+        if space in _valid_spaces:
             _valid_resolutions = [1, 2]
-        elif space == "MNI152NLin2009cAsym":
-            _valid_resolutions = [2]
         else:
             raise_error(
                 f"The parameter `space` ({space}) for 3T needs to be one of "
@@ -858,100 +756,76 @@ def _retrieve_tian(
         )
     resolution = closest_resolution(resolution, _valid_resolutions)
 
-    # Define parcellation and label file names
+    # Fetch file paths
     if magneticfield == "3T":
         parcellation_fname_base_3T = (
-            parcellations_dir / "Tian2020MSA_v1.1" / "3T" / "Subcortex-Only"
-        )
-        parcellation_lname = parcellation_fname_base_3T / (
-            f"Tian_Subcortex_S{scale}_3T_label.txt"
+            dataset.pathobj
+            / "parcellations"
+            / "Melbourne"
+            / "v1.4"
+            / "3T"
+            / "Subcortex-Only"
         )
         if space == "MNI152NLin6Asym":
-            parcellation_fname = parcellation_fname_base_3T / (
-                f"Tian_Subcortex_S{scale}_{magneticfield}.nii.gz"
-            )
             if resolution == 1:
                 parcellation_fname = (
                     parcellation_fname_base_3T
                     / f"Tian_Subcortex_S{scale}_{magneticfield}_1mm.nii.gz"
                 )
+            else:
+                parcellation_fname = parcellation_fname_base_3T / (
+                    f"Tian_Subcortex_S{scale}_{magneticfield}.nii.gz"
+                )
         elif space == "MNI152NLin2009cAsym":
             space = "2009cAsym"
-            parcellation_fname = parcellation_fname_base_3T / (
-                f"Tian_Subcortex_S{scale}_{magneticfield}_{space}.nii.gz"
-            )
-    elif magneticfield == "7T":
-        parcellation_fname_base_7T = (
-            parcellations_dir / "Tian2020MSA_v1.1" / "7T"
+            if resolution == 1:
+                parcellation_fname = parcellation_fname_base_3T / (
+                    f"Tian_Subcortex_S{scale}_{magneticfield}_{space}_1mm.nii.gz"
+                )
+            else:
+                parcellation_fname = parcellation_fname_base_3T / (
+                    f"Tian_Subcortex_S{scale}_{magneticfield}_{space}.nii.gz"
+                )
+
+        parcellation_img_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=parcellation_fname,
         )
-        parcellation_fname_base_7T.mkdir(exist_ok=True, parents=True)
-        parcellation_fname = (
-            parcellations_dir
-            / "Tian2020MSA_v1.1"
-            / f"{magneticfield}"
-            / (f"Tian_Subcortex_S{scale}_{magneticfield}.nii.gz")
+        parcellation_label_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=parcellation_fname_base_3T
+            / f"Tian_Subcortex_S{scale}_3T_label.txt",
+        )
+        # Load labels
+        labels = pd.read_csv(parcellation_label_path, sep=" ", header=None)[
+            0
+        ].to_list()
+    elif magneticfield == "7T":
+        parcellation_img_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
+            / "Melbourne"
+            / "v1.4"
+            / "7T"
+            / f"Tian_Subcortex_S{scale}_{magneticfield}.nii.gz",
         )
         # define 7T labels (b/c currently no labels file available for 7T)
         scale7Trois = {1: 16, 2: 34, 3: 54, 4: 62}
         labels = [
             ("parcel_" + str(x)) for x in np.arange(1, scale7Trois[scale] + 1)
         ]
-        parcellation_lname = parcellation_fname_base_7T / (
-            f"Tian_Subcortex_S{scale}_7T_labelnumbering.txt"
-        )
-        with open(parcellation_lname, "w") as filehandle:
-            for listitem in labels:
-                filehandle.write(f"{listitem}\n")
         logger.info(
             "Currently there are no labels provided for the 7T Tian "
             "parcellation. A simple numbering scheme for distinction was "
             "therefore used."
         )
 
-    # Check existence of parcellation
-    if not (parcellation_fname.exists() and parcellation_lname.exists()):
-        logger.info(
-            "At least one of the parcellation files are missing, fetching."
-        )
-        # Set URL
-        url = (
-            "https://www.nitrc.org/frs/download.php/12012/Tian2020MSA_v1.1.zip"
-        )
-
-        logger.info(f"Downloading TIAN from {url}")
-        # Store initial download in a tempdir
-        with tempfile.TemporaryDirectory() as tmpdir:
-            # Make HTTP request
-            try:
-                resp = httpx.get(url)
-                resp.raise_for_status()
-            except httpx.HTTPError as exc:
-                raise_error(
-                    f"Error response {exc.response.status_code} while "
-                    f"requesting {exc.request.url!r}",
-                    klass=RuntimeError,
-                )
-            else:
-                # Set tempfile for storing initial content and unzipping
-                zip_fname = Path(tmpdir) / "Tian2020MSA_v1.1.zip"
-                # Open tempfile and write content
-                with open(zip_fname, "wb") as f:
-                    f.write(resp.content)
-                # Unzip tempfile
-                with zipfile.ZipFile(zip_fname, "r") as zip_ref:
-                    zip_ref.extractall(parcellations_dir.as_posix())
-                # Clean after unzipping
-                if (parcellations_dir / "__MACOSX").exists():
-                    shutil.rmtree((parcellations_dir / "__MACOSX").as_posix())
-
-    # Load labels
-    labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[0].to_list()
-
-    return parcellation_fname, labels
+    return parcellation_img_path, labels
 
 
 def _retrieve_suit(
-    parcellations_dir: Path,
+    dataset: "Dataset",
     resolution: Optional[float],
     space: str = "MNI152NLin6Asym",
 ) -> tuple[Path, list[str]]:
@@ -959,8 +833,8 @@ def _retrieve_suit(
 
     Parameters
     ----------
-    parcellations_dir : pathlib.Path
-        The path to the parcellation data directory.
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -980,8 +854,6 @@ def _retrieve_suit(
 
     Raises
     ------
-    RuntimeError
-        If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``space``.
 
@@ -1006,78 +878,32 @@ def _retrieve_suit(
     if space == "MNI152NLin6Asym":
         space = "MNI"
 
-    # Define parcellation and label file names
-    parcellation_fname = (
-        parcellations_dir / "SUIT" / (f"SUIT_{space}Space_{resolution}mm.nii")
+    # Fetch file paths
+    parcellation_img_path = fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj
+        / "parcellations"
+        / "SUIT"
+        / f"SUIT_{space}Space_{resolution}mm.nii",
     )
-    parcellation_lname = (
-        parcellations_dir / "SUIT" / (f"SUIT_{space}Space_{resolution}mm.tsv")
+    parcellation_label_path = fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj
+        / "parcellations"
+        / "SUIT"
+        / f"SUIT_{space}Space_{resolution}mm.tsv",
     )
-
-    # Check existence of parcellation
-    if not (parcellation_fname.exists() and parcellation_lname.exists()):
-        logger.info(
-            "At least one of the parcellation files is missing, fetching."
-        )
-        # Create local directory if not present
-        parcellation_fname.parent.mkdir(exist_ok=True, parents=True)
-        # Set URL
-        url_basis = (
-            "https://github.com/DiedrichsenLab/cerebellar_atlases/raw"
-            "/master/Diedrichsen_2009"
-        )
-        if space == "MNI":
-            url = f"{url_basis}/atl-Anatom_space-MNI_dseg.nii"
-        else:  # if not MNI, then SUIT
-            url = f"{url_basis}/atl-Anatom_space-SUIT_dseg.nii"
-        url_labels = f"{url_basis}/atl-Anatom.tsv"
-
-        # Make HTTP requests
-        with httpx.Client(follow_redirects=True) as client:
-            # Download parcellation file
-            logger.info(f"Downloading SUIT parcellation from {url}")
-            try:
-                img_resp = client.get(url)
-                img_resp.raise_for_status()
-            except httpx.HTTPError as exc:
-                raise_error(
-                    f"Error response {exc.response.status_code} while "
-                    f"requesting {exc.request.url!r}",
-                    klass=RuntimeError,
-                )
-            else:
-                with open(parcellation_fname, "wb") as f:
-                    f.write(img_resp.content)
-            # Download label file
-            logger.info(f"Downloading SUIT labels from {url_labels}")
-            try:
-                label_resp = client.get(url_labels)
-                label_resp.raise_for_status()
-            except httpx.HTTPError as exc:
-                raise_error(
-                    f"Error response {exc.response.status_code} while "
-                    f"requesting {exc.request.url!r}",
-                    klass=RuntimeError,
-                )
-            else:
-                # Load labels
-                labels = pd.read_csv(
-                    io.StringIO(label_resp.content.decode("utf-8")),
-                    sep="\t",
-                    usecols=["name"],
-                )
-                labels.to_csv(parcellation_lname, sep="\t", index=False)
 
     # Load labels
-    labels = pd.read_csv(parcellation_lname, sep="\t", usecols=["name"])[
+    labels = pd.read_csv(parcellation_label_path, sep="\t", usecols=["name"])[
         "name"
     ].to_list()
 
-    return parcellation_fname, labels
+    return parcellation_img_path, labels
 
 
 def _retrieve_aicha(
-    parcellations_dir: Path,
+    dataset: "Dataset",
     resolution: Optional[float] = None,
     version: int = 2,
 ) -> tuple[Path, list[str]]:
@@ -1085,8 +911,8 @@ def _retrieve_aicha(
 
     Parameters
     ----------
-    parcellations_dir : pathlib.Path
-        The path to the parcellation data directory.
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -1105,8 +931,6 @@ def _retrieve_aicha(
 
     Raises
     ------
-    RuntimeError
-        If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``version``.
 
@@ -1143,99 +967,48 @@ def _retrieve_aicha(
     _valid_resolutions = [1]
     resolution = closest_resolution(resolution, _valid_resolutions)
 
-    # Define parcellation and label file names
-    parcellation_fname = (
-        parcellations_dir / f"AICHA_v{version}" / "AICHA" / "AICHA.nii"
+    # Fetch file paths
+    parcellation_img_path = fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj
+        / "parcellations"
+        / "AICHA"
+        / f"v{version}"
+        / "AICHA.nii",
     )
-    parcellation_lname = Path()
+    # Conditional label file fetch
     if version == 1:
-        parcellation_lname = (
-            parcellations_dir
-            / f"AICHA_v{version}"
+        parcellation_label_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
             / "AICHA"
-            / "AICHA_vol1.txt"
+            / f"v{version}"
+            / "AICHA_vol1.txt",
         )
     elif version == 2:
-        parcellation_lname = (
-            parcellations_dir
-            / f"AICHA_v{version}"
+        parcellation_label_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
             / "AICHA"
-            / "AICHA_vol3.txt"
+            / f"v{version}"
+            / "AICHA_vol3.txt",
         )
-
-    # Check existence of parcellation
-    if not (parcellation_fname.exists() and parcellation_lname.exists()):
-        logger.info(
-            "At least one of the parcellation files are missing, fetching."
-        )
-        # Set file name on server according to version
-        server_filename = ""
-        if version == 1:
-            server_filename = "aicha_v1.zip"
-        elif version == 2:
-            server_filename = "AICHA_v2.tar.zip"
-        # Set URL
-        url = f"http://www.gin.cnrs.fr/wp-content/uploads/{server_filename}"
-
-        logger.info(f"Downloading AICHA v{version} from {url}")
-        # Store initial download in a tempdir
-        with tempfile.TemporaryDirectory() as tmpdir:
-            # Make HTTP request
-            try:
-                resp = httpx.get(url, follow_redirects=True)
-                resp.raise_for_status()
-            except httpx.HTTPError as exc:
-                raise_error(
-                    f"Error response {exc.response.status_code} while "
-                    f"requesting {exc.request.url!r}",
-                    klass=RuntimeError,
-                )
-            else:
-                # Set tempfile for storing initial content and unzipping
-                parcellation_zip_path = Path(tmpdir) / server_filename
-                # Open tempfile and write content
-                with open(parcellation_zip_path, "wb") as f:
-                    f.write(resp.content)
-                # Unzip tempfile
-                with zipfile.ZipFile(parcellation_zip_path, "r") as zip_ref:
-                    if version == 1:
-                        zip_ref.extractall(
-                            (parcellations_dir / "AICHA_v1").as_posix()
-                        )
-                    elif version == 2:
-                        zip_ref.extractall(Path(tmpdir).as_posix())
-                        # Extract tarfile for v2
-                        with tarfile.TarFile(
-                            Path(tmpdir) / "aicha_v2.tar", "r"
-                        ) as tar_ref:
-                            tar_ref.extractall(
-                                (parcellations_dir / "AICHA_v2").as_posix()
-                            )
-                # Cleanup after unzipping
-                if (
-                    parcellations_dir / f"AICHA_v{version}" / "__MACOSX"
-                ).exists():
-                    shutil.rmtree(
-                        (
-                            parcellations_dir
-                            / f"AICHA_v{version}"
-                            / "__MACOSX"
-                        ).as_posix()
-                    )
 
     # Load labels
     labels = pd.read_csv(
-        parcellation_lname,
+        parcellation_label_path,
         sep="\t",
         header=None,
-        skiprows=[0],  # type: ignore
+        skiprows=[0],
     )[0].to_list()
 
-    return parcellation_fname, labels
+    return parcellation_img_path, labels
 
 
-def _retrieve_shen(  # noqa: C901
-    parcellations_dir: Path,
+def _retrieve_shen(
+    dataset: "Dataset",
     resolution: Optional[float] = None,
     year: int = 2015,
     n_rois: int = 268,
@@ -1244,8 +1017,8 @@ def _retrieve_shen(  # noqa: C901
 
     Parameters
     ----------
-    parcellations_dir : pathlib.Path
-        The path to the parcellation data directory.
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -1269,8 +1042,6 @@ def _retrieve_shen(  # noqa: C901
 
     Raises
     ------
-    RuntimeError
-        If there is a problem fetching files.
     ValueError
         If invalid value or combination is provided for ``year`` and
         ``n_rois``.
@@ -1323,123 +1094,60 @@ def _retrieve_shen(  # noqa: C901
             f"`year = {year}` is invalid"
         )
 
-    # Define parcellation and label file names
+    # Fetch file paths based on year
     if year == 2013:
-        parcellation_fname = (
-            parcellations_dir
-            / "Shen_2013"
-            / "shenetal_neuroimage2013"
-            / f"fconn_atlas_{n_rois}_{resolution}mm.nii"
+        parcellation_img_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
+            / "Shen"
+            / "2013"
+            / f"fconn_atlas_{n_rois}_{resolution}mm.nii",
         )
-        parcellation_lname = (
-            parcellations_dir
-            / "Shen_2013"
-            / "shenetal_neuroimage2013"
-            / f"Group_seg{n_rois}_BAindexing_setA.txt"
+        parcellation_label_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
+            / "Shen"
+            / "2013"
+            / f"Group_seg{n_rois}_BAindexing_setA.txt",
         )
-    elif year == 2015:
-        parcellation_fname = (
-            parcellations_dir
-            / "Shen_2015"
-            / f"shen_{resolution}mm_268_parcellation.nii.gz"
-        )
-    elif year == 2019:
-        parcellation_fname = (
-            parcellations_dir
-            / "Shen_2019"
-            / "Shen_1mm_368_parcellation.nii.gz"
-        )
-
-    # Check existence of parcellation
-    if not parcellation_fname.exists():
-        logger.info(
-            "At least one of the parcellation files are missing, fetching."
-        )
-
-        # Set URL based on year
-        url = ""
-        if year == 2013:
-            url = "https://www.nitrc.org/frs/download.php/5785/shenetal_neuroimage2013_funcatlas.zip"
-        elif year == 2015:
-            # Set URL based on resolution
-            if resolution == 1:
-                url = "https://www.nitrc.org/frs/download.php/7976/shen_1mm_268_parcellation.nii.gz"
-            elif resolution == 2:
-                url = "https://www.nitrc.org/frs/download.php/7977/shen_2mm_268_parcellation.nii.gz"
-        elif year == 2019:
-            url = "https://www.nitrc.org/frs/download.php/11629/shen_368.zip"
-
-        logger.info(f"Downloading Shen {year} from {url}")
-        # Store initial download in a tempdir
-        with tempfile.TemporaryDirectory() as tmpdir:
-            # Make HTTP request
-            try:
-                resp = httpx.get(url)
-                resp.raise_for_status()
-            except httpx.HTTPError as exc:
-                raise_error(
-                    f"Error response {exc.response.status_code} while "
-                    f"requesting {exc.request.url!r}",
-                    klass=RuntimeError,
-                )
-            else:
-                if year in (2013, 2019):
-                    parcellation_zip_path = Path(tmpdir) / f"Shen{year}.zip"
-                    # Open tempfile and write content
-                    with open(parcellation_zip_path, "wb") as f:
-                        f.write(resp.content)
-                    # Unzip tempfile
-                    with zipfile.ZipFile(
-                        parcellation_zip_path, "r"
-                    ) as zip_ref:
-                        zip_ref.extractall(
-                            (parcellations_dir / f"Shen_{year}").as_posix()
-                        )
-                    # Cleanup after unzipping
-                    if (
-                        parcellations_dir / f"Shen_{year}" / "__MACOSX"
-                    ).exists():
-                        shutil.rmtree(
-                            (
-                                parcellations_dir / f"Shen_{year}" / "__MACOSX"
-                            ).as_posix()
-                        )
-                elif year == 2015:
-                    img_dir_path = parcellations_dir / "Shen_2015"
-                    # Create local directory if not present
-                    img_dir_path.mkdir(parents=True, exist_ok=True)
-                    img_path = (
-                        img_dir_path
-                        / f"shen_{resolution}mm_268_parcellation.nii.gz"
-                    )
-                    # Create local file if not present
-                    img_path.touch(exist_ok=True)
-                    # Open tempfile and write content
-                    with open(img_path, "wb") as f:
-                        f.write(resp.content)
-
-    # Load labels based on year
-    if year == 2013:
         labels = (
             pd.read_csv(
-                parcellation_lname,  # type: ignore
-                sep=",",  # type: ignore
-                header=None,  # type: ignore
-                skiprows=[0],  # type: ignore
+                parcellation_label_path,
+                sep=",",
+                header=None,
+                skiprows=[0],
             )[1]
             .map(lambda x: x.strip())  # fix formatting
             .to_list()
         )
     elif year == 2015:
+        parcellation_img_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
+            / "Shen"
+            / "2015"
+            / f"shen_{resolution}mm_268_parcellation.nii.gz",
+        )
         labels = list(range(1, 269))
     elif year == 2019:
+        parcellation_img_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
+            / "Shen"
+            / "2019"
+            / "Shen_1mm_368_parcellation.nii.gz",
+        )
         labels = list(range(1, 369))
 
-    return parcellation_fname, labels
+    return parcellation_img_path, labels
 
 
 def _retrieve_yan(
-    parcellations_dir: Path,
+    dataset: "Dataset",
     resolution: Optional[float] = None,
     n_rois: Optional[int] = None,
     yeo_networks: Optional[int] = None,
@@ -1449,8 +1157,8 @@ def _retrieve_yan(
 
     Parameters
     ----------
-    parcellations_dir : pathlib.Path
-        The path to the parcellation data directory.
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -1473,8 +1181,6 @@ def _retrieve_yan(
 
     Raises
     ------
-    RuntimeError
-        If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``n_rois``, ``yeo_networks`` or
         ``kong_networks``.
@@ -1507,8 +1213,7 @@ def _retrieve_yan(
             f"following: {_valid_n_rois}"
         )
 
-    parcellation_fname = Path()
-    parcellation_lname = Path()
+    # Fetch file paths based on networks
     if yeo_networks:
         # Check yeo_networks value
         _valid_yeo_networks = [7, 17]
@@ -1517,19 +1222,25 @@ def _retrieve_yan(
                 f"The parameter `yeo_networks` ({yeo_networks}) needs to be "
                 f"one of the following: {_valid_yeo_networks}"
             )
-        # Define image and label file according to network
-        parcellation_fname = (
-            parcellations_dir
-            / "Yan_2023"
+
+        parcellation_img_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
+            / "Yan2023"
+            / "Yeo2011"
             / (
                 f"{n_rois}Parcels_Yeo2011_{yeo_networks}Networks_FSLMNI152_"
                 f"{resolution}mm.nii.gz"
-            )
+            ),
         )
-        parcellation_lname = (
-            parcellations_dir
-            / "Yan_2023"
-            / f"{n_rois}Parcels_Yeo2011_{yeo_networks}Networks_LUT.txt"
+        parcellation_label_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
+            / "Yan2023"
+            / "Yeo2011"
+            / f"{n_rois}Parcels_Yeo2011_{yeo_networks}Networks_LUT.txt",
         )
     elif kong_networks:
         # Check kong_networks value
@@ -1539,106 +1250,37 @@ def _retrieve_yan(
                 f"The parameter `kong_networks` ({kong_networks}) needs to be "
                 f"one of the following: {_valid_kong_networks}"
             )
-        # Define image and label file according to network
-        parcellation_fname = (
-            parcellations_dir
-            / "Yan_2023"
+
+        parcellation_img_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
+            / "Yan2023"
+            / "Kong2022"
             / (
                 f"{n_rois}Parcels_Kong2022_{kong_networks}Networks_FSLMNI152_"
                 f"{resolution}mm.nii.gz"
-            )
+            ),
         )
-        parcellation_lname = (
-            parcellations_dir
-            / "Yan_2023"
-            / f"{n_rois}Parcels_Kong2022_{kong_networks}Networks_LUT.txt"
+        parcellation_label_path = fetch_file_via_datalad(
+            dataset=dataset,
+            file_path=dataset.pathobj
+            / "parcellations"
+            / "Yan2023"
+            / "Kong2022"
+            / f"{n_rois}Parcels_Kong2022_{kong_networks}Networks_LUT.txt",
         )
-
-    # Check for existence of parcellation:
-    if not parcellation_fname.exists() and not parcellation_lname.exists():
-        logger.info(
-            "At least one of the parcellation files are missing, fetching."
-        )
-
-        # Set URL based on network
-        img_url = ""
-        label_url = ""
-        if yeo_networks:
-            img_url = (
-                "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/"
-                "master/stable_projects/brain_parcellation/Yan2023_homotopic/"
-                f"parcellations/MNI/yeo{yeo_networks}/{n_rois}Parcels_Yeo2011"
-                f"_{yeo_networks}Networks_FSLMNI152_{resolution}mm.nii.gz"
-            )
-            label_url = (
-                "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/"
-                "master/stable_projects/brain_parcellation/Yan2023_homotopic/"
-                f"parcellations/MNI/yeo{yeo_networks}/freeview_lut/{n_rois}"
-                f"Parcels_Yeo2011_{yeo_networks}Networks_LUT.txt"
-            )
-        elif kong_networks:
-            img_url = (
-                "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/"
-                "master/stable_projects/brain_parcellation/Yan2023_homotopic/"
-                f"parcellations/MNI/kong17/{n_rois}Parcels_Kong2022"
-                f"_17Networks_FSLMNI152_{resolution}mm.nii.gz"
-            )
-            label_url = (
-                "https://raw.githubusercontent.com/ThomasYeoLab/CBIG/"
-                "master/stable_projects/brain_parcellation/Yan2023_homotopic/"
-                f"parcellations/MNI/kong17/freeview_lut/{n_rois}Parcels_"
-                "Kong2022_17Networks_LUT.txt"
-            )
-
-        # Make HTTP requests
-        with httpx.Client() as client:
-            # Download parcellation file
-            logger.info(f"Downloading Yan 2023 parcellation from {img_url}")
-            try:
-                img_resp = client.get(img_url)
-                img_resp.raise_for_status()
-            except httpx.HTTPError as exc:
-                raise_error(
-                    f"Error response {exc.response.status_code} while "
-                    f"requesting {exc.request.url!r}",
-                    klass=RuntimeError,
-                )
-            else:
-                parcellation_img_path = Path(parcellation_fname)
-                # Create local directory if not present
-                parcellation_img_path.parent.mkdir(parents=True, exist_ok=True)
-                # Create local file if not present
-                parcellation_img_path.touch(exist_ok=True)
-                # Open file and write content
-                with open(parcellation_img_path, "wb") as f:
-                    f.write(img_resp.content)
-            # Download label file
-            logger.info(f"Downloading Yan 2023 labels from {label_url}")
-            try:
-                label_resp = client.get(label_url)
-                label_resp.raise_for_status()
-            except httpx.HTTPError as exc:
-                raise_error(
-                    f"Error response {exc.response.status_code} while "
-                    f"requesting {exc.request.url!r}",
-                    klass=RuntimeError,
-                )
-            else:
-                parcellation_labels_path = Path(parcellation_lname)
-                # Create local file if not present
-                parcellation_labels_path.touch(exist_ok=True)
-                # Open file and write content
-                with open(parcellation_labels_path, "wb") as f:
-                    f.write(label_resp.content)
 
     # Load label file
-    labels = pd.read_csv(parcellation_lname, sep=" ", header=None)[1].to_list()
+    labels = pd.read_csv(parcellation_label_path, sep=" ", header=None)[
+        1
+    ].to_list()
 
-    return parcellation_fname, labels
+    return parcellation_img_path, labels
 
 
 def _retrieve_brainnetome(
-    parcellations_dir: Path,
+    dataset: "Dataset",
     resolution: Optional[float] = None,
     threshold: Optional[int] = None,
 ) -> tuple[Path, list[str]]:
@@ -1646,8 +1288,8 @@ def _retrieve_brainnetome(
 
     Parameters
     ----------
-    parcellations_dir : pathlib.Path
-        The path to the parcellation data directory.
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch parcellation from.
     resolution : {1.0, 1.25, 2.0}, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -1666,8 +1308,6 @@ def _retrieve_brainnetome(
 
     Raises
     ------
-    RuntimeError
-        If there is a problem fetching files.
     ValueError
         If invalid value is provided for ``threshold``.
 
@@ -1691,35 +1331,14 @@ def _retrieve_brainnetome(
     if resolution in [1.0, 2.0]:
         resolution = int(resolution)
 
-    parcellation_fname = (
-        parcellations_dir
-        / "BNA246"
-        / f"BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz"
+    # Fetch file path
+    parcellation_img_path = fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj
+        / "parcellations"
+        / "Brainnetome"
+        / f"BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz",
     )
-
-    # Check for existence of parcellation
-    if not parcellation_fname.exists():
-        # Set URL
-        url = f"http://neurovault.org/media/images/1625/BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz"
-
-        logger.info(f"Downloading Brainnetome from {url}")
-        # Make HTTP request
-        try:
-            resp = httpx.get(url, follow_redirects=True)
-            resp.raise_for_status()
-        except httpx.HTTPError as exc:
-            raise_error(
-                f"Error response {exc.response.status_code} while "
-                f"requesting {exc.request.url!r}",
-                klass=RuntimeError,
-            )
-        else:
-            # Create local directory if not present
-            parcellation_fname.parent.mkdir(parents=True, exist_ok=True)
-            # Create file if not present
-            parcellation_fname.touch(exist_ok=True)
-            # Open file and write bytes
-            parcellation_fname.write_bytes(resp.content)
 
     # Load labels
     labels = (
@@ -1750,7 +1369,7 @@ def _retrieve_brainnetome(
         + sorted([f"Tha_L(R)_8_{i}" for i in range(1, 9)] * 2)
     )
 
-    return parcellation_fname, labels
+    return parcellation_img_path, labels
 
 
 def merge_parcellations(
