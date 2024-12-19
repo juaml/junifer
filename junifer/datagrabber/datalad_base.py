@@ -17,6 +17,7 @@ from datalad.support.exceptions import IncompleteResultsError
 from datalad.support.gitrepo import GitRepo
 
 from ..pipeline import WorkDirManager
+from ..typing import Element
 from ..utils import config, logger, raise_error, warn_with_log
 from .base import BaseDataGrabber
 
@@ -312,7 +313,7 @@ class DataladDataGrabber(BaseDataGrabber):
                 logger.debug(f"Dropping {f}")
                 self._dataset.drop(f, result_renderer="disabled")
 
-    def __getitem__(self, element: Union[str, tuple]) -> dict:
+    def __getitem__(self, element: Element) -> dict:
         """Implement single element indexing in the Datalad database.
 
         It will first obtain the paths from the parent class and then
@@ -320,11 +321,11 @@ class DataladDataGrabber(BaseDataGrabber):
 
         Parameters
         ----------
-        element : str or tuple
+        element : str or tuple of str
             The element to be indexed. If one string is provided, it is
             assumed to be a tuple with only one item. If a tuple is provided,
             each item in the tuple is the value for the replacement string
-            specified in "replacements".
+            specified in ``"replacements"``.
 
         Returns
         -------

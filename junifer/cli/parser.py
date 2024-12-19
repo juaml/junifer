@@ -12,6 +12,7 @@ from typing import Union
 
 import pandas as pd
 
+from ..typing import Elements
 from ..utils import logger, raise_error, warn_with_log, yaml
 
 
@@ -142,7 +143,7 @@ def parse_yaml(filepath: Union[str, Path]) -> dict:  # noqa: C901
 
 def parse_elements(
     element: tuple[str, ...], config: dict
-) -> Union[list[tuple[str, ...]], None]:
+) -> Union[Elements, None]:
     """Parse elements from cli.
 
     Parameters
@@ -203,7 +204,7 @@ def parse_elements(
     return elements
 
 
-def _parse_elements_file(filepath: Path) -> list[tuple[str, ...]]:
+def _parse_elements_file(filepath: Path) -> Elements:
     """Parse elements from file.
 
     Parameters

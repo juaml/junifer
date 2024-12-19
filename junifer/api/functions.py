@@ -20,7 +20,13 @@ from ..pipeline import (
 )
 from ..preprocess import BasePreprocessor
 from ..storage import BaseFeatureStorage
-from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
+from ..typing import (
+    DataGrabberLike,
+    Elements,
+    MarkerLike,
+    PreprocessorLike,
+    StorageLike,
+)
 from ..utils import logger, raise_error, warn_with_log, yaml
 
 
@@ -121,7 +127,7 @@ def run(
     markers: list[dict],
     storage: dict,
     preprocessors: Optional[list[dict]] = None,
-    elements: Optional[list[tuple[str, ...]]] = None,
+    elements: Optional[Elements] = None,
 ) -> None:
     """Run the pipeline on the selected element.
 
@@ -147,7 +153,7 @@ def run(
         List of preprocessors to use. Each preprocessor is a dict with at
         least a key ``kind`` specifying the preprocessor to use. All other keys
         are passed to the preprocessor constructor (default None).
-    elements : list of tuple or None, optional
+    elements : list or None, optional
         Element(s) to process. Will be used to index the DataGrabber
         (default None).
 
@@ -257,7 +263,7 @@ def queue(
     kind: str,
     jobname: str = "junifer_job",
     overwrite: bool = False,
-    elements: Optional[list[tuple[str, ...]]] = None,
+    elements: Optional[Elements] = None,
     **kwargs: Union[str, int, bool, dict, tuple, list],
 ) -> None:
     """Queue a job to be executed later.
@@ -272,7 +278,7 @@ def queue(
         The name of the job (default "junifer_job").
     overwrite : bool, optional
         Whether to overwrite if job directory already exists (default False).
-    elements : list of tuple or None, optional
+    elements : list or None, optional
         Element(s) to process. Will be used to index the DataGrabber
         (default None).
     **kwargs : dict
@@ -355,7 +361,7 @@ def queue(
                 elements = dg.get_elements()
     # Listify elements
     if not isinstance(elements, list):
-        elements: list[Union[str, tuple]] = [elements]
+        elements: Elements = [elements]
 
     # Check job queueing system
     adapter = None
@@ -420,7 +426,7 @@ def reset(config: dict) -> None:
 
 def list_elements(
     datagrabber: dict,
-    elements: Optional[list[tuple[str, ...]]] = None,
+    elements: Optional[Elements] = None,
 ) -> str:
     """List elements of the datagrabber filtered using `elements`.
 
@@ -430,7 +436,7 @@ def list_elements(
         DataGrabber to index. Must have a key ``kind`` with the kind of
         DataGrabber to use. All other keys are passed to the DataGrabber
         constructor.
-    elements : list of tuple or None, optional
+    elements : list or None, optional
         Element(s) to filter using. Will be used to index the DataGrabber
         (default None).
 
