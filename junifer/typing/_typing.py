@@ -24,6 +24,8 @@ __all__ = [
     "DataGrabberLike",
     "DataGrabberPatterns",
     "Dependencies",
+    "Element",
+    "Elements",
     "ExternalDependencies",
     "MarkerInOutMappings",
     "MarkerLike",
@@ -62,3 +64,5 @@ DataGrabberPatterns = dict[
     str, Union[dict[str, str], Sequence[dict[str, str]]]
 ]
 ConfigVal = Union[bool, int, float]
+Element = Union[str, tuple[str, ...]]
+Elements = Sequence[Element]

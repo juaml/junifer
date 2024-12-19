@@ -6,8 +6,9 @@
 import shutil
 import textwrap
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
 
+from ...typing import Elements
 from ...utils import logger, make_executable, raise_error, run_ext_cmd
 from .queue_context_adapter import QueueContextAdapter
 
@@ -63,7 +64,7 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
         job_name: str,
         job_dir: Path,
         yaml_config_path: Path,
-        elements: list[Union[str, tuple]],
+        elements: Elements,
         pre_run: Optional[str] = None,
         pre_collect: Optional[str] = None,
         env: Optional[dict[str, str]] = None,

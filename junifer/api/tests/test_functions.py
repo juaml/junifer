@@ -6,6 +6,7 @@
 # License: AGPL
 
 import logging
+from contextlib import AbstractContextManager, nullcontext
 from pathlib import Path
 from typing import Optional, Union
 
@@ -16,6 +17,7 @@ import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, list_elements, queue, reset, run
 from junifer.datagrabber.base import BaseDataGrabber
 from junifer.pipeline import PipelineComponentRegistry
+from junifer.typing import Elements
 
 
 # Configure YAML class
@@ -60,11 +62,23 @@ def storage() -> dict[str, str]:
     }
 
 
+@pytest.mark.parametrize(
+    "element, expect",
+    [
+        (
+            [("sub-01",)],
+            pytest.raises(RuntimeError, match="element selectors are invalid"),
+        ),
+        (["sub-01"], nullcontext()),
+    ],
+)
 def test_run_single_element(
     tmp_path: Path,
     datagrabber: dict[str, str],
     markers: list[dict[str, str]],
     storage: dict[str, str],
+    element: Elements,
+    expect: AbstractContextManager,
 ) -> None:
     """Test run function with single element.
 
@@ -78,21 +92,26 @@ def test_run_single_element(
         Testing markers as list of dictionary.
     storage : dict
         Testing storage as dictionary.
+    element : list of str or tuple
+        The parametrized element.
+    expect : typing.ContextManager
+        The parametrized ContextManager object.
 
     """
     # Set storage
     storage["uri"] = str((tmp_path / "out.sqlite").resolve())
     # Run operations
-    run(
-        workdir=tmp_path,
-        datagrabber=datagrabber,
-        markers=markers,
-        storage=storage,
-        elements=[("sub-01",)],
-    )
-    # Check files
-    files = list(tmp_path.glob("*.sqlite"))
-    assert len(files) == 1
+    with expect:
+        run(
+            workdir=tmp_path,
+            datagrabber=datagrabber,
+            markers=markers,
+            storage=storage,
+            elements=element,
+        )
+        # Check files
+        files = list(tmp_path.glob("*.sqlite"))
+        assert len(files) == 1
 
 
 def test_run_single_element_with_preprocessing(
@@ -128,18 +147,30 @@ def test_run_single_element_with_preprocessing(
                 "kind": "fMRIPrepConfoundRemover",
             }
         ],
-        elements=[("sub-01",)],
+        elements=["sub-01"],
     )
     # Check files
     files = list(tmp_path.glob("*.sqlite"))
     assert len(files) == 1
 
 
+@pytest.mark.parametrize(
+    "element, expect",
+    [
+        (
+            [("sub-01",), ("sub-03",)],
+            pytest.raises(RuntimeError, match="element selectors are invalid"),
+        ),
+        (["sub-01", "sub-03"], nullcontext()),
+    ],
+)
 def test_run_multi_element_multi_output(
     tmp_path: Path,
     datagrabber: dict[str, str],
     markers: list[dict[str, str]],
     storage: dict[str, str],
+    element: Elements,
+    expect: AbstractContextManager,
 ) -> None:
     """Test run function with multi element and multi output.
 
@@ -153,22 +184,27 @@ def test_run_multi_element_multi_output(
         Testing markers as list of dictionary.
     storage : dict
         Testing storage as dictionary.
+    element : list of str or tuple
+        The parametrized element.
+    expect : typing.ContextManager
+        The parametrized ContextManager object.
 
     """
     # Set storage
     storage["uri"] = str((tmp_path / "out.sqlite").resolve())
     storage["single_output"] = False  # type: ignore
     # Run operations
-    run(
-        workdir=tmp_path,
-        datagrabber=datagrabber,
-        markers=markers,
-        storage=storage,
-        elements=[("sub-01",), ("sub-03",)],
-    )
-    # Check files
-    files = list(tmp_path.glob("*.sqlite"))
-    assert len(files) == 2
+    with expect:
+        run(
+            workdir=tmp_path,
+            datagrabber=datagrabber,
+            markers=markers,
+            storage=storage,
+            elements=element,
+        )
+        # Check files
+        files = list(tmp_path.glob("*.sqlite"))
+        assert len(files) == 2
 
 
 def test_run_multi_element_single_output(
@@ -200,7 +236,7 @@ def test_run_multi_element_single_output(
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        elements=[("sub-01",), ("sub-03",)],
+        elements=["sub-01", "sub-03"],
     )
     # Check files
     files = list(tmp_path.glob("*.sqlite"))
@@ -569,7 +605,7 @@ def test_reset_run(
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        elements=[("sub-01",)],
+        elements=["sub-01"],
     )
     # Reset operation
     reset(config={"storage": storage})

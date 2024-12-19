@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Union
 
 from ..pipeline import UpdateMetaMixin
+from ..typing import Element, Elements
 from ..utils import logger, raise_error
 
 
@@ -67,9 +68,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         """
         yield from self.get_elements()
 
-    def __getitem__(
-        self, element: Union[str, tuple[str, ...]]
-    ) -> dict[str, dict]:
+    def __getitem__(self, element: Element) -> dict[str, dict]:
         """Enable indexing support.
 
         Parameters
@@ -137,13 +136,13 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         """
         return self._datadir
 
-    def filter(self, selection: list[Union[str, tuple[str]]]) -> Iterator:
+    def filter(self, selection: Elements) -> Iterator:
         """Filter elements to be grabbed.
 
         Parameters
         ----------
-        selection : list of str or tuple
-            The list of partial element key values to filter using.
+        selection : list
+            The list of partial or complete element selectors to filter using.
 
         Yields
         ------
@@ -152,7 +151,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
 
         """
 
-        def filter_func(element: Union[str, tuple[str]]) -> bool:
+        def filter_func(element: Element) -> bool:
             """Filter element based on selection.
 
             Parameters
@@ -201,15 +200,14 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         )  # pragma: no cover
 
     @abstractmethod
-    def get_elements(self) -> list[Union[str, tuple[str]]]:
+    def get_elements(self) -> Elements:
         """Get elements.
 
         Returns
         -------
         list
-            List of elements that can be grabbed. The elements can be strings,
-            tuples or any object that will be then used as a key to index the
-            DataGrabber.
+            List of elements that can be grabbed. The elements can be strings
+            or tuples of strings to index the DataGrabber.
 
         """
         raise_error(
