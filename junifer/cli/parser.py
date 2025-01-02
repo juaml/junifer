@@ -214,7 +214,7 @@ def _parse_elements_file(filepath: Path) -> Elements:
 
     Returns
     -------
-    list of tuple of str
+    list
         The element(s) as list.
 
     """
@@ -228,5 +228,8 @@ def _parse_elements_file(filepath: Path) -> Elements:
     )
     # Remove trailing whitespace in cell entries
     csv_df_trimmed = csv_df.apply(lambda x: x.str.strip())
-    # Convert to list of tuple of str
-    return list(map(tuple, csv_df_trimmed.to_numpy()))
+    # Convert to list of tuple of str if more than one column else flatten
+    if len(csv_df_trimmed.columns) == 1:
+        return csv_df_trimmed.to_numpy().flatten().tolist()
+    else:
+        return list(map(tuple, csv_df_trimmed.to_numpy()))
