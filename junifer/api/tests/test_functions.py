@@ -58,7 +58,7 @@ _bids_ses_datagrabber = {
 @pytest.fixture
 def datagrabber() -> dict[str, str]:
     """Return a datagrabber as a dictionary."""
-    return _datagrabber
+    return _datagrabber.copy()
 
 
 @pytest.fixture
