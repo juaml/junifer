@@ -8,9 +8,10 @@
 import logging
 from contextlib import AbstractContextManager, nullcontext
 from pathlib import Path
-from typing import Optional, Union
+from typing import Any, Optional, Union
 
 import pytest
+from nibabel.filebasedimages import ImageFileError
 from ruamel.yaml import YAML
 
 import junifer.testing.registry  # noqa: F401
@@ -27,12 +28,37 @@ yaml.allow_unicode = True
 yaml.indent(mapping=2, sequence=4, offset=2)
 
 
+# Kept for parametrizing
+_datagrabber = {
+    "kind": "PartlyCloudyTestingDataGrabber",
+}
+_bids_ses_datagrabber = {
+    "kind": "PatternDataladDataGrabber",
+    "uri": "https://gin.g-node.org/juaml/datalad-example-bids-ses",
+    "types": ["T1w", "BOLD"],
+    "patterns": {
+        "T1w": {
+            "pattern": (
+                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+            ),
+            "space": "MNI152NLin6Asym",
+        },
+        "BOLD": {
+            "pattern": (
+                "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz"
+            ),
+            "space": "MNI152NLin6Asym",
+        },
+    },
+    "replacements": ["subject", "session"],
+    "rootdir": "example_bids_ses",
+}
+
+
 @pytest.fixture
 def datagrabber() -> dict[str, str]:
     """Return a datagrabber as a dictionary."""
-    return {
-        "kind": "PartlyCloudyTestingDataGrabber",
-    }
+    return _datagrabber
 
 
 @pytest.fixture
@@ -63,18 +89,43 @@ def storage() -> dict[str, str]:
 
 
 @pytest.mark.parametrize(
-    "element, expect",
+    "datagrabber, element, expect",
     [
         (
+            _datagrabber,
             [("sub-01",)],
             pytest.raises(RuntimeError, match="element selectors are invalid"),
         ),
-        (["sub-01"], nullcontext()),
+        (
+            _datagrabber,
+            ["sub-01"],
+            nullcontext(),
+        ),
+        (
+            _bids_ses_datagrabber,
+            ["sub-01"],
+            pytest.raises(ImageFileError, match="is not a gzip file"),
+        ),
+        (
+            _bids_ses_datagrabber,
+            [("sub-01", "ses-01")],
+            pytest.raises(ImageFileError, match="is not a gzip file"),
+        ),
+        (
+            _bids_ses_datagrabber,
+            [("sub-01", "ses-100")],
+            pytest.raises(RuntimeError, match="element selectors are invalid"),
+        ),
+        (
+            _bids_ses_datagrabber,
+            [("sub-100", "ses-01")],
+            pytest.raises(RuntimeError, match="element selectors are invalid"),
+        ),
     ],
 )
 def test_run_single_element(
     tmp_path: Path,
-    datagrabber: dict[str, str],
+    datagrabber: dict[str, Any],
     markers: list[dict[str, str]],
     storage: dict[str, str],
     element: Elements,
