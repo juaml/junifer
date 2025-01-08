@@ -13,7 +13,7 @@ from typing import Optional, Union
 import numpy as np
 
 from ..api.decorators import register_datagrabber
-from ..typing import DataGrabberPatterns
+from ..typing import DataGrabberPatterns, Elements
 from ..utils import logger, raise_error
 from .base import BaseDataGrabber
 from .pattern_validation_mixin import PatternValidationMixin
@@ -367,7 +367,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         """
         return self.replacements
 
-    def get_item(self, **element: str) -> dict[str, dict]:
+    def get_item(self, **element: dict) -> dict[str, dict]:
         """Implement single element indexing for the datagrabber.
 
         This method constructs a real path to the requested item's data, by
@@ -450,7 +450,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
 
         return out
 
-    def get_elements(self) -> list:
+    def get_elements(self) -> Elements:
         """Implement fetching list of elements in the dataset.
 
         It will use regex to search for "replacements" in the "patterns" and

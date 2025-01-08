@@ -12,6 +12,7 @@ from typing import Union
 
 import pandas as pd
 
+from ..typing import Elements
 from ..utils import logger, raise_error, warn_with_log, yaml
 
 
@@ -142,7 +143,7 @@ def parse_yaml(filepath: Union[str, Path]) -> dict:  # noqa: C901
 
 def parse_elements(
     element: tuple[str, ...], config: dict
-) -> Union[list[tuple[str, ...]], None]:
+) -> Union[Elements, None]:
     """Parse elements from cli.
 
     Parameters
@@ -203,7 +204,7 @@ def parse_elements(
     return elements
 
 
-def _parse_elements_file(filepath: Path) -> list[tuple[str, ...]]:
+def _parse_elements_file(filepath: Path) -> Elements:
     """Parse elements from file.
 
     Parameters
@@ -213,7 +214,7 @@ def _parse_elements_file(filepath: Path) -> list[tuple[str, ...]]:
 
     Returns
     -------
-    list of tuple of str
+    list
         The element(s) as list.
 
     """
@@ -227,5 +228,8 @@ def _parse_elements_file(filepath: Path) -> list[tuple[str, ...]]:
     )
     # Remove trailing whitespace in cell entries
     csv_df_trimmed = csv_df.apply(lambda x: x.str.strip())
-    # Convert to list of tuple of str
-    return list(map(tuple, csv_df_trimmed.to_numpy()))
+    # Convert to list of tuple of str if more than one column else flatten
+    if len(csv_df_trimmed.columns) == 1:
+        return csv_df_trimmed.to_numpy().flatten().tolist()
+    else:
+        return list(map(tuple, csv_df_trimmed.to_numpy()))
