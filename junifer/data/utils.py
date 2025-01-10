@@ -208,7 +208,7 @@ def fetch_file_via_datalad(dataset: dl.Dataset, file_path: Path) -> Path:
             logger.info(f"Successfully fetched file: {got_path.resolve()}")
             return got_path
         elif status == "notneeded":
-            logger.info(f"Found existing file: {got_path.resolve()}")
+            logger.debug(f"Found existing file: {got_path.resolve()}")
             return got_path
         else:
             raise_error(
