@@ -16,6 +16,7 @@ from typing import (
 import nibabel as nib
 import nilearn.image as nimg
 import numpy as np
+from junifer_data import get
 from nilearn.masking import (
     compute_background_mask,
     compute_epi_mask,
@@ -27,9 +28,9 @@ from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..template_spaces import get_template
 from ..utils import (
-    check_dataset,
+    JUNIFER_DATA_VERSION,
     closest_resolution,
-    fetch_file_via_datalad,
+    get_dataset_path,
     get_native_warper,
 )
 from ._ants_mask_warper import ANTsMaskWarper
@@ -37,7 +38,6 @@ from ._fsl_mask_warper import FSLMaskWarper
 
 
 if TYPE_CHECKING:
-    from datalad.api import Dataset
     from nibabel.nifti1 import Nifti1Image
 
 
@@ -406,17 +406,14 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             mask_img = mask_definition["func"]
             mask_fname = None
         elif t_family in ["Vickery-Patil", "UKB"]:
-            # Get dataset
-            dataset = check_dataset()
             # Load mask
             if t_family == "Vickery-Patil":
                 mask_fname = _load_vickery_patil_mask(
-                    dataset=dataset,
                     name=name,
                     resolution=resolution,
                 )
             elif t_family == "UKB":
-                mask_fname = _load_ukb_mask(dataset=dataset, name=name)
+                mask_fname = _load_ukb_mask(name=name)
         else:
             raise_error(f"Unknown mask family: {t_family}")
 
@@ -698,7 +695,6 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
 
 def _load_vickery_patil_mask(
-    dataset: "Dataset",
     name: str,
     resolution: Optional[float] = None,
 ) -> Path:
@@ -706,8 +702,6 @@ def _load_vickery_patil_mask(
 
     Parameters
     ----------
-    dataset : datalad.api.Dataset
-        The datalad dataset to fetch mask from.
     name : {"GM_prob0.2", "GM_prob0.2_cortex"}
         The name of the mask.
     resolution : float, optional
@@ -748,19 +742,18 @@ def _load_vickery_patil_mask(
         raise_error(f"Cannot find a Vickery-Patil mask called {name}")
 
     # Fetch file
-    return fetch_file_via_datalad(
-        dataset=dataset,
-        file_path=dataset.pathobj / "masks" / "Vickery-Patil" / mask_fname,
+    return get(
+        file_path=Path(f"masks/Vickery-Patil/{mask_fname}"),
+        dataset_path=get_dataset_path(),
+        tag=JUNIFER_DATA_VERSION,
     )
 
 
-def _load_ukb_mask(dataset: "Dataset", name: str) -> Path:
+def _load_ukb_mask(name: str) -> Path:
     """Load UKB mask.
 
     Parameters
     ----------
-    dataset : datalad.api.Dataset
-        The datalad dataset to fetch mask from.
     name : {"UKB_15K_GM"}
         The name of the mask.
 
@@ -782,9 +775,10 @@ def _load_ukb_mask(dataset: "Dataset", name: str) -> Path:
         raise_error(f"Cannot find a UKB mask called {name}")
 
     # Fetch file
-    return fetch_file_via_datalad(
-        dataset=dataset,
-        file_path=dataset.pathobj / "masks" / "UKB" / mask_fname,
+    return get(
+        file_path=Path(f"masks/UKB/{mask_fname}"),
+        dataset_path=get_dataset_path(),
+        tag=JUNIFER_DATA_VERSION,
     )
 
 
