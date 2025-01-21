@@ -8,10 +8,11 @@ from typing import Any, Optional, Union
 
 import nibabel as nib
 import numpy as np
+from junifer_data import get
 from templateflow import api as tflow
 
 from ..utils import logger, raise_error
-from .utils import check_dataset, closest_resolution, fetch_file_via_datalad
+from .utils import JUNIFER_DATA_VERSION, closest_resolution, get_dataset_path
 
 
 __all__ = ["get_template", "get_xfm"]
@@ -33,17 +34,14 @@ def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover
         The path to the transformation file.
 
     """
-    # Get dataset
-    dataset = check_dataset()
     # Set file path to retrieve
-    xfm_file_path = (
-        dataset.pathobj
-        / "xfms"
-        / f"{src}_to_{dst}"
-        / f"{src}_to_{dst}_Composite.h5"
-    )
+    xfm_file_path = Path(f"xfms/{src}_to_{dst}/{src}_to_{dst}_Composite.h5")
     # Retrieve file
-    return fetch_file_via_datalad(dataset=dataset, file_path=xfm_file_path)
+    return get(
+        file_path=xfm_file_path,
+        dataset_path=get_dataset_path(),
+        tag=JUNIFER_DATA_VERSION,
+    )
 
 
 def get_template(
