@@ -13,14 +13,15 @@ import nibabel as nib
 import nilearn.image as nimg
 import numpy as np
 import pandas as pd
+from junifer_data import get
 
 from ...utils import logger, raise_error, warn_with_log
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..utils import (
-    check_dataset,
+    JUNIFER_DATA_VERSION,
     closest_resolution,
-    fetch_file_via_datalad,
+    get_dataset_path,
     get_native_warper,
 )
 from ._ants_parcellation_warper import ANTsParcellationWarper
@@ -28,7 +29,6 @@ from ._fsl_parcellation_warper import FSLParcellationWarper
 
 
 if TYPE_CHECKING:
-    from datalad.api import Dataset
     from nibabel.nifti1 import Nifti1Image
 
 
@@ -357,49 +357,40 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
             "Yan2023",
             "Brainnetome",
         ]:
-            # Get dataset
-            dataset = check_dataset()
             # Load parcellation and labels
             if t_family == "Schaefer2018":
                 parcellation_fname, parcellation_labels = _retrieve_schaefer(
-                    dataset=dataset,
                     resolution=resolution,
                     **parcellation_definition,
                 )
             elif t_family == "SUIT":
                 parcellation_fname, parcellation_labels = _retrieve_suit(
-                    dataset=dataset,
                     resolution=resolution,
                     **parcellation_definition,
                 )
             elif t_family == "Melbourne":
                 parcellation_fname, parcellation_labels = _retrieve_tian(
-                    dataset=dataset,
                     resolution=resolution,
                     **parcellation_definition,
                 )
             elif t_family == "AICHA":
                 parcellation_fname, parcellation_labels = _retrieve_aicha(
-                    dataset=dataset,
                     resolution=resolution,
                     **parcellation_definition,
                 )
             elif t_family == "Shen":
                 parcellation_fname, parcellation_labels = _retrieve_shen(
-                    dataset=dataset,
                     resolution=resolution,
                     **parcellation_definition,
                 )
             elif t_family == "Yan2023":
                 parcellation_fname, parcellation_labels = _retrieve_yan(
-                    dataset=dataset,
                     resolution=resolution,
                     **parcellation_definition,
                 )
             elif t_family == "Brainnetome":
                 parcellation_fname, parcellation_labels = (
                     _retrieve_brainnetome(
-                        dataset=dataset,
                         resolution=resolution,
                         **parcellation_definition,
                     )
@@ -585,7 +576,6 @@ class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
 
 def _retrieve_schaefer(
-    dataset: "Dataset",
     resolution: Optional[float] = None,
     n_rois: Optional[int] = None,
     yeo_networks: int = 7,
@@ -594,8 +584,6 @@ def _retrieve_schaefer(
 
     Parameters
     ----------
-    dataset : datalad.api.Dataset
-        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -646,24 +634,18 @@ def _retrieve_schaefer(
     resolution = closest_resolution(resolution, _valid_resolutions)
 
     # Fetch file paths
-    parcellation_img_path = fetch_file_via_datalad(
-        dataset=dataset,
-        file_path=dataset.pathobj
-        / "parcellations"
-        / "Schaefer2018"
-        / "Yeo2011"
-        / (
-            f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order_"
-            f"FSLMNI152_{resolution}mm.nii.gz"
-        ),
+    path_prefix = Path("parcellations/Schaefer2018/Yeo2011")
+    parcellation_img_path = get(
+        file_path=path_prefix / f"Schaefer2018_{n_rois}Parcels_{yeo_networks}"
+        f"Networks_order_FSLMNI152_{resolution}mm.nii.gz",
+        dataset_path=get_dataset_path(),
+        tag=JUNIFER_DATA_VERSION,
     )
-    parcellation_label_path = fetch_file_via_datalad(
-        dataset=dataset,
-        file_path=dataset.pathobj
-        / "parcellations"
-        / "Schaefer2018"
-        / "Yeo2011"
-        / (f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order.txt"),
+    parcellation_label_path = get(
+        file_path=path_prefix
+        / f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order.txt",
+        dataset_path=get_dataset_path(),
+        tag=JUNIFER_DATA_VERSION,
     )
 
     # Load labels
@@ -678,7 +660,6 @@ def _retrieve_schaefer(
 
 
 def _retrieve_tian(
-    dataset: "Dataset",
     resolution: Optional[float] = None,
     scale: Optional[int] = None,
     space: str = "MNI152NLin6Asym",
@@ -688,8 +669,6 @@ def _retrieve_tian(
 
     Parameters
     ----------
-    dataset : datalad.api.Dataset
-        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -758,13 +737,8 @@ def _retrieve_tian(
 
     # Fetch file paths
     if magneticfield == "3T":
-        parcellation_fname_base_3T = (
-            dataset.pathobj
-            / "parcellations"
-            / "Melbourne"
-            / "v1.4"
-            / "3T"
-            / "Subcortex-Only"
+        parcellation_fname_base_3T = Path(
+            "parcellations/Melbourne/v1.4/3T/Subcortex-Only"
         )
         if space == "MNI152NLin6Asym":
             if resolution == 1:
@@ -787,28 +761,29 @@ def _retrieve_tian(
                     f"Tian_Subcortex_S{scale}_{magneticfield}_{space}.nii.gz"
                 )
 
-        parcellation_img_path = fetch_file_via_datalad(
-            dataset=dataset,
+        parcellation_img_path = get(
             file_path=parcellation_fname,
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
-        parcellation_label_path = fetch_file_via_datalad(
-            dataset=dataset,
+        parcellation_label_path = get(
             file_path=parcellation_fname_base_3T
             / f"Tian_Subcortex_S{scale}_3T_label.txt",
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
         # Load labels
         labels = pd.read_csv(parcellation_label_path, sep=" ", header=None)[
             0
         ].to_list()
     elif magneticfield == "7T":
-        parcellation_img_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "Melbourne"
-            / "v1.4"
-            / "7T"
-            / f"Tian_Subcortex_S{scale}_{magneticfield}.nii.gz",
+        parcellation_img_path = get(
+            file_path=Path(
+                "parcellations/Melbourne/v1.4/7T/"
+                f"Tian_Subcortex_S{scale}_{magneticfield}.nii.gz"
+            ),
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
         # define 7T labels (b/c currently no labels file available for 7T)
         scale7Trois = {1: 16, 2: 34, 3: 54, 4: 62}
@@ -825,7 +800,6 @@ def _retrieve_tian(
 
 
 def _retrieve_suit(
-    dataset: "Dataset",
     resolution: Optional[float],
     space: str = "MNI152NLin6Asym",
 ) -> tuple[Path, list[str]]:
@@ -833,8 +807,6 @@ def _retrieve_suit(
 
     Parameters
     ----------
-    dataset : datalad.api.Dataset
-        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -879,19 +851,16 @@ def _retrieve_suit(
         space = "MNI"
 
     # Fetch file paths
-    parcellation_img_path = fetch_file_via_datalad(
-        dataset=dataset,
-        file_path=dataset.pathobj
-        / "parcellations"
-        / "SUIT"
-        / f"SUIT_{space}Space_{resolution}mm.nii",
+    path_prefix = Path("parcellations/SUIT")
+    parcellation_img_path = get(
+        file_path=path_prefix / f"SUIT_{space}Space_{resolution}mm.nii",
+        dataset_path=get_dataset_path(),
+        tag=JUNIFER_DATA_VERSION,
     )
-    parcellation_label_path = fetch_file_via_datalad(
-        dataset=dataset,
-        file_path=dataset.pathobj
-        / "parcellations"
-        / "SUIT"
-        / f"SUIT_{space}Space_{resolution}mm.tsv",
+    parcellation_label_path = get(
+        file_path=path_prefix / f"SUIT_{space}Space_{resolution}mm.tsv",
+        dataset_path=get_dataset_path(),
+        tag=JUNIFER_DATA_VERSION,
     )
 
     # Load labels
@@ -903,7 +872,6 @@ def _retrieve_suit(
 
 
 def _retrieve_aicha(
-    dataset: "Dataset",
     resolution: Optional[float] = None,
     version: int = 2,
 ) -> tuple[Path, list[str]]:
@@ -911,8 +879,6 @@ def _retrieve_aicha(
 
     Parameters
     ----------
-    dataset : datalad.api.Dataset
-        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -968,32 +934,24 @@ def _retrieve_aicha(
     resolution = closest_resolution(resolution, _valid_resolutions)
 
     # Fetch file paths
-    parcellation_img_path = fetch_file_via_datalad(
-        dataset=dataset,
-        file_path=dataset.pathobj
-        / "parcellations"
-        / "AICHA"
-        / f"v{version}"
-        / "AICHA.nii",
+    path_prefix = Path(f"parcellations/AICHA/v{version}")
+    parcellation_img_path = get(
+        file_path=path_prefix / "AICHA.nii",
+        dataset_path=get_dataset_path(),
+        tag=JUNIFER_DATA_VERSION,
     )
     # Conditional label file fetch
     if version == 1:
-        parcellation_label_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "AICHA"
-            / f"v{version}"
-            / "AICHA_vol1.txt",
+        parcellation_label_path = get(
+            file_path=path_prefix / "AICHA_vol1.txt",
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
     elif version == 2:
-        parcellation_label_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "AICHA"
-            / f"v{version}"
-            / "AICHA_vol3.txt",
+        parcellation_label_path = get(
+            file_path=path_prefix / "AICHA_vol3.txt",
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
 
     # Load labels
@@ -1008,7 +966,6 @@ def _retrieve_aicha(
 
 
 def _retrieve_shen(
-    dataset: "Dataset",
     resolution: Optional[float] = None,
     year: int = 2015,
     n_rois: int = 268,
@@ -1017,8 +974,6 @@ def _retrieve_shen(
 
     Parameters
     ----------
-    dataset : datalad.api.Dataset
-        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -1095,22 +1050,17 @@ def _retrieve_shen(
         )
 
     # Fetch file paths based on year
+    path_prefix = Path(f"parcellations/Shen/{year}")
     if year == 2013:
-        parcellation_img_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "Shen"
-            / "2013"
-            / f"fconn_atlas_{n_rois}_{resolution}mm.nii",
+        parcellation_img_path = get(
+            file_path=path_prefix / f"fconn_atlas_{n_rois}_{resolution}mm.nii",
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
-        parcellation_label_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "Shen"
-            / "2013"
-            / f"Group_seg{n_rois}_BAindexing_setA.txt",
+        parcellation_label_path = get(
+            file_path=path_prefix / f"Group_seg{n_rois}_BAindexing_setA.txt",
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
         labels = (
             pd.read_csv(
@@ -1123,23 +1073,18 @@ def _retrieve_shen(
             .to_list()
         )
     elif year == 2015:
-        parcellation_img_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "Shen"
-            / "2015"
+        parcellation_img_path = get(
+            file_path=path_prefix
             / f"shen_{resolution}mm_268_parcellation.nii.gz",
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
         labels = list(range(1, 269))
     elif year == 2019:
-        parcellation_img_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "Shen"
-            / "2019"
-            / "Shen_1mm_368_parcellation.nii.gz",
+        parcellation_img_path = get(
+            file_path=path_prefix / "Shen_1mm_368_parcellation.nii.gz",
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
         labels = list(range(1, 369))
 
@@ -1147,7 +1092,6 @@ def _retrieve_shen(
 
 
 def _retrieve_yan(
-    dataset: "Dataset",
     resolution: Optional[float] = None,
     n_rois: Optional[int] = None,
     yeo_networks: Optional[int] = None,
@@ -1157,8 +1101,6 @@ def _retrieve_yan(
 
     Parameters
     ----------
-    dataset : datalad.api.Dataset
-        The datalad dataset to fetch parcellation from.
     resolution : float, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -1214,6 +1156,7 @@ def _retrieve_yan(
         )
 
     # Fetch file paths based on networks
+    pre_path_prefix = Path("parcellations/Yan2023")
     if yeo_networks:
         # Check yeo_networks value
         _valid_yeo_networks = [7, 17]
@@ -1223,24 +1166,21 @@ def _retrieve_yan(
                 f"one of the following: {_valid_yeo_networks}"
             )
 
-        parcellation_img_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "Yan2023"
-            / "Yeo2011"
+        path_prefix = pre_path_prefix / "Yeo2011"
+        parcellation_img_path = get(
+            file_path=path_prefix
             / (
                 f"{n_rois}Parcels_Yeo2011_{yeo_networks}Networks_FSLMNI152_"
                 f"{resolution}mm.nii.gz"
             ),
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
-        parcellation_label_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "Yan2023"
-            / "Yeo2011"
+        parcellation_label_path = get(
+            file_path=path_prefix
             / f"{n_rois}Parcels_Yeo2011_{yeo_networks}Networks_LUT.txt",
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
     elif kong_networks:
         # Check kong_networks value
@@ -1251,24 +1191,21 @@ def _retrieve_yan(
                 f"one of the following: {_valid_kong_networks}"
             )
 
-        parcellation_img_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "Yan2023"
-            / "Kong2022"
+        path_prefix = pre_path_prefix / "Kong2022"
+        parcellation_img_path = get(
+            file_path=path_prefix
             / (
                 f"{n_rois}Parcels_Kong2022_{kong_networks}Networks_FSLMNI152_"
                 f"{resolution}mm.nii.gz"
             ),
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
-        parcellation_label_path = fetch_file_via_datalad(
-            dataset=dataset,
-            file_path=dataset.pathobj
-            / "parcellations"
-            / "Yan2023"
-            / "Kong2022"
+        parcellation_label_path = get(
+            file_path=path_prefix
             / f"{n_rois}Parcels_Kong2022_{kong_networks}Networks_LUT.txt",
+            dataset_path=get_dataset_path(),
+            tag=JUNIFER_DATA_VERSION,
         )
 
     # Load label file
@@ -1280,7 +1217,6 @@ def _retrieve_yan(
 
 
 def _retrieve_brainnetome(
-    dataset: "Dataset",
     resolution: Optional[float] = None,
     threshold: Optional[int] = None,
 ) -> tuple[Path, list[str]]:
@@ -1288,8 +1224,6 @@ def _retrieve_brainnetome(
 
     Parameters
     ----------
-    dataset : datalad.api.Dataset
-        The datalad dataset to fetch parcellation from.
     resolution : {1.0, 1.25, 2.0}, optional
         The desired resolution of the parcellation to load. If it is not
         available, the closest resolution will be loaded. Preferably, use a
@@ -1332,12 +1266,13 @@ def _retrieve_brainnetome(
         resolution = int(resolution)
 
     # Fetch file path
-    parcellation_img_path = fetch_file_via_datalad(
-        dataset=dataset,
-        file_path=dataset.pathobj
-        / "parcellations"
-        / "Brainnetome"
-        / f"BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz",
+    parcellation_img_path = get(
+        file_path=Path(
+            "parcellations/Brainnetome/"
+            f"BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz"
+        ),
+        dataset_path=get_dataset_path(),
+        tag=JUNIFER_DATA_VERSION,
     )
 
     # Load labels
