@@ -26,7 +26,6 @@ from junifer.data.masks._masks import (
     _load_ukb_mask,
     _load_vickery_patil_mask,
 )
-from junifer.data.utils import check_dataset
 from junifer.datagrabber import DMCC13Benchmark
 from junifer.datareader import DefaultDataReader
 from junifer.testing.datagrabbers import (
@@ -283,9 +282,7 @@ def test_vickery_patil(
 def test_vickery_patil_error() -> None:
     """Test error for Vickery-Patil mask."""
     with pytest.raises(ValueError, match=r"find a Vickery-Patil mask "):
-        _load_vickery_patil_mask(
-            dataset=check_dataset(), name="wrong", resolution=2.0
-        )
+        _load_vickery_patil_mask(name="wrong", resolution=2.0)
 
 
 def test_ukb() -> None:
@@ -300,7 +297,7 @@ def test_ukb() -> None:
 def test_ukb_error() -> None:
     """Test error for UKB mask."""
     with pytest.raises(ValueError, match=r"find a UKB mask "):
-        _load_ukb_mask(dataset=check_dataset(), name="wrong")
+        _load_ukb_mask(name="wrong")
 
 
 def test_get() -> None:
