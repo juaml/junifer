@@ -596,6 +596,8 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             t_r=t_r,
             mask_img=mask_img,
         )
+        # Fix t_r as nilearn messes it up
+        cleaned_img.header["pixdim"][4] = t_r
         # Save deconfounded data
         deconfounded_img_path = element_tempdir / "deconfounded_data.nii.gz"
         nib.save(cleaned_img, deconfounded_img_path)
