@@ -356,6 +356,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                         to_select.append(x_derivative_2)
                         if x_derivative_2 not in available_vars:
                             squares_to_compute[x_derivative_2] = x_derivative
+        # Add spike
         spike_name = "framewise_displacement"
         if self.spike is not None:
             if spike_name not in available_vars:
