@@ -95,6 +95,8 @@ FMRIPREP_VALID_NAMES = [
 # NOTE: Check with @fraimondo about the spike mapping intent
 # Add spike_name to FMRIPREP_VALID_NAMES
 FMRIPREP_VALID_NAMES.append("framewise_displacement")
+# Add std_dvars to FMRIPREP_VALID_NAMES
+FMRIPREP_VALID_NAMES.append("std_dvars")
 
 
 @register_preprocessor
@@ -130,6 +132,12 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         If None, no spike regressor is added. If spike is a float, it will
         add a spike regressor for every point at which framewise displacement
         exceeds the specified float (default None).
+    std_dvars_threshold : float, optional
+        Standardized DVARS threshold for scrub. DVARs is defined as root mean
+        squared intensity difference of volume N to volume N+1. D referring to
+        temporal derivative of timecourses, VARS referring to root mean squared
+        variance over voxels. If None, no scrubbing is performed
+        (default None).
     detrend : bool, optional
         If True, detrending will be applied on timeseries, before confound
         removal (default True).
@@ -157,6 +165,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         self,
         strategy: Optional[dict[str, str]] = None,
         spike: Optional[float] = None,
+        std_dvars_threshold: Optional[float] = None,
         detrend: bool = True,
         standardize: bool = True,
         low_pass: Optional[float] = None,
@@ -173,6 +182,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             }
         self.strategy = strategy
         self.spike = spike
+        self.std_dvars_threshold = std_dvars_threshold
         self.detrend = detrend
         self.standardize = standardize
         self.low_pass = low_pass
@@ -355,6 +365,14 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                     "Check if this file is really an fmriprep confounds file. "
                     "You can also deactivate spike (set spike = None)."
                 )
+        # Add std_dvars
+        if self.std_dvars_threshold is not None:
+            if "std_dvars" not in available_vars:
+                raise_error(
+                    "Invalid confounds file. Missing std_dvars "
+                    "(standardized DVARS) confound. "
+                    "Check if this file is really an fMRIPrep confounds file. "
+                )
         out = to_select, squares_to_compute, derivatives_to_compute, spike_name
         return out
 
@@ -403,6 +421,14 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             fd.loc[fd != 1] = 0
             out_df["spike"] = fd
             to_select.append("spike")
+
+        # add binary std_dvars regressor if needed at given threshold
+        if self.std_dvars_threshold is not None:
+            std_dvars = out_df["std_dvars"].copy()
+            std_dvars.loc[std_dvars > self.std_dvars_threshold] = 1
+            std_dvars.loc[std_dvars != 1] = 0
+            out_df["std_dvars"] = std_dvars
+            to_select.append("std_dvars")
 
         # Now pick all the relevant confounds
         out_df = out_df[to_select]
