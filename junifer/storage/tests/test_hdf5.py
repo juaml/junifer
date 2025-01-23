@@ -826,6 +826,70 @@ def test_store_timeseries(tmp_path: Path) -> None:
     assert_array_equal(read_df.values, data)
 
 
+def test_store_timeseries2d(tmp_path: Path) -> None:
+    """Test 2D timeseries store.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "test_store_timeseries_2d.hdf5"
+    storage = HDF5FeatureStorage(uri=uri)
+    # Metadata to store
+    element = {"subject": "test"}
+    meta = {
+        "element": element,
+        "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "BOLD",
+    }
+    # Process the metadata
+    meta_md5, meta_to_store, element_to_store = process_meta(meta)
+    # Store metadata
+    storage.store_metadata(
+        meta_md5=meta_md5, element=element_to_store, meta=meta_to_store
+    )
+
+    # Data to store
+    data = np.array(
+        [[10, 11, 12], [20, 21, 22], [30, 31, 32], [40, 41, 42], [50, 51, 52]]
+    )
+    data = np.c_[[data + (i * 100) for i in range(4)]]  # Generate timeseries
+
+    col_names = ["roi1", "roi2", "roi3"]
+    row_names = ["ev1", "ev2", "ev3", "ev4", "ev5"]
+
+    # Store 2D timeseries
+    storage.store_timeseries_2d(
+        meta_md5=meta_md5,
+        element=element_to_store,
+        data=data,
+        col_names=col_names,
+        row_names=row_names,
+    )
+
+    # Read into dataframe
+    read_data = storage.read(feature_md5=meta_md5)
+    # Check if data are equal
+    assert_array_equal(read_data["data"][0], data)
+    assert read_data["column_headers"] == col_names
+    assert read_data["row_headers"], row_names
+
+    read_df = storage.read_df(feature_md5=meta_md5)
+    flatted_names = [f"{row}~{col}" for row in row_names for col in col_names]
+
+    expected_flat_data = np.array(
+        [10, 11, 12, 20, 21, 22, 30, 31, 32, 40, 41, 42, 50, 51, 52]
+    )
+    expected_flat_data = np.c_[
+        [expected_flat_data + (i * 100) for i in range(4)]
+    ]  # Generate timeseries
+    assert_array_equal(read_df.values, expected_flat_data)
+    assert read_df.columns.to_list() == flatted_names
+
+
 def test_store_scalar_table(tmp_path: Path) -> None:
     """Test scalar table store.
 
@@ -857,7 +921,7 @@ def test_store_scalar_table(tmp_path: Path) -> None:
     col_names = ["roi1", "roi2"]
     row_names = ["ev1", "ev2", "ev3"]
 
-    # Store timeseries
+    # Store scalar table
     storage.store_scalar_table(
         meta_md5=meta_md5,
         element=element_to_store,
@@ -910,6 +974,12 @@ def _create_data_to_store(n_elements: int, kind: str) -> tuple[str, dict]:
             "data": np.arange(20).reshape(2, 10),
             "col_names": [f"col-{i}" for i in range(10)],
         }
+    elif kind in "timeseries_2d":
+        data_to_store = {
+            "data": np.arange(120).reshape(6, 5, 4),
+            "row_names": [f"row-{i}" for i in range(5)],
+            "col_names": [f"col-{i}" for i in range(4)],
+        }
     elif kind in "scalar_table":
         data_to_store = {
             "data": np.arange(50).reshape(5, 10),
@@ -961,6 +1031,7 @@ def _create_data_to_store(n_elements: int, kind: str) -> tuple[str, dict]:
         (10, 5, "matrix"),
         (10, 5, "timeseries"),
         (10, 5, "scalar_table"),
+        (10, 5, "timeseries_2d"),
     ],
 )
 def test_multi_output_store_and_collect(
@@ -982,7 +1053,9 @@ def test_multi_output_store_and_collect(
     """
     uri = tmp_path / "test_multi_output_store_and_collect.hdf5"
     storage = HDF5FeatureStorage(
-        uri=uri, single_output=False, chunk_size=chunk_size
+        uri=uri,
+        single_output=False,
+        chunk_size=chunk_size,
     )
 
     meta_md5, all_data = _create_data_to_store(n_elements, kind)
@@ -1009,6 +1082,12 @@ def test_multi_output_store_and_collect(
             )
         elif kind == "timeseries":
             storage.store_timeseries(
+                meta_md5=meta_md5,
+                element=t_data["element"],
+                **t_data["data"],
+            )
+        elif kind == "timeseries_2d":
+            storage.store_timeseries_2d(
                 meta_md5=meta_md5,
                 element=t_data["element"],
                 **t_data["data"],
@@ -1049,6 +1128,10 @@ def test_multi_output_store_and_collect(
 
     all_df = storage.read_df(feature_md5=meta_md5)
     if kind == "timeseries":
+        data_size = np.sum([x["data"]["data"].shape[0] for x in all_data])
+        assert len(all_df) == data_size
+        idx_names = [x for x in all_df.index.names if x != "timepoint"]
+    elif kind == "timeseries_2d":
         data_size = np.sum([x["data"]["data"].shape[0] for x in all_data])
         assert len(all_df) == data_size
         idx_names = [x for x in all_df.index.names if x != "timepoint"]

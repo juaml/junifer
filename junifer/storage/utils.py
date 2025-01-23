@@ -212,6 +212,44 @@ def store_matrix_checks(
         )
 
 
+def store_timeseries_2d_checks(
+    data_shape: tuple[int, int, int],
+    row_names_len: int,
+    col_names_len: int,
+) -> None:
+    """Run parameter checks for store_timeseries_2d() methods.
+
+    Parameters
+    ----------
+    data_shape : tuple of int and int
+        The shape of the matrix data to store.
+    row_names_len : int
+        The length of row labels.
+    col_names_len : int
+        The length of column labels.
+
+    """
+    # data validation
+    if len(data_shape) != 3:
+        raise_error(
+            msg="Data must be a 3D array",
+            klass=ValueError,
+        )
+
+    # Row label validation
+    if row_names_len != data_shape[1]:  # type: ignore
+        raise_error(
+            msg="Number of row names does not match number of rows",
+            klass=ValueError,
+        )
+    # Column label validation
+    if col_names_len != data_shape[2]:  # type: ignore
+        raise_error(
+            msg="Number of column names does not match number of columns",
+            klass=ValueError,
+        )
+
+
 def matrix_to_vector(
     data: np.ndarray,
     col_names: Iterable[str],
@@ -266,5 +304,37 @@ def matrix_to_vector(
         f"{row_names[i]}~{col_names[j]}"  # type: ignore
         for i, j in zip(data_idx[0], data_idx[1])
     ]
+
+    return flat_data, columns
+
+
+def timeseries2d_to_vector(
+    data: np.ndarray,
+    col_names: Iterable[str],
+    row_names: Iterable[str],
+) -> tuple[np.ndarray, list[str]]:
+    """Convert matrix to vector based on parameters.
+
+    Parameters
+    ----------
+    data : 2D / 3D numpy.ndarray
+        The matrix / tensor data to store / read.
+    col_names : list or tuple of str
+        The column labels.
+    row_names : list or tuple of str
+        The row labels.
+
+    Returns
+    -------
+    2D numpy.ndarray
+        The vector / matrix data.
+    list of str
+        The column labels.
+
+    """
+    # Reshape data to 2D
+    flat_data = data.reshape(data.shape[0], -1)
+    # Generate flat 1D row X column names
+    columns = [f"{r}~{c}" for r in row_names for c in col_names]
 
     return flat_data, columns

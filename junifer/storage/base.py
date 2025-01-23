@@ -226,6 +226,10 @@ class BaseFeatureStorage(ABC):
             self.store_scalar_table(
                 meta_md5=meta_md5, element=t_element, **kwargs
             )
+        elif kind == "timeseries_2d":
+            self.store_timeseries_2d(
+                meta_md5=meta_md5, element=t_element, **kwargs
+            )
 
     def store_matrix(
         self,
@@ -318,6 +322,35 @@ class BaseFeatureStorage(ABC):
         """
         raise_error(
             msg="Concrete classes need to implement store_timeseries().",
+            klass=NotImplementedError,
+        )
+
+    def store_timeseries_2d(
+        self,
+        meta_md5: str,
+        element: dict,
+        data: np.ndarray,
+        col_names: Optional[Iterable[str]] = None,
+        row_names: Optional[Iterable[str]] = None,
+    ) -> None:
+        """Store 2D timeseries.
+
+        Parameters
+        ----------
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as a dictionary.
+        data : numpy.ndarray
+            The timeseries data to store.
+        col_names : list or tuple of str, optional
+            The column labels (default None).
+        row_names : str, optional
+            The row labels (default None).
+
+        """
+        raise_error(
+            msg="Concrete classes need to implement store_timeseries_2d().",
             klass=NotImplementedError,
         )
 

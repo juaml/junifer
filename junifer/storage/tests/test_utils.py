@@ -17,6 +17,7 @@ from junifer.storage.utils import (
     matrix_to_vector,
     process_meta,
     store_matrix_checks,
+    timeseries2d_to_vector,
 )
 
 
@@ -421,3 +422,27 @@ def test_matrix_to_vector(
     data, columns = matrix_to_vector(**params)  # type: ignore
     assert_array_equal(data, expected_data)
     assert columns == expected_columns
+
+
+def test_timeseries2d_to_vector() -> None:
+    """Test timeseries2d to vector."""
+    data = np.array(
+        [[10, 11, 12], [20, 21, 22], [30, 31, 32], [40, 41, 42], [50, 51, 52]]
+    )
+    data = np.c_[[data + (i * 100) for i in range(4)]]  # Generate timeseries
+    col_names = ["c0", "c1", "c2"]
+    row_names = ["r0", "r1", "r2", "r3", "r4"]
+    flat_data, columns = timeseries2d_to_vector(
+        data=data,
+        col_names=col_names,
+        row_names=row_names,
+    )
+
+    expected_flat_data = np.array(
+        [10, 11, 12, 20, 21, 22, 30, 31, 32, 40, 41, 42, 50, 51, 52]
+    )
+    expected_flat_data = np.c_[
+        [expected_flat_data + (i * 100) for i in range(4)]
+    ]  # Generate timeseries
+    assert_array_equal(flat_data, expected_flat_data)
+    assert columns == [f"{r}~{c}" for r in row_names for c in col_names]
