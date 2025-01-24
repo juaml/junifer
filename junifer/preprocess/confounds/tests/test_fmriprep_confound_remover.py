@@ -460,21 +460,31 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
-        orig_bold = element_data["BOLD"]["data"].get_fdata().copy()
+        # Get original data
+        input_img = element_data["BOLD"]["data"]
+        input_bold = input_img.get_fdata().copy()
+        input_tr = input_img.header.get_zooms()[3]
+        # Fit-transform
         output = confound_remover.fit_transform(element_data)
-        trans_bold = output["BOLD"]["data"].get_fdata()
+        output_img = output["BOLD"]["data"]
+        output_bold = output_img.get_fdata()
+        output_tr = output_img.header.get_zooms()[3]
+
         # Transformation is in place
         assert_array_equal(
-            trans_bold, element_data["BOLD"]["data"].get_fdata()
+            output_bold, element_data["BOLD"]["data"].get_fdata()
         )
 
         # Data should have the same shape
-        assert orig_bold.shape == trans_bold.shape
+        assert input_bold.shape == output_bold.shape
 
         # but be different
         assert_raises(
-            AssertionError, assert_array_equal, orig_bold, trans_bold
+            AssertionError, assert_array_equal, input_bold, output_bold
         )
+
+        # Check t_r
+        assert input_tr == output_tr
 
         assert "meta" in output["BOLD"]
         assert "preprocess" in output["BOLD"]["meta"]
@@ -506,21 +516,31 @@ def test_fMRIPrepConfoundRemover_fit_transform_masks() -> None:
 
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
-        orig_bold = element_data["BOLD"]["data"].get_fdata().copy()
+        # Get original data
+        input_img = element_data["BOLD"]["data"]
+        input_bold = input_img.get_fdata().copy()
+        input_tr = input_img.header.get_zooms()[3]
+        # Fit-transform
         output = confound_remover.fit_transform(element_data)
-        trans_bold = output["BOLD"]["data"].get_fdata()
+        output_img = output["BOLD"]["data"]
+        output_bold = output_img.get_fdata()
+        output_tr = output_img.header.get_zooms()[3]
+
         # Transformation is in place
         assert_array_equal(
-            trans_bold, element_data["BOLD"]["data"].get_fdata()
+            output_bold, element_data["BOLD"]["data"].get_fdata()
         )
 
         # Data should have the same shape
-        assert orig_bold.shape == trans_bold.shape
+        assert input_bold.shape == output_bold.shape
 
         # but be different
         assert_raises(
-            AssertionError, assert_array_equal, orig_bold, trans_bold
+            AssertionError, assert_array_equal, input_bold, output_bold
         )
+
+        # Check t_r
+        assert input_tr == output_tr
 
         assert "meta" in output["BOLD"]
         assert "preprocess" in output["BOLD"]["meta"]
