@@ -181,6 +181,15 @@ def store_matrix_checks(
     col_names_len : int
         The length of column labels.
 
+    Raises
+    ------
+    ValueError
+        If the matrix kind is invalid
+        If the diagnoal is False and the matrix kind is "full"
+        If the matrix kind is "triu" or "tril" and the matrix is not square
+        If the number of row names does not match the number of rows
+        If the number of column names does not match the number of columns
+
     """
     # Matrix kind validation
     if matrix_kind not in ("triu", "tril", "full"):
@@ -227,6 +236,13 @@ def store_timeseries_2d_checks(
         The length of row labels.
     col_names_len : int
         The length of column labels.
+
+    Raises
+    ------
+    ValueError
+        If the data is not a 3D array (timepoints, rows, columns)
+        If the number of row names does not match the number of rows
+        If the number of column names does not match the number of columns
 
     """
     # data validation

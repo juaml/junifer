@@ -980,7 +980,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         col_names: Optional[Iterable[str]] = None,
         row_names: Optional[Iterable[str]] = None,
     ) -> None:
-        """Store timeseries.
+        """Store a 2D timeseries.
 
         Parameters
         ----------
@@ -989,9 +989,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         element : dict
             The element as dictionary.
         data : numpy.ndarray
-            The timeseries data to store.
+            The 2D timeseries data to store.
         col_names : list or tuple of str, optional
             The column labels (default None).
+        row_names : list or tuple of str, optional
+            The row labels (default None).
 
         """
         store_timeseries_2d_checks(
@@ -1140,7 +1142,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     fname=str(file_),
                     title=feature_md5,
                     slash="ignore",
-                )s
+                )
                 if i_file == 0:
                     # Store the "static" data
                     static_data = {
