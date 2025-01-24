@@ -7,7 +7,7 @@
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>14. What’s new - junifer documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=d2d258e8" />
@@ -317,8 +317,8 @@
         <article role="main" id="furo-main-content">
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
-<section id="junifer-release-2024-11-18">
-<h2><span class="section-number">14.1. </span>Junifer 0.0.6.dev257 (2024-11-18)<a class="headerlink" href="#junifer-release-2024-11-18" title="Link to this heading">¶</a></h2>
+<section id="junifer-release-2025-01-24">
+<h2><span class="section-number">14.1. </span>Junifer 0.0.6.dev399 (2025-01-24)<a class="headerlink" href="#junifer-release-2025-01-24" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -331,8 +331,20 @@ in <a class="reference internal" href="api/markers.html#junifer.markers.BrainPri
 <code class="docutils literal notranslate"><span class="pre">junifer.pipeline.registry</span></code> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/369">#369</a>)</p></li>
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">'emomatching'</span></code> task to <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> by <a class="reference external" href="https://github.com/LeSasse">Leonard Sasse</a>
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/370">#370</a>)</p></li>
+<li><p>Use correct return code for ANTs commands while checking presence of external
+commands by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/385">#385</a>)</p></li>
 <li><p>Use the <a class="reference internal" href="api/pipeline.html#junifer.pipeline.WorkDirManager" title="junifer.pipeline.WorkDirManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.pipeline.WorkDirManager</span></code></a> for temporary directories in
 the <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/386">#386</a>)</p></li>
+<li><p>Fix coordinates space transformation using ANTs by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/388">#388</a>)</p></li>
+<li><p>Fix metadata update for <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a> and adjust
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber.get_elements" title="junifer.datagrabber.PatternDataGrabber.get_elements"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PatternDataGrabber.get_elements()</span></code></a> to check <code class="docutils literal notranslate"><span class="pre">list</span></code>-like data type
+values by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> and <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/398">#398</a>)</p></li>
+<li><p>Use correct file output suffices for AFNI-based markers by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/409">#409</a>)</p></li>
+<li><p>Fix <code class="docutils literal notranslate"><span class="pre">t_r</span></code> tampering by <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.image.clean_img.html#nilearn.image.clean_img" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.image.clean_img()</span></code></a> in
+<a class="reference internal" href="api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> and <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/420">#420</a>)</p></li>
 </ul>
 </section>
 <section id="api-changes">
@@ -347,6 +359,25 @@ the <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabbe
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/387">#387</a>)</p></li>
 <li><p><a class="reference internal" href="api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a>’s <code class="docutils literal notranslate"><span class="pre">using</span></code> now supports <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> allowing auto tool
 selection based on DataGrabber specification by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/390">#390</a>)</p></li>
+<li><p>Allow <code class="docutils literal notranslate"><span class="pre">workdir</span></code> to also be a mapping in YAML, with <code class="docutils literal notranslate"><span class="pre">path</span></code> and <code class="docutils literal notranslate"><span class="pre">cleanup</span></code>
+keys by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/402">#402</a>)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">source</span></code> parameter and resurrect <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> parameter for
+<code class="docutils literal notranslate"><span class="pre">compute_brain_mask</span></code> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/404">#404</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">native_t1w</span></code> parameter has been replaced with <code class="docutils literal notranslate"><span class="pre">space</span></code> to allow
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICID1000" title="junifer.datagrabber.DataladAOMICID1000"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a>, <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a> and
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> to fetch data in all available spaces by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/405">#405</a>)</p></li>
+<li><p><a class="reference internal" href="api/data.html#junifer.data.ParcellationRegistry.load" title="junifer.data.ParcellationRegistry.load"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ParcellationRegistry.load()</span></code></a> now has a new parameter <code class="docutils literal notranslate"><span class="pre">target_space</span></code>
+to provide parcellation in highest possible resolution if it does not match
+the space of the parcellation by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> and <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/411">#411</a>)</p></li>
+<li><p>Introduce new CLI parameter <code class="docutils literal notranslate"><span class="pre">--verbose-datalad</span></code> to control <code class="docutils literal notranslate"><span class="pre">datalad</span></code>’s
+logging handler by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/412">#412</a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_data</span></code> parameter of <a class="reference internal" href="api/data.html#junifer.data.get_template" title="junifer.data.get_template"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_template()</span></code></a> has been replaced with
+<code class="docutils literal notranslate"><span class="pre">target_img</span></code> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/413">#413</a>)</p></li>
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">template_space</span></code> parameter for <code class="docutils literal notranslate"><span class="pre">compute_brain_mask</span></code> and
+<code class="docutils literal notranslate"><span class="pre">resolution</span></code> parameter for <a class="reference internal" href="api/data.html#junifer.data.get_template" title="junifer.data.get_template"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_template()</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/415">#415</a>)</p></li>
 </ul>
 </section>
 <section id="improved-documentation">
@@ -360,6 +391,8 @@ selection based on DataGrabber specification by <a class="reference external" hr
 <section id="enhancements">
 <h3><span class="section-number">14.1.4. </span>Enhancements<a class="headerlink" href="#enhancements" title="Link to this heading">¶</a></h3>
 <ul class="simple">
+<li><p>Raise error when partial or complete element selectors are invalid when
+running the pipeline by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/319">#319</a>)</p></li>
 <li><p>Add support for Spearman’s correlation in
 <a class="reference internal" href="api/nilearn.html#junifer.external.nilearn.JuniferConnectivityMeasure" title="junifer.external.nilearn.JuniferConnectivityMeasure"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferConnectivityMeasure</span></code></a> by <a class="reference external" href="https://github.com/LeSasse">Leonard Sasse</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/335">#335</a>)</p></li>
 <li><p>Set proper stdout encoding for <a class="reference internal" href="api/utils.html#junifer.utils.run_ext_cmd" title="junifer.utils.run_ext_cmd"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_ext_cmd()</span></code></a> to ease human readability
@@ -373,6 +406,27 @@ which allows to disable cleaning up temporary directories by <a class="reference
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/389">#389</a>)</p></li>
 <li><p>Update <code class="docutils literal notranslate"><span class="pre">Warp</span></code> data type to be a list of dictionaries and adapt to allow
 multiple transforms to be specified by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/390">#390</a>)</p></li>
+<li><p>Refactor the masking logic in the pipeline to account for and optimise space
+transformations and merges by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> and <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/395">#395</a>)</p></li>
+<li><p>Allow <code class="docutils literal notranslate"><span class="pre">workdir</span></code> mapping form in YAML for easy debugging of single element
+<code class="docutils literal notranslate"><span class="pre">run</span></code> by disabling cleanup of <a class="reference internal" href="api/pipeline.html#junifer.pipeline.WorkDirManager" title="junifer.pipeline.WorkDirManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.pipeline.WorkDirManager</span></code></a> by
+<a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/402">#402</a>)</p></li>
+<li><p>Use <a class="reference internal" href="api/utils.html#junifer.utils.ConfigManager" title="junifer.utils.ConfigManager"><code class="xref py py-func docutils literal notranslate"><span class="pre">junifer.utils.ConfigManager()</span></code></a> to skip time-consuming dataset ID and
+dirty checks for <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/403">#403</a>)</p></li>
+<li><p>Enable <code class="docutils literal notranslate"><span class="pre">compute_brain_mask</span></code> to use subject-specific probseg files by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/404">#404</a>)</p></li>
+<li><p>Update <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICID1000" title="junifer.datagrabber.DataladAOMICID1000"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a>, <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a> and
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> to fetch data in all available spaces by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/405">#405</a>)</p></li>
+<li><p>Update Preprocessors to sync data their paths so that the results are
+idempotent by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/408">#408</a>)</p></li>
+<li><p>Ease asset storage for AFNI-based markers by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/409">#409</a>)</p></li>
+<li><p>Refactor the parcellation logic in the pipeline to account for and optimise
+space transformations and merges by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> and <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/411">#411</a>)</p></li>
+<li><p>Adapt mask warpers to use correct interpolation method based on the type of
+data by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> and <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/416">#416</a>)</p></li>
 </ul>
 </section>
 <section id="features">
@@ -389,6 +443,15 @@ pipeline component management by <a class="reference external" href="https://git
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/387">#387</a>)</p></li>
 <li><p>Introduce <code class="docutils literal notranslate"><span class="pre">junifer.typing</span></code> sub-module to organise internal and external
 type hints by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/392">#392</a>)</p></li>
+<li><p>Introduce <a class="reference internal" href="api/utils.html#junifer.utils.ConfigManager" title="junifer.utils.ConfigManager"><code class="xref py py-class docutils literal notranslate"><span class="pre">junifer.utils.ConfigManager</span></code></a> singleton class to manage
+global configuration by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/401">#401</a>)</p></li>
+<li><p>Introduce <code class="docutils literal notranslate"><span class="pre">BOLD.reference</span></code> nested type and adapt <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a> and
+necessary data components by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/407">#407</a>)</p></li>
+<li><p>Allow masks to be warped, if found, in <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon
+Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/408">#408</a>)</p></li>
+<li><p>Add support for coloured <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Formatter" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Formatter</span></code></a> to use with <code class="docutils literal notranslate"><span class="pre">junifer</span></code>’s
+<a class="reference external" href="https://docs.python.org/3/library/logging.handlers.html#logging.StreamHandler" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.StreamHandler</span></code></a> based on environment by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/412">#412</a>)</p></li>
 </ul>
 </section>
 <section id="miscellaneous">
@@ -415,6 +478,8 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/391">#391</a>)</p></li>
 <li><p>Update type hints across codebase to be Python&gt;=3.9 compatible by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/393">#393</a>)</p></li>
+<li><p>Simplify logic for parcellation and mask space warping by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/414">#414</a>)</p></li>
 </ul>
 </section>
 </section>
@@ -478,7 +543,7 @@ aggregation function behaves exactly as
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> to support <code class="docutils literal notranslate"><span class="pre">FreeSurfer</span></code> data type by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/346">#346</a>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">FunctionalConnectivity</span></code>-family Markers now use
-<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EmpiricalCovariance.html#sklearn.covariance.EmpiricalCovariance" title="(in scikit-learn v1.5)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.EmpiricalCovariance</span></code></a> as the default covariance
+<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.covariance.EmpiricalCovariance.html#sklearn.covariance.EmpiricalCovariance" title="(in scikit-learn v1.6)"><code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.covariance.EmpiricalCovariance</span></code></a> as the default covariance
 estimator and <code class="docutils literal notranslate"><span class="pre">correlation</span></code> as the default connecivity matrix kind by
 <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/348">#348</a>)</p></li>
 <li><p>Enable Markers to output multiple features by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/349">#349</a>)</p></li>
@@ -1123,7 +1188,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, junifer Contributors
+                Copyright &#169; 2025, junifer Contributors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1150,7 +1215,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-release-2024-11-18">14.1. Junifer 0.0.6.dev257 (2024-11-18)</a><ul>
+<li><a class="reference internal" href="#junifer-release-2025-01-24">14.1. Junifer 0.0.6.dev399 (2025-01-24)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
@@ -1216,7 +1281,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=31d9cc84"></script>
+</div><script src="_static/documentation_options.js?v=d4bc68f5"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>

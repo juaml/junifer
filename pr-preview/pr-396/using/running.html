@@ -7,7 +7,7 @@
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>5.2. Running Jobs - junifer documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
@@ -407,7 +407,7 @@ commands will collect the results:</p>
 wish. We would need to do this programmatically so feel free to choose your
 Python interpreter of choice or use it via a Python script.</p>
 <p>First we load the storage like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.storage</span> <span class="kn">import</span> <span class="n">HDF5FeatureStorage</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">junifer.storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">HDF5FeatureStorage</span>
 
 <span class="c1"># You need to import and use SQLiteFeatureStorage if you chose that</span>
 <span class="c1"># for storage while extracting features</span>
@@ -446,13 +446,13 @@ like so:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_df</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="s2">&quot;&lt;name-key-from-feature-metadata&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>to get it as a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1702.g7fe270c8e7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>.</p>
+<p>to get it as a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>.</p>
 <p>If there are features with duplicate <code class="docutils literal notranslate"><span class="pre">name</span></code> s, then we would need to use
 the MD5 checksum and pass it like so:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_df</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_md5</span><span class="o">=</span><span class="s2">&quot;&lt;md5-hash-of-feature&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We can now manipulate the dictionary or the <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1702.g7fe270c8e7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> as we
+<p>We can now manipulate the dictionary or the <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> as we
 wish or use the DataFrame directly with <a class="reference external" href="https://juaml.github.io/julearn">julearn</a> if desired.</p>
 <section id="on-the-fly-transforms">
 <h2><span class="section-number">5.4.1. </span>On-the-fly transforms<a class="headerlink" href="#on-the-fly-transforms" title="Link to this heading">¶</a></h2>
@@ -469,7 +469,7 @@ is required.</p>
 <h3>Computing brain connectivity via <a class="reference external" href="https://github.com/aestrivex/bctpy">bctpy</a><a class="headerlink" href="#computing-brain-connectivity-via-bctpy" title="Link to this heading">¶</a></h3>
 <p>You can compute for example, the degree of each node considering an undirected
 graph via <a class="reference external" href="https://github.com/aestrivex/bctpy">bctpy</a> like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.onthefly</span> <span class="kn">import</span> <span class="n">read_transform</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">junifer.onthefly</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_transform</span>
 
 <span class="n">transformed_df</span> <span class="o">=</span> <span class="n">read_transform</span><span class="p">(</span>
     <span class="n">storage</span><span class="p">,</span>
@@ -484,7 +484,7 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
 <section id="post-analysis-of-brainprint-results">
 <h3>Post-analysis of BrainPrint results<a class="headerlink" href="#post-analysis-of-brainprint-results" title="Link to this heading">¶</a></h3>
 <p>To perform post-analysis on BrainPrint results, start by importing:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">junifer.onthefly</span> <span class="kn">import</span> <span class="n">brainprint</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">junifer.onthefly</span><span class="w"> </span><span class="kn">import</span> <span class="n">brainprint</span>
 </pre></div>
 </div>
 <section id="normalising">
@@ -569,7 +569,7 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, junifer Contributors
+                Copyright &#169; 2025, junifer Contributors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -622,7 +622,7 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=31d9cc84"></script>
+</div><script src="../_static/documentation_options.js?v=d4bc68f5"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
