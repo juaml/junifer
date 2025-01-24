@@ -29,6 +29,7 @@ jobs:
         make \
         jq
     - name: Copy xfms directory
+      run: |
         mkdir -p $HOME/junifer/data/xfms
         cp -ar /root/junifer/data/xfms/. $HOME/junifer/data/xfms/
     - name: Checkout repository
