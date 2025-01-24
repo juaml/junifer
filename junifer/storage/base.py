@@ -345,7 +345,7 @@ class BaseFeatureStorage(ABC):
             The timeseries data to store.
         col_names : list or tuple of str, optional
             The column labels (default None).
-        row_names : str, optional
+        row_names : list or tuple of str, optional
             The row labels (default None).
 
         """
