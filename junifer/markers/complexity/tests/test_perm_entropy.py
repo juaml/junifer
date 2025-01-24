@@ -11,11 +11,11 @@ import pytest
 
 pytest.importorskip("neurokit2")
 
-from junifer.datareader import DefaultDataReader  # noqa: E402
-from junifer.markers.complexity import PermEntropy  # noqa: E402
-from junifer.pipeline.utils import _check_ants  # noqa: E402
-from junifer.storage import SQLiteFeatureStorage  # noqa: E402
-from junifer.testing.datagrabbers import (  # noqa: E402
+from junifer.datareader import DefaultDataReader
+from junifer.markers.complexity import PermEntropy
+from junifer.pipeline.utils import _check_ants
+from junifer.storage import SQLiteFeatureStorage
+from junifer.testing.datagrabbers import (
     SPMAuditoryTestingDataGrabber,
 )
 

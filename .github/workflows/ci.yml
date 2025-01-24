@@ -12,7 +12,7 @@ on:
 
 jobs:
   run-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # Use custom docs CI image
     container: ghcr.io/juaml/junifer-ci:main
     strategy:
@@ -31,16 +31,16 @@ jobs:
       run: |
         echo "Using FSL : $(flirt -version)"
     - name: Install system dependencies
+      # actions/checkout fails to identify Git as it's not in the CI image
       run: |
-        # actions/checkout fails to identify Git as it's not in the CI image
-        apt-get -qq update && \
-        apt-get -qq install -y \
+        sudo apt-get update
+        sudo apt-get install -y \
         git \
         git-annex \
         make \
         jq
-        # Copy xfms directory
-        mkdir -p $HOME/junifer/data/xfms && \
+    - name: Copy xfms directory
+        mkdir -p $HOME/junifer/data/xfms
         cp -ar /root/junifer/data/xfms/. $HOME/junifer/data/xfms/
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -59,8 +59,8 @@ jobs:
         git config --global user.email "junifer-runner@github.com"
         git config --global user.name "GitHub Runner"
     - name: Test with tox
+      # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
       run: |
-        # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
         git config --system --add safe.directory $(pwd)
         tox
     - name: Upload coverage to Codecov

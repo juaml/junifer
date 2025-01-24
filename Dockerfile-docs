@@ -10,7 +10,8 @@ RUN apt-get update && \
     apt-get install -y \
     # ANTs runtime stuff
     libhdf5-dev \
-    bc
+    bc \
+    && rm -rf /var/lib/apt/lists/*
 
 # Add xfms
 COPY --from=ghcr.io/juaml/human-template-xfms:main /opt/xfms /root/junifer/data/xfms
