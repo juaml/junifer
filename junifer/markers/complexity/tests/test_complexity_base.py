@@ -8,7 +8,7 @@ import pytest
 
 pytest.importorskip("neurokit2")
 
-from junifer.markers.complexity.complexity_base import (  # noqa: E402
+from junifer.markers.complexity.complexity_base import (
     ComplexityBase,
 )
 
