@@ -185,7 +185,7 @@ def store_matrix_checks(
     ------
     ValueError
         If the matrix kind is invalid
-        If the diagnoal is False and the matrix kind is "full"
+        If the diagonal is False and the matrix kind is "full"
         If the matrix kind is "triu" or "tril" and the matrix is not square
         If the number of row names does not match the number of rows
         If the number of column names does not match the number of columns
