@@ -4,10 +4,12 @@ on:
   push:
     paths-ignore:
       - 'junifer/**'
+      - 'docs/changes/newsfragments/**'
       - '.github/workflows/**'
   pull_request:
     paths-ignore:
       - 'junifer/**'
+      - 'docs/changes/newsfragments/**'
       - '.github/workflows/**'
 jobs:
   run-tests:
@@ -42,7 +44,7 @@ jobs:
           echo '</coverage>' >> coverage.xml
         if: matrix.python-version == 3.12
       - name: Upload mock coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           # Allow coverage upload failure
