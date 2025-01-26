@@ -4,7 +4,6 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-
 from collections import defaultdict
 from collections.abc import Iterable
 from pathlib import Path
@@ -24,7 +23,13 @@ from ..external.h5io.h5io import (
 )
 from ..utils import logger, raise_error
 from .base import BaseFeatureStorage
-from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
+from .utils import (
+    element_to_prefix,
+    matrix_to_vector,
+    store_matrix_checks,
+    store_timeseries_2d_checks,
+    timeseries2d_to_vector,
+)
 
 
 __all__ = ["HDF5FeatureStorage"]
@@ -82,7 +87,7 @@ def _create_chunk(
             chunk_size=tuple(array_chunk_size),
             n_chunk=i_chunk,
         )
-    elif kind in ["timeseries", "scalar_table"]:
+    elif kind in ["timeseries", "scalar_table", "timeseries_2d"]:
         out = ChunkedList(
             data=chunk_data,
             size=element_count,
@@ -91,8 +96,8 @@ def _create_chunk(
     else:
         raise_error(
             f"Invalid kind: {kind}. "
-            "Must be one of ['vector', 'matrix', 'timeseries',"
-            "'scalar_table']."
+            "Must be one of ['vector', 'matrix', 'timeseries', "
+            "'timeseries_2d', 'scalar_table']."
         )
     return out
 
@@ -196,8 +201,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         if not self.single_output and not element:
             raise_error(
                 msg=(
-                    "`element` must be provided when `single_output` "
-                    "is False"
+                    "`element` must be provided when `single_output` is False"
                 ),
                 klass=RuntimeError,
             )
@@ -514,6 +518,27 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             columns = hdf_data["column_headers"]
             # Convert data from 3D to 2D
             reshaped_data = np.concatenate(all_data, axis=0)
+        elif hdf_data["kind"] == "timeseries_2d":
+            # Create dictionary for aggregating index data
+            element_idx = defaultdict(list)
+            all_data = []
+            for idx, element in enumerate(hdf_data["element"]):
+                # Get row count for the element
+                t_data = hdf_data["data"][idx]
+                flat_data, columns = timeseries2d_to_vector(
+                    data=t_data,
+                    col_names=hdf_data["column_headers"],
+                    row_names=hdf_data["row_headers"],
+                )
+                all_data.append(flat_data)
+                n_timepoints = flat_data.shape[0]
+                # Set rows for the index
+                for key, val in element.items():
+                    element_idx[key].extend([val] * n_timepoints)
+                # Add extra column for timepoints
+                element_idx["timepoint"].extend(np.arange(n_timepoints))
+            # Convert data from 3D to 2D
+            reshaped_data = np.concatenate(all_data, axis=0)
         elif hdf_data["kind"] == "scalar_table":
             # Create dictionary for aggregating index data
             element_idx = defaultdict(list)
@@ -765,7 +790,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
             t_data = stored_data["data"]
-            if kind in ["timeseries", "scalar_table"]:
+            if kind in ["timeseries", "scalar_table", "timeseries_2d"]:
                 t_data += data
             else:
                 t_data = np.concatenate((t_data, data), axis=-1)
@@ -947,6 +972,44 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             row_header_column_name="timepoint",
         )
 
+    def store_timeseries_2d(
+        self,
+        meta_md5: str,
+        element: dict[str, str],
+        data: np.ndarray,
+        col_names: Optional[Iterable[str]] = None,
+        row_names: Optional[Iterable[str]] = None,
+    ) -> None:
+        """Store a 2D timeseries.
+
+        Parameters
+        ----------
+        meta_md5 : str
+            The metadata MD5 hash.
+        element : dict
+            The element as dictionary.
+        data : numpy.ndarray
+            The 2D timeseries data to store.
+        col_names : list or tuple of str, optional
+            The column labels (default None).
+        row_names : list or tuple of str, optional
+            The row labels (default None).
+
+        """
+        store_timeseries_2d_checks(
+            data_shape=data.shape,
+            row_names_len=len(row_names),  # type: ignore
+            col_names_len=len(col_names),  # type: ignore
+        )
+        self._store_data(
+            kind="timeseries_2d",
+            meta_md5=meta_md5,
+            element=[element],  # convert to list
+            data=[data],  # convert to list
+            column_headers=col_names,
+            row_headers=row_names,
+        )
+
     def store_scalar_table(
         self,
         meta_md5: str,
@@ -1014,8 +1077,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Run loop to collect metadata
         logger.info(
-            "Collecting metadata from "
-            f"{self.uri.parent}/*_{self.uri.name}"  # type: ignore
+            f"Collecting metadata from {self.uri.parent}/*_{self.uri.name}"  # type: ignore
         )
         # Collect element files per feature MD5
         elements_per_feature_md5 = defaultdict(list)
@@ -1046,8 +1108,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Run loop to collect data per feature per file
         logger.info(
-            "Collecting data from "
-            f"{self.uri.parent}/*_{self.uri.name}"  # type: ignore
+            f"Collecting data from {self.uri.parent}/*_{self.uri.name}"  # type: ignore
         )
         logger.info(f"Will collect {len(elements_per_feature_md5)} features.")
 
@@ -1092,7 +1153,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                     kind = static_data["kind"]
 
                 # Append the "dynamic" data
-                if kind in ["timeseries", "scalar_table"]:
+                if kind in ["timeseries", "scalar_table", "timeseries_2d"]:
                     chunk_data.extend(t_data["data"])
                 else:
                     chunk_data.append(t_data["data"])
