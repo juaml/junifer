@@ -418,7 +418,7 @@ feature.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1869.g84bf1ef829)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -536,6 +536,28 @@ this to False will raise an error (default True).</p>
 <dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The timeseries data to store.</p>
 </dd>
 <dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.storage.BaseFeatureStorage.store_timeseries_2d">
+<span class="sig-name descname"><span class="pre">store_timeseries_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_md5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.BaseFeatureStorage.store_timeseries_2d" title="Link to this definition">¶</a></dt>
+<dd><p>Store 2D timeseries.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>meta_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The metadata MD5 hash.</p>
+</dd>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
+</dd>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The timeseries data to store.</p>
+</dd>
+<dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
+</dd>
+<dt><strong>row_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The row labels (default None).</p>
 </dd>
 </dl>
 </dd>
@@ -715,7 +737,7 @@ specified.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1869.g84bf1ef829)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -842,6 +864,28 @@ store metadata if <code class="docutils literal notranslate"><span class="pre">m
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="junifer.storage.HDF5FeatureStorage.store_timeseries_2d">
+<span class="sig-name descname"><span class="pre">store_timeseries_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_md5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.store_timeseries_2d" title="Link to this definition">¶</a></dt>
+<dd><p>Store a 2D timeseries.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>meta_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The metadata MD5 hash.</p>
+</dd>
+<dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as dictionary.</p>
+</dd>
+<dt><strong>data</strong><span class="classifier"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">numpy.ndarray</span></code></a></span></dt><dd><p>The 2D timeseries data to store.</p>
+</dd>
+<dt><strong>col_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The column labels (default None).</p>
+</dd>
+<dt><strong>row_names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The row labels (default None).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="junifer.storage.HDF5FeatureStorage.store_vector">
 <span class="sig-name descname"><span class="pre">store_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta_md5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.storage.HDF5FeatureStorage.store_vector" title="Link to this definition">¶</a></dt>
 <dd><p>Store vector.</p>
@@ -906,7 +950,7 @@ implementation of this abstract class.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Index</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.MultiIndex.html#pandas.MultiIndex" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.MultiIndex</span></code></a></dt><dd><p>The index of the dataframe to store.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v3.0.0.dev0+1869.g84bf1ef829)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Index</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.MultiIndex.html#pandas.MultiIndex" title="(in pandas v3.0.0.dev0+1869.g84bf1ef829)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.MultiIndex</span></code></a></dt><dd><p>The index of the dataframe to store.</p>
 </dd>
 </dl>
 </dd>
@@ -939,7 +983,7 @@ storage interface.</p>
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
 </dd>
-<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1869.g84bf1ef829)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v3.0.0.dev0+1869.g84bf1ef829)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
 </dd>
 </dl>
 </dd>
@@ -1117,7 +1161,7 @@ specified.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1869.g84bf1ef829)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The features as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -1142,7 +1186,7 @@ multiple features are found.</p>
 </dd>
 <dt><strong>element</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The element as a dictionary.</p>
 </dd>
-<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v3.0.0.dev0+1862.g0c4ca3a9e4)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
+<dt><strong>df</strong><span class="classifier"><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+1869.g84bf1ef829)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> or <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v3.0.0.dev0+1869.g84bf1ef829)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.Series</span></code></a></span></dt><dd><p>The pandas DataFrame or Series to store.</p>
 </dd>
 </dl>
 </dd>
@@ -1280,6 +1324,7 @@ this to False will raise an error (default True).</p>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.store_metadata"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.store_metadata()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.store_scalar_table"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.store_scalar_table()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.store_timeseries"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.store_timeseries()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.store_timeseries_2d"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.store_timeseries_2d()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.store_vector"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.store_vector()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.BaseFeatureStorage.validate"><code class="docutils literal notranslate"><span class="pre">BaseFeatureStorage.validate()</span></code></a></li>
 </ul>
@@ -1294,6 +1339,7 @@ this to False will raise an error (default True).</p>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_metadata"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_metadata()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_scalar_table"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_scalar_table()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_timeseries"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_timeseries()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_timeseries_2d"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_timeseries_2d()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.storage.HDF5FeatureStorage.store_vector"><code class="docutils literal notranslate"><span class="pre">HDF5FeatureStorage.store_vector()</span></code></a></li>
 </ul>
 </li>
@@ -1327,7 +1373,7 @@ this to False will raise an error (default True).</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=de10aefc"></script>
+</div><script src="../_static/documentation_options.js?v=d7385a29"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
