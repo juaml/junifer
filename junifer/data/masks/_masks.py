@@ -26,20 +26,22 @@ from ...utils import logger, raise_error
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..template_spaces import get_template
-from ..utils import closest_resolution, get_native_warper
+from ..utils import (
+    check_dataset,
+    closest_resolution,
+    fetch_file_via_datalad,
+    get_native_warper,
+)
 from ._ants_mask_warper import ANTsMaskWarper
 from ._fsl_mask_warper import FSLMaskWarper
 
 
 if TYPE_CHECKING:
+    from datalad.api import Dataset
     from nibabel.nifti1 import Nifti1Image
 
 
 __all__ = ["MaskRegistry", "compute_brain_mask"]
-
-
-# Path to the masks
-_masks_path = Path(__file__).parent
 
 
 def compute_brain_mask(
@@ -224,6 +226,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
     def __init__(self) -> None:
         """Initialize the class."""
+        super().__init__()
         # Each entry in registry is a dictionary that must contain at least
         # the following keys:
         # * 'family': the mask's family name
@@ -240,38 +243,40 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         self._builtin = {}
         self._external = {}
 
-        self._builtin = {
-            "GM_prob0.2": {
-                "family": "Vickery-Patil",
-                "space": "IXI549Space",
-            },
-            "GM_prob0.2_cortex": {
-                "family": "Vickery-Patil",
-                "space": "IXI549Space",
-            },
-            "compute_brain_mask": {
-                "family": "Callable",
-                "func": compute_brain_mask,
-                "space": "inherit",
-            },
-            "compute_background_mask": {
-                "family": "Callable",
-                "func": compute_background_mask,
-                "space": "inherit",
-            },
-            "compute_epi_mask": {
-                "family": "Callable",
-                "func": compute_epi_mask,
-                "space": "inherit",
-            },
-            "UKB_15K_GM": {
-                "family": "UKB",
-                "space": "MNI152NLin6Asym",
-            },
-        }
+        self._builtin.update(
+            {
+                "GM_prob0.2": {
+                    "family": "Vickery-Patil",
+                    "space": "IXI549Space",
+                },
+                "GM_prob0.2_cortex": {
+                    "family": "Vickery-Patil",
+                    "space": "IXI549Space",
+                },
+                "compute_brain_mask": {
+                    "family": "Callable",
+                    "func": compute_brain_mask,
+                    "space": "inherit",
+                },
+                "compute_background_mask": {
+                    "family": "Callable",
+                    "func": compute_background_mask,
+                    "space": "inherit",
+                },
+                "compute_epi_mask": {
+                    "family": "Callable",
+                    "func": compute_epi_mask,
+                    "space": "inherit",
+                },
+                "UKB_15K_GM": {
+                    "family": "UKB",
+                    "space": "MNI152NLin6Asym",
+                },
+            }
+        )
 
-        # Set built-in to registry
-        self._registry = self._builtin
+        # Update registry with built-in ones
+        self._registry.update(self._builtin)
 
     def register(
         self,
@@ -297,19 +302,18 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         Raises
         ------
         ValueError
-            If the mask ``name`` is already registered and
-            ``overwrite=False`` or
-            if the mask ``name`` is a built-in mask.
+            If the mask ``name`` is a built-in mask or
+            if the mask ``name`` is already registered and
+            ``overwrite=False``.
 
         """
         # Check for attempt of overwriting built-in mask
         if name in self._builtin:
+            raise_error(f"Mask: {name} already registered as built-in mask.")
+        # Check for attempt of overwriting external masks
+        if name in self._external:
             if overwrite:
                 logger.info(f"Overwriting mask: {name}")
-                if self._registry[name]["family"] != "CustomUserMask":
-                    raise_error(
-                        f"Mask: {name} already registered as built-in mask."
-                    )
             else:
                 raise_error(
                     f"Mask: {name} already registered. Set `overwrite=True` "
@@ -318,16 +322,17 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Convert str to Path
         if not isinstance(mask_path, Path):
             mask_path = Path(mask_path)
+        # Registration
         logger.info(f"Registering mask: {name}")
         # Add mask info
         self._external[name] = {
-            "path": str(mask_path.absolute()),
+            "path": mask_path,
             "family": "CustomUserMask",
             "space": space,
         }
         # Update registry
         self._registry[name] = {
-            "path": str(mask_path.absolute()),
+            "path": mask_path,
             "family": "CustomUserMask",
             "space": space,
         }
@@ -396,14 +401,22 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         # Check if the mask family is custom or built-in
         mask_img = None
         if t_family == "CustomUserMask":
-            mask_fname = Path(mask_definition["path"])
-        elif t_family == "Vickery-Patil":
-            mask_fname = _load_vickery_patil_mask(name, resolution)
+            mask_fname = mask_definition["path"]
         elif t_family == "Callable":
             mask_img = mask_definition["func"]
             mask_fname = None
-        elif t_family == "UKB":
-            mask_fname = _load_ukb_mask(name)
+        elif t_family in ["Vickery-Patil", "UKB"]:
+            # Get dataset
+            dataset = check_dataset()
+            # Load mask
+            if t_family == "Vickery-Patil":
+                mask_fname = _load_vickery_patil_mask(
+                    dataset=dataset,
+                    name=name,
+                    resolution=resolution,
+                )
+            elif t_family == "UKB":
+                mask_fname = _load_ukb_mask(dataset=dataset, name=name)
         else:
             raise_error(f"Unknown mask family: {t_family}")
 
@@ -685,6 +698,7 @@ class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
 
 def _load_vickery_patil_mask(
+    dataset: "Dataset",
     name: str,
     resolution: Optional[float] = None,
 ) -> Path:
@@ -692,6 +706,8 @@ def _load_vickery_patil_mask(
 
     Parameters
     ----------
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch mask from.
     name : {"GM_prob0.2", "GM_prob0.2_cortex"}
         The name of the mask.
     resolution : float, optional
@@ -712,6 +728,7 @@ def _load_vickery_patil_mask(
         ``name = "GM_prob0.2"``.
 
     """
+    # Check name
     if name == "GM_prob0.2":
         available_resolutions = [1.5, 3.0]
         to_load = closest_resolution(resolution, available_resolutions)
@@ -730,17 +747,20 @@ def _load_vickery_patil_mask(
     else:
         raise_error(f"Cannot find a Vickery-Patil mask called {name}")
 
-    # Set path for masks
-    mask_fname = _masks_path / "vickery-patil" / mask_fname
+    # Fetch file
+    return fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj / "masks" / "Vickery-Patil" / mask_fname,
+    )
 
-    return mask_fname
 
-
-def _load_ukb_mask(name: str) -> Path:
+def _load_ukb_mask(dataset: "Dataset", name: str) -> Path:
     """Load UKB mask.
 
     Parameters
     ----------
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch mask from.
     name : {"UKB_15K_GM"}
         The name of the mask.
 
@@ -755,15 +775,17 @@ def _load_ukb_mask(name: str) -> Path:
         If ``name`` is invalid.
 
     """
+    # Check name
     if name == "UKB_15K_GM":
         mask_fname = "UKB_15K_GM_template.nii.gz"
     else:
         raise_error(f"Cannot find a UKB mask called {name}")
 
-    # Set path for masks
-    mask_fname = _masks_path / "ukb" / mask_fname
-
-    return mask_fname
+    # Fetch file
+    return fetch_file_via_datalad(
+        dataset=dataset,
+        file_path=dataset.pathobj / "masks" / "UKB" / mask_fname,
+    )
 
 
 def _get_interpolation_method(img: "Nifti1Image") -> str:

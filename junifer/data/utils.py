@@ -5,14 +5,22 @@
 # License: AGPL
 
 from collections.abc import MutableMapping
+from pathlib import Path
 from typing import Optional, Union
 
+import datalad.api as dl
 import numpy as np
+from datalad.support.exceptions import IncompleteResultsError
 
-from ..utils import logger, raise_error
+from ..utils import config, logger, raise_error
 
 
-__all__ = ["closest_resolution", "get_native_warper"]
+__all__ = [
+    "check_dataset",
+    "closest_resolution",
+    "fetch_file_via_datalad",
+    "get_native_warper",
+]
 
 
 def closest_resolution(
@@ -114,3 +122,96 @@ def get_native_warper(
         )
 
     return possible_warpers[0]
+
+
+def check_dataset() -> dl.Dataset:
+    """Get or install junifer-data dataset.
+
+    Returns
+    -------
+    datalad.api.Dataset
+        The junifer-data dataset.
+
+    Raises
+    ------
+    RuntimeError
+        If there is a problem cloning the dataset.
+
+    """
+    # Check config and set default if not passed
+    data_dir = config.get("data.location")
+    if data_dir is not None:
+        data_dir = Path(data_dir)
+    else:
+        data_dir = Path().home() / "junifer_data"
+
+    # Check if the dataset is installed at storage path;
+    # else clone a fresh copy
+    if dl.Dataset(data_dir).is_installed():
+        logger.debug(f"Found existing junifer-data at: {data_dir.resolve()}")
+        return dl.Dataset(data_dir)
+    else:
+        logger.debug(f"Cloning junifer-data to: {data_dir.resolve()}")
+        # Clone dataset
+        try:
+            dataset = dl.clone(
+                "https://github.com/juaml/junifer-data.git",
+                path=data_dir,
+                result_renderer="disabled",
+            )
+        except IncompleteResultsError as e:
+            raise_error(
+                msg=f"Failed to clone junifer-data: {e.failed}",
+                klass=RuntimeError,
+            )
+        else:
+            logger.debug(
+                f"Successfully cloned junifer-data to: "
+                f"{data_dir.resolve()}"
+            )
+            return dataset
+
+
+def fetch_file_via_datalad(dataset: dl.Dataset, file_path: Path) -> Path:
+    """Fetch `file_path` from `dataset` via datalad.
+
+    Parameters
+    ----------
+    dataset : datalad.api.Dataset
+        The datalad dataset to fetch files from.
+    file_path : pathlib.Path
+        The file path to fetch.
+
+    Returns
+    -------
+    pathlib.Path
+        Resolved fetched file path.
+
+    Raises
+    ------
+    RuntimeError
+        If there is a problem fetching the file.
+
+    """
+    try:
+        got = dataset.get(file_path, result_renderer="disabled")
+    except IncompleteResultsError as e:
+        raise_error(
+            msg=f"Failed to get file from dataset: {e.failed}",
+            klass=RuntimeError,
+        )
+    else:
+        got_path = Path(got[0]["path"])
+        # Conditional logging based on file fetch
+        status = got[0]["status"]
+        if status == "ok":
+            logger.info(f"Successfully fetched file: {got_path.resolve()}")
+            return got_path
+        elif status == "notneeded":
+            logger.debug(f"Found existing file: {got_path.resolve()}")
+            return got_path
+        else:
+            raise_error(
+                msg=f"Failed to fetch file: {got_path.resolve()}",
+                klass=RuntimeError,
+            )
