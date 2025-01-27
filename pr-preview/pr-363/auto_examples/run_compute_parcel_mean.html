@@ -342,14 +342,14 @@ and 4D NIfTI.</p>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/__w/junifer/junifer/junifer/utils/logging.py:193: UserWarning: The &#39;__version__&#39; attribute is deprecated and will be removed in MarkupSafe 3.1. Use feature detection, or `importlib.metadata.version(&quot;markupsafe&quot;)`, instead.
   vstring = str(getattr(module, &quot;__version__&quot;, None))
-2025-01-24 17:17:07,417 - JUNIFER - INFO - ===== Lib Versions =====
-2025-01-24 17:17:07,417 - JUNIFER - INFO - numpy: 1.26.4
-2025-01-24 17:17:07,417 - JUNIFER - INFO - scipy: 1.15.0
-2025-01-24 17:17:07,417 - JUNIFER - INFO - pandas: 2.1.4
-2025-01-24 17:17:07,417 - JUNIFER - INFO - nilearn: 0.10.4
-2025-01-24 17:17:07,417 - JUNIFER - INFO - nibabel: 5.3.2
-2025-01-24 17:17:07,417 - JUNIFER - INFO - junifer: 0.0.6.dev439
-2025-01-24 17:17:07,417 - JUNIFER - INFO - ========================
+2025-01-27 11:17:43,551 - JUNIFER - INFO - ===== Lib Versions =====
+2025-01-27 11:17:43,551 - JUNIFER - INFO - numpy: 1.26.4
+2025-01-27 11:17:43,551 - JUNIFER - INFO - scipy: 1.15.0
+2025-01-27 11:17:43,551 - JUNIFER - INFO - pandas: 2.1.4
+2025-01-27 11:17:43,551 - JUNIFER - INFO - nilearn: 0.10.4
+2025-01-27 11:17:43,551 - JUNIFER - INFO - nibabel: 5.3.2
+2025-01-27 11:17:43,551 - JUNIFER - INFO - junifer: 0.0.6.dev450
+2025-01-27 11:17:43,551 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>Perform parcel aggregation on VBM GM data (3D) from OASIS dataset</p>
@@ -367,23 +367,23 @@ and 4D NIfTI.</p>
     <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a><span class="p">[</span><span class="s2">&quot;VBM_GM&quot;</span><span class="p">][</span><span class="s2">&quot;aggregation&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (1 x parcels)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2025-01-24 17:17:07,423 - JUNIFER - INFO - Getting element sub-01
-2025-01-24 17:17:07,423 - JUNIFER - INFO - Reading VBM_GM from /github/home/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
-2025-01-24 17:17:07,423 - JUNIFER - INFO - VBM_GM is of type NIFTI
-2025-01-24 17:17:07,424 - JUNIFER - INFO - Computing VBM_GM
-2025-01-24 17:17:07,424 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
-2025-01-24 17:17:07,424 - JUNIFER - INFO - Parcellation parameters:
-2025-01-24 17:17:07,424 - JUNIFER - INFO -      resolution: None
-2025-01-24 17:17:07,424 - JUNIFER - INFO -      n_rois: 100
-2025-01-24 17:17:07,424 - JUNIFER - INFO -      yeo_networks: 7
-2025-01-24 17:17:07,424 - JUNIFER - INFO - Resolution set to None, using highest resolution.
-2025-01-24 17:17:09,824 - JUNIFER - INFO - Loading parcellation: /github/home/junifer_data/v1.0.0/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_1mm.nii.gz
-2025-01-24 17:17:11,808 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
-2025-01-24 17:17:12,309 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpt7w77vck/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_0b7feeca-da77-11ef-8fc1-0242ac120002xsz2jku2/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpt7w77vck/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_0b7feeca-da77-11ef-8fc1-0242ac120002xsz2jku2/MNI152Lin_T1w.nii.gz -t /github/home/junifer_data/v1.0.0/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpt7w77vck/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_0b7feeca-da77-11ef-8fc1-0242ac120002xsz2jku2/parcellation_warped.nii.gz
-2025-01-24 17:17:18,653 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2025-01-27 11:17:43,556 - JUNIFER - INFO - Getting element sub-01
+2025-01-27 11:17:43,557 - JUNIFER - INFO - Reading VBM_GM from /github/home/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
+2025-01-27 11:17:43,557 - JUNIFER - INFO - VBM_GM is of type NIFTI
+2025-01-27 11:17:43,558 - JUNIFER - INFO - Computing VBM_GM
+2025-01-27 11:17:43,558 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+2025-01-27 11:17:43,558 - JUNIFER - INFO - Parcellation parameters:
+2025-01-27 11:17:43,558 - JUNIFER - INFO -      resolution: None
+2025-01-27 11:17:43,558 - JUNIFER - INFO -      n_rois: 100
+2025-01-27 11:17:43,558 - JUNIFER - INFO -      yeo_networks: 7
+2025-01-27 11:17:43,558 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+2025-01-27 11:17:46,165 - JUNIFER - INFO - Loading parcellation: /github/home/junifer_data/v1.0.0/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_1mm.nii.gz
+2025-01-27 11:17:48,103 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+2025-01-27 11:17:48,604 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpfl6tpiz7/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_55cba7c8-dca0-11ef-bd11-0242ac120002b5wir_3r/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpfl6tpiz7/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_55cba7c8-dca0-11ef-bd11-0242ac120002b5wir_3r/MNI152Lin_T1w.nii.gz -t /github/home/junifer_data/v1.0.0/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpfl6tpiz7/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_55cba7c8-dca0-11ef-bd11-0242ac120002b5wir_3r/parcellation_warped.nii.gz
+2025-01-27 11:17:54,882 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 
-2025-01-24 17:17:19,889 - JUNIFER - INFO - No storage specified, returning dictionary
+2025-01-27 11:17:56,102 - JUNIFER - INFO - No storage specified, returning dictionary
 dict_keys([&#39;VBM_GM&#39;])
 (1, 100)
 </pre></div>
@@ -405,57 +405,44 @@ dict_keys([&#39;VBM_GM&#39;])
     <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a><span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">][</span><span class="s2">&quot;aggregation&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (timepoints x parcels)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2025-01-24 17:17:19,890 - JUNIFER - INFO - Getting element sub001
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2025-01-27 11:17:56,103 - JUNIFER - INFO - Getting element sub001
 
 Dataset created in /github/home/nilearn_data/spm_auditory
 
 Data absent, downloading...
 Downloading data from https://www.fil.ion.ucl.ac.uk/spm/download/data/MoAEpilot/MoAEpilot.zip ...
 
-Downloaded 4177920 of 34212021 bytes (12.2%,    7.2s remaining)
-Downloaded 8036352 of 34212021 bytes (23.5%,    6.5s remaining)
-Downloaded 8806400 of 34212021 bytes (25.7%,    8.7s remaining)
-Downloaded 9199616 of 34212021 bytes (26.9%,   11.0s remaining)
-Downloaded 9551872 of 34212021 bytes (27.9%,   13.1s remaining)
-Downloaded 9846784 of 34212021 bytes (28.8%,   15.1s remaining)
-Downloaded 10166272 of 34212021 bytes (29.7%,   16.8s remaining)
-Downloaded 10526720 of 34212021 bytes (30.8%,   18.3s remaining)
-Downloaded 10969088 of 34212021 bytes (32.1%,   19.4s remaining)
-Downloaded 11534336 of 34212021 bytes (33.7%,   20.0s remaining)
-Downloaded 12189696 of 34212021 bytes (35.6%,   20.2s remaining)
-Downloaded 12992512 of 34212021 bytes (38.0%,   20.0s remaining)
-Downloaded 13877248 of 34212021 bytes (40.6%,   19.4s remaining)
-Downloaded 14868480 of 34212021 bytes (43.5%,   18.5s remaining)
-Downloaded 16236544 of 34212021 bytes (47.5%,   16.9s remaining)
-Downloaded 18219008 of 34212021 bytes (53.3%,   14.3s remaining)
-Downloaded 21061632 of 34212021 bytes (61.6%,   10.8s remaining)
-Downloaded 24633344 of 34212021 bytes (72.0%,    7.1s remaining)
-Downloaded 28033024 of 34212021 bytes (81.9%,    4.3s remaining)
-Downloaded 31825920 of 34212021 bytes (93.0%,    1.5s remaining) ...done. (22 seconds, 0 min)
+Downloaded 3317760 of 34212021 bytes (9.7%,    9.5s remaining)
+Downloaded 8404992 of 34212021 bytes (24.6%,    6.2s remaining)
+Downloaded 13729792 of 34212021 bytes (40.1%,    4.5s remaining)
+Downloaded 18178048 of 34212021 bytes (53.1%,    3.6s remaining)
+Downloaded 22790144 of 34212021 bytes (66.6%,    2.5s remaining)
+Downloaded 27705344 of 34212021 bytes (81.0%,    1.4s remaining)
+Downloaded 32694272 of 34212021 bytes (95.6%,    0.3s remaining) ...done. (8 seconds, 0 min)
 Extracting data from /github/home/nilearn_data/spm_auditory/sub001/MoAEpilot.zip..... done.
-2025-01-24 17:17:44,665 - JUNIFER - INFO - Reading BOLD from /tmp/tmpdreyfbez/sub001_bold.nii.gz
-2025-01-24 17:17:44,665 - JUNIFER - INFO - BOLD is of type NIFTI
-2025-01-24 17:17:44,666 - JUNIFER - INFO - Reading T1w from /tmp/tmpdreyfbez/sub001_T1w.nii.gz
-2025-01-24 17:17:44,666 - JUNIFER - INFO - T1w is of type NIFTI
-2025-01-24 17:17:44,667 - JUNIFER - INFO - Computing BOLD
-2025-01-24 17:17:44,667 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
-2025-01-24 17:17:44,667 - JUNIFER - INFO - Parcellation parameters:
-2025-01-24 17:17:44,667 - JUNIFER - INFO -      resolution: None
-2025-01-24 17:17:44,667 - JUNIFER - INFO -      n_rois: 100
-2025-01-24 17:17:44,668 - JUNIFER - INFO -      yeo_networks: 7
-2025-01-24 17:17:44,668 - JUNIFER - INFO - Resolution set to None, using highest resolution.
-2025-01-24 17:17:46,081 - JUNIFER - INFO - Loading parcellation: /github/home/junifer_data/v1.0.0/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_1mm.nii.gz
-2025-01-24 17:17:47,934 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
-2025-01-24 17:17:48,437 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpt7w77vck/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_211c5d0e-da77-11ef-8fc1-0242ac120002mtulurpf/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpt7w77vck/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_211c5d0e-da77-11ef-8fc1-0242ac120002mtulurpf/MNI152Lin_T1w.nii.gz -t /github/home/junifer_data/v1.0.0/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpt7w77vck/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_211c5d0e-da77-11ef-8fc1-0242ac120002mtulurpf/parcellation_warped.nii.gz
-2025-01-24 17:17:54,696 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+2025-01-27 11:18:06,924 - JUNIFER - INFO - Reading BOLD from /tmp/tmpolnbfw8b/sub001_bold.nii.gz
+2025-01-27 11:18:06,924 - JUNIFER - INFO - BOLD is of type NIFTI
+2025-01-27 11:18:06,925 - JUNIFER - INFO - Reading T1w from /tmp/tmpolnbfw8b/sub001_T1w.nii.gz
+2025-01-27 11:18:06,925 - JUNIFER - INFO - T1w is of type NIFTI
+2025-01-27 11:18:06,925 - JUNIFER - INFO - Computing BOLD
+2025-01-27 11:18:06,925 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+2025-01-27 11:18:06,926 - JUNIFER - INFO - Parcellation parameters:
+2025-01-27 11:18:06,926 - JUNIFER - INFO -      resolution: None
+2025-01-27 11:18:06,926 - JUNIFER - INFO -      n_rois: 100
+2025-01-27 11:18:06,926 - JUNIFER - INFO -      yeo_networks: 7
+2025-01-27 11:18:06,926 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+2025-01-27 11:18:08,176 - JUNIFER - INFO - Loading parcellation: /github/home/junifer_data/v1.0.0/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_1mm.nii.gz
+2025-01-27 11:18:10,093 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+2025-01-27 11:18:10,593 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpfl6tpiz7/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_62ea0ecc-dca0-11ef-bd11-0242ac120002r3dfl9ya/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpfl6tpiz7/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_62ea0ecc-dca0-11ef-bd11-0242ac120002r3dfl9ya/MNI152Lin_T1w.nii.gz -t /github/home/junifer_data/v1.0.0/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpfl6tpiz7/ants_parcellation_warper_Schaefer100x7_from_MNI152NLin6Asym_to_MNI152Lin_62ea0ecc-dca0-11ef-bd11-0242ac120002r3dfl9ya/parcellation_warped.nii.gz
+2025-01-27 11:18:16,822 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 
-2025-01-24 17:17:57,540 - JUNIFER - INFO - No storage specified, returning dictionary
+2025-01-27 11:18:19,588 - JUNIFER - INFO - No storage specified, returning dictionary
 dict_keys([&#39;BOLD&#39;])
 (96, 100)
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 50.129 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 36.043 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-compute-parcel-mean-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/ef059f4719b06b8d88553c134bac43b4/run_compute_parcel_mean.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_compute_parcel_mean.ipynb</span></code></a></p>
@@ -519,7 +506,7 @@ dict_keys([&#39;BOLD&#39;])
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=03e4b711"></script>
+</div><script src="../_static/documentation_options.js?v=05dee7de"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
