@@ -415,6 +415,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             out_df["spike"] = fd
             to_select.append("spike")
 
+        # Add std_dvars to to_select if scrubbing is required
+        if self.std_dvars_threshold is not None:
+            to_select.append("std_dvars")
+
         # Now pick all the relevant confounds
         out_df = out_df[to_select]
 
@@ -426,14 +430,13 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         return out_df
 
-    def _get_scrub_mask(self, input: dict[str, Any]) -> np.ndarray:
+    def _get_scrub_mask(self, confounds_df: pd.DataFrame) -> np.ndarray:
         """Get boolean mask for scrubbing.
 
         Parameters
         ----------
-        input : dict
-            Dictionary containing the ``BOLD.confounds`` value from the
-            Junifer Data object.
+        confounds_df : pandas.DataFrame
+            pandas.DataFrame with selected confounds.
 
         Returns
         -------
@@ -443,11 +446,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         Raises
         ------
         RuntimeError
-            If ``std_dvars`` is not found in the confounds file.
+            If ``std_dvars`` is not found in ``confounds_df``.
 
         """
-        confounds_df = input["data"]
-        # Check confounds file
+        # Check confounds columns
         if "std_dvars" not in confounds_df.columns:
             raise_error(
                 "Invalid confounds file. Missing std_dvars "
