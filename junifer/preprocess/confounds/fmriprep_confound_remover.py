@@ -627,11 +627,15 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 }
             )
 
+        signal_clean_kwargs = {}
         # Set up scrubbing mask if needed
         if self.std_dvars_threshold is not None:
-            sample_mask = self._get_scrub_mask(input["confounds"])
-        else:
-            sample_mask = None
+            sample_mask = self._get_scrub_mask(confounds_df)
+            signal_clean_kwargs.update(
+                {
+                    "clean__sample_mask": sample_mask,
+                }
+            )
 
         # Clean image
         logger.info("Cleaning image using nilearn")
@@ -650,7 +654,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             high_pass=self.high_pass,
             t_r=t_r,
             mask_img=mask_img,
-            clean__sample_mask=sample_mask,
+            **signal_clean_kwargs,
         )
         # Fix t_r as nilearn messes it up
         cleaned_img.header["pixdim"][4] = t_r
