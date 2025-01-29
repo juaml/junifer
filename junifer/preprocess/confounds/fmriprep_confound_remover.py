@@ -95,6 +95,8 @@ FMRIPREP_VALID_NAMES = [
 # NOTE: Check with @fraimondo about the spike mapping intent
 # Add spike_name to FMRIPREP_VALID_NAMES
 FMRIPREP_VALID_NAMES.append("framewise_displacement")
+# Add std_dvars to FMRIPREP_VALID_NAMES
+FMRIPREP_VALID_NAMES.append("std_dvars")
 
 
 @register_preprocessor
@@ -130,6 +132,12 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         If None, no spike regressor is added. If spike is a float, it will
         add a spike regressor for every point at which framewise displacement
         exceeds the specified float (default None).
+    std_dvars_threshold : float, optional
+        Standardized DVARS threshold for scrub. DVARs is defined as root mean
+        squared intensity difference of volume N to volume N+1. D referring to
+        temporal derivative of timecourses, VARS referring to root mean squared
+        variance over voxels. If None, no scrubbing is performed
+        (default None).
     detrend : bool, optional
         If True, detrending will be applied on timeseries, before confound
         removal (default True).
@@ -157,6 +165,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         self,
         strategy: Optional[dict[str, str]] = None,
         spike: Optional[float] = None,
+        std_dvars_threshold: Optional[float] = None,
         detrend: bool = True,
         standardize: bool = True,
         low_pass: Optional[float] = None,
@@ -173,6 +182,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             }
         self.strategy = strategy
         self.spike = spike
+        self.std_dvars_threshold = std_dvars_threshold
         self.detrend = detrend
         self.standardize = standardize
         self.low_pass = low_pass
@@ -346,6 +356,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                         to_select.append(x_derivative_2)
                         if x_derivative_2 not in available_vars:
                             squares_to_compute[x_derivative_2] = x_derivative
+        # Add spike
         spike_name = "framewise_displacement"
         if self.spike is not None:
             if spike_name not in available_vars:
@@ -404,6 +415,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             out_df["spike"] = fd
             to_select.append("spike")
 
+        # Add std_dvars to to_select if scrubbing is required
+        if self.std_dvars_threshold is not None:
+            to_select.append("std_dvars")
+
         # Now pick all the relevant confounds
         out_df = out_df[to_select]
 
@@ -414,6 +429,39 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         out_df.iloc[0, mask_nan] = out_df.iloc[1, mask_nan]
 
         return out_df
+
+    def _get_scrub_mask(self, confounds_df: pd.DataFrame) -> np.ndarray:
+        """Get boolean mask for scrubbing.
+
+        Parameters
+        ----------
+        confounds_df : pandas.DataFrame
+            pandas.DataFrame with selected confounds.
+
+        Returns
+        -------
+        numpy.ndarray
+            Index of volumes to be kept.
+
+        Raises
+        ------
+        RuntimeError
+            If ``std_dvars`` is not found in ``confounds_df``.
+
+        """
+        # Check confounds columns
+        if "std_dvars" not in confounds_df.columns:
+            raise_error(
+                "Invalid confounds file. Missing std_dvars "
+                "(standardized DVARS) confound. "
+                "Check if this file is really an fMRIPrep confounds file. "
+            )
+        # Make first row 0 and then threshold
+        return np.flatnonzero(
+            (
+                confounds_df["std_dvars"].fillna(0) > self.std_dvars_threshold
+            ).to_numpy()
+        )
 
     def _validate_data(
         self,
@@ -578,6 +626,17 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                     }
                 }
             )
+
+        signal_clean_kwargs = {}
+        # Set up scrubbing mask if needed
+        if self.std_dvars_threshold is not None:
+            sample_mask = self._get_scrub_mask(confounds_df)
+            signal_clean_kwargs.update(
+                {
+                    "clean__sample_mask": sample_mask,
+                }
+            )
+
         # Clean image
         logger.info("Cleaning image using nilearn")
         logger.debug(f"\tdetrend: {self.detrend}")
@@ -595,6 +654,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             high_pass=self.high_pass,
             t_r=t_r,
             mask_img=mask_img,
+            **signal_clean_kwargs,
         )
         # Fix t_r as nilearn messes it up
         cleaned_img.header["pixdim"][4] = t_r
