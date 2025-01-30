@@ -63,6 +63,6 @@ MarkerInOutMappings = MutableMapping[str, MutableMapping[str, str]]
 DataGrabberPatterns = dict[
     str, Union[dict[str, str], Sequence[dict[str, str]]]
 ]
-ConfigVal = Union[bool, int, float]
+ConfigVal = Union[bool, int, float, str]
 Element = Union[str, tuple[str, ...]]
 Elements = Sequence[Element]

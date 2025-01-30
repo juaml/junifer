@@ -5,14 +5,24 @@
 # License: AGPL
 
 from collections.abc import MutableMapping
+from pathlib import Path
 from typing import Optional, Union
 
 import numpy as np
 
-from ..utils import logger, raise_error
+from ..utils import config, logger, raise_error
 
 
-__all__ = ["closest_resolution", "get_native_warper"]
+__all__ = [
+    "JUNIFER_DATA_VERSION",
+    "closest_resolution",
+    "get_dataset_path",
+    "get_native_warper",
+]
+
+
+# junifer-data version constant
+JUNIFER_DATA_VERSION = "1.0.0"
 
 
 def closest_resolution(
@@ -114,3 +124,19 @@ def get_native_warper(
         )
 
     return possible_warpers[0]
+
+
+def get_dataset_path() -> Optional[Path]:
+    """Get junifer-data dataset path.
+
+    Returns
+    -------
+    pathlib.Path or None
+        Path to the dataset or None.
+
+    """
+    return (
+        Path(config.get("data.location"))
+        if config.get("data.location") is not None
+        else None
+    )
