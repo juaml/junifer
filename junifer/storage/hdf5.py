@@ -157,7 +157,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             uri.parent.mkdir(parents=True, exist_ok=True)
 
         # Available storage kinds
-        storage_types = ["vector", "timeseries", "matrix", "scalar_table"]
+        storage_types = [
+            "vector",
+            "timeseries",
+            "matrix",
+            "scalar_table",
+            "timeseries_2d",
+        ]
 
         super().__init__(
             uri=uri,
@@ -180,7 +186,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             storage.
 
         """
-        return ["matrix", "vector", "timeseries", "scalar_table"]
+        return [
+            "matrix",
+            "vector",
+            "timeseries",
+            "scalar_table",
+            "timeseries_2d",
+        ]
 
     def _fetch_correct_uri_for_io(self, element: Optional[dict]) -> str:
         """Return proper URI for I/O based on `element`.
