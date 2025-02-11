@@ -567,3 +567,41 @@ def test_fMRIPrepConfoundRemover_fit_transform_masks() -> None:
         assert "dependencies" in output["BOLD"]["meta"]
         dependencies = output["BOLD"]["meta"]["dependencies"]
         assert dependencies == {"numpy", "nilearn"}
+
+
+def test_fMRIPrepConfoundRemover_scrubbing() -> None:
+    """Test fMRIPrepConfoundRemover with scrubbing."""
+    confound_remover = fMRIPrepConfoundRemover(
+        strategy={
+            "motion": "full",
+            "wm_csf": "full",
+            "global_signal": "full",
+            "scrubbing": True,
+        },
+    )
+
+    with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+        orig_bold = element_data["BOLD"]["data"].get_fdata().copy()
+        pre_input = element_data["BOLD"]
+        pre_extra_input = {
+            "BOLD": {"confounds": element_data["BOLD"]["confounds"]}
+        }
+        output, _ = confound_remover.preprocess(pre_input, pre_extra_input)
+        trans_bold = output["data"].get_fdata()
+        # Transformation is in place
+        assert_array_equal(
+            trans_bold, element_data["BOLD"]["data"].get_fdata()
+        )
+
+        # Data should have different shape
+        assert_raises(
+            AssertionError,
+            assert_array_equal,
+            orig_bold.shape,
+            trans_bold.shape,
+        )
+        # and be different
+        assert_raises(
+            AssertionError, assert_array_equal, orig_bold, trans_bold
+        )
