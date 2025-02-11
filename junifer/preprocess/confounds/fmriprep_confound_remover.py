@@ -701,10 +701,16 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             )
         # Clean image
         logger.info("Cleaning image using nilearn")
+        logger.debug(f"\tstrategy: {self.strategy}")
+        logger.debug(f"\tspike: {self.spike}")
+        logger.debug(f"\tscrub: {self.scrub}")
+        logger.debug(f"\tfd_threshold: {self.fd_threshold}")
+        logger.debug(f"\tstd_dvars_threshold: {self.std_dvars_threshold}")
         logger.debug(f"\tdetrend: {self.detrend}")
         logger.debug(f"\tstandardize: {self.standardize}")
         logger.debug(f"\tlow_pass: {self.low_pass}")
         logger.debug(f"\thigh_pass: {self.high_pass}")
+        logger.debug(f"\tt_r: {self.t_r}")
 
         # Deconfound data
         cleaned_img = nimg.clean_img(
