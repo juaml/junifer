@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from nilearn._utils.exceptions import DimensionError
+from nilearn.interfaces.fmriprep.load_confounds_utils import prepare_output
 from numpy.testing import assert_array_equal, assert_raises
 from pandas.testing import assert_frame_equal
 
@@ -583,6 +584,7 @@ def test_fMRIPrepConfoundRemover_scrubbing() -> None:
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         orig_bold = element_data["BOLD"]["data"].get_fdata().copy()
+        orig_confounds = element_data["BOLD"]["confounds"].copy()
         pre_input = element_data["BOLD"]
         pre_extra_input = {
             "BOLD": {"confounds": element_data["BOLD"]["confounds"]}
@@ -605,3 +607,25 @@ def test_fMRIPrepConfoundRemover_scrubbing() -> None:
         assert_raises(
             AssertionError, assert_array_equal, orig_bold, trans_bold
         )
+
+        # Check scrubbing process
+        # Should be at the start
+        confounds_df = confound_remover._pick_confounds(orig_confounds)
+        assert confounds_df.shape == (168, 36)
+        # Should have 4 motion outliers based on threshold
+        motion_outline_regressors = confound_remover._get_scrub_regressors(
+            orig_confounds["data"]
+        )
+        assert motion_outline_regressors.shape == (168, 4)
+        # Add regressors to confounds
+        concat_confounds_df = pd.concat(
+            [confounds_df, motion_outline_regressors], axis=1
+        )
+        assert concat_confounds_df.shape == (168, 40)
+        # Get sample mask and correct confounds
+        sample_mask, final_confounds_df = prepare_output(
+            confounds=concat_confounds_df, demean=False
+        )
+        assert not confounds_df.equals(final_confounds_df)
+        assert sample_mask.shape == (164,)
+        assert not (np.isin([91, 92, 93, 113], sample_mask)).all()
