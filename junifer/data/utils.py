@@ -22,7 +22,7 @@ __all__ = [
 
 
 # junifer-data version constant
-JUNIFER_DATA_VERSION = "1.0.0"
+JUNIFER_DATA_VERSION = "1"
 
 
 def closest_resolution(
