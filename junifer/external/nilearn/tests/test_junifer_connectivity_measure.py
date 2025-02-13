@@ -185,7 +185,7 @@ def signals() -> list[np.ndarray]:
 
 @pytest.fixture
 def signals_and_covariances(
-    cov_estimator: Union[LedoitWolf, EmpiricalCovariance]
+    cov_estimator: Union[LedoitWolf, EmpiricalCovariance],
 ) -> tuple[list[np.ndarray], list[float]]:
     """Return signals and covariances for a covariance estimator.
 
