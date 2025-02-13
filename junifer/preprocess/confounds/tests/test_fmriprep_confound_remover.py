@@ -212,7 +212,7 @@ def test_fMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
     )
 
     msg = r"Missing basic confounds: \['white_matter'\]"
-    with pytest.raises(ValueError, match=msg):
+    with pytest.raises(RuntimeError, match=msg):
         confound_remover._process_fmriprep_spec({"data": confounds_df})
 
     var_names = ["csf", "white_matter"]
@@ -221,7 +221,7 @@ def test_fMRIPrepConfoundRemover__process_fmriprep_spec() -> None:
     )
 
     msg = r"Missing framewise_displacement"
-    with pytest.raises(ValueError, match=msg):
+    with pytest.raises(RuntimeError, match=msg):
         confound_remover._process_fmriprep_spec({"data": confounds_df})
 
 

@@ -345,7 +345,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
         Raises
         ------
-        ValueError
+        RuntimeError
             If invalid confounds file is found.
 
         """
@@ -364,11 +364,14 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 if any(x not in available_vars for x in t_basics):
                     missing = [x for x in t_basics if x not in available_vars]
                     raise_error(
-                        "Invalid confounds file. Missing basic confounds: "
-                        f"{missing}. "
-                        "Check if this file is really an fmriprep confounds "
-                        "file. You can also modify the confound removal "
-                        "strategy."
+                        msg=(
+                            "Invalid confounds file. Missing basic confounds: "
+                            f"{missing}. "
+                            "Check if this file is really an fmriprep "
+                            "confounds file. You can also modify the confound "
+                            "removal strategy."
+                        ),
+                        klass=RuntimeError,
                     )
 
                 to_select.extend(t_basics)
@@ -398,10 +401,14 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         if self.spike is not None:
             if spike_name not in available_vars:
                 raise_error(
-                    "Invalid confounds file. Missing framewise_displacement "
-                    "(spike) confound. "
-                    "Check if this file is really an fmriprep confounds file. "
-                    "You can also deactivate spike (set spike = None)."
+                    msg=(
+                        "Invalid confounds file. Missing "
+                        "framewise_displacement (spike) confound. "
+                        "Check if this file is really an fmriprep confounds "
+                        "file. You can also deactivate spike "
+                        "(set spike = None)."
+                    ),
+                    klass=RuntimeError,
                 )
         out = to_select, squares_to_compute, derivatives_to_compute, spike_name
         return out
