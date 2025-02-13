@@ -18,13 +18,13 @@ from junifer.data.parcellations import merge_parcellations
 from junifer.data.parcellations._parcellations import (
     _retrieve_aicha,
     _retrieve_brainnetome,
-    _retrieve_parcellation,
     _retrieve_schaefer,
     _retrieve_shen,
     _retrieve_suit,
     _retrieve_tian,
     _retrieve_yan,
 )
+from junifer.data.utils import check_dataset
 from junifer.datareader import DefaultDataReader
 from junifer.pipeline.utils import _check_ants
 from junifer.testing.datagrabbers import (
@@ -247,12 +247,6 @@ def test_load_incorrect() -> None:
         ParcellationRegistry().load("wrongparcellation", "MNI152NLin6Asym")
 
 
-def test_retrieve_parcellation_incorrect() -> None:
-    """Test retrieval of invalid parcellations."""
-    with pytest.raises(ValueError, match=r"provided parcellation name"):
-        _retrieve_parcellation("wrongparcellation")
-
-
 @pytest.mark.parametrize(
     "resolution, n_rois, yeo_networks",
     [
@@ -299,7 +293,6 @@ def test_retrieve_parcellation_incorrect() -> None:
     ],
 )
 def test_schaefer(
-    tmp_path: Path,
     resolution: float,
     n_rois: int,
     yeo_networks: int,
@@ -308,8 +301,6 @@ def test_schaefer(
 
     Parameters
     ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
     resolution : float
         The parametrized resolution values.
     n_rois : int
@@ -329,7 +320,6 @@ def test_schaefer(
     img, label, img_path, space = ParcellationRegistry().load(
         name=parcellation_name,
         target_space="MNI152NLin6Asym",
-        parcellations_dir=tmp_path,
         resolution=resolution,
     )
     assert img is not None
@@ -341,36 +331,22 @@ def test_schaefer(
     )
 
 
-def test_retrieve_schaefer_incorrect_n_rois(tmp_path: Path) -> None:
-    """Test retrieve Schaefer with incorrect ROIs.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_schaefer_incorrect_n_rois() -> None:
+    """Test retrieve Schaefer with incorrect ROIs."""
     with pytest.raises(ValueError, match=r"The parameter `n_rois`"):
         _retrieve_schaefer(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             resolution=1,
             n_rois=101,
             yeo_networks=7,
         )
 
 
-def test_retrieve_schaefer_incorrect_yeo_networks(tmp_path: Path) -> None:
-    """Test retrieve Schaefer with incorrect Yeo networks.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_schaefer_incorrect_yeo_networks() -> None:
+    """Test retrieve Schaefer with incorrect Yeo networks."""
     with pytest.raises(ValueError, match=r"The parameter `yeo_networks`"):
         _retrieve_schaefer(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             resolution=1,
             n_rois=100,
             yeo_networks=8,
@@ -381,13 +357,11 @@ def test_retrieve_schaefer_incorrect_yeo_networks(tmp_path: Path) -> None:
     "space_key, space",
     [("SUIT", "SUIT"), ("MNI", "MNI152NLin6Asym")],
 )
-def test_suit(tmp_path: Path, space_key: str, space: str) -> None:
+def test_suit(space_key: str, space: str) -> None:
     """Test SUIT parcellation.
 
     Parameters
     ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
     space_key : str
         The parametrized space values for the key.
     space : str
@@ -399,7 +373,6 @@ def test_suit(tmp_path: Path, space_key: str, space: str) -> None:
     img, label, img_path, parcellation_space = ParcellationRegistry().load(
         name=f"SUITx{space_key}",
         target_space=space,
-        parcellations_dir=tmp_path,
     )
     assert img is not None
     assert img_path.name == f"SUIT_{space_key}Space_1mm.nii"
@@ -408,33 +381,20 @@ def test_suit(tmp_path: Path, space_key: str, space: str) -> None:
     assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
 
 
-def test_retrieve_suit_incorrect_space(tmp_path: Path) -> None:
-    """Test retrieve SUIT with incorrect space.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_suit_incorrect_space() -> None:
+    """Test retrieve SUIT with incorrect space."""
     with pytest.raises(ValueError, match=r"The parameter `space`"):
-        _retrieve_suit(
-            parcellations_dir=tmp_path, resolution=1.0, space="wrong"
-        )
+        _retrieve_suit(dataset=check_dataset(), resolution=1.0, space="wrong")
 
 
 @pytest.mark.parametrize(
     "scale, n_label", [(1, 16), (2, 32), (3, 50), (4, 54)]
 )
-def test_tian_3T_6thgeneration(
-    tmp_path: Path, scale: int, n_label: int
-) -> None:
+def test_tian_3T_6thgeneration(scale: int, n_label: int) -> None:
     """Test Tian parcellation.
 
     Parameters
     ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
     scale : int
         The parametrized scale values.
     n_label : int
@@ -447,44 +407,38 @@ def test_tian_3T_6thgeneration(
     assert "TianxS3x3TxMNI6thgeneration" in parcellations
     assert "TianxS4x3TxMNI6thgeneration" in parcellations
     # Load parcellation
-    img, lbl, fname, parcellation_space_1 = ParcellationRegistry().load(
+    img, lbl, fname, space = ParcellationRegistry().load(
         name=f"TianxS{scale}x3TxMNI6thgeneration",
-        parcellations_dir=tmp_path,
-        target_space="MNI152NLin2009cAsym",
+        target_space="MNI152NLin2009cAsym",  # force highest resolution
     )
-    fname1 = f"Tian_Subcortex_S{scale}_3T_1mm.nii.gz"
+    expected_fname = f"Tian_Subcortex_S{scale}_3T_1mm.nii.gz"
     assert img is not None
-    assert fname.name == fname1
-    assert parcellation_space_1 == "MNI152NLin6Asym"
+    assert fname.name == expected_fname
+    assert space == "MNI152NLin6Asym"
     assert len(lbl) == n_label
-    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])  # type: ignore
+    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])
     # Load parcellation
-    img, lbl, fname, parcellation_space_2 = ParcellationRegistry().load(
+    img, lbl, fname, space = ParcellationRegistry().load(
         name=f"TianxS{scale}x3TxMNI6thgeneration",
         target_space="MNI152NLin6Asym",
-        parcellations_dir=tmp_path,
         resolution=2,
     )
-    fname1 = f"Tian_Subcortex_S{scale}_3T.nii.gz"
+    expected_fname = f"Tian_Subcortex_S{scale}_3T.nii.gz"
     assert img is not None
-    assert fname.name == fname1
-    assert parcellation_space_2 == "MNI152NLin6Asym"
+    assert fname.name == expected_fname
+    assert space == "MNI152NLin6Asym"
     assert len(lbl) == n_label
-    assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
+    assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])
 
 
 @pytest.mark.parametrize(
     "scale, n_label", [(1, 16), (2, 32), (3, 50), (4, 54)]
 )
-def test_tian_3T_nonlinear2009cAsym(
-    tmp_path: Path, scale: int, n_label: int
-) -> None:
+def test_tian_3T_nonlinear2009cAsym(scale: int, n_label: int) -> None:
     """Test Tian parcellation.
 
     Parameters
     ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
     scale : int
         The parametrized scale values.
     n_label : int
@@ -499,29 +453,36 @@ def test_tian_3T_nonlinear2009cAsym(
     # Load parcellation
     img, lbl, fname, space = ParcellationRegistry().load(
         name=f"TianxS{scale}x3TxMNInonlinear2009cAsym",
-        target_space="MNI152NLin2009cAsym",
-        parcellations_dir=tmp_path,
+        target_space="MNI152NLin6Asym",  # force highest resolution
     )
-    fname1 = f"Tian_Subcortex_S{scale}_3T_2009cAsym.nii.gz"
+    expected_fname = f"Tian_Subcortex_S{scale}_3T_2009cAsym_1mm.nii.gz"
     assert img is not None
-    assert fname.name == fname1
+    assert fname.name == expected_fname
     assert space == "MNI152NLin2009cAsym"
     assert len(lbl) == n_label
-    assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
+    assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])
+    # Load parcellation
+    img, lbl, fname, space = ParcellationRegistry().load(
+        name=f"TianxS{scale}x3TxMNInonlinear2009cAsym",
+        target_space="MNI152NLin2009cAsym",
+        resolution=2,
+    )
+    expected_fname = f"Tian_Subcortex_S{scale}_3T_2009cAsym.nii.gz"
+    assert img is not None
+    assert fname.name == expected_fname
+    assert space == "MNI152NLin2009cAsym"
+    assert len(lbl) == n_label
+    assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])
 
 
 @pytest.mark.parametrize(
     "scale, n_label", [(1, 16), (2, 34), (3, 54), (4, 62)]
 )
-def test_tian_7T_6thgeneration(
-    tmp_path: Path, scale: int, n_label: int
-) -> None:
+def test_tian_7T_6thgeneration(scale: int, n_label: int) -> None:
     """Test Tian parcellation.
 
     Parameters
     ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
     scale : int
         The parametrized scale values.
     n_label : int
@@ -537,7 +498,6 @@ def test_tian_7T_6thgeneration(
     img, lbl, fname, space = ParcellationRegistry().load(
         name=f"TianxS{scale}x7TxMNI6thgeneration",
         target_space="MNI152NLin6Asym",
-        parcellations_dir=tmp_path,
     )
     fname1 = f"Tian_Subcortex_S{scale}_7T.nii.gz"
     assert img is not None
@@ -549,23 +509,16 @@ def test_tian_7T_6thgeneration(
     )
 
 
-def test_retrieve_tian_incorrect_space(tmp_path: Path) -> None:
-    """Test retrieve tian with incorrect space.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_tian_incorrect_space() -> None:
+    """Test retrieve tian with incorrect space."""
     with pytest.raises(ValueError, match=r"The parameter `space`"):
         _retrieve_tian(
-            parcellations_dir=tmp_path, resolution=1, scale=1, space="wrong"
+            dataset=check_dataset(), resolution=1, scale=1, space="wrong"
         )
 
     with pytest.raises(ValueError, match=r"MNI152NLin6Asym"):
         _retrieve_tian(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             resolution=1,
             scale=1,
             magneticfield="7T",
@@ -573,18 +526,11 @@ def test_retrieve_tian_incorrect_space(tmp_path: Path) -> None:
         )
 
 
-def test_retrieve_tian_incorrect_magneticfield(tmp_path: Path) -> None:
-    """Test retrieve tian with incorrect magneticfield.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_tian_incorrect_magneticfield() -> None:
+    """Test retrieve tian with incorrect magneticfield."""
     with pytest.raises(ValueError, match=r"The parameter `magneticfield`"):
         _retrieve_tian(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             resolution=1,
             scale=1,
             magneticfield="wrong",
@@ -592,17 +538,10 @@ def test_retrieve_tian_incorrect_magneticfield(tmp_path: Path) -> None:
 
 
 def test_retrieve_tian_incorrect_scale(tmp_path: Path) -> None:
-    """Test retrieve tian with incorrect scale.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+    """Test retrieve tian with incorrect scale."""
     with pytest.raises(ValueError, match=r"The parameter `scale`"):
         _retrieve_tian(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             resolution=1,
             scale=5,
             space="MNI152NLin6Asym",
@@ -610,7 +549,7 @@ def test_retrieve_tian_incorrect_scale(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize("version", [1, 2])
-def test_aicha(tmp_path: Path, version: int) -> None:
+def test_aicha(version: int) -> None:
     """Test AICHA parcellation.
 
     Parameters
@@ -626,7 +565,6 @@ def test_aicha(tmp_path: Path, version: int) -> None:
     img, label, img_path, space = ParcellationRegistry().load(
         name=f"AICHA_v{version}",
         target_space="IXI549Space",
-        parcellations_dir=tmp_path,
     )
     assert img is not None
     assert img_path.name == "AICHA.nii"
@@ -635,18 +573,11 @@ def test_aicha(tmp_path: Path, version: int) -> None:
     assert_array_equal(img.header["pixdim"][1:4], [2, 2, 2])  # type: ignore
 
 
-def test_retrieve_aicha_incorrect_version(tmp_path: Path) -> None:
-    """Test retrieve AICHA with incorrect version.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_aicha_incorrect_version() -> None:
+    """Test retrieve AICHA with incorrect version."""
     with pytest.raises(ValueError, match="The parameter `version`"):
         _retrieve_aicha(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             version=100,
         )
 
@@ -666,7 +597,6 @@ def test_retrieve_aicha_incorrect_version(tmp_path: Path) -> None:
     ],
 )
 def test_shen(
-    tmp_path: Path,
     resolution: float,
     year: int,
     n_rois: int,
@@ -677,8 +607,6 @@ def test_shen(
 
     Parameters
     ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
     resolution : float
         The parametrized resolution values.
     year : int
@@ -696,7 +624,6 @@ def test_shen(
     img, label, img_path, space = ParcellationRegistry().load(
         name=f"Shen_{year}_{n_rois}",
         target_space="MNI152NLin2009cAsym",
-        parcellations_dir=tmp_path,
         resolution=resolution,
     )
     assert img is not None
@@ -708,34 +635,20 @@ def test_shen(
     )
 
 
-def test_retrieve_shen_incorrect_year(tmp_path: Path) -> None:
-    """Test retrieve Shen with incorrect year.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_shen_incorrect_year() -> None:
+    """Test retrieve Shen with incorrect year."""
     with pytest.raises(ValueError, match="The parameter `year`"):
         _retrieve_shen(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             year=1969,
         )
 
 
-def test_retrieve_shen_incorrect_n_rois(tmp_path: Path) -> None:
-    """Test retrieve Shen with incorrect ROIs.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_shen_incorrect_n_rois() -> None:
+    """Test retrieve Shen with incorrect ROIs."""
     with pytest.raises(ValueError, match="The parameter `n_rois`"):
         _retrieve_shen(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             year=2015,
             n_rois=10,
         )
@@ -758,7 +671,6 @@ def test_retrieve_shen_incorrect_n_rois(tmp_path: Path) -> None:
     ],
 )
 def test_retrieve_shen_incorrect_param_combo(
-    tmp_path: Path,
     resolution: float,
     year: int,
     n_rois: int,
@@ -779,7 +691,7 @@ def test_retrieve_shen_incorrect_param_combo(
     """
     with pytest.raises(ValueError, match="The parameter combination"):
         _retrieve_shen(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             resolution=resolution,
             year=year,
             n_rois=n_rois,
@@ -852,7 +764,6 @@ def test_retrieve_shen_incorrect_param_combo(
     ],
 )
 def test_yan(
-    tmp_path: Path,
     resolution: float,
     n_rois: int,
     yeo_networks: int,
@@ -862,8 +773,6 @@ def test_yan(
 
     Parameters
     ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
     resolution : float
         The parametrized resolution values.
     n_rois : int
@@ -893,7 +802,6 @@ def test_yan(
     img, label, img_path, space = ParcellationRegistry().load(
         name=parcellation_name,
         target_space="MNI152NLin6Asym",
-        parcellations_dir=tmp_path,
         resolution=resolution,
     )
     assert img is not None
@@ -905,20 +813,13 @@ def test_yan(
     )
 
 
-def test_retrieve_yan_incorrect_networks(tmp_path: Path) -> None:
-    """Test retrieve Yan with incorrect networks.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_yan_incorrect_networks() -> None:
+    """Test retrieve Yan with incorrect networks."""
     with pytest.raises(
         ValueError, match="Either one of `yeo_networks` or `kong_networks`"
     ):
         _retrieve_yan(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             n_rois=31418,
             yeo_networks=100,
             kong_networks=100,
@@ -928,59 +829,38 @@ def test_retrieve_yan_incorrect_networks(tmp_path: Path) -> None:
         ValueError, match="Either one of `yeo_networks` or `kong_networks`"
     ):
         _retrieve_yan(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             n_rois=31418,
             yeo_networks=None,
             kong_networks=None,
         )
 
 
-def test_retrieve_yan_incorrect_n_rois(tmp_path: Path) -> None:
-    """Test retrieve Yan with incorrect ROIs.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_yan_incorrect_n_rois() -> None:
+    """Test retrieve Yan with incorrect ROIs."""
     with pytest.raises(ValueError, match="The parameter `n_rois`"):
         _retrieve_yan(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             n_rois=31418,
             yeo_networks=7,
         )
 
 
-def test_retrieve_yan_incorrect_yeo_networks(tmp_path: Path) -> None:
-    """Test retrieve Yan with incorrect Yeo networks.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_yan_incorrect_yeo_networks() -> None:
+    """Test retrieve Yan with incorrect Yeo networks."""
     with pytest.raises(ValueError, match="The parameter `yeo_networks`"):
         _retrieve_yan(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             n_rois=100,
             yeo_networks=27,
         )
 
 
-def test_retrieve_yan_incorrect_kong_networks(tmp_path: Path) -> None:
-    """Test retrieve Yan with incorrect Kong networks.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_yan_incorrect_kong_networks() -> None:
+    """Test retrieve Yan with incorrect Kong networks."""
     with pytest.raises(ValueError, match="The parameter `kong_networks`"):
         _retrieve_yan(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             n_rois=100,
             kong_networks=27,
         )
@@ -1001,7 +881,6 @@ def test_retrieve_yan_incorrect_kong_networks(tmp_path: Path) -> None:
     ],
 )
 def test_brainnetome(
-    tmp_path: Path,
     resolution: float,
     threshold: int,
 ) -> None:
@@ -1009,8 +888,6 @@ def test_brainnetome(
 
     Parameters
     ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
     resolution : float
         The parametrized resolution values.
     threshold : int
@@ -1030,7 +907,6 @@ def test_brainnetome(
     img, label, img_path, space = ParcellationRegistry().load(
         name=parcellation_name,
         target_space="MNI152NLin6Asym",
-        parcellations_dir=tmp_path,
         resolution=resolution,
     )
     assert img is not None
@@ -1042,18 +918,11 @@ def test_brainnetome(
     )
 
 
-def test_retrieve_brainnetome_incorrect_threshold(tmp_path: Path) -> None:
-    """Test retrieve Brainnetome with incorrect threshold.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
+def test_retrieve_brainnetome_incorrect_threshold() -> None:
+    """Test retrieve Brainnetome with incorrect threshold."""
     with pytest.raises(ValueError, match="The parameter `threshold`"):
         _retrieve_brainnetome(
-            parcellations_dir=tmp_path,
+            dataset=check_dataset(),
             threshold=100,
         )
 
@@ -1214,7 +1083,7 @@ def test_get_single() -> None:
         bold_img = bold["data"]
         # Get tailored parcellation
         tailored_parcellation, tailored_labels = ParcellationRegistry().get(
-            parcellations=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellations=["Shen_2015_268"],
             target_data=bold,
         )
         # Check shape and affine with original element data
@@ -1222,9 +1091,9 @@ def test_get_single() -> None:
         assert_array_equal(tailored_parcellation.affine, bold_img.affine)
         # Get raw parcellation
         raw_parcellation, raw_labels, _, _ = ParcellationRegistry().load(
-            "TianxS1x3TxMNInonlinear2009cAsym",
+            name="Shen_2015_268",
             target_space="MNI152NLin2009cAsym",
-            resolution=1.5,
+            resolution=4,
         )
         resampled_raw_parcellation = resample_to_img(
             source_img=raw_parcellation,
@@ -1266,7 +1135,9 @@ def test_get_multi_same_space() -> None:
         ]
         for name in parcellations_names:
             img, labels, _, _ = ParcellationRegistry().load(
-                name=name, target_space="MNI152NLin2009cAsym", resolution=1.5
+                name=name,
+                target_space="MNI152NLin2009cAsym",
+                resolution=4,
             )
             # Resample raw parcellations
             resampled_img = resample_to_img(

@@ -6,22 +6,18 @@
 from pathlib import Path
 from typing import Any, Optional, Union
 
-import datalad.api as dl
 import nibabel as nib
 import numpy as np
-from datalad.support.exceptions import IncompleteResultsError
 from templateflow import api as tflow
 
 from ..utils import logger, raise_error
-from .utils import closest_resolution
+from .utils import check_dataset, closest_resolution, fetch_file_via_datalad
 
 
 __all__ = ["get_template", "get_xfm"]
 
 
-def get_xfm(
-    src: str, dst: str, xfms_dir: Union[str, Path, None] = None
-) -> Path:  # pragma: no cover
+def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover
     """Fetch warp files to convert from ``src`` to ``dst``.
 
     Parameters
@@ -30,94 +26,24 @@ def get_xfm(
         The template space to transform from.
     dst : str
         The template space to transform to.
-    xfms_dir : str or pathlib.Path, optional
-        Path where the retrieved transformation files are stored.
-        The default location is "$HOME/junifer/data/xfms" (default None).
 
     Returns
     -------
     pathlib.Path
         The path to the transformation file.
 
-    Raises
-    ------
-    RuntimeError
-        If there is a problem cloning the xfm dataset or
-        if there is a problem fetching the xfm file.
-
     """
-    # Set default path for storage
-    if xfms_dir is None:
-        xfms_dir = Path().home() / "junifer" / "data" / "xfms"
-
-    # Convert str to Path
-    if not isinstance(xfms_dir, Path):
-        xfms_dir = Path(xfms_dir)
-
-    # Check if the template xfms dataset is installed at storage path
-    is_installed = dl.Dataset(xfms_dir).is_installed()
-    # Use existing dataset
-    if is_installed:
-        logger.debug(
-            f"Found existing template xfms dataset at: {xfms_dir.resolve()}"
-        )
-        # Set dataset
-        dataset = dl.Dataset(xfms_dir)
-    # Clone a fresh copy
-    else:
-        logger.debug(f"Cloning template xfms dataset to: {xfms_dir.resolve()}")
-        # Clone dataset
-        try:
-            dataset = dl.clone(
-                "https://github.com/juaml/human-template-xfms.git",
-                path=xfms_dir,
-                result_renderer="disabled",
-            )
-        except IncompleteResultsError as e:
-            raise_error(
-                msg=f"Failed to clone dataset: {e.failed}",
-                klass=RuntimeError,
-            )
-        else:
-            logger.debug(
-                f"Successfully cloned template xfms dataset to: "
-                f"{xfms_dir.resolve()}"
-            )
-
+    # Get dataset
+    dataset = check_dataset()
     # Set file path to retrieve
     xfm_file_path = (
-        xfms_dir / "xfms" / f"{src}_to_{dst}" / f"{src}_to_{dst}_Composite.h5"
+        dataset.pathobj
+        / "xfms"
+        / f"{src}_to_{dst}"
+        / f"{src}_to_{dst}_Composite.h5"
     )
-
     # Retrieve file
-    try:
-        got = dataset.get(xfm_file_path, result_renderer="disabled")
-    except IncompleteResultsError as e:
-        raise_error(
-            msg=f"Failed to get file from dataset: {e.failed}",
-            klass=RuntimeError,
-        )
-    else:
-        file_path = Path(got[0]["path"])
-        # Conditional logging based on file fetch
-        status = got[0]["status"]
-        if status == "ok":
-            logger.info(
-                f"Successfully fetched xfm file for {src} to {dst} at "
-                f"{file_path.resolve()}"
-            )
-            return file_path
-        elif status == "notneeded":
-            logger.info(
-                f"Found existing xfm file for {src} to {dst} at "
-                f"{file_path.resolve()}"
-            )
-            return file_path
-        else:
-            raise_error(
-                f"Failed to fetch xfm file for {src} to {dst} at "
-                f"{file_path.resolve()}"
-            )
+    return fetch_file_via_datalad(dataset=dataset, file_path=xfm_file_path)
 
 
 def get_template(
@@ -190,7 +116,7 @@ def get_template(
 
     logger.info(
         f"Downloading template {space} ({template_type} in "
-        f"resolution {resolution}"
+        f"resolution {resolution})"
     )
     # Retrieve template
     try:
@@ -224,9 +150,11 @@ def get_template(
         )
     except Exception:  # noqa: BLE001
         raise_error(
-            f"Template {space} ({template_type}) with resolution {resolution} "
-            "not found",
+            msg=(
+                f"Template {space} ({template_type}) with resolution "
+                f"{resolution}) not found"
+            ),
             klass=RuntimeError,
         )
     else:
-        return nib.load(template_path)  # type: ignore
+        return nib.load(template_path)
