@@ -489,18 +489,24 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             and "std_dvars" not in confounds_df.columns
         ):
             raise_error(
-                "Invalid confounds file. Missing std_dvars "
-                "(standardized DVARS) confound. "
-                "Check if this file is really an fMRIPrep confounds file. "
+                msg=(
+                    "Invalid confounds file. Missing std_dvars "
+                    "(standardized DVARS) confound. "
+                    "Check if this file is really an fMRIPrep confounds file. "
+                ),
+                klass=RuntimeError,
             )
         if (
             self.fd_threshold is not None
             and "framewise_displacement" not in confounds_df.columns
         ):
             raise_error(
-                "Invalid confounds file. Missing framewise_displacement "
-                "confound. "
-                "Check if this file is really an fMRIPrep confounds file. "
+                msg=(
+                    "Invalid confounds file. Missing framewise_displacement "
+                    "confound. "
+                    "Check if this file is really an fMRIPrep confounds file. "
+                ),
+                klass=RuntimeError,
             )
         # Use function from nilearn to not reinvent the wheel
         return _load_scrub(

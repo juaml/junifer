@@ -321,6 +321,32 @@ def test_fMRIPRepConfoundRemover__pick_confounds_fmriprep_compute() -> None:
     assert_frame_equal(out_junifer, out_fmriprep)
 
 
+@pytest.mark.parametrize(
+    "preprocessor",
+    [
+        fMRIPrepConfoundRemover(
+            std_dvars_threshold=1.5,
+        ),
+        fMRIPrepConfoundRemover(
+            fd_threshold=0.5,
+        ),
+    ],
+)
+def test_fMRIPrepConfoundRemover__get_scrub_regressors_errors(
+    preprocessor: type,
+) -> None:
+    """Test fMRIPrepConfoundRemover scrub regressors errors.
+
+    Parameters
+    ----------
+    preprocessor : object
+        The parametrized preprocessor.
+
+    """
+    with pytest.raises(RuntimeError, match="Invalid confounds file."):
+        preprocessor._get_scrub_regressors(pd.DataFrame({"a": [1, 2]}))
+
+
 def test_fMRIPrepConfoundRemover__validate_data() -> None:
     """Test fMRIPrepConfoundRemover validate data."""
     confound_remover = fMRIPrepConfoundRemover(strategy={"wm_csf": "full"})
