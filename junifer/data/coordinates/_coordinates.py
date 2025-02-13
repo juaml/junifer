@@ -4,16 +4,18 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
 from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
+from junifer_data import get
 from numpy.typing import ArrayLike
 
 from ...utils import logger, raise_error
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
-from ..utils import check_dataset, fetch_file_via_datalad, get_native_warper
+from ..utils import JUNIFER_DATA_VERSION, get_dataset_path, get_native_warper
 from ._ants_coordinates_warper import ANTsCoordinatesWarper
 from ._fsl_coordinates_warper import FSLCoordinatesWarper
 
@@ -273,23 +275,17 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
 
         # Load data for in-built ones
         if t_coord.get("file_path_suffix") is not None:
-            # Get dataset
-            dataset = check_dataset()
             # Set file path to retrieve
-            coords_file_path = (
-                dataset.pathobj
-                / "coordinates"
-                / name
-                / t_coord["file_path_suffix"]
+            coords_file_path = Path(
+                f"coordinates/{name}/{t_coord['file_path_suffix']}"
             )
-            logger.debug(
-                f"Loading coordinates `{name}` from: "
-                f"{coords_file_path.absolute()!s}"
-            )
+            logger.debug(f"Loading coordinates: `{name}`")
             # Load via pandas
             df_coords = pd.read_csv(
-                fetch_file_via_datalad(
-                    dataset=dataset, file_path=coords_file_path
+                get(
+                    file_path=coords_file_path,
+                    dataset_path=get_dataset_path(),
+                    tag=JUNIFER_DATA_VERSION,
                 ),
                 sep="\t",
                 header=None,

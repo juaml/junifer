@@ -24,7 +24,6 @@ from junifer.data.parcellations._parcellations import (
     _retrieve_tian,
     _retrieve_yan,
 )
-from junifer.data.utils import check_dataset
 from junifer.datareader import DefaultDataReader
 from junifer.pipeline.utils import _check_ants
 from junifer.testing.datagrabbers import (
@@ -335,7 +334,6 @@ def test_retrieve_schaefer_incorrect_n_rois() -> None:
     """Test retrieve Schaefer with incorrect ROIs."""
     with pytest.raises(ValueError, match=r"The parameter `n_rois`"):
         _retrieve_schaefer(
-            dataset=check_dataset(),
             resolution=1,
             n_rois=101,
             yeo_networks=7,
@@ -346,7 +344,6 @@ def test_retrieve_schaefer_incorrect_yeo_networks() -> None:
     """Test retrieve Schaefer with incorrect Yeo networks."""
     with pytest.raises(ValueError, match=r"The parameter `yeo_networks`"):
         _retrieve_schaefer(
-            dataset=check_dataset(),
             resolution=1,
             n_rois=100,
             yeo_networks=8,
@@ -384,7 +381,7 @@ def test_suit(space_key: str, space: str) -> None:
 def test_retrieve_suit_incorrect_space() -> None:
     """Test retrieve SUIT with incorrect space."""
     with pytest.raises(ValueError, match=r"The parameter `space`"):
-        _retrieve_suit(dataset=check_dataset(), resolution=1.0, space="wrong")
+        _retrieve_suit(resolution=1.0, space="wrong")
 
 
 @pytest.mark.parametrize(
@@ -512,13 +509,10 @@ def test_tian_7T_6thgeneration(scale: int, n_label: int) -> None:
 def test_retrieve_tian_incorrect_space() -> None:
     """Test retrieve tian with incorrect space."""
     with pytest.raises(ValueError, match=r"The parameter `space`"):
-        _retrieve_tian(
-            dataset=check_dataset(), resolution=1, scale=1, space="wrong"
-        )
+        _retrieve_tian(resolution=1, scale=1, space="wrong")
 
     with pytest.raises(ValueError, match=r"MNI152NLin6Asym"):
         _retrieve_tian(
-            dataset=check_dataset(),
             resolution=1,
             scale=1,
             magneticfield="7T",
@@ -530,7 +524,6 @@ def test_retrieve_tian_incorrect_magneticfield() -> None:
     """Test retrieve tian with incorrect magneticfield."""
     with pytest.raises(ValueError, match=r"The parameter `magneticfield`"):
         _retrieve_tian(
-            dataset=check_dataset(),
             resolution=1,
             scale=1,
             magneticfield="wrong",
@@ -541,7 +534,6 @@ def test_retrieve_tian_incorrect_scale(tmp_path: Path) -> None:
     """Test retrieve tian with incorrect scale."""
     with pytest.raises(ValueError, match=r"The parameter `scale`"):
         _retrieve_tian(
-            dataset=check_dataset(),
             resolution=1,
             scale=5,
             space="MNI152NLin6Asym",
@@ -577,7 +569,6 @@ def test_retrieve_aicha_incorrect_version() -> None:
     """Test retrieve AICHA with incorrect version."""
     with pytest.raises(ValueError, match="The parameter `version`"):
         _retrieve_aicha(
-            dataset=check_dataset(),
             version=100,
         )
 
@@ -639,7 +630,6 @@ def test_retrieve_shen_incorrect_year() -> None:
     """Test retrieve Shen with incorrect year."""
     with pytest.raises(ValueError, match="The parameter `year`"):
         _retrieve_shen(
-            dataset=check_dataset(),
             year=1969,
         )
 
@@ -648,7 +638,6 @@ def test_retrieve_shen_incorrect_n_rois() -> None:
     """Test retrieve Shen with incorrect ROIs."""
     with pytest.raises(ValueError, match="The parameter `n_rois`"):
         _retrieve_shen(
-            dataset=check_dataset(),
             year=2015,
             n_rois=10,
         )
@@ -691,7 +680,6 @@ def test_retrieve_shen_incorrect_param_combo(
     """
     with pytest.raises(ValueError, match="The parameter combination"):
         _retrieve_shen(
-            dataset=check_dataset(),
             resolution=resolution,
             year=year,
             n_rois=n_rois,
@@ -819,7 +807,6 @@ def test_retrieve_yan_incorrect_networks() -> None:
         ValueError, match="Either one of `yeo_networks` or `kong_networks`"
     ):
         _retrieve_yan(
-            dataset=check_dataset(),
             n_rois=31418,
             yeo_networks=100,
             kong_networks=100,
@@ -829,7 +816,6 @@ def test_retrieve_yan_incorrect_networks() -> None:
         ValueError, match="Either one of `yeo_networks` or `kong_networks`"
     ):
         _retrieve_yan(
-            dataset=check_dataset(),
             n_rois=31418,
             yeo_networks=None,
             kong_networks=None,
@@ -840,7 +826,6 @@ def test_retrieve_yan_incorrect_n_rois() -> None:
     """Test retrieve Yan with incorrect ROIs."""
     with pytest.raises(ValueError, match="The parameter `n_rois`"):
         _retrieve_yan(
-            dataset=check_dataset(),
             n_rois=31418,
             yeo_networks=7,
         )
@@ -850,7 +835,6 @@ def test_retrieve_yan_incorrect_yeo_networks() -> None:
     """Test retrieve Yan with incorrect Yeo networks."""
     with pytest.raises(ValueError, match="The parameter `yeo_networks`"):
         _retrieve_yan(
-            dataset=check_dataset(),
             n_rois=100,
             yeo_networks=27,
         )
@@ -860,7 +844,6 @@ def test_retrieve_yan_incorrect_kong_networks() -> None:
     """Test retrieve Yan with incorrect Kong networks."""
     with pytest.raises(ValueError, match="The parameter `kong_networks`"):
         _retrieve_yan(
-            dataset=check_dataset(),
             n_rois=100,
             kong_networks=27,
         )
@@ -922,7 +905,6 @@ def test_retrieve_brainnetome_incorrect_threshold() -> None:
     """Test retrieve Brainnetome with incorrect threshold."""
     with pytest.raises(ValueError, match="The parameter `threshold`"):
         _retrieve_brainnetome(
-            dataset=check_dataset(),
             threshold=100,
         )
 

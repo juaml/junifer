@@ -48,6 +48,7 @@ def test_get_dependency_information_short() -> None:
         "lapy",
         "lazy_loader",
         "looseversion",
+        "junifer_data",
     ]
 
     if sys.version_info < (3, 11):
