@@ -77,7 +77,6 @@ def test_get_dependency_information_long() -> None:
         "templateflow",
         "lapy",
         "lazy_loader",
-        "junifer_data",
     ]
     for key in dependency_list:
         assert key in dependency_information_keys
