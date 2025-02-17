@@ -17,6 +17,7 @@ concurrency: preview-${{ github.ref }}
 
 jobs:
   build-docs:
+    # https://github.com/actions/setup-python/issues/1013#issuecomment-2642078401
     runs-on: ubuntu-22.04
     # Use custom docs CI image
     container: ghcr.io/juaml/junifer-docs:main
