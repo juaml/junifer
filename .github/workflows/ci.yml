@@ -43,10 +43,10 @@ jobs:
         git-annex \
         make \
         jq
-    - name: Copy xfms directory
+    - name: Copy junifer-data directory
       run: |
-        mkdir -p $HOME/junifer/data/xfms
-        cp -ar /root/junifer/data/xfms/. $HOME/junifer/data/xfms/
+        mkdir -p $HOME/junifer_data/v1
+        cp -ar /root/junifer_data/v1/. $HOME/junifer_data/v1/
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
