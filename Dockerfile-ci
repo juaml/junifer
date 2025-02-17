@@ -44,8 +44,8 @@ RUN apt-get update && \
     libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Add xfms
-COPY --from=ghcr.io/juaml/human-template-xfms:main /opt/xfms /root/junifer/data/xfms
+# Add junifer-data
+COPY --from=ghcr.io/juaml/junifer-data:v1 /opt/junifer-data /root/junifer_data/v1
 
 # Add ANTs
 COPY --from=antsx/ants:latest /opt/ants /opt/ants
