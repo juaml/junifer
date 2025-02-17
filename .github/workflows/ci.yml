@@ -16,13 +16,14 @@ on:
 
 jobs:
   run-tests:
+    # https://github.com/actions/setup-python/issues/1013#issuecomment-2642078401
     runs-on: ubuntu-22.04
-    # Use custom docs CI image
+    # Use custom CI image
     container: ghcr.io/juaml/junifer-ci:main
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.9', '3.10', '3.11', '3.12']
 
     steps:
     - name: Check ANTs
@@ -43,10 +44,10 @@ jobs:
         git-annex \
         make \
         jq
-    - name: Copy xfms directory
+    - name: Copy junifer-data directory
       run: |
-        mkdir -p $HOME/junifer/data/xfms
-        cp -ar /root/junifer/data/xfms/. $HOME/junifer/data/xfms/
+        mkdir -p $HOME/junifer_data/v1
+        cp -ar /root/junifer_data/v1/. $HOME/junifer_data/v1/
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
