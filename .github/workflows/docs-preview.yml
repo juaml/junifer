@@ -28,6 +28,7 @@ jobs:
     - name: Install system dependencies
       # actions/checkout fails to identify Git as it's not in the CI image
       run: |
+        apt-get -qq update
         apt-get -qq install -y \
         git \
         git-annex \
