@@ -26,9 +26,8 @@ jobs:
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
     - name: Install system dependencies
+      # actions/checkout fails to identify Git as it's not in the CI image
       run: |
-        # actions/checkout fails to identify Git as it's not in the CI image
-        apt-get -qq update && \
         apt-get -qq install -y \
         git \
         git-annex \
@@ -41,7 +40,7 @@ jobs:
       run: |
         mkdir -p $HOME/junifer_data/v1
         cp -ar /root/junifer_data/v1/. $HOME/junifer_data/v1/
-    - name: Checkout source
+    - name: Checkout repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 0
