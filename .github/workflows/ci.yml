@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.9', '3.10', '3.11', '3.12']
 
     steps:
     - name: Check ANTs
@@ -44,14 +44,6 @@ jobs:
         git-annex \
         make \
         jq
-    - name: Install extra system dependencies
-      run: |
-        apt-get -qq install -y \
-        gcc \
-        g++ \
-        pkg-config \
-        python3.13-dev
-      if: matrix.python-version == 3.13
     - name: Copy junifer-data directory
       run: |
         mkdir -p $HOME/junifer_data/v1
