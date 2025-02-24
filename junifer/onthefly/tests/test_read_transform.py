@@ -64,6 +64,36 @@ def matrix_storage(tmp_path: Path) -> HDF5FeatureStorage:
     return storage
 
 
+@pytest.fixture
+def matrix_storage_with_nan(tmp_path: Path) -> HDF5FeatureStorage:
+    """Return a HDF5FeatureStorage with matrix data.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    storage = HDF5FeatureStorage(tmp_path / "matrix_store_nan.hdf5")
+    data = np.arange(36).reshape(3, 3, 4).astype(float)
+    data[1, 1, 2] = np.nan
+    data[1, 2, 2] = np.nan
+    for i in range(4):
+        storage.store(
+            kind="matrix",
+            meta={
+                "element": {"subject": f"test{i + 1}"},
+                "dependencies": [],
+                "marker": {"name": "matrix"},
+                "type": "BOLD",
+            },
+            data=data[:, :, i],
+            col_names=["f1", "f2", "f3"],
+            row_names=["g1", "g2", "g3"],
+        )
+    return storage
+
+
 def test_incorrect_package(matrix_storage: HDF5FeatureStorage) -> None:
     """Test error check for incorrect package name.
 
@@ -176,3 +206,57 @@ def test_bctpy_function(
         )
         assert "Computing" in caplog.text
         assert "Generating" in caplog.text
+
+
+@pytest.mark.parametrize(
+    "nan_policy, error_msg",
+    [
+        ("drop_element", None),
+        ("drop_rows", "square"),
+        ("drop_columns", "square"),
+        ("drop_symmetric", None),
+        ("bypass", "NaNs"),
+        ("wrong", "Unknown"),
+    ],
+)
+def test_bctpy_nans(
+    matrix_storage_with_nan: HDF5FeatureStorage,
+    caplog: pytest.LogCaptureFixture,
+    nan_policy: str,
+    error_msg: str,
+) -> None:
+    """Test working function of bctpy.
+
+    Parameters
+    ----------
+    matrix_storage : HDF5FeatureStorage
+        The HDF5FeatureStorage with matrix data, as fixture.
+    caplog : pytest.LogCaptureFixture
+        The pytest.LogCaptureFixture object.
+    nan_policy : str
+        The NAN policy to test.
+    error_msg : str
+        The expected error message snippet. If None, no error should be raised.
+
+    """
+    # Skip test if import fails
+    pytest.importorskip("bct")
+
+    with caplog.at_level(logging.DEBUG):
+        if error_msg is None:
+            read_transform(
+                storage=matrix_storage_with_nan,  # type: ignore
+                feature_name="BOLD_matrix",
+                transform="bctpy_eigenvector_centrality_und",
+                nan_policy=nan_policy,
+            )
+            assert "Computing" in caplog.text
+            assert "Generating" in caplog.text
+        else:
+            with pytest.raises(ValueError, match=error_msg):
+                read_transform(
+                    storage=matrix_storage_with_nan,  # type: ignore
+                    feature_name="BOLD_matrix",
+                    transform="bctpy_eigenvector_centrality_und",
+                    nan_policy=nan_policy,
+                )
