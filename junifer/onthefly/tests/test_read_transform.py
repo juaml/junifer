@@ -229,7 +229,7 @@ def test_bctpy_nans(
 
     Parameters
     ----------
-    matrix_storage : HDF5FeatureStorage
+    matrix_storage_with_nan : HDF5FeatureStorage
         The HDF5FeatureStorage with matrix data, as fixture.
     caplog : pytest.LogCaptureFixture
         The pytest.LogCaptureFixture object.
