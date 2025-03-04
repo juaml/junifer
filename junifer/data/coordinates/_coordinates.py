@@ -47,83 +47,85 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         self._builtin.update(
             {
                 "CogAC": {
-                    "file_path_suffix": "CogAC_VOIs.txt",
+                    "file_path_suffix": "CogAC/CogAC_VOIs.txt",
                     "space": "MNI",
                 },
                 "CogAR": {
-                    "file_path_suffix": "CogAR_VOIs.txt",
+                    "file_path_suffix": "CogAR/CogAR_VOIs.txt",
                     "space": "MNI",
                 },
                 "DMNBuckner": {
-                    "file_path_suffix": "DMNBuckner_VOIs.txt",
+                    "file_path_suffix": "DMNBuckner/DMNBuckner_VOIs.txt",
                     "space": "MNI",
                 },
                 "eMDN": {
-                    "file_path_suffix": "eMDN_VOIs.txt",
+                    "file_path_suffix": "eMDN/eMDN_VOIs.txt",
                     "space": "MNI",
                 },
                 "Empathy": {
-                    "file_path_suffix": "Empathy_VOIs.txt",
+                    "file_path_suffix": "Empathy/Empathy_VOIs.txt",
                     "space": "MNI",
                 },
                 "eSAD": {
-                    "file_path_suffix": "eSAD_VOIs.txt",
+                    "file_path_suffix": "eSAD/eSAD_VOIs.txt",
                     "space": "MNI",
                 },
                 "extDMN": {
-                    "file_path_suffix": "extDMN_VOIs.txt",
+                    "file_path_suffix": "extDMN/extDMN_VOIs.txt",
                     "space": "MNI",
                 },
                 "Motor": {
-                    "file_path_suffix": "Motor_VOIs.txt",
+                    "file_path_suffix": "Motor/Motor_VOIs.txt",
                     "space": "MNI",
                 },
                 "MultiTask": {
-                    "file_path_suffix": "MultiTask_VOIs.txt",
+                    "file_path_suffix": "MultiTask/MultiTask_VOIs.txt",
                     "space": "MNI",
                 },
                 "PhysioStress": {
-                    "file_path_suffix": "PhysioStress_VOIs.txt",
+                    "file_path_suffix": "PhysioStress/PhysioStress_VOIs.txt",
                     "space": "MNI",
                 },
                 "Rew": {
-                    "file_path_suffix": "Rew_VOIs.txt",
+                    "file_path_suffix": "Rew/Rew_VOIs.txt",
                     "space": "MNI",
                 },
                 "Somatosensory": {
-                    "file_path_suffix": "Somatosensory_VOIs.txt",
+                    "file_path_suffix": "Somatosensory/Somatosensory_VOIs.txt",
                     "space": "MNI",
                 },
                 "ToM": {
-                    "file_path_suffix": "ToM_VOIs.txt",
+                    "file_path_suffix": "ToM/ToM_VOIs.txt",
                     "space": "MNI",
                 },
                 "VigAtt": {
-                    "file_path_suffix": "VigAtt_VOIs.txt",
+                    "file_path_suffix": "VigAtt/VigAtt_VOIs.txt",
                     "space": "MNI",
                 },
                 "WM": {
-                    "file_path_suffix": "WM_VOIs.txt",
+                    "file_path_suffix": "WM/WM_VOIs.txt",
                     "space": "MNI",
                 },
                 "Power": {
-                    "file_path_suffix": "Power2011_MNI_VOIs.txt",
+                    "file_path_suffix": "Power/Power2011_MNI_VOIs.txt",
                     "space": "MNI",
                 },
                 "Power2011": {
-                    "file_path_suffix": "Power2011_MNI_VOIs.txt",
+                    "file_path_suffix": "Power/Power2011_MNI_VOIs.txt",
                     "space": "MNI",
                 },
                 "Dosenbach": {
-                    "file_path_suffix": "Dosenbach2010_MNI_VOIs.txt",
+                    "file_path_suffix": "Dosenbach/Dosenbach2010_MNI_VOIs.txt",
                     "space": "MNI",
                 },
                 "Power2013": {
-                    "file_path_suffix": "Power2013_MNI_VOIs.tsv",
+                    "file_path_suffix": "Power/Power2013_MNI_VOIs.tsv",
                     "space": "MNI",
                 },
                 "AutobiographicalMemory": {
-                    "file_path_suffix": "AutobiographicalMemory_VOIs.txt",
+                    "file_path_suffix": (
+                        "AutobiographicalMemory/AutobiographicalMemory_VOIs.txt"
+                    ),
                     "space": "MNI",
                 },
             }
@@ -277,7 +279,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         if t_coord.get("file_path_suffix") is not None:
             # Set file path to retrieve
             coords_file_path = Path(
-                f"coordinates/{name}/{t_coord['file_path_suffix']}"
+                f"coordinates/{t_coord['file_path_suffix']}"
             )
             logger.debug(f"Loading coordinates: `{name}`")
             # Load via pandas
