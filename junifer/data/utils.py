@@ -14,6 +14,8 @@ from ..utils import config, logger, raise_error
 
 
 __all__ = [
+    "JUNIFER_DATA_HEXSHA",
+    "JUNIFER_DATA_PARAMS",
     "JUNIFER_DATA_VERSION",
     "closest_resolution",
     "get_dataset_path",
@@ -23,6 +25,14 @@ __all__ = [
 
 # junifer-data version constant
 JUNIFER_DATA_VERSION = "1"
+
+# junifer-data hexsha constant
+JUNIFER_DATA_HEXSHA = "e9aecf7b5a2fff82de00d265e02afde42a448647"
+
+JUNIFER_DATA_PARAMS = {
+    "tag": JUNIFER_DATA_VERSION,
+    "hexsha": JUNIFER_DATA_HEXSHA,
+}
 
 
 def closest_resolution(
