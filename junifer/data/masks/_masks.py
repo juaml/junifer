@@ -28,7 +28,7 @@ from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..template_spaces import get_template
 from ..utils import (
-    JUNIFER_DATA_VERSION,
+    JUNIFER_DATA_PARAMS,
     closest_resolution,
     get_dataset_path,
     get_native_warper,
@@ -745,7 +745,7 @@ def _load_vickery_patil_mask(
     return get(
         file_path=Path(f"masks/Vickery-Patil/{mask_fname}"),
         dataset_path=get_dataset_path(),
-        tag=JUNIFER_DATA_VERSION,
+        **JUNIFER_DATA_PARAMS,
     )
 
 
@@ -778,7 +778,7 @@ def _load_ukb_mask(name: str) -> Path:
     return get(
         file_path=Path(f"masks/UKB/{mask_fname}"),
         dataset_path=get_dataset_path(),
-        tag=JUNIFER_DATA_VERSION,
+        **JUNIFER_DATA_PARAMS,
     )
 
 

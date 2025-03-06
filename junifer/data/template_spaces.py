@@ -12,7 +12,7 @@ from junifer_data import get
 from templateflow import api as tflow
 
 from ..utils import logger, raise_error
-from .utils import JUNIFER_DATA_VERSION, closest_resolution, get_dataset_path
+from .utils import JUNIFER_DATA_PARAMS, closest_resolution, get_dataset_path
 
 
 __all__ = ["get_template", "get_xfm"]
@@ -40,7 +40,7 @@ def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover
     return get(
         file_path=xfm_file_path,
         dataset_path=get_dataset_path(),
-        tag=JUNIFER_DATA_VERSION,
+        **JUNIFER_DATA_PARAMS,
     )
 
 

@@ -19,7 +19,7 @@ from ...utils import logger, raise_error, warn_with_log
 from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..utils import (
-    JUNIFER_DATA_VERSION,
+    JUNIFER_DATA_PARAMS,
     closest_resolution,
     get_dataset_path,
     get_native_warper,
@@ -639,13 +639,13 @@ def _retrieve_schaefer(
         file_path=path_prefix / f"Schaefer2018_{n_rois}Parcels_{yeo_networks}"
         f"Networks_order_FSLMNI152_{resolution}mm.nii.gz",
         dataset_path=get_dataset_path(),
-        tag=JUNIFER_DATA_VERSION,
+        **JUNIFER_DATA_PARAMS,
     )
     parcellation_label_path = get(
         file_path=path_prefix
         / f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order.txt",
         dataset_path=get_dataset_path(),
-        tag=JUNIFER_DATA_VERSION,
+        **JUNIFER_DATA_PARAMS,
     )
 
     # Load labels
@@ -764,13 +764,13 @@ def _retrieve_tian(
         parcellation_img_path = get(
             file_path=parcellation_fname,
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
         parcellation_label_path = get(
             file_path=parcellation_fname_base_3T
             / f"Tian_Subcortex_S{scale}_3T_label.txt",
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
         # Load labels
         labels = pd.read_csv(parcellation_label_path, sep=" ", header=None)[
@@ -783,7 +783,7 @@ def _retrieve_tian(
                 f"Tian_Subcortex_S{scale}_{magneticfield}.nii.gz"
             ),
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
         # define 7T labels (b/c currently no labels file available for 7T)
         scale7Trois = {1: 16, 2: 34, 3: 54, 4: 62}
@@ -855,12 +855,12 @@ def _retrieve_suit(
     parcellation_img_path = get(
         file_path=path_prefix / f"SUIT_{space}Space_{resolution}mm.nii",
         dataset_path=get_dataset_path(),
-        tag=JUNIFER_DATA_VERSION,
+        **JUNIFER_DATA_PARAMS,
     )
     parcellation_label_path = get(
         file_path=path_prefix / f"SUIT_{space}Space_{resolution}mm.tsv",
         dataset_path=get_dataset_path(),
-        tag=JUNIFER_DATA_VERSION,
+        **JUNIFER_DATA_PARAMS,
     )
 
     # Load labels
@@ -938,20 +938,20 @@ def _retrieve_aicha(
     parcellation_img_path = get(
         file_path=path_prefix / "AICHA.nii",
         dataset_path=get_dataset_path(),
-        tag=JUNIFER_DATA_VERSION,
+        **JUNIFER_DATA_PARAMS,
     )
     # Conditional label file fetch
     if version == 1:
         parcellation_label_path = get(
             file_path=path_prefix / "AICHA_vol1.txt",
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
     elif version == 2:
         parcellation_label_path = get(
             file_path=path_prefix / "AICHA_vol3.txt",
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
 
     # Load labels
@@ -1055,12 +1055,12 @@ def _retrieve_shen(
         parcellation_img_path = get(
             file_path=path_prefix / f"fconn_atlas_{n_rois}_{resolution}mm.nii",
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
         parcellation_label_path = get(
             file_path=path_prefix / f"Group_seg{n_rois}_BAindexing_setA.txt",
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
         labels = (
             pd.read_csv(
@@ -1077,14 +1077,14 @@ def _retrieve_shen(
             file_path=path_prefix
             / f"shen_{resolution}mm_268_parcellation.nii.gz",
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
         labels = list(range(1, 269))
     elif year == 2019:
         parcellation_img_path = get(
             file_path=path_prefix / "Shen_1mm_368_parcellation.nii.gz",
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
         labels = list(range(1, 369))
 
@@ -1174,13 +1174,13 @@ def _retrieve_yan(
                 f"{resolution}mm.nii.gz"
             ),
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
         parcellation_label_path = get(
             file_path=path_prefix
             / f"{n_rois}Parcels_Yeo2011_{yeo_networks}Networks_LUT.txt",
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
     elif kong_networks:
         # Check kong_networks value
@@ -1199,13 +1199,13 @@ def _retrieve_yan(
                 f"{resolution}mm.nii.gz"
             ),
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
         parcellation_label_path = get(
             file_path=path_prefix
             / f"{n_rois}Parcels_Kong2022_{kong_networks}Networks_LUT.txt",
             dataset_path=get_dataset_path(),
-            tag=JUNIFER_DATA_VERSION,
+            **JUNIFER_DATA_PARAMS,
         )
 
     # Load label file
@@ -1272,7 +1272,7 @@ def _retrieve_brainnetome(
             f"BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz"
         ),
         dataset_path=get_dataset_path(),
-        tag=JUNIFER_DATA_VERSION,
+        **JUNIFER_DATA_PARAMS,
     )
 
     # Load labels
