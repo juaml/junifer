@@ -292,6 +292,14 @@ Available
        | `Richman et al. (2000) <https://doi.org/10.1152/ajpheart.2000.278.6.H2039>`_
      - Done
      - 0.0.4
+   * - :class:`.FunctionalConnectivityLaggedParcels`
+     - Compute lagged functional connectivity over parcellation
+     - Done
+     - 0.0.6
+   * - :class:`.FunctionalConnectivityLaggedSpheres`
+     - Compute lagged functional connectivity over spheres placed on coordinates
+     - Done
+     - 0.0.6
 
 Planned
 ~~~~~~~
