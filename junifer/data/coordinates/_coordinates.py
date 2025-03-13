@@ -118,10 +118,6 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     "file_path_suffix": "Dosenbach/Dosenbach2010_MNI_VOIs.txt",
                     "space": "MNI",
                 },
-                "Power2013": {
-                    "file_path_suffix": "Power/Power2013_MNI_VOIs.tsv",
-                    "space": "MNI",
-                },
                 "AutobiographicalMemory": {
                     "file_path_suffix": (
                         "AutobiographicalMemory/AutobiographicalMemory_VOIs.txt"
