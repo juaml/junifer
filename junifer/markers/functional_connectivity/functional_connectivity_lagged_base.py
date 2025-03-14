@@ -130,7 +130,7 @@ class FunctionalConnectivityLaggedBase(BaseMarker):
         # transposed to get (n_rois, n_timepoints)
         fmri_data = aggregation["aggregation"]["data"].T
         n_rois = fmri_data.shape[0]
-        fc_matrix = np.zeros((n_rois, n_rois))
+        fc_matrix = np.ones((n_rois, n_rois))
         lag_matrix = np.zeros((n_rois, n_rois), dtype=int)
         lags = np.arange(-self.max_lag, self.max_lag + 1)
         # Compute
