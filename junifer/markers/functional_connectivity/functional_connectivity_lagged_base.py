@@ -119,6 +119,10 @@ class FunctionalConnectivityLaggedBase(BaseMarker):
               - ``col_names`` : ROI labels as list of str
               - ``matrix_kind`` : the kind of matrix (tril, triu or full)
 
+        Notes
+        -----
+        Pearson correlation is used to perform connectivity measure.
+
         """
         # Perform necessary aggregation
         aggregation = self.aggregate(input, extra_input=extra_input)
