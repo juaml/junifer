@@ -106,10 +106,6 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     "file_path_suffix": "WM/WM_VOIs.txt",
                     "space": "MNI",
                 },
-                "Power": {
-                    "file_path_suffix": "Power/Power2011_MNI_VOIs.txt",
-                    "space": "MNI",
-                },
                 "Power2011": {
                     "file_path_suffix": "Power/Power2011_MNI_VOIs.txt",
                     "space": "MNI",
@@ -122,6 +118,10 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
                     "file_path_suffix": (
                         "AutobiographicalMemory/AutobiographicalMemory_VOIs.txt"
                     ),
+                    "space": "MNI",
+                },
+                "Seitzman2018": {
+                    "file_path_suffix": "Seitzman/Seitzman2018_MNI_VOIs.txt",
                     "space": "MNI",
                 },
             }
