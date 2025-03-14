@@ -640,6 +640,15 @@ Available
        | Meta-analysis.
        | Journal of Cognitive Neuroscience, Volume 21(3), Pages 489–510 (2009).
        | https://doi.org/10.1162/jocn.2008.21029
+   * - | Functionally-constrained ROIs from non-cortical structures from
+       | Seitzman et al. (2020)
+     - ``Seitzman2018``
+     - 0.0.6
+     - | Seitzman, B. A., Gratton, C., Marek, S. et al.
+       | A set of functionally-defined brain regions with improved representation
+       | of the subcortex and cerebellum.
+       | NeuroImage, Volume 206 (2020).
+       | https://doi.org/10.1016/j.neuroimage.2019.116290
 
 
 Planned
