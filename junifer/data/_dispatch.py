@@ -214,7 +214,7 @@ def register_data(
             name=name, space=space, overwrite=overwrite, **kwargs
         )
     elif kind == "mask":
-        return MaskRegistry().load(
+        return MaskRegistry().register(
             name=name, space=space, overwrite=overwrite, **kwargs
         )
     else:
@@ -241,8 +241,8 @@ def deregister_data(kind: str, name: str) -> None:
     if kind == "coordinates":
         return CoordinatesRegistry().deregister(name=name)
     elif kind == "parcellation":
-        return ParcellationRegistry().register(name=name)
+        return ParcellationRegistry().deregister(name=name)
     elif kind == "mask":
-        return MaskRegistry().load(name=name)
+        return MaskRegistry().deregister(name=name)
     else:
         raise_error(f"Unknown data kind: {kind}")
