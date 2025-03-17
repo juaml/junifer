@@ -136,17 +136,19 @@ class FunctionalConnectivityLaggedBase(BaseMarker):
         # Compute
         for i, j in product(range(n_rois), range(n_rois)):
             if i != j:
-                # Compute cross-correlation
-                ccf = correlate(
-                    fmri_data[i], fmri_data[j], mode="full", method="auto"
-                )
+                x = fmri_data[i]
+                y = fmri_data[j]
+                # Compute cross-correlation function (CCF)
+                ccf = correlate(x, y, mode="full", method="auto")
+                # Normalize CCF
+                ccf /= np.sqrt(np.sum(np.abs(x**2)) * np.sum(np.abs(y**2)))
+                # Limit lag range
                 ccf = ccf[
                     len(ccf) // 2
                     - self.max_lag : len(ccf) // 2
                     + self.max_lag
                     + 1
-                ]  # Limit lag range
-
+                ]
                 # Find peak correlation and corresponding lag
                 peak_idx = np.argmax(np.abs(ccf))  # Peak correlation index
                 peak_corr = ccf[peak_idx]  # Peak correlation value
