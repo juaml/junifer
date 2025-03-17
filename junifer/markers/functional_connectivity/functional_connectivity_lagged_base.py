@@ -167,6 +167,6 @@ class FunctionalConnectivityLaggedBase(BaseMarker):
                 "data": lag_matrix,
                 "row_names": roi_labels,
                 "col_names": roi_labels,
-                "matrix_kind": "tril",
+                "matrix_kind": "full",
             },
         }
