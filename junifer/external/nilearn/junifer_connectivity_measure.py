@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from itertools import product
 from typing import Callable, Optional
 
 import numpy as np
@@ -322,7 +323,8 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
         The covariance estimator
         (default ``EmpiricalCovariance(store_precision=False)``).
     kind : {"covariance", "correlation", "spearman correlation", \
-            "partial correlation", "tangent", "precision"}, optional
+            "partial correlation", "xi correlation", "tangent", \
+            "precision"}, optional
         The matrix kind. The default value uses Pearson's correlation.
         If ``"spearman correlation"`` is used, the data will be ranked before
         estimating the covariance. For the use of ``"tangent"`` see [1]_
@@ -420,6 +422,17 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
                 covariances_std.append(self.cov_estimator_.fit(x).covariance_)
 
             connectivities = [cov_to_corr(cov) for cov in covariances_std]
+        elif self.kind == "xi correlation":
+            connectivities = []
+            for x in X:
+                n_rois = x.shape[1]
+                connectivity = np.ones((n_rois, n_rois))
+                for i, j in product(range(n_rois), range(n_rois)):
+                    if i != j:
+                        connectivity[i, j] = stats.chatterjeexi(
+                            x[:, i], x[:, j], y_continuous=True
+                        ).statistic
+                connectivities.append(connectivity)
         else:
             covariances = [self.cov_estimator_.fit(x).covariance_ for x in X]
             if self.kind in ("covariance", "tangent"):
@@ -434,6 +447,7 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
                 allowed_kinds = (
                     "correlation",
                     "partial correlation",
+                    "xi correlation",
                     "tangent",
                     "covariance",
                     "precision",
