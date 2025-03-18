@@ -447,6 +447,7 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
                 allowed_kinds = (
                     "correlation",
                     "partial correlation",
+                    "spearman correlation",
                     "xi correlation",
                     "tangent",
                     "covariance",
