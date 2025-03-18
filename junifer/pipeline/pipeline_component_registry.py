@@ -90,6 +90,12 @@ class PipelineComponentRegistry(metaclass=Singleton):
                 "FunctionalConnectivitySpheres": (
                     "FunctionalConnectivitySpheres"
                 ),
+                "FunctionalConnectivityLaggedParcels": (
+                    "FunctionalConnectivityLaggedParcels"
+                ),
+                "FunctionalConnectivityLaggedSpheres": (
+                    "FunctionalConnectivityLaggedSpheres"
+                ),
                 "ParcelAggregation": "ParcelAggregation",
                 "ReHoParcels": "ReHoParcels",
                 "ReHoSpheres": "ReHoSpheres",
