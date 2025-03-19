@@ -327,8 +327,9 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
             "precision"}, optional
         The matrix kind. The default value uses Pearson's correlation.
         If ``"spearman correlation"`` is used, the data will be ranked before
-        estimating the covariance. For the use of ``"tangent"`` see [1]_
-        (default "correlation").
+        estimating the covariance. For ``"xi correlation"``, the coefficient
+        is not symmetric and should be interpreted as a measure of dependence
+        [2]_ . For the use of ``"tangent"`` see [1]_ (default "correlation").
     vectorize : bool, optional
         If True, connectivity matrices are reshaped into 1D arrays and only
         their flattened lower triangular parts are returned (default False).
@@ -373,6 +374,12 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
            in computer science, Pages 200-208. Berlin, Heidelberg, 2010.
            Springer.
            doi:10/cn2h9c.
+
+    .. [2] Chatterjee, S.
+           A new coefficient of correlation.
+           Journal of the American Statistical Association 116.536 (2021):
+           2009-2022.
+           doi:10.1080/01621459.2020.1758115.
 
     """
 
