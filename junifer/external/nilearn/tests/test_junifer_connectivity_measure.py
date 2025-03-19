@@ -12,7 +12,11 @@ import numpy as np
 import pytest
 from nilearn.connectome.connectivity_matrices import sym_matrix_to_vec
 from nilearn.tests.test_signal import generate_signals
-from numpy.testing import assert_array_almost_equal, assert_array_equal
+from numpy.testing import (
+    assert_allclose,
+    assert_array_almost_equal,
+    assert_array_equal,
+)
 from pandas import DataFrame
 from scipy import linalg
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
@@ -1089,3 +1093,23 @@ def test_connectivity_measure_standardize(
         ).fit_transform(signals)
         for m in record:
             assert match not in m.message
+
+
+def test_xi_correlation() -> None:
+    """Check xi correlation according to paper."""
+    rng = np.random.default_rng(25982435982346983)
+    x = rng.random(size=10)
+    y = rng.random(size=10)
+    arr = np.column_stack((x, y))
+    expected = np.array(
+        [
+            [
+                [1.0, -0.3030303],
+                [-0.18181818, 1.0],
+            ]
+        ]
+    )
+    got = JuniferConnectivityMeasure(kind="xi correlation").fit_transform(
+        [arr]
+    )
+    assert_allclose(expected, got)
