@@ -143,14 +143,17 @@ class FunctionalConnectivityBase(BaseMarker):
             },
         )
         # Create dictionary for output
+        labels = aggregation["aggregation"]["col_names"]
         return {
             "functional_connectivity": {
                 "data": connectivity.fit_transform(
                     [aggregation["aggregation"]["data"]]
                 )[0],
-                # Create column names
-                "row_names": aggregation["aggregation"]["col_names"],
-                "col_names": aggregation["aggregation"]["col_names"],
-                "matrix_kind": "tril",
+                "row_names": labels,
+                "col_names": labels,
+                # xi correlation coefficient is not symmetric
+                "matrix_kind": (
+                    "full" if self.conn_method == "xi correlation" else "tril"
+                ),
             },
         }
