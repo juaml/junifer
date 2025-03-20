@@ -30,3 +30,4 @@ DataGrabbers, Preprocessors, Markers, etc.,  following the *junifer* way.
    parcellations
    coordinates
    masks
+   plugins

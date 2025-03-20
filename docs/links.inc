@@ -12,6 +12,7 @@
 .. _`AML`: https://www.fz-juelich.de/inm/inm-7/EN/Forschung/Applied%20Machine%20Learning/_node.html
 .. _`INM-7`: https://www.fz-juelich.de/inm/inm-7/EN/Home/home_node.html
 .. _`julearn`: https://juaml.github.io/julearn
+.. _`junifer-data`: https://github.com/juaml/junifer-data-client
 
 .. _`pandas`: https://pandas.pydata.org
 .. _`pandas.DataFrame` : https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html
@@ -24,6 +25,7 @@
 .. _`nipype`: https://nipype.readthedocs.io
 .. _`datalad`: https://datalad.org
 .. _`templateflow`: https://www.templateflow.org
+.. _`click`: https://click.palletsprojects.com/en/stable/
 
 .. _`venv`: https://docs.python.org/3/tutorial/venv.html
 .. _`conda env`: https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
@@ -36,6 +38,7 @@
 .. _`Wikipedia`: https://wikipedia.org
 .. _`YAML`: https://yaml.org
 
+.. _`setuptools`: https://setuptools.pypa.io/en/latest/
 .. _`setuptools_scm`: https://github.com/pypa/setuptools_scm/
 
 .. _`sphinx gallery`: https://sphinx-gallery.github.io/stable/index.html
