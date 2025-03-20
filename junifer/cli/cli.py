@@ -111,7 +111,9 @@ def _validate_verbose(
     )
 
 
-@click.group()
+@click.group
+@click.version_option()
+@click.help_option()
 def cli() -> None:  # pragma: no cover
     """JUelich NeuroImaging FEature extractoR."""
 
