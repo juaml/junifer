@@ -8,7 +8,6 @@
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/junifer/badges/version.svg)](https://anaconda.org/conda-forge/junifer)
 ![GitHub](https://img.shields.io/github/license/juaml/junifer?style=flat-square)
 ![Codecov](https://img.shields.io/codecov/c/github/juaml/junifer?style=flat-square)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/charliermarsh/ruff)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8176570.svg)](https://doi.org/10.5281/zenodo.8176570)
