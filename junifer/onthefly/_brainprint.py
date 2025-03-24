@@ -79,7 +79,7 @@ def normalize(
         )
     else:
         raise_error(
-            "Invalid value for `kind`, should be one of: " f"{valid_kind}"
+            f"Invalid value for `kind`, should be one of: {valid_kind}"
         )
 
     return normalized_df

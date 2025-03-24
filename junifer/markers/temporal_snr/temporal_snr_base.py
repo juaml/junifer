@@ -3,7 +3,6 @@
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-
 from abc import abstractmethod
 from typing import Any, ClassVar, Optional, Union
 

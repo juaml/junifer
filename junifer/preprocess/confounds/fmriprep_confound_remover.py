@@ -572,7 +572,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         if bold_img.get_fdata().shape[3] != len(confound_df):
             raise_error(
                 "Image time series and confounds have different length!\n"
-                f"\tImage time series: { bold_img.get_fdata().shape[3]}\n"
+                f"\tImage time series: {bold_img.get_fdata().shape[3]}\n"
                 f"\tConfounds: {len(confound_df)}"
             )
 

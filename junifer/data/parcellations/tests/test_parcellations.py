@@ -326,7 +326,8 @@ def test_schaefer(
     assert len(label) == n_rois
     assert space == "MNI152NLin6Asym"
     assert_array_equal(
-        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+        img.header["pixdim"][1:4],
+        3 * [resolution],  # type: ignore
     )
 
 
@@ -502,7 +503,8 @@ def test_tian_7T_6thgeneration(scale: int, n_label: int) -> None:
     assert space == "MNI152NLin6Asym"
     assert len(lbl) == n_label
     assert_array_almost_equal(
-        img.header["pixdim"][1:4], [1.6, 1.6, 1.6]  # type: ignore
+        img.header["pixdim"][1:4],
+        [1.6, 1.6, 1.6],  # type: ignore
     )
 
 
@@ -622,7 +624,8 @@ def test_shen(
     assert space == "MNI152NLin2009cAsym"
     assert len(label) == n_labels
     assert_array_equal(
-        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+        img.header["pixdim"][1:4],
+        3 * [resolution],  # type: ignore
     )
 
 
@@ -797,7 +800,8 @@ def test_yan(
     assert space == "MNI152NLin6Asym"
     assert len(label) == n_rois
     assert_array_equal(
-        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+        img.header["pixdim"][1:4],
+        3 * [resolution],  # type: ignore
     )
 
 
@@ -897,7 +901,8 @@ def test_brainnetome(
     assert space == "MNI152NLin6Asym"
     assert len(label) == 246
     assert_array_equal(
-        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+        img.header["pixdim"][1:4],
+        3 * [resolution],  # type: ignore
     )
 
 

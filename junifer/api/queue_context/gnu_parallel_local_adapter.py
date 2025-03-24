@@ -218,8 +218,7 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
         # Copy executable if not local
         if hasattr(self, "_exec_path"):
             logger.info(
-                f"Copying {self._executable} to "
-                f"{self._exec_path.resolve()!s}"
+                f"Copying {self._executable} to {self._exec_path.resolve()!s}"
             )
             shutil.copy(
                 src=Path(__file__).parent.parent / "res" / self._executable,
@@ -235,15 +234,14 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
         self._elements_file_path.write_text(textwrap.dedent(self.elements()))
         # Create pre run
         logger.info(
-            f"Writing {self._pre_run_path.name} to "
-            f"{self._job_dir.resolve()!s}"
+            f"Writing {self._pre_run_path.name} to {self._job_dir.resolve()!s}"
         )
         self._pre_run_path.touch()
         self._pre_run_path.write_text(textwrap.dedent(self.pre_run()))
         make_executable(self._pre_run_path)
         # Create run
         logger.info(
-            f"Writing {self._run_path.name} to " f"{self._job_dir.resolve()!s}"
+            f"Writing {self._run_path.name} to {self._job_dir.resolve()!s}"
         )
         self._run_path.touch()
         self._run_path.write_text(textwrap.dedent(self.run()))
@@ -258,8 +256,7 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
         make_executable(self._pre_collect_path)
         # Create collect
         logger.info(
-            f"Writing {self._collect_path.name} to "
-            f"{self._job_dir.resolve()!s}"
+            f"Writing {self._collect_path.name} to {self._job_dir.resolve()!s}"
         )
         self._collect_path.touch()
         self._collect_path.write_text(textwrap.dedent(self.collect()))

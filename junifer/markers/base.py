@@ -229,9 +229,9 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
                     # feature data is not manipulated, only meta
                     self.update_meta(feature_data_copy, "marker")
                     # Update marker feature's metadata name
-                    feature_data_copy["meta"]["marker"][
-                        "name"
-                    ] += f"_{feature_name}"
+                    feature_data_copy["meta"]["marker"]["name"] += (
+                        f"_{feature_name}"
+                    )
 
                     if storage is not None:
                         logger.info(f"Storing in {storage}")
