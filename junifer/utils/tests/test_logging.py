@@ -68,7 +68,7 @@ def test_log_file(tmp_path: Path) -> None:
         assert any("Warn message" in line for line in lines)
         assert any("Error message" in line for line in lines)
 
-    configure_logging(fname=tmp_path / "test2.log", level="INFO")
+    configure_logging(fname=(tmp_path / "test2.log").resolve(), level="INFO")
     logger.debug("Debug message")
     logger.info("Info message")
     logger.warning("Warn message")
@@ -81,7 +81,9 @@ def test_log_file(tmp_path: Path) -> None:
         assert any("Warn message" in line for line in lines)
         assert any("Error message" in line for line in lines)
 
-    configure_logging(fname=tmp_path / "test3.log", level="WARNING")
+    configure_logging(
+        fname=tmp_path / "test3.log", level="WARNING", level_datalad="WARNING"
+    )
     logger.debug("Debug message")
     logger.info("Info message")
     logger.warning("Warn message")

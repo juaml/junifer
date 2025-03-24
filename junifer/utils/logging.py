@@ -8,15 +8,14 @@ import os
 import sys
 
 
-if sys.version_info < (3, 12):
+if sys.version_info < (3, 12):  # pragma: no cover
     from distutils.version import LooseVersion
-else:  # pragma: no cover
+else:
     from looseversion import LooseVersion
 
 import logging
 import warnings
 from pathlib import Path
-from subprocess import PIPE, Popen, TimeoutExpired
 from typing import ClassVar, NoReturn, Optional, Union
 from warnings import warn
 
@@ -77,7 +76,7 @@ class WrapStdOut(logging.StreamHandler):
         # just stdout) in order for this to work (tested on OSX and Linux)
         if hasattr(sys.stdout, name):
             return getattr(sys.stdout, name)
-        else:
+        else:  # pragma: no cover
             raise AttributeError(f"'file' object has not attribute '{name}'")
 
 
@@ -107,11 +106,13 @@ class ColorFormatter(logging.Formatter):
     COLOR_SEQ: str = "\033[1;%dm"
     BOLD_SEQ: str = "\033[1m"
 
-    def __init__(self, fmt: str, datefmt: Optional[str] = None) -> None:
+    def __init__(
+        self, fmt: str, datefmt: Optional[str] = None
+    ) -> None:  # pragma: no cover
         """Initialize the ColorFormatter."""
         logging.Formatter.__init__(self, fmt, datefmt)
 
-    def format(self, record: logging.LogRecord) -> str:
+    def format(self, record: logging.LogRecord) -> str:  # pragma: no cover
         """Format the log record.
 
         Parameters
@@ -134,45 +135,6 @@ class ColorFormatter(logging.Formatter):
         return logging.Formatter.format(self, record)
 
 
-def _get_git_head(path: Path) -> str:
-    """Aux function to read HEAD from git.
-
-    Parameters
-    ----------
-    path : pathlib.Path
-        The path to read git HEAD from.
-
-    Returns
-    -------
-    str
-        Empty string if timeout expired for subprocess command execution else
-        git HEAD information.
-
-    Raises
-    ------
-    FileNotFoundError
-        If ``path`` is invalid.
-
-    """
-    if not path.exists():
-        raise_error(
-            msg=f"This path does not exist: {path}", klass=FileNotFoundError
-        )
-    command = f"cd {path}; git rev-parse --verify HEAD"
-    process = Popen(
-        args=command,
-        stdout=PIPE,
-        shell=True,
-    )
-    try:
-        stdout, _ = process.communicate(timeout=10)
-        proc_stdout = stdout.strip().decode()
-    except TimeoutExpired:
-        process.kill()
-        proc_stdout = ""
-    return proc_stdout
-
-
 def get_versions() -> dict:
     """Import stuff and get versions if module.
 
@@ -188,43 +150,14 @@ def get_versions() -> dict:
         # allowing ruamel.yaml
         if "." in name and name != "ruamel.yaml":
             continue
-        if name in ["_curses"]:
-            continue
         vstring = str(getattr(module, "__version__", None))
         module_version = LooseVersion(vstring)
         module_version = getattr(module_version, "vstring", None)
         if module_version is None:
             module_version = None
-        elif "git" in module_version:
-            git_path = Path(module.__file__).resolve().parent  # type: ignore
-            head = _get_git_head(git_path)
-            module_version += f"-HEAD:{head}"
 
         module_versions[name] = module_version
     return module_versions
-
-
-# def get_ext_versions(tbox_path: Path) -> Dict:
-#     """Get versions of external tools used by junifer.
-
-#     Parameters
-#     ----------
-#     tbox_path : pathlib.Path
-#         The path to external toolboxes.
-
-#     Returns
-#     -------
-#     dict
-#         The dependency information.
-
-#     """
-#     versions = {}
-#     # spm_path = tbox_path / 'spm12'
-#     # if spm_path.exists():
-#     #     head = _get_git_head(spm_path)
-#     #     module_version = 'SPM12-HEAD:{}'.format(head)
-#     #     versions['spm'] = module_version
-#     return versions
 
 
 def _close_handlers(logger: logging.Logger) -> None:
@@ -243,55 +176,37 @@ def _close_handlers(logger: logging.Logger) -> None:
             logger.removeHandler(handler)
 
 
-def _safe_log(versions: dict, name: str) -> None:
-    """Log with safety.
-
-    Parameters
-    ----------
-    versions : dict
-        The dictionary with keys as dependency names and values as the
-        versions.
-    name : str
-        The dependency to look up in `versions`.
-
-    """
-    if name in versions:
-        logger.info(f"{name}: {versions[name]}")
-
-
-def log_versions(tbox_path: Optional[Path] = None) -> None:
-    """Log versions of dependencies and junifer.
-
-    If `tbox_path` is specified, can also log versions of external toolboxes.
-
-    Parameters
-    ----------
-    tbox_path : pathlib.Path, optional
-        The path to external toolboxes (default None).
-
-    """
+def log_versions() -> None:
+    """Log versions of dependencies and junifer."""
     # Get versions of all found packages
     versions = get_versions()
-
+    # Set packages to log
+    pkgs_to_log = [
+        "click",
+        "numpy",
+        "scipy",
+        "datalad",
+        "pandas",
+        "nibabel",
+        "nilearn",
+        "sqlalchemy",
+        "ruamel.yaml",
+        "h5py",
+        "tqdm",
+        "templateflow",
+        "lapy",
+        "junifer_data",
+        "junifer",
+    ]
+    # Log
     logger.info("===== Lib Versions =====")
-    _safe_log(versions, "numpy")
-    _safe_log(versions, "scipy")
-    _safe_log(versions, "pandas")
-    _safe_log(versions, "nipype")
-    _safe_log(versions, "nitime")
-    _safe_log(versions, "nilearn")
-    _safe_log(versions, "nibabel")
-    _safe_log(versions, "junifer")
+    for pkg in pkgs_to_log:
+        if pkg in versions:
+            logger.info(f"{pkg}: {versions[pkg]}")
     logger.info("========================")
 
-    if tbox_path is not None:
-        # ext_versions = get_ext_versions(tbox_path)
-        # logger.info('spm: {}'.format(ext_versions['spm']))
-        # logger.info('========================')
-        pass
 
-
-def _can_use_color(handler: logging.Handler) -> bool:
+def _can_use_color(handler: logging.Handler) -> bool:  # pragma: no cover
     """Check if color can be used in the logging output.
 
     Parameters
@@ -391,11 +306,7 @@ def configure_logging(
     # Set logging format
     if output_format is None:
         output_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-        # (
-        #     "%(asctime)s [%(levelname)s] %(message)s "
-        #     "(%(filename)s:%(lineno)s)"
-        # )
-    if _can_use_color(lh):
+    if _can_use_color(lh):  # pragma: no cover
         formatter = ColorFormatter(fmt=output_format)
     else:
         formatter = logging.Formatter(fmt=output_format)
