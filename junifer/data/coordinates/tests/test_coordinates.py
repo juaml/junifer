@@ -129,3 +129,9 @@ def test_get() -> None:
         # Both tailored and raw should be same for now
         assert_array_equal(tailored_coords, raw_coords)
         assert tailored_labels == raw_labels
+
+
+def test_deregister() -> None:
+    """Test coordinates deregistration."""
+    CoordinatesRegistry().deregister("MyList")
+    assert "MyList" not in CoordinatesRegistry().list

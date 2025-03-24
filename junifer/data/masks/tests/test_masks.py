@@ -555,3 +555,9 @@ def test_get_multiple(
 
         expected = intersect_masks(mask_imgs, **params)
         assert_array_equal(computed.get_fdata(), expected.get_fdata())
+
+
+def test_deregister() -> None:
+    """Test mask deregistration."""
+    MaskRegistry().deregister("testmask")
+    assert "testmask" not in MaskRegistry().list

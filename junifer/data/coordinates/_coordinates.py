@@ -339,7 +339,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
         seeds, labels, _ = self.load(name=coords)
 
         # Transform coordinate if target data is native
-        if target_data["space"] == "native":
+        if target_data["space"] == "native":  # pragma: no cover
             # Check for extra inputs
             if extra_input is None:
                 raise_error(
