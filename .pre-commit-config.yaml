@@ -17,24 +17,22 @@ repos:
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.23
+    rev: v0.24.1
     hooks:
       - id: validate-pyproject
-  - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 24.10.0
-    hooks:
-      - id: black
-        exclude: ^(docs/|examples/|tools/)
-        args: [--check]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.3
+    rev: v0.11.2
     hooks:
       - id: ruff
         types_or: [python, jupyter]
         exclude: ^(__init__.py)
         args: [--output-format, grouped, --show-fixes]
+      - id: ruff-format
+        types_or: [python, jupyter]
+        exclude: ^(__init__.py)
+        args: [--check, --diff]
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.4.0
+    rev: v2.4.1
     hooks:
       - id: codespell
         exclude: ^(.github/|docs/)
@@ -47,10 +45,3 @@ repos:
       - id: rst-backticks
       - id: rst-directive-colons
       - id: rst-inline-touching-normal
-  - repo: https://github.com/adamchainz/blacken-docs
-    rev: "1.19.1"
-    hooks:
-      - id: blacken-docs
-        additional_dependencies:
-          - black==24.4.2
-        args: [-l 79]
