@@ -91,7 +91,8 @@ def test_FunctionalConnectivityParcels(
         )
         # Compute the connectivity measure
         connectivity_measure = ConnectivityMeasure(
-            cov_estimator=cov_estimator, kind="correlation"  # type: ignore
+            cov_estimator=cov_estimator,
+            kind="correlation",  # type: ignore
         ).fit_transform([extracted_timeseries])[0]
 
         # Check that FC are almost equal

@@ -151,9 +151,7 @@ class ALFFParcels(ALFFBase):
                 ).compute(
                     input=aggregation_alff_input,
                     extra_input=extra_input,
-                )[
-                    "aggregation"
-                ],
+                )["aggregation"],
             },
             "falff": {
                 **ParcelAggregation(
@@ -165,8 +163,6 @@ class ALFFParcels(ALFFBase):
                 ).compute(
                     input=aggregation_falff_input,
                     extra_input=extra_input,
-                )[
-                    "aggregation"
-                ],
+                )["aggregation"],
             },
         }

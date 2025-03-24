@@ -20,7 +20,6 @@ def test_base_marker_subclassing() -> None:
 
     # Create concrete class
     class MyBaseMarker(BaseMarker):
-
         _MARKER_INOUT_MAPPINGS = {  # noqa: RUF012
             "BOLD": {
                 "feat_1": "timeseries",

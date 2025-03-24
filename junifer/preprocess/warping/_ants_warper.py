@@ -237,8 +237,7 @@ class ANTsWarper:
             if input.get("mask") is not None:
                 # Create a tempfile for warped mask output
                 apply_transforms_mask_out_path = element_tempdir / (
-                    f"warped_mask_from_{input['space']}_to_"
-                    f"{reference}.nii.gz"
+                    f"warped_mask_from_{input['space']}_to_{reference}.nii.gz"
                 )
                 # Set antsApplyTransforms command
                 apply_transforms_mask_cmd = [

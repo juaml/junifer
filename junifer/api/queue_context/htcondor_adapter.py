@@ -264,9 +264,7 @@ class HTCondorAdapter(QueueContextAdapter):
             )
 
         junifer_collect_args = (
-            "collect "
-            f"{self._yaml_config_path.resolve()!s} "
-            f"{verbose_args}"
+            f"collect {self._yaml_config_path.resolve()!s} {verbose_args}"
         )
         log_dir_prefix = f"{self._log_dir.resolve()!s}/junifer_collect"
         fixed = (
@@ -316,7 +314,7 @@ class HTCondorAdapter(QueueContextAdapter):
                 "$DAG_STATUS\n"
             )
         elif self._collect == "on_success_only":
-            var += f"JOB collect {self._submit_collect_path}\n" "PARENT "
+            var += f"JOB collect {self._submit_collect_path}\nPARENT "
             for idx, _ in enumerate(self._elements):
                 var += f"run{idx} "
             var += "CHILD collect\n"
@@ -328,14 +326,13 @@ class HTCondorAdapter(QueueContextAdapter):
         logger.info("Creating HTCondor job")
         # Create logs
         logger.info(
-            f"Creating logs directory under " f"{self._job_dir.resolve()!s}"
+            f"Creating logs directory under {self._job_dir.resolve()!s}"
         )
         self._log_dir.mkdir(exist_ok=True, parents=True)
         # Copy executable if not local
         if hasattr(self, "_exec_path"):
             logger.info(
-                f"Copying {self._executable} to "
-                f"{self._exec_path.resolve()!s}"
+                f"Copying {self._executable} to {self._exec_path.resolve()!s}"
             )
             shutil.copy(
                 src=Path(__file__).parent.parent / "res" / self._executable,
@@ -344,8 +341,7 @@ class HTCondorAdapter(QueueContextAdapter):
             make_executable(self._exec_path)
         # Create pre run
         logger.info(
-            f"Writing {self._pre_run_path.name} to "
-            f"{self._job_dir.resolve()!s}"
+            f"Writing {self._pre_run_path.name} to {self._job_dir.resolve()!s}"
         )
         self._pre_run_path.touch()
         self._pre_run_path.write_text(textwrap.dedent(self.pre_run()))
@@ -374,7 +370,7 @@ class HTCondorAdapter(QueueContextAdapter):
         self._submit_collect_path.write_text(textwrap.dedent(self.collect()))
         # Create DAG
         logger.debug(
-            f"Writing {self._dag_path.name} to " f"{self._job_dir.resolve()!s}"
+            f"Writing {self._dag_path.name} to {self._job_dir.resolve()!s}"
         )
         self._dag_path.touch()
         self._dag_path.write_text(textwrap.dedent(self.dag()))

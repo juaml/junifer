@@ -114,9 +114,9 @@ class RangeEntropy(ComplexityBase):
 
         assert isinstance(emb_dim, int), "Embedding dimension must be integer."
         assert isinstance(delay, int), "Delay must be integer."
-        assert isinstance(
-            tolerance, float
-        ), "Tolerance must be a float number between 0 and 1."
+        assert isinstance(tolerance, float), (
+            "Tolerance must be a float number between 0 and 1."
+        )
 
         _, n_roi = extracted_bold_values.shape
         range_en_roi = np.zeros((n_roi, 1))

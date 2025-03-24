@@ -272,7 +272,8 @@ def test_vickery_patil(
     """
     mask, mask_fname, space = MaskRegistry().load(name, resolution=resolution)
     assert_array_almost_equal(
-        mask.header["pixdim"][1:4], pixdim  # type: ignore
+        mask.header["pixdim"][1:4],
+        pixdim,  # type: ignore
     )
     assert space == "IXI549Space"
     assert mask_fname is not None

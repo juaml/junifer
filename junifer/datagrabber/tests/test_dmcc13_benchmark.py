@@ -264,7 +264,7 @@ def test_DMCC13Benchmark_invalid_sessions():
     """Test DMCC13Benchmark DataGrabber invalid sessions."""
     with pytest.raises(
         ValueError,
-        match=("phonyses is not a valid session in " "the DMCC dataset"),
+        match=("phonyses is not a valid session in the DMCC dataset"),
     ):
         DMCC13Benchmark(sessions="phonyses")
 
@@ -273,9 +273,7 @@ def test_DMCC13Benchmark_invalid_tasks():
     """Test DMCC13Benchmark DataGrabber invalid tasks."""
     with pytest.raises(
         ValueError,
-        match=(
-            "thisisnotarealtask is not a valid task in " "the DMCC dataset"
-        ),
+        match=("thisisnotarealtask is not a valid task in the DMCC dataset"),
     ):
         DMCC13Benchmark(tasks="thisisnotarealtask")
 
@@ -284,9 +282,7 @@ def test_DMCC13Benchmark_phase_encodings():
     """Test DMCC13Benchmark DataGrabber invalid phase encodings."""
     with pytest.raises(
         ValueError,
-        match=(
-            "moonphase is not a valid phase encoding in " "the DMCC dataset"
-        ),
+        match=("moonphase is not a valid phase encoding in the DMCC dataset"),
     ):
         DMCC13Benchmark(phase_encodings="moonphase")
 
@@ -295,6 +291,6 @@ def test_DMCC13Benchmark_runs():
     """Test DMCC13Benchmark DataGrabber invalid runs."""
     with pytest.raises(
         ValueError,
-        match=("cerebralrun is not a valid run in " "the DMCC dataset"),
+        match=("cerebralrun is not a valid run in the DMCC dataset"),
     ):
         DMCC13Benchmark(runs="cerebralrun")
