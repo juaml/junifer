@@ -40,7 +40,7 @@ class FSLWarper:
         self,
         input: dict[str, Any],
         extra_input: dict[str, Any],
-    ) -> dict[str, Any]:
+    ) -> dict[str, Any]:  # pragma: no cover
         """Preprocess using FSL.
 
         Parameters
