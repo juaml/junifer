@@ -72,7 +72,7 @@ class ANTsWarper:
         )
 
         # Native space warping
-        if reference == "T1w":
+        if reference == "T1w":  # pragma: no cover
             logger.debug("Using ANTs for space warping")
 
             # Get the min of the voxel sizes from input and use it as the
