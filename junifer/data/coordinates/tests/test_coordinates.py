@@ -8,7 +8,13 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from junifer.data import CoordinatesRegistry
+from junifer.data import (
+    deregister_data,
+    get_data,
+    list_data,
+    load_data,
+    register_data,
+)
 from junifer.datareader import DefaultDataReader
 from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
 
@@ -16,7 +22,8 @@ from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
 def test_register_built_in_check() -> None:
     """Test coordinates registration check for built-in coordinates."""
     with pytest.raises(ValueError, match=r"built-in"):
-        CoordinatesRegistry().register(
+        register_data(
+            kind="coordinates",
             name="DMNBuckner",
             coordinates=np.zeros(2),
             voi_names=["1", "2"],
@@ -26,14 +33,16 @@ def test_register_built_in_check() -> None:
 
 def test_register_overwrite() -> None:
     """Test coordinates registration check for overwriting."""
-    CoordinatesRegistry().register(
+    register_data(
+        kind="coordinates",
         name="MyList",
         coordinates=np.zeros((2, 3)),
         voi_names=["roi1", "roi2"],
         space="MNI",
     )
     with pytest.raises(ValueError, match=r"already registered"):
-        CoordinatesRegistry().register(
+        register_data(
+            kind="coordinates",
             name="MyList",
             coordinates=np.ones((2, 3)),
             voi_names=["roi2", "roi3"],
@@ -41,7 +50,8 @@ def test_register_overwrite() -> None:
             overwrite=False,
         )
 
-    CoordinatesRegistry().register(
+    register_data(
+        kind="coordinates",
         name="MyList",
         coordinates=np.ones((2, 3)),
         voi_names=["roi2", "roi3"],
@@ -49,7 +59,7 @@ def test_register_overwrite() -> None:
         overwrite=True,
     )
 
-    coord, names, space = CoordinatesRegistry().load("MyList")
+    coord, names, space = load_data(kind="coordinates", name="MyList")
     assert_array_equal(coord, np.ones((2, 3)))
     assert names == ["roi2", "roi3"]
     assert space == "MNI"
@@ -58,7 +68,8 @@ def test_register_overwrite() -> None:
 def test_register_valid_input() -> None:
     """Test coordinates registration check for valid input."""
     with pytest.raises(TypeError, match=r"numpy.ndarray"):
-        CoordinatesRegistry().register(
+        register_data(
+            kind="coordinates",
             name="MyList",
             coordinates=[1, 2],
             voi_names=["roi1", "roi2"],
@@ -66,7 +77,8 @@ def test_register_valid_input() -> None:
             overwrite=True,
         )
     with pytest.raises(ValueError, match=r"2D array"):
-        CoordinatesRegistry().register(
+        register_data(
+            kind="coordinates",
             name="MyList",
             coordinates=np.zeros((2, 3, 4)),
             voi_names=["roi1", "roi2"],
@@ -75,7 +87,8 @@ def test_register_valid_input() -> None:
         )
 
     with pytest.raises(ValueError, match=r"3 values"):
-        CoordinatesRegistry().register(
+        register_data(
+            kind="coordinates",
             name="MyList",
             coordinates=np.zeros((2, 4)),
             voi_names=["roi1", "roi2"],
@@ -83,7 +96,8 @@ def test_register_valid_input() -> None:
             overwrite=True,
         )
     with pytest.raises(ValueError, match=r"voi_names"):
-        CoordinatesRegistry().register(
+        register_data(
+            kind="coordinates",
             name="MyList",
             coordinates=np.zeros((2, 3)),
             voi_names=["roi1", "roi2", "roi3"],
@@ -95,13 +109,13 @@ def test_register_valid_input() -> None:
 def test_list() -> None:
     """Test listing of available coordinates."""
     assert {"DMNBuckner", "MultiTask", "VigAtt", "WM"}.issubset(
-        set(CoordinatesRegistry().list)
+        set(list_data(kind="coordinates"))
     )
 
 
 def test_load() -> None:
     """Test loading coordinates from file."""
-    coord, names, space = CoordinatesRegistry().load("DMNBuckner")
+    coord, names, space = load_data(kind="coordinates", name="DMNBuckner")
     assert coord.shape == (6, 3)  # type: ignore
     assert names == ["PCC", "MPFC", "lAG", "rAG", "lHF", "rHF"]
     assert space == "MNI"
@@ -110,7 +124,7 @@ def test_load() -> None:
 def test_load_nonexisting() -> None:
     """Test loading coordinates that not exist."""
     with pytest.raises(ValueError, match=r"not found"):
-        CoordinatesRegistry().load("NonExisting")
+        load_data(kind="coordinates", name="NonExisting")
 
 
 def test_get() -> None:
@@ -121,11 +135,13 @@ def test_get() -> None:
         element_data = reader.fit_transform(element)
         vbm_gm = element_data["VBM_GM"]
         # Get tailored coordinates
-        tailored_coords, tailored_labels = CoordinatesRegistry().get(
-            coords="DMNBuckner", target_data=vbm_gm
+        tailored_coords, tailored_labels = get_data(
+            kind="coordinates", names="DMNBuckner", target_data=vbm_gm
         )
         # Get raw coordinates
-        raw_coords, raw_labels, _ = CoordinatesRegistry().load("DMNBuckner")
+        raw_coords, raw_labels, _ = load_data(
+            kind="coordinates", name="DMNBuckner"
+        )
         # Both tailored and raw should be same for now
         assert_array_equal(tailored_coords, raw_coords)
         assert tailored_labels == raw_labels
@@ -133,5 +149,5 @@ def test_get() -> None:
 
 def test_deregister() -> None:
     """Test coordinates deregistration."""
-    CoordinatesRegistry().deregister("MyList")
-    assert "MyList" not in CoordinatesRegistry().list
+    deregister_data(kind="coordinates", name="MyList")
+    assert "MyList" not in list_data(kind="coordinates")

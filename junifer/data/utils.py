@@ -76,7 +76,7 @@ def get_native_warper(
     target_data: MutableMapping,
     other_data: MutableMapping,
     inverse: bool = False,
-) -> dict:
+) -> dict:  # pragma: no cover
     """Get correct warping specification for native space.
 
     Parameters
