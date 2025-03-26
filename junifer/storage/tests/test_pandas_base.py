@@ -37,7 +37,8 @@ def test_element_to_index() -> None:
     assert index.levels[1].name == "idx"  # type: ignore
     # Check second index level values
     assert all(
-        x == i for i, x in enumerate(index.levels[1].values)  # type: ignore
+        x == i
+        for i, x in enumerate(index.levels[1].values)  # type: ignore
     )
     # Check second index level values shape
     assert index.levels[1].values.shape == (10,)  # type: ignore
@@ -69,7 +70,8 @@ def test_element_to_index() -> None:
     assert index.levels[1].name == "scan"  # type: ignore
     # Check second index level values
     assert all(
-        x == i for i, x in enumerate(index.levels[1].values)  # type: ignore
+        x == i
+        for i, x in enumerate(index.levels[1].values)  # type: ignore
     )
     # Check second index level values shape
     assert index.levels[1].values.shape == (7,)  # type: ignore
@@ -97,7 +99,8 @@ def test_element_to_index() -> None:
     assert index.levels[2].name == "idx"  # type: ignore
     # Check third index level values
     assert all(
-        x == i for i, x in enumerate(index.levels[2].values)  # type: ignore
+        x == i
+        for i, x in enumerate(index.levels[2].values)  # type: ignore
     )
     # Check third index level values shape
     assert index.levels[2].values.shape == (10,)  # type: ignore

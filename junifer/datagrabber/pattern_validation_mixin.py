@@ -3,7 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-
 from ..typing import DataGrabberPatterns
 from ..utils import logger, raise_error, warn_with_log
 

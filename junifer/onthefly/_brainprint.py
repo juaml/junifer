@@ -19,7 +19,7 @@ def normalize(
     storage: StorageLike,
     features: dict[str, dict[str, Optional[str]]],
     kind: str,
-) -> pd.DataFrame:
+) -> pd.DataFrame:  # pragma: no cover
     """Read stored brainprint data and normalize either surfaces or volumes.
 
     Parameters
@@ -79,7 +79,7 @@ def normalize(
         )
     else:
         raise_error(
-            "Invalid value for `kind`, should be one of: " f"{valid_kind}"
+            f"Invalid value for `kind`, should be one of: {valid_kind}"
         )
 
     return normalized_df
@@ -89,7 +89,7 @@ def reweight(
     storage: StorageLike,
     feature_name: Optional[str] = None,
     feature_md5: Optional[str] = None,
-) -> pd.DataFrame:
+) -> pd.DataFrame:  # pragma: no cover
     """Read stored brainprint data and reweight eigenvalues.
 
     Parameters

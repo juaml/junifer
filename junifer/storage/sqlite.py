@@ -229,9 +229,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Format index names for retrieved data
         meta_df.index = meta_df.index.str.replace(r"meta_", "")
         # Convert dataframe to dictionary
-        out: dict[str, dict[str, str]] = meta_df.to_dict(
-            orient="index"
-        )  # type: ignore
+        out: dict[str, dict[str, str]] = meta_df.to_dict(orient="index")  # type: ignore
         # Format output
         for md5, t_meta in out.items():
             for k, v in t_meta.items():
@@ -536,8 +534,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 klass=IOError,
             )
         logger.info(
-            "Collecting data from "
-            f"{self.uri.parent}/*{self.uri.name}"  # type: ignore
+            f"Collecting data from {self.uri.parent}/*{self.uri.name}"  # type: ignore
         )
         # Create new instance
         out_storage = SQLiteFeatureStorage(uri=self.uri, upsert="ignore")
@@ -596,9 +593,7 @@ def _generate_update_statements(table, index_col, rows_to_update):
     for i, (_, keys) in enumerate(pk_indb.iterrows()):
         stmt = (
             table.update()
-            .where(
-                and_(col == keys[j] for j, col in enumerate(pk_cols))
-            )  # type: ignore
+            .where(and_(col == keys[j] for j, col in enumerate(pk_cols)))  # type: ignore
             .values(new_records[i])
         )
         stmts.append(stmt)

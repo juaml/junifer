@@ -20,7 +20,14 @@ from nilearn.masking import (
 )
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
-from junifer.data import MaskRegistry
+from junifer.data import (
+    MaskRegistry,
+    deregister_data,
+    get_data,
+    list_data,
+    load_data,
+    register_data,
+)
 from junifer.data.masks import compute_brain_mask
 from junifer.data.masks._masks import (
     _load_ukb_mask,
@@ -112,7 +119,8 @@ def test_compute_brain_mask_for_native(mask_type: str) -> None:
 def test_register_built_in_check() -> None:
     """Test mask registration check for built-in masks."""
     with pytest.raises(ValueError, match=r"built-in mask"):
-        MaskRegistry().register(
+        register_data(
+            kind="mask",
             name="GM_prob0.2",
             mask_path="testmask.nii.gz",
             space="MNI",
@@ -122,36 +130,39 @@ def test_register_built_in_check() -> None:
 
 def test_list_incorrect() -> None:
     """Test incorrect information check for list masks."""
-    assert "testmask" not in MaskRegistry().list
+    assert "testmask" not in list_data(kind="mask")
 
 
 def test_register_already_registered() -> None:
     """Test mask registration check for already registered."""
     # Register custom mask
-    MaskRegistry().register(
+    register_data(
+        kind="mask",
         name="testmask",
         mask_path="testmask.nii.gz",
         space="MNI",
     )
-    out = MaskRegistry().load("testmask", path_only=True)
+    out = load_data(kind="mask", name="testmask", path_only=True)
     assert out[1] is not None
     assert out[1].name == "testmask.nii.gz"
 
     # Try registering again
     with pytest.raises(ValueError, match=r"already registered."):
-        MaskRegistry().register(
+        register_data(
+            kind="mask",
             name="testmask",
             mask_path="testmask.nii.gz",
             space="MNI",
         )
-    MaskRegistry().register(
+    register_data(
+        kind="mask",
         name="testmask",
         mask_path="testmask2.nii.gz",
         space="MNI",
         overwrite=True,
     )
 
-    out = MaskRegistry().load("testmask", path_only=True)
+    out = load_data(kind="mask", name="testmask", path_only=True)
     assert out[1] is not None
     assert out[1].name == "testmask2.nii.gz"
 
@@ -185,16 +196,17 @@ def test_register(
 
     """
     # Register custom mask
-    MaskRegistry().register(
+    register_data(
+        kind="mask",
         name=name,
         mask_path=mask_path,
         space=space,
         overwrite=overwrite,
     )
     # List available mask and check registration
-    assert name in MaskRegistry().list
+    assert name in list_data(kind="mask")
     # Load registered mask
-    _, fname, mask_space = MaskRegistry().load(name=name, path_only=True)
+    _, fname, mask_space = load_data(kind="mask", name=name, path_only=True)
     # Check values for registered mask
     assert fname is not None
     assert fname.name == f"{name}.nii.gz"
@@ -218,7 +230,7 @@ def test_list_correct(mask_name: str) -> None:
         The parametrized mask name.
 
     """
-    assert mask_name in MaskRegistry().list
+    assert mask_name in list_data(kind="mask")
 
 
 def test_load_incorrect() -> None:
@@ -270,9 +282,12 @@ def test_vickery_patil(
         The parametrized name of the mask file.
 
     """
-    mask, mask_fname, space = MaskRegistry().load(name, resolution=resolution)
+    mask, mask_fname, space = load_data(
+        kind="mask", name=name, resolution=resolution
+    )
     assert_array_almost_equal(
-        mask.header["pixdim"][1:4], pixdim  # type: ignore
+        mask.header["pixdim"][1:4],
+        pixdim,  # type: ignore
     )
     assert space == "IXI549Space"
     assert mask_fname is not None
@@ -287,7 +302,9 @@ def test_vickery_patil_error() -> None:
 
 def test_ukb() -> None:
     """Test UKB mask."""
-    mask, mask_fname, space = MaskRegistry().load("UKB_15K_GM", resolution=2.0)
+    mask, mask_fname, space = load_data(
+        kind="mask", name="UKB_15K_GM", resolution=2.0
+    )
     assert_array_almost_equal(mask.header["pixdim"][1:4], 2.0)  # type: ignore
     assert space == "MNI152NLin6Asym"
     assert mask_fname is not None
@@ -306,8 +323,8 @@ def test_get() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         vbm_gm = element_data["VBM_GM"]
         vbm_gm_img = vbm_gm["data"]
-        mask = MaskRegistry().get(
-            masks="compute_brain_mask", target_data=vbm_gm
+        mask = get_data(
+            kind="mask", names="compute_brain_mask", target_data=vbm_gm
         )
 
         assert mask.shape == vbm_gm_img.shape
@@ -355,28 +372,33 @@ def test_get_errors() -> None:
         vbm_gm = element_data["VBM_GM"]
         # Test wrong masks definitions (more than one key per dict)
         with pytest.raises(ValueError, match=r"only one key"):
-            MaskRegistry().get(
-                masks={"GM_prob0.2": {}, "Other": {}}, target_data=vbm_gm
+            get_data(
+                kind="mask",
+                names={"GM_prob0.2": {}, "Other": {}},
+                target_data=vbm_gm,
             )
 
         # Test wrong masks definitions (pass paramaeters to non-callable mask)
         with pytest.raises(ValueError, match=r"callable params"):
-            MaskRegistry().get(
-                masks={"GM_prob0.2": {"param": 1}}, target_data=vbm_gm
+            get_data(
+                kind="mask",
+                names={"GM_prob0.2": {"param": 1}},
+                target_data=vbm_gm,
             )
 
         # Pass only parameters to the intersection function
         with pytest.raises(
             ValueError, match=r" At least one mask is required."
         ):
-            MaskRegistry().get(masks={"threshold": 1}, target_data=vbm_gm)
+            get_data(kind="mask", names={"threshold": 1}, target_data=vbm_gm)
 
         # Pass parameters to the intersection function when only one mask
         with pytest.raises(
             ValueError, match=r"parameters to the intersection"
         ):
-            MaskRegistry().get(
-                masks=["compute_brain_mask", {"threshold": 1}],
+            get_data(
+                kind="mask",
+                names=["compute_brain_mask", {"threshold": 1}],
                 target_data=vbm_gm,
             )
 
@@ -423,7 +445,7 @@ def test_nilearn_compute_masks(
         else:
             mask_spec = {mask_name: params}
 
-        mask = MaskRegistry().get(masks=mask_spec, target_data=bold)
+        mask = get_data(kind="mask", names=mask_spec, target_data=bold)
 
         assert_array_equal(mask.affine, bold_img.affine)
 
@@ -449,8 +471,9 @@ def test_get_inherit() -> None:
         gm_mask = compute_brain_mask(element_data["BOLD"], threshold=0.2)
 
         # Get mask using the compute_brain_mask function
-        mask1 = MaskRegistry().get(
-            masks={"compute_brain_mask": {"threshold": 0.2}},
+        mask1 = get_data(
+            kind="mask",
+            names={"compute_brain_mask": {"threshold": 0.2}},
             target_data=element_data["BOLD"],
         )
 
@@ -461,8 +484,9 @@ def test_get_inherit() -> None:
             "data": gm_mask,
             "space": element_data["BOLD"]["space"],
         }
-        mask2 = MaskRegistry().get(
-            masks="inherit",
+        mask2 = get_data(
+            kind="mask",
+            names="inherit",
             target_data=bold_dict,
         )
 
@@ -503,8 +527,8 @@ def test_get_multiple(
         target_img = element_data["BOLD"]["data"]
         resolution = np.min(target_img.header.get_zooms()[:3])
 
-        computed = MaskRegistry().get(
-            masks=junifer_masks, target_data=element_data["BOLD"]
+        computed = get_data(
+            kind="mask", names=junifer_masks, target_data=element_data["BOLD"]
         )
 
         masks_names = [
@@ -523,8 +547,11 @@ def test_get_multiple(
         ]
 
         mask_imgs = [
-            MaskRegistry().load(
-                t_mask, path_only=False, resolution=resolution
+            load_data(
+                kind="mask",
+                name=t_mask,
+                path_only=False,
+                resolution=resolution,
             )[0]
             for t_mask in mask_files
         ]
@@ -554,3 +581,9 @@ def test_get_multiple(
 
         expected = intersect_masks(mask_imgs, **params)
         assert_array_equal(computed.get_fdata(), expected.get_fdata())
+
+
+def test_deregister() -> None:
+    """Test mask deregistration."""
+    deregister_data(kind="mask", name="testmask")
+    assert "testmask" not in list_data(kind="mask")

@@ -3,7 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-
 from typing import Optional
 
 import pandas as pd
@@ -85,7 +84,7 @@ def read_transform(
         # Check bctpy import
         try:
             import bct
-        except ImportError as err:
+        except ImportError as err:  # pragma: no cover
             raise_error(msg=str(err), klass=ImportError)
 
         # Warning about function usage

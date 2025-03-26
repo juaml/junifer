@@ -75,7 +75,12 @@ onthefly = [
     "bctpy==0.6.0"
 ]
 neurokit2 = ["neurokit2>=0.1.7"]
-dev = ["tox", "pre-commit"]
+dev = [
+    "tox",
+    "pre-commit",
+    "ruff",
+    "towncrier",
+]
 docs = [
     "seaborn>=0.13.0,<0.14.0",
     "sphinx>=7.3.0,<8.1.0",
@@ -107,16 +112,6 @@ version_scheme = "guess-next-dev"
 local_scheme = "no-local-version"
 write_to = "junifer/_version.py"
 
-[tool.black]
-line-length = 79
-target-version = ["py39", "py310", "py311", "py312", "py313"]
-extend-exclude = """
-(
-  junifer/external/h5io
-  | junifer/external/BrainPrint
-)
-"""
-
 [tool.codespell]
 skip = "*/auto_examples/*,*.html,.git/,*.pyc,*/_build/*,*/h5io/*,*/BrainPrint/*"
 count = ""
@@ -136,6 +131,7 @@ extend-exclude = [
     "examples",
     "tools",
 ]
+target-version = "py39"
 
 [tool.ruff.lint]
 select = [
@@ -275,3 +271,31 @@ showcontent = true
 [tool.towncrier.fragment.change]
 name = "API Changes"
 showcontent = true
+
+[tool.coverage.paths]
+source = [
+    "junifer",
+    "*/site-packages/junifer",
+]
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "*/setup.py",
+    "*/_version.py",
+    "*/tests/*",
+    "*/junifer/configs/*",
+    "*/junifer/external/h5io/*",
+    "*/junifer/external/BrainPrint/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    # Have to re-enable the standard pragma
+    "pragma: no cover",
+    # Type checking if statements should not be considered
+    "if TYPE_CHECKING:",
+    # Don't complain if non-runnable code isn't run:
+    "if __name__ == .__main__.:",
+]
+precision = 2

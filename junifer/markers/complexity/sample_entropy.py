@@ -115,9 +115,9 @@ class SampleEntropy(ComplexityBase):
 
         assert isinstance(emb_dim, int), "Embedding dimension must be integer."
         assert isinstance(delay, int), "Delay must be integer."
-        assert isinstance(
-            tol, float
-        ), "Tolerance must be a positive float number."
+        assert isinstance(tol, float), (
+            "Tolerance must be a positive float number."
+        )
 
         _, n_roi = extracted_bold_values.shape
         samp_en_roi = np.zeros((n_roi, 1))

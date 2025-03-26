@@ -197,8 +197,7 @@ class WorkDirManager(metaclass=Singleton):
             return
         if self._elementdir is not None:
             logger.debug(
-                "Deleting element directory at "
-                f"{self._elementdir.resolve()!s}"
+                f"Deleting element directory at {self._elementdir.resolve()!s}"
             )
             shutil.rmtree(self._elementdir, ignore_errors=True)
             self._elementdir = None

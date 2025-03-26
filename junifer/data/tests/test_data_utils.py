@@ -3,7 +3,6 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-
 import numpy as np
 import pytest
 
