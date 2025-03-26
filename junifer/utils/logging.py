@@ -159,7 +159,7 @@ def get_versions() -> dict:
     return module_versions
 
 
-def _close_handlers(logger: logging.Logger) -> None:
+def _close_handlers(logger: logging.Logger) -> None:  # pragma: no cover
     """Safely close relevant handlers for logger.
 
     Parameters

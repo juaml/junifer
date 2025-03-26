@@ -68,7 +68,9 @@ def test_log_file(tmp_path: Path) -> None:
         assert any("Warn message" in line for line in lines)
         assert any("Error message" in line for line in lines)
 
-    configure_logging(fname=(tmp_path / "test2.log").resolve(), level="INFO")
+    configure_logging(
+        fname=str((tmp_path / "test2.log").resolve()), level="INFO"
+    )
     logger.debug("Debug message")
     logger.info("Info message")
     logger.warning("Warn message")
@@ -96,7 +98,7 @@ def test_log_file(tmp_path: Path) -> None:
         assert any("Warn message" in line for line in lines)
         assert any("Error message" in line for line in lines)
 
-    configure_logging(fname=tmp_path / "test4.log", level="ERROR")
+    configure_logging(fname=tmp_path / "test4.log", level=logging.ERROR)
     logger.debug("Debug message")
     logger.info("Info message")
     logger.warning("Warn message")
@@ -109,7 +111,11 @@ def test_log_file(tmp_path: Path) -> None:
         assert any("Error message" in line for line in lines)
 
     with pytest.warns(UserWarning, match="to avoid this message"):
-        configure_logging(fname=tmp_path / "test4.log", level="WARNING")
+        configure_logging(
+            fname=tmp_path / "test4.log",
+            level="WARNING",
+            level_datalad=logging.WARNING,
+        )
         logger.debug("Debug2 message")
         logger.info("Info2 message")
         logger.warning("Warn2 message")
