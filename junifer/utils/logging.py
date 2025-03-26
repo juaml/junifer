@@ -144,18 +144,17 @@ def get_versions() -> dict:
         The module names and corresponding versions.
 
     """
+    # Setup dictionary to track versions of modules
     module_versions = {}
     for name, module in sys.modules.copy().items():
         # Bypassing sub-modules of packages and
         # allowing ruamel.yaml
         if "." in name and name != "ruamel.yaml":
             continue
+        # Get version or None as string
         vstring = str(getattr(module, "__version__", None))
-        module_version = LooseVersion(vstring)
-        module_version = getattr(module_version, "vstring", None)
-        if module_version is None:
-            module_version = None
-
+        # Get module version
+        module_version = getattr(LooseVersion(vstring), "vstring", None)
         module_versions[name] = module_version
     return module_versions
 
