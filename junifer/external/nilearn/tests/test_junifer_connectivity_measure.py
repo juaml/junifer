@@ -644,7 +644,7 @@ def test_connectivity_measure_generic(
         kind=kind, cov_estimator=cov_estimator
     )
     if sys.version_info < (3, 10) and kind == "xi correlation":
-        with pytest.raises(RuntimeError, msg="scipy 1.15.0"):
+        with pytest.raises(RuntimeError, match="scipy 1.15.0"):
             connectivities = conn_measure.fit_transform(signals)
 
     connectivities = conn_measure.fit_transform(signals)
@@ -835,7 +835,7 @@ def test_connectivity_measure_check_mean(
     """
     conn_measure = JuniferConnectivityMeasure(kind=kind)
     if sys.version_info < (3, 10) and kind == "xi correlation":
-        with pytest.raises(RuntimeError, msg="scipy 1.15.0"):
+        with pytest.raises(RuntimeError, match="scipy 1.15.0"):
             conn_measure.fit_transform(signals)
 
     conn_measure.fit_transform(signals)
@@ -875,7 +875,7 @@ def test_connectivity_measure_check_vectorization_option(
     connectivities = conn_measure.fit_transform(signals)
     conn_measure = JuniferConnectivityMeasure(vectorize=True, kind=kind)
     if sys.version_info < (3, 10) and kind == "xi correlation":
-        with pytest.raises(RuntimeError, msg="scipy 1.15.0"):
+        with pytest.raises(RuntimeError, match="scipy 1.15.0"):
             vectorized_connectivities = conn_measure.fit_transform(signals)
     vectorized_connectivities = conn_measure.fit_transform(signals)
 
