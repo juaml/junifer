@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import sys
 from itertools import product
 from typing import Callable, Optional
 
@@ -430,6 +431,14 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
 
             connectivities = [cov_to_corr(cov) for cov in covariances_std]
         elif self.kind == "xi correlation":
+            if sys.version_info < (3, 10):  # pragma: no cover
+                raise_error(
+                    klass=RuntimeError,
+                    msg=(
+                        "scipy.stats.chatterjeexi is available from "
+                        "scipy 1.15.0 and that requires Python 3.10 and above."
+                    ),
+                )
             connectivities = []
             for x in X:
                 n_rois = x.shape[1]
