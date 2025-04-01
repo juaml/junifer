@@ -4,6 +4,7 @@
 # License: AGPL
 
 import copy
+import sys
 import warnings
 from math import cosh, exp, log, sinh, sqrt
 from typing import TYPE_CHECKING, Optional, Union
@@ -1094,6 +1095,25 @@ def test_connectivity_measure_standardize(
             assert match not in m.message
 
 
+@pytest.mark.skipif(
+    sys.version_info > (3, 9),
+    reason="will have correct scipy version so no error",
+)
+def test_xi_correlation_error() -> None:
+    """Check xi correlation according to paper."""
+    with pytest.raises(RuntimeError, match="scipy.stats.chatterjeexi"):
+        JuniferConnectivityMeasure(kind="xi correlation").fit_transform(
+            np.zeros((2, 2))
+        )
+
+
+@pytest.mark.skipif(
+    sys.version_info < (3, 10),
+    reason=(
+        "needs scipy 1.15.0 and above which in turn requires "
+        "python 3.10 and above"
+    ),
+)
 def test_xi_correlation() -> None:
     """Check xi correlation according to paper."""
     rng = np.random.default_rng(25982435982346983)
