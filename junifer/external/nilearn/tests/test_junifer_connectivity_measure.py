@@ -76,7 +76,6 @@ CONNECTIVITY_KINDS = (
     "precision",
     "partial correlation",
     "spearman correlation",
-    "xi correlation",
 )
 
 N_FEATURES = 49
@@ -834,7 +833,7 @@ def test_connectivity_measure_check_mean(
 
     assert (conn_measure.mean_).shape == (N_FEATURES, N_FEATURES)
 
-    if kind not in ("tangent", "xi correlation"):
+    if kind != "tangent":
         assert_array_almost_equal(
             conn_measure.mean_,
             np.mean(conn_measure.transform(signals), axis=0),
