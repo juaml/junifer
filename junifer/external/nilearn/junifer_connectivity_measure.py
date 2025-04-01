@@ -3,6 +3,8 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import sys
+from itertools import product
 from typing import Callable, Optional
 
 import numpy as np
@@ -322,11 +324,13 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
         The covariance estimator
         (default ``EmpiricalCovariance(store_precision=False)``).
     kind : {"covariance", "correlation", "spearman correlation", \
-            "partial correlation", "tangent", "precision"}, optional
+            "partial correlation", "xi correlation", "tangent", \
+            "precision"}, optional
         The matrix kind. The default value uses Pearson's correlation.
         If ``"spearman correlation"`` is used, the data will be ranked before
-        estimating the covariance. For the use of ``"tangent"`` see [1]_
-        (default "correlation").
+        estimating the covariance. For ``"xi correlation"``, the coefficient
+        is not symmetric and should be interpreted as a measure of dependence
+        [2]_ . For the use of ``"tangent"`` see [1]_ (default "correlation").
     vectorize : bool, optional
         If True, connectivity matrices are reshaped into 1D arrays and only
         their flattened lower triangular parts are returned (default False).
@@ -371,6 +375,12 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
            in computer science, Pages 200-208. Berlin, Heidelberg, 2010.
            Springer.
            doi:10/cn2h9c.
+
+    .. [2] Chatterjee, S.
+           A new coefficient of correlation.
+           Journal of the American Statistical Association 116.536 (2021):
+           2009-2022.
+           doi:10.1080/01621459.2020.1758115.
 
     """
 
@@ -420,6 +430,25 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
                 covariances_std.append(self.cov_estimator_.fit(x).covariance_)
 
             connectivities = [cov_to_corr(cov) for cov in covariances_std]
+        elif self.kind == "xi correlation":
+            if sys.version_info < (3, 10):  # pragma: no cover
+                raise_error(
+                    klass=RuntimeError,
+                    msg=(
+                        "scipy.stats.chatterjeexi is available from "
+                        "scipy 1.15.0 and that requires Python 3.10 and above."
+                    ),
+                )
+            connectivities = []
+            for x in X:
+                n_rois = x.shape[1]
+                connectivity = np.ones((n_rois, n_rois))
+                for i, j in product(range(n_rois), range(n_rois)):
+                    if i != j:
+                        connectivity[i, j] = stats.chatterjeexi(
+                            x[:, i], x[:, j], y_continuous=True
+                        ).statistic
+                connectivities.append(connectivity)
         else:
             covariances = [self.cov_estimator_.fit(x).covariance_ for x in X]
             if self.kind in ("covariance", "tangent"):
