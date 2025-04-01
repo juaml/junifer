@@ -646,8 +646,8 @@ def test_connectivity_measure_generic(
     if sys.version_info < (3, 10) and kind == "xi correlation":
         with pytest.raises(RuntimeError, match="scipy 1.15.0"):
             connectivities = conn_measure.fit_transform(signals)
-    else:
-        connectivities = conn_measure.fit_transform(signals)
+
+    connectivities = conn_measure.fit_transform(signals)
     # Generic
     assert isinstance(connectivities, np.ndarray)
     assert len(connectivities) == len(covs)
@@ -837,8 +837,8 @@ def test_connectivity_measure_check_mean(
     if sys.version_info < (3, 10) and kind == "xi correlation":
         with pytest.raises(RuntimeError, match="scipy 1.15.0"):
             conn_measure.fit_transform(signals)
-    else:
-        conn_measure.fit_transform(signals)
+
+    conn_measure.fit_transform(signals)
 
     assert (conn_measure.mean_).shape == (N_FEATURES, N_FEATURES)
 
@@ -877,8 +877,7 @@ def test_connectivity_measure_check_vectorization_option(
     if sys.version_info < (3, 10) and kind == "xi correlation":
         with pytest.raises(RuntimeError, match="scipy 1.15.0"):
             vectorized_connectivities = conn_measure.fit_transform(signals)
-    else:
-        vectorized_connectivities = conn_measure.fit_transform(signals)
+    vectorized_connectivities = conn_measure.fit_transform(signals)
 
     assert_array_almost_equal(
         vectorized_connectivities, sym_matrix_to_vec(connectivities)
@@ -1121,13 +1120,7 @@ def test_xi_correlation() -> None:
             ]
         ]
     )
-    if sys.version_info < (3, 10):
-        with pytest.raises(RuntimeError, match="scipy 1.15.0"):
-            got = JuniferConnectivityMeasure(
-                kind="xi correlation"
-            ).fit_transform([arr])
-    else:
-        got = JuniferConnectivityMeasure(kind="xi correlation").fit_transform(
-            [arr]
-        )
+    got = JuniferConnectivityMeasure(kind="xi correlation").fit_transform(
+        [arr]
+    )
     assert_allclose(expected, got)
