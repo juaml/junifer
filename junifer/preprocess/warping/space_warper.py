@@ -77,7 +77,7 @@ class SpaceWarper(BasePreprocessor):
         self.reference = reference
         # Set required data types based on reference and
         # initialize superclass
-        if self.reference == "T1w":
+        if self.reference == "T1w":  # pragma: no cover
             required_data_types = [self.reference, "Warp"]
             # Listify on
             if not isinstance(on, list):
@@ -170,7 +170,9 @@ class SpaceWarper(BasePreprocessor):
         """
         logger.info(f"Warping to {self.reference} space using SpaceWarper")
         # Transform to native space
-        if self.using in ["fsl", "ants", "auto"] and self.reference == "T1w":
+        if (
+            self.using in ["fsl", "ants", "auto"] and self.reference == "T1w"
+        ):  # pragma: no cover
             # Check for extra inputs
             if extra_input is None:
                 raise_error(

@@ -32,7 +32,7 @@ class FSLParcellationWarper:
         parcellation_img: "Nifti1Image",
         target_data: dict[str, Any],
         warp_data: dict[str, Any],
-    ) -> "Nifti1Image":
+    ) -> "Nifti1Image":  # pragma: no cover
         """Warp ``parcellation_img`` to correct space.
 
         Parameters

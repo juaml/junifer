@@ -95,7 +95,7 @@ def get_data(
             target_data=target_data,
             extra_input=extra_input,
         )
-    else:
+    else:  # pragma: no cover
         raise_error(f"Unknown data kind: {kind}")
 
 
@@ -125,7 +125,7 @@ def list_data(kind: str) -> list[str]:
         return ParcellationRegistry().list
     elif kind == "mask":
         return MaskRegistry().list
-    else:
+    else:  # pragma: no cover
         raise_error(f"Unknown data kind: {kind}")
 
 
@@ -172,7 +172,7 @@ def load_data(
         return ParcellationRegistry().load(name=name, **kwargs)
     elif kind == "mask":
         return MaskRegistry().load(name=name, **kwargs)
-    else:
+    else:  # pragma: no cover
         raise_error(f"Unknown data kind: {kind}")
 
 
@@ -217,7 +217,7 @@ def register_data(
         return MaskRegistry().register(
             name=name, space=space, overwrite=overwrite, **kwargs
         )
-    else:
+    else:  # pragma: no cover
         raise_error(f"Unknown data kind: {kind}")
 
 
@@ -244,5 +244,5 @@ def deregister_data(kind: str, name: str) -> None:
         return ParcellationRegistry().deregister(name=name)
     elif kind == "mask":
         return MaskRegistry().deregister(name=name)
-    else:
+    else:  # pragma: no cover
         raise_error(f"Unknown data kind: {kind}")

@@ -116,7 +116,7 @@ class BrainPrint(BaseMarker):
         aseg_path: Path,
         norm_path: Path,
         indices: list,
-    ) -> Path:
+    ) -> Path:  # pragma: no cover
         """Generate a surface from the aseg and label files.
 
         Parameters
@@ -191,7 +191,7 @@ class BrainPrint(BaseMarker):
         self,
         aseg_path: Path,
         norm_path: Path,
-    ) -> dict[str, Path]:
+    ) -> dict[str, Path]:  # pragma: no cover
         """Create surfaces from FreeSurfer aseg labels.
 
         Parameters
@@ -266,7 +266,7 @@ class BrainPrint(BaseMarker):
         rh_white_path: Path,
         lh_pial_path: Path,
         rh_pial_path: Path,
-    ) -> dict[str, Path]:
+    ) -> dict[str, Path]:  # pragma: no cover
         """Create cortical surfaces from FreeSurfer labels.
 
         Parameters
@@ -308,7 +308,7 @@ class BrainPrint(BaseMarker):
     def _fix_nan(
         self,
         input_data: list[Union[float, str, npt.ArrayLike]],
-    ) -> np.ndarray:
+    ) -> np.ndarray:  # pragma: no cover
         """Convert BrainPrint output with string NaN to ``numpy.nan``.
 
         Parameters
@@ -330,7 +330,7 @@ class BrainPrint(BaseMarker):
         self,
         input: dict[str, Any],
         extra_input: Optional[dict] = None,
-    ) -> dict:
+    ) -> dict:  # pragma: no cover
         """Compute.
 
         Parameters

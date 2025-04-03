@@ -41,7 +41,7 @@ class AFNIReHo(metaclass=Singleton):
         },
     ]
 
-    def __del__(self) -> None:
+    def __del__(self) -> None:  # pragma: no cover
         """Terminate the class."""
         # Clear the computation cache
         logger.debug("Clearing cache for ReHo computation via AFNI")
