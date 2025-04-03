@@ -43,7 +43,9 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
     Raises
     ------
     ValueError
-        If invalid value is passed for ``tasks``.
+        If invalid value is passed for:
+         * ``tasks``
+         * ``space``
 
     """
 

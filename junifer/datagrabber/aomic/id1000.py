@@ -35,6 +35,12 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
     space : {"native", "MNI152NLin2009cAsym"}, optional
         The space to use for the data (default "MNI152NLin2009cAsym").
 
+    Raises
+    ------
+    ValueError
+        If invalid value is passed for:
+         * ``space``
+
     """
 
     def __init__(
