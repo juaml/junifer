@@ -1035,17 +1035,17 @@ def _retrieve_shen(
         )
     if n_rois in (268, 368) and year == 2013:
         raise_error(
-            f"The parameter combination `resolution = {resolution}` and "
+            f"The parameter combination `n_rois = {n_rois}` and "
             "`year = 2013` is invalid"
         )
     if n_rois in (50, 100, 150) and year in (2015, 2019):
         raise_error(
-            f"The parameter combination `resolution = {resolution}` and "
+            f"The parameter combination `n_rois = {n_rois}` and "
             f"`year = {year}` is invalid"
         )
     if (n_rois == 268 and year == 2019) or (n_rois == 368 and year == 2015):
         raise_error(
-            f"The parameter combination `resolution = {resolution}` and "
+            f"The parameter combination `n_rois = {n_rois}` and "
             f"`year = {year}` is invalid"
         )
 
