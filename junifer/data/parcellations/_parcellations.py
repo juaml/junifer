@@ -1312,11 +1312,11 @@ def merge_parcellations(
     parcellations_names: list[str],
     labels_lists: list[list[str]],
 ) -> tuple["Nifti1Image", list[str]]:
-    """Merge all parcellations from a list into one parcellation.
+    """Merge multiple parcellations.
 
     Parameters
     ----------
-    parcellations_list : list of niimg-like object
+    parcellations_list : list of Niimg-like object
         List of parcellations to merge.
     parcellations_names: list of str
         List of names for parcellations at the corresponding indices.
@@ -1326,10 +1326,10 @@ def merge_parcellations(
 
     Returns
     -------
-    parcellation : niimg-like object
+    Niimg-like object
         The parcellation that results from merging the list of input
         parcellations.
-    labels : list of str
+    list of str
         List of labels for the resultant parcellation.
 
     """
