@@ -24,9 +24,9 @@ class TemporalSlicer(BasePreprocessor):
 
     Parameters
     ----------
-    start : int
+    start : float
         Starting time point, in second.
-    stop : int
+    stop : float
         Ending time point, in second.
     t_r : float, optional
         Repetition time, in second (sampling period).
@@ -38,8 +38,8 @@ class TemporalSlicer(BasePreprocessor):
 
     def __init__(
         self,
-        start: int,
-        stop: int,
+        start: float,
+        stop: float,
         t_r: Optional[float] = None,
     ) -> None:
         """Initialize the class."""
