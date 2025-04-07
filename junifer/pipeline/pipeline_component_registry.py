@@ -75,6 +75,7 @@ class PipelineComponentRegistry(metaclass=Singleton):
                 "Smoothing": "Smoothing",
                 "SpaceWarper": "SpaceWarper",
                 "fMRIPrepConfoundRemover": "fMRIPrepConfoundRemover",
+                "TemporalSlicer": "TemporalSlicer",
             },
             "marker": {
                 "ALFFParcels": "ALFFParcels",
