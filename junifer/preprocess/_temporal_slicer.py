@@ -118,8 +118,13 @@ class TemporalSlicer(BasePreprocessor):
             prefix="temporal_slicer"
         )
 
+        # Calculate stop index if going from end
+        if self.stop < 0:
+            stop = bold_img.shape[3] + 1 + self.stop
+        else:
+            stop = self.stop
         # Slice image after converting slice range from seconds to indices
-        index = slice(int(self.start // t_r), int(self.stop // t_r))
+        index = slice(int(self.start // t_r), int(stop // t_r))
         sliced_img = nimg.index_img(bold_img, index)
         # Fix t_r as nilearn messes it up
         sliced_img.header["pixdim"][4] = t_r
