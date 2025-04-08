@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Optional
+from typing import Any, ClassVar, Optional, Union
 
 import nibabel as nib
 import nilearn.image as nimg
@@ -26,8 +26,10 @@ class TemporalSlicer(BasePreprocessor):
     ----------
     start : float
         Starting time point, in second.
-    stop : float
-        Ending time point, in second.
+    stop : float or None
+        Ending time point, in second. If None, stops at the last time point.
+        Can also do negative indexing and has the same meaning as standard
+        Python slicing except it represents time points.
     t_r : float, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
@@ -39,7 +41,7 @@ class TemporalSlicer(BasePreprocessor):
     def __init__(
         self,
         start: float,
-        stop: float,
+        stop: Union[float, None],
         t_r: Optional[float] = None,
     ) -> None:
         """Initialize the class."""
@@ -118,11 +120,15 @@ class TemporalSlicer(BasePreprocessor):
             prefix="temporal_slicer"
         )
 
-        # Calculate stop index if going from end
-        if self.stop < 0:
-            stop = bold_img.shape[3] + 1 + self.stop
+        # Check stop
+        if self.stop is None:
+            stop = bold_img.shape[3]
         else:
-            stop = self.stop
+            # Calculate stop index if going from end
+            if self.stop < 0:
+                stop = bold_img.shape[3] + 1 + self.stop
+            else:
+                stop = self.stop
         # Slice image after converting slice range from seconds to indices
         index = slice(int(self.start // t_r), int(stop // t_r))
         sliced_img = nimg.index_img(bold_img, index)
