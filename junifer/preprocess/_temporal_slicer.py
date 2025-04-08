@@ -11,7 +11,7 @@ import nilearn.image as nimg
 from ..api.decorators import register_preprocessor
 from ..pipeline import WorkDirManager
 from ..typing import Dependencies
-from ..utils import logger
+from ..utils import logger, raise_error
 from .base import BasePreprocessor
 
 
@@ -101,11 +101,33 @@ class TemporalSlicer(BasePreprocessor):
             Extra "helper" data types as dictionary to add to the Junifer Data
             object.
 
+        Raises
+        ------
+        RuntimeError
+            If no time slicing will be performed.
+
         """
         logger.debug("Temporal slicing")
 
         # Get BOLD data
         bold_img = input["data"]
+
+        # Check if slicing is not required
+        if self.start == 0:
+            if (
+                self.stop is None
+                or self.stop == -1
+                or self.stop == bold_img.shape[3]
+            ):
+                raise_error(
+                    "No temporal slicing will be performed as "
+                    f"`start` = {self.start} and "
+                    f"`stop` = {self.stop}, hence you "
+                    "should remove the TemporalSlicer from the preprocess "
+                    "step.",
+                    klass=RuntimeError,
+                )
+
         # Set t_r
         t_r = self.t_r
         if t_r is None:
