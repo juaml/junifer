@@ -30,6 +30,9 @@ class TemporalSlicer(BasePreprocessor):
         Ending time point, in second. If None, stops at the last time point.
         Can also do negative indexing and has the same meaning as standard
         Python slicing except it represents time points.
+    duration : float or None, optional
+        Time duration to add to ``start``, in second. If None, ``stop`` is
+        respected, else error is raised.
     t_r : float, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
@@ -42,11 +45,13 @@ class TemporalSlicer(BasePreprocessor):
         self,
         start: float,
         stop: Union[float, None],
+        duration: Union[float, None] = None,
         t_r: Optional[float] = None,
     ) -> None:
         """Initialize the class."""
         self.start = start
         self.stop = stop
+        self.duration = duration
         self.t_r = t_r
         super().__init__(on="BOLD", required_data_types=["BOLD"])
 
@@ -104,7 +109,8 @@ class TemporalSlicer(BasePreprocessor):
         Raises
         ------
         RuntimeError
-            If no time slicing will be performed.
+            If no time slicing will be performed or
+            if ``stop`` is not None when ``duration`` is provided.
 
         """
         logger.debug("Temporal slicing")
@@ -128,6 +134,14 @@ class TemporalSlicer(BasePreprocessor):
                     klass=RuntimeError,
                 )
 
+        # Sanity check for stop and duration combination
+        if self.duration is not None and self.stop is not None:
+            raise_error(
+                "`stop` should be None if `duration` is not None. "
+                "Set `stop` = None for TemporalSlicer to continue.",
+                klass=RuntimeError,
+            )
+
         # Set t_r
         t_r = self.t_r
         if t_r is None:
@@ -142,9 +156,12 @@ class TemporalSlicer(BasePreprocessor):
             prefix="temporal_slicer"
         )
 
-        # Check stop
+        # Check stop; duration is None
         if self.stop is None:
-            stop = bold_img.shape[3]
+            if self.duration is not None:
+                stop = self.start + self.duration
+            else:
+                stop = bold_img.shape[3]
         else:
             # Calculate stop index if going from end
             if self.stop < 0:

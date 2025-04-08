@@ -4,6 +4,7 @@
 # License: AGPL
 
 from contextlib import AbstractContextManager, nullcontext
+from typing import Union
 
 import pytest
 
@@ -13,50 +14,73 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
 @pytest.mark.parametrize(
-    "start, stop, t_r, expected_dim, expect",
+    "start, stop, duration, t_r, expected_dim, expect",
     (
         [
-            0,
-            168,
+            0.0,
+            168.0,
+            None,
             2.0,
             84,
             pytest.raises(RuntimeError, match="No temporal slicing"),
         ],  # t_r from doc is 2.0
-        [0, 167, 2.0, 83, nullcontext()],  # t_r from doc is 2.0
+        [0.0, 167.0, None, 2.0, 83, nullcontext()],  # t_r from doc is 2.0
         [
-            0,
+            0.0,
+            None,
             None,
             2.0,
             84,
             pytest.raises(RuntimeError, match="No temporal slicing"),
         ],  # total with no end
-        [2, None, 2.0, 83, nullcontext()],  # total with no end
-        [0, 84, 2.0, 42, nullcontext()],  # first half
-        [0, -85, 2.0, 42, nullcontext()],  # first half from end
-        [84, -1, 2.0, 42, nullcontext()],  # second half
+        [2.0, None, None, 2.0, 83, nullcontext()],  # total with no end
+        [0.0, 84.0, None, 2.0, 42, nullcontext()],  # first half
+        [0.0, -85.0, None, 2.0, 42, nullcontext()],  # first half from end
+        [84.0, -1.0, None, 2.0, 42, nullcontext()],  # second half
         [
-            0,
-            168,
+            33.0,
+            -33.0,
+            33.0,
+            2.0,
+            42,
+            pytest.raises(RuntimeError, match="`stop` should be None"),
+        ],
+        [10.0, None, 30.0, 2.0, 15, nullcontext()],
+        [
+            0.0,
+            168.0,
+            None,
             None,
             168,
             pytest.raises(RuntimeError, match="No temporal slicing"),
         ],  # t_r from image is 1.0
-        [0, 167, None, 167, nullcontext()],  # t_r from image is 1.0
+        [0.0, 167.0, None, None, 167, nullcontext()],  # t_r from image is 1.0
         [
-            0,
+            0.0,
+            None,
             None,
             None,
             168,
             pytest.raises(RuntimeError, match="No temporal slicing"),
         ],  # total with no end
-        [0, 84, None, 84, nullcontext()],  # first half
-        [0, -85, None, 84, nullcontext()],  # first half from end
-        [84, -1, None, 84, nullcontext()],  # second half
+        [0.0, 84.0, None, None, 84, nullcontext()],  # first half
+        [0.0, -85.0, None, None, 84, nullcontext()],  # first half from end
+        [84.0, -1.0, None, None, 84, nullcontext()],  # second half
+        [
+            33.0,
+            -33.0,
+            33.0,
+            None,
+            84,
+            pytest.raises(RuntimeError, match="`stop` should be None"),
+        ],
+        [10.0, None, 30.0, None, 30, nullcontext()],
     ),
 )
 def test_TemporalSlicer(
-    start: int,
-    stop: int,
+    start: float,
+    stop: Union[float, None],
+    duration: float,
     t_r: float,
     expected_dim: int,
     expect: AbstractContextManager,
@@ -65,10 +89,12 @@ def test_TemporalSlicer(
 
     Parameters
     ----------
-    start : int
+    start : float
         The parametrized start.
-    stop : int
+    stop : float
         The parametrized stop.
+    duration : float
+        The parametrized duration.
     t_r : float
         The parametrized TR.
     expected_dim : int
@@ -84,8 +110,9 @@ def test_TemporalSlicer(
         # Preprocess data
         with expect:
             output = TemporalSlicer(
-                start=start,
+                start=start,  # in seconds
                 stop=stop,  # in seconds
+                duration=duration,  # in seconds
                 t_r=t_r,  # in seconds
             ).fit_transform(element_data)
 
