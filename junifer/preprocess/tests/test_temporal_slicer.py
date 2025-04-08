@@ -14,7 +14,13 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
     "start, stop, t_r, expected_dim",
     (
         [0, 168, 2.0, 84],  # t_r from doc is 2.0
+        [0, 84, 2.0, 42],  # first half
+        [0, -85, 2.0, 42],  # first half from end
+        [84, -1, 2.0, 42],  # second half
         [0, 168, None, 168],  # t_r from image is 1.0
+        [0, 84, None, 84],  # first half
+        [0, -85, None, 84],  # first half from end
+        [84, -1, None, 84],  # second half
     ),
 )
 def test_TemporalSlicer(
