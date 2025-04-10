@@ -5,7 +5,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-
 from ..pipeline import PipelineComponentRegistry
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 

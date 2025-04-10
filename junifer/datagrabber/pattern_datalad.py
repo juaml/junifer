@@ -5,7 +5,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-
 from ..api.decorators import register_datagrabber
 from ..utils import logger
 from .datalad_base import DataladDataGrabber

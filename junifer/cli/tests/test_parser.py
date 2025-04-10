@@ -18,6 +18,23 @@ def test_parse_yaml_failure() -> None:
         parse_yaml("foo.yaml")
 
 
+def test_parse_yaml_empty_elements_failure(tmp_path: Path) -> None:
+    """Test YAML parsing with empty elements failure.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Write test file
+    fname = tmp_path / "test_parse_yaml_empty_elements_failure.yaml"
+    fname.write_text("elements:")
+    # Check test file
+    with pytest.raises(ValueError, match="elements key was defined"):
+        parse_yaml(fname)
+
+
 def test_parse_yaml_success(tmp_path: Path) -> None:
     """Test YAML parsing success.
 
@@ -159,6 +176,41 @@ def test_parse_yaml_absolute_path(tmp_path: Path) -> None:
     parse_yaml(yaml_fname)
 
 
+def test_parse_yaml_multi_module_deps(tmp_path: Path) -> None:
+    """Test YAML parsing with multi-module import with deps.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    t_tmp_path = tmp_path / "test_with_multi_module"
+
+    # Write .py to include
+    py_path = t_tmp_path / "external"
+    py_path.mkdir(exist_ok=True, parents=True)
+    py_fname_1 = py_path / "first.py"
+    py_fname_1.write_text(
+        "import numpy as np\nfrom second import hej\n"
+        "def junifer_module_deps(): return ['second.py']\n"
+    )
+    py_fname_2 = py_path / "second.py"
+    py_fname_2.write_text("def hej(): print('hej')\n")
+
+    # Write yaml
+    yaml_path = t_tmp_path / "yamls"
+    yaml_path.mkdir(exist_ok=True, parents=True)
+    yaml_fname = yaml_path / "test_parse_yaml_multi_module.yaml"
+
+    yaml_fname.write_text(
+        "foo: bar\nwith:\n  - ../external/first.py\n  - scipy\n"
+    )
+
+    # Check test file
+    parse_yaml(yaml_fname)
+
+
 def test_parse_storage_uri_relative(tmp_path: Path) -> None:
     """Test YAML parsing with storage and relative URI.
 
@@ -212,3 +264,17 @@ def test_parse_storage_uri_relative(tmp_path: Path) -> None:
     assert "foo" in contents
     assert contents["foo"] == "bar"
     assert "storage" in contents
+
+
+def test_parse_yaml_queue_venv_relative(tmp_path: Path) -> None:
+    """Test YAML parsing with relative venv queue.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    fname = tmp_path / "test_parse_yaml_queue_venv_relative.yaml"
+    fname.write_text("queue:\n  env:\n    kind: venv\n    name: .venv\n")
+    _ = parse_yaml(fname)

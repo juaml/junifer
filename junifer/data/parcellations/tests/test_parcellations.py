@@ -13,7 +13,12 @@ import pytest
 from nilearn.image import new_img_like, resample_to_img
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
-from junifer.data import ParcellationRegistry
+from junifer.data import (
+    get_data,
+    list_data,
+    load_data,
+    register_data,
+)
 from junifer.data.parcellations import merge_parcellations
 from junifer.data.parcellations._parcellations import (
     _retrieve_aicha,
@@ -35,7 +40,8 @@ from junifer.testing.datagrabbers import (
 def test_register_built_in_check() -> None:
     """Test parcellation registration check for built-in parcellations."""
     with pytest.raises(ValueError, match=r"built-in parcellation"):
-        ParcellationRegistry().register(
+        register_data(
+            kind="parcellation",
             name="SUITxSUIT",
             parcellation_path="testparc.nii.gz",
             parcels_labels=["1", "2", "3"],
@@ -46,34 +52,40 @@ def test_register_built_in_check() -> None:
 
 def test_list_incorrect() -> None:
     """Test incorrect information check for list parcellations."""
-    assert "testparc" not in ParcellationRegistry().list
+    assert "testparc" not in list_data(kind="parcellation")
 
 
 def test_register_already_registered() -> None:
     """Test parcellation registration check for already registered."""
     # Register custom parcellation
-    ParcellationRegistry().register(
+    register_data(
+        kind="parcellation",
         name="testparc",
         parcellation_path="testparc.nii.gz",
         parcels_labels=["1", "2", "3"],
         space="MNI152Lin",
     )
     assert (
-        ParcellationRegistry()
-        .load("testparc", target_space="MNI152Lin", path_only=True)[2]
-        .name
+        load_data(
+            kind="parcellation",
+            name="testparc",
+            target_space="MNI152Lin",
+            path_only=True,
+        )[2].name
         == "testparc.nii.gz"
     )
 
     # Try registering again
     with pytest.raises(ValueError, match=r"already registered."):
-        ParcellationRegistry().register(
+        register_data(
+            kind="parcellation",
             name="testparc",
             parcellation_path="testparc.nii.gz",
             parcels_labels=["1", "2", "3"],
             space="MNI152Lin",
         )
-    ParcellationRegistry().register(
+    register_data(
+        kind="parcellation",
         name="testparc",
         parcellation_path="testparc2.nii.gz",
         parcels_labels=["1", "2", "3"],
@@ -82,9 +94,12 @@ def test_register_already_registered() -> None:
     )
 
     assert (
-        ParcellationRegistry()
-        .load("testparc", target_space="MNI152Lin", path_only=True)[2]
-        .name
+        load_data(
+            kind="parcellation",
+            name="testparc",
+            target_space="MNI152Lin",
+            path_only=True,
+        )[2].name
         == "testparc2.nii.gz"
     )
 
@@ -98,27 +113,44 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    schaefer, labels, schaefer_path, _ = ParcellationRegistry().load(
-        "Schaefer100x7",
-        "MNI152NLin6Asym",
+    schaefer, labels, schaefer_path, _ = load_data(
+        kind="parcellation",
+        name="Schaefer100x7",
+        target_space="MNI152NLin6Asym",
     )
     assert schaefer is not None
 
     # Test wrong number of labels
-    ParcellationRegistry().register(
-        "WrongLabels", schaefer_path, labels[:10], "MNI152Lin"
+    register_data(
+        kind="parcellation",
+        name="WrongLabels",
+        parcellation_path=schaefer_path,
+        parcels_labels=labels[:10],
+        space="MNI152Lin",
     )
 
     with pytest.raises(ValueError, match=r"has 100 parcels but 10"):
-        ParcellationRegistry().load("WrongLabels", "MNI152NLin6Asym")
+        load_data(
+            kind="parcellation",
+            name="WrongLabels",
+            target_space="MNI152NLin6Asym",
+        )
 
     # Test wrong number of labels
-    ParcellationRegistry().register(
-        "WrongLabels2", schaefer_path, [*labels, "wrong"], "MNI152Lin"
+    register_data(
+        kind="parcellation",
+        name="WrongLabels2",
+        parcellation_path=schaefer_path,
+        parcels_labels=[*labels, "wrong"],
+        space="MNI152Lin",
     )
 
     with pytest.raises(ValueError, match=r"has 100 parcels but 101"):
-        ParcellationRegistry().load("WrongLabels2", "MNI152NLin6Asym")
+        load_data(
+            kind="parcellation",
+            name="WrongLabels2",
+            target_space="MNI152NLin6Asym",
+        )
 
     schaefer_data = schaefer.get_fdata().copy()
     schaefer_data[schaefer_data == 50] = 0
@@ -126,11 +158,19 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
     new_schaefer_img = new_img_like(schaefer, schaefer_data)
     nib.save(new_schaefer_img, new_schaefer_path)
 
-    ParcellationRegistry().register(
-        "WrongValues", new_schaefer_path, labels[:-1], "MNI152Lin"
+    register_data(
+        kind="parcellation",
+        name="WrongValues",
+        parcellation_path=new_schaefer_path,
+        parcels_labels=labels[:-1],
+        space="MNI152Lin",
     )
     with pytest.raises(ValueError, match=r"must have all the values in the"):
-        ParcellationRegistry().load("WrongValues", "MNI152NLin6Asym")
+        load_data(
+            kind="parcellation",
+            name="WrongValues",
+            target_space="MNI152NLin6Asym",
+        )
 
     schaefer_data = schaefer.get_fdata().copy()
     schaefer_data[schaefer_data == 50] = 200
@@ -138,11 +178,19 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
     new_schaefer_img = new_img_like(schaefer, schaefer_data)
     nib.save(new_schaefer_img, new_schaefer_path)
 
-    ParcellationRegistry().register(
-        "WrongValues2", new_schaefer_path, labels, "MNI152Lin"
+    register_data(
+        kind="parcellation",
+        name="WrongValues2",
+        parcellation_path=new_schaefer_path,
+        parcels_labels=labels,
+        space="MNI152Lin",
     )
     with pytest.raises(ValueError, match=r"must have all the values in the"):
-        ParcellationRegistry().load("WrongValues2", "MNI152NLin6Asym")
+        load_data(
+            kind="parcellation",
+            name="WrongValues2",
+            target_space="MNI152NLin6Asym",
+        )
 
 
 @pytest.mark.parametrize(
@@ -195,7 +243,8 @@ def test_register(
 
     """
     # Register custom parcellation
-    ParcellationRegistry().register(
+    register_data(
+        kind="parcellation",
         name=name,
         parcellation_path=parcellation_path,
         parcels_labels=parcels_labels,
@@ -203,10 +252,13 @@ def test_register(
         overwrite=overwrite,
     )
     # List available parcellation and check registration
-    assert name in ParcellationRegistry().list
+    assert name in list_data(kind="parcellation")
     # Load registered parcellation
-    _, lbl, fname, parcellation_space = ParcellationRegistry().load(
-        name=name, target_space=space, path_only=True
+    _, lbl, fname, parcellation_space = load_data(
+        kind="parcellation",
+        name=name,
+        target_space=space,
+        path_only=True,
     )
     # Check values for registered parcellation
     assert lbl == parcels_labels
@@ -237,13 +289,17 @@ def test_list_correct(parcellation_name: str) -> None:
         The parametrized parcellation name.
 
     """
-    assert parcellation_name in ParcellationRegistry().list
+    assert parcellation_name in list_data(kind="parcellation")
 
 
 def test_load_incorrect() -> None:
     """Test loading of invalid parcellations."""
     with pytest.raises(ValueError, match=r"not found"):
-        ParcellationRegistry().load("wrongparcellation", "MNI152NLin6Asym")
+        load_data(
+            kind="parcellation",
+            name="wrongparcellation",
+            target_space="MNI152NLin6Asym",
+        )
 
 
 @pytest.mark.parametrize(
@@ -309,14 +365,15 @@ def test_schaefer(
 
     """
     parcellation_name = f"Schaefer{n_rois}x{yeo_networks}"
-    assert parcellation_name in ParcellationRegistry().list
+    assert parcellation_name in list_data(kind="parcellation")
 
     parcellation_file = (
         f"Schaefer2018_{n_rois}Parcels_{yeo_networks}Networks_order_FSLMNI152_"
         f"{int(resolution)}mm.nii.gz"
     )
     # Load parcellation
-    img, label, img_path, space = ParcellationRegistry().load(
+    img, label, img_path, space = load_data(
+        kind="parcellation",
         name=parcellation_name,
         target_space="MNI152NLin6Asym",
         resolution=resolution,
@@ -326,7 +383,8 @@ def test_schaefer(
     assert len(label) == n_rois
     assert space == "MNI152NLin6Asym"
     assert_array_equal(
-        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+        img.header["pixdim"][1:4],
+        3 * [resolution],  # type: ignore
     )
 
 
@@ -365,9 +423,10 @@ def test_suit(space_key: str, space: str) -> None:
         The parametrized space values.
 
     """
-    assert f"SUITx{space_key}" in ParcellationRegistry().list
+    assert f"SUITx{space_key}" in list_data(kind="parcellation")
     # Load parcellation
-    img, label, img_path, parcellation_space = ParcellationRegistry().load(
+    img, label, img_path, parcellation_space = load_data(
+        kind="parcellation",
         name=f"SUITx{space_key}",
         target_space=space,
     )
@@ -398,13 +457,14 @@ def test_tian_3T_6thgeneration(scale: int, n_label: int) -> None:
         The parametrized n_label values.
 
     """
-    parcellations = ParcellationRegistry().list
+    parcellations = list_data(kind="parcellation")
     assert "TianxS1x3TxMNI6thgeneration" in parcellations
     assert "TianxS2x3TxMNI6thgeneration" in parcellations
     assert "TianxS3x3TxMNI6thgeneration" in parcellations
     assert "TianxS4x3TxMNI6thgeneration" in parcellations
     # Load parcellation
-    img, lbl, fname, space = ParcellationRegistry().load(
+    img, lbl, fname, space = load_data(
+        kind="parcellation",
         name=f"TianxS{scale}x3TxMNI6thgeneration",
         target_space="MNI152NLin2009cAsym",  # force highest resolution
     )
@@ -415,7 +475,8 @@ def test_tian_3T_6thgeneration(scale: int, n_label: int) -> None:
     assert len(lbl) == n_label
     assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])
     # Load parcellation
-    img, lbl, fname, space = ParcellationRegistry().load(
+    img, lbl, fname, space = load_data(
+        kind="parcellation",
         name=f"TianxS{scale}x3TxMNI6thgeneration",
         target_space="MNI152NLin6Asym",
         resolution=2,
@@ -442,13 +503,14 @@ def test_tian_3T_nonlinear2009cAsym(scale: int, n_label: int) -> None:
         The parametrized n_label values.
 
     """
-    parcellations = ParcellationRegistry().list
+    parcellations = list_data(kind="parcellation")
     assert "TianxS1x3TxMNInonlinear2009cAsym" in parcellations
     assert "TianxS2x3TxMNInonlinear2009cAsym" in parcellations
     assert "TianxS3x3TxMNInonlinear2009cAsym" in parcellations
     assert "TianxS4x3TxMNInonlinear2009cAsym" in parcellations
     # Load parcellation
-    img, lbl, fname, space = ParcellationRegistry().load(
+    img, lbl, fname, space = load_data(
+        kind="parcellation",
         name=f"TianxS{scale}x3TxMNInonlinear2009cAsym",
         target_space="MNI152NLin6Asym",  # force highest resolution
     )
@@ -459,7 +521,8 @@ def test_tian_3T_nonlinear2009cAsym(scale: int, n_label: int) -> None:
     assert len(lbl) == n_label
     assert_array_equal(img.header["pixdim"][1:4], [1, 1, 1])
     # Load parcellation
-    img, lbl, fname, space = ParcellationRegistry().load(
+    img, lbl, fname, space = load_data(
+        kind="parcellation",
         name=f"TianxS{scale}x3TxMNInonlinear2009cAsym",
         target_space="MNI152NLin2009cAsym",
         resolution=2,
@@ -486,13 +549,14 @@ def test_tian_7T_6thgeneration(scale: int, n_label: int) -> None:
         The parametrized n_label values.
 
     """
-    parcellations = ParcellationRegistry().list
+    parcellations = list_data(kind="parcellation")
     assert "TianxS1x7TxMNI6thgeneration" in parcellations
     assert "TianxS2x7TxMNI6thgeneration" in parcellations
     assert "TianxS3x7TxMNI6thgeneration" in parcellations
     assert "TianxS4x7TxMNI6thgeneration" in parcellations
     # Load parcellation
-    img, lbl, fname, space = ParcellationRegistry().load(
+    img, lbl, fname, space = load_data(
+        kind="parcellation",
         name=f"TianxS{scale}x7TxMNI6thgeneration",
         target_space="MNI152NLin6Asym",
     )
@@ -502,7 +566,8 @@ def test_tian_7T_6thgeneration(scale: int, n_label: int) -> None:
     assert space == "MNI152NLin6Asym"
     assert len(lbl) == n_label
     assert_array_almost_equal(
-        img.header["pixdim"][1:4], [1.6, 1.6, 1.6]  # type: ignore
+        img.header["pixdim"][1:4],
+        [1.6, 1.6, 1.6],  # type: ignore
     )
 
 
@@ -552,9 +617,10 @@ def test_aicha(version: int) -> None:
         The parametrized version values.
 
     """
-    assert f"AICHA_v{version}" in ParcellationRegistry().list
+    assert f"AICHA_v{version}" in list_data(kind="parcellation")
     # Load parcellation
-    img, label, img_path, space = ParcellationRegistry().load(
+    img, label, img_path, space = load_data(
+        kind="parcellation",
         name=f"AICHA_v{version}",
         target_space="IXI549Space",
     )
@@ -610,9 +676,10 @@ def test_shen(
         The parametrized partial file names.
 
     """
-    assert f"Shen_{year}_{n_rois}" in ParcellationRegistry().list
+    assert f"Shen_{year}_{n_rois}" in list_data(kind="parcellation")
     # Load parcellation
-    img, label, img_path, space = ParcellationRegistry().load(
+    img, label, img_path, space = load_data(
+        kind="parcellation",
         name=f"Shen_{year}_{n_rois}",
         target_space="MNI152NLin2009cAsym",
         resolution=resolution,
@@ -622,7 +689,8 @@ def test_shen(
     assert space == "MNI152NLin2009cAsym"
     assert len(label) == n_labels
     assert_array_equal(
-        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+        img.header["pixdim"][1:4],
+        3 * [resolution],  # type: ignore
     )
 
 
@@ -771,7 +839,7 @@ def test_yan(
         The parametrized Kong networks values.
 
     """
-    parcellations = ParcellationRegistry().list
+    parcellations = list_data(kind="parcellation")
     if yeo_networks:
         parcellation_name = f"Yan{n_rois}xYeo{yeo_networks}"
         assert parcellation_name in parcellations
@@ -787,7 +855,8 @@ def test_yan(
             f"{int(resolution)}mm.nii.gz"
         )
     # Load parcellation
-    img, label, img_path, space = ParcellationRegistry().load(
+    img, label, img_path, space = load_data(
+        kind="parcellation",
         name=parcellation_name,
         target_space="MNI152NLin6Asym",
         resolution=resolution,
@@ -797,7 +866,8 @@ def test_yan(
     assert space == "MNI152NLin6Asym"
     assert len(label) == n_rois
     assert_array_equal(
-        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+        img.header["pixdim"][1:4],
+        3 * [resolution],  # type: ignore
     )
 
 
@@ -877,7 +947,7 @@ def test_brainnetome(
         The parametrized threshold values.
 
     """
-    parcellations = ParcellationRegistry().list
+    parcellations = list_data(kind="parcellation")
     parcellation_name = f"Brainnetome_thr{threshold}"
     assert parcellation_name in parcellations
 
@@ -887,7 +957,8 @@ def test_brainnetome(
 
     parcellation_file = f"BNA-maxprob-thr{threshold}-{resolution}mm.nii.gz"
     # Load parcellation
-    img, label, img_path, space = ParcellationRegistry().load(
+    img, label, img_path, space = load_data(
+        kind="parcellation",
         name=parcellation_name,
         target_space="MNI152NLin6Asym",
         resolution=resolution,
@@ -897,7 +968,8 @@ def test_brainnetome(
     assert space == "MNI152NLin6Asym"
     assert len(label) == 246
     assert_array_equal(
-        img.header["pixdim"][1:4], 3 * [resolution]  # type: ignore
+        img.header["pixdim"][1:4],
+        3 * [resolution],  # type: ignore
     )
 
 
@@ -912,11 +984,14 @@ def test_retrieve_brainnetome_incorrect_threshold() -> None:
 def test_merge_parcellations() -> None:
     """Test merging parcellations."""
     # load some parcellations for testing
-    schaefer_parcellation, schaefer_labels, _, _ = ParcellationRegistry().load(
-        "Schaefer100x17", target_space="MNI152NLin2009cAsym"
+    schaefer_parcellation, schaefer_labels, _, _ = load_data(
+        kind="parcellation",
+        name="Schaefer100x17",
+        target_space="MNI152NLin2009cAsym",
     )
-    tian_parcellation, tian_labels, _, _ = ParcellationRegistry().load(
-        "TianxS2x3TxMNInonlinear2009cAsym",
+    tian_parcellation, tian_labels, _, _ = load_data(
+        kind="parcellation",
+        name="TianxS2x3TxMNInonlinear2009cAsym",
         target_space="MNI152NLin2009cAsym",
     )
     # prepare the list of the actual parcellations
@@ -949,8 +1024,10 @@ def test_merge_parcellations_3D_multiple_non_overlapping(
 
     """
     # Get the testing parcellation
-    parcellation, labels, _, _ = ParcellationRegistry().load(
-        "Schaefer100x7", target_space="MNI152NLin2009cAsym"
+    parcellation, labels, _, _ = load_data(
+        kind="parcellation",
+        name="Schaefer100x7",
+        target_space="MNI152NLin2009cAsym",
     )
 
     assert parcellation is not None
@@ -986,8 +1063,10 @@ def test_merge_parcellations_3D_multiple_overlapping() -> None:
     """Test merge_parcellations with multiple overlapping parcellations."""
 
     # Get the testing parcellation
-    parcellation, labels, _, _ = ParcellationRegistry().load(
-        "Schaefer100x7", target_space="MNI152NLin2009cAsym"
+    parcellation, labels, _, _ = load_data(
+        kind="parcellation",
+        name="Schaefer100x7",
+        target_space="MNI152NLin2009cAsym",
     )
 
     assert parcellation is not None
@@ -1023,8 +1102,10 @@ def test_merge_parcellations_3D_multiple_duplicated_labels() -> None:
     """Test merge_parcellations with duplicated labels."""
 
     # Get the testing parcellation
-    parcellation, labels, _, _ = ParcellationRegistry().load(
-        "Schaefer100x7", target_space="MNI152NLin2009cAsym"
+    parcellation, labels, _, _ = load_data(
+        kind="parcellation",
+        name="Schaefer100x7",
+        target_space="MNI152NLin2009cAsym",
     )
 
     assert parcellation is not None
@@ -1064,15 +1145,17 @@ def test_get_single() -> None:
         bold = element_data["BOLD"]
         bold_img = bold["data"]
         # Get tailored parcellation
-        tailored_parcellation, tailored_labels = ParcellationRegistry().get(
-            parcellations=["Shen_2015_268"],
+        tailored_parcellation, tailored_labels = get_data(
+            kind="parcellation",
+            names=["Shen_2015_268"],
             target_data=bold,
         )
         # Check shape and affine with original element data
         assert tailored_parcellation.shape == bold_img.shape[:3]
         assert_array_equal(tailored_parcellation.affine, bold_img.affine)
         # Get raw parcellation
-        raw_parcellation, raw_labels, _, _ = ParcellationRegistry().load(
+        raw_parcellation, raw_labels, _, _ = load_data(
+            kind="parcellation",
             name="Shen_2015_268",
             target_space="MNI152NLin2009cAsym",
             resolution=4,
@@ -1098,8 +1181,9 @@ def test_get_multi_same_space() -> None:
         bold = element_data["BOLD"]
         bold_img = bold["data"]
         # Get tailored parcellation
-        tailored_parcellation, tailored_labels = ParcellationRegistry().get(
-            parcellations=[
+        tailored_parcellation, tailored_labels = get_data(
+            kind="parcellation",
+            names=[
                 "Shen_2015_268",
                 "TianxS1x3TxMNInonlinear2009cAsym",
             ],
@@ -1116,7 +1200,8 @@ def test_get_multi_same_space() -> None:
             "TianxS1x3TxMNInonlinear2009cAsym",
         ]
         for name in parcellations_names:
-            img, labels, _, _ = ParcellationRegistry().load(
+            img, labels, _, _ = load_data(
+                kind="parcellation",
                 name=name,
                 target_space="MNI152NLin2009cAsym",
                 resolution=4,
@@ -1152,8 +1237,9 @@ def test_get_multi_different_space() -> None:
     with OasisVBMTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Get tailored parcellation
-        ParcellationRegistry().get(
-            parcellations=[
+        get_data(
+            kind="parcellation",
+            names=[
                 "Schaefer100x7",
                 "TianxS1x3TxMNInonlinear2009cAsym",
             ],

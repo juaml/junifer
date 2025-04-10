@@ -3,7 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-
 import pytest
 
 from junifer.datareader import DefaultDataReader

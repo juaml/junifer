@@ -294,8 +294,7 @@ def queue(
     valid_kind = ["HTCondor", "GNUParallelLocal"]
     if kind not in valid_kind:
         raise_error(
-            f"Invalid value for `kind`: {kind}, "
-            f"must be one of {valid_kind}"
+            f"Invalid value for `kind`: {kind}, must be one of {valid_kind}"
         )
 
     # Create a folder within the CWD to store the job files / config

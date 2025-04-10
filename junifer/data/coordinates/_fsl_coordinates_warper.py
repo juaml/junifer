@@ -27,7 +27,7 @@ class FSLCoordinatesWarper:
         seeds: ArrayLike,
         target_data: dict[str, Any],
         warp_data: dict[str, Any],
-    ) -> ArrayLike:
+    ) -> ArrayLike:  # pragma: no cover
         """Warp ``seeds`` to correct space.
 
         Parameters

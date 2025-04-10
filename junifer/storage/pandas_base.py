@@ -187,7 +187,9 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         )
         # Prepare new dataframe
         df = pd.DataFrame(
-            data=data, columns=col_names, index=idx  # type: ignore
+            data=data,
+            columns=col_names,
+            index=idx,  # type: ignore
         )
         # Store dataframe
         self.store_df(meta_md5=meta_md5, element=element, df=df)

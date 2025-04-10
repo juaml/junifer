@@ -84,7 +84,7 @@ class ANTsParcellationWarper:
         )
 
         # Native space warping
-        if dst == "native":
+        if dst == "native":  # pragma: no cover
             # Warp data check
             if warp_data is None:
                 raise_error("No `warp_data` provided")

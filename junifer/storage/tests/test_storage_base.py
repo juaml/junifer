@@ -13,7 +13,8 @@ def test_BaseFeatureStorage_abstractness() -> None:
     """Test BaseFeatureStorage is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
         BaseFeatureStorage(
-            uri="/tmp", storage_types=["matrix"]  # type: ignore
+            uri="/tmp",
+            storage_types=["matrix"],  # type: ignore
         )
 
 
