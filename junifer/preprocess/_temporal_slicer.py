@@ -170,6 +170,8 @@ class TemporalSlicer(BasePreprocessor):
                 stop = self.stop
         # Slice image after converting slice range from seconds to indices
         index = slice(int(self.start // t_r), int(stop // t_r))
+
+        # Slice image
         sliced_img = nimg.index_img(bold_img, index)
         # Fix t_r as nilearn messes it up
         sliced_img.header["pixdim"][4] = t_r
@@ -186,5 +188,31 @@ class TemporalSlicer(BasePreprocessor):
                 "data": sliced_img,
             }
         )
+
+        # Check for BOLD.confounds and update if found
+        if input.get("confounds") is not None:
+            # Slice confounds
+            sliced_confounds_df = input["confounds"]["data"].iloc[index, :]
+            # Save sliced confounds
+            sliced_confounds_path = (
+                element_tempdir / "sliced_confounds_regressors.tsv"
+            )
+            sliced_confounds_df.to_csv(
+                sliced_confounds_path,
+                sep="\t",
+                index=False,
+            )
+
+            logger.debug("Updating `BOLD.confounds`")
+            input.update(
+                {
+                    "confounds": {
+                        # Update path to sync with "data"
+                        "path": sliced_confounds_path,
+                        # Update data
+                        "data": sliced_confounds_df,
+                    }
+                }
+            )
 
         return input, None

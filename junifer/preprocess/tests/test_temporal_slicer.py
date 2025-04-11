@@ -116,4 +116,7 @@ def test_TemporalSlicer(
                 t_r=t_r,  # in seconds
             ).fit_transform(element_data)
 
+            # Check image data dim
             assert output["BOLD"]["data"].shape[3] == expected_dim
+            # Check confounds dim
+            assert output["BOLD"]["confounds"]["data"].shape[0] == expected_dim
