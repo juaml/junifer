@@ -163,6 +163,10 @@ Available
        | ``fMRIPrep``-ed data
      - In Progress
      - :gh:`161`
+   * - ``TemporalSlicer``
+     - Slice ``BOLD`` data temporally
+     - | Done
+     - :gh:`443`
 
 
 ..
