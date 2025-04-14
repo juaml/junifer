@@ -37,6 +37,11 @@ class TemporalSlicer(BasePreprocessor):
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
 
+    Raises
+    ------
+    ValueError
+        If ``start`` is negative.
+
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
@@ -49,7 +54,10 @@ class TemporalSlicer(BasePreprocessor):
         t_r: Optional[float] = None,
     ) -> None:
         """Initialize the class."""
-        self.start = start
+        if start < 0:
+            raise_error("`start` cannot be negative")
+        else:
+            self.start = start
         self.stop = stop
         self.duration = duration
         self.t_r = t_r
