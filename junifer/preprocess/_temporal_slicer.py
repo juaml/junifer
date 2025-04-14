@@ -125,14 +125,11 @@ class TemporalSlicer(BasePreprocessor):
 
         # Get BOLD data
         bold_img = input["data"]
+        time_dim = bold_img.shape[3]
 
         # Check if slicing is not required
         if self.start == 0:
-            if (
-                self.stop is None
-                or self.stop == -1
-                or self.stop == bold_img.shape[3]
-            ):
+            if self.stop is None or self.stop == -1 or self.stop == time_dim:
                 raise_error(
                     "No temporal slicing will be performed as "
                     f"`start` = {self.start} and "
@@ -169,11 +166,11 @@ class TemporalSlicer(BasePreprocessor):
             if self.duration is not None:
                 stop = self.start + self.duration
             else:
-                stop = bold_img.shape[3]
+                stop = time_dim
         else:
             # Calculate stop index if going from end
             if self.stop < 0:
-                stop = bold_img.shape[3] + 1 + self.stop
+                stop = time_dim + 1 + self.stop
             else:
                 stop = self.stop
         # Slice image after converting slice range from seconds to indices
