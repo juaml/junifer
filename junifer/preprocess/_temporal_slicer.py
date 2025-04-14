@@ -173,8 +173,14 @@ class TemporalSlicer(BasePreprocessor):
                 stop = time_dim + 1 + self.stop
             else:
                 stop = self.stop
-        # Slice image after converting slice range from seconds to indices
+
+        # Convert slice range from seconds to indices
         index = slice(int(self.start // t_r), int(stop // t_r))
+
+        logger.info(
+            "Computed slice range for TemporalSlicer: "
+            f"[{index.start},{index.stop}]"
+        )
 
         # Slice image
         sliced_img = nimg.index_img(bold_img, index)
