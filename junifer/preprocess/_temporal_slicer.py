@@ -118,7 +118,8 @@ class TemporalSlicer(BasePreprocessor):
         ------
         RuntimeError
             If no time slicing will be performed or
-            if ``stop`` is not None when ``duration`` is provided.
+            if ``stop`` is not None when ``duration`` is provided or
+            if calculated stop index is greater than allowed value.
 
         """
         logger.debug("Temporal slicing")
@@ -176,6 +177,14 @@ class TemporalSlicer(BasePreprocessor):
 
         # Convert slice range from seconds to indices
         index = slice(int(self.start // t_r), int(stop // t_r))
+
+        # Check if stop index is out of bounds
+        if index.stop > time_dim:
+            raise_error(
+                f"Calculated stop index: {index.stop} is greater than "
+                f"allowed value: {time_dim}",
+                klass=IndexError,
+            )
 
         logger.info(
             "Computed slice range for TemporalSlicer: "

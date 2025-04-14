@@ -83,6 +83,14 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
             84,
             pytest.raises(ValueError, match="`start` cannot be negative"),
         ],
+        [
+            0.0,
+            500.0,
+            None,
+            2.0,
+            42,
+            pytest.raises(IndexError, match="Calculated stop index:"),
+        ],
     ),
 )
 def test_TemporalSlicer(
