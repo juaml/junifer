@@ -88,8 +88,8 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 def test_TemporalSlicer(
     start: float,
     stop: Union[float, None],
-    duration: float,
-    t_r: float,
+    duration: Union[float, None],
+    t_r: Union[float, None],
     expected_dim: int,
     expect: AbstractContextManager,
 ) -> None:
@@ -99,11 +99,11 @@ def test_TemporalSlicer(
     ----------
     start : float
         The parametrized start.
-    stop : float
+    stop : float or None
         The parametrized stop.
-    duration : float
+    duration : float or None
         The parametrized duration.
-    t_r : float
+    t_r : float or None
         The parametrized TR.
     expected_dim : int
         The parametrized expected time dimension size.
