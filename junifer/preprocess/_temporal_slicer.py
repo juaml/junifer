@@ -33,7 +33,7 @@ class TemporalSlicer(BasePreprocessor):
     duration : float or None, optional
         Time duration to add to ``start``, in second. If None, ``stop`` is
         respected, else error is raised.
-    t_r : float, optional
+    t_r : float or None, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
 
