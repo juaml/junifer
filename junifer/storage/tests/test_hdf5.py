@@ -29,6 +29,7 @@ def test_get_valid_inputs() -> None:
         "vector",
         "timeseries",
         "scalar_table",
+        "timeseries_2d",
     ]
 
 
