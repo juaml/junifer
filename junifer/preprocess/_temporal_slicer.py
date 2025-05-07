@@ -224,14 +224,12 @@ class TemporalSlicer(BasePreprocessor):
             )
 
             logger.debug("Updating `BOLD.confounds`")
-            input.update(
+            input["confounds"].update(
                 {
-                    "confounds": {
-                        # Update path to sync with "data"
-                        "path": sliced_confounds_path,
-                        # Update data
-                        "data": sliced_confounds_df,
-                    }
+                    # Update path to sync with "data"
+                    "path": sliced_confounds_path,
+                    # Update data
+                    "data": sliced_confounds_df,
                 }
             )
 
