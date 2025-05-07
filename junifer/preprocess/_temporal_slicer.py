@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar, Optional
 
 import nibabel as nib
 import nilearn.image as nimg
@@ -32,7 +32,7 @@ class TemporalSlicer(BasePreprocessor):
         Python slicing except it represents time points.
     duration : float or None, optional
         Time duration to add to ``start``, in second. If None, ``stop`` is
-        respected, else error is raised.
+        respected, else error is raised (default None).
     t_r : float or None, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
@@ -49,8 +49,8 @@ class TemporalSlicer(BasePreprocessor):
     def __init__(
         self,
         start: float,
-        stop: Union[float, None],
-        duration: Union[float, None] = None,
+        stop: Optional[float],
+        duration: Optional[float] = None,
         t_r: Optional[float] = None,
     ) -> None:
         """Initialize the class."""
