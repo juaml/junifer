@@ -1,5 +1,6 @@
 __all__ = [
     "CoordinatesRegistry",
+    "DataDispatcher",
     "ParcellationRegistry",
     "MaskRegistry",
     "get_data",
@@ -17,6 +18,7 @@ from .parcellations import ParcellationRegistry
 from .masks import MaskRegistry
 
 from ._dispatch import (
+    DataDispatcher,
     get_data,
     list_data,
     load_data,

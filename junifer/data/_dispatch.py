@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Iterator, MutableMapping
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -18,19 +19,91 @@ from ..utils import raise_error
 from .coordinates import CoordinatesRegistry
 from .masks import MaskRegistry
 from .parcellations import ParcellationRegistry
+from .pipeline_data_registry_base import BasePipelineDataRegistry
 
 
 if TYPE_CHECKING:
     from nibabel.nifti1 import Nifti1Image
 
-
 __all__ = [
+    "DataDispatcher",
     "deregister_data",
     "get_data",
     "list_data",
     "load_data",
     "register_data",
 ]
+
+
+class DataDispatcher(MutableMapping):
+    """Class for helping dynamic data dispatch."""
+
+    _instance = None
+
+    def __new__(cls):
+        # Make class singleton
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            # Set registries
+            cls._registries: dict[str, type[BasePipelineDataRegistry]] = {}
+            cls._builtin: dict[str, type[BasePipelineDataRegistry]] = {}
+            cls._external: dict[str, type[BasePipelineDataRegistry]] = {}
+            cls._builtin.update(
+                {
+                    "coordinates": CoordinatesRegistry,
+                    "parcellation": ParcellationRegistry,
+                    "mask": MaskRegistry,
+                }
+            )
+            cls._registries.update(cls._builtin)
+        return cls._instance
+
+    def __getitem__(self, key: str) -> type[BasePipelineDataRegistry]:
+        return self._registries[key]
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._registries)
+
+    def __len__(self) -> int:
+        return len(self._registries)
+
+    def __delitem__(self, key: str) -> None:
+        # Internal check
+        if key in self._builtin:
+            raise_error(f"Cannot delete in-built key: {key}")
+        # Non-existing key
+        if key not in self._external:
+            raise_error(klass=KeyError, msg=key)
+        # Update external
+        _ = self._external.pop(key)
+        # Update global
+        _ = self._registries.pop(key)
+
+    def __setitem__(
+        self, key: str, value: type[BasePipelineDataRegistry]
+    ) -> None:
+        # Internal check
+        if key in self._builtin:
+            raise_error(f"Cannot set value for in-built key: {key}")
+        # Value type check
+        if not isinstance(value, BasePipelineDataRegistry):
+            raise_error(f"Invalid value type: {type(value)}")
+        # Update external
+        self._external[key] = value
+        # Update global
+        self._registries[key] = value
+
+    def popitem():
+        """Not implemented."""
+        pass
+
+    def clear(self):
+        """Not implemented."""
+        pass
+
+    def setdefault(self, key: str, value=None):
+        """Not implemented."""
+        pass
 
 
 def get_data(
