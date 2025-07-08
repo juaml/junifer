@@ -1,4 +1,5 @@
 __all__ = [
+    "BasePipelineDataRegistry",
     "CoordinatesRegistry",
     "DataDispatcher",
     "ParcellationRegistry",
@@ -13,6 +14,7 @@ __all__ = [
     "utils",
 ]
 
+from .pipeline_data_registry_base import BasePipelineDataRegistry
 from .coordinates import CoordinatesRegistry
 from .parcellations import ParcellationRegistry
 from .masks import MaskRegistry
