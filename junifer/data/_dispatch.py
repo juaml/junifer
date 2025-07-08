@@ -149,27 +149,16 @@ def get_data(
         If ``kind`` is invalid value.
 
     """
-
-    if kind == "coordinates":
-        return CoordinatesRegistry().get(
-            coords=names,
-            target_data=target_data,
-            extra_input=extra_input,
-        )
-    elif kind == "parcellation":
-        return ParcellationRegistry().get(
-            parcellations=names,
-            target_data=target_data,
-            extra_input=extra_input,
-        )
-    elif kind == "mask":
-        return MaskRegistry().get(
-            masks=names,
-            target_data=target_data,
-            extra_input=extra_input,
-        )
-    else:  # pragma: no cover
+    try:
+        registry = DataDispatcher()[kind]
+    except KeyError:
         raise_error(f"Unknown data kind: {kind}")
+    else:
+        return registry().get(
+            names,
+            target_data=target_data,
+            extra_input=extra_input,
+        )
 
 
 def list_data(kind: str) -> list[str]:
@@ -192,14 +181,12 @@ def list_data(kind: str) -> list[str]:
 
     """
 
-    if kind == "coordinates":
-        return CoordinatesRegistry().list
-    elif kind == "parcellation":
-        return ParcellationRegistry().list
-    elif kind == "mask":
-        return MaskRegistry().list
-    else:  # pragma: no cover
+    try:
+        registry = DataDispatcher()[kind]
+    except KeyError:
         raise_error(f"Unknown data kind: {kind}")
+    else:
+        return registry().list
 
 
 def load_data(
@@ -238,15 +225,12 @@ def load_data(
         If ``kind`` is invalid value.
 
     """
-
-    if kind == "coordinates":
-        return CoordinatesRegistry().load(name=name)
-    elif kind == "parcellation":
-        return ParcellationRegistry().load(name=name, **kwargs)
-    elif kind == "mask":
-        return MaskRegistry().load(name=name, **kwargs)
-    else:  # pragma: no cover
+    try:
+        registry = DataDispatcher()[kind]
+    except KeyError:
         raise_error(f"Unknown data kind: {kind}")
+    else:
+        return registry().load(name, **kwargs)
 
 
 def register_data(
@@ -278,20 +262,14 @@ def register_data(
 
     """
 
-    if kind == "coordinates":
-        return CoordinatesRegistry().register(
-            name=name, space=space, overwrite=overwrite, **kwargs
-        )
-    elif kind == "parcellation":
-        return ParcellationRegistry().register(
-            name=name, space=space, overwrite=overwrite, **kwargs
-        )
-    elif kind == "mask":
-        return MaskRegistry().register(
-            name=name, space=space, overwrite=overwrite, **kwargs
-        )
-    else:  # pragma: no cover
+    try:
+        registry = DataDispatcher()[kind]
+    except KeyError:
         raise_error(f"Unknown data kind: {kind}")
+    else:
+        return registry().register(
+            name=name, space=space, overwrite=overwrite, **kwargs
+        )
 
 
 def deregister_data(kind: str, name: str) -> None:
@@ -311,11 +289,9 @@ def deregister_data(kind: str, name: str) -> None:
 
     """
 
-    if kind == "coordinates":
-        return CoordinatesRegistry().deregister(name=name)
-    elif kind == "parcellation":
-        return ParcellationRegistry().deregister(name=name)
-    elif kind == "mask":
-        return MaskRegistry().deregister(name=name)
-    else:  # pragma: no cover
+    try:
+        registry = DataDispatcher()[kind]
+    except KeyError:
         raise_error(f"Unknown data kind: {kind}")
+    else:
+        return registry().deregister(name=name)
