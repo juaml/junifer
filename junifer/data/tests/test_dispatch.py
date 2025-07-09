@@ -19,10 +19,10 @@ from junifer.data._dispatch import DataDispatcher
 def test_dispatcher_addition_errors() -> None:
     """Test registry addition errors."""
     with pytest.raises(ValueError, match="Cannot set"):
-        DataDispatcher()["mask"] = {}
+        DataDispatcher()["mask"] = dict
 
     with pytest.raises(ValueError, match="Invalid"):
-        DataDispatcher()["masks"] = {}
+        DataDispatcher()["masks"] = dict
 
 
 def test_dispatcher_removal_errors() -> None:
@@ -50,7 +50,7 @@ def test_dispatcher() -> None:
         def get():
             pass
 
-    DataDispatcher().update({"masks": DumDum()})
+    DataDispatcher().update({"masks": DumDum})
     assert "masks" in DataDispatcher()
 
     _ = DataDispatcher().pop("masks")
