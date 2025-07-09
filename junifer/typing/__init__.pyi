@@ -1,5 +1,6 @@
 __all__ = [
     "DataGrabberLike",
+    "DataRegistryLike",
     "PreprocessorLike",
     "MarkerLike",
     "StorageLike",
@@ -16,6 +17,7 @@ __all__ = [
 
 from ._typing import (
     DataGrabberLike,
+    DataRegistryLike,
     PreprocessorLike,
     MarkerLike,
     StorageLike,

@@ -5,11 +5,19 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from ..data import DataDispatcher
 from ..pipeline import PipelineComponentRegistry
-from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
+from ..typing import (
+    DataGrabberLike,
+    DataRegistryLike,
+    MarkerLike,
+    PreprocessorLike,
+    StorageLike,
+)
 
 
 __all__ = [
+    "register_data_registry",
     "register_datagrabber",
     "register_datareader",
     "register_marker",
@@ -139,3 +147,40 @@ def register_storage(klass: StorageLike) -> StorageLike:
         klass=klass,
     )
     return klass
+
+
+def register_data_registry(name: str) -> DataRegistryLike:
+    """Registry registration decorator.
+
+    Registers the data registry as ``name``.
+
+    Parameters
+    ----------
+    name : str
+        The name of the data registry.
+
+    Returns
+    -------
+    class
+        The unmodified input class.
+
+    """
+
+    def decorator(klass: DataRegistryLike) -> DataRegistryLike:
+        """Actual decorator.
+
+        Parameters
+        ----------
+        klass : class
+            The class of the data registry to register.
+
+        Returns
+        -------
+        class
+            The unmodified input class.
+
+        """
+        DataDispatcher()[name] = klass
+        return klass
+
+    return decorator
