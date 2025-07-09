@@ -33,12 +33,12 @@ def register_datagrabber(klass: DataGrabberLike) -> DataGrabberLike:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the DataGrabber to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     Notes
@@ -60,12 +60,12 @@ def register_datareader(klass: type) -> type:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the DataReader to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     Notes
@@ -87,12 +87,12 @@ def register_preprocessor(klass: PreprocessorLike) -> PreprocessorLike:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the preprocessor to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     """
@@ -110,12 +110,12 @@ def register_marker(klass: MarkerLike) -> MarkerLike:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the marker to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     """
@@ -133,12 +133,12 @@ def register_storage(klass: StorageLike) -> StorageLike:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the storage to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     """
