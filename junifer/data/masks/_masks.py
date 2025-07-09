@@ -24,7 +24,6 @@ from nilearn.masking import (
 )
 
 from ...utils import logger, raise_error
-from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..template_spaces import get_template
 from ..utils import (
@@ -216,7 +215,7 @@ def compute_brain_mask(
     return nimg.new_img_like(target_data["data"], mask)  # type: ignore
 
 
-class MaskRegistry(BasePipelineDataRegistry, metaclass=Singleton):
+class MaskRegistry(BasePipelineDataRegistry):
     """Class for mask data registry.
 
     This class is a singleton and is used for managing available mask

@@ -13,7 +13,6 @@ from junifer_data import get
 from numpy.typing import ArrayLike
 
 from ...utils import logger, raise_error
-from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..utils import JUNIFER_DATA_PARAMS, get_dataset_path, get_native_warper
 from ._ants_coordinates_warper import ANTsCoordinatesWarper
@@ -23,7 +22,7 @@ from ._fsl_coordinates_warper import FSLCoordinatesWarper
 __all__ = ["CoordinatesRegistry"]
 
 
-class CoordinatesRegistry(BasePipelineDataRegistry, metaclass=Singleton):
+class CoordinatesRegistry(BasePipelineDataRegistry):
     """Class for coordinates data registry.
 
     This class is a singleton and is used for managing available coordinates
