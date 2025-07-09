@@ -86,7 +86,7 @@ class DataDispatcher(MutableMapping):
         if key in self._builtin:
             raise_error(f"Cannot set value for in-built key: {key}")
         # Value type check
-        if not isinstance(value, BasePipelineDataRegistry):
+        if not issubclass(value, BasePipelineDataRegistry):
             raise_error(f"Invalid value type: {type(value)}")
         # Update external
         self._external[key] = value
