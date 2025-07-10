@@ -31,3 +31,4 @@ DataGrabbers, Preprocessors, Markers, etc.,  following the *junifer* way.
    coordinates
    masks
    plugins
+   data_registries
