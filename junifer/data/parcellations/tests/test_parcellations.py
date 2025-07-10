@@ -14,6 +14,7 @@ from nilearn.image import new_img_like, resample_to_img
 from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 from junifer.data import (
+    deregister_data,
     get_data,
     list_data,
     load_data,
@@ -1245,3 +1246,9 @@ def test_get_multi_different_space() -> None:
             ],
             target_data=element_data["VBM_GM"],
         )
+
+
+def test_deregister() -> None:
+    """Test parcellation deregistration."""
+    deregister_data(kind="parcellation", name="testparc_3")
+    assert "testparc_3" not in list_data(kind="parcellation")
