@@ -11,6 +11,7 @@ from typing import (
 
 
 if TYPE_CHECKING:
+    from ..data import BasePipelineDataRegistry
     from ..datagrabber import BaseDataGrabber
     from ..datareader import DefaultDataReader
     from ..markers import BaseMarker
@@ -23,6 +24,7 @@ __all__ = [
     "ConfigVal",
     "DataGrabberLike",
     "DataGrabberPatterns",
+    "DataRegistryLike",
     "Dependencies",
     "Element",
     "Elements",
@@ -35,6 +37,7 @@ __all__ = [
 ]
 
 
+DataRegistryLike = type["BasePipelineDataRegistry"]
 DataGrabberLike = type["BaseDataGrabber"]
 PreprocessorLike = type["BasePreprocessor"]
 MarkerLike = type["BaseMarker"]

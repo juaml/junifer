@@ -16,7 +16,6 @@ import pandas as pd
 from junifer_data import get
 
 from ...utils import logger, raise_error, warn_with_log
-from ...utils.singleton import Singleton
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..utils import (
     JUNIFER_DATA_PARAMS,
@@ -38,7 +37,7 @@ __all__ = [
 ]
 
 
-class ParcellationRegistry(BasePipelineDataRegistry, metaclass=Singleton):
+class ParcellationRegistry(BasePipelineDataRegistry):
     """Class for parcellation data registry.
 
     This class is a singleton and is used for managing available parcellation

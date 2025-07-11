@@ -5,11 +5,19 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from ..data import DataDispatcher
 from ..pipeline import PipelineComponentRegistry
-from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
+from ..typing import (
+    DataGrabberLike,
+    DataRegistryLike,
+    MarkerLike,
+    PreprocessorLike,
+    StorageLike,
+)
 
 
 __all__ = [
+    "register_data_registry",
     "register_datagrabber",
     "register_datareader",
     "register_marker",
@@ -25,12 +33,12 @@ def register_datagrabber(klass: DataGrabberLike) -> DataGrabberLike:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the DataGrabber to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     Notes
@@ -52,12 +60,12 @@ def register_datareader(klass: type) -> type:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the DataReader to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     Notes
@@ -79,12 +87,12 @@ def register_preprocessor(klass: PreprocessorLike) -> PreprocessorLike:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the preprocessor to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     """
@@ -102,12 +110,12 @@ def register_marker(klass: MarkerLike) -> MarkerLike:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the marker to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     """
@@ -125,12 +133,12 @@ def register_storage(klass: StorageLike) -> StorageLike:
 
     Parameters
     ----------
-    klass: class
+    klass : class
         The class of the storage to register.
 
     Returns
     -------
-    klass: class
+    class
         The unmodified input class.
 
     """
@@ -139,3 +147,40 @@ def register_storage(klass: StorageLike) -> StorageLike:
         klass=klass,
     )
     return klass
+
+
+def register_data_registry(name: str) -> DataRegistryLike:
+    """Registry registration decorator.
+
+    Registers the data registry as ``name``.
+
+    Parameters
+    ----------
+    name : str
+        The name of the data registry.
+
+    Returns
+    -------
+    class
+        The unmodified input class.
+
+    """
+
+    def decorator(klass: DataRegistryLike) -> DataRegistryLike:
+        """Actual decorator.
+
+        Parameters
+        ----------
+        klass : class
+            The class of the data registry to register.
+
+        Returns
+        -------
+        class
+            The unmodified input class.
+
+        """
+        DataDispatcher()[name] = klass
+        return klass
+
+    return decorator
