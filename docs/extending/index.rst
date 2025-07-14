@@ -32,3 +32,4 @@ DataGrabbers, Preprocessors, Markers, etc.,  following the *junifer* way.
    masks
    plugins
    data_registries
+   data_types
