@@ -15,6 +15,7 @@ __all__ = [
     "DataTypeSchema",
     "OptionalTypeSchema",
     "PatternValidationMixin",
+    "register_data_type",
 ]
 
 
@@ -181,6 +182,20 @@ class DataTypeManager(MutableMapping):
     def setdefault(self, key: str, value=None):
         """Not implemented."""
         pass
+
+
+def register_data_type(name: str, schema: type[DataTypeSchema]) -> None:
+    """Register custom data type.
+
+    Parameters
+    ----------
+    name : str
+        The data type name.
+    schema : DataTypeSchema
+        The data type schema.
+
+    """
+    DataTypeManager()[name] = schema
 
 
 class PatternValidationMixin:

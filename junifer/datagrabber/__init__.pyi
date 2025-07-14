@@ -14,6 +14,7 @@ __all__ = [
     "DataTypeSchema",
     "OptionalTypeSchema",
     "PatternValidationMixin",
+    "register_data_type",
 ]
 
 # These 4 need to be in this order, otherwise it is a circular import
@@ -32,4 +33,5 @@ from .pattern_validation_mixin import (
     DataTypeSchema,
     OptionalTypeSchema,
     PatternValidationMixin,
+    register_data_type,
 )

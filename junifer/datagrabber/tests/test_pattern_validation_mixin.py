@@ -13,6 +13,7 @@ from junifer.datagrabber.pattern_validation_mixin import (
     DataTypeManager,
     DataTypeSchema,
     PatternValidationMixin,
+    register_data_type,
 )
 
 
@@ -85,6 +86,27 @@ def test_dtype_mgr(dtype: DataTypeSchema) -> None:
 
     _ = DataTypeManager().pop("DType")
     assert "DType" not in DataTypeManager()
+
+
+def test_register_data_type() -> None:
+    """Test data type registration."""
+
+    register_data_type(
+        name="dtype",
+        schema={
+            "mandatory": ["pattern"],
+            "optional": {
+                "mask": {
+                    "mandatory": ["pattern"],
+                    "optional": [],
+                },
+            },
+        },
+    )
+
+    assert "dtype" in DataTypeManager()
+    _ = DataTypeManager().pop("dtype")
+    assert "dumb" not in DataTypeManager()
 
 
 @pytest.mark.parametrize(
