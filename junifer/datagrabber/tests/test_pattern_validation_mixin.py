@@ -9,7 +9,82 @@ from typing import Union
 
 import pytest
 
-from junifer.datagrabber.pattern_validation_mixin import PatternValidationMixin
+from junifer.datagrabber.pattern_validation_mixin import (
+    DataTypeManager,
+    DataTypeSchema,
+    PatternValidationMixin,
+)
+
+
+def test_dtype_mgr_addition_errors() -> None:
+    """Test data type manager addition errors."""
+    with pytest.raises(ValueError, match="Cannot set"):
+        DataTypeManager()["T1w"] = {}
+
+    with pytest.raises(ValueError, match="Invalid"):
+        DataTypeManager()["DType"] = ""
+
+
+def test_dtype_mgr_removal_errors() -> None:
+    """Test data type manager removal errors."""
+    with pytest.raises(ValueError, match="Cannot delete"):
+        _ = DataTypeManager().pop("T1w")
+
+    with pytest.raises(KeyError, match="DType"):
+        del DataTypeManager()["DType"]
+
+
+@pytest.mark.parametrize(
+    "dtype",
+    [
+        {
+            "mandatory": ["pattern"],
+            "optional": {},
+        },
+        {
+            "mandatory": ["pattern"],
+            "optional": {
+                "subtype": {
+                    "mandatory": [],
+                    "optional": [],
+                }
+            },
+        },
+        {
+            "mandatory": ["pattern"],
+            "optional": {
+                "subtype": {
+                    "mandatory": ["pattern"],
+                    "optional": [],
+                }
+            },
+        },
+        {
+            "mandatory": ["pattern"],
+            "optional": {
+                "subtype": {
+                    "mandatory": ["pattern"],
+                    "optional": ["pattern"],
+                }
+            },
+        },
+    ],
+)
+def test_dtype_mgr(dtype: DataTypeSchema) -> None:
+    """Test data type manager addition and removal.
+
+    Parameters
+    ----------
+    dtype : DataTypeSchema
+        The parametrized schema.
+
+    """
+
+    DataTypeManager().update({"DType": dtype})
+    assert "DType" in DataTypeManager()
+
+    _ = DataTypeManager().pop("DType")
+    assert "DType" not in DataTypeManager()
 
 
 @pytest.mark.parametrize(
