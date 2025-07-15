@@ -184,7 +184,7 @@ class DataTypeManager(MutableMapping):
         pass
 
 
-def register_data_type(name: str, schema: type[DataTypeSchema]) -> None:
+def register_data_type(name: str, schema: DataTypeSchema) -> None:
     """Register custom data type.
 
     Parameters
