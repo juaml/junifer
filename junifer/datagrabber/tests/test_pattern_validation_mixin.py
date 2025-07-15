@@ -20,7 +20,11 @@ from junifer.datagrabber.pattern_validation_mixin import (
 def test_dtype_mgr_addition_errors() -> None:
     """Test data type manager addition errors."""
     with pytest.raises(ValueError, match="Cannot set"):
-        DataTypeManager()["T1w"] = {}
+        dtype_schema: DataTypeSchema = {
+            "mandatory": ["pattern"],
+            "optional": {},
+        }
+        DataTypeManager()["T1w"] = dtype_schema
 
     with pytest.raises(ValueError, match="Invalid"):
         DataTypeManager()["DType"] = ""
@@ -91,17 +95,19 @@ def test_dtype_mgr(dtype: DataTypeSchema) -> None:
 def test_register_data_type() -> None:
     """Test data type registration."""
 
-    register_data_type(
-        name="dtype",
-        schema={
-            "mandatory": ["pattern"],
-            "optional": {
-                "mask": {
-                    "mandatory": ["pattern"],
-                    "optional": [],
-                },
+    dtype_schema: DataTypeSchema = {
+        "mandatory": ["pattern"],
+        "optional": {
+            "mask": {
+                "mandatory": ["pattern"],
+                "optional": [],
             },
         },
+    }
+
+    register_data_type(
+        name="dtype",
+        schema=dtype_schema,
     )
 
     assert "dtype" in DataTypeManager()
