@@ -64,7 +64,7 @@ ConditionalDependencies = Sequence[
 ExternalDependencies = Sequence[MutableMapping[str, Union[str, Sequence[str]]]]
 MarkerInOutMappings = MutableMapping[str, MutableMapping[str, str]]
 DataGrabberPatterns = dict[
-    str, Union[dict[str, str], Sequence[dict[str, str]]]
+    str, Union[dict[str, str], list[dict[str, str]]]
 ]
 ConfigVal = Union[bool, int, float, str]
 Element = Union[str, tuple[str, ...]]

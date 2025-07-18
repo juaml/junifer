@@ -3,71 +3,199 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Iterator, MutableMapping
+from typing import TypedDict
+
 from ..typing import DataGrabberPatterns
 from ..utils import logger, raise_error, warn_with_log
 
 
-__all__ = ["PatternValidationMixin"]
+__all__ = [
+    "DataTypeManager",
+    "DataTypeSchema",
+    "OptionalTypeSchema",
+    "PatternValidationMixin",
+    "register_data_type",
+]
 
 
-# Define schema for pattern-based datagrabber's patterns
-PATTERNS_SCHEMA = {
-    "T1w": {
-        "mandatory": ["pattern", "space"],
-        "optional": {
-            "mask": {"mandatory": ["pattern", "space"], "optional": []},
-        },
-    },
-    "T2w": {
-        "mandatory": ["pattern", "space"],
-        "optional": {
-            "mask": {"mandatory": ["pattern", "space"], "optional": []},
-        },
-    },
-    "BOLD": {
-        "mandatory": ["pattern", "space"],
-        "optional": {
-            "mask": {"mandatory": ["pattern", "space"], "optional": []},
-            "confounds": {
-                "mandatory": ["pattern", "format"],
-                "optional": ["mappings"],
-            },
-            "reference": {"mandatory": ["pattern"], "optional": []},
-            "prewarp_space": {"mandatory": [], "optional": []},
-        },
-    },
-    "Warp": {
-        "mandatory": ["pattern", "src", "dst", "warper"],
-        "optional": {},
-    },
-    "VBM_GM": {
-        "mandatory": ["pattern", "space"],
-        "optional": {},
-    },
-    "VBM_WM": {
-        "mandatory": ["pattern", "space"],
-        "optional": {},
-    },
-    "VBM_CSF": {
-        "mandatory": ["pattern", "space"],
-        "optional": {},
-    },
-    "DWI": {
-        "mandatory": ["pattern"],
-        "optional": {},
-    },
-    "FreeSurfer": {
-        "mandatory": ["pattern"],
-        "optional": {
-            "aseg": {"mandatory": ["pattern"], "optional": []},
-            "norm": {"mandatory": ["pattern"], "optional": []},
-            "lh_white": {"mandatory": ["pattern"], "optional": []},
-            "rh_white": {"mandatory": ["pattern"], "optional": []},
-            "lh_pial": {"mandatory": ["pattern"], "optional": []},
-            "rh_pial": {"mandatory": ["pattern"], "optional": []},
-        },
-    },
-}
+class OptionalTypeSchema(TypedDict):
+    """Optional type schema."""
+
+    mandatory: list[str]
+    optional: list[str]
+
+
+class DataTypeSchema(TypedDict):
+    """Data type schema."""
+
+    mandatory: list[str]
+    optional: dict[str, OptionalTypeSchema]
+
+
+class DataTypeManager(MutableMapping):
+    """Class for managing data types."""
+
+    _instance = None
+
+    def __new__(cls):
+        """Overridden to make the class singleton."""
+        # Make class singleton
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            # Set global schema
+            cls._global: dict[str, DataTypeSchema] = {}
+            cls._builtin: dict[str, DataTypeSchema] = {}
+            cls._external: dict[str, DataTypeSchema] = {}
+            cls._builtin.update(
+                {
+                    "T1w": {
+                        "mandatory": ["pattern", "space"],
+                        "optional": {
+                            "mask": {
+                                "mandatory": ["pattern", "space"],
+                                "optional": [],
+                            },
+                        },
+                    },
+                    "T2w": {
+                        "mandatory": ["pattern", "space"],
+                        "optional": {
+                            "mask": {
+                                "mandatory": ["pattern", "space"],
+                                "optional": [],
+                            },
+                        },
+                    },
+                    "BOLD": {
+                        "mandatory": ["pattern", "space"],
+                        "optional": {
+                            "mask": {
+                                "mandatory": ["pattern", "space"],
+                                "optional": [],
+                            },
+                            "confounds": {
+                                "mandatory": ["pattern", "format"],
+                                "optional": ["mappings"],
+                            },
+                            "reference": {
+                                "mandatory": ["pattern"],
+                                "optional": [],
+                            },
+                            "prewarp_space": {"mandatory": [], "optional": []},
+                        },
+                    },
+                    "Warp": {
+                        "mandatory": ["pattern", "src", "dst", "warper"],
+                        "optional": {},
+                    },
+                    "VBM_GM": {
+                        "mandatory": ["pattern", "space"],
+                        "optional": {},
+                    },
+                    "VBM_WM": {
+                        "mandatory": ["pattern", "space"],
+                        "optional": {},
+                    },
+                    "VBM_CSF": {
+                        "mandatory": ["pattern", "space"],
+                        "optional": {},
+                    },
+                    "DWI": {
+                        "mandatory": ["pattern"],
+                        "optional": {},
+                    },
+                    "FreeSurfer": {
+                        "mandatory": ["pattern"],
+                        "optional": {
+                            "aseg": {"mandatory": ["pattern"], "optional": []},
+                            "norm": {"mandatory": ["pattern"], "optional": []},
+                            "lh_white": {
+                                "mandatory": ["pattern"],
+                                "optional": [],
+                            },
+                            "rh_white": {
+                                "mandatory": ["pattern"],
+                                "optional": [],
+                            },
+                            "lh_pial": {
+                                "mandatory": ["pattern"],
+                                "optional": [],
+                            },
+                            "rh_pial": {
+                                "mandatory": ["pattern"],
+                                "optional": [],
+                            },
+                        },
+                    },
+                }
+            )
+            cls._global.update(cls._builtin)
+        return cls._instance
+
+    def __getitem__(self, key: str) -> DataTypeSchema:
+        """Retrieve schema for ``key``."""
+        return self._global[key]
+
+    def __iter__(self) -> Iterator[str]:
+        """Iterate over data types."""
+        return iter(self._global)
+
+    def __len__(self) -> int:
+        """Get data type count."""
+        return len(self._global)
+
+    def __delitem__(self, key: str) -> None:
+        """Remove schema for ``key``."""
+        # Internal check
+        if key in self._builtin:
+            raise_error(f"Cannot delete in-built key: {key}")
+        # Non-existing key
+        if key not in self._external:
+            raise_error(klass=KeyError, msg=key)
+        # Update external
+        _ = self._external.pop(key)
+        # Update global
+        _ = self._global.pop(key)
+
+    def __setitem__(self, key: str, value: DataTypeSchema) -> None:
+        """Update ``key`` with ``value``."""
+        # Internal check
+        if key in self._builtin:
+            raise_error(f"Cannot set value for in-built key: {key}")
+        # Value type check
+        if not isinstance(value, dict):
+            raise_error(f"Invalid value type: {type(value)}")
+        # Update external
+        self._external[key] = value
+        # Update global
+        self._global[key] = value
+
+    def popitem():
+        """Not implemented."""
+        pass
+
+    def clear(self):
+        """Not implemented."""
+        pass
+
+    def setdefault(self, key: str, value=None):
+        """Not implemented."""
+        pass
+
+
+def register_data_type(name: str, schema: DataTypeSchema) -> None:
+    """Register custom data type.
+
+    Parameters
+    ----------
+    name : str
+        The data type name.
+    schema : DataTypeSchema
+        The data type schema.
+
+    """
+    DataTypeManager()[name] = schema
 
 
 class PatternValidationMixin:
@@ -311,12 +439,13 @@ class PatternValidationMixin:
                 msg="`patterns` must contain all `types`", klass=ValueError
             )
         # Check against schema
+        dtype_mgr = DataTypeManager()
         for dtype_key, dtype_val in patterns.items():
             # Check if valid data type is provided
-            if dtype_key not in PATTERNS_SCHEMA:
+            if dtype_key not in dtype_mgr:
                 raise_error(
                     f"Unknown data type: {dtype_key}, "
-                    f"should be one of: {list(PATTERNS_SCHEMA.keys())}"
+                    f"should be one of: {list(dtype_mgr.keys())}"
                 )
             # Conditional for list dtype vals like Warp
             if isinstance(dtype_val, list):
@@ -324,14 +453,14 @@ class PatternValidationMixin:
                     # Check mandatory keys for data type
                     self._validate_mandatory_keys(
                         keys=list(entry),
-                        schema=PATTERNS_SCHEMA[dtype_key]["mandatory"],
+                        schema=dtype_mgr[dtype_key]["mandatory"],
                         data_type=f"{dtype_key}.{idx}",
                         partial_pattern_ok=partial_pattern_ok,
                     )
                     # Check optional keys for data type
-                    for optional_key, optional_val in PATTERNS_SCHEMA[
-                        dtype_key
-                    ]["optional"].items():
+                    for optional_key, optional_val in dtype_mgr[dtype_key][
+                        "optional"
+                    ].items():
                         if optional_key not in entry:
                             logger.debug(
                                 f"Optional key: `{optional_key}` missing for "
@@ -344,12 +473,12 @@ class PatternValidationMixin:
                             )
                             # Set nested type name for easier access
                             nested_dtype = f"{dtype_key}.{idx}.{optional_key}"
-                            nested_mandatory_keys_schema = PATTERNS_SCHEMA[
+                            nested_mandatory_keys_schema = dtype_mgr[
                                 dtype_key
                             ]["optional"][optional_key]["mandatory"]
-                            nested_optional_keys_schema = PATTERNS_SCHEMA[
-                                dtype_key
-                            ]["optional"][optional_key]["optional"]
+                            nested_optional_keys_schema = dtype_mgr[dtype_key][
+                                "optional"
+                            ][optional_key]["optional"]
                             # Check mandatory keys for nested type
                             self._validate_mandatory_keys(
                                 keys=list(optional_val["mandatory"]),
@@ -392,10 +521,8 @@ class PatternValidationMixin:
                     self._identify_stray_keys(
                         keys=list(entry.keys()),
                         schema=(
-                            PATTERNS_SCHEMA[dtype_key]["mandatory"]
-                            + list(
-                                PATTERNS_SCHEMA[dtype_key]["optional"].keys()
-                            )
+                            dtype_mgr[dtype_key]["mandatory"]
+                            + list(dtype_mgr[dtype_key]["optional"].keys())
                         ),
                         data_type=dtype_key,
                     )
@@ -412,12 +539,12 @@ class PatternValidationMixin:
                 # Check mandatory keys for data type
                 self._validate_mandatory_keys(
                     keys=list(dtype_val),
-                    schema=PATTERNS_SCHEMA[dtype_key]["mandatory"],
+                    schema=dtype_mgr[dtype_key]["mandatory"],
                     data_type=dtype_key,
                     partial_pattern_ok=partial_pattern_ok,
                 )
                 # Check optional keys for data type
-                for optional_key, optional_val in PATTERNS_SCHEMA[dtype_key][
+                for optional_key, optional_val in dtype_mgr[dtype_key][
                     "optional"
                 ].items():
                     if optional_key not in dtype_val:
@@ -432,12 +559,12 @@ class PatternValidationMixin:
                         )
                         # Set nested type name for easier access
                         nested_dtype = f"{dtype_key}.{optional_key}"
-                        nested_mandatory_keys_schema = PATTERNS_SCHEMA[
-                            dtype_key
-                        ]["optional"][optional_key]["mandatory"]
-                        nested_optional_keys_schema = PATTERNS_SCHEMA[
-                            dtype_key
-                        ]["optional"][optional_key]["optional"]
+                        nested_mandatory_keys_schema = dtype_mgr[dtype_key][
+                            "optional"
+                        ][optional_key]["mandatory"]
+                        nested_optional_keys_schema = dtype_mgr[dtype_key][
+                            "optional"
+                        ][optional_key]["optional"]
                         # Check mandatory keys for nested type
                         self._validate_mandatory_keys(
                             keys=list(optional_val["mandatory"]),
@@ -476,8 +603,8 @@ class PatternValidationMixin:
                 self._identify_stray_keys(
                     keys=list(dtype_val.keys()),
                     schema=(
-                        PATTERNS_SCHEMA[dtype_key]["mandatory"]
-                        + list(PATTERNS_SCHEMA[dtype_key]["optional"].keys())
+                        dtype_mgr[dtype_key]["mandatory"]
+                        + list(dtype_mgr[dtype_key]["optional"].keys())
                     ),
                     data_type=dtype_key,
                 )

@@ -10,7 +10,11 @@ __all__ = [
     "DataladHCP1200",
     "MultipleDataGrabber",
     "DMCC13Benchmark",
+    "DataTypeManager",
+    "DataTypeSchema",
+    "OptionalTypeSchema",
     "PatternValidationMixin",
+    "register_data_type",
 ]
 
 # These 4 need to be in this order, otherwise it is a circular import
@@ -24,4 +28,10 @@ from .hcp1200 import HCP1200, DataladHCP1200
 from .multiple import MultipleDataGrabber
 from .dmcc13_benchmark import DMCC13Benchmark
 
-from .pattern_validation_mixin import PatternValidationMixin
+from .pattern_validation_mixin import (
+    DataTypeManager,
+    DataTypeSchema,
+    OptionalTypeSchema,
+    PatternValidationMixin,
+    register_data_type,
+)

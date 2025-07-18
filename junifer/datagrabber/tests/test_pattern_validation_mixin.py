@@ -9,7 +9,110 @@ from typing import Union
 
 import pytest
 
-from junifer.datagrabber.pattern_validation_mixin import PatternValidationMixin
+from junifer.datagrabber.pattern_validation_mixin import (
+    DataTypeManager,
+    DataTypeSchema,
+    PatternValidationMixin,
+    register_data_type,
+)
+
+
+def test_dtype_mgr_addition_errors() -> None:
+    """Test data type manager addition errors."""
+    with pytest.raises(ValueError, match="Cannot set"):
+        dtype_schema: DataTypeSchema = {
+            "mandatory": ["pattern"],
+            "optional": {},
+        }
+        DataTypeManager()["T1w"] = dtype_schema
+
+    with pytest.raises(ValueError, match="Invalid"):
+        DataTypeManager()["DType"] = ""
+
+
+def test_dtype_mgr_removal_errors() -> None:
+    """Test data type manager removal errors."""
+    with pytest.raises(ValueError, match="Cannot delete"):
+        _ = DataTypeManager().pop("T1w")
+
+    with pytest.raises(KeyError, match="DType"):
+        del DataTypeManager()["DType"]
+
+
+@pytest.mark.parametrize(
+    "dtype",
+    [
+        {
+            "mandatory": ["pattern"],
+            "optional": {},
+        },
+        {
+            "mandatory": ["pattern"],
+            "optional": {
+                "subtype": {
+                    "mandatory": [],
+                    "optional": [],
+                }
+            },
+        },
+        {
+            "mandatory": ["pattern"],
+            "optional": {
+                "subtype": {
+                    "mandatory": ["pattern"],
+                    "optional": [],
+                }
+            },
+        },
+        {
+            "mandatory": ["pattern"],
+            "optional": {
+                "subtype": {
+                    "mandatory": ["pattern"],
+                    "optional": ["pattern"],
+                }
+            },
+        },
+    ],
+)
+def test_dtype_mgr(dtype: DataTypeSchema) -> None:
+    """Test data type manager addition and removal.
+
+    Parameters
+    ----------
+    dtype : DataTypeSchema
+        The parametrized schema.
+
+    """
+
+    DataTypeManager().update({"DType": dtype})
+    assert "DType" in DataTypeManager()
+
+    _ = DataTypeManager().pop("DType")
+    assert "DType" not in DataTypeManager()
+
+
+def test_register_data_type() -> None:
+    """Test data type registration."""
+
+    dtype_schema: DataTypeSchema = {
+        "mandatory": ["pattern"],
+        "optional": {
+            "mask": {
+                "mandatory": ["pattern"],
+                "optional": [],
+            },
+        },
+    }
+
+    register_data_type(
+        name="dtype",
+        schema=dtype_schema,
+    )
+
+    assert "dtype" in DataTypeManager()
+    _ = DataTypeManager().pop("dtype")
+    assert "dumb" not in DataTypeManager()
 
 
 @pytest.mark.parametrize(
