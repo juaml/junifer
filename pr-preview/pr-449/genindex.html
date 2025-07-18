@@ -241,6 +241,7 @@
 <li class="toctree-l2"><a class="reference internal" href="extending/masks.html">7.8. Adding Masks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extending/plugins.html">7.9. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> plugin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extending/data_registries.html">7.10. Creating a Data Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending/data_types.html">7.11. Adding Data Types</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -375,7 +376,11 @@
         <li><a href="api/pipeline.html#junifer.pipeline.WorkDirManager.cleanup_elementdir">cleanup_elementdir() (junifer.pipeline.WorkDirManager method)</a>
 </li>
         <li><a href="api/data.html#junifer.data.DataDispatcher.clear">clear() (junifer.data.DataDispatcher method)</a>
+
+        <ul>
+          <li><a href="api/datagrabbers.html#junifer.datagrabber.DataTypeManager.clear">(junifer.datagrabber.DataTypeManager method)</a>
 </li>
+        </ul></li>
         <li><a href="api/api.html#junifer.api.functions.collect">collect() (in module junifer.api.functions)</a>
 
         <ul>
@@ -474,10 +479,14 @@
 </li>
         <li><a href="api/datagrabbers.html#junifer.datagrabber.DataladHCP1200">DataladHCP1200 (class in junifer.datagrabber)</a>
 </li>
-        <li><a href="api/utils.html#junifer.utils.deep_update">deep_update() (in module junifer.utils)</a>
+        <li><a href="api/datagrabbers.html#junifer.datagrabber.DataTypeManager">DataTypeManager (class in junifer.datagrabber)</a>
+</li>
+        <li><a href="api/datagrabbers.html#junifer.datagrabber.DataTypeSchema">DataTypeSchema (class in junifer.datagrabber)</a>
 </li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/utils.html#junifer.utils.deep_update">deep_update() (in module junifer.utils)</a>
+</li>
         <li><a href="api/datareaders.html#junifer.datareader.DefaultDataReader">DefaultDataReader (class in junifer.datareader)</a>
 </li>
         <li><a href="api/utils.html#junifer.utils.ConfigManager.delete">delete() (junifer.utils.ConfigManager method)</a>
@@ -997,6 +1006,10 @@
         <li><a href="api/testing.html#junifer.testing.datagrabbers.OasisVBMTestingDataGrabber">OasisVBMTestingDataGrabber (class in junifer.testing.datagrabbers)</a>
 </li>
     </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/datagrabbers.html#junifer.datagrabber.OptionalTypeSchema">OptionalTypeSchema (class in junifer.datagrabber)</a>
+</li>
+    </ul></td>
   </tr></table>
 </section>
 
@@ -1029,7 +1042,11 @@
         <li><a href="api/pipeline.html#junifer.pipeline.PipelineStepMixin">PipelineStepMixin (class in junifer.pipeline)</a>
 </li>
         <li><a href="api/data.html#junifer.data.DataDispatcher.popitem">popitem() (junifer.data.DataDispatcher method)</a>
+
+        <ul>
+          <li><a href="api/datagrabbers.html#junifer.datagrabber.DataTypeManager.popitem">(junifer.datagrabber.DataTypeManager method)</a>
 </li>
+        </ul></li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api/api.html#junifer.api.queue_context.GnuParallelLocalAdapter.pre_collect">pre_collect() (junifer.api.queue_context.GnuParallelLocalAdapter method)</a>
@@ -1128,9 +1145,11 @@
         </ul></li>
         <li><a href="api/data.html#junifer.data.register_data">register_data() (in module junifer.data)</a>
 </li>
+        <li><a href="api/api.html#junifer.api.decorators.register_data_registry">register_data_registry() (in module junifer.api.decorators)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/api.html#junifer.api.decorators.register_data_registry">register_data_registry() (in module junifer.api.decorators)</a>
+        <li><a href="api/datagrabbers.html#junifer.datagrabber.register_data_type">register_data_type() (in module junifer.datagrabber)</a>
 </li>
         <li><a href="api/api.html#junifer.api.decorators.register_datagrabber">register_datagrabber() (in module junifer.api.decorators)</a>
 </li>
@@ -1193,7 +1212,11 @@
 </li>
         </ul></li>
         <li><a href="api/data.html#junifer.data.DataDispatcher.setdefault">setdefault() (junifer.data.DataDispatcher method)</a>
+
+        <ul>
+          <li><a href="api/datagrabbers.html#junifer.datagrabber.DataTypeManager.setdefault">(junifer.datagrabber.DataTypeManager method)</a>
 </li>
+        </ul></li>
         <li><a href="api/datagrabbers.html#junifer.datagrabber.DataladHCP1200.skip_file_check">skip_file_check (junifer.datagrabber.DataladHCP1200 property)</a>
 
         <ul>
@@ -1390,7 +1413,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=aebc455a"></script>
+</div><script src="_static/documentation_options.js?v=fd8b1f74"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>
