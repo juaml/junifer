@@ -241,6 +241,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.6. Adding Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">7.7. Adding Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">7.8. Adding Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/plugins.html">7.9. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/data_registries.html">7.10. Creating a Data Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/data_types.html">7.11. Adding Data Types</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -449,6 +452,27 @@ are passed to the preprocessor constructor (default None).</p>
 <span id="decorators"></span><h2>Decorators<a class="headerlink" href="#module-junifer.api.decorators" title="Link to this heading">¶</a></h2>
 <p>Provide API decorators.</p>
 <dl class="py function">
+<dt class="sig sig-object py" id="junifer.api.decorators.register_data_registry">
+<span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_data_registry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register_data_registry" title="Link to this definition">¶</a></dt>
+<dd><p>Registry registration decorator.</p>
+<p>Registers the data registry as <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the data registry.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>class</dt><dd><p>The unmodified input class.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="junifer.api.decorators.register_datagrabber">
 <span class="sig-prename descclassname"><span class="pre">junifer.api.decorators.</span></span><span class="sig-name descname"><span class="pre">register_datagrabber</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">klass</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.decorators.register_datagrabber" title="Link to this definition">¶</a></dt>
 <dd><p>Register DataGrabber.</p>
@@ -456,13 +480,13 @@ are passed to the preprocessor constructor (default None).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>klass: class</strong></dt><dd><p>The class of the DataGrabber to register.</p>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>The class of the DataGrabber to register.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+<dt>class</dt><dd><p>The unmodified input class.</p>
 </dd>
 </dl>
 </dd>
@@ -479,13 +503,13 @@ are passed to the preprocessor constructor (default None).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>klass: class</strong></dt><dd><p>The class of the DataReader to register.</p>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>The class of the DataReader to register.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+<dt>class</dt><dd><p>The unmodified input class.</p>
 </dd>
 </dl>
 </dd>
@@ -502,13 +526,13 @@ are passed to the preprocessor constructor (default None).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>klass: class</strong></dt><dd><p>The class of the marker to register.</p>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>The class of the marker to register.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+<dt>class</dt><dd><p>The unmodified input class.</p>
 </dd>
 </dl>
 </dd>
@@ -523,13 +547,13 @@ are passed to the preprocessor constructor (default None).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>klass: class</strong></dt><dd><p>The class of the preprocessor to register.</p>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>The class of the preprocessor to register.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+<dt>class</dt><dd><p>The unmodified input class.</p>
 </dd>
 </dl>
 </dd>
@@ -544,13 +568,13 @@ are passed to the preprocessor constructor (default None).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>klass: class</strong></dt><dd><p>The class of the storage to register.</p>
+<dt><strong>klass</strong><span class="classifier">class</span></dt><dd><p>The class of the storage to register.</p>
 </dd>
 </dl>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt>klass: class</dt><dd><p>The unmodified input class.</p>
+<dt>class</dt><dd><p>The unmodified input class.</p>
 </dd>
 </dl>
 </dd>
@@ -901,6 +925,7 @@ implementation of this abstract class.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-junifer.api.decorators">Decorators</a><ul>
+<li><a class="reference internal" href="#junifer.api.decorators.register_data_registry"><code class="docutils literal notranslate"><span class="pre">register_data_registry()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.decorators.register_datagrabber"><code class="docutils literal notranslate"><span class="pre">register_datagrabber()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.decorators.register_datareader"><code class="docutils literal notranslate"><span class="pre">register_datareader()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.api.decorators.register_marker"><code class="docutils literal notranslate"><span class="pre">register_marker()</span></code></a></li>
@@ -948,7 +973,7 @@ implementation of this abstract class.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=377b2e46"></script>
+</div><script src="../_static/documentation_options.js?v=226936dc"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

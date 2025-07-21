@@ -5,8 +5,8 @@
 Creating a ``junifer`` extension
 ================================
 
-``junifer`` is designed to be easily extensible. Through the use of a registry
-and decorators, you can easily add new functionality to ``junifer`` during
+``junifer`` is designed to be easily extensible. Through the use of data registries,
+a component registry and decorators, you can easily add new functionality to ``junifer`` during
 runtime. This is done by creating a new Python module and importing it before
 running ``junifer``.
 

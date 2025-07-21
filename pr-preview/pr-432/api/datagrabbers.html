@@ -241,6 +241,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.6. Adding Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">7.7. Adding Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">7.8. Adding Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/plugins.html">7.9. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/data_registries.html">7.10. Creating a Data Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/data_types.html">7.11. Adding Data Types</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -532,6 +535,39 @@ specified element.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataTypeManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataTypeManager</span></span><a class="headerlink" href="#junifer.datagrabber.DataTypeManager" title="Link to this definition">¶</a></dt>
+<dd><p>Class for managing data types.</p>
+<p>Overridden to make the class singleton.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataTypeManager.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataTypeManager.clear" title="Link to this definition">¶</a></dt>
+<dd><p>Not implemented.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataTypeManager.popitem">
+<span class="sig-name descname"><span class="pre">popitem</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataTypeManager.popitem" title="Link to this definition">¶</a></dt>
+<dd><p>Not implemented.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataTypeManager.setdefault">
+<span class="sig-name descname"><span class="pre">setdefault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataTypeManager.setdefault" title="Link to this definition">¶</a></dt>
+<dd><p>Not implemented.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.DataTypeSchema">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataTypeSchema</span></span><a class="headerlink" href="#junifer.datagrabber.DataTypeSchema" title="Link to this definition">¶</a></dt>
+<dd><p>Data type schema.</p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="junifer.datagrabber.DataladAOMICID1000">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">DataladAOMICID1000</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datadir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'MNI152NLin2009cAsym'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.DataladAOMICID1000" title="Link to this definition">¶</a></dt>
 <dd><p>Concrete implementation for datalad-based data fetching of AOMIC ID1000.</p>
@@ -546,6 +582,17 @@ the datalad dataset will be cloned into a temporary directory
 (default None).</p>
 </dd>
 <dt><strong>space</strong><span class="classifier">{“native”, “MNI152NLin2009cAsym”}, optional</span></dt><dd><p>The space to use for the data (default “MNI152NLin2009cAsym”).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><dl class="simple">
+<dt>If invalid value is passed for:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">space</span></code></p></li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd>
@@ -575,7 +622,13 @@ selected (default None).</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If invalid value is passed for <code class="docutils literal notranslate"><span class="pre">tasks</span></code>.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><dl class="simple">
+<dt>If invalid value is passed for:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tasks</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">space</span></code></p></li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd>
@@ -642,7 +695,13 @@ selected (default None).</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If invalid value is passed for <code class="docutils literal notranslate"><span class="pre">tasks</span></code>.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><dl class="simple">
+<dt>If invalid value is passed for:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tasks</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">space</span></code></p></li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd>
@@ -976,6 +1035,12 @@ specified element.</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="junifer.datagrabber.OptionalTypeSchema">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">OptionalTypeSchema</span></span><a class="headerlink" href="#junifer.datagrabber.OptionalTypeSchema" title="Link to this definition">¶</a></dt>
+<dd><p>Optional type schema.</p>
 </dd></dl>
 
 <dl class="py class">
@@ -1350,6 +1415,22 @@ if data type pattern key contains ‘*’ as value.</p>
 
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="junifer.datagrabber.register_data_type">
+<span class="sig-prename descclassname"><span class="pre">junifer.datagrabber.</span></span><span class="sig-name descname"><span class="pre">register_data_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.register_data_type" title="Link to this definition">¶</a></dt>
+<dd><p>Register custom data type.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type name.</p>
+</dd>
+<dt><strong>schema</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.DataTypeSchema" title="junifer.datagrabber.DataTypeSchema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DataTypeSchema</span></code></a></span></dt><dd><p>The data type schema.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
         </article>
@@ -1422,6 +1503,13 @@ if data type pattern key contains ‘*’ as value.</p>
 <li><a class="reference internal" href="#junifer.datagrabber.DMCC13Benchmark.get_item"><code class="docutils literal notranslate"><span class="pre">DMCC13Benchmark.get_item()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#junifer.datagrabber.DataTypeManager"><code class="docutils literal notranslate"><span class="pre">DataTypeManager</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.datagrabber.DataTypeManager.clear"><code class="docutils literal notranslate"><span class="pre">DataTypeManager.clear()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.DataTypeManager.popitem"><code class="docutils literal notranslate"><span class="pre">DataTypeManager.popitem()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.DataTypeManager.setdefault"><code class="docutils literal notranslate"><span class="pre">DataTypeManager.setdefault()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#junifer.datagrabber.DataTypeSchema"><code class="docutils literal notranslate"><span class="pre">DataTypeSchema</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICID1000"><code class="docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.datagrabber.DataladAOMICPIOP1.get_elements"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1.get_elements()</span></code></a></li>
@@ -1455,6 +1543,7 @@ if data type pattern key contains ‘*’ as value.</p>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_types"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_types()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#junifer.datagrabber.OptionalTypeSchema"><code class="docutils literal notranslate"><span class="pre">OptionalTypeSchema</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_element_keys"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.get_element_keys()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_elements"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.get_elements()</span></code></a></li>
@@ -1467,6 +1556,7 @@ if data type pattern key contains ‘*’ as value.</p>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternValidationMixin.validate_patterns"><code class="docutils literal notranslate"><span class="pre">PatternValidationMixin.validate_patterns()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#junifer.datagrabber.register_data_type"><code class="docutils literal notranslate"><span class="pre">register_data_type()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1478,7 +1568,7 @@ if data type pattern key contains ‘*’ as value.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=377b2e46"></script>
+</div><script src="../_static/documentation_options.js?v=226936dc"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
