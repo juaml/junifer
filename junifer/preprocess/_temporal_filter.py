@@ -16,12 +16,12 @@ import nibabel as nib
 from nilearn import image as nimg
 from nilearn._utils.niimg_conversions import check_niimg_4d
 
-from ...api.decorators import register_preprocessor
-from ...data import get_data
-from ...pipeline import WorkDirManager
-from ...typing import Dependencies
-from ...utils import logger
-from ..base import BasePreprocessor
+from ..api.decorators import register_preprocessor
+from ..data import get_data
+from ..pipeline import WorkDirManager
+from ..typing import Dependencies
+from ..utils import logger
+from .base import BasePreprocessor
 
 
 __all__ = ["TemporalFilter"]
@@ -125,8 +125,6 @@ class TemporalFilter(BasePreprocessor):
         """
         # BOLD must be 4D niimg
         check_niimg_4d(input["data"])
-
-
 
     def preprocess(
         self,

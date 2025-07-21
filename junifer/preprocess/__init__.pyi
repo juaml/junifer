@@ -12,4 +12,4 @@ from .confounds import fMRIPrepConfoundRemover
 from .warping import SpaceWarper
 from .smoothing import Smoothing
 from ._temporal_slicer import TemporalSlicer
-from .filter import TemporalFilter
+from ._temporal_filter import TemporalFilter
