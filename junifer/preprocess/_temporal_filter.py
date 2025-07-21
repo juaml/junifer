@@ -211,7 +211,6 @@ class TemporalFilter(BasePreprocessor):
         logger.debug(f"\thigh_pass: {self.high_pass}")
         logger.debug(f"\tt_r: {self.t_r}")
 
-        # Deconfound data
         cleaned_img = nimg.clean_img(
             imgs=bold_img,
             detrend=self.detrend,
@@ -224,7 +223,7 @@ class TemporalFilter(BasePreprocessor):
         )
         # Fix t_r as nilearn messes it up
         cleaned_img.header["pixdim"][4] = t_r
-        # Save deconfounded data
+        # Save filtered data
         filtered_data_path = element_tempdir / "filtered_data.nii.gz"
         nib.save(cleaned_img, filtered_data_path)
 
