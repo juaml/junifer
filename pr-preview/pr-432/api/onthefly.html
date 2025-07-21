@@ -323,7 +323,7 @@
 <p>Utilities for on-the-fly analyses.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.onthefly.read_transform">
-<span class="sig-prename descclassname"><span class="pre">junifer.onthefly.</span></span><span class="sig-name descname"><span class="pre">read_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nan_policy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bypass'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform_kw_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.onthefly.read_transform" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">junifer.onthefly.</span></span><span class="sig-name descname"><span class="pre">read_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_md5</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform_kw_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.onthefly.read_transform" title="Link to this definition">¶</a></dt>
 <dd><p>Read stored feature and transform to specific statistical output.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -337,16 +337,6 @@ for example, <code class="docutils literal notranslate"><span class="pre">bctpy_
 </dd>
 <dt><strong>feature_md5</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>MD5 hash of the feature to read (default None).</p>
 </dd>
-<dt><strong>nan_policy</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The policy to handle NaN values (default “ignore”).
-Options are:</p>
-<ul class="simple">
-<li><p>“bypass”: Do nothing and pass NaN values to the transform function.</p></li>
-<li><p>“drop_element”: Drop (skip) elements with NaN values.</p></li>
-<li><p>“drop_rows”: Drop (skip) rows with NaN values.</p></li>
-<li><p>“drop_columns”: Drop (skip) columns with NaN values.</p></li>
-<li><p>“drop_symmetric”: Drop (skip) symmetric pairs with NaN values.</p></li>
-</ul>
-</dd>
 <dt><strong>transform_args</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">tuple</span></code></a>, optional</span></dt><dd><p>The positional arguments for the callable of <code class="docutils literal notranslate"><span class="pre">transform</span></code>
 (default None).</p>
 </dd>
@@ -357,7 +347,7 @@ Options are:</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+2249.g930c8a479d)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a dataframe.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+2250.g13f7b8b7e3)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a dataframe.</p>
 </dd>
 </dl>
 </dd>
@@ -405,7 +395,7 @@ not None for each first-level key, but both keys are mandatory.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+2249.g930c8a479d)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+2250.g13f7b8b7e3)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -435,7 +425,7 @@ not None for each first-level key, but both keys are mandatory.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+2249.g930c8a479d)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.</p>
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.0.0.dev0+2250.g13f7b8b7e3)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The transformed feature as a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>.</p>
 </dd>
 </dl>
 </dd>
