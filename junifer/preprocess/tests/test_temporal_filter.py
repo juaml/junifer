@@ -13,7 +13,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
 @pytest.mark.parametrize(
-    "detrend, standardize, low_pass, high_pass, t_r",
+    "detrend, standardize, low_pass, high_pass, t_r, masks",
     (
         [
             True,
@@ -21,6 +21,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
             None,
             None,
             None,
+            None,
         ],
         [
             False,
@@ -28,6 +29,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
             0.1,
             None,
             None,
+            "compute_brain_mask",
         ],
         [
             True,
@@ -35,6 +37,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
             None,
             0.08,
             None,
+            "compute_background_mask",
         ],
         [
             False,
@@ -42,6 +45,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
             None,
             None,
             2,
+            None,
         ],
         [
             True,
@@ -49,6 +53,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
             0.1,
             0.08,
             2,
+            "compute_brain_mask",
         ],
     ),
 )
@@ -58,6 +63,7 @@ def test_TemporalFilter(
     low_pass: Optional[float],
     high_pass: Optional[float],
     t_r: Optional[float],
+    masks: Optional[str],
 ) -> None:
     """Test TemporalFilter.
 
@@ -73,8 +79,8 @@ def test_TemporalFilter(
         The parametrized high pass value.
     t_r : float or None
         The parametrized repetition time.
-    expect : typing.ContextManager
-        The parametrized ContextManager object.
+    masks : str or None
+        The parametrized mask.
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
@@ -87,6 +93,7 @@ def test_TemporalFilter(
             low_pass=low_pass,
             high_pass=high_pass,
             t_r=t_r,
+            masks=masks,
         ).fit_transform(element_data)
 
         assert isinstance(output, dict)
