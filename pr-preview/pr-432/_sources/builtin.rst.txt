@@ -167,6 +167,10 @@ Available
      - Slice ``BOLD`` data temporally
      - | Done
      - :gh:`443`
+   * - ``TemporalFilter``
+     - Filter (clean) ``BOLD`` data temporally
+     - | Done
+     - :gh:`432`
 
 
 ..
