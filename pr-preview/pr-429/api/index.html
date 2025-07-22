@@ -241,6 +241,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.6. Adding Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">7.7. Adding Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">7.8. Adding Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/plugins.html">7.9. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/data_registries.html">7.10. Creating a Data Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/data_types.html">7.11. Adding Data Types</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -325,6 +328,8 @@
 <li class="toctree-l1"><a class="reference internal" href="datagrabbers.html">9.1.1. Data Grabbers</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.BaseDataGrabber"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.DMCC13Benchmark"><code class="docutils literal notranslate"><span class="pre">DMCC13Benchmark</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.DataTypeManager"><code class="docutils literal notranslate"><span class="pre">DataTypeManager</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.DataTypeSchema"><code class="docutils literal notranslate"><span class="pre">DataTypeSchema</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.DataladAOMICID1000"><code class="docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2"><code class="docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a></li>
@@ -332,9 +337,11 @@
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.DataladHCP1200"><code class="docutils literal notranslate"><span class="pre">DataladHCP1200</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.HCP1200"><code class="docutils literal notranslate"><span class="pre">HCP1200</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.MultipleDataGrabber"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.OptionalTypeSchema"><code class="docutils literal notranslate"><span class="pre">OptionalTypeSchema</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.PatternDataGrabber"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber"><code class="docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.PatternValidationMixin"><code class="docutils literal notranslate"><span class="pre">PatternValidationMixin</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.register_data_type"><code class="docutils literal notranslate"><span class="pre">register_data_type()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="datareaders.html">9.1.2. DataReaders</a><ul>
@@ -345,6 +352,8 @@
 <li class="toctree-l2"><a class="reference internal" href="preprocessing.html#junifer.preprocess.BasePreprocessor"><code class="docutils literal notranslate"><span class="pre">BasePreprocessor</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="preprocessing.html#junifer.preprocess.Smoothing"><code class="docutils literal notranslate"><span class="pre">Smoothing</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="preprocessing.html#junifer.preprocess.SpaceWarper"><code class="docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#junifer.preprocess.TemporalFilter"><code class="docutils literal notranslate"><span class="pre">TemporalFilter</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessing.html#junifer.preprocess.TemporalSlicer"><code class="docutils literal notranslate"><span class="pre">TemporalSlicer</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover"><code class="docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover</span></code></a></li>
 </ul>
 </li>
@@ -384,7 +393,9 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="data.html">9.2.1. Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="data.html#junifer.data.BasePipelineDataRegistry"><code class="docutils literal notranslate"><span class="pre">BasePipelineDataRegistry</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html#junifer.data.CoordinatesRegistry"><code class="docutils literal notranslate"><span class="pre">CoordinatesRegistry</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html#junifer.data.DataDispatcher"><code class="docutils literal notranslate"><span class="pre">DataDispatcher</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html#junifer.data.MaskRegistry"><code class="docutils literal notranslate"><span class="pre">MaskRegistry</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html#junifer.data.ParcellationRegistry"><code class="docutils literal notranslate"><span class="pre">ParcellationRegistry</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="data.html#junifer.data.deregister_data"><code class="docutils literal notranslate"><span class="pre">deregister_data()</span></code></a></li>
@@ -552,7 +563,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=0083a42c"></script>
+</div><script src="../_static/documentation_options.js?v=1bf18c37"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
