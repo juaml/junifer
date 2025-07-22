@@ -152,7 +152,8 @@ def read_transform(
                 t_data = t_data[~np.isnan(t_data).any(axis=1)]
             elif nan_policy == "drop_columns" and has_nan:
                 logger.debug(
-                    f"Skipping columns with NaN values in element {element} ..."
+                    f"Skipping columns with NaN values in element {element} "
+                    "..."
                 )
                 t_data = t_data[:, ~np.isnan(t_data).any(axis=0)]
             elif nan_policy == "drop_symmetric":
