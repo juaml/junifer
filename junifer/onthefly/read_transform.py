@@ -59,6 +59,18 @@ def read_transform(
     pandas.DataFrame
         The transformed feature as a dataframe.
 
+    Raises
+    ------
+    ValueError
+        If ``nan_policy`` is invalid or
+        if *package* is invalid.
+    RuntimeError
+        If *package* is ``bctpy`` and stored data kind is not ``matrix``.
+    ImportError
+        If ``bctpy`` cannot be imported.
+    AttributeError
+        If *function* to be invoked in invalid.
+
     Notes
     -----
     This function has been only tested for:
