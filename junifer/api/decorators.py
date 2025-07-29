@@ -6,8 +6,13 @@
 # License: AGPL
 
 from ..data import DataDispatcher
-from ..pipeline import PipelineComponentRegistry
+from ..pipeline import (
+    AssetDumperDispatcher,
+    AssetLoaderDispatcher,
+    PipelineComponentRegistry,
+)
 from ..typing import (
+    DataDumpAssetLike,
     DataGrabberLike,
     DataRegistryLike,
     MarkerLike,
@@ -17,6 +22,7 @@ from ..typing import (
 
 
 __all__ = [
+    "register_data_dump_asset",
     "register_data_registry",
     "register_datagrabber",
     "register_datareader",
@@ -181,6 +187,52 @@ def register_data_registry(name: str) -> DataRegistryLike:
 
         """
         DataDispatcher()[name] = klass
+        return klass
+
+    return decorator
+
+
+def register_data_dump_asset(
+    types: list[type], exts: list[str]
+) -> DataDumpAssetLike:
+    """Asset registration decorator.
+
+    Registers the data dump asset for ``types`` with ``exts``.
+
+    Parameters
+    ----------
+    types : list of class
+        The classes to dump.
+    exts : list of str
+        The extensions to load.
+
+    Returns
+    -------
+    class
+        The unmodified input class.
+
+    """
+
+    def decorator(klass: DataDumpAssetLike) -> DataDumpAssetLike:
+        """Actual decorator.
+
+        Parameters
+        ----------
+        klass : class
+            The class of the data dump asset to register.
+
+        Returns
+        -------
+        class
+            The unmodified input class.
+
+        """
+        # Add asset dumper
+        for t in types:
+            AssetDumperDispatcher()[t] = klass
+        # Add asset loader
+        for e in exts:
+            AssetLoaderDispatcher()[e] = klass
         return klass
 
     return decorator
