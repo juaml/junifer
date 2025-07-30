@@ -18,6 +18,7 @@ to interact with HPC and HTC systems.
    codeless
    running
    queueing
+   configuring
 
 
 .. _using_components:
