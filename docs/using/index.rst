@@ -19,6 +19,7 @@ to interact with HPC and HTC systems.
    running
    queueing
    configuring
+   dumping
 
 
 .. _using_components:

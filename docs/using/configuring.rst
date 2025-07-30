@@ -5,7 +5,7 @@
 Configuring Pipeline Behaviour
 ==============================
 
-It is also possible to configure some internal pipeline behaviour via :obj:`.ConfigManager`.
+It is also possible to configure some internal :ref:`pipeline <pipeline>` behaviour via :obj:`.ConfigManager`.
 It can be done either via the command-line interface (CLI) or the application programming
 interface (API).
 
@@ -29,6 +29,8 @@ and via the API like so:
 
     # Remove config
     config.delete("<config-key>")
+
+.. _available_configurations:
 
 Available Configurations
 ------------------------
