@@ -5,12 +5,13 @@
 # License: AGPL
 
 from collections import Counter
+from pathlib import Path
 from typing import Optional
 
 from ..datareader import DefaultDataReader
-from ..pipeline import PipelineStepMixin, WorkDirManager
+from ..pipeline import DataObjectDumper, PipelineStepMixin, WorkDirManager
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
-from ..utils import logger, raise_error
+from ..utils import config, logger, raise_error
 
 
 __all__ = ["MarkerCollection"]
@@ -80,16 +81,53 @@ class MarkerCollection:
 
         # Fetch actual data using datareader
         data = self._datareader.fit_transform(input)
+        # Conditional data dump
+        if (
+            config.get("preprocessing.dump.location") is not None
+            and config.get("preprocessing.dump.granularity") == "full"
+        ):
+            DataObjectDumper().dump(
+                data=data,
+                path=Path(config.get("preprocessing.dump.location")),
+                step=f"0_datareader_{self._datareader.__class__.__name__}",
+            )
 
         # Apply preprocessing steps
         if self._preprocessors is not None:
-            for preprocessor in self._preprocessors:
+            for idx, preprocessor in enumerate(self._preprocessors):
                 logger.info(
                     "Preprocessing data with "
                     f"{preprocessor.__class__.__name__}"
                 )
                 # Mutate data after every iteration
                 data = preprocessor.fit_transform(data)
+                # Conditional data dump
+                if (
+                    config.get("preprocessing.dump.location") is not None
+                    and config.get("preprocessing.dump.granularity") == "full"
+                ):
+                    DataObjectDumper().dump(
+                        data=data,
+                        path=Path(config.get("preprocessing.dump.location")),
+                        step=(
+                            f"{idx + 1}_preprocessor_"
+                            f"{preprocessor.__class__.__name__}"
+                        ),
+                    )
+
+            # Conditional data dump
+            if (
+                config.get("preprocessing.dump.location") is not None
+                and config.get("preprocessing.dump.granularity") == "final"
+            ):
+                DataObjectDumper().dump(
+                    data=data,
+                    path=Path(config.get("preprocessing.dump.location")),
+                    step=(
+                        f"final_preprocessor_"
+                        f"{self._preprocessors[-1].__class__.__name__}"
+                    ),
+                )
 
         # Compute markers
         out = {}

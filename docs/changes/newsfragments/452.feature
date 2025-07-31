@@ -1,0 +1,1 @@
+Allow pipeline data object to be dumped by introducing :class:`.DataObjectDumper` and available dumping / loading assets to be extended by introducing :func:`.register_data_dump_asset` decorator by `Synchon Mandal`_

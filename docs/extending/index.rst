@@ -33,3 +33,4 @@ DataGrabbers, Preprocessors, Markers, etc.,  following the *junifer* way.
    plugins
    data_registries
    data_types
+   data_dump_asset

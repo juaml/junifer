@@ -22,6 +22,7 @@ if TYPE_CHECKING:
 __all__ = [
     "ConditionalDependencies",
     "ConfigVal",
+    "DataDumpAssetLike",
     "DataGrabberLike",
     "DataGrabberPatterns",
     "DataRegistryLike",
@@ -37,6 +38,7 @@ __all__ = [
 ]
 
 
+DataDumpAssetLike = type["DataDumpAssetLike"]
 DataRegistryLike = type["BasePipelineDataRegistry"]
 DataGrabberLike = type["BaseDataGrabber"]
 PreprocessorLike = type["BasePreprocessor"]

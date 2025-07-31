@@ -1,4 +1,5 @@
 __all__ = [
+    "DataDumpAssetLike",
     "DataGrabberLike",
     "DataRegistryLike",
     "PreprocessorLike",
@@ -16,6 +17,7 @@ __all__ = [
 ]
 
 from ._typing import (
+    DataDumpAssetLike,
     DataGrabberLike,
     DataRegistryLike,
     PreprocessorLike,
