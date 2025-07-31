@@ -90,7 +90,7 @@ def test_dispatcher_removal_errors(
         _ = dispatcher().pop(inbuilt_key)
 
     with pytest.raises(KeyError, match=f"{ext_key}"):
-        del AssetDumperDispatcher()[ext_key]
+        del dispatcher()[ext_key]
 
 
 def test_dispatcher() -> None:
