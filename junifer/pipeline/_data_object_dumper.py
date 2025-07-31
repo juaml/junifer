@@ -318,6 +318,7 @@ class DataObjectDumper:
             if isinstance(v, list):
                 for idx, _ in enumerate(v):
                     data[k][idx]["path"] = Path(data[k][idx]["path"])
+                continue
 
             # Transform str to Path
             data[k]["path"] = Path(data[k]["path"])
