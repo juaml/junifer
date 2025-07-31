@@ -184,3 +184,42 @@ def test_data_object_dumper(
 
     config.delete("preprocessing.dump.location")
     config.delete("preprocessing.dump.granularity")
+
+
+def test_data_object_dumper_with_warp(tmp_path: Path) -> None:
+    """Test data object dumper with Warp data type.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    DataObjectDumper().dump(
+        data={
+            "Warp": [
+                {
+                    "path": (
+                        tmp_path / "from-MNI152NLin2009cAsym_to-T1w_"
+                        "mode-image_xfm.h5"
+                    ),
+                    "src": "MNI152NLin2009cAsym",
+                    "dst": "native",
+                    "warper": "ants",
+                },
+                {
+                    "path": (
+                        tmp_path / "from-T1w_to-MNI152NLin2009cAsym_"
+                        "mode-image_xfm.h5"
+                    ),
+                    "src": "native",
+                    "dst": "MNI152NLin2009cAsym",
+                    "warper": "ants",
+                },
+            ],
+        },
+        path=tmp_path,
+        step="warp_test",
+    )
+    dump_load = DataObjectDumper().load(tmp_path / "warp_test" / "data.yaml")
+    assert "Warp" in dump_load

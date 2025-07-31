@@ -254,7 +254,8 @@ class DataObjectDumper:
             # Conditional for Warp type; kept separate for low cognitive load
             if isinstance(v, list):
                 for idx, _ in enumerate(v):
-                    data[k][idx]["path"] = str(data[k][idx]["path"])
+                    data_copy[k][idx]["path"] = str(data_copy[k][idx]["path"])
+                continue
 
             # Transform Path to str
             data_copy[k]["path"] = str(data_copy[k]["path"])
