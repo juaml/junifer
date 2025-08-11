@@ -35,7 +35,7 @@ class ANTsMapsWarper:
         dst: str,
         target_data: dict[str, Any],
         warp_data: Optional[dict[str, Any]],
-    ) -> "Nifti1Image":
+    ) -> "Nifti1Image":  # pragma: no cover
         """Warp ``maps_img`` to correct space.
 
         Parameters
