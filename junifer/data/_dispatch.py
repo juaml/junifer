@@ -17,6 +17,7 @@ from numpy.typing import ArrayLike
 
 from ..utils import raise_error
 from .coordinates import CoordinatesRegistry
+from .maps import MapsRegistry
 from .masks import MaskRegistry
 from .parcellations import ParcellationRegistry
 from .pipeline_data_registry_base import BasePipelineDataRegistry
@@ -52,6 +53,7 @@ class DataDispatcher(MutableMapping):
                 {
                     "coordinates": CoordinatesRegistry,
                     "parcellation": ParcellationRegistry,
+                    "maps": MapsRegistry,
                     "mask": MaskRegistry,
                 }
             )
@@ -118,14 +120,14 @@ def get_data(
     extra_input: Optional[dict[str, Any]] = None,
 ) -> Union[
     tuple[ArrayLike, list[str]],  # coordinates
-    tuple["Nifti1Image", list[str]],  # parcellation
+    tuple["Nifti1Image", list[str]],  # parcellation / maps
     "Nifti1Image",  # mask
 ]:
     """Get tailored ``kind`` for ``target_data``.
 
     Parameters
     ----------
-    kind : {"coordinates", "parcellation", "mask"}
+    kind : {"coordinates", "parcellation", "mask", "maps"}
         Kind of data to fetch and apply.
     names : str or dict or list of str / dict
         The registered name(s) of the data.
@@ -166,7 +168,7 @@ def list_data(kind: str) -> list[str]:
 
     Parameters
     ----------
-    kind : {"coordinates", "parcellation", "mask"}
+    kind : {"coordinates", "parcellation", "mask", "maps"}
         Kind of data registry to list.
 
     Returns
@@ -195,7 +197,9 @@ def load_data(
     **kwargs,
 ) -> Union[
     tuple[ArrayLike, list[str], str],  # coordinates
-    tuple[Optional["Nifti1Image"], list[str], Path, str],  # parcellation
+    tuple[
+        Optional["Nifti1Image"], list[str], Path, str
+    ],  # parcellation / maps
     tuple[
         Optional[Union["Nifti1Image", Callable]], Optional[Path], str
     ],  # mask
@@ -204,7 +208,7 @@ def load_data(
 
     Parameters
     ----------
-    kind : {"coordinates", "parcellation", "mask"}
+    kind : {"coordinates", "parcellation", "mask", "maps"}
         Kind of data to load.
     name : str
         The registered name of the data.
@@ -244,7 +248,7 @@ def register_data(
 
     Parameters
     ----------
-    kind : {"coordinates", "parcellation", "mask"}
+    kind : {"coordinates", "parcellation", "mask", "maps"}
         Kind of data to register.
     name : str
         The name to register.
@@ -277,7 +281,7 @@ def deregister_data(kind: str, name: str) -> None:
 
     Parameters
     ----------
-    kind : {"coordinates", "parcellation", "mask"}
+    kind : {"coordinates", "parcellation", "mask", "maps"}
         Kind of data to register.
     name : str
         The name to de-register.
