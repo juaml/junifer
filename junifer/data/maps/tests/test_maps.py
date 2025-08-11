@@ -3,7 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
@@ -77,42 +76,26 @@ def test_register_overwrite() -> None:
 
 def test_register_valid_input() -> None:
     """Test maps registration check for valid input."""
-    with pytest.raises(TypeError, match=r"numpy.ndarray"):
-        register_data(
-            kind="coordinates",
-            name="MyList",
-            coordinates=[1, 2],
-            voi_names=["roi1", "roi2"],
-            space="MNI",
-            overwrite=True,
-        )
-    with pytest.raises(ValueError, match=r"2D array"):
-        register_data(
-            kind="coordinates",
-            name="MyList",
-            coordinates=np.zeros((2, 3, 4)),
-            voi_names=["roi1", "roi2"],
-            space="MNI",
-            overwrite=True,
-        )
+    maps, labels, maps_path, _ = load_data(
+        kind="maps",
+        name="Smith_rsn_10",
+        target_space="MNI152NLin6Asym",
+    )
+    assert maps is not None
 
-    with pytest.raises(ValueError, match=r"3 values"):
-        register_data(
-            kind="coordinates",
-            name="MyList",
-            coordinates=np.zeros((2, 4)),
-            voi_names=["roi1", "roi2"],
-            space="MNI",
-            overwrite=True,
-        )
-    with pytest.raises(ValueError, match=r"voi_names"):
-        register_data(
-            kind="coordinates",
-            name="MyList",
-            coordinates=np.zeros((2, 3)),
-            voi_names=["roi1", "roi2", "roi3"],
-            space="MNI",
-            overwrite=True,
+    # Test wrong number of labels
+    register_data(
+        kind="maps",
+        name="WrongLabels",
+        maps_path=maps_path,
+        maps_labels=labels[:5],
+        space="MNI152NLin6Asym",
+    )
+    with pytest.raises(ValueError, match=r"has 10 regions but 5"):
+        load_data(
+            kind="maps",
+            name="WrongLabels",
+            target_space="MNI152NLin6Asym",
         )
 
 
