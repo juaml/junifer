@@ -443,4 +443,4 @@ def _retrieve_smith(
         **JUNIFER_DATA_PARAMS,
     )
 
-    return maps_img_path, [str(i) for i in range(dimension)]
+    return maps_img_path, [f"Map_{i}" for i in range(dimension)]
