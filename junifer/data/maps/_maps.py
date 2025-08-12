@@ -340,7 +340,7 @@ class MapsRegistry(BasePipelineDataRegistry):
             # we are in the correct space
             logger.debug(f"Resampling {maps} to target image.")
             # Resample maps to target image
-            nimg.resample_to_img(
+            img = nimg.resample_to_img(
                 source_img=img,
                 target_img=target_img,
                 interpolation="continuous",
