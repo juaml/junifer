@@ -176,8 +176,8 @@ def test_get_different_space() -> None:
             name="Smith_rsn_10",
             target_space="MNI152NLin2009cAsym",
         )
-        # Both tailored and raw should be same
-        assert_array_equal(tailored_maps.get_fdata(), raw_maps.get_fdata())
+        # Tailored and raw should not be same
+        assert tailored_maps.shape[:3] != raw_maps.shape[:3]
         assert tailored_labels == raw_labels
 
 
