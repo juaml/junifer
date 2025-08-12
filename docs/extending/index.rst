@@ -30,6 +30,7 @@ DataGrabbers, Preprocessors, Markers, etc.,  following the *junifer* way.
    parcellations
    coordinates
    masks
+   maps
    plugins
    data_registries
    data_types
