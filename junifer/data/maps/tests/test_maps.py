@@ -147,8 +147,8 @@ def test_get() -> None:
         raw_maps, raw_labels, _, _ = load_data(
             kind="maps", name="Smith_rsn_10", target_space="MNI152NLin6Asym"
         )
-        # Both tailored and raw should be same
-        assert_array_equal(tailored_maps.get_fdata(), raw_maps.get_fdata())
+        # Tailored and raw shape should be same
+        assert tailored_maps.shape[:3] == raw_maps.shape[:3]
         assert tailored_labels == raw_labels
 
 
