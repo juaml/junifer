@@ -34,7 +34,7 @@ jobs:
         mkdir -p $HOME/junifer_data/v3
         cp -ar /root/junifer_data/v3/. $HOME/junifer_data/v3/
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         # require all of history to see all tagged versions' docs
         fetch-depth: 0
@@ -55,7 +55,7 @@ jobs:
     - name: Checkout gh-pages
       # As we already did a deploy of gh-pages above, it is guaranteed to be there
       # so check it out so we can selectively build docs below
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
           ref: gh-pages
           path: docs/_build
