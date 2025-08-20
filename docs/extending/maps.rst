@@ -116,7 +116,7 @@ file, we can save the above code in a Python file, say
 Afterwards continue configuring the rest of the pipeline in this YAML file, and
 you will be able to use this maps using the name you gave the
 maps when registering it. For example, we can add a
-``MapsAggregation`` Marker to demonstrate how this can be done:
+:class:`.MapsAggregation` Marker to demonstrate how this can be done:
 
 .. code-block:: yaml
 
@@ -124,7 +124,6 @@ maps when registering it. For example, we can add a
     - name: CustomMaps_mean
       kind: MapsAggregation
       maps: my_custom_maps
-      method: mean
 
 Now, you can simply use this YAML file to run your pipeline.
 
