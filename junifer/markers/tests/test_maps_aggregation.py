@@ -18,34 +18,6 @@ from junifer.markers import MapsAggregation
 from junifer.storage import HDF5FeatureStorage
 
 
-@pytest.fixture
-def datagrabber(tmp_path: Path) -> PatternDataladDataGrabber:
-    """Return a PatternDataladDataGrabber in correct space.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
-    dg = PatternDataladDataGrabber(
-        uri="https://github.com/OpenNeuroDatasets/ds005226.git",
-        types=["BOLD"],
-        patterns={
-            "BOLD": {
-                "pattern": (
-                    "derivatives/pre-processed_data/space-MNI/{subject}/"
-                    "{subject-padded}_task-{task}_run-{run}_space-MNI152NLin6Asym"
-                    "_res-2_desc-preproc_bold.nii.gz"
-                ),
-                "space": "MNI152NLin6Asym",
-            },
-        },
-        replacements=["subject", "subject-padded", "task", "run"],
-    )
-    return dg
-
-
 @pytest.mark.parametrize(
     "input_type, storage_type",
     [
@@ -105,16 +77,18 @@ def test_MapsAggregation_input_output(
     ).get_output_type(input_type=input_type, output_feature="aggregation")
 
 
-def test_MapsAggregation_3D(datagrabber: PatternDataladDataGrabber) -> None:
+def test_MapsAggregation_3D(
+    maps_datagrabber: PatternDataladDataGrabber,
+) -> None:
     """Test MapsAggregation on 3D data.
 
     Parameters
     ----------
-    datagrabber : PatternDataladDataGrabber
+    maps_datagrabber : PatternDataladDataGrabber
         The testing PatternDataladDataGrabber, as fixture.
 
     """
-    with datagrabber as dg:
+    with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
         # Deepcopy data for later use
@@ -148,16 +122,18 @@ def test_MapsAggregation_3D(datagrabber: PatternDataladDataGrabber) -> None:
         assert_array_equal(nifti_maps_masked_bold, maps_agg_bold_data)
 
 
-def test_MapsAggregation_4D(datagrabber: PatternDataladDataGrabber) -> None:
+def test_MapsAggregation_4D(
+    maps_datagrabber: PatternDataladDataGrabber,
+) -> None:
     """Test MapsAggregation on 4D data.
 
     Parameters
     ----------
-    datagrabber : PatternDataladDataGrabber
+    maps_datagrabber : PatternDataladDataGrabber
         The testing PatternDataladDataGrabber, as fixture.
 
     """
-    with datagrabber as dg:
+    with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
         # Deepcopy data for later use
@@ -187,20 +163,20 @@ def test_MapsAggregation_4D(datagrabber: PatternDataladDataGrabber) -> None:
 
 
 def test_MapsAggregation_storage(
-    datagrabber: PatternDataladDataGrabber, tmp_path: Path
+    maps_datagrabber: PatternDataladDataGrabber, tmp_path: Path
 ) -> None:
     """Test MapsAggregation storage.
 
     Parameters
     ----------
-    datagrabber : PatternDataladDataGrabber
+    maps_datagrabber : PatternDataladDataGrabber
         The testing PatternDataladDataGrabber, as fixture.
     tmp_path : pathlib.Path
         The path to the test directory.
 
     """
     # Store 3D
-    with datagrabber as dg:
+    with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
         storage = HDF5FeatureStorage(
@@ -221,7 +197,7 @@ def test_MapsAggregation_storage(
         )
 
     # Store 4D
-    with datagrabber as dg:
+    with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
         storage = HDF5FeatureStorage(
@@ -240,17 +216,17 @@ def test_MapsAggregation_storage(
 
 
 def test_MapsAggregation_3D_mask(
-    datagrabber: PatternDataladDataGrabber,
+    maps_datagrabber: PatternDataladDataGrabber,
 ) -> None:
     """Test MapsAggregation on 3D data with mask.
 
     Parameters
     ----------
-    datagrabber : PatternDataladDataGrabber
+    maps_datagrabber : PatternDataladDataGrabber
         The testing PatternDataladDataGrabber, as fixture.
 
     """
-    with datagrabber as dg:
+    with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
         # Deepcopy data for later use
@@ -293,17 +269,17 @@ def test_MapsAggregation_3D_mask(
 
 
 def test_MapsAggregation_3D_mask_computed(
-    datagrabber: PatternDataladDataGrabber,
+    maps_datagrabber: PatternDataladDataGrabber,
 ) -> None:
     """Test MapsAggregation on 3D data with computed masks.
 
     Parameters
     ----------
-    datagrabber : PatternDataladDataGrabber
+    maps_datagrabber : PatternDataladDataGrabber
         The testing PatternDataladDataGrabber, as fixture.
 
     """
-    with datagrabber as dg:
+    with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
 
@@ -349,17 +325,17 @@ def test_MapsAggregation_3D_mask_computed(
 
 
 def test_MapsAggregation_4D_agg_time(
-    datagrabber: PatternDataladDataGrabber,
+    maps_datagrabber: PatternDataladDataGrabber,
 ):
     """Test MapsAggregation on 4D data, aggregating time.
 
     Parameters
     ----------
-    datagrabber : PatternDataladDataGrabber
+    maps_datagrabber : PatternDataladDataGrabber
         The testing PatternDataladDataGrabber, as fixture.
 
     """
-    with datagrabber as dg:
+    with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
         # Create MapsAggregation object
@@ -433,10 +409,10 @@ def test_MapsAggregation_errors() -> None:
 
 
 def test_MapsAggregation_warning(
-    datagrabber: PatternDataladDataGrabber,
+    maps_datagrabber: PatternDataladDataGrabber,
 ) -> None:
     """Test warning for MapsAggregation."""
-    with datagrabber as dg:
+    with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
         with pytest.warns(
