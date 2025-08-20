@@ -296,6 +296,10 @@ Available
        | `Richman et al. (2000) <https://doi.org/10.1152/ajpheart.2000.278.6.H2039>`_
      - Done
      - 0.0.4
+   * - :class:`.MapsAggregation`
+     - Apply maps (probabilistic atlas) and extract mean time series per region
+     - Done
+     - 0.0.7
 
 Planned
 ~~~~~~~
