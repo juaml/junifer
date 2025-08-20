@@ -8,6 +8,7 @@ __all__ = [
     "FunctionalConnectivityParcels",
     "FunctionalConnectivitySpheres",
     "CrossParcellationFC",
+    "EdgeCentricFCMaps",
     "EdgeCentricFCParcels",
     "EdgeCentricFCSpheres",
     "ReHoParcels",
@@ -29,6 +30,7 @@ from .functional_connectivity import (
     FunctionalConnectivityParcels,
     FunctionalConnectivitySpheres,
     CrossParcellationFC,
+    EdgeCentricFCMaps,
     EdgeCentricFCParcels,
     EdgeCentricFCSpheres,
 )
