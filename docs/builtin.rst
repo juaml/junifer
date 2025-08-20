@@ -209,20 +209,28 @@ Available
      - Apply parcellation and perform aggregation function
      - Done
      - 0.0.1
-   * - :class:`.FunctionalConnectivityParcels`
-     - Compute functional connectivity over parcellation
-     - Done
-     - 0.0.1
-   * - :class:`.CrossParcellationFC`
-     - Compute functional connectivity across two parcellations
-     - Done
-     - 0.0.1
    * - :class:`.SphereAggregation`
      - Spherical aggregation using mean
      - Done
      - 0.0.1
+   * - :class:`.MapsAggregation`
+     - Apply maps (probabilistic atlas) and extract mean time series per region
+     - Done
+     - 0.0.7
+   * - :class:`.FunctionalConnectivityParcels`
+     - Compute functional connectivity over parcellation
+     - Done
+     - 0.0.1
    * - :class:`.FunctionalConnectivitySpheres`
      - Compute functional connectivity over spheres placed on coordinates
+     - Done
+     - 0.0.1
+   * - :class:`.FunctionalConnectivityMaps`
+     - Compute functional connectivity over maps (probabilistic atlas)
+     - Done
+     - 0.0.7
+   * - :class:`.CrossParcellationFC`
+     - Compute functional connectivity across two parcellations
      - Done
      - 0.0.1
    * - :class:`.RSSETSMarker`
@@ -237,6 +245,10 @@ Available
      - Calculate regional homogeneity over spheres placed on coordinates
      - Done
      - 0.0.1
+   * - :class:`.ReHoMaps`
+     - Calculate regional homogeneity over maps (probabilistic atlas)
+     - Done
+     - 0.0.7
    * - :class:`.ALFFParcels`
      - Calculate (f)ALFF and aggregate using parcellations
      - Done
@@ -245,6 +257,10 @@ Available
      - Calculate (f)ALFF and aggregate using spheres placed on coordinates
      - Done
      - 0.0.1
+   * - :class:`.ALFFMaps`
+     - Calculate (f)ALFF and aggregate using maps (probabilistic atlas)
+     - Done
+     - 0.0.7
    * - :class:`.EdgeCentricFCParcels`
      - | Calculate edge-centric functional connectivity over parcellation, as
        | found in
@@ -257,6 +273,12 @@ Available
        | `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.2
+   * - :class:`.EdgeCentricFCMaps`
+     - | Calculate edge-centric functional connectivity over maps (probabilistic atlas),
+       | as found in
+       | `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
+     - Done
+     - 0.0.7
    * - :class:`.TemporalSNRParcels`
      - Calculate temporal signal-to-noise ratio using parcellations
      - Done
@@ -266,6 +288,10 @@ Available
        | coordinates
      - Done
      - 0.0.2
+   * - :class:`.TemporalSNRMaps`
+     - Calculate temporal signal-to-noise ratio using maps (probabilistic atlas)
+     - Done
+     - 0.0.7
    * - :class:`.HurstExponent`
      - | Calculate Hurst exponent of a time series as found in
        | `Peng et al. (1995) <https://doi.org/10.1063/1.166141>`_
@@ -296,10 +322,6 @@ Available
        | `Richman et al. (2000) <https://doi.org/10.1152/ajpheart.2000.278.6.H2039>`_
      - Done
      - 0.0.4
-   * - :class:`.MapsAggregation`
-     - Apply maps (probabilistic atlas) and extract mean time series per region
-     - Done
-     - 0.0.7
 
 Planned
 ~~~~~~~
