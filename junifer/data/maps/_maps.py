@@ -227,7 +227,7 @@ class MapsRegistry(BasePipelineDataRegistry):
                     resolution=resolution,
                     **maps_def,
                 )
-        else:
+        else:  # pragma: no cover
             raise_error(f"Unknown map(s) family: {t_family}")
 
         # Load maps image and values
@@ -284,7 +284,7 @@ class MapsRegistry(BasePipelineDataRegistry):
         target_space = target_data["space"]
         logger.debug(f"Getting {maps} in {target_space} space.")
         # Extra data type requirement check if target space is native
-        if target_space == "native":
+        if target_space == "native":  # pragma: no cover
             # Check for extra inputs
             if extra_input is None:
                 raise_error(
@@ -346,7 +346,7 @@ class MapsRegistry(BasePipelineDataRegistry):
                 interpolation="continuous",
                 copy=True,
             )
-        else:
+        else:  # pragma: no cover
             # Warp maps if target space is native as either
             # the image is in the right non-native space or it's
             # warped from one non-native space to another non-native space
