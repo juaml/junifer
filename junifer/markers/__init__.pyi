@@ -15,6 +15,7 @@ __all__ = [
     "ReHoSpheres",
     "ALFFParcels",
     "ALFFSpheres",
+    "TemporalSNRMaps",
     "TemporalSNRParcels",
     "TemporalSNRSpheres",
     "BrainPrint",
@@ -37,6 +38,7 @@ from .functional_connectivity import (
 from .reho import ReHoParcels, ReHoSpheres
 from .falff import ALFFParcels, ALFFSpheres
 from .temporal_snr import (
+    TemporalSNRMaps,
     TemporalSNRParcels,
     TemporalSNRSpheres,
 )
