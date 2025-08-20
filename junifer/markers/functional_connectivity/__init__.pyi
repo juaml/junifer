@@ -1,4 +1,5 @@
 __all__ = [
+    "FunctionalConnectivityMaps",
     "FunctionalConnectivityParcels",
     "FunctionalConnectivitySpheres",
     "CrossParcellationFC",
@@ -6,6 +7,7 @@ __all__ = [
     "EdgeCentricFCSpheres",
 ]
 
+from .functional_connectivity_maps import FunctionalConnectivityMaps
 from .functional_connectivity_parcels import FunctionalConnectivityParcels
 from .functional_connectivity_spheres import FunctionalConnectivitySpheres
 from .crossparcellation_functional_connectivity import CrossParcellationFC
