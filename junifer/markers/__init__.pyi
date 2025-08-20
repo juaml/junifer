@@ -4,6 +4,7 @@ __all__ = [
     "MapsAggregation",
     "ParcelAggregation",
     "SphereAggregation",
+    "FunctionalConnectivityMaps",
     "FunctionalConnectivityParcels",
     "FunctionalConnectivitySpheres",
     "CrossParcellationFC",
@@ -24,6 +25,7 @@ from .maps_aggregation import MapsAggregation
 from .parcel_aggregation import ParcelAggregation
 from .sphere_aggregation import SphereAggregation
 from .functional_connectivity import (
+    FunctionalConnectivityMaps,
     FunctionalConnectivityParcels,
     FunctionalConnectivitySpheres,
     CrossParcellationFC,
