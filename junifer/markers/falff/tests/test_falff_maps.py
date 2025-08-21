@@ -59,18 +59,25 @@ def test_ALFFMaps(
         The testing PatternDataladDataGrabber, as fixture.
 
     """
+    # Update workdir to current test's tmp_path
+    WorkDirManager().workdir = tmp_path
+
     with caplog.at_level(logging.DEBUG):
         with maps_datagrabber as dg:
             element = dg[("sub-01", "sub-001", "rest", "1")]
             element_data = DefaultDataReader().fit_transform(element)
-            # Update workdir to current test's tmp_path
-            WorkDirManager().workdir = tmp_path
 
             # Initialize marker
             marker = ALFFMaps(
                 maps=MAPS,
                 using="junifer",
             )
+            # Check correct output
+            for name in ["alff", "falff"]:
+                assert "vector" == marker.get_output_type(
+                    input_type="BOLD", output_feature=name
+                )
+
             # Fit transform marker on data
             output = marker.fit_transform(element_data)
 
@@ -98,6 +105,12 @@ def test_ALFFMaps(
                 input=element_data,
                 storage=storage,
             )
+            # Check stored feature name
+            features = storage.list_features()
+            assert any(
+                x["name"] in ["BOLD_ALFFMaps_alff", "BOLD_ALFFMaps_falff"]
+                for x in features.values()
+            )
             # Cache working correctly
             assert "Creating cache" not in caplog.text
 
@@ -118,11 +131,12 @@ def test_ALFFMaps_comparison(
         The testing PatternDataladDataGrabber, as fixture.
 
     """
+    # Update workdir to current test's tmp_path
+    WorkDirManager().workdir = tmp_path
+
     with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
-        # Update workdir to current test's tmp_path
-        WorkDirManager().workdir = tmp_path
 
         # Initialize marker
         junifer_marker = ALFFMaps(
