@@ -55,7 +55,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
         # and can also have optional key(s):
         # * 'valid_resolutions': a list of valid resolutions for the
         # parcellation (e.g., [1, 2])
-        # The built-in coordinates are files that are shipped with the
+        # The built-in parcellations are files that are shipped with the
         # junifer-data dataset.
         # Make built-in and external dictionaries for validation later
         self._builtin = {}
