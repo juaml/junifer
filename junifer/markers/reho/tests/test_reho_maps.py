@@ -34,12 +34,13 @@ def test_ReHoMaps(
         The testing PatternDataladDataGrabber, as fixture.
 
     """
+    # Update workdir to current test's tmp_path
+    WorkDirManager().workdir = tmp_path
+
     with caplog.at_level(logging.DEBUG):
         with maps_datagrabber as dg:
             element = dg[("sub-01", "sub-001", "rest", "1")]
             element_data = DefaultDataReader().fit_transform(element)
-            # Update workdir to current test's tmp_path
-            WorkDirManager().workdir = tmp_path
 
             # Initialize marker
             marker = ReHoMaps(
@@ -80,6 +81,11 @@ def test_ReHoMaps(
                 input=element_data,
                 storage=storage,
             )
+            # Check stored feature name
+            features = storage.list_features()
+            assert any(
+                x["name"] == "BOLD_ReHoMaps_reho" for x in features.values()
+            )
             # Cache working correctly
             assert "Creating cache" not in caplog.text
 
@@ -100,11 +106,12 @@ def test_ReHoMaps_comparison(
         The testing PatternDataladDataGrabber, as fixture.
 
     """
+    # Update workdir to current test's tmp_path
+    WorkDirManager().workdir = tmp_path
+
     with maps_datagrabber as dg:
         element = dg[("sub-01", "sub-001", "rest", "1")]
         element_data = DefaultDataReader().fit_transform(element)
-        # Update workdir to current test's tmp_path
-        WorkDirManager().workdir = tmp_path
 
         # Initialize marker
         junifer_marker = ReHoMaps(maps="Smith_rsn_10", using="junifer")
