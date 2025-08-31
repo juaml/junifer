@@ -5,6 +5,8 @@ __all__ = [
     "SphereAggregation",
     "FunctionalConnectivityParcels",
     "FunctionalConnectivitySpheres",
+    "FunctionalConnectivityLaggedParcels",
+    "FunctionalConnectivityLaggedSpheres",
     "CrossParcellationFC",
     "EdgeCentricFCParcels",
     "EdgeCentricFCSpheres",
@@ -24,6 +26,8 @@ from .sphere_aggregation import SphereAggregation
 from .functional_connectivity import (
     FunctionalConnectivityParcels,
     FunctionalConnectivitySpheres,
+    FunctionalConnectivityLaggedParcels,
+    FunctionalConnectivityLaggedSpheres,
     CrossParcellationFC,
     EdgeCentricFCParcels,
     EdgeCentricFCSpheres,
