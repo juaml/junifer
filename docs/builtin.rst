@@ -743,5 +743,39 @@ Available
    Planned
    ~~~~~~~
 
+
+Maps
+----
+
+..
+    Provide a list of the maps that are implemented or planned.
+
+    Version added: The junifer version in which the maps was added.
+
+Available
+~~~~~~~~~
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Name
+     - Options
+     - Keys
+     - Template Spaces
+     - Version Added
+     - Publication
+   * - Smith
+     - ``components``, ``dimension``
+     - | ``Smith_rsn_10``, ``Smith_rsn_20``, ``Smith_rsn_70``,
+       | ``Smith_bm_10``, ``Smith_bm_20``, ``Smith_bm_70``
+     - ``MNI152NLin6Asym``
+     - 0.0.7
+     - | S.M. Smith, P.T. Fox, K.L. Miller et al.
+       | Correspondence of the brain's functional architecture during activation and rest
+       | Proc. Natl. Acad. Sci. U.S.A. 106 (31) 13040-13045 (2009)
+       | https://doi.org/10.1073/pnas.0905267106
+
+
 ..
   helpful site for creating tables: https://rest-sphinx-memo.readthedocs.io/en/latest/ReST.html#tables

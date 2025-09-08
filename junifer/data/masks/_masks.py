@@ -231,8 +231,9 @@ class MaskRegistry(BasePipelineDataRegistry):
         # * 'family': the mask's family name
         #             (e.g., 'Vickery-Patil', 'Callable')
         # * 'space': the mask's space (e.g., 'MNI', 'inherit')
-        # The built-in masks are files that are shipped with the package in the
-        # data/masks directory. The user can also register their own masks.
+        # The built-in masks are files that are shipped either with the
+        # junifer-data dataset or computed on-demand. The user can also
+        # register their own masks.
         # Callable masks should be functions that take at least one parameter:
         # * `target_img`: the image to which the mask will be applied.
         # and should be included in the registry as a value to a key: `func`.
