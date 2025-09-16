@@ -26,16 +26,16 @@ from junifer.testing.datagrabbers import (
 def test_fMRIPrepConfoundRemover_init() -> None:
     """Test fMRIPrepConfoundRemover init."""
 
-    with pytest.raises(ValueError, match="keys must be strings"):
+    with pytest.raises(ValueError, match=r"keys must be strings"):
         fMRIPrepConfoundRemover(strategy={1: "full"})  # type: ignore
 
-    with pytest.raises(ValueError, match="values must be strings"):
+    with pytest.raises(ValueError, match=r"values must be strings"):
         fMRIPrepConfoundRemover(strategy={"motion": 1})  # type: ignore
 
-    with pytest.raises(ValueError, match="component names"):
+    with pytest.raises(ValueError, match=r"component names"):
         fMRIPrepConfoundRemover(strategy={"wrong": "full"})
 
-    with pytest.raises(ValueError, match="confound types"):
+    with pytest.raises(ValueError, match=r"confound types"):
         fMRIPrepConfoundRemover(strategy={"motion": "wrong"})
 
 
@@ -342,7 +342,7 @@ def test_fMRIPrepConfoundRemover__get_scrub_regressors_errors(
         The parametrized preprocessor.
 
     """
-    with pytest.raises(RuntimeError, match="Invalid confounds file."):
+    with pytest.raises(RuntimeError, match=r"Invalid confounds file."):
         preprocessor._get_scrub_regressors(pd.DataFrame({"a": [1, 2]}))
 
 
@@ -354,7 +354,7 @@ def test_fMRIPrepConfoundRemover__validate_data() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         vbm = element_data["VBM_GM"]
         with pytest.raises(
-            DimensionError, match="incompatible dimensionality"
+            DimensionError, match=r"incompatible dimensionality"
         ):
             confound_remover._validate_data(vbm)
     # Check missing nested type in correct data type
@@ -363,22 +363,22 @@ def test_fMRIPrepConfoundRemover__validate_data() -> None:
         bold = element_data["BOLD"]
         # Test confound type
         with pytest.raises(
-            ValueError, match="`BOLD.confounds` data type not provided"
+            ValueError, match=r"`BOLD.confounds` data type not provided"
         ):
             confound_remover._validate_data(bold)
         # Test confound data
         bold["confounds"] = {}
         with pytest.raises(
-            ValueError, match="`BOLD.confounds.data` not provided"
+            ValueError, match=r"`BOLD.confounds.data` not provided"
         ):
             confound_remover._validate_data(bold)
         # Test confound data is valid type
         bold["confounds"] = {"data": None}
-        with pytest.raises(ValueError, match="must be a `pandas.DataFrame`"):
+        with pytest.raises(ValueError, match=r"must be a `pandas.DataFrame`"):
             confound_remover._validate_data(bold)
         # Test confound data dimension mismatch with BOLD
         bold["confounds"] = {"data": pd.DataFrame()}
-        with pytest.raises(ValueError, match="Image time series and"):
+        with pytest.raises(ValueError, match=r"Image time series and"):
             confound_remover._validate_data(bold)
     # Check nested type variations
     with PartlyCloudyTestingDataGrabber(reduce_confounds=False) as dg:
@@ -393,19 +393,19 @@ def test_fMRIPrepConfoundRemover__validate_data() -> None:
         }
         # Test incorrect format
         modified_bold["confounds"].update({"format": "wrong"})
-        with pytest.raises(ValueError, match="Invalid confounds format"):
+        with pytest.raises(ValueError, match=r"Invalid confounds format"):
             confound_remover._validate_data(modified_bold)
         # Test missing mappings for adhoc
         modified_bold["confounds"].update({"format": "adhoc"})
         with pytest.raises(
-            ValueError, match="`BOLD.confounds.mappings` need to be set"
+            ValueError, match=r"`BOLD.confounds.mappings` need to be set"
         ):
             confound_remover._validate_data(modified_bold)
         # Test missing fmriprep mappings for adhoc
         modified_bold["confounds"].update({"mappings": {}})
         with pytest.raises(
             ValueError,
-            match="`BOLD.confounds.mappings.fmriprep` need to be set",
+            match=r"`BOLD.confounds.mappings.fmriprep` need to be set",
         ):
             confound_remover._validate_data(modified_bold)
         # Test incorrect fmriprep mappings for adhoc

@@ -223,7 +223,7 @@ def signals_and_covariances(
 def test_check_square() -> None:
     """Test square matrix assertion."""
     non_square = np.ones((2, 3))
-    with pytest.raises(ValueError, match="Expected a square matrix"):
+    with pytest.raises(ValueError, match=r"Expected a square matrix"):
         _check_square(non_square)
 
 
@@ -244,7 +244,7 @@ def test_check_spd(invalid_input: np.ndarray) -> None:
 
     """
     with pytest.raises(
-        ValueError, match="Expected a symmetric positive definite matrix."
+        ValueError, match=r"Expected a symmetric positive definite matrix."
     ):
         _check_spd(invalid_input)
 
@@ -555,7 +555,7 @@ def test_geometric_mean_error_non_square_matrix() -> None:
     n_features = 5
     mat1 = np.ones((n_features, n_features + 1))
 
-    with pytest.raises(ValueError, match="Expected a square matrix"):
+    with pytest.raises(ValueError, match=r"Expected a square matrix"):
         _geometric_mean([mat1])
 
 
@@ -566,7 +566,7 @@ def test_geometric_mean_error_input_matrices_have_different_shapes() -> None:
     mat2 = np.ones((n_features + 1, n_features + 1))
 
     with pytest.raises(
-        ValueError, match="Matrices are not of the same shape."
+        ValueError, match=r"Matrices are not of the same shape."
     ):
         _geometric_mean([mat1, mat2])
 
@@ -577,7 +577,7 @@ def test_geometric_mean_error_non_spd_input_matrix() -> None:
     mat2 = np.ones((n_features + 1, n_features + 1))
 
     with pytest.raises(
-        ValueError, match="Expected a symmetric positive definite matrix."
+        ValueError, match=r"Expected a symmetric positive definite matrix."
     ):
         _geometric_mean([mat2])
 
@@ -588,19 +588,20 @@ def test_connectivity_measure_errors():
     conn_measure = JuniferConnectivityMeasure()
 
     with pytest.raises(
-        ValueError, match="'subjects' input argument must be an iterable"
+        ValueError, match=r"'subjects' input argument must be an iterable"
     ):
         conn_measure.fit(1.0)
 
     # input subjects not 2D numpy.ndarrays
     with pytest.raises(
-        ValueError, match="Each subject must be 2D numpy.ndarray."
+        ValueError, match=r"Each subject must be 2D numpy.ndarray."
     ):
         conn_measure.fit([np.ones((100, 40)), np.ones((10,))])
 
     # input subjects with different number of features
     with pytest.raises(
-        ValueError, match="All subjects must have the same number of features."
+        ValueError,
+        match=r"All subjects must have the same number of features.",
     ):
         conn_measure.fit([np.ones((100, 40)), np.ones((100, 41))])
 
@@ -609,7 +610,7 @@ def test_connectivity_measure_errors():
 
     with pytest.raises(
         ValueError,
-        match="Tangent space parametrization .* only be .* group of subjects",
+        match=r"Tangent space parametrization .* only be .* group of subjects",
     ):
         conn_measure.fit_transform([np.ones((100, 40))])
 
@@ -873,7 +874,7 @@ def test_connectivity_measure_check_vectorization_option(
     )
 
     # Check not fitted error
-    with pytest.raises(ValueError, match="has not been fitted. "):
+    with pytest.raises(ValueError, match=r"has not been fitted. "):
         JuniferConnectivityMeasure().inverse_transform(
             vectorized_connectivities
         )
@@ -956,7 +957,7 @@ def test_connectivity_measure_check_inverse_transformation_discard_diag(
 
         assert_array_almost_equal(inverse_transformed, connectivities)
         with pytest.raises(
-            ValueError, match="cannot reconstruct connectivity matrices"
+            ValueError, match=r"cannot reconstruct connectivity matrices"
         ):
             conn_measure.inverse_transform(vectorized_connectivities)
 
@@ -1010,7 +1011,7 @@ def test_connectivity_measure_inverse_transform_tangent(
 
     assert_array_almost_equal(inverse_transformed, covariances)
     with pytest.raises(
-        ValueError, match="cannot reconstruct connectivity matrices"
+        ValueError, match=r"cannot reconstruct connectivity matrices"
     ):
         tangent_measure.inverse_transform(vectorized_displacements)
 
@@ -1050,7 +1051,7 @@ def test_confounds_connectivity_measure_errors() -> None:
 
     # Raising error for input confounds are not iterable
     conn_measure = JuniferConnectivityMeasure(vectorize=True)
-    msg = "'confounds' input argument must be an iterable"
+    msg = r"'confounds' input argument must be an iterable"
 
     with pytest.raises(ValueError, match=msg):
         conn_measure._check_input(X=signals, confounds=1.0)
@@ -1066,7 +1067,7 @@ def test_confounds_connectivity_measure_errors() -> None:
     # Raising error for input confounds are given but not vectorize=True
     conn_measure = JuniferConnectivityMeasure(vectorize=False)
     with pytest.raises(
-        ValueError, match="'confounds' are provided but vectorize=False"
+        ValueError, match=r"'confounds' are provided but vectorize=False"
     ):
         conn_measure.fit_transform(signals, None, confounds[:10])
 
@@ -1082,7 +1083,7 @@ def test_connectivity_measure_standardize(
         The input signals.
 
     """
-    match = "default strategy for standardize"
+    match = r"default strategy for standardize"
 
     with pytest.warns(DeprecationWarning, match=match):
         JuniferConnectivityMeasure(kind="correlation").fit_transform(signals)
@@ -1101,7 +1102,7 @@ def test_connectivity_measure_standardize(
 )
 def test_xi_correlation_error() -> None:
     """Check xi correlation according to paper."""
-    with pytest.raises(RuntimeError, match="scipy.stats.chatterjeexi"):
+    with pytest.raises(RuntimeError, match=r"scipy.stats.chatterjeexi"):
         JuniferConnectivityMeasure(kind="xi correlation").fit_transform(
             np.zeros((2, 2))
         )

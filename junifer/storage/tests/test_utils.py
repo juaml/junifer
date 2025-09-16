@@ -211,7 +211,7 @@ def test_process_meta_element(meta: dict, elements: list[str]) -> None:
         The parametrized elements to assert against.
 
     """
-    hash1, processed_meta, _ = process_meta(meta)
+    _, processed_meta, _ = process_meta(meta)
     assert "_element_keys" in processed_meta
     assert processed_meta["_element_keys"] == elements
     assert "A" in processed_meta

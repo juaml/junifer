@@ -634,7 +634,7 @@ def test_aicha(version: int) -> None:
 
 def test_retrieve_aicha_incorrect_version() -> None:
     """Test retrieve AICHA with incorrect version."""
-    with pytest.raises(ValueError, match="The parameter `version`"):
+    with pytest.raises(ValueError, match=r"The parameter `version`"):
         _retrieve_aicha(
             version=100,
         )
@@ -697,7 +697,7 @@ def test_shen(
 
 def test_retrieve_shen_incorrect_year() -> None:
     """Test retrieve Shen with incorrect year."""
-    with pytest.raises(ValueError, match="The parameter `year`"):
+    with pytest.raises(ValueError, match=r"The parameter `year`"):
         _retrieve_shen(
             year=1969,
         )
@@ -705,7 +705,7 @@ def test_retrieve_shen_incorrect_year() -> None:
 
 def test_retrieve_shen_incorrect_n_rois() -> None:
     """Test retrieve Shen with incorrect ROIs."""
-    with pytest.raises(ValueError, match="The parameter `n_rois`"):
+    with pytest.raises(ValueError, match=r"The parameter `n_rois`"):
         _retrieve_shen(
             year=2015,
             n_rois=10,
@@ -747,7 +747,7 @@ def test_retrieve_shen_incorrect_param_combo(
         The parametrized ROI count values.
 
     """
-    with pytest.raises(ValueError, match="The parameter combination"):
+    with pytest.raises(ValueError, match=r"The parameter combination"):
         _retrieve_shen(
             resolution=resolution,
             year=year,
@@ -875,7 +875,7 @@ def test_yan(
 def test_retrieve_yan_incorrect_networks() -> None:
     """Test retrieve Yan with incorrect networks."""
     with pytest.raises(
-        ValueError, match="Either one of `yeo_networks` or `kong_networks`"
+        ValueError, match=r"Either one of `yeo_networks` or `kong_networks`"
     ):
         _retrieve_yan(
             n_rois=31418,
@@ -884,7 +884,7 @@ def test_retrieve_yan_incorrect_networks() -> None:
         )
 
     with pytest.raises(
-        ValueError, match="Either one of `yeo_networks` or `kong_networks`"
+        ValueError, match=r"Either one of `yeo_networks` or `kong_networks`"
     ):
         _retrieve_yan(
             n_rois=31418,
@@ -895,7 +895,7 @@ def test_retrieve_yan_incorrect_networks() -> None:
 
 def test_retrieve_yan_incorrect_n_rois() -> None:
     """Test retrieve Yan with incorrect ROIs."""
-    with pytest.raises(ValueError, match="The parameter `n_rois`"):
+    with pytest.raises(ValueError, match=r"The parameter `n_rois`"):
         _retrieve_yan(
             n_rois=31418,
             yeo_networks=7,
@@ -904,7 +904,7 @@ def test_retrieve_yan_incorrect_n_rois() -> None:
 
 def test_retrieve_yan_incorrect_yeo_networks() -> None:
     """Test retrieve Yan with incorrect Yeo networks."""
-    with pytest.raises(ValueError, match="The parameter `yeo_networks`"):
+    with pytest.raises(ValueError, match=r"The parameter `yeo_networks`"):
         _retrieve_yan(
             n_rois=100,
             yeo_networks=27,
@@ -913,7 +913,7 @@ def test_retrieve_yan_incorrect_yeo_networks() -> None:
 
 def test_retrieve_yan_incorrect_kong_networks() -> None:
     """Test retrieve Yan with incorrect Kong networks."""
-    with pytest.raises(ValueError, match="The parameter `kong_networks`"):
+    with pytest.raises(ValueError, match=r"The parameter `kong_networks`"):
         _retrieve_yan(
             n_rois=100,
             kong_networks=27,
@@ -976,7 +976,7 @@ def test_brainnetome(
 
 def test_retrieve_brainnetome_incorrect_threshold() -> None:
     """Test retrieve Brainnetome with incorrect threshold."""
-    with pytest.raises(ValueError, match="The parameter `threshold`"):
+    with pytest.raises(ValueError, match=r"The parameter `threshold`"):
         _retrieve_brainnetome(
             threshold=100,
         )
@@ -1091,7 +1091,7 @@ def test_merge_parcellations_3D_multiple_overlapping() -> None:
     names = ["high", "low"]
     labels_lists = [labels1, labels2]
 
-    with pytest.warns(RuntimeWarning, match="overlapping voxels"):
+    with pytest.warns(RuntimeWarning, match=r"overlapping voxels"):
         merge_parcellations(parcellation_list, names, labels_lists)
 
     parc_data = parcellation.get_fdata()
@@ -1128,7 +1128,7 @@ def test_merge_parcellations_3D_multiple_duplicated_labels() -> None:
     names = ["high", "low"]
     labels_lists = [labels1, labels2]
 
-    with pytest.warns(RuntimeWarning, match="duplicated labels."):
+    with pytest.warns(RuntimeWarning, match=r"duplicated labels."):
         merged_parc, _ = merge_parcellations(
             parcellation_list, names, labels_lists
         )

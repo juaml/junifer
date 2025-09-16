@@ -41,41 +41,41 @@ def test_get_aggfunc_by_name(name: str, params: Optional[dict]) -> None:
 
 def test_get_aggfunc_by_name_errors() -> None:
     """Test aggregation function retrieval using wrong name."""
-    with pytest.raises(ValueError, match="unknown. Please provide any of"):
+    with pytest.raises(ValueError, match=r"unknown. Please provide any of"):
         get_aggfunc_by_name(name="invalid", func_params=None)
 
-    with pytest.raises(ValueError, match="list of limits"):
+    with pytest.raises(ValueError, match=r"list of limits"):
         get_aggfunc_by_name(name="winsorized_mean", func_params=None)
 
-    with pytest.raises(ValueError, match="list of limits"):
+    with pytest.raises(ValueError, match=r"list of limits"):
         get_aggfunc_by_name(
             name="winsorized_mean", func_params={"limits": 0.1}
         )
 
-    with pytest.raises(ValueError, match="list of two limits"):
+    with pytest.raises(ValueError, match=r"list of two limits"):
         get_aggfunc_by_name(
             name="winsorized_mean", func_params={"limits": [0.2]}
         )
 
-    with pytest.raises(ValueError, match="list of two"):
+    with pytest.raises(ValueError, match=r"list of two"):
         get_aggfunc_by_name(
             name="winsorized_mean", func_params={"limits": [0.2, 0.7, 0.1]}
         )
 
-    with pytest.raises(ValueError, match="must be between 0 and 1"):
+    with pytest.raises(ValueError, match=r"must be between 0 and 1"):
         get_aggfunc_by_name(
             name="winsorized_mean", func_params={"limits": [-1, 0.7]}
         )
 
-    with pytest.raises(ValueError, match="must be between 0 and 1"):
+    with pytest.raises(ValueError, match=r"must be between 0 and 1"):
         get_aggfunc_by_name(
             name="winsorized_mean", func_params={"limits": [0.1, 2]}
         )
 
-    with pytest.raises(ValueError, match="must be specified."):
+    with pytest.raises(ValueError, match=r"must be specified."):
         get_aggfunc_by_name(name="select", func_params=None)
 
-    with pytest.raises(ValueError, match="must be specified, not both."):
+    with pytest.raises(ValueError, match=r"must be specified, not both."):
         get_aggfunc_by_name(
             name="select", func_params={"pick": [0], "drop": [1]}
         )
@@ -110,10 +110,10 @@ def test_select() -> None:
     """Test select."""
     input = np.arange(28).reshape(7, 4)
 
-    with pytest.raises(ValueError, match="must be specified."):
+    with pytest.raises(ValueError, match=r"must be specified."):
         select(input, axis=2)
 
-    with pytest.raises(ValueError, match="must be specified, not both."):
+    with pytest.raises(ValueError, match=r"must be specified, not both."):
         select(input, pick=[1], drop=[2], axis=2)
 
     out1 = select(input, pick=[1], axis=0)
