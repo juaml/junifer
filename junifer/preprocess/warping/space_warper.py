@@ -184,6 +184,7 @@ class SpaceWarper(BasePreprocessor):
                 input = FSLWarper().preprocess(
                     input=input,
                     extra_input=extra_input,
+                    reference=self.reference,
                 )
             elif self.using == "ants":
                 input = ANTsWarper().preprocess(
@@ -204,6 +205,7 @@ class SpaceWarper(BasePreprocessor):
                     input = FSLWarper().preprocess(
                         input=input,
                         extra_input=extra_input,
+                        reference=self.reference,
                     )
                 elif warper == "ants":
                     input = ANTsWarper().preprocess(
@@ -230,14 +232,49 @@ class SpaceWarper(BasePreprocessor):
                 extra_input={},
                 reference=self.reference,
             )
-        # Transform to template space with FSL not possible
+        # Transform to template space with FSL possible conditionally
         elif self.using == "fsl" and self.reference != "T1w":
-            raise_error(
-                (
-                    f"Warping to {self.reference} space not possible with "
-                    "FSL, use ANTs instead."
-                ),
-                klass=RuntimeError,
-            )
+            input_space = input["space"]
+            # Transform from native to MNI possible conditionally
+            if input_space == "native":
+                # Check for BOLD reference as no T1w available
+                if input.get("reference") is None:
+                    raise_error(
+                        "`reference` key missing from input data type."
+                    )
+                # Check for extra inputs
+                if extra_input is None:
+                    raise_error(
+                        "No extra input provided, requires `Warp` "
+                        "data type in particular."
+                    )
+                # Warp
+                input_prewarp_space = input["prewarp_space"]
+                warper = None
+                for entry in extra_input["Warp"]:
+                    if (
+                        entry["src"] == input_space
+                        and entry["dst"] == input_prewarp_space
+                    ):
+                        warper = entry["warper"]
+                if warper is None or warper != "fsl":
+                    raise_error(
+                        klass=RuntimeError, msg="Could not find correct warper"
+                    )
+                input = FSLWarper().preprocess(
+                    input=input,
+                    extra_input=extra_input,
+                    reference=input_prewarp_space,
+                )
+            # Transform from MNI to MNI template space not possible
+            else:
+                raise_error(
+                    (
+                        f"Warping from {input_space} space to "
+                        f"{self.reference} space not possible with "
+                        "FSL, use ANTs instead."
+                    ),
+                    klass=RuntimeError,
+                )
 
         return input, None
