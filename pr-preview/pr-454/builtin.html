@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="7. Extending junifer" href="extending/index.html" /><link rel="prev" title="5.6.1. Masks" href="using/masks.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="7. Extending junifer" href="extending/index.html" /><link rel="prev" title="5.8.1. Masks" href="using/masks.html" />
 
     <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
         <title>6. Built-in Pipeline Components - junifer documentation</title>
@@ -228,7 +228,9 @@
 <li class="toctree-l2"><a class="reference internal" href="using/running.html#collecting-results">5.3. Collecting Results</a></li>
 <li class="toctree-l2"><a class="reference internal" href="using/running.html#analysing-results">5.4. Analysing Results</a></li>
 <li class="toctree-l2"><a class="reference internal" href="using/queueing.html">5.5. Queueing Jobs (HPC, HTC)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="using/masks.html">5.6.1. Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/configuring.html">5.6. Configuring Pipeline Behaviour</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/dumping.html">5.7. Dumping Pipeline Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using/masks.html">5.8.1. Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">6. Built-in Pipeline Components</a></li>
@@ -241,9 +243,11 @@
 <li class="toctree-l2"><a class="reference internal" href="extending/parcellations.html">7.6. Adding Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extending/coordinates.html">7.7. Adding Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="extending/masks.html">7.8. Adding Masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extending/plugins.html">7.9. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extending/data_registries.html">7.10. Creating a Data Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="extending/data_types.html">7.11. Adding Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending/maps.html">7.9. Adding Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending/plugins.html">7.10. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending/data_registries.html">7.11. Creating a Data Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending/data_types.html">7.12. Adding Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extending/data_dump_asset.html">7.13. Adding Data Dump Assets</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -524,23 +528,33 @@
 <td><p>Done</p></td>
 <td><p>0.0.1</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.FunctionalConnectivityParcels" title="junifer.markers.FunctionalConnectivityParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalConnectivityParcels</span></code></a></p></td>
-<td><p>Compute functional connectivity over parcellation</p></td>
-<td><p>Done</p></td>
-<td><p>0.0.1</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.CrossParcellationFC" title="junifer.markers.CrossParcellationFC"><code class="xref py py-class docutils literal notranslate"><span class="pre">CrossParcellationFC</span></code></a></p></td>
-<td><p>Compute functional connectivity across two parcellations</p></td>
-<td><p>Done</p></td>
-<td><p>0.0.1</p></td>
-</tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.SphereAggregation" title="junifer.markers.SphereAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">SphereAggregation</span></code></a></p></td>
 <td><p>Spherical aggregation using mean</p></td>
 <td><p>Done</p></td>
 <td><p>0.0.1</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.MapsAggregation" title="junifer.markers.MapsAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">MapsAggregation</span></code></a></p></td>
+<td><p>Apply maps (probabilistic atlas) and extract mean time series per region</p></td>
+<td><p>Done</p></td>
+<td><p>0.0.7</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.FunctionalConnectivityParcels" title="junifer.markers.FunctionalConnectivityParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalConnectivityParcels</span></code></a></p></td>
+<td><p>Compute functional connectivity over parcellation</p></td>
+<td><p>Done</p></td>
+<td><p>0.0.1</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.FunctionalConnectivitySpheres" title="junifer.markers.FunctionalConnectivitySpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalConnectivitySpheres</span></code></a></p></td>
 <td><p>Compute functional connectivity over spheres placed on coordinates</p></td>
+<td><p>Done</p></td>
+<td><p>0.0.1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.FunctionalConnectivityMaps" title="junifer.markers.FunctionalConnectivityMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">FunctionalConnectivityMaps</span></code></a></p></td>
+<td><p>Compute functional connectivity over maps (probabilistic atlas)</p></td>
+<td><p>Done</p></td>
+<td><p>0.0.7</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.CrossParcellationFC" title="junifer.markers.CrossParcellationFC"><code class="xref py py-class docutils literal notranslate"><span class="pre">CrossParcellationFC</span></code></a></p></td>
+<td><p>Compute functional connectivity across two parcellations</p></td>
 <td><p>Done</p></td>
 <td><p>0.0.1</p></td>
 </tr>
@@ -559,15 +573,25 @@
 <td><p>Done</p></td>
 <td><p>0.0.1</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.ALFFParcels" title="junifer.markers.ALFFParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFParcels</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.ReHoMaps" title="junifer.markers.ReHoMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReHoMaps</span></code></a></p></td>
+<td><p>Calculate regional homogeneity over maps (probabilistic atlas)</p></td>
+<td><p>Done</p></td>
+<td><p>0.0.7</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.ALFFParcels" title="junifer.markers.ALFFParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFParcels</span></code></a></p></td>
 <td><p>Calculate (f)ALFF and aggregate using parcellations</p></td>
 <td><p>Done</p></td>
 <td><p>0.0.1</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.ALFFSpheres" title="junifer.markers.ALFFSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFSpheres</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.ALFFSpheres" title="junifer.markers.ALFFSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFSpheres</span></code></a></p></td>
 <td><p>Calculate (f)ALFF and aggregate using spheres placed on coordinates</p></td>
 <td><p>Done</p></td>
 <td><p>0.0.1</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.ALFFMaps" title="junifer.markers.ALFFMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFMaps</span></code></a></p></td>
+<td><p>Calculate (f)ALFF and aggregate using maps (probabilistic atlas)</p></td>
+<td><p>Done</p></td>
+<td><p>0.0.7</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.EdgeCentricFCParcels" title="junifer.markers.EdgeCentricFCParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeCentricFCParcels</span></code></a></p></td>
 <td><div class="line-block">
@@ -589,12 +613,22 @@
 <td><p>Done</p></td>
 <td><p>0.0.2</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRParcels" title="junifer.markers.TemporalSNRParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRParcels</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.EdgeCentricFCMaps" title="junifer.markers.EdgeCentricFCMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeCentricFCMaps</span></code></a></p></td>
+<td><div class="line-block">
+<div class="line">Calculate edge-centric functional connectivity over maps (probabilistic atlas),</div>
+<div class="line">as found in</div>
+<div class="line"><a class="reference external" href="https://doi.org/10.1016/j.neuroimage.2021.118204">Jo et al. (2021)</a></div>
+</div>
+</td>
+<td><p>Done</p></td>
+<td><p>0.0.7</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRParcels" title="junifer.markers.TemporalSNRParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRParcels</span></code></a></p></td>
 <td><p>Calculate temporal signal-to-noise ratio using parcellations</p></td>
 <td><p>Done</p></td>
 <td><p>0.0.2</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRSpheres" title="junifer.markers.TemporalSNRSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRSpheres</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRSpheres" title="junifer.markers.TemporalSNRSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRSpheres</span></code></a></p></td>
 <td><div class="line-block">
 <div class="line">Calculate temporal signal-to-noise ratio using spheres placed on</div>
 <div class="line">coordinates</div>
@@ -602,6 +636,11 @@
 </td>
 <td><p>Done</p></td>
 <td><p>0.0.2</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRMaps" title="junifer.markers.TemporalSNRMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRMaps</span></code></a></p></td>
+<td><p>Calculate temporal signal-to-noise ratio using maps (probabilistic atlas)</p></td>
+<td><p>Done</p></td>
+<td><p>0.0.7</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="api/markers.html#junifer.markers.complexity.HurstExponent" title="junifer.markers.complexity.HurstExponent"><code class="xref py py-class docutils literal notranslate"><span class="pre">HurstExponent</span></code></a></p></td>
 <td><div class="line-block">
@@ -661,8 +700,8 @@
 </table>
 </div>
 </section>
-<section id="id5">
-<h3><span class="section-number">6.3.2. </span>Planned<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<section id="id6">
+<h3><span class="section-number">6.3.2. </span>Planned<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -683,8 +722,8 @@
 </section>
 <section id="parcellation">
 <h2><span class="section-number">6.4. </span>Parcellation<a class="headerlink" href="#parcellation" title="Link to this heading">¶</a></h2>
-<section id="id6">
-<h3><span class="section-number">6.4.1. </span>Available<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<section id="id7">
+<h3><span class="section-number">6.4.1. </span>Available<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -836,8 +875,8 @@
 </table>
 </div>
 </section>
-<section id="id7">
-<h3><span class="section-number">6.4.2. </span>Planned<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<section id="id8">
+<h3><span class="section-number">6.4.2. </span>Planned<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -926,8 +965,8 @@
 </section>
 <section id="coordinates">
 <h2><span class="section-number">6.5. </span>Coordinates<a class="headerlink" href="#coordinates" title="Link to this heading">¶</a></h2>
-<section id="id8">
-<h3><span class="section-number">6.5.1. </span>Available<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<section id="id9">
+<h3><span class="section-number">6.5.1. </span>Available<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -1168,8 +1207,8 @@
 </table>
 </div>
 </section>
-<section id="id9">
-<h3><span class="section-number">6.5.2. </span>Planned<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<section id="id10">
+<h3><span class="section-number">6.5.2. </span>Planned<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -1205,8 +1244,8 @@
 </section>
 <section id="mask">
 <h2><span class="section-number">6.6. </span>Mask<a class="headerlink" href="#mask" title="Link to this heading">¶</a></h2>
-<section id="id10">
-<h3><span class="section-number">6.6.1. </span>Available<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<section id="id11">
+<h3><span class="section-number">6.6.1. </span>Available<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -1294,6 +1333,44 @@
 </div>
 </section>
 </section>
+<section id="maps">
+<h2><span class="section-number">6.7. </span>Maps<a class="headerlink" href="#maps" title="Link to this heading">¶</a></h2>
+<section id="id12">
+<h3><span class="section-number">6.7.1. </span>Available<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Options</p></th>
+<th class="head"><p>Keys</p></th>
+<th class="head"><p>Template Spaces</p></th>
+<th class="head"><p>Version Added</p></th>
+<th class="head"><p>Publication</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Smith</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">components</span></code>, <code class="docutils literal notranslate"><span class="pre">dimension</span></code></p></td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Smith_rsn_10</span></code>, <code class="docutils literal notranslate"><span class="pre">Smith_rsn_20</span></code>, <code class="docutils literal notranslate"><span class="pre">Smith_rsn_70</span></code>,</div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">Smith_bm_10</span></code>, <code class="docutils literal notranslate"><span class="pre">Smith_bm_20</span></code>, <code class="docutils literal notranslate"><span class="pre">Smith_bm_70</span></code></div>
+</div>
+</td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MNI152NLin6Asym</span></code></p></td>
+<td><p>0.0.7</p></td>
+<td><div class="line-block">
+<div class="line">S.M. Smith, P.T. Fox, K.L. Miller et al.</div>
+<div class="line">Correspondence of the brain’s functional architecture during activation and rest</div>
+<div class="line">Proc. Natl. Acad. Sci. U.S.A. 106 (31) 13040-13045 (2009)</div>
+<div class="line"><a class="reference external" href="https://doi.org/10.1073/pnas.0905267106">https://doi.org/10.1073/pnas.0905267106</a></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
 </section>
 
         </article>
@@ -1317,7 +1394,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title"><span class="section-number">5.6.1. </span>Masks</div>
+                <div class="title"><span class="section-number">5.8.1. </span>Masks</div>
                 
               </div>
             </a>
@@ -1363,21 +1440,25 @@
 </li>
 <li><a class="reference internal" href="#marker">6.3. Marker</a><ul>
 <li><a class="reference internal" href="#id2">6.3.1. Available</a></li>
-<li><a class="reference internal" href="#id5">6.3.2. Planned</a></li>
+<li><a class="reference internal" href="#id6">6.3.2. Planned</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#parcellation">6.4. Parcellation</a><ul>
-<li><a class="reference internal" href="#id6">6.4.1. Available</a></li>
-<li><a class="reference internal" href="#id7">6.4.2. Planned</a></li>
+<li><a class="reference internal" href="#id7">6.4.1. Available</a></li>
+<li><a class="reference internal" href="#id8">6.4.2. Planned</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#coordinates">6.5. Coordinates</a><ul>
-<li><a class="reference internal" href="#id8">6.5.1. Available</a></li>
-<li><a class="reference internal" href="#id9">6.5.2. Planned</a></li>
+<li><a class="reference internal" href="#id9">6.5.1. Available</a></li>
+<li><a class="reference internal" href="#id10">6.5.2. Planned</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#mask">6.6. Mask</a><ul>
-<li><a class="reference internal" href="#id10">6.6.1. Available</a></li>
+<li><a class="reference internal" href="#id11">6.6.1. Available</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#maps">6.7. Maps</a><ul>
+<li><a class="reference internal" href="#id12">6.7.1. Available</a></li>
 </ul>
 </li>
 </ul>
@@ -1391,7 +1472,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=6b55e516"></script>
+</div><script src="_static/documentation_options.js?v=b28d9c71"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=5fa4622c"></script>

@@ -228,7 +228,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../using/running.html#collecting-results">5.3. Collecting Results</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/running.html#analysing-results">5.4. Analysing Results</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../using/queueing.html">5.5. Queueing Jobs (HPC, HTC)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../using/masks.html">5.6.1. Masks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/configuring.html">5.6. Configuring Pipeline Behaviour</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/dumping.html">5.7. Dumping Pipeline Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../using/masks.html">5.8.1. Masks</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../builtin.html">6. Built-in Pipeline Components</a></li>
@@ -241,9 +243,11 @@
 <li class="toctree-l2"><a class="reference internal" href="../extending/parcellations.html">7.6. Adding Parcellations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/coordinates.html">7.7. Adding Coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../extending/masks.html">7.8. Adding Masks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/plugins.html">7.9. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/data_registries.html">7.10. Creating a Data Registry</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../extending/data_types.html">7.11. Adding Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/maps.html">7.9. Adding Maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/plugins.html">7.10. Creating a <code class="docutils literal notranslate"><span class="pre">junifer</span></code> plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/data_registries.html">7.11. Creating a Data Registry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/data_types.html">7.12. Adding Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../extending/data_dump_asset.html">7.13. Adding Data Dump Assets</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
@@ -546,6 +550,141 @@ if the <code class="docutils literal notranslate"><span class="pre">voi_names</s
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="junifer.data.MapsRegistry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.data.</span></span><span class="sig-name descname"><span class="pre">MapsRegistry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.MapsRegistry" title="Link to this definition">¶</a></dt>
+<dd><p>Class for maps data registry.</p>
+<p>This class is a singleton and is used for managing available maps
+data in a centralized manner.</p>
+<p>Initialize the class.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.data.MapsRegistry.deregister">
+<span class="sig-name descname"><span class="pre">deregister</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.MapsRegistry.deregister" title="Link to this definition">¶</a></dt>
+<dd><p>De-register a custom user map(s).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the map(s).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.data.MapsRegistry.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">maps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.MapsRegistry.get" title="Link to this definition">¶</a></dt>
+<dd><p>Get map(s), tailored for the target image.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>maps</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the map(s).</p>
+</dd>
+<dt><strong>target_data</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The corresponding item of the data object to which the map(s)
+will be applied.</p>
+</dd>
+<dt><strong>extra_input</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a>, optional</span></dt><dd><p>The other fields in the data object. Useful for accessing other
+data kinds that needs to be used in the computation of
+map(s) (default None).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v5.4.0.dev1+g3b1c7b37)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a></dt><dd><p>The map(s) image.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>Map(s) labels.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">extra_input</span></code> is None when <code class="docutils literal notranslate"><span class="pre">target_data</span></code>’s space is native.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.data.MapsRegistry.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.MapsRegistry.load" title="Link to this definition">¶</a></dt>
+<dd><p>Load map(s) and labels.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the map(s).</p>
+</dd>
+<dt><strong>target_space</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The desired space of the map(s).</p>
+</dd>
+<dt><strong>resolution</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The desired resolution of the map(s) to load. If it is not
+available, the closest resolution will be loaded. Preferably, use a
+resolution higher than the desired one. By default, will load the
+highest one (default None).</p>
+</dd>
+<dt><strong>path_only</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.13)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, the map(s) image will not be loaded (default False).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://nipy.org/nibabel/reference/nibabel.nifti1.html#nibabel.nifti1.Nifti1Image" title="(in NiBabel v5.4.0.dev1+g3b1c7b37)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nifti1Image</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Loaded map(s) image.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>Map(s) labels.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></dt><dd><p>File path to the map(s) image.</p>
+</dd>
+<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The space of the map(s).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If <code class="docutils literal notranslate"><span class="pre">name</span></code> is invalid or
+if the map(s) family is invalid or
+if the map(s) values and labels
+don’t have equal dimension or if the value range is invalid.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.data.MapsRegistry.register">
+<span class="sig-name descname"><span class="pre">register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maps_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maps_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.MapsRegistry.register" title="Link to this definition">¶</a></dt>
+<dd><p>Register a custom user map(s).</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name of the map(s).</p>
+</dd>
+<dt><strong>maps_path</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The path to the map(s) file.</p>
+</dd>
+<dt><strong>maps_labels</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The list of labels for the map(s).</p>
+</dd>
+<dt><strong>space</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The template space of the map(s), e.g., “MNI152NLin6Asym”.</p>
+</dd>
+<dt><strong>overwrite</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.13)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>If True, overwrite an existing maps with the same name.
+Does not apply to built-in maps (default False).</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If the map(s) <code class="docutils literal notranslate"><span class="pre">name</span></code> is a built-in map(s) or
+if the map(s) <code class="docutils literal notranslate"><span class="pre">name</span></code> is already registered and
+<code class="docutils literal notranslate"><span class="pre">overwrite=False</span></code>.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="junifer.data.MaskRegistry">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.data.</span></span><span class="sig-name descname"><span class="pre">MaskRegistry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.data.MaskRegistry" title="Link to this definition">¶</a></dt>
 <dd><p>Class for mask data registry.</p>
@@ -821,7 +960,7 @@ if the parcellation <code class="docutils literal notranslate"><span class="pre"
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”}</span></dt><dd><p>Kind of data to register.</p>
+<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”, “maps”}</span></dt><dd><p>Kind of data to register.</p>
 </dd>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name to de-register.</p>
 </dd>
@@ -843,7 +982,7 @@ if the parcellation <code class="docutils literal notranslate"><span class="pre"
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”}</span></dt><dd><p>Kind of data to fetch and apply.</p>
+<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”, “maps”}</span></dt><dd><p>Kind of data to fetch and apply.</p>
 </dd>
 <dt><strong>names</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> / <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></span></dt><dd><p>The registered name(s) of the data.</p>
 </dd>
@@ -940,7 +1079,7 @@ if <code class="docutils literal notranslate"><span class="pre">resolution</span
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”}</span></dt><dd><p>Kind of data registry to list.</p>
+<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”, “maps”}</span></dt><dd><p>Kind of data registry to list.</p>
 </dd>
 </dl>
 </dd>
@@ -966,7 +1105,7 @@ if <code class="docutils literal notranslate"><span class="pre">resolution</span
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”}</span></dt><dd><p>Kind of data to load.</p>
+<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”, “maps”}</span></dt><dd><p>Kind of data to load.</p>
 </dd>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The registered name of the data.</p>
 </dd>
@@ -995,7 +1134,7 @@ if <code class="docutils literal notranslate"><span class="pre">resolution</span
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”}</span></dt><dd><p>Kind of data to register.</p>
+<dt><strong>kind</strong><span class="classifier">{“coordinates”, “parcellation”, “mask”, “maps”}</span></dt><dd><p>Kind of data to register.</p>
 </dd>
 <dt><strong>name</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The name to register.</p>
 </dd>
@@ -1096,6 +1235,13 @@ if <code class="docutils literal notranslate"><span class="pre">resolution</span
 <li><a class="reference internal" href="#junifer.data.DataDispatcher.setdefault"><code class="docutils literal notranslate"><span class="pre">DataDispatcher.setdefault()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#junifer.data.MapsRegistry"><code class="docutils literal notranslate"><span class="pre">MapsRegistry</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.data.MapsRegistry.deregister"><code class="docutils literal notranslate"><span class="pre">MapsRegistry.deregister()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.data.MapsRegistry.get"><code class="docutils literal notranslate"><span class="pre">MapsRegistry.get()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.data.MapsRegistry.load"><code class="docutils literal notranslate"><span class="pre">MapsRegistry.load()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.data.MapsRegistry.register"><code class="docutils literal notranslate"><span class="pre">MapsRegistry.register()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#junifer.data.MaskRegistry"><code class="docutils literal notranslate"><span class="pre">MaskRegistry</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.data.MaskRegistry.deregister"><code class="docutils literal notranslate"><span class="pre">MaskRegistry.deregister()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.data.MaskRegistry.get"><code class="docutils literal notranslate"><span class="pre">MaskRegistry.get()</span></code></a></li>
@@ -1128,7 +1274,7 @@ if <code class="docutils literal notranslate"><span class="pre">resolution</span
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=6b55e516"></script>
+</div><script src="../_static/documentation_options.js?v=b28d9c71"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
