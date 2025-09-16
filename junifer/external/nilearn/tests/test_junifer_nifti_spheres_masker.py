@@ -144,7 +144,7 @@ def test_anisotropic_sphere_extraction() -> None:
 def test_errors() -> None:
     """Test errors."""
     masker = JuniferNiftiSpheresMasker(seeds=([1, 2]), radius=0.2)
-    with pytest.raises(ValueError, match="Seeds must be a list .+"):
+    with pytest.raises(ValueError, match=r"Seeds must be a list .+"):
         masker.fit()
 
 
@@ -183,7 +183,7 @@ def test_nifti_spheres_masker_overlap() -> None:
         radius=2,
         allow_overlap=False,
     )
-    with pytest.raises(ValueError, match="Overlap detected"):
+    with pytest.raises(ValueError, match=r"Overlap detected"):
         noverlapping_masker.fit_transform(fmri_img)
 
 
@@ -288,7 +288,7 @@ def test_nifti_spheres_masker_inverse_transform() -> None:
     masker = JuniferNiftiSpheresMasker(seeds=[(1, 1, 1)], radius=1)
     with pytest.raises(
         NotImplementedError,
-        match="some of which are non-reversible",
+        match=r"some of which are non-reversible",
     ):
         masker.inverse_transform(data[0, 0, 0, :])
 
@@ -319,7 +319,7 @@ def test_nifti_spheres_masker_io_shapes() -> None:
     masker.fit()
 
     # DeprecationWarning *should* be raised for 3D inputs
-    with pytest.warns(DeprecationWarning, match="Starting in version 0.12"):
+    with pytest.warns(DeprecationWarning, match=r"Starting in version 0.12"):
         test_data = masker.transform(img_3d)
         assert test_data.shape == (1, n_regions)
 

@@ -1174,7 +1174,7 @@ def test_collect_error_single_output() -> None:
     """Test error for collect in single output storage."""
     with pytest.raises(
         NotImplementedError,
-        match="is not implemented for single output.",
+        match=r"is not implemented for single output.",
     ):
         storage = HDF5FeatureStorage(uri="/tmp", single_output=True)
         storage.collect()

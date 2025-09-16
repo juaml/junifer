@@ -14,7 +14,7 @@ from junifer.api.queue_context import GnuParallelLocalAdapter
 
 def test_GnuParallelLocalAdapter_env_kind_error() -> None:
     """Test error for invalid env kind."""
-    with pytest.raises(ValueError, match="Invalid value for `env.kind`"):
+    with pytest.raises(ValueError, match=r"Invalid value for `env.kind`"):
         GnuParallelLocalAdapter(
             job_name="check_env_kind",
             job_dir=Path("."),
@@ -26,7 +26,7 @@ def test_GnuParallelLocalAdapter_env_kind_error() -> None:
 
 def test_GnuParallelLocalAdapter_env_shell_error() -> None:
     """Test error for invalid env shell."""
-    with pytest.raises(ValueError, match="Invalid value for `env.shell`"):
+    with pytest.raises(ValueError, match=r"Invalid value for `env.shell`"):
         GnuParallelLocalAdapter(
             job_name="check_env_shell",
             job_dir=Path("."),
