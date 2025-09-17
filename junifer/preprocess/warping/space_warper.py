@@ -236,7 +236,7 @@ class SpaceWarper(BasePreprocessor):
         elif self.using == "fsl" and self.reference != "T1w":
             input_space = input["space"]
             # Transform from native to MNI possible conditionally
-            if input_space == "native":
+            if input_space == "native":  # pragma: no cover
                 # Check for BOLD reference as no T1w available
                 if input.get("reference") is None:
                     raise_error(
