@@ -270,7 +270,7 @@ class SpaceWarper(BasePreprocessor):
             input_space = input["space"]
             # Transform from native to MNI possible conditionally
             if input_space == "native":  # pragma: no cover
-                # Check for BOLD reference as no T1w available
+                # Check for reference as no T1w available
                 if input.get("reference") is None:
                     raise_error(
                         "`reference` key missing from input data type."
