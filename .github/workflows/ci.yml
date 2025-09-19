@@ -54,9 +54,8 @@ jobs:
         jq
     - name: Copy junifer-data directory
       run: |
-        # Kept at v3 as v4 has FSL installation storage issue
-        mkdir -p $HOME/junifer_data/v3
-        cp -ar /root/junifer_data/v3/. $HOME/junifer_data/v3/
+        mkdir -p $HOME/junifer_data/v4
+        cp -ar /root/junifer_data/v4/. $HOME/junifer_data/v4/
     - name: Checkout repository
       uses: actions/checkout@v5
       with:
