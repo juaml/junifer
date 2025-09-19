@@ -188,6 +188,31 @@ class FSLWarper:
                     msg="Could not find correct warp file path",
                 )
 
+            # Use flirt if input data resolution and reference resolution don't
+            # match
+            input_resolution = np.min(input["data"].header.get_zooms()[:3])
+            ref_resolution = np.min(
+                input["reference"]["data"].header.get_zooms()[:3]
+            )
+            if input_resolution != ref_resolution:
+                # Create a tempfile for resampled reference output
+                ref_path = (
+                    element_tempdir / f"resampled_reference-{reference}.nii.gz"
+                )
+                # Set flirt command
+                flirt_cmd = [
+                    "flirt",
+                    "-interp spline",
+                    f"-in {input['reference']['path'].resolve()}",
+                    f"-ref {input['reference']['path'].resolve()}",
+                    f"-applyisoxfm {input_resolution}",
+                    f"-out {ref_path.resolve()}",
+                ]
+                # Call flirt
+                run_ext_cmd(name="flirt", cmd=flirt_cmd)
+            else:
+                ref_path = input["reference"]["path"]
+
             # Create a tempfile for warped output
             applywarp_out_path = (
                 element_tempdir
@@ -198,7 +223,8 @@ class FSLWarper:
                 "applywarp",
                 "--interp=spline",
                 f"-i {input['path'].resolve()}",
-                f"-r {input['reference']['path'].resolve()}",
+                # use resampled reference or original
+                f"-r {ref_path.resolve()}",
                 f"-w {warp_file_path.resolve()}",
                 f"-o {applywarp_out_path.resolve()}",
             ]
@@ -215,6 +241,9 @@ class FSLWarper:
                     # Switch space and prewarp_space
                     "space": reference,
                     "prewarp_space": input["space"],
+                    # Save resampled reference path or overwrite original
+                    # keeping it same
+                    "reference": {"path": ref_path},
                 }
             )
 
@@ -230,7 +259,8 @@ class FSLWarper:
                     "applywarp",
                     "--interp=nn",
                     f"-i {input['mask']['path'].resolve()}",
-                    f"-r {input['reference']['path'].resolve()}",
+                    # use resampled reference or original
+                    f"-r {ref_path.resolve()}",
                     f"-w {warp_file_path.resolve()}",
                     f"-o {applywarp_mask_out_path.resolve()}",
                 ]
