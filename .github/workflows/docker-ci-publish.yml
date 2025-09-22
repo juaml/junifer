@@ -21,8 +21,16 @@ jobs:
       packages: write
       id-token: write
     steps:
-      - name: Delete huge unnecessary tools folder
-        run: rm -rf /opt/hostedtoolcache
+      - run: df -h
+      - name: Clean runner
+        run: |
+          rm -rf /usr/share/dotnet \
+                 /usr/local/lib/android \
+                 /opt/ghc \
+                 /opt/hostedtoolcache
+          docker image prune --all --force
+          docker builder prune -a
+      - run: df -h
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Install cosign
