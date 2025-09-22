@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.12-slim
+FROM python:3.12-slim-bookworm
 
 LABEL org.opencontainers.image.source=https://github.com/juaml/junifer
 LABEL org.opencontainers.image.description="Junifer CI container image"
@@ -60,14 +60,13 @@ ENV PATH="/opt/afni/bin:$PATH"
 # Patch gsl
 RUN ln -s /usr/lib/x86_64-linux-gnu/libgsl.so.27 /usr/lib/x86_64-linux-gnu/libgsl.so.23
 
-# disabled as standard github runner fails to install due to insufficient space on device
-# # Add FSL
-# RUN curl https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | \
-#     python - -d /opt/fsl/ --skip_registration
-# # Set env vars for FSL
-# ENV FSLDIR=/opt/fsl \
-#     FSLOUTPUTTYPE=NIFTI_GZ \
-#     PATH="/opt/fsl/share/fsl/bin:$PATH"
+# Add FSL
+RUN curl https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | \
+    python - -d /opt/fsl/ --skip_registration
+# Set env vars for FSL
+ENV FSLDIR=/opt/fsl \
+    FSLOUTPUTTYPE=NIFTI_GZ \
+    PATH="/opt/fsl/share/fsl/bin:$PATH"
 
 # Clean apt cache
 RUN apt-get autoremove --purge && apt-get clean
