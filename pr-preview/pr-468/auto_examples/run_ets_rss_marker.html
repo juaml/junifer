@@ -348,21 +348,21 @@ of the edge-wise timeseries using the Schaefer parcellation
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/__w/junifer/junifer/junifer/utils/logging.py:155: UserWarning: The &#39;__version__&#39; attribute is deprecated and will be removed in MarkupSafe 3.1. Use feature detection, or `importlib.metadata.version(&quot;markupsafe&quot;)`, instead.
   vstring = str(getattr(module, &quot;__version__&quot;, None))
-2025-09-22 13:47:01,546 - JUNIFER - INFO - ===== Lib Versions =====
-2025-09-22 13:47:01,546 - JUNIFER - INFO - click: 8.1.8
-2025-09-22 13:47:01,546 - JUNIFER - INFO - numpy: 1.26.4
-2025-09-22 13:47:01,546 - JUNIFER - INFO - scipy: 1.15.0
-2025-09-22 13:47:01,546 - JUNIFER - INFO - datalad: 1.1.6
-2025-09-22 13:47:01,546 - JUNIFER - INFO - pandas: 2.1.4
-2025-09-22 13:47:01,546 - JUNIFER - INFO - nibabel: 5.3.2
-2025-09-22 13:47:01,546 - JUNIFER - INFO - nilearn: 0.10.4
-2025-09-22 13:47:01,546 - JUNIFER - INFO - sqlalchemy: 2.0.43
-2025-09-22 13:47:01,546 - JUNIFER - INFO - ruamel.yaml: 0.18.15
-2025-09-22 13:47:01,546 - JUNIFER - INFO - tqdm: 4.66.6
-2025-09-22 13:47:01,546 - JUNIFER - INFO - templateflow: 24.2.2
-2025-09-22 13:47:01,546 - JUNIFER - INFO - junifer_data: None
-2025-09-22 13:47:01,546 - JUNIFER - INFO - junifer: 0.0.7.dev201
-2025-09-22 13:47:01,546 - JUNIFER - INFO - ========================
+2025-09-22 15:05:25,661 - JUNIFER - INFO - ===== Lib Versions =====
+2025-09-22 15:05:25,661 - JUNIFER - INFO - click: 8.1.8
+2025-09-22 15:05:25,661 - JUNIFER - INFO - numpy: 1.26.4
+2025-09-22 15:05:25,661 - JUNIFER - INFO - scipy: 1.15.0
+2025-09-22 15:05:25,661 - JUNIFER - INFO - datalad: 1.1.6
+2025-09-22 15:05:25,661 - JUNIFER - INFO - pandas: 2.1.4
+2025-09-22 15:05:25,661 - JUNIFER - INFO - nibabel: 5.3.2
+2025-09-22 15:05:25,661 - JUNIFER - INFO - nilearn: 0.10.4
+2025-09-22 15:05:25,661 - JUNIFER - INFO - sqlalchemy: 2.0.43
+2025-09-22 15:05:25,661 - JUNIFER - INFO - ruamel.yaml: 0.18.15
+2025-09-22 15:05:25,661 - JUNIFER - INFO - tqdm: 4.66.6
+2025-09-22 15:05:25,662 - JUNIFER - INFO - templateflow: 24.2.2
+2025-09-22 15:05:25,662 - JUNIFER - INFO - junifer_data: None
+2025-09-22 15:05:25,662 - JUNIFER - INFO - junifer: 0.0.7.dev204
+2025-09-22 15:05:25,662 - JUNIFER - INFO - ========================
 </pre></div>
 </div>
 <p>Define the DataGrabber interface</p>
@@ -413,64 +413,64 @@ At the end you can read the extracted data into a <code class="docutils literal 
     <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_rssets</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;BOLD_Schaefer200x17_RSSETS_rss_ets&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2025-09-22 13:47:01,548 - JUNIFER - INFO - Registering RSSETSMarker in marker
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Validating Marker Collection
-2025-09-22 13:47:01,549 - JUNIFER - INFO - DataGrabber output type: [&#39;BOLD&#39;, &#39;T1w&#39;]
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Validating Data Reader:
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Data Reader output type: [&#39;BOLD&#39;, &#39;T1w&#39;]
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Validating Marker: Schaefer100x17_RSSETS
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Marker output type: [&#39;timeseries&#39;]
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Validating storage for Schaefer100x17_RSSETS
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Validating Marker: Schaefer200x17_RSSETS
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Marker output type: [&#39;timeseries&#39;]
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Validating storage for Schaefer200x17_RSSETS
-2025-09-22 13:47:01,549 - JUNIFER - INFO - Getting element sub001
-2025-09-22 13:47:03,599 - JUNIFER - INFO - Fitting pipeline
-2025-09-22 13:47:03,599 - JUNIFER - INFO - Reading BOLD from /tmp/tmpfk3zhi0p/sub001_bold.nii.gz
-2025-09-22 13:47:03,599 - JUNIFER - INFO - BOLD is of type NIFTI
-2025-09-22 13:47:03,600 - JUNIFER - INFO - Reading T1w from /tmp/tmpfk3zhi0p/sub001_T1w.nii.gz
-2025-09-22 13:47:03,600 - JUNIFER - INFO - T1w is of type NIFTI
-2025-09-22 13:47:03,601 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
-2025-09-22 13:47:03,601 - JUNIFER - INFO - Computing BOLD
-2025-09-22 13:47:03,601 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
-2025-09-22 13:47:03,601 - JUNIFER - INFO - Parcellation parameters:
-2025-09-22 13:47:03,601 - JUNIFER - INFO -      resolution: None
-2025-09-22 13:47:03,601 - JUNIFER - INFO -      n_rois: 100
-2025-09-22 13:47:03,601 - JUNIFER - INFO -      yeo_networks: 17
-2025-09-22 13:47:03,602 - JUNIFER - INFO - Resolution set to None, using highest resolution.
-2025-09-22 13:47:03,675 - JUNIFER - INFO - Loading parcellation: /github/home/junifer_data/v4/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
-2025-09-22 13:47:05,944 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
-2025-09-22 13:47:06,444 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpb_n3fsyv/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_9f34101e-97ba-11f0-85eb-42081f6b4700qc2jiicn/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpb_n3fsyv/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_9f34101e-97ba-11f0-85eb-42081f6b4700qc2jiicn/MNI152Lin_T1w.nii.gz -t /github/home/junifer_data/v4/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpb_n3fsyv/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_9f34101e-97ba-11f0-85eb-42081f6b4700qc2jiicn/parcellation_warped.nii.gz
-2025-09-22 13:47:12,746 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2025-09-22 15:05:25,664 - JUNIFER - INFO - Registering RSSETSMarker in marker
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Validating Marker Collection
+2025-09-22 15:05:25,664 - JUNIFER - INFO - DataGrabber output type: [&#39;BOLD&#39;, &#39;T1w&#39;]
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Validating Data Reader:
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Data Reader output type: [&#39;BOLD&#39;, &#39;T1w&#39;]
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Validating Marker: Schaefer100x17_RSSETS
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Marker output type: [&#39;timeseries&#39;]
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Validating storage for Schaefer100x17_RSSETS
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Validating Marker: Schaefer200x17_RSSETS
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Marker output type: [&#39;timeseries&#39;]
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Validating storage for Schaefer200x17_RSSETS
+2025-09-22 15:05:25,664 - JUNIFER - INFO - Getting element sub001
+2025-09-22 15:05:27,727 - JUNIFER - INFO - Fitting pipeline
+2025-09-22 15:05:27,727 - JUNIFER - INFO - Reading BOLD from /tmp/tmpocyx3now/sub001_bold.nii.gz
+2025-09-22 15:05:27,727 - JUNIFER - INFO - BOLD is of type NIFTI
+2025-09-22 15:05:27,728 - JUNIFER - INFO - Reading T1w from /tmp/tmpocyx3now/sub001_T1w.nii.gz
+2025-09-22 15:05:27,728 - JUNIFER - INFO - T1w is of type NIFTI
+2025-09-22 15:05:27,729 - JUNIFER - INFO - Fitting marker Schaefer100x17_RSSETS
+2025-09-22 15:05:27,729 - JUNIFER - INFO - Computing BOLD
+2025-09-22 15:05:27,729 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+2025-09-22 15:05:27,729 - JUNIFER - INFO - Parcellation parameters:
+2025-09-22 15:05:27,729 - JUNIFER - INFO -      resolution: None
+2025-09-22 15:05:27,729 - JUNIFER - INFO -      n_rois: 100
+2025-09-22 15:05:27,729 - JUNIFER - INFO -      yeo_networks: 17
+2025-09-22 15:05:27,729 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+2025-09-22 15:05:27,805 - JUNIFER - INFO - Loading parcellation: /github/home/junifer_data/v4/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+2025-09-22 15:05:30,150 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+2025-09-22 15:05:30,656 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpdgb9cpok/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_931690b2-97c5-11f0-ba11-569c478ed1dbqkp782fx/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpdgb9cpok/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_931690b2-97c5-11f0-ba11-569c478ed1dbqkp782fx/MNI152Lin_T1w.nii.gz -t /github/home/junifer_data/v4/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpdgb9cpok/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_931690b2-97c5-11f0-ba11-569c478ed1dbqkp782fx/parcellation_warped.nii.gz
+2025-09-22 15:05:36,950 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 
-2025-09-22 13:47:15,668 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpto_ivu5_/test.sqlite (multiple output)&gt;
-2025-09-22 13:47:15,690 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
-2025-09-22 13:47:15,690 - JUNIFER - INFO - Computing BOLD
-2025-09-22 13:47:15,690 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
-2025-09-22 13:47:15,690 - JUNIFER - INFO - Parcellation parameters:
-2025-09-22 13:47:15,690 - JUNIFER - INFO -      resolution: None
-2025-09-22 13:47:15,690 - JUNIFER - INFO -      n_rois: 200
-2025-09-22 13:47:15,690 - JUNIFER - INFO -      yeo_networks: 17
-2025-09-22 13:47:15,690 - JUNIFER - INFO - Resolution set to None, using highest resolution.
-2025-09-22 13:47:15,764 - JUNIFER - INFO - Loading parcellation: /github/home/junifer_data/v4/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
-2025-09-22 13:47:18,066 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
-2025-09-22 13:47:18,569 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpb_n3fsyv/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a669660e-97ba-11f0-85eb-42081f6b4700s9l0rmi7/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpb_n3fsyv/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a669660e-97ba-11f0-85eb-42081f6b4700s9l0rmi7/MNI152Lin_T1w.nii.gz -t /github/home/junifer_data/v4/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpb_n3fsyv/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a669660e-97ba-11f0-85eb-42081f6b4700s9l0rmi7/parcellation_warped.nii.gz
-2025-09-22 13:47:30,039 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+2025-09-22 15:05:40,056 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpp_519sby/test.sqlite (multiple output)&gt;
+2025-09-22 15:05:40,075 - JUNIFER - INFO - Fitting marker Schaefer200x17_RSSETS
+2025-09-22 15:05:40,075 - JUNIFER - INFO - Computing BOLD
+2025-09-22 15:05:40,076 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+2025-09-22 15:05:40,076 - JUNIFER - INFO - Parcellation parameters:
+2025-09-22 15:05:40,076 - JUNIFER - INFO -      resolution: None
+2025-09-22 15:05:40,076 - JUNIFER - INFO -      n_rois: 200
+2025-09-22 15:05:40,076 - JUNIFER - INFO -      yeo_networks: 17
+2025-09-22 15:05:40,076 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+2025-09-22 15:05:40,151 - JUNIFER - INFO - Loading parcellation: /github/home/junifer_data/v4/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+2025-09-22 15:05:42,468 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+2025-09-22 15:05:42,973 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpdgb9cpok/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9a727b00-97c5-11f0-ba11-569c478ed1dbfesq3dfc/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpdgb9cpok/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9a727b00-97c5-11f0-ba11-569c478ed1dbfesq3dfc/MNI152Lin_T1w.nii.gz -t /github/home/junifer_data/v4/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpdgb9cpok/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9a727b00-97c5-11f0-ba11-569c478ed1dbfesq3dfc/parcellation_warped.nii.gz
+2025-09-22 15:05:54,325 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 
-2025-09-22 13:47:32,377 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpto_ivu5_/test.sqlite (multiple output)&gt;
-2025-09-22 13:47:32,402 - JUNIFER - INFO - Marker collection fitting done
-2025-09-22 13:47:32,412 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
-2025-09-22 13:47:32,412 - JUNIFER - INFO - Collecting data from /tmp/tmpto_ivu5_/*test.sqlite
+2025-09-22 15:05:57,090 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpp_519sby/test.sqlite (multiple output)&gt;
+2025-09-22 15:05:57,112 - JUNIFER - INFO - Marker collection fitting done
+2025-09-22 15:05:57,123 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
+2025-09-22 15:05:57,123 - JUNIFER - INFO - Collecting data from /tmp/tmpp_519sby/*test.sqlite
 
 file: 0it [00:00, ?it/s]
 
 feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-feature: 100%|██████████| 2/2 [00:00&lt;00:00, 59.41it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 72.56it/s]
 
-file: 1it [00:00, 21.01it/s]
-2025-09-22 13:47:32,460 - JUNIFER - INFO - Collect done
+file: 1it [00:00, 24.79it/s]
+2025-09-22 15:05:57,164 - JUNIFER - INFO - Collect done
 {&#39;de47d0513cf22df792d264ecc363085a&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;SPMAuditoryTestingDataGrabber&#39;, &#39;types&#39;: [&#39;BOLD&#39;, &#39;T1w&#39;]}, &#39;dependencies&#39;: {&#39;nilearn&#39;: &#39;0.10.4&#39;}, &#39;datareader&#39;: {&#39;class&#39;: &#39;DefaultDataReader&#39;}, &#39;type&#39;: &#39;BOLD&#39;, &#39;marker&#39;: {&#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;class&#39;: &#39;RSSETSMarker&#39;, &#39;masks&#39;: None, &#39;name&#39;: &#39;Schaefer100x17_RSSETS_rss_ets&#39;, &#39;parcellation&#39;: &#39;Schaefer100x17&#39;}, &#39;_element_keys&#39;: [&#39;subject&#39;], &#39;name&#39;: &#39;BOLD_Schaefer100x17_RSSETS_rss_ets&#39;}, &#39;0ff7a9e8f65fc25885bd0cd4936f87a4&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;SPMAuditoryTestingDataGrabber&#39;, &#39;types&#39;: [&#39;BOLD&#39;, &#39;T1w&#39;]}, &#39;dependencies&#39;: {&#39;nilearn&#39;: &#39;0.10.4&#39;}, &#39;datareader&#39;: {&#39;class&#39;: &#39;DefaultDataReader&#39;}, &#39;type&#39;: &#39;BOLD&#39;, &#39;marker&#39;: {&#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;class&#39;: &#39;RSSETSMarker&#39;, &#39;masks&#39;: None, &#39;name&#39;: &#39;Schaefer200x17_RSSETS_rss_ets&#39;, &#39;parcellation&#39;: &#39;Schaefer200x17&#39;}, &#39;_element_keys&#39;: [&#39;subject&#39;], &#39;name&#39;: &#39;BOLD_Schaefer200x17_RSSETS_rss_ets&#39;}}
 </pre></div>
 </div>
@@ -533,7 +533,7 @@ file: 1it [00:00, 21.01it/s]
 </div>
 </div>
 <br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 30.935 seconds)</p>
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 31.524 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-ets-rss-marker-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/38a3ca477b4260f36bb72dbc46764f45/run_ets_rss_marker.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_ets_rss_marker.ipynb</span></code></a></p>
@@ -597,7 +597,7 @@ file: 1it [00:00, 21.01it/s]
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=0e65e5ca"></script>
+</div><script src="../_static/documentation_options.js?v=566c7b74"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
