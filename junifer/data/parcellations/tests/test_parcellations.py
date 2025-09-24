@@ -7,7 +7,6 @@
 
 from pathlib import Path
 
-import nibabel as nib
 import numpy as np
 import pytest
 from nilearn.image import new_img_like, resample_to_img
@@ -150,46 +149,6 @@ def test_parcellation_wrong_labels_values(tmp_path: Path) -> None:
         load_data(
             kind="parcellation",
             name="WrongLabels2",
-            target_space="MNI152NLin6Asym",
-        )
-
-    schaefer_data = schaefer.get_fdata().copy()
-    schaefer_data[schaefer_data == 50] = 0
-    new_schaefer_path = tmp_path / "new_schaefer.nii.gz"
-    new_schaefer_img = new_img_like(schaefer, schaefer_data)
-    nib.save(new_schaefer_img, new_schaefer_path)
-
-    register_data(
-        kind="parcellation",
-        name="WrongValues",
-        parcellation_path=new_schaefer_path,
-        parcels_labels=labels[:-1],
-        space="MNI152Lin",
-    )
-    with pytest.raises(ValueError, match=r"must have all the values in the"):
-        load_data(
-            kind="parcellation",
-            name="WrongValues",
-            target_space="MNI152NLin6Asym",
-        )
-
-    schaefer_data = schaefer.get_fdata().copy()
-    schaefer_data[schaefer_data == 50] = 200
-    new_schaefer_path = tmp_path / "new_schaefer2.nii.gz"
-    new_schaefer_img = new_img_like(schaefer, schaefer_data)
-    nib.save(new_schaefer_img, new_schaefer_path)
-
-    register_data(
-        kind="parcellation",
-        name="WrongValues2",
-        parcellation_path=new_schaefer_path,
-        parcels_labels=labels,
-        space="MNI152Lin",
-    )
-    with pytest.raises(ValueError, match=r"must have all the values in the"):
-        load_data(
-            kind="parcellation",
-            name="WrongValues2",
             target_space="MNI152NLin6Asym",
         )
 

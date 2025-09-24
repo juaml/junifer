@@ -413,12 +413,6 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                 )
             # Sort values
             parcel_values.sort()
-            # Check if value range is invalid
-            if np.any(np.diff(parcel_values) != 1):
-                raise_error(
-                    f"Parcellation {name} must have all the values in the "
-                    f"range [0, {len(parcel_values)}]"
-                )
 
         return parcellation_img, parcellation_labels, parcellation_fname, space
 
