@@ -205,6 +205,8 @@ class ANTsWarper:
                 ref_res = np.min(
                     input["reference"]["data"].header.get_zooms()[:3]
                 )
+                logger.debug(f"Input resolution: {input_res}")
+                logger.debug(f"Reference resolution: {ref_res}")
                 if input_res != ref_res:
                     # Create a tempfile for resampled reference output
                     ref_path = (
@@ -224,6 +226,9 @@ class ANTsWarper:
                     # Call ResampleImage
                     run_ext_cmd(name="ResampleImage", cmd=resample_image_cmd)
                 else:
+                    logger.debug(
+                        "Reference resolution matches input resolution"
+                    )
                     ref_path = input["reference"]["path"]
 
             # MNI to MNI
@@ -278,6 +283,7 @@ class ANTsWarper:
 
             # Check for data type's mask and warp if found
             if input.get("mask") is not None:
+                logger.debug("Warping associated mask")
                 # Create a tempfile for warped mask output
                 apply_transforms_mask_out_path = element_tempdir / (
                     f"warped_mask_from_{input_space}_to_{reference}.nii.gz"
