@@ -194,7 +194,10 @@ class FSLWarper:
             ref_resolution = np.min(
                 input["reference"]["data"].header.get_zooms()[:3]
             )
+            logger.debug(f"Input resolution: {input_resolution}")
+            logger.debug(f"Reference resolution: {ref_resolution}")
             if input_resolution != ref_resolution:
+                logger.debug("Resampling reference to match input resolution")
                 # Create a tempfile for resampled reference output
                 ref_path = (
                     element_tempdir / f"resampled_reference-{reference}.nii.gz"
@@ -211,6 +214,7 @@ class FSLWarper:
                 # Call flirt
                 run_ext_cmd(name="flirt", cmd=flirt_cmd)
             else:
+                logger.debug("Reference resolution matches input resolution")
                 ref_path = input["reference"]["path"]
 
             # Create a tempfile for warped output
@@ -249,6 +253,7 @@ class FSLWarper:
 
             # Check for data type's mask and warp if found
             if input.get("mask") is not None:
+                logger.debug("Warping associated mask")
                 # Create a tempfile for warped mask output
                 applywarp_mask_out_path = (
                     element_tempdir
