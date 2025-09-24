@@ -403,7 +403,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
         if not path_only:
             # Load image via nibabel
             parcellation_img = nib.load(parcellation_fname)
-            # Get unique values
+            # Get unique values (returns sorted result)
             parcel_values = np.unique(parcellation_img.get_fdata())
             # Check for dimension
             if len(parcel_values) - 1 != len(parcellation_labels):
@@ -411,8 +411,6 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                     f"Parcellation {name} has {len(parcel_values) - 1} "
                     f"parcels but {len(parcellation_labels)} labels."
                 )
-            # Sort values
-            parcel_values.sort()
 
         return parcellation_img, parcellation_labels, parcellation_fname, space
 
