@@ -180,27 +180,74 @@ class ANTsWarper:
 
         # Template space warping
         else:
+            input_space = input["space"]
             logger.debug(
-                f"Using ANTs to warp data from {input['space']} to {reference}"
+                f"Using ANTs to warp data from {input_space} space "
+                f"to {reference} space"
             )
 
-            # Get xfm file
-            xfm_file_path = get_xfm(src=input["space"], dst=reference)
-            # Get template space image
-            template_space_img = get_template(
-                space=reference,
-                target_img=input["data"],
-                extra_input=None,
-            )
-            # Save template
-            template_space_img_path = (
-                element_tempdir / f"{reference}_T1w.nii.gz"
-            )
-            nib.save(template_space_img, template_space_img_path)
+            # Native to MNI
+            if input_space == "native":
+                # Get warp file path
+                xfm_file_path = None
+                for entry in extra_input["Warp"]:
+                    if entry["src"] == "native" and entry["dst"] == reference:
+                        xfm_file_path = entry["path"]
+                if xfm_file_path is None:
+                    raise_error(
+                        klass=RuntimeError,
+                        msg="Could not find correct warp file path",
+                    )
+
+                # Use ResampleImage if input data resolution and reference
+                # resolution don't match
+                input_res = np.min(input["data"].header.get_zooms()[:3])
+                ref_res = np.min(
+                    input["reference"]["data"].header.get_zooms()[:3]
+                )
+                logger.debug(f"Input resolution: {input_res}")
+                logger.debug(f"Reference resolution: {ref_res}")
+                if input_res != ref_res:
+                    # Create a tempfile for resampled reference output
+                    ref_path = (
+                        element_tempdir
+                        / f"resampled_reference-{reference}.nii.gz"
+                    )
+                    # Set ResampleImage command
+                    resample_image_cmd = [
+                        "ResampleImage",
+                        "3",  # image dimension
+                        f"{input['reference']['path'].resolve()}",
+                        f"{ref_path.resolve()}",
+                        f"{input_res}x{input_res}x{input_res}",
+                        "0",  # option for spacing and not size
+                        "3 3",  # Lanczos windowed sinc
+                    ]
+                    # Call ResampleImage
+                    run_ext_cmd(name="ResampleImage", cmd=resample_image_cmd)
+                else:
+                    logger.debug(
+                        "Reference resolution matches input resolution"
+                    )
+                    ref_path = input["reference"]["path"]
+
+            # MNI to MNI
+            else:
+                # Get xfm file
+                xfm_file_path = get_xfm(src=input_space, dst=reference)
+                # Get template space image in correct resolution
+                template_space_img = get_template(
+                    space=reference,
+                    target_img=input["data"],
+                    extra_input=None,
+                )
+                # Save template
+                ref_path = element_tempdir / f"{reference}_T1w.nii.gz"
+                nib.save(template_space_img, ref_path)
 
             # Create a tempfile for warped output
             warped_output_path = element_tempdir / (
-                f"warped_data_from_{input['space']}_to_{reference}.nii.gz"
+                f"warped_data_from_{input_space}_to_{reference}.nii.gz"
             )
 
             # Set antsApplyTransforms command
@@ -210,7 +257,7 @@ class ANTsWarper:
                 "-e 3",
                 "-n LanczosWindowedSinc",
                 f"-i {input['path'].resolve()}",
-                f"-r {template_space_img_path.resolve()}",
+                f"-r {ref_path.resolve()}",
                 f"-t {xfm_file_path.resolve()}",
                 f"-o {warped_output_path.resolve()}",
             ]
@@ -226,18 +273,20 @@ class ANTsWarper:
                     "data": nib.load(warped_output_path),
                     # Update warped input's space
                     "space": reference,
-                    # Save reference path
-                    "reference": {"path": template_space_img_path},
+                    # Save resampled reference path or overwrite original
+                    # keeping it same
+                    "reference": {"path": ref_path},
                     # Keep pre-warp space for further operations
-                    "prewarp_space": input["space"],
+                    "prewarp_space": input_space,
                 }
             )
 
             # Check for data type's mask and warp if found
             if input.get("mask") is not None:
+                logger.debug("Warping associated mask")
                 # Create a tempfile for warped mask output
                 apply_transforms_mask_out_path = element_tempdir / (
-                    f"warped_mask_from_{input['space']}_to_{reference}.nii.gz"
+                    f"warped_mask_from_{input_space}_to_{reference}.nii.gz"
                 )
                 # Set antsApplyTransforms command
                 apply_transforms_mask_cmd = [
@@ -246,8 +295,8 @@ class ANTsWarper:
                     "-e 3",
                     "-n 'GenericLabel[NearestNeighbor]'",
                     f"-i {input['mask']['path'].resolve()}",
-                    # use resampled reference
-                    f"-r {input['reference']['path'].resolve()}",
+                    # use resampled reference or original
+                    f"-r {ref_path.resolve()}",
                     f"-t {xfm_file_path.resolve()}",
                     f"-o {apply_transforms_mask_out_path.resolve()}",
                 ]
