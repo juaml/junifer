@@ -1364,7 +1364,7 @@ def merge_parcellations(
         # Resample to reference (1st in the list) parcellation
         if parc.shape != ref_parc.shape:
             warn_with_log(
-                "The parcellations have different resolutions!"
+                "The parcellations have different resolutions. "
                 "Resampling all parcellations to the first one in the list."
             )
             parc = nimg.resample_to_img(
