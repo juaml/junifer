@@ -1346,34 +1346,47 @@ def merge_parcellations(
             ]
     overlapping_voxels = False
     ref_parc = parcellations_list[0]
-    parc_data = ref_parc.get_fdata()
+    ref_parc_data = ref_parc.get_fdata()
 
     labels = labels_lists[0]
 
-    for t_parc, t_labels in zip(parcellations_list[1:], labels_lists[1:]):
-        if t_parc.shape != ref_parc.shape:
+    # Get max value for the parcellation ROIs to get a reference for ROI value
+    # increment
+    max_val = np.max(
+        np.concatenate(
+            [np.unique(p.get_fdata().astype(int)) for p in parcellations_list]
+        )
+    )
+
+    for idx, (parc, labs) in enumerate(
+        zip(parcellations_list[1:], labels_lists[1:])
+    ):
+        # Resample to reference (1st in the list) parcellation
+        if parc.shape != ref_parc.shape:
             warn_with_log(
                 "The parcellations have different resolutions!"
                 "Resampling all parcellations to the first one in the list."
             )
-            t_parc = nimg.resample_to_img(
-                t_parc, ref_parc, interpolation="nearest", copy=True
+            parc = nimg.resample_to_img(
+                source_img=parc,
+                target_img=ref_parc,
+                interpolation="nearest",
+                copy=True,
             )
-
         # Get the data from this parcellation
-        t_parc_data = t_parc.get_fdata().copy()  # must be copied
+        parc_data = parc.get_fdata().copy()  # must be copied
         # Increase the values of each ROI to match the labels
-        t_parc_data[t_parc_data != 0] += len(labels)
+        parc_data[parc_data != 0] += (idx + 1) * max_val
 
         # Only set new values for the voxels that are 0
         # This makes sure that the voxels that are in multiple
         # parcellations are assigned to the parcellation that was
         # first in the list.
-        if np.any(parc_data[t_parc_data != 0] != 0):
+        if np.any(ref_parc_data[parc_data != 0] != 0):
             overlapping_voxels = True
 
-        parc_data[parc_data == 0] += t_parc_data[parc_data == 0]
-        labels.extend(t_labels)
+        ref_parc_data[ref_parc_data == 0] += parc_data[ref_parc_data == 0]
+        labels.extend(labs)
 
     if overlapping_voxels:
         warn_with_log(
@@ -1382,6 +1395,9 @@ def merge_parcellations(
             "parcellation that was first in the list."
         )
 
-    parcellation_img_res = nimg.new_img_like(parcellations_list[0], parc_data)
+    parcellation_img_res = nimg.new_img_like(
+        ref_niimg=parcellations_list[0],
+        data=ref_parc_data,
+    )
 
     return parcellation_img_res, labels
