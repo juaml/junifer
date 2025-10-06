@@ -143,8 +143,7 @@ def get_data(
     Returns
     -------
     tuple of numpy.ndarray, list of str; \
-    tuple of nibabel.nifti1.Nifti1Image, dict of int and str or,
-    list of str; \
+    tuple of nibabel.nifti1.Nifti1Image, dict or list of str; \
     nibabel.nifti1.Nifti1Image
 
     Raises

@@ -438,7 +438,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
         -------
         Nifti1Image
             The parcellation image.
-        dict of int and str
+        dict
             Parcellation value to label mappings.
 
         Raises
