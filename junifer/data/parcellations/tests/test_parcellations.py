@@ -1131,7 +1131,7 @@ def test_get_single() -> None:
             tailored_parcellation.get_fdata(),
             resampled_raw_parcellation.get_fdata(),
         )
-        assert tailored_labels == raw_labels
+        assert list(tailored_labels.values()) == raw_labels
 
 
 def test_get_multi_same_space() -> None:
