@@ -213,7 +213,7 @@ class ParcelAggregation(BaseMarker):
         logger.debug("Computing ROI means")
         out_values = []
         # Iterate over the parcels (existing)
-        for t_v in range(1, len(labels) + 1):
+        for t_v in labels.keys():
             t_values = agg_func(data[:, parcellation_values == t_v], axis=-1)
             out_values.append(t_values)
             # Update the labels just in case a parcel has no voxels
@@ -238,6 +238,6 @@ class ParcelAggregation(BaseMarker):
         return {
             "aggregation": {
                 "data": out_values,
-                "col_names": labels,
+                "col_names": list(labels.values()),
             },
         }

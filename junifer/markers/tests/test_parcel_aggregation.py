@@ -408,8 +408,8 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
         parcellation2_data = parcellation_data.copy()
         parcellation2_data[parcellation2_data <= 8] = 0
         parcellation2_data[parcellation2_data > 0] -= 8
-        labels1 = labels[:8]
-        labels2 = labels[8:]
+        labels1 = list(labels.values())[:8]
+        labels2 = list(labels.values())[8:]
 
         parcellation1_img = new_img_like(
             testing_parcellation, parcellation1_data
@@ -512,8 +512,9 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
         # Make the second parcellation overlap with the first
         parcellation2_data[parcellation2_data <= 6] = 0
         parcellation2_data[parcellation2_data > 0] -= 6
-        labels1 = [f"low_{x}" for x in labels[:8]]  # Change the labels
-        labels2 = [f"high_{x}" for x in labels[6:]]  # Change the labels
+        # Change the labels
+        labels1 = [f"low_{x}" for x in list(labels.values())[:8]]
+        labels2 = [f"high_{x}" for x in list(labels.values())[6:]]
 
         parcellation1_img = new_img_like(
             testing_parcellation, parcellation1_data
@@ -621,8 +622,8 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
         parcellation2_data = parcellation_data.copy()
         parcellation2_data[parcellation2_data <= 8] = 0
         parcellation2_data[parcellation2_data > 0] -= 8
-        labels1 = labels[:8]
-        labels2 = labels[7:-1]  # One label is duplicated
+        labels1 = list(labels.values())[:8]
+        labels2 = list(labels.values())[7:-1]  # One label is duplicated
 
         parcellation1_img = new_img_like(
             testing_parcellation, parcellation1_data
