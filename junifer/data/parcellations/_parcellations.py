@@ -419,7 +419,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
         parcellations: Union[str, list[str]],
         target_data: dict[str, Any],
         extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple["Nifti1Image", list[str]]:
+    ) -> tuple["Nifti1Image", dict[int, str]]:
         """Get parcellation, tailored for the target image.
 
         Parameters
@@ -438,8 +438,8 @@ class ParcellationRegistry(BasePipelineDataRegistry):
         -------
         Nifti1Image
             The parcellation image.
-        list of str
-            Parcellation labels.
+        dict of int and str
+            Parcellation value to label mappings.
 
         Raises
         ------
@@ -553,7 +553,16 @@ class ParcellationRegistry(BasePipelineDataRegistry):
         # Avoid merging if there is only one parcellation
         if len(all_parcellations) == 1:
             resampled_parcellation_img = all_parcellations[0]
-            labels = all_labels[0]
+            labels = dict(
+                zip(
+                    np.trim_zeros(
+                        np.unique(
+                            resampled_parcellation_img.get_fdata().astype(int)
+                        )
+                    ),
+                    all_labels[0],
+                )
+            )
         # Parcellations are already transformed to target standard space
         else:
             logger.debug("Merging parcellations.")
@@ -1302,7 +1311,7 @@ def merge_parcellations(
     parcellations_list: list["Nifti1Image"],
     parcellations_names: list[str],
     labels_lists: list[list[str]],
-) -> tuple["Nifti1Image", list[str]]:
+) -> tuple["Nifti1Image", dict[int, str]]:
     """Merge multiple parcellations.
 
     Parameters
@@ -1320,8 +1329,8 @@ def merge_parcellations(
     Niimg-like object
         The parcellation that results from merging the list of input
         parcellations.
-    list of str
-        List of labels for the resultant parcellation.
+    dict of int and str
+        Merged parcellation value to label mappings.
 
     """
     # Check for duplicated labels
@@ -1340,14 +1349,19 @@ def merge_parcellations(
     ref_parc = parcellations_list[0]
     ref_parc_data = ref_parc.get_fdata()
 
-    labels = labels_lists[0]
-
     # Get max value for the parcellation ROIs to get a reference for ROI value
     # increment
     max_val = np.max(
         np.concatenate(
             [np.unique(p.get_fdata().astype(int)) for p in parcellations_list]
         )
+    )
+    # Setup parcellation value to label mapping
+    val_label_map = dict(
+        zip(
+            np.trim_zeros(np.unique(ref_parc_data.astype(int))),
+            labels_lists[0],
+        ),
     )
 
     for idx, (parc, labs) in enumerate(
@@ -1368,8 +1382,11 @@ def merge_parcellations(
         # Get the data from this parcellation
         parc_data = parc.get_fdata().copy()  # must be copied
         # Increase the values of each ROI to match the labels
+        # and update label mapping
         parc_data[parc_data != 0] += (idx + 1) * max_val
-
+        val_label_map.update(
+            dict(zip(np.trim_zeros(np.unique(parc_data.astype(int))), labs))
+        )
         # Only set new values for the voxels that are 0
         # This makes sure that the voxels that are in multiple
         # parcellations are assigned to the parcellation that was
@@ -1378,7 +1395,6 @@ def merge_parcellations(
             overlapping_voxels = True
 
         ref_parc_data[ref_parc_data == 0] += parc_data[ref_parc_data == 0]
-        labels.extend(labs)
 
     if overlapping_voxels:
         warn_with_log(
@@ -1392,4 +1408,4 @@ def merge_parcellations(
         data=ref_parc_data,
     )
 
-    return parcellation_img_res, labels
+    return parcellation_img_res, val_label_map
