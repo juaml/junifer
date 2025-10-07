@@ -120,7 +120,8 @@ def get_data(
     extra_input: Optional[dict[str, Any]] = None,
 ) -> Union[
     tuple[ArrayLike, list[str]],  # coordinates
-    tuple["Nifti1Image", list[str]],  # parcellation / maps
+    tuple["Nifti1Image", dict[int, str]],  # parcellation
+    tuple["Nifti1Image", list[str]],  # maps
     "Nifti1Image",  # mask
 ]:
     """Get tailored ``kind`` for ``target_data``.
@@ -142,7 +143,7 @@ def get_data(
     Returns
     -------
     tuple of numpy.ndarray, list of str; \
-    tuple of nibabel.nifti1.Nifti1Image, list of str; \
+    tuple of nibabel.nifti1.Nifti1Image, dict or list of str; \
     nibabel.nifti1.Nifti1Image
 
     Raises
