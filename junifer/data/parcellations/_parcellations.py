@@ -190,6 +190,15 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                     },
                 }
             )
+        # Add FreeSurfer 7.4.1 aseg
+        self._builtin.update(
+            {
+                "aseg-7_4_1": {
+                    "family": "FreeSurfer",
+                    "space": "fsaverage",
+                }
+            }
+        )
 
         # Update registry with built-in ones
         self._registry.update(self._builtin)
@@ -355,6 +364,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
             "Shen",
             "Yan2023",
             "Brainnetome",
+            "FreeSurfer",
         ]:
             # Load parcellation and labels
             if t_family == "Schaefer2018":
@@ -393,6 +403,10 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                         resolution=resolution,
                         **parcellation_definition,
                     )
+                )
+            elif t_family == "FreeSurfer":
+                parcellation_fname, parcellation_labels = _retrieve_aseg(
+                    resolution=resolution,
                 )
         else:
             raise_error(f"Unknown parcellation family: {t_family}")
@@ -1302,6 +1316,106 @@ def _retrieve_brainnetome(
         + sorted([f"Hipp_L(R)_2_{i}" for i in range(1, 3)] * 2)
         + sorted([f"BG_L(R)_6_{i}" for i in range(1, 7)] * 2)
         + sorted([f"Tha_L(R)_8_{i}" for i in range(1, 9)] * 2)
+    )
+
+    return parcellation_img_path, labels
+
+
+def _retrieve_aseg(
+    resolution: Optional[float] = None,
+) -> tuple[Path, list[str]]:
+    """Retrieve aseg generated from FreeSurfer 7.4.1 .
+
+    Parameters
+    ----------
+    resolution : 1.0, optional
+        The desired resolution of the parcellation to load. If it is not
+        available, the closest resolution will be loaded. Preferably, use a
+        resolution higher than the desired one. By default, will load the
+        highest one (default None). Available resolution for this
+        parcellation is 1mm.
+
+    Returns
+    -------
+    pathlib.Path
+        File path to the parcellation image.
+    list of str
+        Parcellation labels.
+
+    """
+    logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
+
+    _valid_resolutions = [1.0]
+    _ = closest_resolution(resolution, _valid_resolutions)
+
+    path_prefix = Path("parcellations/FreeSurfer-7_4_1")
+    parcellation_img_path = get(
+        file_path=path_prefix / "aseg.nii",
+        dataset_path=get_dataset_path(),
+        **JUNIFER_DATA_PARAMS,
+    )
+    parcellation_label_path = get(
+        file_path=path_prefix / "ASegStatsLUT.txt",
+        dataset_path=get_dataset_path(),
+        **JUNIFER_DATA_PARAMS,
+    )
+    # Explicitly indexed to get proper labels
+    idxs = [
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        24,
+        26,
+        28,
+        30,
+        31,
+        41,
+        42,
+        43,
+        44,
+        46,
+        47,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        58,
+        60,
+        62,
+        63,
+        77,
+        85,
+        251,
+        252,
+        253,
+        254,
+        255,
+    ]
+    labels = (
+        pd.read_csv(
+            parcellation_label_path,
+            sep=r"\s+",
+            skiprows=6,
+            header=None,
+            index_col=0,
+        )
+        .loc[idxs][1]
+        .to_list()
     )
 
     return parcellation_img_path, labels
