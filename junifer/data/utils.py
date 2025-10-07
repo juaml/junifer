@@ -24,10 +24,10 @@ __all__ = [
 
 
 # junifer-data version constant
-JUNIFER_DATA_VERSION = "4"
+JUNIFER_DATA_VERSION = "5"
 
 # junifer-data hexsha constant
-JUNIFER_DATA_HEXSHA = "d178bddf383fede04742d7020312a574de47f0ab"
+JUNIFER_DATA_HEXSHA = "62a0e3d187259a3c3ba7be638ee39cfb40df0a61"
 
 JUNIFER_DATA_PARAMS = {
     "tag": JUNIFER_DATA_VERSION,

@@ -941,6 +941,27 @@ def test_retrieve_brainnetome_incorrect_threshold() -> None:
         )
 
 
+def test_aseg() -> None:
+    """Test FreeSurfer 7.4.1 aseg parcellation."""
+    parcellations = list_data(kind="parcellation")
+    assert "aseg-7_4_1" in parcellations
+
+    # Load parcellation
+    img, label, img_path, space = load_data(
+        kind="parcellation",
+        name="aseg-7_4_1",
+        target_space="fsaverage",
+    )
+    assert img is not None
+    assert img_path.name == "aseg.nii"
+    assert space == "fsaverage"
+    assert len(label) == 43
+    assert_array_equal(
+        img.header["pixdim"][1:4],
+        3 * [1],
+    )
+
+
 def test_merge_parcellations() -> None:
     """Test merging parcellations."""
     # load some parcellations for testing
