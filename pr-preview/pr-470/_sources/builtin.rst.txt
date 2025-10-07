@@ -453,6 +453,16 @@ Available
        | Architecture
        | Cerebral Cortex, Volume 26(8), Pages 3508–3526 (2016).
        | https://doi.org/10.1093/cercor/bhw157
+   * - FreeSurfer 7.4.1 anatomical segmentation atlas
+     - None
+     - ``aseg-7_4_1``
+     - ``fsaverage``
+     - 0.0.7
+     - | Fischl B, Salat DH, Busa E, et al.
+       | Whole brain segmentation: automated labeling of neuroanatomical
+       | structures in the human brain.
+       | Neuron., Volume 33(3), Pages 341-355 (2002).
+       | https://doi:10.1016/s0896-6273(02)00569-x
 
 
 Planned
@@ -492,12 +502,6 @@ Planned
        | anatomical nomenclature.
        | NeuroImage, Volume 53(1), Pages 1–15 (2010).
        | http://doi.org/10.1016/j.neuroimage.2010.06.010.
-   * - Fan
-     - | Fan, L., Li, H., Zhuo, J. et al.
-       | The human brainnetome atlas: a new brain atlas based on connectional
-       | architecture.
-       | Cerebral cortex, Volume 26(8), Pages 3508-3526 (2016).
-       | https://doi.org/10.1093/cercor/bhw157
    * - Buckner
      - | Buckner, R.L., Krienen, F.M., Castellanos, A., Diaz, J.C., Yeo, B.T.T.
        | The organization of the human cerebellum estimated by intrinsic
