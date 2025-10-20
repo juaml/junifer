@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v5
       - name: Install cosign
         if: github.event_name != 'pull_request'
-        uses: sigstore/cosign-installer@v3.10.0
+        uses: sigstore/cosign-installer@v4.0.0
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3.11.1
       - name: Log into registry ${{ env.REGISTRY }}
