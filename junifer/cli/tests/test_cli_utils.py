@@ -49,6 +49,7 @@ def test_get_dependency_information_short() -> None:
         "lazy_loader",
         "looseversion",
         "junifer_data",
+        "structlog",
     ]
 
     if sys.version_info < (3, 11):
