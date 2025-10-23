@@ -235,7 +235,6 @@ def configure_logging(
     level: Union[int, str] = "WARNING",
     fname: Optional[Union[str, Path]] = None,
     overwrite: Optional[bool] = None,
-    output_format=None,
     level_datalad: Union[int, str, None] = None,
 ) -> None:
     """Configure the logging functionality.
@@ -253,12 +252,6 @@ def configure_logging(
         will be appended to the log (default). None is the same as False,
         but additionally raises a warning to notify the user that log
         entries will be appended (default None).
-    output_format : str, optional
-        Format of the output messages. See the following for examples:
-        https://docs.python.org/dev/howto/logging.html
-        e.g., ``"%(asctime)s - %(levelname)s - %(message)s"``.
-        If None, default string format is used
-        (default ``"%(asctime)s - %(name)s - %(levelname)s - %(message)s"``).
     level_datalad : int or {"DEBUG", "INFO", "WARNING", "ERROR"}, optional
         The level of the messages to print for datalad. If string, it will be
         interpreted as elements of logging. If None, it will be set as the
@@ -288,10 +281,6 @@ def configure_logging(
         lh = logging.FileHandler(fname, mode=mode)
     else:
         lh = logging.StreamHandler(WrapStdOut())  # type: ignore
-
-    # Set logging format
-    if output_format is None:
-        output_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
     logger.setLevel(level)  # set level
 
