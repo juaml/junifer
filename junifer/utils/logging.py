@@ -14,6 +14,7 @@ else:
     from looseversion import LooseVersion
 
 import logging
+import logging.config
 import warnings
 from pathlib import Path
 from typing import ClassVar, NoReturn, Optional, Union
@@ -33,7 +34,87 @@ __all__ = [
 ]
 
 
-logger = structlog.getLogger("JUNIFER")
+# Common processors for stdlib and structlog
+_timestamper = structlog.processors.TimeStamper(fmt="%Y-%m-%d %H:%M:%S")
+
+
+def _remove_datalad_message(_, __, event_dict):
+    """Clean datalad records."""
+    if "message" in event_dict:
+        event_dict.pop("message")
+    return event_dict
+
+
+_pre_chain = [
+    structlog.stdlib.add_log_level,
+    structlog.stdlib.add_logger_name,
+    structlog.stdlib.ExtraAdder(),
+    _timestamper,
+    _remove_datalad_message,
+]
+
+
+def _configure_stdlib(level: int = logging.WARNING) -> None:
+    """Configure stdlib logging.
+
+    Parameters
+    ----------
+    level : int, optional
+        The logging level (default 30).
+
+    """
+    logging.config.dictConfig(
+        {
+            "version": 1,
+            "disable_existing_loggers": False,
+            "formatters": {
+                "console": {
+                    "()": structlog.stdlib.ProcessorFormatter,
+                    "processors": [
+                        structlog.stdlib.add_logger_name,
+                        structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+                        structlog.dev.ConsoleRenderer(
+                            colors=sys.stdout.isatty() and sys.stderr.isatty()
+                        ),
+                    ],
+                    "foreign_pre_chain": _pre_chain,
+                },
+            },
+            "handlers": {
+                "default": {
+                    "level": level,
+                    "class": "logging.StreamHandler",
+                    "formatter": "console",
+                },
+            },
+            "loggers": {
+                "": {
+                    "handlers": ["default"],
+                    "level": level,
+                    "propagate": True,
+                },
+            },
+        }
+    )
+
+
+# Initial logging setup
+_configure_stdlib()
+structlog.configure(
+    processors=[
+        structlog.stdlib.add_log_level,
+        structlog.stdlib.PositionalArgumentsFormatter(),
+        _timestamper,
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
+    ],
+    logger_factory=structlog.stdlib.LoggerFactory(),
+    wrapper_class=structlog.stdlib.BoundLogger,
+    cache_logger_on_first_use=True,
+)
+
+logger = logging.getLogger("junifer")
 
 # Set up datalad logger level to warning by default
 datalad.log.lgr.setLevel(logging.WARNING)
