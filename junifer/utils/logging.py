@@ -23,7 +23,6 @@ import structlog
 
 
 __all__ = [
-    "WrapStdOut",
     "configure_logging",
     "get_versions",
     "log_versions",
@@ -142,6 +141,7 @@ def capture_warnings():
 capture_warnings()
 
 
+# TODO(synchon): check whether to keep or not
 class WrapStdOut(logging.StreamHandler):
     """Dynamically wrap to sys.stdout.
 
