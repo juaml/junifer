@@ -141,25 +141,6 @@ def capture_warnings():
 capture_warnings()
 
 
-# TODO(synchon): check whether to keep or not
-class WrapStdOut(logging.StreamHandler):
-    """Dynamically wrap to sys.stdout.
-
-    This makes packages that monkey-patch sys.stdout (e.g.doctest,
-    sphinx-gallery) work properly.
-
-    """
-
-    def __getattr__(self, name: str) -> str:
-        """Implement attribute fetch."""
-        # Even more ridiculous than this class, this must be sys.stdout (not
-        # just stdout) in order for this to work (tested on OSX and Linux)
-        if hasattr(sys.stdout, name):
-            return getattr(sys.stdout, name)
-        else:  # pragma: no cover
-            raise AttributeError(f"'file' object has not attribute '{name}'")
-
-
 def get_versions() -> dict:
     """Import stuff and get versions if module.
 
