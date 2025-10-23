@@ -15,7 +15,6 @@ else:
 import logging
 import logging.config
 import warnings
-from pathlib import Path
 from typing import NoReturn, Optional, Union
 from warnings import warn
 
@@ -233,8 +232,6 @@ def log_versions() -> None:
 
 def configure_logging(
     level: Union[int, str] = "WARNING",
-    fname: Optional[Union[str, Path]] = None,
-    overwrite: Optional[bool] = None,
     level_datalad: Union[int, str, None] = None,
 ) -> None:
     """Configure the logging functionality.
@@ -244,14 +241,6 @@ def configure_logging(
     level : int or {"DEBUG", "INFO", "WARNING", "ERROR"}
         The level of the messages to print. If string, it will be interpreted
         as elements of logging (default "WARNING").
-    fname : str or pathlib.Path, optional
-        Filename of the log to print to. If None, stdout is used
-        (default None).
-    overwrite : bool, optional
-        Overwrite the log file (if it exists). Otherwise, statements
-        will be appended to the log (default). None is the same as False,
-        but additionally raises a warning to notify the user that log
-        entries will be appended (default None).
     level_datalad : int or {"DEBUG", "INFO", "WARNING", "ERROR"}, optional
         The level of the messages to print for datalad. If string, it will be
         interpreted as elements of logging. If None, it will be set as the
@@ -264,24 +253,6 @@ def configure_logging(
     if isinstance(level, str):
         level = _logging_types[level]
 
-    # Set logging output handler
-    if fname is not None:
-        # Convert str to Path
-        if not isinstance(fname, Path):
-            fname = Path(fname)
-        if fname.exists() and overwrite is None:
-            warn(
-                f"File ({fname.absolute()!s}) exists. "
-                "Messages will be appended. Use overwrite=True to "
-                "overwrite or overwrite=False to avoid this message.",
-                stacklevel=2,
-            )
-            overwrite = False
-        mode = "w" if overwrite else "a"
-        lh = logging.FileHandler(fname, mode=mode)
-    else:
-        lh = logging.StreamHandler(WrapStdOut())  # type: ignore
-
     logger.setLevel(level)  # set level
 
     # Set datalad logging level accordingly
@@ -292,7 +263,6 @@ def configure_logging(
         level_datalad = level
     datalad.log.lgr.setLevel(level_datalad)  # set level for datalad
 
-    logger.addHandler(lh)  # set handler
     log_versions()  # log versions of installed packages
 
 
