@@ -10,7 +10,6 @@ import logging
 import pytest
 
 from junifer.utils.logging import (
-    configure_logging,
     get_versions,
     log_versions,
     logger,
@@ -38,6 +37,7 @@ def test_log_versions(caplog: pytest.LogCaptureFixture) -> None:
     with caplog.at_level(logging.INFO):
         # Log versions
         log_versions()
+        assert len(caplog.records) != 0
         # Check logging levels
         for record in caplog.records:
             assert record.levelname not in ("DEBUG", "WARNING", "ERROR")
@@ -57,10 +57,13 @@ def test_log_stdout(caplog: pytest.LogCaptureFixture) -> None:
         The pytest.LogCaptureFixture object.
 
     """
-    configure_logging()
-    logger.info("Testing")
-    for record in caplog.records:
-        assert record.levelname == "INFO"
+    # Set log capturing at INFO
+    with caplog.at_level(logging.INFO):
+        logger.info("Testing")
+        assert len(caplog.records) == 1
+        for record in caplog.records:
+            assert record.levelname == "INFO"
+        assert "Testing" in caplog.text
 
 
 def test_raise_error(caplog: pytest.LogCaptureFixture) -> None:
@@ -74,8 +77,10 @@ def test_raise_error(caplog: pytest.LogCaptureFixture) -> None:
     """
     with pytest.raises(ValueError, match="test error"):
         raise_error(msg="test error")
+        assert len(caplog.records) == 1
         for record in caplog.records:
             assert record.levelname == "ERROR"
+        assert "test error" in caplog.text
 
 
 def test_warn_with_log(caplog: pytest.LogCaptureFixture) -> None:
@@ -87,7 +92,16 @@ def test_warn_with_log(caplog: pytest.LogCaptureFixture) -> None:
         The pytest.LogCaptureFixture object.
 
     """
-    with pytest.warns(RuntimeWarning, match="test warning"):
-        warn_with_log("test warning")
-        for record in caplog.records:
-            assert record.levelname == "WARNING"
+    # Explicitly needed as pytest messes with logging
+    from junifer.utils.logging import capture_warnings
+
+    capture_warnings()
+    # Check logging
+    warn_with_log("test warning")
+    assert len(caplog.records) == 1
+    for record in caplog.records:
+        assert record.levelname == "WARNING"
+    assert "test warning" in caplog.text
+    # Check normal warning capture
+    with pytest.warns(RuntimeWarning, match="test warning 2"):
+        warn_with_log("test warning 2")
