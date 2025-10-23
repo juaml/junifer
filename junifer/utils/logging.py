@@ -113,8 +113,10 @@ structlog.configure(
 
 logger = logging.getLogger("junifer")
 
-# Set up datalad logger level to warning by default
-datalad.log.lgr.setLevel(logging.WARNING)
+# Remove datalad logger handlers to avoid duplicate logging
+_datalad_lgr_hdlrs = datalad.log.lgr.handlers
+for h in _datalad_lgr_hdlrs:
+    datalad.log.lgr.removeHandler(h)
 
 _logging_types = {
     "DEBUG": logging.DEBUG,
@@ -127,12 +129,10 @@ _logging_types = {
 # Copied over from stdlib and tweaked to our use-case.
 def _showwarning(message, category, filename, lineno, file=None, line=None):
     s = warnings.formatwarning(message, category, filename, lineno, line)
-    logger.warning(str(s))
+    logger.warning(s)
 
 
 # Overwrite warnings display to integrate with logging
-
-
 def capture_warnings():
     """Capture warnings and log them."""
     warnings.showwarning = _showwarning
@@ -193,11 +193,9 @@ def _close_handlers(logger: logging.Logger) -> None:  # pragma: no cover
         The logger to close handlers for.
 
     """
-    for handler in list(logger.handlers):
-        if isinstance(handler, (logging.FileHandler, logging.StreamHandler)):
-            if isinstance(handler, logging.FileHandler):
-                handler.close()
-            logger.removeHandler(handler)
+    hdlrs = logger.handlers
+    for h in hdlrs:
+        logger.removeHandler(h)
 
 
 def log_versions() -> None:
@@ -247,23 +245,21 @@ def configure_logging(
         ``level`` parameter (default None).
 
     """
-    _close_handlers(logger)  # close relevant logger handlers
-
+    _close_handlers(logger)
     # Set logging level
     if isinstance(level, str):
         level = _logging_types[level]
 
-    logger.setLevel(level)  # set level
-
+    _configure_stdlib(level)
     # Set datalad logging level accordingly
     if level_datalad is not None:
         if isinstance(level_datalad, str):
             level_datalad = _logging_types[level_datalad]
     else:
         level_datalad = level
-    datalad.log.lgr.setLevel(level_datalad)  # set level for datalad
+    datalad.log.lgr.setLevel(level_datalad)
 
-    log_versions()  # log versions of installed packages
+    log_versions()
 
 
 def raise_error(
