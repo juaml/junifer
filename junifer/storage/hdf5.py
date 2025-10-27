@@ -182,14 +182,12 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             If ``element=None`` when ``single_output=False``.
 
         """
-        if not self.single_output and not element:
+        if not self.single_output and element is None:
             raise_error(
-                msg=(
-                    "`element` must be provided when `single_output` is False"
-                ),
+                msg="`element` must be provided when `single_output=False`",
                 klass=RuntimeError,
             )
-        elif not self.single_output and element:
+        elif not self.single_output and element is not None:
             # element access for multi output only
             prefix = element_to_prefix(element=element)
         else:
