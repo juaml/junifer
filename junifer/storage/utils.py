@@ -6,7 +6,7 @@
 
 import hashlib
 import json
-from collections.abc import Iterable
+from collections.abc import Sequence
 from importlib.metadata import PackageNotFoundError, version
 
 import numpy as np
@@ -268,8 +268,8 @@ def store_timeseries_2d_checks(
 
 def matrix_to_vector(
     data: np.ndarray,
-    col_names: Iterable[str],
-    row_names: Iterable[str],
+    col_names: Sequence[str],
+    row_names: Sequence[str],
     matrix_kind: str,
     diagonal: bool,
 ) -> tuple[np.ndarray, list[str]]:
@@ -279,9 +279,9 @@ def matrix_to_vector(
     ----------
     data : 2D / 3D numpy.ndarray
         The matrix / tensor data to store / read.
-    col_names : list or tuple of str
+    col_names : list-like of str
         The column labels.
-    row_names : list or tuple of str
+    row_names : list-like of str
         The row labels.
     matrix_kind : str
         The kind of matrix:
@@ -326,8 +326,8 @@ def matrix_to_vector(
 
 def timeseries2d_to_vector(
     data: np.ndarray,
-    col_names: Iterable[str],
-    row_names: Iterable[str],
+    col_names: Sequence[str],
+    row_names: Sequence[str],
 ) -> tuple[np.ndarray, list[str]]:
     """Convert matrix to vector based on parameters.
 
@@ -335,9 +335,9 @@ def timeseries2d_to_vector(
     ----------
     data : 2D / 3D numpy.ndarray
         The matrix / tensor data to store / read.
-    col_names : list or tuple of str
+    col_names : list-like of str
         The column labels.
-    row_names : list or tuple of str
+    row_names : list-like of str
         The row labels.
 
     Returns
