@@ -61,7 +61,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         single_output: bool = True,
         upsert: str = "update",
     ) -> None:
-        # Check upsert argument value
+        # Check and set upsert argument value
         if upsert not in ["update", "ignore"]:
             raise_error(
                 msg=(
@@ -88,6 +88,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         -------
         sqlalchemy.engine.Engine
             The sqlalchemy engine.
+
+        Raises
+        ------
+        ValueError
+            If ``element=None`` when ``single_output=False``.
 
         """
         # Prefixed elements
@@ -128,8 +133,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         Raises
         ------
         ValueError
-            If the table exists and if_exists is "fail" or if invalid option is
-            passed to `if_exists`.
+            If the table exists and ``if_exists="fail"`` or
+            if invalid option is passed to ``if_exists``.
 
         """
         # Get index names
@@ -238,10 +243,14 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         dict
             The stored feature as a dictionary.
 
+        Raises
+        ------
+        NotImplementedError
+
         """
         raise_error(
             msg=(
-                "read() for SQLiteFeatureStorage is not currently planned to "
+                "SQLiteFeatureStorage.read() is not currently planned to "
                 "be implemented in the near future. If you need the "
                 "functionality, contact the junifer developers "
                 "(https://juaml.github.io/junifer/main/help.html)."
