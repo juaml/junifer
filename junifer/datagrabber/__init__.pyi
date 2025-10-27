@@ -15,10 +15,11 @@ __all__ = [
     "OptionalTypeSchema",
     "PatternValidationMixin",
     "register_data_type",
+    "DataType",
 ]
 
 # These 4 need to be in this order, otherwise it is a circular import
-from .base import BaseDataGrabber
+from .base import BaseDataGrabber, DataType
 from .datalad_base import DataladDataGrabber
 from .pattern import PatternDataGrabber
 from .pattern_datalad import PatternDataladDataGrabber
