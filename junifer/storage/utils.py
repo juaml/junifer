@@ -36,6 +36,11 @@ def get_dependency_version(dependency: str) -> str:
     str
         The version of the dependency.
 
+    Raises
+    ------
+    PackageNotFoundError
+        If ``dependency`` is not found.
+
     """
     dep_version = ""
     try:
@@ -141,6 +146,11 @@ def element_to_prefix(element: dict) -> str:
     str
         The element converted to prefix.
 
+    Raises
+    ------
+    ValueError
+        If ``element`` is not a dict.
+
     """
     logger.debug(f"Converting element {element} to prefix.")
     prefix = "element"
@@ -245,7 +255,7 @@ def store_timeseries_2d_checks(
         If the number of column names does not match the number of columns
 
     """
-    # data validation
+    # Data validation
     if len(data_shape) != 3:
         raise_error(
             msg="Data must be a 3D array",
