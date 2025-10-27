@@ -22,7 +22,7 @@ __all__ = ["BaseFeatureStorage"]
 class BaseFeatureStorage(ABC):
     """Abstract base class for feature storage.
 
-    For every interface that is required, one needs to provide a concrete
+    For every storage, one needs to provide a concrete
     implementation of this abstract class.
 
     Parameters
@@ -72,7 +72,7 @@ class BaseFeatureStorage(ABC):
         -------
         list of str
             The list of storage types that can be used as input for this
-            storage interface.
+            storage.
 
         """
         return list(self._STORAGE_TYPES)
@@ -212,9 +212,11 @@ class BaseFeatureStorage(ABC):
                 msg=f"I don't know how to store {kind}.",
                 klass=ValueError,
             )
+        # Process and store metadata
         t_meta = kwargs.pop("meta")
         meta_md5, t_meta, t_element = process_meta(t_meta)
         self.store_metadata(meta_md5=meta_md5, element=t_element, meta=t_meta)
+        # Store data
         if kind == "matrix":
             self.store_matrix(meta_md5=meta_md5, element=t_element, **kwargs)
         elif kind == "timeseries":
