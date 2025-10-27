@@ -24,13 +24,13 @@ from junifer.storage.utils import (
 def test_get_valid_inputs() -> None:
     """Test valid inputs."""
     storage = HDF5FeatureStorage(uri="/tmp")
-    assert storage.get_valid_inputs() == [
+    assert set(storage.get_valid_inputs()) == {
         "matrix",
         "vector",
         "timeseries",
         "scalar_table",
         "timeseries_2d",
-    ]
+    }
 
 
 def test_single_output(tmp_path: Path) -> None:
@@ -285,7 +285,7 @@ def test_read_df_params_error(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="At least one of"):
         storage.read_df()
 
-    with pytest.raises(ValueError, match="Feature MD5"):
+    with pytest.raises(RuntimeError, match="Feature MD5"):
         storage.read_df(feature_md5="md5")
 
 
