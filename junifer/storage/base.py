@@ -6,6 +6,7 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
+from enum import Enum
 from pathlib import Path
 from typing import Any, ClassVar, Optional, Union
 
@@ -16,7 +17,17 @@ from ..utils import logger, raise_error
 from .utils import process_meta
 
 
-__all__ = ["BaseFeatureStorage"]
+__all__ = ["BaseFeatureStorage", "StorageType"]
+
+
+class StorageType(str, Enum):
+    """Accepted storage type."""
+
+    Vector = "vector"
+    Matrix = "matrix"
+    Timeseries = "timeseries"
+    Timeseries2D = "timeseries_2d"
+    ScalarTable = "scalar_table"
 
 
 class BaseFeatureStorage(ABC):
