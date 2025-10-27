@@ -7,6 +7,7 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
+from enum import Enum
 from pathlib import Path
 from typing import Union
 
@@ -15,8 +16,24 @@ from ..typing import Element, Elements
 from ..utils import logger, raise_error
 
 
-__all__ = ["BaseDataGrabber"]
+__all__ = ["BaseDataGrabber", "DataType"]
 
+
+class DataType(str, Enum):
+    """Accepted data type."""
+
+    T1w = "T1w"
+    T2w = "T2w"
+    BOLD = "BOLD"
+    Warp = "Warp"
+    VBM_GM = "VBM_GM"
+    VBM_WM = "VBM_WM"
+    VBM_CSF = "VBM_CSF"
+    FALFF = "fALFF"
+    GCOR = "GCOR"
+    LCOR = "LCOR"
+    DWI = "DWI"
+    FreeSurfer = "FreeSurfer"
 
 class BaseDataGrabber(ABC, UpdateMetaMixin):
     """Abstract base class for DataGrabber.
