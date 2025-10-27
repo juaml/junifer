@@ -69,12 +69,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                     "Must be either 'update' or 'ignore'."
                 )
             )
+        self.upsert = upsert
         super().__init__(
             uri=uri,
             single_output=single_output,
         )
-        # Set upsert
-        self._upsert = upsert
 
     def get_engine(self, element: Optional[dict] = None) -> "Engine":
         """Get engine.
@@ -175,12 +174,12 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                         warn_with_log(
                             f"Some rows (n={len(existing)}) are already "
                             "present in the database. The storage is "
-                            f"configured to {self._upsert} the existing "
+                            f"configured to {self.upsert} the existing "
                             f"elements. The new rows (n={len(new)}) will be "
                             "appended. This warning is shown because normally "
                             "all of the elements should be updated."
                         )
-                    if self._upsert == "update":
+                    if self.upsert == "update":
                         update_stmts = _generate_update_statements(
                             table, index_col, existing
                         )
