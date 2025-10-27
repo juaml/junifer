@@ -47,8 +47,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     upsert : {"ignore", "update"}, optional
         Upsert mode. If "ignore" is used, the existing elements are ignored.
         If "update", the existing elements are updated (default "update").
-    **kwargs : dict
-            The keyword arguments passed to the superclass.
 
     See Also
     --------
@@ -62,7 +60,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         uri: Union[str, Path],
         single_output: bool = True,
         upsert: str = "update",
-        **kwargs: str,
     ) -> None:
         # Check upsert argument value
         if upsert not in ["update", "ignore"]:
@@ -75,7 +72,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         super().__init__(
             uri=uri,
             single_output=single_output,
-            **kwargs,
         )
         # Set upsert
         self._upsert = upsert

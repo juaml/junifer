@@ -31,8 +31,6 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         The path to the storage.
     single_output : bool, optional
         Whether to have single output (default True).
-    **kwargs
-        Keyword arguments passed to superclass.
 
     See Also
     --------
@@ -47,9 +45,11 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
     ]
 
     def __init__(
-        self, uri: Union[str, Path], single_output: bool = True, **kwargs
+        self,
+        uri: Union[str, Path],
+        single_output: bool = True,
     ) -> None:
-        super().__init__(uri=uri, single_output=single_output, **kwargs)
+        super().__init__(uri=uri, single_output=single_output)
 
     def _meta_row(self, meta: dict, meta_md5: str) -> pd.DataFrame:
         """Convert the metadata to a pandas DataFrame.
