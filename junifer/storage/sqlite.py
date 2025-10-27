@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Any, Optional, Union
 import numpy as np
 import pandas as pd
 from pandas.core.base import NoNewAttributesMixin
-from pandas.io.sql import pandasSQL_builder  # type: ignore
+from pandas.io.sql import pandasSQL_builder
 from sqlalchemy import create_engine, inspect
 from tqdm import tqdm
 
@@ -98,10 +98,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 raise_error(msg)
             prefix = element_to_prefix(element)
         # Format URI for engine creation
-        uri = (
-            f"sqlite:///{self.uri.parent}/"  # type: ignore
-            f"{prefix}{self.uri.name}"  # type: ignore
-        )
+        uri = f"sqlite:///{self.uri.parent}/{prefix}{self.uri.name}"
         return create_engine(uri, echo=False)
 
     def _save_upsert(
@@ -463,8 +460,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             matrix_kind=matrix_kind,
             diagonal=diagonal,
             data_shape=data.shape,
-            row_names_len=len(row_names),  # type: ignore
-            col_names_len=len(col_names),  # type: ignore
+            row_names_len=len(row_names),
+            col_names_len=len(col_names),
         )
         # Matrix to vector conversion
         flat_data, columns = matrix_to_vector(
@@ -517,13 +514,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 msg="collect() is not implemented for single output.",
                 klass=IOError,
             )
-        logger.info(
-            f"Collecting data from {self.uri.parent}/*{self.uri.name}"  # type: ignore
-        )
+        logger.info(f"Collecting data from {self.uri.parent}/*{self.uri.name}")
         # Create new instance
         out_storage = SQLiteFeatureStorage(uri=self.uri, upsert="ignore")
         # Glob files
-        files = self.uri.parent.glob(f"*{self.uri.name}")  # type: ignore
+        files = self.uri.parent.glob(f"*{self.uri.name}")
         for elem in tqdm(files, desc="file"):
             logger.debug(f"Reading from {elem.absolute()!s}")
             in_storage = SQLiteFeatureStorage(uri=elem)
