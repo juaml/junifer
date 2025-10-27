@@ -208,13 +208,13 @@ def store_matrix_checks(
                 klass=ValueError,
             )
     # Row label validation
-    if row_names_len != data_shape[0]:  # type: ignore
+    if row_names_len != data_shape[0]:
         raise_error(
             msg="Number of row names does not match number of rows",
             klass=ValueError,
         )
     # Column label validation
-    if col_names_len != data_shape[1]:  # type: ignore
+    if col_names_len != data_shape[1]:
         raise_error(
             msg="Number of column names does not match number of columns",
             klass=ValueError,
@@ -253,13 +253,13 @@ def store_timeseries_2d_checks(
         )
 
     # Row label validation
-    if row_names_len != data_shape[1]:  # type: ignore
+    if row_names_len != data_shape[1]:
         raise_error(
             msg="Number of row names does not match number of rows",
             klass=ValueError,
         )
     # Column label validation
-    if col_names_len != data_shape[2]:  # type: ignore
+    if col_names_len != data_shape[2]:
         raise_error(
             msg="Number of column names does not match number of columns",
             klass=ValueError,
@@ -317,7 +317,7 @@ def matrix_to_vector(
     flat_data = data[data_idx]
     # Generate flat 1D row X column names
     columns = [
-        f"{row_names[i]}~{col_names[j]}"  # type: ignore
+        f"{row_names[i]}~{col_names[j]}"
         for i, j in zip(data_idx[0], data_idx[1])
     ]
 
