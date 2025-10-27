@@ -6,8 +6,9 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -29,37 +30,31 @@ class BaseFeatureStorage(ABC):
     ----------
     uri : str or pathlib.Path
         The path to the storage.
-    storage_types : str or list of str
-        The available storage types for the class.
     single_output : bool, optional
         Whether to have single output (default True).
 
     Raises
     ------
-    ValueError
-        If required storage type(s) is(are) missing from ``storage_types``.
+    AttributeError
+        If the storage does not have `_STORAGE_TYPES` attribute.
 
     """
+
+    _STORAGE_TYPES: ClassVar[Sequence[str]]
 
     def __init__(
         self,
         uri: Union[str, Path],
-        storage_types: Union[list[str], str],
         single_output: bool = True,
     ) -> None:
-        self.uri = uri
-        # Convert storage_types to list
-        if not isinstance(storage_types, list):
-            storage_types = [storage_types]
-        # Check if required inputs are found
-        if any(x not in self.get_valid_inputs() for x in storage_types):
-            wrong_storage_types = [
-                x for x in storage_types if x not in self.get_valid_inputs()
-            ]
+        # Check for missing storage types attribute
+        if not hasattr(self, "_STORAGE_TYPES"):
             raise_error(
-                f"{self.__class__.__name__} cannot store {wrong_storage_types}"
+                msg="Missing `_STORAGE_TYPES` for the storage",
+                klass=AttributeError,
             )
-        self._valid_inputs = storage_types
+        self.uri = uri
+            )
         self.single_output = single_output
 
     def get_valid_inputs(self) -> list[str]:
@@ -72,10 +67,7 @@ class BaseFeatureStorage(ABC):
             storage interface.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement get_valid_inputs().",
-            klass=NotImplementedError,
-        )
+        return list(self._STORAGE_TYPES)
 
     def validate(self, input_: list[str]) -> None:
         """Validate the input to the pipeline step.
@@ -91,11 +83,12 @@ class BaseFeatureStorage(ABC):
             If the ``input_`` is invalid.
 
         """
-        if not any(x in input_ for x in self._valid_inputs):
+        # self._STORAGE_TYPES should be there already
+        if not any(x in input_ for x in self._STORAGE_TYPES):
             raise_error(
                 "Input does not have the required data."
                 f"\t Input: {input}"
-                f"\t Required (any of): {self._valid_inputs}"
+                f"\t Required (any of): {self._STORAGE_TYPES}"
             )
 
     @abstractmethod
@@ -206,7 +199,7 @@ class BaseFeatureStorage(ABC):
         """
         # Do the check before calling the abstract methods, otherwise the
         # meta might be stored even if the data is not stored.
-        if kind not in self._valid_inputs:
+        if kind not in self._STORAGE_TYPES:
             raise_error(
                 msg=f"I don't know how to store {kind}.",
                 klass=ValueError,
