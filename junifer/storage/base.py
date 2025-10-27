@@ -5,7 +5,6 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, ClassVar, Optional, Union
@@ -238,8 +237,8 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
         matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:
@@ -253,9 +252,9 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray
             The matrix data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : str, optional
+        row_names : list-like of str, optional
             The row labels (default None).
         matrix_kind : str, optional
             The kind of matrix:
@@ -280,7 +279,7 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: Union[np.ndarray, list],
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store vector.
 
@@ -292,7 +291,7 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray or list
             The vector data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
 
         """
@@ -306,7 +305,7 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store timeseries.
 
@@ -318,7 +317,7 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
 
         """
@@ -332,8 +331,8 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store 2D timeseries.
 
@@ -345,9 +344,9 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : list or tuple of str, optional
+        row_names : list-like of str, optional
             The row labels (default None).
 
         """
@@ -361,8 +360,8 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
         row_header_col_name: Optional[str] = "feature",
     ) -> None:
         """Store table with scalar values.
@@ -375,9 +374,9 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : str, optional
+        row_names : list-like of str, optional
             The row labels (default None).
         row_header_col_name : str, optional
             The column name for the row header column (default "feature").

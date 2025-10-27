@@ -5,6 +5,7 @@
 # License: AGPL
 
 import json
+from collections.abc import Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional, Union
 
@@ -421,8 +422,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[list[str]] = None,
-        row_names: Optional[list[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
         matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:
@@ -438,9 +439,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The matrix data to store.
         meta : dict
             The metadata as a dictionary.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : str, optional
+        row_names : list-like of str, optional
             The row labels (optional None).
         matrix_kind : str, optional
             The kind of matrix:
