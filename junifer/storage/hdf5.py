@@ -162,9 +162,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         )
 
     def _fetch_correct_uri_for_io(self, element: Optional[dict]) -> str:
-        """Return proper URI for I/O based on `element`.
+        """Return proper URI for I/O based on ``element``.
 
-        If `element` is None, will return `self.uri`.
+        If ``element`` is None, will return ``self.uri``.
 
         Parameters
         ----------
@@ -175,6 +175,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         -------
         str
             Formatted URI for accessing metadata and data.
+
+        Raises
+        ------
+        RuntimeError
+            If ``element=None`` when ``single_output=False``.
 
         """
         if not self.single_output and not element:
@@ -341,8 +346,14 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Raises
         ------
+        ValueError
+            If both ``feature_md5`` and ``feature_name`` are provided or
+            if none of ``feature_md5`` or ``feature_name`` is provided.
         IOError
             If HDF5 file does not exist.
+        RuntimeError
+            If feature is not found or
+            if duplicate feature is found with the same name.
 
         """
         # Parameter conflict
@@ -380,7 +391,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             if feature_md5 in metadata:
                 md5 = feature_md5  # type: ignore
             else:
-                raise_error(msg=f"Feature MD5 '{feature_md5}' not found")
+                raise_error(
+                    msg=f"Feature MD5 '{feature_md5}' not found",
+                    klass=RuntimeError,
+                )
 
         # Consider feature_name
         elif feature_name:
@@ -881,7 +895,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     def store_vector(
         self,
         meta_md5: str,
-        element: dict[str, str],
+        element: dict,
         data: Union[np.ndarray, list],
         col_names: Optional[Sequence[str]] = None,
     ) -> None:
@@ -924,7 +938,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     def store_timeseries(
         self,
         meta_md5: str,
-        element: dict[str, str],
+        element: dict,
         data: np.ndarray,
         col_names: Optional[Sequence[str]] = None,
     ) -> None:
@@ -954,19 +968,19 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     def store_timeseries_2d(
         self,
         meta_md5: str,
-        element: dict[str, str],
+        element: dict,
         data: np.ndarray,
         col_names: Optional[Sequence[str]] = None,
         row_names: Optional[Sequence[str]] = None,
     ) -> None:
-        """Store a 2D timeseries.
+        """Store 2D timeseries.
 
         Parameters
         ----------
         meta_md5 : str
             The metadata MD5 hash.
         element : dict
-            The element as dictionary.
+            The element as a dictionary.
         data : numpy.ndarray
             The 2D timeseries data to store.
         col_names : list-like of str, optional
