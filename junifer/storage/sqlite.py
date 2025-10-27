@@ -99,9 +99,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         prefix = ""
         if self.single_output is False:
             if element is None:
-                msg = "element must be specified when single_output is False."
-                raise_error(msg)
-            prefix = element_to_prefix(element)
+                raise_error(
+                    "`element` cannot be None when `single_output=False`"
+                )
+            else:
+                prefix = element_to_prefix(element)
         # Format URI for engine creation
         uri = f"sqlite:///{self.uri.parent}/{prefix}{self.uri.name}"
         return create_engine(uri, echo=False)
