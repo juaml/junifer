@@ -1058,11 +1058,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 klass=NotImplementedError,
             )
 
-        # Glob files
-        globbed_files = list(
-            self.uri.parent.glob(f"*_{self.uri.name}")  # type: ignore
-        )
-
         # Create new storage instance
         out_storage = HDF5FeatureStorage(uri=self.uri, overwrite="update")
 
@@ -1073,7 +1068,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         # Collect element files per feature MD5
         elements_per_feature_md5 = defaultdict(list)
         out_metadata = {}
-        for file_ in tqdm(globbed_files, desc="file-metadata"):
+        for file_ in tqdm(
+            self.uri.parent.glob(f"*_{self.uri.name}"), desc="file-metadata"
+        ):
             logger.debug(f"Reading HDF5 file: {file_} ...")
             # Create new storage instance to load metadata
             in_storage = HDF5FeatureStorage(uri=file_)
