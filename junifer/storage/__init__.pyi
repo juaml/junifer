@@ -3,9 +3,10 @@ __all__ = [
     "PandasBaseFeatureStorage",
     "SQLiteFeatureStorage",
     "HDF5FeatureStorage",
+    "StorageType",
 ]
 
-from .base import BaseFeatureStorage
 from .pandas_base import PandasBaseFeatureStorage
 from .sqlite import SQLiteFeatureStorage
+from .base import BaseFeatureStorage, StorageType
 from .hdf5 import HDF5FeatureStorage
