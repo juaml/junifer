@@ -4,6 +4,9 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Sequence
+from typing import ClassVar
+
 import pytest
 
 from junifer.storage.base import BaseFeatureStorage
@@ -22,7 +25,12 @@ def test_BaseFeatureStorage() -> None:
     class MyFeatureStorage(BaseFeatureStorage):
         """Implement concrete class."""
 
-        _STORAGE_TYPES = ["matrix", "vector", "timeseries", "timeseries_2d"]
+        _STORAGE_TYPES: ClassVar[Sequence[str]] = [
+            "matrix",
+            "vector",
+            "timeseries",
+            "timeseries_2d",
+        ]
 
         def __init__(self, uri, single_output=True):
             super().__init__(
