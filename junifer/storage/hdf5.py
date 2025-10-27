@@ -153,18 +153,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         force_float32: bool = True,
         chunk_size: int = 100,
     ) -> None:
-        # Convert str to Path
-        if not isinstance(uri, Path):
-            uri = Path(uri)
-
-        # Create parent directories if not present
-        if not uri.parent.exists():
-            logger.info(
-                f"Output directory: '{uri.parent.resolve()}' "
-                "does not exist, creating now"
-            )
-            uri.parent.mkdir(parents=True, exist_ok=True)
-
         self.overwrite = overwrite
         self.compression = compression
         self.force_float32 = force_float32

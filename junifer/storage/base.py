@@ -13,7 +13,7 @@ from typing import Any, ClassVar, Optional, Union
 import numpy as np
 import pandas as pd
 
-from ..utils import raise_error
+from ..utils import logger, raise_error
 from .utils import process_meta
 
 
@@ -53,8 +53,17 @@ class BaseFeatureStorage(ABC):
                 msg="Missing `_STORAGE_TYPES` for the storage",
                 klass=AttributeError,
             )
+        # Convert str to Path
+        if not isinstance(uri, Path):
+            uri = Path(uri)
         self.uri = uri
+        # Create parent directories if not present
+        if not self.uri.parent.exists():
+            logger.info(
+                f"Output directory: '{self.uri.parent.resolve()}' "
+                "does not exist, creating now"
             )
+            self.uri.parent.mkdir(parents=True, exist_ok=True)
         self.single_output = single_output
 
     def get_valid_inputs(self) -> list[str]:

@@ -71,16 +71,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                     "Must be either 'update' or 'ignore'."
                 )
             )
-        # Convert str to Path
-        if not isinstance(uri, Path):
-            uri = Path(uri)
-        # Create parent directories if not present
-        if not uri.parent.exists():
-            logger.info(
-                f"Output directory ({uri.parent.absolute()!s}) "
-                "does not exist, creating now."
-            )
-            uri.parent.mkdir(parents=True, exist_ok=True)
         super().__init__(
             uri=uri,
             single_output=single_output,
