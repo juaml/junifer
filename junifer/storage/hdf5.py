@@ -194,7 +194,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             # parent access for single output, ignore element
             prefix = ""
         # Format URI based on prefix
-        return f"{self.uri.parent}/{prefix}{self.uri.name}"  # type: ignore
+        return f"{self.uri.parent}/{prefix}{self.uri.name}"
 
     def _read_metadata(
         self, element: Optional[dict[str, str]] = None
@@ -261,7 +261,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         """
         # Read metadata
         metadata = read_hdf5(
-            fname=str(self.uri.resolve()),  # type: ignore
+            fname=str(self.uri.resolve()),
             title="meta",
             slash="ignore",
         )
@@ -372,7 +372,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
         # Parameter check pass; read metadata
         metadata = read_hdf5(
-            fname=str(self.uri.resolve()),  # type: ignore
+            fname=str(self.uri.resolve()),
             title="meta",
             slash="ignore",
         )
@@ -387,7 +387,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
             # Validate MD5
             if feature_md5 in metadata:
-                md5 = feature_md5  # type: ignore
+                md5 = feature_md5
             else:
                 raise_error(
                     msg=f"Feature MD5 '{feature_md5}' not found",
@@ -398,7 +398,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         elif feature_name:
             logger.debug(
                 f"Validating feature name '{feature_name}' in metadata "
-                f"for: {self.uri.resolve()} ..."  # type: ignore
+                f"for: {self.uri.resolve()} ..."
             )
             # Retrieve MD5 for feature_name
             # Implicit counter for duplicate feature_name with different
@@ -424,7 +424,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Read data from HDF5
         hdf_data = read_hdf5(
-            fname=str(self.uri.resolve()),  # type: ignore
+            fname=str(self.uri.resolve()),
             title=md5,
             slash="ignore",
         )
@@ -552,7 +552,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             reshaped_data = np.concatenate(all_data, axis=0)
 
         # Create dataframe for index
-        idx_df = pd.DataFrame(data=element_idx)  # type: ignore
+        idx_df = pd.DataFrame(data=element_idx)
         # Create multiindex from dataframe
         hdf_data_idx = pd.MultiIndex.from_frame(df=idx_df)
         logger.debug(
@@ -568,7 +568,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         df = pd.DataFrame(
             data=reshaped_data,
             index=hdf_data_idx,
-            columns=columns,  # type: ignore
+            columns=columns,
             dtype=reshaped_data.dtype,
         )
         logger.debug(
@@ -600,7 +600,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         write_hdf5(
             fname=fname,
             data=processed_data,
-            overwrite=self.overwrite,  # type: ignore
+            overwrite=self.overwrite,
             compression=self.compression,
             title=title,
             slash="error",
@@ -874,8 +874,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             matrix_kind=matrix_kind,
             diagonal=diagonal,
             data_shape=data.shape,
-            row_names_len=len(row_names),  # type: ignore
-            col_names_len=len(col_names),  # type: ignore
+            row_names_len=len(row_names),
+            col_names_len=len(col_names),
         )
         # Store
         self._store_data(
@@ -989,8 +989,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         """
         store_timeseries_2d_checks(
             data_shape=data.shape,
-            row_names_len=len(row_names),  # type: ignore
-            col_names_len=len(col_names),  # type: ignore
+            row_names_len=len(row_names) if row_names is not None else 0,
+            col_names_len=len(col_names) if col_names is not None else 0,
         )
         self._store_data(
             kind="timeseries_2d",
@@ -1063,7 +1063,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Run loop to collect metadata
         logger.info(
-            f"Collecting metadata from {self.uri.parent}/*_{self.uri.name}"  # type: ignore
+            f"Collecting metadata from {self.uri.parent}/*_{self.uri.name}"
         )
         # Collect element files per feature MD5
         elements_per_feature_md5 = defaultdict(list)
@@ -1089,7 +1089,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         logger.info("Writing metadata to HDF5 file ...")
         # Save metadata out metadata
         out_storage._write_processed_data(
-            fname=str(self.uri.resolve()),  # type: ignore
+            fname=str(self.uri.resolve()),
             processed_data=out_metadata,
             title="meta",
         )
@@ -1170,9 +1170,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
                     # Write to HDF5
                     write_hdf5(
-                        fname=str(self.uri.resolve()),  # type: ignore
+                        fname=str(self.uri.resolve()),
                         data=to_write,
-                        overwrite="update",  # type: ignore
+                        overwrite="update",
                         compression=0,
                         title=feature_md5,
                         slash="error",
