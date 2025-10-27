@@ -81,11 +81,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 "does not exist, creating now."
             )
             uri.parent.mkdir(parents=True, exist_ok=True)
-        # Available storage kinds
-        storage_types = ["vector", "timeseries", "matrix"]
         super().__init__(
             uri=uri,
-            storage_types=storage_types,
             single_output=single_output,
             **kwargs,
         )

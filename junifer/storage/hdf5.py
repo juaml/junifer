@@ -6,8 +6,9 @@
 
 from collections import defaultdict
 from collections.abc import Iterable
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -135,6 +136,14 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     """
 
+    _STORAGE_TYPES: ClassVar[Sequence[str]] = [
+        "vector",
+        "timeseries",
+        "matrix",
+        "scalar_table",
+        "timeseries_2d",
+    ]
+
     def __init__(
         self,
         uri: Union[str, Path],
@@ -156,43 +165,14 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
             uri.parent.mkdir(parents=True, exist_ok=True)
 
-        # Available storage kinds
-        storage_types = [
-            "vector",
-            "timeseries",
-            "matrix",
-            "scalar_table",
-            "timeseries_2d",
-        ]
-
-        super().__init__(
-            uri=uri,
-            storage_types=storage_types,
-            single_output=single_output,
-        )
-
         self.overwrite = overwrite
         self.compression = compression
         self.force_float32 = force_float32
         self.chunk_size = chunk_size
-
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid storage types for input.
-
-        Returns
-        -------
-        list of str
-            The list of storage types that can be used as input for this
-            storage.
-
-        """
-        return [
-            "matrix",
-            "vector",
-            "timeseries",
-            "scalar_table",
-            "timeseries_2d",
-        ]
+        super().__init__(
+            uri=uri,
+            single_output=single_output,
+        )
 
     def _fetch_correct_uri_for_io(self, element: Optional[dict]) -> str:
         """Return proper URI for I/O based on `element`.
