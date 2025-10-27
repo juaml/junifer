@@ -114,7 +114,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement list_features().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     @abstractmethod
     def read(
@@ -142,7 +142,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement read().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     @abstractmethod
     def read_df(
@@ -168,7 +168,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement read_df().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     @abstractmethod
     def store_metadata(self, meta_md5: str, element: dict, meta: dict) -> None:
@@ -187,7 +187,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement store_metadata().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def store(self, kind: str, **kwargs) -> None:
         """Store extracted features data.
@@ -395,7 +395,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement collect().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def __str__(self) -> str:
         """Represent object as string.
