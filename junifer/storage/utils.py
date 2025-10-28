@@ -8,10 +8,15 @@ import hashlib
 import json
 from collections.abc import Sequence
 from importlib.metadata import PackageNotFoundError, version
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 from ..utils.logging import logger, raise_error
+
+
+if TYPE_CHECKING:
+    from .base import MatrixKind
 
 
 __all__ = [
@@ -174,15 +179,10 @@ def store_matrix_checks(
 
     Parameters
     ----------
-    matrix_kind : {"triu", "tril", "full"}
-        The kind of matrix:
-
-        * ``triu`` : store upper triangular only
-        * ``tril`` : store lower triangular
-        * ``full`` : full matrix
-
+    matrix_kind : MatrixKind, optional
+        The matrix kind.
     diagonal : bool
-        Whether to store the diagonal. If ``matrix_kind`` is "full",
+        Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
         setting this to False will raise an error.
     data_shape : tuple of int and int
         The shape of the matrix data to store.
@@ -280,7 +280,7 @@ def matrix_to_vector(
     data: np.ndarray,
     col_names: Sequence[str],
     row_names: Sequence[str],
-    matrix_kind: str,
+    matrix_kind: "MatrixKind",
     diagonal: bool,
 ) -> tuple[np.ndarray, list[str]]:
     """Convert matrix to vector based on parameters.
@@ -293,13 +293,8 @@ def matrix_to_vector(
         The column labels.
     row_names : list-like of str
         The row labels.
-    matrix_kind : str
-        The kind of matrix:
-
-        * ``triu`` : store upper triangular only
-        * ``tril`` : store lower triangular
-        * ``full`` : full matrix
-
+    matrix_kind : MatrixKind
+        The matrix kind.
     diagonal : bool
         Whether to store the diagonal.
 
