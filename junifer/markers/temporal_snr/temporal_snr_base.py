@@ -1,6 +1,7 @@
 """Provide abstract base class for temporal signal-to-noise ratio (tSNR)."""
 
 # Authors: Leonard Sasse <l.sasse@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 from abc import abstractmethod
@@ -8,6 +9,8 @@ from typing import Any, ClassVar, Optional, Union
 
 from nilearn import image as nimg
 
+from ...datagrabber import DataType
+from ...storage import StorageType
 from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import raise_error
 from ..base import BaseMarker
@@ -40,8 +43,8 @@ class TemporalSNRBase(BaseMarker):
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "BOLD": {
-            "tsnr": "vector",
+        DataType.BOLD: {
+            "tsnr": StorageType.Vector,
         },
     }
 

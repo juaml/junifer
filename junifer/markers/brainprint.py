@@ -16,12 +16,14 @@ import numpy as np
 import numpy.typing as npt
 
 from ..api.decorators import register_marker
+from ..datagrabber import DataType
 from ..external.BrainPrint.brainprint.brainprint import (
     compute_asymmetry,
     compute_brainprint,
 )
 from ..external.BrainPrint.brainprint.surfaces import surf_to_vtk
 from ..pipeline import WorkDirManager
+from ..storage import StorageType
 from ..typing import Dependencies, ExternalDependencies, MarkerInOutMappings
 from ..utils import logger, run_ext_cmd
 from .base import BaseMarker
@@ -81,11 +83,11 @@ class BrainPrint(BaseMarker):
     _DEPENDENCIES: ClassVar[Dependencies] = {"lapy", "numpy"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "FreeSurfer": {
-            "eigenvalues": "scalar_table",
-            "areas": "vector",
-            "volumes": "vector",
-            "distances": "vector",
+        DataType.FreeSurfer: {
+            "eigenvalues": StorageType.ScalarTable,
+            "areas": StorageType.Vector,
+            "volumes": StorageType.Vector,
+            "distances": StorageType.Vector,
         }
     }
 

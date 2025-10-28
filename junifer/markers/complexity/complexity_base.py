@@ -1,6 +1,7 @@
 """Provide base class for complexity."""
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 from abc import abstractmethod
@@ -12,6 +13,8 @@ from typing import (
     Union,
 )
 
+from ...datagrabber import DataType
+from ...storage import StorageType
 from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import raise_error
 from ..base import BaseMarker
@@ -52,8 +55,8 @@ class ComplexityBase(BaseMarker):
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "neurokit2"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "BOLD": {
-            "complexity": "vector",
+        DataType.BOLD: {
+            "complexity": StorageType.Vector,
         },
     }
 
