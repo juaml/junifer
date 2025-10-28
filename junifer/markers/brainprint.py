@@ -22,7 +22,7 @@ from ..external.BrainPrint.brainprint.brainprint import (
     compute_brainprint,
 )
 from ..external.BrainPrint.brainprint.surfaces import surf_to_vtk
-from ..pipeline import WorkDirManager
+from ..pipeline import ExtDep, WorkDirManager
 from ..storage import StorageType
 from ..typing import Dependencies, ExternalDependencies, MarkerInOutMappings
 from ..utils import logger, run_ext_cmd
@@ -70,7 +70,7 @@ class BrainPrint(BaseMarker):
 
     _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
-            "name": "freesurfer",
+            "name": ExtDep.FreeSurfer,
             "commands": [
                 "mri_binarize",
                 "mri_pretess",
