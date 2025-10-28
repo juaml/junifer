@@ -10,7 +10,7 @@ from typing import (
 
 import nibabel as nib
 
-from ...pipeline import WorkDirManager
+from ...pipeline import ExtDep, WorkDirManager
 from ...typing import Dependencies, ExternalDependencies
 from ...utils import logger, run_ext_cmd
 
@@ -27,7 +27,7 @@ class FSLSmoothing:
 
     _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
-            "name": "fsl",
+            "name": ExtDep.FSL,
             "commands": ["susan"],
         },
     ]
