@@ -19,7 +19,12 @@ from tqdm import tqdm
 from ..api.decorators import register_storage
 from ..utils import logger, raise_error, warn_with_log
 from .pandas_base import PandasBaseFeatureStorage
-from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
+from .utils import (
+    MatrixKind,
+    element_to_prefix,
+    matrix_to_vector,
+    store_matrix_checks,
+)
 
 
 if TYPE_CHECKING:
@@ -427,7 +432,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         data: np.ndarray,
         col_names: Optional[Sequence[str]] = None,
         row_names: Optional[Sequence[str]] = None,
-        matrix_kind: str = "full",
+        matrix_kind: MatrixKind = MatrixKind.Full,
         diagonal: bool = True,
     ) -> None:
         """Store matrix.
@@ -446,17 +451,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (optional None).
-        matrix_kind : str, optional
-            The kind of matrix:
-
-            * ``triu`` : store upper triangular only
-            * ``tril`` : store lower triangular
-            * ``full`` : full matrix
-
-            (default "full").
+        matrix_kind : MatrixKind, optional
+            The matrix kind (default MatrixKind.Full).
         diagonal : bool, optional
-            Whether to store the diagonal. If ``matrix_kind = full``, setting
-            this to False will raise an error (default True).
+            Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
+            setting this to False will raise an error (default True).
 
         """
         # Row data validation
