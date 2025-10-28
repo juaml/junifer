@@ -8,8 +8,10 @@ from typing import Any, ClassVar, Optional, Union
 
 from ..api.decorators import register_marker
 from ..data import get_data
+from ..datagrabber import DataType
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
+from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
 from ..utils import logger, raise_error, warn_with_log
 from .base import BaseMarker
@@ -70,32 +72,32 @@ class SphereAggregation(BaseMarker):
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "numpy"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "T1w": {
-            "aggregation": "vector",
+        DataType.T1w: {
+            "aggregation": StorageType.Vector,
         },
-        "T2w": {
-            "aggregation": "vector",
+        DataType.T2w: {
+            "aggregation": StorageType.Vector,
         },
-        "BOLD": {
-            "aggregation": "timeseries",
+        DataType.BOLD: {
+            "aggregation": StorageType.Timeseries,
         },
-        "VBM_GM": {
-            "aggregation": "vector",
+        DataType.VBM_GM: {
+            "aggregation": StorageType.Vector,
         },
-        "VBM_WM": {
-            "aggregation": "vector",
+        DataType.VBM_WM: {
+            "aggregation": StorageType.Vector,
         },
-        "VBM_CSF": {
-            "aggregation": "vector",
+        DataType.VBM_CSF: {
+            "aggregation": StorageType.Vector,
         },
-        "fALFF": {
-            "aggregation": "vector",
+        DataType.FALFF: {
+            "aggregation": StorageType.Vector,
         },
-        "GCOR": {
-            "aggregation": "vector",
+        DataType.GCOR: {
+            "aggregation": StorageType.Vector,
         },
-        "LCOR": {
-            "aggregation": "vector",
+        DataType.LCOR: {
+            "aggregation": StorageType.Vector,
         },
     }
 

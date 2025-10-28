@@ -8,7 +8,9 @@ from typing import Any, ClassVar, Optional, Union
 
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
+from ...datagrabber import DataType
 from ...external.nilearn import JuniferConnectivityMeasure
+from ...storage import StorageType
 from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import raise_error
 from ..base import BaseMarker
@@ -54,8 +56,8 @@ class FunctionalConnectivityBase(BaseMarker):
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "scikit-learn"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "BOLD": {
-            "functional_connectivity": "matrix",
+        DataType.BOLD: {
+            "functional_connectivity": StorageType.Matrix,
         },
     }
 

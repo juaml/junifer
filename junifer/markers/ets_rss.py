@@ -11,6 +11,8 @@ from typing import Any, ClassVar, Optional, Union
 import numpy as np
 
 from ..api.decorators import register_marker
+from ..datagrabber import DataType
+from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
 from ..utils import logger
 from .base import BaseMarker
@@ -49,8 +51,8 @@ class RSSETSMarker(BaseMarker):
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "BOLD": {
-            "rss_ets": "timeseries",
+        DataType.BOLD: {
+            "rss_ets": StorageType.Timeseries,
         },
     }
 
