@@ -10,6 +10,8 @@ from typing import (
     ClassVar,
 )
 
+from ...datagrabber import DataType
+from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
 from ...utils import logger, raise_error
 from ..base import BaseMarker
@@ -57,8 +59,8 @@ class ReHoBase(BaseMarker):
     ]
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "BOLD": {
-            "reho": "vector",
+        DataType.BOLD: {
+            "reho": StorageType.Vector,
         },
     }
 
