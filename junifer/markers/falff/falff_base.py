@@ -14,6 +14,8 @@ from typing import (
     Optional,
 )
 
+from ...datagrabber import DataType
+from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
 from ...utils.logging import logger, raise_error
 from ..base import BaseMarker
@@ -80,9 +82,9 @@ class ALFFBase(BaseMarker):
     ]
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "BOLD": {
-            "alff": "vector",
-            "falff": "vector",
+        DataType.BOLD: {
+            "alff": StorageType.Vector,
+            "falff": StorageType.Vector,
         },
     }
 
