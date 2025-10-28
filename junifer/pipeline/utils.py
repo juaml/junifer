@@ -5,12 +5,22 @@
 # License: AGPL
 
 import subprocess
+from enum import Enum
 from typing import Any, Optional
 
 from junifer.utils.logging import raise_error, warn_with_log
 
 
-__all__ = ["check_ext_dependencies"]
+__all__ = ["ExtDep", "check_ext_dependencies"]
+
+
+class ExtDep(str, Enum):
+    """Accepted external dependencies."""
+
+    AFNI = "afni"
+    FSL = "fsl"
+    ANTs = "ants"
+    FreeSurfer = "freesurfer"
 
 
 def check_ext_dependencies(
