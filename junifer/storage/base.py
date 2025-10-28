@@ -17,7 +17,7 @@ from ..utils import logger, raise_error
 from .utils import process_meta
 
 
-__all__ = ["BaseFeatureStorage", "StorageType"]
+__all__ = ["BaseFeatureStorage", "MatrixKind", "StorageType"]
 
 
 class StorageType(str, Enum):
@@ -28,6 +28,14 @@ class StorageType(str, Enum):
     Timeseries = "timeseries"
     Timeseries2D = "timeseries_2d"
     ScalarTable = "scalar_table"
+
+
+class MatrixKind(str, Enum):
+    """Accepted matrix kind value."""
+
+    UpperTriangle = "triu"
+    LowerTriangle = "tril"
+    Full = "full"
 
 
 class BaseFeatureStorage(ABC):
@@ -269,14 +277,8 @@ class BaseFeatureStorage(ABC):
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (default None).
-        matrix_kind : str, optional
-            The kind of matrix:
-
-            * ``triu`` : store upper triangular only
-            * ``tril`` : store lower triangular
-            * ``full`` : full matrix
-
-            (default "full").
+        matrix_kind : MatrixKind, optional
+            The matrix kind (default MatrixKind.Full).
         diagonal : bool, optional
             Whether to store the diagonal. If ``matrix_kind = full``, setting
             this to False will raise an error (default True).
