@@ -10,7 +10,7 @@ from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
 from ...datagrabber import DataType
 from ...external.nilearn import JuniferConnectivityMeasure
-from ...storage import StorageType
+from ...storage import MatrixKind, StorageType
 from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import raise_error
 from ..base import BaseMarker
@@ -123,7 +123,7 @@ class FunctionalConnectivityBase(BaseMarker):
               - ``data`` : functional connectivity matrix as ``numpy.ndarray``
               - ``row_names`` : ROI labels as list of str
               - ``col_names`` : ROI labels as list of str
-              - ``matrix_kind`` : the kind of matrix (tril, triu or full)
+              - ``matrix_kind`` : :obj:`.junifer.storage.MatrixKind`
 
         """
         # Perform necessary aggregation
@@ -154,7 +154,9 @@ class FunctionalConnectivityBase(BaseMarker):
                 "col_names": labels,
                 # xi correlation coefficient is not symmetric
                 "matrix_kind": (
-                    "full" if self.conn_method == "xi correlation" else "tril"
+                    MatrixKind.Full
+                    if self.conn_method == "xi correlation"
+                    else MatrixKind.LowerTriangle
                 ),
             },
         }

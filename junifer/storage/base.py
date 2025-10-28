@@ -260,7 +260,7 @@ class BaseFeatureStorage(ABC):
         data: np.ndarray,
         col_names: Optional[Sequence[str]] = None,
         row_names: Optional[Sequence[str]] = None,
-        matrix_kind: str = "full",
+        matrix_kind: MatrixKind = MatrixKind.Full,
         diagonal: bool = True,
     ) -> None:
         """Store matrix.
@@ -280,8 +280,8 @@ class BaseFeatureStorage(ABC):
         matrix_kind : MatrixKind, optional
             The matrix kind (default MatrixKind.Full).
         diagonal : bool, optional
-            Whether to store the diagonal. If ``matrix_kind = full``, setting
-            this to False will raise an error (default True).
+            Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
+            setting this to False will raise an error (default True).
 
         """
         raise_error(

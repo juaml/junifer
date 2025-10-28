@@ -22,7 +22,7 @@ from ..external.h5io.h5io import (
     write_hdf5,
 )
 from ..utils import logger, raise_error
-from .base import BaseFeatureStorage
+from .base import BaseFeatureStorage, MatrixKind
 from .utils import (
     element_to_prefix,
     matrix_to_vector,
@@ -818,7 +818,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         data: np.ndarray,
         col_names: Optional[Sequence[str]] = None,
         row_names: Optional[Sequence[str]] = None,
-        matrix_kind: str = "full",
+        matrix_kind: MatrixKind = MatrixKind.Full,
         diagonal: bool = True,
         row_header_col_name: str = "ROI",
     ) -> None:
@@ -839,16 +839,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (default None).
-        matrix_kind : str, optional
-            The kind of matrix:
-
-            * ``triu`` : store upper triangular only
-            * ``tril`` : store lower triangular
-            * ``full`` : full matrix
-
-            (default "full").
+        matrix_kind : MatrixKind, optional
+            The matrix kind (default MatrixKind.Full).
         diagonal : bool, optional
-            Whether to store the diagonal. If ``matrix_kind`` is "full",
+            Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
             setting this to False will raise an error (default True).
         row_header_col_name : str, optional
             The column name for the row header column (default "ROI").
@@ -879,7 +873,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         )
         # Store
         self._store_data(
-            kind="matrix",
+            kind=StorageType.Matrix,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=data[:, :, np.newaxis],  # convert to 3D
