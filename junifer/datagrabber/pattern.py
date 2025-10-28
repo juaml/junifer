@@ -7,6 +7,7 @@
 
 import re
 from copy import deepcopy
+from enum import Enum
 from pathlib import Path
 from typing import Optional, Union
 
@@ -19,11 +20,16 @@ from .base import BaseDataGrabber
 from .pattern_validation_mixin import PatternValidationMixin
 
 
-__all__ = ["PatternDataGrabber"]
+__all__ = ["ConfoundsFormat", "PatternDataGrabber"]
 
 
 # Accepted formats for confounds specification
 _CONFOUNDS_FORMATS = ("fmriprep", "adhoc")
+class ConfoundsFormat(str, Enum):
+    """Accepted confounds format."""
+
+    FMRIPrep = "fmriprep"
+    AdHoc = "adhoc"
 
 
 @register_datagrabber
