@@ -12,11 +12,11 @@ from typing import (
 
 if TYPE_CHECKING:
     from ..data import BasePipelineDataRegistry
-    from ..datagrabber import BaseDataGrabber
+    from ..datagrabber import BaseDataGrabber, DataType
     from ..datareader import DefaultDataReader
     from ..markers import BaseMarker
     from ..preprocess import BasePreprocessor
-    from ..storage import BaseFeatureStorage
+    from ..storage import BaseFeatureStorage, StorageType
 
 
 __all__ = [
@@ -62,9 +62,9 @@ ConditionalDependencies = Sequence[
             Sequence[PipelineComponent],
         ],
     ]
+MarkerInOutMappings = dict["DataType", dict[str, "StorageType"]]
 ]
 ExternalDependencies = Sequence[MutableMapping[str, Union[str, Sequence[str]]]]
-MarkerInOutMappings = MutableMapping[str, MutableMapping[str, str]]
 DataGrabberPatterns = dict[str, Union[dict[str, str], list[dict[str, str]]]]
 ConfigVal = Union[bool, int, float, str]
 Element = Union[str, tuple[str, ...]]
