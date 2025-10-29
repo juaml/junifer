@@ -57,9 +57,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         ``uri`` and store all the elements in the same file. This behaviour
         is only suitable for non-parallel executions. SQLite does not
         support concurrency (default True).
-    upsert : {"ignore", "update"}, optional
-        Upsert mode. If "ignore" is used, the existing elements are ignored.
-        If "update", the existing elements are updated (default "update").
+    upsert : Upsert, optional
+        Upsert mode. If ``Upsert.Ignore`` is used, the existing elements are
+        ignored. If ``Upsert.Update``, the existing elements are updated
+        (default Upsert.Update).
 
     See Also
     --------
@@ -72,7 +73,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         self,
         uri: Union[str, Path],
         single_output: bool = True,
-        upsert: str = "update",
+        upsert: Upsert = Upsert.Update,
     ) -> None:
         # Check and set upsert argument value
         if upsert not in ["update", "ignore"]:
