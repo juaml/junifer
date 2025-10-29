@@ -7,6 +7,7 @@
 import json
 from collections.abc import Sequence
 from pathlib import Path
+from enum import Enum
 from typing import TYPE_CHECKING, Any, Optional, Union
 
 import numpy as np
@@ -31,7 +32,14 @@ if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
 
-__all__ = ["SQLiteFeatureStorage"]
+__all__ = ["SQLiteFeatureStorage", "Upsert"]
+
+
+class Upsert(str, Enum):
+    """Accepted upsert value."""
+
+    Update = "update"
+    Ignore = "ignore"
 
 
 @register_storage
