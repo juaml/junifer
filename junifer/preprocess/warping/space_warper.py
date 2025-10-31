@@ -106,24 +106,6 @@ class SpaceWarper(BasePreprocessor):
         else:
             raise_error(f"Unknown reference: {self.reference}")
 
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the preprocessor.
-
-        Returns
-        -------
-        str
-            The data type output by the preprocessor.
-
-        """
-        # Does not add any new keys
-        return input_type
-
     def preprocess(  # noqa: C901
         self,
         input: dict[str, Any],

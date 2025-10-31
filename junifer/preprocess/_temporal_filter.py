@@ -76,23 +76,6 @@ class TemporalFilter(BasePreprocessor):
         self.t_r = t_r
         self.masks = masks
 
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The input to the preprocessor.
-
-        Returns
-        -------
-        str
-            The data type output by the preprocessor.
-
-        """
-        # Does not add any new keys
-        return input_type
         super().__init__()
 
     def _validate_data(

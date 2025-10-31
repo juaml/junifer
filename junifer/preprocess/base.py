@@ -112,7 +112,6 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         """
         return list(self._VALID_DATA_TYPES)
 
-    @abstractmethod
     def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
@@ -127,10 +126,8 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             The data type output by the preprocessor.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement get_output_type().",
-            klass=NotImplementedError,
-        )
+        # Does not add any new keys
+        return input_type
 
     @abstractmethod
     def preprocess(
