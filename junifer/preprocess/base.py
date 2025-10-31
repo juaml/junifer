@@ -137,7 +137,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         self,
         input: dict[str, Any],
         extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
+    ) -> dict[str, Any]:
         """Preprocess.
 
         Parameters
@@ -154,10 +154,6 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         -------
         dict
             The computed result as dictionary.
-        dict or None
-            Extra "helper" data types as dictionary to add to the Junifer Data
-            object. If no new "helper" data type(s) is(are) created, None is to
-            be passed.
 
         """
         raise_error(
@@ -199,19 +195,10 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
                     f"Extra data type for preprocess: {extra_input.keys()}"
                 )
                 # Preprocess data
-                t_out, t_extra_input = self.preprocess(
-                    input=t_input, extra_input=extra_input
-                )
+                t_out = self.preprocess(input=t_input, extra_input=extra_input)
                 # Set output to the Junifer Data object
                 logger.debug(f"Adding {type_} to output")
                 out[type_] = t_out
-                # Check if helper data types are to be added
-                if t_extra_input is not None:
-                    logger.debug(
-                        f"Adding helper data types: {t_extra_input.keys()} "
-                        "to output"
-                    )
-                    out.update(t_extra_input)
                 # Update metadata for step
                 self.update_meta(out[type_], "preprocess")
         return out
