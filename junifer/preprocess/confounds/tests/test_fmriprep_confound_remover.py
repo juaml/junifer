@@ -463,7 +463,7 @@ def test_fMRIPrepConfoundRemover_preprocess() -> None:
         pre_extra_input = {
             "BOLD": {"confounds": element_data["BOLD"]["confounds"]}
         }
-        output, _ = confound_remover.preprocess(pre_input, pre_extra_input)
+        output = confound_remover.preprocess(pre_input, pre_extra_input)
         trans_bold = output["data"].get_fdata()
         # Transformation is in place
         assert_array_equal(
@@ -614,7 +614,7 @@ def test_fMRIPrepConfoundRemover_scrubbing() -> None:
         pre_extra_input = {
             "BOLD": {"confounds": element_data["BOLD"]["confounds"]}
         }
-        output, _ = confound_remover.preprocess(pre_input, pre_extra_input)
+        output = confound_remover.preprocess(pre_input, pre_extra_input)
         trans_bold = output["data"].get_fdata()
         # Transformation is in place
         assert_array_equal(
