@@ -31,7 +31,7 @@ def test_base_preprocessor_subclassing() -> None:
 
         def preprocess(self, input, extra_input=None):
             input["data"] = f"modified_{input['data']}"
-            return input, extra_input
+            return input
 
     with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
         MyBasePreprocessor(on=["BOLD", "T2w"])
