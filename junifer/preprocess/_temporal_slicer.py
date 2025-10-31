@@ -69,7 +69,7 @@ class TemporalSlicer(BasePreprocessor):
         self,
         input: dict[str, Any],
         extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
+    ) -> dict[str, Any]:
         """Preprocess.
 
         Parameters
@@ -83,9 +83,6 @@ class TemporalSlicer(BasePreprocessor):
         -------
         dict
             The computed result as dictionary.
-        None
-            Extra "helper" data types as dictionary to add to the Junifer Data
-            object.
 
         Raises
         ------
@@ -206,4 +203,4 @@ class TemporalSlicer(BasePreprocessor):
                 }
             )
 
-        return input, None
+        return input

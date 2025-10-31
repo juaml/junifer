@@ -594,7 +594,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         self,
         input: dict[str, Any],
         extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
+    ) -> dict[str, Any]:
         """Preprocess.
 
         Parameters
@@ -609,9 +609,6 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         dict
             The computed result as dictionary. If `self.masks` is not None,
             then the target data computed mask is updated for further steps.
-        None
-            Extra "helper" data types as dictionary to add to the Junifer Data
-            object.
 
         """
         # Validate data
@@ -726,4 +723,4 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             }
         )
 
-        return input, None
+        return input
