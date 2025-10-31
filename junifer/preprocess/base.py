@@ -5,7 +5,8 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional, Union
+from collections.abc import Sequence
+from typing import Any, ClassVar, Optional, Union
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
@@ -31,10 +32,14 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     Raises
     ------
+    AttributeError
+        If the preprocessor does not have `_VALID_DATA_TYPES` attribute.
     ValueError
         If required input data type(s) is(are) not found.
 
     """
+
+    _VALID_DATA_TYPES: ClassVar[Sequence[str]]
 
     def __init__(
         self,
@@ -42,6 +47,12 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         required_data_types: Optional[Union[list[str], str]] = None,
     ) -> None:
         """Initialize the class."""
+        # Check for missing data types attributes
+        if not hasattr(self, "_VALID_DATA_TYPES"):
+            raise_error(
+                msg="Missing `_VALID_DATA_TYPES` for the preprocessor",
+                klass=AttributeError,
+            )
         # Use all data types if not provided
         if on is None:
             on = self.get_valid_inputs()
@@ -89,7 +100,6 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             )
         return [x for x in self._on if x in input]
 
-    @abstractmethod
     def get_valid_inputs(self) -> list[str]:
         """Get valid data types for input.
 
@@ -100,10 +110,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             preprocessor.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement get_valid_inputs().",
-            klass=NotImplementedError,
-        )
+        return list(self._VALID_DATA_TYPES)
 
     @abstractmethod
     def get_output_type(self, input_type: str) -> str:
