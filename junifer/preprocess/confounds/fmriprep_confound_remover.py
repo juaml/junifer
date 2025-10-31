@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Sequence
 from typing import (
     Any,
     ClassVar,
@@ -175,6 +176,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn"}
+    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["BOLD"]
 
     def __init__(
         self,
@@ -251,19 +253,6 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 "include it in the future",
                 klass=ValueError,
             )
-        super().__init__(on="BOLD", required_data_types=["BOLD"])
-
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this
-            preprocessor.
-
-        """
-        return ["BOLD"]
 
     def get_output_type(self, input_type: str) -> str:
         """Get output type.
@@ -281,6 +270,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         """
         # Does not add any new keys
         return input_type
+        super().__init__()
 
     def _map_adhoc_to_fmriprep(self, input: dict[str, Any]) -> None:
         """Map the adhoc format to the fmpriprep format spec.
