@@ -16,15 +16,15 @@ __all__ = ["BasePreprocessor"]
 
 
 class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
-    """Abstract base class for all preprocessors.
+    """Abstract base class for preprocessor.
 
-    For every interface that is required, one needs to provide a concrete
+    For every preprocessor, one needs to provide a concrete
     implementation of this abstract class.
 
     Parameters
     ----------
     on : str or list of str or None, optional
-        The data type to apply the preprocessor on. If None,
+        The data type(s) to apply the preprocessor on. If None,
         will work on all available data types (default None).
     required_data_types : str or list of str, optional
         The data types needed for computation. If None,
