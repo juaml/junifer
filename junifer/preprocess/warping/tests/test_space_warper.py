@@ -113,7 +113,7 @@ def test_SpaceWarper_native(
         # Read data
         element_data = DefaultDataReader().fit_transform(dg[element])
         # Preprocess data
-        output, _ = SpaceWarper(
+        output = SpaceWarper(
             using=using,
             reference="T1w",
             on="BOLD",
@@ -179,7 +179,7 @@ def test_SpaceWarper_multi_mni(
         element_data = DefaultDataReader().fit_transform(dg[element])
         pre_xfm_data = element_data["T1w"]["data"].get_fdata().copy()
         # Preprocess data
-        output, _ = SpaceWarper(
+        output = SpaceWarper(
             using="ants",
             reference=space,
             on=["T1w"],
