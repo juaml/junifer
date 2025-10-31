@@ -69,6 +69,9 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         if required_data_types is None:
             self._required_data_types = on
         else:
+            # Convert data types to list
+            if not isinstance(required_data_types, list):
+                required_data_types = [required_data_types]
             self._required_data_types = required_data_types
 
     def validate_input(self, input: list[str]) -> list[str]:
