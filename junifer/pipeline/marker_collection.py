@@ -6,7 +6,6 @@
 
 from collections import Counter
 from pathlib import Path
-from typing import Optional
 
 from ..datareader import DefaultDataReader
 from ..pipeline import DataObjectDumper, PipelineStepMixin, WorkDirManager
@@ -41,9 +40,9 @@ class MarkerCollection:
     def __init__(
         self,
         markers: list[MarkerLike],
-        datareader: Optional[PipelineStepMixin] = None,
-        preprocessors: Optional[list[PreprocessorLike]] = None,
-        storage: Optional[StorageLike] = None,
+        datareader: PipelineStepMixin | None = None,
+        preprocessors: list[PreprocessorLike] | None = None,
+        storage: StorageLike | None = None,
     ):
         # Check that the markers have different names
         marker_names = [m.name for m in markers]
@@ -60,7 +59,7 @@ class MarkerCollection:
         self._preprocessors = preprocessors
         self._storage = storage
 
-    def fit(self, input: dict[str, dict]) -> Optional[dict]:
+    def fit(self, input: dict[str, dict]) -> dict | None:
         """Fit the pipeline.
 
         Parameters

@@ -4,7 +4,7 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar
 
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
@@ -62,11 +62,11 @@ class FunctionalConnectivityBase(BaseMarker):
     def __init__(
         self,
         agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
+        agg_method_params: dict | None = None,
         conn_method: str = "correlation",
-        conn_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
+        conn_method_params: dict | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        name: str | None = None,
     ) -> None:
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
@@ -83,7 +83,7 @@ class FunctionalConnectivityBase(BaseMarker):
     def aggregate(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Perform aggregation."""
         raise_error(
@@ -94,7 +94,7 @@ class FunctionalConnectivityBase(BaseMarker):
     def compute(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict] = None,
+        extra_input: dict | None = None,
     ) -> dict:
         """Compute.
 

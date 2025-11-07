@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar
 
 from nilearn.maskers import NiftiMapsMasker
 
@@ -88,11 +88,11 @@ class MapsAggregation(BaseMarker):
     def __init__(
         self,
         maps: str,
-        time_method: Optional[str] = None,
-        time_method_params: Optional[dict[str, Any]] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        on: Union[list[str], str, None] = None,
-        name: Optional[str] = None,
+        time_method: str | None = None,
+        time_method_params: dict[str, Any] | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        on: list[str] | str | None = None,
+        name: str | None = None,
     ) -> None:
         self.maps = maps
         self.masks = masks
@@ -113,7 +113,7 @@ class MapsAggregation(BaseMarker):
         self.time_method_params = time_method_params or {}
 
     def compute(
-        self, input: dict[str, Any], extra_input: Optional[dict] = None
+        self, input: dict[str, Any], extra_input: dict | None = None
     ) -> dict:
         """Compute.
 

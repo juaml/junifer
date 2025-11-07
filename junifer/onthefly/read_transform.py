@@ -3,8 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional
-
 import numpy as np
 import pandas as pd
 
@@ -18,11 +16,11 @@ __all__ = ["read_transform"]
 def read_transform(
     storage: StorageLike,
     transform: str,
-    feature_name: Optional[str] = None,
-    feature_md5: Optional[str] = None,
-    nan_policy: Optional[str] = "bypass",
-    transform_args: Optional[tuple] = None,
-    transform_kw_args: Optional[dict] = None,
+    feature_name: str | None = None,
+    feature_md5: str | None = None,
+    nan_policy: str | None = "bypass",
+    transform_args: tuple | None = None,
+    transform_kw_args: dict | None = None,
 ) -> pd.DataFrame:
     """Read stored feature and transform to specific statistical output.
 

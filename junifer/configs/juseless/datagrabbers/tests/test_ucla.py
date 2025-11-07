@@ -6,7 +6,6 @@
 # License: AGPL
 
 import socket
-from typing import Optional, Union
 
 import pytest
 
@@ -53,7 +52,7 @@ def test_JuselessUCLA() -> None:
     ],
 )
 def test_JuselessUCLA_partial_data_access(
-    types: Union[str, list[str]],
+    types: str | list[str],
 ) -> None:
     """Test JuselessUCLA DataGrabber partial data access.
 
@@ -92,7 +91,7 @@ def test_JuselessUCLA_incorrect_data_type() -> None:
     "tasks",
     [None, "rest", ["rest", "stopsignal"]],
 )
-def test_JuselessUCLA_task_params(tasks: Optional[str]) -> None:
+def test_JuselessUCLA_task_params(tasks: str | None) -> None:
     """Test JuselessUCLA with different task parameters.
 
     Parameters

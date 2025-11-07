@@ -3,8 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional
-
 import pytest
 
 from junifer.datareader import DefaultDataReader
@@ -60,10 +58,10 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 def test_TemporalFilter(
     detrend: bool,
     standardize: bool,
-    low_pass: Optional[float],
-    high_pass: Optional[float],
-    t_r: Optional[float],
-    masks: Optional[str],
+    low_pass: float | None,
+    high_pass: float | None,
+    t_r: float | None,
+    masks: str | None,
 ) -> None:
     """Test TemporalFilter.
 

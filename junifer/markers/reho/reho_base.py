@@ -8,7 +8,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Optional,
 )
 
 from ...typing import ConditionalDependencies, MarkerInOutMappings
@@ -66,7 +65,7 @@ class ReHoBase(BaseMarker):
     def __init__(
         self,
         using: str,
-        name: Optional[str] = None,
+        name: str | None = None,
     ) -> None:
         # Validate `using` parameter
         valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]

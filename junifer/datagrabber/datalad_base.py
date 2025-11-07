@@ -9,7 +9,6 @@ import atexit
 import os
 import tempfile
 from pathlib import Path
-from typing import Optional, Union
 
 import datalad
 import datalad.api as dl
@@ -71,9 +70,9 @@ class DataladDataGrabber(BaseDataGrabber):
 
     def __init__(
         self,
-        rootdir: Union[str, Path] = ".",
-        datadir: Union[str, Path, None] = None,
-        uri: Optional[str] = None,
+        rootdir: str | Path = ".",
+        datadir: str | Path | None = None,
+        uri: str | None = None,
         **kwargs,
     ):
         if datadir is None:

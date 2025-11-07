@@ -5,7 +5,6 @@
 
 from itertools import product
 from pathlib import Path
-from typing import Union
 
 from ..api.decorators import register_datagrabber
 from ..utils import raise_error
@@ -58,12 +57,12 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
 
     def __init__(
         self,
-        datadir: Union[str, Path, None] = None,
-        types: Union[str, list[str], None] = None,
-        sessions: Union[str, list[str], None] = None,
-        tasks: Union[str, list[str], None] = None,
-        phase_encodings: Union[str, list[str], None] = None,
-        runs: Union[str, list[str], None] = None,
+        datadir: str | Path | None = None,
+        types: str | list[str] | None = None,
+        sessions: str | list[str] | None = None,
+        tasks: str | list[str] | None = None,
+        phase_encodings: str | list[str] | None = None,
+        runs: str | list[str] | None = None,
         native_t1w: bool = False,
     ) -> None:
         # Declare all sessions

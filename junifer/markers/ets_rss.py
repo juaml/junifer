@@ -6,7 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar
 
 import numpy as np
 
@@ -56,11 +56,11 @@ class RSSETSMarker(BaseMarker):
 
     def __init__(
         self,
-        parcellation: Union[str, list[str]],
+        parcellation: str | list[str],
         agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
+        agg_method_params: dict | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        name: str | None = None,
     ) -> None:
         self.parcellation = parcellation
         self.agg_method = agg_method
@@ -71,7 +71,7 @@ class RSSETSMarker(BaseMarker):
     def compute(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict] = None,
+        extra_input: dict | None = None,
     ) -> dict:
         """Compute.
 

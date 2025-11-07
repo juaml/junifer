@@ -5,7 +5,6 @@
 # License: AGPL
 
 import os
-from typing import Optional
 
 from ..typing import ConfigVal
 from .logging import logger
@@ -61,7 +60,7 @@ class ConfigManager(metaclass=Singleton):
                 )
                 self._config[var_name] = var_value
 
-    def get(self, key: str, default: Optional[ConfigVal] = None) -> ConfigVal:
+    def get(self, key: str, default: ConfigVal | None = None) -> ConfigVal:
         """Get configuration parameter.
 
         Parameters

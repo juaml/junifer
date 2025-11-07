@@ -7,8 +7,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional, Union
-
 import pytest
 
 from junifer.datagrabber.aomic.id1000 import DataladAOMICID1000
@@ -35,7 +33,7 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomic1000"
 )
 def test_DataladAOMICID1000(
     type_: str,
-    nested_types: Optional[list[str]],
+    nested_types: list[str] | None,
     space: str,
 ) -> None:
     """Test DataladAOMICID1000 DataGrabber.
@@ -94,7 +92,7 @@ def test_DataladAOMICID1000(
     ],
 )
 def test_DataladAOMICID1000_partial_data_access(
-    types: Union[str, list[str]],
+    types: str | list[str],
 ) -> None:
     """Test DataladAOMICID1000 DataGrabber partial data access.
 

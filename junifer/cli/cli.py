@@ -8,7 +8,6 @@ import pathlib
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional, Union
 
 import click
 
@@ -46,7 +45,7 @@ __all__ = [
 
 
 def _validate_optional_verbose(
-    ctx: click.Context, param: str, value: Optional[str]
+    ctx: click.Context, param: str, value: str | None
 ):
     """Validate optional verbose option.
 
@@ -71,9 +70,7 @@ def _validate_optional_verbose(
         return _validate_verbose(ctx, param, value)
 
 
-def _validate_verbose(
-    ctx: click.Context, param: str, value: str
-) -> Union[str, int]:
+def _validate_verbose(ctx: click.Context, param: str, value: str) -> str | int:
     """Validate verbose option.
 
     Parameters
@@ -142,8 +139,8 @@ def cli() -> None:  # pragma: no cover
 def run(
     filepath: click.Path,
     element: tuple[str],
-    verbose: Union[str, int],
-    verbose_datalad: Optional[Union[str, int]],
+    verbose: str | int,
+    verbose_datalad: str | int | None,
 ) -> None:
     """Run feature extraction.
 
@@ -214,8 +211,8 @@ def run(
 )
 def collect(
     filepath: click.Path,
-    verbose: Union[str, int],
-    verbose_datalad: Union[str, int, None],
+    verbose: str | int,
+    verbose_datalad: str | int | None,
 ) -> None:
     """Collect extracted features.
 
@@ -270,8 +267,8 @@ def queue(
     element: tuple[str],
     overwrite: bool,
     submit: bool,
-    verbose: Union[str, int],
-    verbose_datalad: Union[str, int, None],
+    verbose: str | int,
+    verbose_datalad: str | int | None,
 ) -> None:
     """Queue feature extraction.
 
@@ -433,8 +430,8 @@ def selftest(subpkg: str) -> None:
 )
 def reset(
     filepath: click.Path,
-    verbose: Union[str, int],
-    verbose_datalad: Union[str, int, None],
+    verbose: str | int,
+    verbose_datalad: str | int | None,
 ) -> None:
     """Reset generated assets.
 
@@ -487,9 +484,9 @@ def reset(
 def list_elements(
     filepath: click.Path,
     element: tuple[str],
-    output_file: Optional[click.Path],
-    verbose: Union[str, int],
-    verbose_datalad: Union[str, int, None],
+    output_file: click.Path | None,
+    verbose: str | int,
+    verbose_datalad: str | int | None,
 ) -> None:
     """List elements of a dataset.
 

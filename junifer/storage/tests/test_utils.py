@@ -5,7 +5,6 @@
 # License: AGPL
 
 from collections.abc import Iterable
-from typing import Union
 
 import numpy as np
 import pytest
@@ -322,7 +321,7 @@ def test_element_to_prefix_invalid_type() -> None:
     ],
 )
 def test_store_matrix_checks(
-    params: dict[str, Union[str, bool, tuple[int, int], int]], err_msg: str
+    params: dict[str, str | bool | tuple[int, int] | int], err_msg: str
 ) -> None:
     """Test matrix storing parameter checks.
 
@@ -403,7 +402,7 @@ def test_store_matrix_checks(
     ],
 )
 def test_matrix_to_vector(
-    params: dict[str, Union[np.ndarray, Iterable[str], str, bool]],
+    params: dict[str, np.ndarray | Iterable[str] | str | bool],
     expected_data: np.ndarray,
     expected_columns: list[str],
 ) -> None:

@@ -6,7 +6,6 @@
 
 from collections.abc import MutableMapping
 from pathlib import Path
-from typing import Optional, Union
 
 import numpy as np
 
@@ -36,9 +35,9 @@ JUNIFER_DATA_PARAMS = {
 
 
 def closest_resolution(
-    resolution: Optional[Union[float, int]],
-    valid_resolution: Union[list[float], list[int], np.ndarray],
-) -> Union[float, int]:
+    resolution: float | int | None,
+    valid_resolution: list[float] | list[int] | np.ndarray,
+) -> float | int:
     """Find the closest resolution.
 
     Parameters
@@ -136,7 +135,7 @@ def get_native_warper(
     return possible_warpers[0]
 
 
-def get_dataset_path() -> Optional[Path]:
+def get_dataset_path() -> Path | None:
     """Get junifer-data dataset path.
 
     Returns

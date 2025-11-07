@@ -7,7 +7,7 @@
 
 from itertools import product
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 import nibabel as nib
 import nilearn.image as nimg
@@ -206,7 +206,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
     def register(
         self,
         name: str,
-        parcellation_path: Union[str, Path],
+        parcellation_path: str | Path,
         parcels_labels: list[str],
         space: str,
         overwrite: bool = False,
@@ -289,7 +289,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
         self,
         name: str,
         target_space: str,
-        resolution: Optional[float] = None,
+        resolution: float | None = None,
         path_only: bool = False,
     ) -> tuple[Optional["Nifti1Image"], list[str], Path, str]:
         """Load parcellation and labels.
@@ -430,9 +430,9 @@ class ParcellationRegistry(BasePipelineDataRegistry):
 
     def get(
         self,
-        parcellations: Union[str, list[str]],
+        parcellations: str | list[str],
         target_data: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> tuple["Nifti1Image", dict[int, str]]:
         """Get parcellation, tailored for the target image.
 
@@ -575,6 +575,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                         )
                     ),
                     all_labels[0],
+                    strict=False,
                 )
             )
         # Parcellations are already transformed to target standard space
@@ -590,8 +591,8 @@ class ParcellationRegistry(BasePipelineDataRegistry):
 
 
 def _retrieve_schaefer(
-    resolution: Optional[float] = None,
-    n_rois: Optional[int] = None,
+    resolution: float | None = None,
+    n_rois: int | None = None,
     yeo_networks: int = 7,
 ) -> tuple[Path, list[str]]:
     """Retrieve Schaefer parcellation.
@@ -674,8 +675,8 @@ def _retrieve_schaefer(
 
 
 def _retrieve_tian(
-    resolution: Optional[float] = None,
-    scale: Optional[int] = None,
+    resolution: float | None = None,
+    scale: int | None = None,
     space: str = "MNI152NLin6Asym",
     magneticfield: str = "3T",
 ) -> tuple[Path, list[str]]:
@@ -814,7 +815,7 @@ def _retrieve_tian(
 
 
 def _retrieve_suit(
-    resolution: Optional[float],
+    resolution: float | None,
     space: str = "MNI152NLin6Asym",
 ) -> tuple[Path, list[str]]:
     """Retrieve SUIT parcellation.
@@ -886,7 +887,7 @@ def _retrieve_suit(
 
 
 def _retrieve_aicha(
-    resolution: Optional[float] = None,
+    resolution: float | None = None,
     version: int = 2,
 ) -> tuple[Path, list[str]]:
     """Retrieve AICHA parcellation.
@@ -980,7 +981,7 @@ def _retrieve_aicha(
 
 
 def _retrieve_shen(
-    resolution: Optional[float] = None,
+    resolution: float | None = None,
     year: int = 2015,
     n_rois: int = 268,
 ) -> tuple[Path, list[str]]:
@@ -1106,10 +1107,10 @@ def _retrieve_shen(
 
 
 def _retrieve_yan(
-    resolution: Optional[float] = None,
-    n_rois: Optional[int] = None,
-    yeo_networks: Optional[int] = None,
-    kong_networks: Optional[int] = None,
+    resolution: float | None = None,
+    n_rois: int | None = None,
+    yeo_networks: int | None = None,
+    kong_networks: int | None = None,
 ) -> tuple[Path, list[str]]:
     """Retrieve Yan parcellation.
 
@@ -1231,8 +1232,8 @@ def _retrieve_yan(
 
 
 def _retrieve_brainnetome(
-    resolution: Optional[float] = None,
-    threshold: Optional[int] = None,
+    resolution: float | None = None,
+    threshold: int | None = None,
 ) -> tuple[Path, list[str]]:
     """Retrieve Brainnetome parcellation.
 
@@ -1322,7 +1323,7 @@ def _retrieve_brainnetome(
 
 
 def _retrieve_aseg(
-    resolution: Optional[float] = None,
+    resolution: float | None = None,
 ) -> tuple[Path, list[str]]:
     """Retrieve aseg generated from FreeSurfer 7.4.1 .
 
@@ -1475,11 +1476,12 @@ def merge_parcellations(
         zip(
             np.trim_zeros(np.unique(ref_parc_data.astype(int))),
             labels_lists[0],
+            strict=False,
         ),
     )
 
     for idx, (parc, labs) in enumerate(
-        zip(parcellations_list[1:], labels_lists[1:])
+        zip(parcellations_list[1:], labels_lists[1:], strict=False)
     ):
         # Resample to reference (1st in the list) parcellation
         if parc.shape != ref_parc.shape:
@@ -1499,7 +1501,13 @@ def merge_parcellations(
         # and update label mapping
         parc_data[parc_data != 0] += (idx + 1) * max_val
         val_label_map.update(
-            dict(zip(np.trim_zeros(np.unique(parc_data.astype(int))), labs))
+            dict(
+                zip(
+                    np.trim_zeros(np.unique(parc_data.astype(int))),
+                    labs,
+                    strict=False,
+                )
+            )
         )
         # Only set new values for the voxels that are 0
         # This makes sure that the voxels that are in multiple

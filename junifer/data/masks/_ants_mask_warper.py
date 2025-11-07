@@ -4,7 +4,7 @@
 # License: AGPL
 
 import uuid
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 import nibabel as nib
 import numpy as np
@@ -55,7 +55,7 @@ class ANTsMaskWarper:
         src: str,
         dst: str,
         target_data: dict[str, Any],
-        warp_data: Optional[dict[str, Any]],
+        warp_data: dict[str, Any] | None,
     ) -> "Nifti1Image":  # pragma: no cover
         """Warp ``mask_img`` to correct space.
 

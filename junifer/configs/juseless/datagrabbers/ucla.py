@@ -5,7 +5,6 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataGrabber
@@ -40,11 +39,9 @@ class JuselessUCLA(PatternDataGrabber):
 
     def __init__(
         self,
-        datadir: Union[
-            str, Path
-        ] = "/data/project/psychosis_thalamus/data/fmriprep",
-        types: Union[str, list[str], None] = None,
-        tasks: Union[str, list[str], None] = None,
+        datadir: str | Path = "/data/project/psychosis_thalamus/data/fmriprep",
+        types: str | list[str] | None = None,
+        tasks: str | list[str] | None = None,
     ) -> None:
         # Declare all tasks
         all_tasks = [
