@@ -6,7 +6,6 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import PatternDataladDataGrabber
@@ -30,7 +29,7 @@ class JuselessDataladUKBVBM(PatternDataladDataGrabber):
 
     """
 
-    def __init__(self, datadir: Union[str, Path, None] = None) -> None:
+    def __init__(self, datadir: str | Path | None = None) -> None:
         uri = "ria+http://ukb.ds.inm7.de#~cat_m0wp1"
         rootdir = "m0wp1"
         types = ["VBM_GM"]

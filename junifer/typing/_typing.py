@@ -55,17 +55,12 @@ Dependencies = set[str]
 ConditionalDependencies = Sequence[
     MutableMapping[
         str,
-        Union[
-            str,
-            PipelineComponent,
-            Sequence[str],
-            Sequence[PipelineComponent],
-        ],
+        str | PipelineComponent | Sequence[str] | Sequence[PipelineComponent],
     ]
 ]
-ExternalDependencies = Sequence[MutableMapping[str, Union[str, Sequence[str]]]]
+ExternalDependencies = Sequence[MutableMapping[str, str | Sequence[str]]]
 MarkerInOutMappings = MutableMapping[str, MutableMapping[str, str]]
-DataGrabberPatterns = dict[str, Union[dict[str, str], list[dict[str, str]]]]
-ConfigVal = Union[bool, int, float, str]
-Element = Union[str, tuple[str, ...]]
+DataGrabberPatterns = dict[str, dict[str, str] | list[dict[str, str]]]
+ConfigVal = bool | int | float | str
+Element = str | tuple[str, ...]
 Elements = Sequence[Element]

@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any
 
 from ...api.decorators import register_marker
 from ..maps_aggregation import MapsAggregation
@@ -35,8 +35,8 @@ class TemporalSNRMaps(TemporalSNRBase):
     def __init__(
         self,
         maps: str,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
+        masks: str | dict | list[dict | str] | None = None,
+        name: str | None = None,
     ) -> None:
         self.maps = maps
         super().__init__(
@@ -45,7 +45,7 @@ class TemporalSNRMaps(TemporalSNRBase):
         )
 
     def aggregate(
-        self, input: dict[str, Any], extra_input: Optional[dict] = None
+        self, input: dict[str, Any], extra_input: dict | None = None
     ) -> dict:
         """Perform maps aggregation.
 

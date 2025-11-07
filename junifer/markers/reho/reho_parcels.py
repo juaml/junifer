@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any
 
 import numpy as np
 
@@ -91,13 +91,13 @@ class ReHoParcels(ReHoBase):
 
     def __init__(
         self,
-        parcellation: Union[str, list[str]],
+        parcellation: str | list[str],
         using: str,
-        reho_params: Optional[dict] = None,
+        reho_params: dict | None = None,
         agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
+        agg_method_params: dict | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        name: str | None = None,
     ) -> None:
         # Superclass init first to validate `using` parameter
         super().__init__(using=using, name=name)
@@ -110,7 +110,7 @@ class ReHoParcels(ReHoBase):
     def compute(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Compute.
 

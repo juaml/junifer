@@ -4,7 +4,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 import nibabel as nib
 import numpy as np
@@ -47,9 +47,9 @@ def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover
 def get_template(
     space: str,
     target_img: nib.Nifti1Image,
-    extra_input: Optional[dict[str, Any]] = None,
+    extra_input: dict[str, Any] | None = None,
     template_type: str = "T1w",
-    resolution: Optional[Union[int, "str"]] = None,
+    resolution: Union[int, "str"] | None = None,
 ) -> nib.Nifti1Image:
     """Get template for the space, tailored for the target image.
 

@@ -7,7 +7,7 @@
 import json
 from collections.abc import Sequence
 from pathlib import Path
-from typing import ClassVar, Optional, Union
+from typing import ClassVar
 
 import numpy as np
 import pandas as pd
@@ -46,7 +46,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
     def __init__(
         self,
-        uri: Union[str, Path],
+        uri: str | Path,
         single_output: bool = True,
     ) -> None:
         super().__init__(uri=uri, single_output=single_output)
@@ -75,8 +75,8 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
     @staticmethod
     def element_to_index(
-        element: dict, n_rows: int = 1, rows_col_name: Optional[str] = None
-    ) -> Union[pd.Index, pd.MultiIndex]:
+        element: dict, n_rows: int = 1, rows_col_name: str | None = None
+    ) -> pd.Index | pd.MultiIndex:
         """Convert the element metadata to index.
 
         Parameters
@@ -124,7 +124,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         return index
 
     def store_df(
-        self, meta_md5: str, element: dict, df: Union[pd.DataFrame, pd.Series]
+        self, meta_md5: str, element: dict, df: pd.DataFrame | pd.Series
     ) -> None:
         """Implement pandas DataFrame storing.
 
@@ -153,9 +153,9 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         self,
         meta_md5: str,
         element: dict,
-        data: Union[np.ndarray, list],
-        col_names: Optional[Sequence[str]] = None,
-        rows_col_name: Optional[str] = None,
+        data: np.ndarray | list,
+        col_names: Sequence[str] | None = None,
+        rows_col_name: str | None = None,
     ) -> None:
         """Store 2D data.
 
@@ -192,8 +192,8 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         self,
         meta_md5: str,
         element: dict,
-        data: Union[np.ndarray, list],
-        col_names: Optional[Sequence[str]] = None,
+        data: np.ndarray | list,
+        col_names: Sequence[str] | None = None,
     ) -> None:
         """Store vector.
 
@@ -231,7 +231,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Sequence[str]] = None,
+        col_names: Sequence[str] | None = None,
     ) -> None:
         """Store timeseries.
 

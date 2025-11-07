@@ -8,7 +8,6 @@ import importlib
 import importlib.util
 import sys
 from pathlib import Path
-from typing import Union
 
 import pandas as pd
 
@@ -19,7 +18,7 @@ from ..utils import logger, raise_error, warn_with_log, yaml
 __all__ = ["parse_elements", "parse_yaml"]
 
 
-def parse_yaml(filepath: Union[str, Path]) -> dict:  # noqa: C901
+def parse_yaml(filepath: str | Path) -> dict:  # noqa: C901
     """Parse YAML.
 
     Parameters
@@ -141,9 +140,7 @@ def parse_yaml(filepath: Union[str, Path]) -> dict:  # noqa: C901
     return contents
 
 
-def parse_elements(
-    element: tuple[str, ...], config: dict
-) -> Union[Elements, None]:
+def parse_elements(element: tuple[str, ...], config: dict) -> Elements | None:
     """Parse elements from cli.
 
     Parameters

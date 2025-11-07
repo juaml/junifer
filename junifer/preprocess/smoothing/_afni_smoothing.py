@@ -6,7 +6,6 @@
 from typing import (
     Any,
     ClassVar,
-    Union,
 )
 
 import nibabel as nib
@@ -38,7 +37,7 @@ class AFNISmoothing:
     def preprocess(
         self,
         input: dict[str, Any],
-        fwhm: Union[int, float],
+        fwhm: int | float,
     ) -> dict[str, Any]:
         """Preprocess using AFNI.
 

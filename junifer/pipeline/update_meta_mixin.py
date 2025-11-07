@@ -4,9 +4,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Union
-
-
 __all__ = ["UpdateMetaMixin"]
 
 
@@ -15,7 +12,7 @@ class UpdateMetaMixin:
 
     def update_meta(
         self,
-        input: Union[dict, list[dict]],
+        input: dict | list[dict],
         step_name: str,
     ) -> None:
         """Update metadata.
@@ -51,6 +48,6 @@ class UpdateMetaMixin:
             # Update step dependencies
             dependencies = getattr(self, "_DEPENDENCIES", set())
             if dependencies is not None:
-                if not isinstance(dependencies, (set, list)):
+                if not isinstance(dependencies, set | list):
                     dependencies = {dependencies}
                 entry["meta"]["dependencies"].update(dependencies)

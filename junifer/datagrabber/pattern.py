@@ -8,7 +8,6 @@
 import re
 from copy import deepcopy
 from pathlib import Path
-from typing import Optional, Union
 
 import numpy as np
 
@@ -173,9 +172,9 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         self,
         types: list[str],
         patterns: DataGrabberPatterns,
-        replacements: Union[list[str], str],
-        datadir: Union[str, Path],
-        confounds_format: Optional[str] = None,
+        replacements: list[str] | str,
+        datadir: str | Path,
+        confounds_format: str | None = None,
         partial_pattern_ok: bool = False,
     ) -> None:
         # Convert replacements to list if not already

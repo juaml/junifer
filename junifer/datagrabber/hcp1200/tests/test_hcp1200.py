@@ -7,7 +7,6 @@ import shutil
 import tempfile
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Optional
 
 import pytest
 
@@ -64,8 +63,8 @@ def hcpdg() -> Iterable[DataladHCP1200]:
 )
 def test_HCP1200(
     hcpdg: DataladHCP1200,
-    tasks: Optional[str],
-    phase_encodings: Optional[str],
+    tasks: str | None,
+    phase_encodings: str | None,
     ica_fix: bool,
     expected_path_name: str,
 ) -> None:
@@ -140,8 +139,8 @@ def test_HCP1200(
 )
 def test_HCP1200_single_access(
     hcpdg: DataladHCP1200,
-    tasks: Optional[str],
-    phase_encodings: Optional[str],
+    tasks: str | None,
+    phase_encodings: str | None,
 ) -> None:
     """Test HCP1200 DataGrabber single access.
 
@@ -180,8 +179,8 @@ def test_HCP1200_single_access(
 )
 def test_HCP1200_multi_access(
     hcpdg: DataladHCP1200,
-    tasks: Optional[str],
-    phase_encodings: Optional[str],
+    tasks: str | None,
+    phase_encodings: str | None,
 ) -> None:
     """Test HCP1200 DataGrabber multiple access.
 
@@ -275,8 +274,8 @@ def test_HCP1200_multi_access_phase_simple(
     ],
 )
 def test_HCP1200_incorrect_access_task(
-    tasks: Optional[str],
-    phase_encodings: Optional[str],
+    tasks: str | None,
+    phase_encodings: str | None,
 ) -> None:
     """Test HCP1200 DataGrabber incorrect access for task.
 
@@ -307,8 +306,8 @@ def test_HCP1200_incorrect_access_task(
     ],
 )
 def test_HCP1200_incorrect_access_phase(
-    tasks: Optional[str],
-    phase_encodings: Optional[str],
+    tasks: str | None,
+    phase_encodings: str | None,
 ) -> None:
     """Test HCP1200 DataGrabber incorrect access for phase.
 
@@ -374,7 +373,7 @@ def test_HCP1200_elements(
     ],
 )
 def test_HCP1200_incorrect_access_icafix(
-    tasks: Optional[str], ica_fix: bool
+    tasks: str | None, ica_fix: bool
 ) -> None:
     """Test HCP1200 DataGrabber incorrect access for icafix.
 

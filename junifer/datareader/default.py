@@ -5,7 +5,6 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Optional, Union
 
 import nibabel as nib
 import pandas as pd
@@ -59,7 +58,7 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
     def _fit_transform(
         self,
         input: dict[str, dict],
-        params: Optional[dict] = None,
+        params: dict | None = None,
     ) -> dict:
         """Fit and transform.
 
@@ -149,7 +148,7 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
 
 def _read_data(
     data_type: str, path: Path, read_params: dict
-) -> Union[nib.Nifti1Image, pd.DataFrame, None]:
+) -> nib.Nifti1Image | pd.DataFrame | None:
     """Read data for data type.
 
     Parameters

@@ -8,7 +8,6 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Union
 
 from ..pipeline import UpdateMetaMixin
 from ..typing import Element, Elements
@@ -38,7 +37,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
 
     """
 
-    def __init__(self, types: list[str], datadir: Union[str, Path]) -> None:
+    def __init__(self, types: list[str], datadir: str | Path) -> None:
         # Validate types
         if not isinstance(types, list):
             raise_error(msg="`types` must be a list", klass=TypeError)
@@ -89,7 +88,9 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
             element = (element,)
         # Zip through element keys and actual values to construct element
         # access dictionary
-        named_element: dict = dict(zip(self.get_element_keys(), element))
+        named_element: dict = dict(
+            zip(self.get_element_keys(), element, strict=False)
+        )
         logger.debug(f"Named element: {named_element}")
         # Fetch element
         out = self.get_item(**named_element)

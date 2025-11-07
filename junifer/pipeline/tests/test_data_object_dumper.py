@@ -5,7 +5,6 @@
 
 import pickle
 from pathlib import Path
-from typing import Union
 
 import nibabel
 import pytest
@@ -36,9 +35,9 @@ from junifer.utils import config
     ],
 )
 def test_dispatcher_addition_errors(
-    dispatcher: Union[AssetDumperDispatcher, AssetLoaderDispatcher],
-    inbuilt_key: Union[str, type],
-    ext_key: Union[str, type],
+    dispatcher: AssetDumperDispatcher | AssetLoaderDispatcher,
+    inbuilt_key: str | type,
+    ext_key: str | type,
     val: type,
 ) -> None:
     """Test asset dumper / loader addition errors.
@@ -70,9 +69,9 @@ def test_dispatcher_addition_errors(
     ],
 )
 def test_dispatcher_removal_errors(
-    dispatcher: Union[AssetDumperDispatcher, AssetLoaderDispatcher],
-    inbuilt_key: Union[str, type],
-    ext_key: Union[str, type],
+    dispatcher: AssetDumperDispatcher | AssetLoaderDispatcher,
+    inbuilt_key: str | type,
+    ext_key: str | type,
 ) -> None:
     """Test asset dumper / loader removal errors.
 

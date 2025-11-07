@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any
 
 from ...api.decorators import register_marker
 from ...utils import logger
@@ -65,9 +65,9 @@ class ALFFMaps(ALFFBase):
         using: str,
         highpass: float = 0.01,
         lowpass: float = 0.1,
-        tr: Optional[float] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
+        tr: float | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        name: str | None = None,
     ) -> None:
         # Superclass init first to validate `using` parameter
         super().__init__(
@@ -83,7 +83,7 @@ class ALFFMaps(ALFFBase):
     def compute(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Compute.
 

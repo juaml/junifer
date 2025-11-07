@@ -8,7 +8,6 @@
 import os
 import shutil
 from pathlib import Path
-from typing import Optional, Union
 
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from ..datagrabber import BaseDataGrabber
@@ -122,12 +121,12 @@ def _get_storage(storage_config: dict) -> StorageLike:
 
 
 def run(
-    workdir: Union[str, Path, dict],
+    workdir: str | Path | dict,
     datagrabber: dict,
     markers: list[dict],
     storage: dict,
-    preprocessors: Optional[list[dict]] = None,
-    elements: Optional[Elements] = None,
+    preprocessors: list[dict] | None = None,
+    elements: Elements | None = None,
 ) -> None:
     """Run the pipeline on the selected element.
 
@@ -166,7 +165,7 @@ def run(
 
     """
     # Conditional to handle workdir config
-    if isinstance(workdir, (str, Path)):
+    if isinstance(workdir, str | Path):
         if isinstance(workdir, str):
             workdir = {"workdir": Path(workdir), "cleanup": True}
         else:
@@ -263,8 +262,8 @@ def queue(
     kind: str,
     jobname: str = "junifer_job",
     overwrite: bool = False,
-    elements: Optional[Elements] = None,
-    **kwargs: Union[str, int, bool, dict, tuple, list],
+    elements: Elements | None = None,
+    **kwargs: str | int | bool | dict | tuple | list,
 ) -> None:
     """Queue a job to be executed later.
 
@@ -425,7 +424,7 @@ def reset(config: dict) -> None:
 
 def list_elements(
     datagrabber: dict,
-    elements: Optional[Elements] = None,
+    elements: Elements | None = None,
 ) -> str:
     """List elements of the datagrabber filtered using `elements`.
 

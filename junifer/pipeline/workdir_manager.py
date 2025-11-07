@@ -7,7 +7,6 @@
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Optional, Union
 
 from ..utils import logger
 from ..utils.singleton import Singleton
@@ -46,7 +45,7 @@ class WorkDirManager(metaclass=Singleton):
     """
 
     def __init__(
-        self, workdir: Optional[Union[str, Path]] = None, cleanup: bool = True
+        self, workdir: str | Path | None = None, cleanup: bool = True
     ) -> None:
         """Initialize the class."""
         self._workdir = Path(workdir) if isinstance(workdir, str) else workdir
@@ -97,7 +96,7 @@ class WorkDirManager(metaclass=Singleton):
         return self._workdir  # type: ignore
 
     @workdir.setter
-    def workdir(self, path: Union[str, Path]) -> None:
+    def workdir(self, path: str | Path) -> None:
         """Set working directory.
 
         The directory path is created if it doesn't exist yet.
@@ -130,7 +129,7 @@ class WorkDirManager(metaclass=Singleton):
         return self._elementdir  # type: ignore
 
     def get_element_tempdir(
-        self, prefix: Optional[str] = None, suffix: Optional[str] = None
+        self, prefix: str | None = None, suffix: str | None = None
     ) -> Path:
         """Get an element-scoped temporary directory.
 
@@ -203,12 +202,12 @@ class WorkDirManager(metaclass=Singleton):
             self._elementdir = None
 
     @property
-    def root_tempdir(self) -> Optional[Path]:
+    def root_tempdir(self) -> Path | None:
         """Get root temporary directory."""
         return self._root_tempdir
 
     def get_tempdir(
-        self, prefix: Optional[str] = None, suffix: Optional[str] = None
+        self, prefix: str | None = None, suffix: str | None = None
     ) -> Path:
         """Get a component-scoped temporary directory.
 

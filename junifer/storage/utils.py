@@ -328,7 +328,7 @@ def matrix_to_vector(
     # Generate flat 1D row X column names
     columns = [
         f"{row_names[i]}~{col_names[j]}"
-        for i, j in zip(data_idx[0], data_idx[1])
+        for i, j in zip(data_idx[0], data_idx[1], strict=False)
     ]
 
     return flat_data, columns

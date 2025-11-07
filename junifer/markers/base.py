@@ -6,7 +6,7 @@
 
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..typing import MarkerInOutMappings, StorageLike
@@ -44,8 +44,8 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     def __init__(
         self,
-        on: Optional[Union[list[str], str]] = None,
-        name: Optional[str] = None,
+        on: list[str] | str | None = None,
+        name: str | None = None,
     ) -> None:
         # Check for missing mapping attribute
         if not hasattr(self, "_MARKER_INOUT_MAPPINGS"):
@@ -126,7 +126,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         return self._MARKER_INOUT_MAPPINGS[input_type][output_feature]
 
     @abstractmethod
-    def compute(self, input: dict, extra_input: Optional[dict] = None) -> dict:
+    def compute(self, input: dict, extra_input: dict | None = None) -> dict:
         """Compute.
 
         Parameters
@@ -181,7 +181,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
     def _fit_transform(
         self,
         input: dict[str, dict],
-        storage: Optional[StorageLike] = None,
+        storage: StorageLike | None = None,
     ) -> dict:
         """Fit and transform.
 

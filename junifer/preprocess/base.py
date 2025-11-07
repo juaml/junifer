@@ -6,7 +6,7 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
@@ -43,8 +43,8 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     def __init__(
         self,
-        on: Optional[Union[list[str], str]] = None,
-        required_data_types: Optional[Union[list[str], str]] = None,
+        on: list[str] | str | None = None,
+        required_data_types: list[str] | str | None = None,
     ) -> None:
         """Initialize the class."""
         # Check for missing data types attributes
@@ -119,7 +119,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
     def preprocess(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Preprocess.
 

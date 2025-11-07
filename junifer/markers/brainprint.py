@@ -8,8 +8,6 @@ from pathlib import Path
 from typing import (
     Any,
     ClassVar,
-    Optional,
-    Union,
 )
 
 import numpy as np
@@ -99,7 +97,7 @@ class BrainPrint(BaseMarker):
         asymmetry: bool = False,
         asymmetry_distance: str = "euc",
         use_cholmod: bool = False,
-        name: Optional[str] = None,
+        name: str | None = None,
     ) -> None:
         self.num = num
         self.skip_cortex = skip_cortex
@@ -307,7 +305,7 @@ class BrainPrint(BaseMarker):
 
     def _fix_nan(
         self,
-        input_data: list[Union[float, str, npt.ArrayLike]],
+        input_data: list[float | str | npt.ArrayLike],
     ) -> np.ndarray:  # pragma: no cover
         """Convert BrainPrint output with string NaN to ``numpy.nan``.
 
@@ -329,7 +327,7 @@ class BrainPrint(BaseMarker):
     def compute(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict] = None,
+        extra_input: dict | None = None,
     ) -> dict:  # pragma: no cover
         """Compute.
 

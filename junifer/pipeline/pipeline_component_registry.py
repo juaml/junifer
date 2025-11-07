@@ -7,7 +7,6 @@
 
 import importlib
 from collections.abc import Mapping
-from typing import Optional, Union
 
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
 from ..utils import logger, raise_error
@@ -119,7 +118,7 @@ class PipelineComponentRegistry(metaclass=Singleton):
         return self._steps
 
     @property
-    def components(self) -> Mapping[str, Mapping[str, Union[str, type]]]:
+    def components(self) -> Mapping[str, Mapping[str, str | type]]:
         """Get registered components for valid pipeline steps."""
         return self._components
 
@@ -238,8 +237,8 @@ class PipelineComponentRegistry(metaclass=Singleton):
         step: str,
         name: str,
         baseclass: type,
-        init_params: Optional[dict] = None,
-    ) -> Union[DataGrabberLike, PreprocessorLike, MarkerLike, StorageLike]:
+        init_params: dict | None = None,
+    ) -> DataGrabberLike | PreprocessorLike | MarkerLike | StorageLike:
         """Build an instance of class registered as ``name``.
 
         Parameters

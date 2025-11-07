@@ -5,7 +5,6 @@
 
 import logging
 from pathlib import Path
-from typing import Optional, Union
 
 import pytest
 
@@ -58,7 +57,7 @@ def test_HTCondorAdapter_collect_error() -> None:
     ],
 )
 def test_HTCondorAdapter_pre_run(
-    pre_run: Optional[str],
+    pre_run: str | None,
     expected_text: str,
     shell: str,
 ) -> None:
@@ -100,7 +99,7 @@ def test_HTCondorAdapter_pre_run(
     ],
 )
 def test_HTCondorAdapter_pre_collect(
-    pre_collect: Optional[str],
+    pre_collect: str | None,
     expected_text: str,
     collect: str,
     shell: str,
@@ -140,7 +139,7 @@ def test_HTCondorAdapter_pre_collect(
     ],
 )
 def test_HTCondorAdapter_run_collect(
-    extra_preamble: Optional[str], expected_text: str
+    extra_preamble: str | None, expected_text: str
 ) -> None:
     """Test HTCondorAdapter run() and collect().
 
@@ -181,7 +180,7 @@ def test_HTCondorAdapter_run_collect(
     ],
 )
 def test_HTCondor_dag(
-    elements: list[Union[str, tuple]], collect: str, expected_text: str
+    elements: list[str | tuple], collect: str, expected_text: str
 ) -> None:
     """Test HTCondorAdapter dag().
 

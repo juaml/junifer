@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar
 
 import pandas as pd
 
@@ -63,10 +63,10 @@ class CrossParcellationFC(BaseMarker):
         parcellation_one: str,
         parcellation_two: str,
         agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
+        agg_method_params: dict | None = None,
         corr_method: str = "pearson",
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
+        masks: str | dict | list[dict | str] | None = None,
+        name: str | None = None,
     ) -> None:
         if parcellation_one == parcellation_two:
             raise_error(
@@ -83,7 +83,7 @@ class CrossParcellationFC(BaseMarker):
     def compute(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict] = None,
+        extra_input: dict | None = None,
     ) -> dict:
         """Compute.
 

@@ -4,8 +4,6 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional, Union
-
 import neurokit2 as nk
 import numpy as np
 
@@ -56,12 +54,12 @@ class RangeEntropyAUC(ComplexityBase):
 
     def __init__(
         self,
-        parcellation: Union[str, list[str]],
+        parcellation: str | list[str],
         agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        params: Optional[dict] = None,
-        name: Optional[str] = None,
+        agg_method_params: dict | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        params: dict | None = None,
+        name: str | None = None,
     ) -> None:
         super().__init__(
             parcellation=parcellation,
