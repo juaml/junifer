@@ -6,8 +6,8 @@
 # License: AGPL
 
 import socket
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable, Optional, Union
 
 import nibabel as nib
 import numpy as np
@@ -264,7 +264,7 @@ def test_load_incorrect() -> None:
 )
 def test_vickery_patil(
     name: str,
-    resolution: Optional[float],
+    resolution: float | None,
     pixdim: list[float],
     fname: str,
 ) -> None:
@@ -417,7 +417,7 @@ def test_get_errors() -> None:
 def test_nilearn_compute_masks(
     mask_name: str,
     function: Callable,
-    params: Union[dict, None],
+    params: dict | None,
     resample: bool,
 ) -> None:
     """Test using nilearn compute mask functions.
@@ -502,7 +502,7 @@ def test_get_inherit() -> None:
     ],
 )
 def test_get_multiple(
-    masks: Union[str, dict, list[Union[dict, str]]], params: dict
+    masks: str | dict | list[dict | str], params: dict
 ) -> None:
     """Test getting multiple masks.
 

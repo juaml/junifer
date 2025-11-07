@@ -90,7 +90,7 @@ def test_fMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
     ]
 
     # Build mappings dictionary
-    mappings = dict(zip(adhoc_names, fmriprep_names))
+    mappings = dict(zip(adhoc_names, fmriprep_names, strict=False))
     input = {
         "mappings": {"fmriprep": mappings},
         "data": adhoc_df,
@@ -245,7 +245,7 @@ def test_fMRIPrepConfoundRemover__pick_confounds_adhoc() -> None:
     ]
 
     # Build mappings dictionary
-    mappings = dict(zip(adhoc_names, fmriprep_names))
+    mappings = dict(zip(adhoc_names, fmriprep_names, strict=False))
     input = {
         "mappings": {"fmriprep": mappings},
         "data": adhoc_df,

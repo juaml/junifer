@@ -6,7 +6,6 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union
 
 from junifer.datagrabber.datalad_base import DataladDataGrabber
 
@@ -49,9 +48,9 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
 
     def __init__(
         self,
-        datadir: Union[str, Path, None] = None,
-        tasks: Union[str, list[str], None] = None,
-        phase_encodings: Union[str, list[str], None] = None,
+        datadir: str | Path | None = None,
+        tasks: str | list[str] | None = None,
+        phase_encodings: str | list[str] | None = None,
         ica_fix: bool = False,
     ) -> None:
         uri = (

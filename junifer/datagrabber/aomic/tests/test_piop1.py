@@ -7,8 +7,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional, Union
-
 import pytest
 
 from junifer.datagrabber import DataladAOMICPIOP1
@@ -71,8 +69,8 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomicpiop1"
 )
 def test_DataladAOMICPIOP1(
     type_: str,
-    nested_types: Optional[list[str]],
-    tasks: Optional[list[str]],
+    nested_types: list[str] | None,
+    tasks: list[str] | None,
     space: str,
 ) -> None:
     """Test DataladAOMICPIOP1 DataGrabber.
@@ -151,7 +149,7 @@ def test_DataladAOMICPIOP1(
     ],
 )
 def test_DataladAOMICPIOP1_partial_data_access(
-    types: Union[str, list[str]],
+    types: str | list[str],
 ) -> None:
     """Test DataladAOMICPIOP1 DataGrabber partial data access.
 

@@ -8,7 +8,7 @@
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
-from typing import Callable, Optional, Union
+from collections.abc import Callable
 
 import numpy as np
 import pandas as pd
@@ -19,8 +19,8 @@ from ..utils import raise_error
 
 def _ets(
     bold_ts: np.ndarray,
-    roi_names: Union[None, list[str]] = None,
-) -> tuple[np.ndarray, Optional[list[str]]]:
+    roi_names: None | list[str] = None,
+) -> tuple[np.ndarray, list[str] | None]:
     """Compute the edge-wise time series based on BOLD time series.
 
     Take a timeseries of brain areas, and calculate timeseries for each
@@ -73,7 +73,8 @@ def _ets(
             )
         _roi_names = np.array(roi_names)
         edge_names = [
-            "~".join([x, y]) for x, y in zip(_roi_names[u], _roi_names[v])
+            "~".join([x, y])
+            for x, y in zip(_roi_names[u], _roi_names[v], strict=False)
         ]
         return ets, edge_names
 
@@ -81,7 +82,7 @@ def _ets(
 def _correlate_dataframes(
     df1: pd.DataFrame,
     df2: pd.DataFrame,
-    method: Union[str, Callable] = "pearson",
+    method: str | Callable = "pearson",
 ) -> pd.DataFrame:
     """Column-wise correlations between two dataframes.
 

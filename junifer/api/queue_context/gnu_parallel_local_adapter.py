@@ -6,7 +6,6 @@
 import shutil
 import textwrap
 from pathlib import Path
-from typing import Optional
 
 from ...typing import Elements
 from ...utils import logger, make_executable, raise_error, run_ext_cmd
@@ -65,11 +64,11 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
         job_dir: Path,
         yaml_config_path: Path,
         elements: Elements,
-        pre_run: Optional[str] = None,
-        pre_collect: Optional[str] = None,
-        env: Optional[dict[str, str]] = None,
+        pre_run: str | None = None,
+        pre_collect: str | None = None,
+        env: dict[str, str] | None = None,
         verbose: str = "info",
-        verbose_datalad: Optional[str] = None,
+        verbose_datalad: str | None = None,
         submit: bool = False,
     ) -> None:
         """Initialize the class."""
@@ -92,7 +91,7 @@ class GnuParallelLocalAdapter(QueueContextAdapter):
         self._run_joblog_path = self._job_dir / f"run_{self._job_name}_joblog"
         self._elements_file_path = self._job_dir / "elements"
 
-    def _check_env(self, env: Optional[dict[str, str]]) -> None:
+    def _check_env(self, env: dict[str, str] | None) -> None:
         """Check value of env parameter on init.
 
         Parameters

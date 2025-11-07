@@ -4,7 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 from scipy.stats import mode, trim_mean
@@ -17,7 +18,7 @@ __all__ = ["count", "get_aggfunc_by_name", "select", "winsorized_mean"]
 
 
 def get_aggfunc_by_name(
-    name: str, func_params: Optional[dict[str, Any]] = None
+    name: str, func_params: dict[str, Any] | None = None
 ) -> Callable:
     """Get an aggregation function by its name.
 
@@ -134,7 +135,7 @@ def count(data: np.ndarray, axis: int = 0) -> np.ndarray:
 
 
 def winsorized_mean(
-    data: np.ndarray, axis: Optional[int] = None, **win_params
+    data: np.ndarray, axis: int | None = None, **win_params
 ) -> np.ndarray:
     """Compute a winsorized mean by chaining winsorization and mean.
 
@@ -169,8 +170,8 @@ def winsorized_mean(
 def select(
     data: np.ndarray,
     axis: int = 0,
-    pick: Optional[list[int]] = None,
-    drop: Optional[list[int]] = None,
+    pick: list[int] | None = None,
+    drop: list[int] | None = None,
 ) -> np.ndarray:
     """Select a subset of the data.
 

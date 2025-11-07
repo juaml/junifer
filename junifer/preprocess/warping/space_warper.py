@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar
 
 from templateflow import api as tflow
 
@@ -64,7 +64,7 @@ class SpaceWarper(BasePreprocessor):
     ]
 
     def __init__(
-        self, using: str, reference: str, on: Union[list[str], str]
+        self, using: str, reference: str, on: list[str] | str
     ) -> None:
         """Initialize the class."""
         # Validate `using` parameter
@@ -136,8 +136,8 @@ class SpaceWarper(BasePreprocessor):
     def preprocess(  # noqa: C901
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
+        extra_input: dict[str, Any] | None = None,
+    ) -> tuple[dict[str, Any], dict[str, dict[str, Any]] | None]:
         """Preprocess.
 
         Parameters

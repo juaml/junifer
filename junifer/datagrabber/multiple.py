@@ -5,8 +5,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Union
-
 from ..api.decorators import register_datagrabber
 from ..typing import DataGrabberLike
 from ..utils import deep_update, raise_error
@@ -79,7 +77,7 @@ class MultipleDataGrabber(BaseDataGrabber):
                 )
         self._datagrabbers = datagrabbers
 
-    def __getitem__(self, element: Union[str, tuple]) -> dict:
+    def __getitem__(self, element: str | tuple) -> dict:
         """Implement indexing.
 
         Parameters

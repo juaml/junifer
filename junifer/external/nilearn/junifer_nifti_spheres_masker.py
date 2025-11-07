@@ -3,7 +3,8 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import TYPE_CHECKING, Callable, Optional, Union
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Union
 
 import numpy as np
 from nilearn import image, masking
@@ -133,7 +134,7 @@ def _apply_mask_and_get_affinity(
             interpolation="nearest",
         )
         mask, _ = masking.load_mask_img(mask_img)
-        mask_coords = list(zip(*np.where(mask != 0)))
+        mask_coords = list(zip(*np.where(mask != 0), strict=False))
 
         X = masking.apply_mask_fmri(niimg, mask_img)
 
@@ -166,7 +167,7 @@ def _apply_mask_and_get_affinity(
         except ValueError:
             nearests.append(None)
 
-    mask_coords = np.asarray(list(zip(*mask_coords)))
+    mask_coords = np.asarray(list(zip(*mask_coords, strict=False)))
     mask_coords = image.resampling.coord_transform(
         mask_coords[0], mask_coords[1], mask_coords[2], affine
     )
@@ -255,7 +256,7 @@ class _JuniferExtractionFunctor:
     def __init__(
         self,
         seeds_: "ArrayLike",
-        radius: Optional[float],
+        radius: float | None,
         mask_img: Union["Nifti1Image", "Nifti2Image", None],
         agg_func: Callable,
         allow_overlap: bool,
@@ -352,7 +353,7 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
     def __init__(
         self,
         seeds: "ArrayLike",
-        radius: Optional[float] = None,
+        radius: float | None = None,
         mask_img: Union["Nifti1Image", "Nifti2Image", None] = None,
         agg_func: Callable = np.mean,
         allow_overlap: bool = False,

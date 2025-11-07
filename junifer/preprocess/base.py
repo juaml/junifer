@@ -5,7 +5,7 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional, Union
+from typing import Any
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
@@ -38,8 +38,8 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     def __init__(
         self,
-        on: Optional[Union[list[str], str]] = None,
-        required_data_types: Optional[Union[list[str], str]] = None,
+        on: list[str] | str | None = None,
+        required_data_types: list[str] | str | None = None,
     ) -> None:
         """Initialize the class."""
         # Use all data types if not provided
@@ -129,8 +129,8 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
     def preprocess(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
+        extra_input: dict[str, Any] | None = None,
+    ) -> tuple[dict[str, Any], dict[str, dict[str, Any]] | None]:
         """Preprocess.
 
         Parameters

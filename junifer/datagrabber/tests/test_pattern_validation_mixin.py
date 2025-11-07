@@ -5,7 +5,6 @@
 # License: AGPL
 
 from contextlib import AbstractContextManager, nullcontext
-from typing import Union
 
 import pytest
 
@@ -289,9 +288,9 @@ def test_register_data_type() -> None:
     ],
 )
 def test_PatternValidationMixin(
-    types: Union[str, list[str], list[int]],
-    replacements: Union[str, list[str], list[int]],
-    patterns: Union[str, dict[str, dict[str, str]]],
+    types: str | list[str] | list[int],
+    replacements: str | list[str] | list[int],
+    patterns: str | dict[str, dict[str, str]],
     expect: AbstractContextManager,
 ) -> None:
     """Test validation.

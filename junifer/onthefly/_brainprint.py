@@ -3,8 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional
-
 import numpy as np
 import pandas as pd
 
@@ -17,7 +15,7 @@ __all__ = ["normalize", "reweight"]
 
 def normalize(
     storage: StorageLike,
-    features: dict[str, dict[str, Optional[str]]],
+    features: dict[str, dict[str, str | None]],
     kind: str,
 ) -> pd.DataFrame:  # pragma: no cover
     """Read stored brainprint data and normalize either surfaces or volumes.
@@ -87,8 +85,8 @@ def normalize(
 
 def reweight(
     storage: StorageLike,
-    feature_name: Optional[str] = None,
-    feature_md5: Optional[str] = None,
+    feature_name: str | None = None,
+    feature_md5: str | None = None,
 ) -> pd.DataFrame:  # pragma: no cover
     """Read stored brainprint data and reweight eigenvalues.
 

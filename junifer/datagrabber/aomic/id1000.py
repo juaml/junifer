@@ -8,7 +8,6 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union
 
 from ...api.decorators import register_datagrabber
 from ...utils import raise_error
@@ -45,8 +44,8 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
 
     def __init__(
         self,
-        datadir: Union[str, Path, None] = None,
-        types: Union[str, list[str], None] = None,
+        datadir: str | Path | None = None,
+        types: str | list[str] | None = None,
         space: str = "MNI152NLin2009cAsym",
     ) -> None:
         valid_spaces = ["native", "MNI152NLin2009cAsym"]

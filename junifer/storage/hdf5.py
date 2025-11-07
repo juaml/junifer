@@ -7,7 +7,7 @@
 from collections import defaultdict
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -41,7 +41,7 @@ def _create_chunk(
     element_count: int,
     chunk_size: int,
     i_chunk: int,
-) -> Union[ChunkedArray, ChunkedList]:
+) -> ChunkedArray | ChunkedList:
     """Create chunked array or list.
 
     Parameters
@@ -137,9 +137,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     def __init__(
         self,
-        uri: Union[str, Path],
+        uri: str | Path,
         single_output: bool = True,
-        overwrite: Union[bool, str] = "update",
+        overwrite: bool | str = "update",
         compression: int = 7,
         force_float32: bool = True,
         chunk_size: int = 100,
@@ -194,7 +194,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             "timeseries_2d",
         ]
 
-    def _fetch_correct_uri_for_io(self, element: Optional[dict]) -> str:
+    def _fetch_correct_uri_for_io(self, element: dict | None) -> str:
         """Return proper URI for I/O based on `element`.
 
         If `element` is None, will return `self.uri`.
@@ -227,7 +227,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         return f"{self.uri.parent}/{prefix}{self.uri.name}"  # type: ignore
 
     def _read_metadata(
-        self, element: Optional[dict[str, str]] = None
+        self, element: dict[str, str] | None = None
     ) -> dict[str, dict[str, Any]]:
         """Read metadata (should not be called directly).
 
@@ -298,7 +298,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         return metadata
 
     def _read_data(
-        self, md5: str, element: Optional[dict[str, str]] = None
+        self, md5: str, element: dict[str, str] | None = None
     ) -> dict[str, Any]:
         """Read data (should not be called directly).
 
@@ -353,11 +353,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     def read(
         self,
-        feature_name: Optional[str] = None,
-        feature_md5: Optional[str] = None,
-    ) -> dict[
-        str, Union[str, list[Union[int, str, dict[str, str]]], np.ndarray]
-    ]:
+        feature_name: str | None = None,
+        feature_md5: str | None = None,
+    ) -> dict[str, str | list[int | str | dict[str, str]] | np.ndarray]:
         """Read stored feature.
 
         Parameters
@@ -453,8 +451,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     def read_df(
         self,
-        feature_name: Optional[str] = None,
-        feature_md5: Optional[str] = None,
+        feature_name: str | None = None,
+        feature_md5: str | None = None,
     ) -> pd.DataFrame:
         """Read feature into a pandas.DataFrame.
 
@@ -837,8 +835,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict[str, str],
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Iterable[str] | None = None,
+        row_names: Iterable[str] | None = None,
         matrix_kind: str = "full",
         diagonal: bool = True,
         row_header_col_name: str = "ROI",
@@ -915,8 +913,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         self,
         meta_md5: str,
         element: dict[str, str],
-        data: Union[np.ndarray, list],
-        col_names: Optional[Iterable[str]] = None,
+        data: np.ndarray | list,
+        col_names: Iterable[str] | None = None,
     ) -> None:
         """Store vector.
 
@@ -959,7 +957,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict[str, str],
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Iterable[str] | None = None,
     ) -> None:
         """Store timeseries.
 
@@ -989,8 +987,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict[str, str],
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Iterable[str] | None = None,
+        row_names: Iterable[str] | None = None,
     ) -> None:
         """Store a 2D timeseries.
 
@@ -1027,9 +1025,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
-        row_header_col_name: Optional[str] = "feature",
+        col_names: Iterable[str] | None = None,
+        row_names: Iterable[str] | None = None,
+        row_header_col_name: str | None = "feature",
     ) -> None:
         """Store table with scalar values.
 

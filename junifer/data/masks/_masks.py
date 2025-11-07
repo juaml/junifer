@@ -4,12 +4,11 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Callable
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
-    Optional,
     Union,
 )
 
@@ -45,12 +44,12 @@ __all__ = ["MaskRegistry", "compute_brain_mask"]
 
 def compute_brain_mask(
     target_data: dict[str, Any],
-    warp_data: Optional[dict[str, Any]] = None,
+    warp_data: dict[str, Any] | None = None,
     mask_type: str = "brain",
     threshold: float = 0.5,
     source: str = "template",
-    template_space: Optional[str] = None,
-    extra_input: Optional[dict[str, Any]] = None,
+    template_space: str | None = None,
+    extra_input: dict[str, Any] | None = None,
 ) -> "Nifti1Image":
     """Compute the whole-brain, grey-matter or white-matter mask.
 
@@ -281,7 +280,7 @@ class MaskRegistry(BasePipelineDataRegistry):
     def register(
         self,
         name: str,
-        mask_path: Union[str, Path],
+        mask_path: str | Path,
         space: str,
         overwrite: bool = False,
     ) -> None:
@@ -355,9 +354,9 @@ class MaskRegistry(BasePipelineDataRegistry):
     def load(
         self,
         name: str,
-        resolution: Optional[float] = None,
+        resolution: float | None = None,
         path_only: bool = False,
-    ) -> tuple[Optional[Union["Nifti1Image", Callable]], Optional[Path], str]:
+    ) -> tuple[Union["Nifti1Image", Callable] | None, Path | None, str]:
         """Load mask.
 
         Parameters
@@ -428,9 +427,9 @@ class MaskRegistry(BasePipelineDataRegistry):
 
     def get(  # noqa: C901
         self,
-        masks: Union[str, dict, list[Union[dict, str]]],
+        masks: str | dict | list[dict | str],
         target_data: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> "Nifti1Image":
         """Get mask, tailored for the target image.
 
@@ -696,7 +695,7 @@ class MaskRegistry(BasePipelineDataRegistry):
 
 def _load_vickery_patil_mask(
     name: str,
-    resolution: Optional[float] = None,
+    resolution: float | None = None,
 ) -> Path:
     """Load Vickery-Patil mask.
 

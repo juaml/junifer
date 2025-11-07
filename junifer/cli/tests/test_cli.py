@@ -4,8 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 import pytest
 from click.testing import CliRunner

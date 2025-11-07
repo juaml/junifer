@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any
 
 from ...api.decorators import register_marker
 from ..maps_aggregation import MapsAggregation
@@ -54,9 +54,9 @@ class EdgeCentricFCMaps(FunctionalConnectivityBase):
         self,
         maps: str,
         conn_method: str = "correlation",
-        conn_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
+        conn_method_params: dict | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        name: str | None = None,
     ) -> None:
         self.maps = maps
         super().__init__(
@@ -67,7 +67,7 @@ class EdgeCentricFCMaps(FunctionalConnectivityBase):
         )
 
     def aggregate(
-        self, input: dict[str, Any], extra_input: Optional[dict] = None
+        self, input: dict[str, Any], extra_input: dict | None = None
     ) -> dict:
         """Perform maps aggregation and ETS computation.
 

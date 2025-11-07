@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any
 
 from ...api.decorators import register_marker
 from ..parcel_aggregation import ParcelAggregation
@@ -61,13 +61,13 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
 
     def __init__(
         self,
-        parcellation: Union[str, list[str]],
+        parcellation: str | list[str],
         agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
+        agg_method_params: dict | None = None,
         conn_method: str = "correlation",
-        conn_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
+        conn_method_params: dict | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        name: str | None = None,
     ) -> None:
         self.parcellation = parcellation
         super().__init__(
@@ -80,7 +80,7 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
         )
 
     def aggregate(
-        self, input: dict[str, Any], extra_input: Optional[dict] = None
+        self, input: dict[str, Any], extra_input: dict | None = None
     ) -> dict:
         """Perform parcel aggregation and ETS computation.
 

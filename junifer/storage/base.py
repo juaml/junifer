@@ -7,7 +7,7 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -43,8 +43,8 @@ class BaseFeatureStorage(ABC):
 
     def __init__(
         self,
-        uri: Union[str, Path],
-        storage_types: Union[list[str], str],
+        uri: str | Path,
+        storage_types: list[str] | str,
         single_output: bool = True,
     ) -> None:
         self.uri = uri
@@ -118,11 +118,9 @@ class BaseFeatureStorage(ABC):
     @abstractmethod
     def read(
         self,
-        feature_name: Optional[str] = None,
-        feature_md5: Optional[str] = None,
-    ) -> dict[
-        str, Union[str, list[Union[int, str, dict[str, str]]], np.ndarray]
-    ]:
+        feature_name: str | None = None,
+        feature_md5: str | None = None,
+    ) -> dict[str, str | list[int | str | dict[str, str]] | np.ndarray]:
         """Read stored feature.
 
         Parameters
@@ -146,8 +144,8 @@ class BaseFeatureStorage(ABC):
     @abstractmethod
     def read_df(
         self,
-        feature_name: Optional[str] = None,
-        feature_md5: Optional[str] = None,
+        feature_name: str | None = None,
+        feature_md5: str | None = None,
     ) -> pd.DataFrame:
         """Read feature into a pandas DataFrame.
 
@@ -236,8 +234,8 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Iterable[str] | None = None,
+        row_names: Iterable[str] | None = None,
         matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:
@@ -277,8 +275,8 @@ class BaseFeatureStorage(ABC):
         self,
         meta_md5: str,
         element: dict,
-        data: Union[np.ndarray, list],
-        col_names: Optional[Iterable[str]] = None,
+        data: np.ndarray | list,
+        col_names: Iterable[str] | None = None,
     ) -> None:
         """Store vector.
 
@@ -304,7 +302,7 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Iterable[str] | None = None,
     ) -> None:
         """Store timeseries.
 
@@ -330,8 +328,8 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Iterable[str] | None = None,
+        row_names: Iterable[str] | None = None,
     ) -> None:
         """Store 2D timeseries.
 
@@ -359,9 +357,9 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
-        row_header_col_name: Optional[str] = "feature",
+        col_names: Iterable[str] | None = None,
+        row_names: Iterable[str] | None = None,
+        row_header_col_name: str | None = "feature",
     ) -> None:
         """Store table with scalar values.
 
