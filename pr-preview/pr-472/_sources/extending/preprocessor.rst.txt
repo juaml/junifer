@@ -14,16 +14,11 @@ new ones, you might need something specific and then you can create your
 own Preprocessor.
 
 While implementing your own Preprocessor, you need to always inherit from
-:class:`.BasePreprocessor` and implement a few methods:
+:class:`.BasePreprocessor` and implement a few methods and class attributes:
 
-#. ``get_valid_inputs``: This method should return a list of strings
-   representing the valid data types that the Preprocessor can work on.
-   Check :ref:`data types <data_types>` for reference.
-#. ``get_output_type``: This method should just return the input as it
-   is unused as of now.
-#. ``preprocess``: The method that given the data, preprocesses the data.
 #. ``__init__``: The initialisation method, where the Preprocessor is
    configured.
+#. ``preprocess``: The method that given the data, preprocesses the data.
 
 As an example, we will develop a ``NilearnSmoothing`` Preprocessor, which
 smoothens the data using :func:`nilearn.image.smooth_img`. This is often
@@ -32,37 +27,16 @@ desirable in cases where your data is preprocessed using ``fMRIPrep``, as
 
 .. _extending_preprocessors_input_output:
 
-Step 1: Configure input and output
-----------------------------------
+Step 1: Configure input
+-----------------------
 
-In this step, we define the input and output data types of the Preprocessor.
+In this step, we define the input data types of the Preprocessor.
 For input we can accept ``T1w``, ``T2w`` and ``BOLD``
-:ref:`data types <data_types>`.
+:ref:`data types <data_types>` and thus declare them in a class attribute:
 
 .. code-block:: python
 
-    ...
-
-
-    def get_valid_inputs(self) -> list[str]:
-        return ["T1w", "T2w", "BOLD"]
-
-
-    ...
-
-The output definition of the Preprocessor is unused now but is kept for
-completeness.
-
-.. code-block:: python
-
-    ...
-
-
-    def get_output_type(self, input_type: str) -> str:
-        return input_type
-
-
-    ...
+    _VALID_DATA_TYPES = ["T1w", "T2w", "BOLD"]
 
 .. _extending_preprocessors_init:
 
@@ -77,7 +51,7 @@ you configure it. Our class will have the following arguments:
    pass the value to it.
 2. ``on``: The data type we want the Preprocessor to work on. If the user does
    not specify, it will work on all the data types given by the
-   ``get_valid_inputs`` function.
+   ``_VALID_DATA_TYPES`` attribute.
 
 .. attention::
 
@@ -133,17 +107,6 @@ arguments:
   useful if you want to use other data (e.g., ``Warp`` can be used to provide
   the transformation matrix file for transformation to subject-native space).
 
-and it has two return values:
-
-* First is the ``input`` dictionary with necessary data modified. Usually, you
-  want to replace the ``input["data"]`` with the preprocessed data.
-* Second is a dictionary just like ``input`` or ``extra_input`` but with only
-  specific key-value pairs which you would like to pass down to the Markers.
-  For example, if your Preprocessor computes some mask with the preprocessed
-  data, you could pass it through this which would be added and available
-  in the Marker step with the same key you pass here. Usually, you would
-  want to pass ``None``.
-
 .. code-block:: python
 
     from typing import Any
@@ -158,9 +121,9 @@ and it has two return values:
         self,
         input: dict[str, Any],
         extra_input: dict[str, Any] | None = None,
-    ) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    ) -> dict[str, Any]:
         input["data"] = nimg.smooth_img(imgs=input["data"], fwhm=self.fwhm)
-        return input, None
+        return input
 
 
     ...
@@ -187,7 +150,8 @@ decorator and our final code should look like this:
 
 .. code-block:: python
 
-    from typing import Any, Literal
+    from collections.abc import Sequence
+    from typing import Any, ClassVar, Literal
 
     from junifer.api.decorators import register_preprocessor
     from junifer.preprocess import BasePreprocessor
@@ -201,6 +165,8 @@ decorator and our final code should look like this:
 
         _DEPENDENCIES = {"nilearn"}
 
+        _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["T1w", "T2w", "BOLD"]
+
         def __init__(
             self,
             fwhm: int | float | ArrayLike | Literal["fast"] | None,
@@ -209,19 +175,13 @@ decorator and our final code should look like this:
             self.fwhm = fwhm
             super().__init__(on=on)
 
-        def get_valid_inputs(self) -> list[str]:
-            return ["T1w", "T2w", "BOLD"]
-
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
-
         def preprocess(
             self,
             input: dict[str, Any],
             extra_input: dict[str, Any] | None = None,
-        ) -> tuple[dict[str, Any], dict[str, Any] | None]:
+        ) -> dict[str, Any]:
             input["data"] = nimg.smooth_img(imgs=input["data"], fwhm=self.fwhm)
-            return input, None
+            return input
 
 
 .. _extending_preprocessors_template:
@@ -238,18 +198,16 @@ Template for a custom Preprocessor
     @register_preprocessor
     class TemplatePreprocessor(BasePreprocessor):
 
+        # TODO: add the dependencies
+        _DEPENDENCIES = {}
+
+        # TODO: add the inputs
+        _VALID_DATA_TYPES = []
+
         def __init__(self, on=None):
             # TODO: add preprocessor-specific parameters
             super().__init__(on=on)
 
-        def get_valid_inputs(self):
-            # TODO: Complete with the valid inputs
-            valid = []
-            return valid
-
-        def get_output_type(self, input_type):
-            return input_type
-
         def preprocess(self, input, extra_input):
             # TODO: add the preprocessor logic
-            return input, None
+            return input

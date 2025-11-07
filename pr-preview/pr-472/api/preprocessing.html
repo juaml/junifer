@@ -328,13 +328,13 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="junifer.preprocess.BasePreprocessor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.preprocess.</span></span><span class="sig-name descname"><span class="pre">BasePreprocessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required_data_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.BasePreprocessor" title="Link to this definition">¶</a></dt>
-<dd><p>Abstract base class for all preprocessors.</p>
-<p>For every interface that is required, one needs to provide a concrete
+<dd><p>Abstract base class for preprocessor.</p>
+<p>For every preprocessor, one needs to provide a concrete
 implementation of this abstract class.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>on</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>The data type to apply the preprocessor on. If None,
+<dt><strong>on</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>The data type(s) to apply the preprocessor on. If None,
 will work on all available data types (default None).</p>
 </dd>
 <dt><strong>required_data_types</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a>, optional</span></dt><dd><p>The data types needed for computation. If None,
@@ -344,6 +344,8 @@ will be equal to <code class="docutils literal notranslate"><span class="pre">on
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AttributeError</span></code></a></dt><dd><p>If the preprocessor does not have <cite>_VALID_DATA_TYPES</cite> attribute.</p>
+</dd>
 <dt><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ValueError</span></code></a></dt><dd><p>If required input data type(s) is(are) not found.</p>
 </dd>
 </dl>
@@ -352,7 +354,7 @@ will be equal to <code class="docutils literal notranslate"><span class="pre">on
 <p>Initialize the class.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.preprocess.BasePreprocessor.get_output_type">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.BasePreprocessor.get_output_type" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.BasePreprocessor.get_output_type" title="Link to this definition">¶</a></dt>
 <dd><p>Get output type.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -372,7 +374,7 @@ will be equal to <code class="docutils literal notranslate"><span class="pre">on
 
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.preprocess.BasePreprocessor.get_valid_inputs">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.BasePreprocessor.get_valid_inputs" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.BasePreprocessor.get_valid_inputs" title="Link to this definition">¶</a></dt>
 <dd><p>Get valid data types for input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -404,10 +406,6 @@ confounds if available (default None).</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary.</p>
-</dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Extra “helper” data types as dictionary to add to the Junifer Data
-object. If no new “helper” data type(s) is(are) created, None is to
-be passed.</p>
 </dd>
 </dl>
 </dd>
@@ -511,41 +509,6 @@ the contrast of the underlying image.</p>
 </dl>
 <p>Initialize the class.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.Smoothing.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.Smoothing.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The data type output by the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.Smoothing.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.Smoothing.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this
-preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="junifer.preprocess.Smoothing.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.Smoothing.preprocess" title="Link to this definition">¶</a></dt>
 <dd><p>Preprocess.</p>
@@ -561,9 +524,6 @@ preprocessor.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary.</p>
-</dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Extra “helper” data types as dictionary to add to the Junifer Data
-object.</p>
 </dd>
 </dl>
 </dd>
@@ -605,41 +565,6 @@ if <code class="docutils literal notranslate"><span class="pre">reference</span>
 </dl>
 <p>Initialize the class.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.SpaceWarper.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.SpaceWarper.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The data type output by the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.SpaceWarper.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.SpaceWarper.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this
-preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="junifer.preprocess.SpaceWarper.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.SpaceWarper.preprocess" title="Link to this definition">¶</a></dt>
 <dd><p>Preprocess.</p>
@@ -655,9 +580,6 @@ preprocessor.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary.</p>
-</dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Extra “helper” data types as dictionary to add to the Junifer Data
-object.</p>
 </dd>
 </dl>
 </dd>
@@ -709,41 +631,6 @@ If None, will not apply any mask (default None).</p>
 </dl>
 <p>Initialize the class.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.TemporalFilter.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.TemporalFilter.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The input to the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The data type output by the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.TemporalFilter.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.TemporalFilter.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this
-preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="junifer.preprocess.TemporalFilter.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.TemporalFilter.preprocess" title="Link to this definition">¶</a></dt>
 <dd><p>Preprocess.</p>
@@ -760,9 +647,6 @@ preprocessor.</p>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. If <cite>self.masks</cite> is not None,
 then the target data computed mask is updated for further steps.</p>
-</dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Extra “helper” data types as dictionary to add to the Junifer Data
-object.</p>
 </dd>
 </dl>
 </dd>
@@ -801,41 +685,6 @@ If None, it will use t_r from nifti header (default None).</p>
 </dl>
 <p>Initialize the class.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.TemporalSlicer.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.TemporalSlicer.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type input to the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The data type output by the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.TemporalSlicer.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.TemporalSlicer.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this
-preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="junifer.preprocess.TemporalSlicer.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.TemporalSlicer.preprocess" title="Link to this definition">¶</a></dt>
 <dd><p>Preprocess.</p>
@@ -851,9 +700,6 @@ preprocessor.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary.</p>
-</dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Extra “helper” data types as dictionary to add to the Junifer Data
-object.</p>
 </dd>
 </dl>
 </dd>
@@ -946,41 +792,6 @@ If None, will not apply any mask (default None).</p>
 </dl>
 <p>Initialize the class.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.fMRIPrepConfoundRemover.get_output_type">
-<span class="sig-name descname"><span class="pre">get_output_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.fMRIPrepConfoundRemover.get_output_type" title="Link to this definition">¶</a></dt>
-<dd><p>Get output type.</p>
-<dl class="field-list">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><dl>
-<dt><strong>input_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The input to the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The data type output by the preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="junifer.preprocess.fMRIPrepConfoundRemover.get_valid_inputs">
-<span class="sig-name descname"><span class="pre">get_valid_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.fMRIPrepConfoundRemover.get_valid_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Get valid data types for input.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The list of data types that can be used as input for this
-preprocessor.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="junifer.preprocess.fMRIPrepConfoundRemover.preprocess">
 <span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.preprocess.fMRIPrepConfoundRemover.preprocess" title="Link to this definition">¶</a></dt>
 <dd><p>Preprocess.</p>
@@ -997,9 +808,6 @@ preprocessor.</p>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The computed result as dictionary. If <cite>self.masks</cite> is not None,
 then the target data computed mask is updated for further steps.</p>
-</dd>
-<dt><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a></dt><dd><p>Extra “helper” data types as dictionary to add to the Junifer Data
-object.</p>
 </dd>
 </dl>
 </dd>
@@ -1074,32 +882,22 @@ object.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.preprocess.Smoothing"><code class="docutils literal notranslate"><span class="pre">Smoothing</span></code></a><ul>
-<li><a class="reference internal" href="#junifer.preprocess.Smoothing.get_output_type"><code class="docutils literal notranslate"><span class="pre">Smoothing.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.preprocess.Smoothing.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">Smoothing.get_valid_inputs()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.preprocess.Smoothing.preprocess"><code class="docutils literal notranslate"><span class="pre">Smoothing.preprocess()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.preprocess.SpaceWarper"><code class="docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a><ul>
-<li><a class="reference internal" href="#junifer.preprocess.SpaceWarper.get_output_type"><code class="docutils literal notranslate"><span class="pre">SpaceWarper.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.preprocess.SpaceWarper.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">SpaceWarper.get_valid_inputs()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.preprocess.SpaceWarper.preprocess"><code class="docutils literal notranslate"><span class="pre">SpaceWarper.preprocess()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.preprocess.TemporalFilter"><code class="docutils literal notranslate"><span class="pre">TemporalFilter</span></code></a><ul>
-<li><a class="reference internal" href="#junifer.preprocess.TemporalFilter.get_output_type"><code class="docutils literal notranslate"><span class="pre">TemporalFilter.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.preprocess.TemporalFilter.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">TemporalFilter.get_valid_inputs()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.preprocess.TemporalFilter.preprocess"><code class="docutils literal notranslate"><span class="pre">TemporalFilter.preprocess()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.preprocess.TemporalSlicer"><code class="docutils literal notranslate"><span class="pre">TemporalSlicer</span></code></a><ul>
-<li><a class="reference internal" href="#junifer.preprocess.TemporalSlicer.get_output_type"><code class="docutils literal notranslate"><span class="pre">TemporalSlicer.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.preprocess.TemporalSlicer.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">TemporalSlicer.get_valid_inputs()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.preprocess.TemporalSlicer.preprocess"><code class="docutils literal notranslate"><span class="pre">TemporalSlicer.preprocess()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#junifer.preprocess.fMRIPrepConfoundRemover"><code class="docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover</span></code></a><ul>
-<li><a class="reference internal" href="#junifer.preprocess.fMRIPrepConfoundRemover.get_output_type"><code class="docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover.get_output_type()</span></code></a></li>
-<li><a class="reference internal" href="#junifer.preprocess.fMRIPrepConfoundRemover.get_valid_inputs"><code class="docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover.get_valid_inputs()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.preprocess.fMRIPrepConfoundRemover.preprocess"><code class="docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover.preprocess()</span></code></a></li>
 </ul>
 </li>
@@ -1114,7 +912,7 @@ object.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=170ac8f0"></script>
+</div><script src="../_static/documentation_options.js?v=bd6a5867"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
