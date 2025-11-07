@@ -6,7 +6,7 @@
 
 import hashlib
 import json
-from collections.abc import Iterable
+from collections.abc import Sequence
 from importlib.metadata import PackageNotFoundError, version
 
 import numpy as np
@@ -35,6 +35,11 @@ def get_dependency_version(dependency: str) -> str:
     -------
     str
         The version of the dependency.
+
+    Raises
+    ------
+    PackageNotFoundError
+        If ``dependency`` is not found.
 
     """
     dep_version = ""
@@ -141,6 +146,11 @@ def element_to_prefix(element: dict) -> str:
     str
         The element converted to prefix.
 
+    Raises
+    ------
+    ValueError
+        If ``element`` is not a dict.
+
     """
     logger.debug(f"Converting element {element} to prefix.")
     prefix = "element"
@@ -208,13 +218,13 @@ def store_matrix_checks(
                 klass=ValueError,
             )
     # Row label validation
-    if row_names_len != data_shape[0]:  # type: ignore
+    if row_names_len != data_shape[0]:
         raise_error(
             msg="Number of row names does not match number of rows",
             klass=ValueError,
         )
     # Column label validation
-    if col_names_len != data_shape[1]:  # type: ignore
+    if col_names_len != data_shape[1]:
         raise_error(
             msg="Number of column names does not match number of columns",
             klass=ValueError,
@@ -245,7 +255,7 @@ def store_timeseries_2d_checks(
         If the number of column names does not match the number of columns
 
     """
-    # data validation
+    # Data validation
     if len(data_shape) != 3:
         raise_error(
             msg="Data must be a 3D array",
@@ -253,13 +263,13 @@ def store_timeseries_2d_checks(
         )
 
     # Row label validation
-    if row_names_len != data_shape[1]:  # type: ignore
+    if row_names_len != data_shape[1]:
         raise_error(
             msg="Number of row names does not match number of rows",
             klass=ValueError,
         )
     # Column label validation
-    if col_names_len != data_shape[2]:  # type: ignore
+    if col_names_len != data_shape[2]:
         raise_error(
             msg="Number of column names does not match number of columns",
             klass=ValueError,
@@ -268,8 +278,8 @@ def store_timeseries_2d_checks(
 
 def matrix_to_vector(
     data: np.ndarray,
-    col_names: Iterable[str],
-    row_names: Iterable[str],
+    col_names: Sequence[str],
+    row_names: Sequence[str],
     matrix_kind: str,
     diagonal: bool,
 ) -> tuple[np.ndarray, list[str]]:
@@ -279,9 +289,9 @@ def matrix_to_vector(
     ----------
     data : 2D / 3D numpy.ndarray
         The matrix / tensor data to store / read.
-    col_names : list or tuple of str
+    col_names : list-like of str
         The column labels.
-    row_names : list or tuple of str
+    row_names : list-like of str
         The row labels.
     matrix_kind : str
         The kind of matrix:
@@ -317,7 +327,7 @@ def matrix_to_vector(
     flat_data = data[data_idx]
     # Generate flat 1D row X column names
     columns = [
-        f"{row_names[i]}~{col_names[j]}"  # type: ignore
+        f"{row_names[i]}~{col_names[j]}"
         for i, j in zip(data_idx[0], data_idx[1])
     ]
 
@@ -326,8 +336,8 @@ def matrix_to_vector(
 
 def timeseries2d_to_vector(
     data: np.ndarray,
-    col_names: Iterable[str],
-    row_names: Iterable[str],
+    col_names: Sequence[str],
+    row_names: Sequence[str],
 ) -> tuple[np.ndarray, list[str]]:
     """Convert matrix to vector based on parameters.
 
@@ -335,9 +345,9 @@ def timeseries2d_to_vector(
     ----------
     data : 2D / 3D numpy.ndarray
         The matrix / tensor data to store / read.
-    col_names : list or tuple of str
+    col_names : list-like of str
         The column labels.
-    row_names : list or tuple of str
+    row_names : list-like of str
         The row labels.
 
     Returns

@@ -5,9 +5,9 @@
 # License: AGPL
 
 import json
-from collections.abc import Iterable
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Optional, Union
+from typing import ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -31,8 +31,6 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         The path to the storage.
     single_output : bool, optional
         Whether to have single output (default True).
-    **kwargs
-        Keyword arguments passed to superclass.
 
     See Also
     --------
@@ -40,22 +38,18 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
     """
 
+    _STORAGE_TYPES: ClassVar[Sequence[str]] = [
+        "vector",
+        "timeseries",
+        "matrix",
+    ]
+
     def __init__(
-        self, uri: Union[str, Path], single_output: bool = True, **kwargs
+        self,
+        uri: Union[str, Path],
+        single_output: bool = True,
     ) -> None:
-        super().__init__(uri=uri, single_output=single_output, **kwargs)
-
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid storage types for input.
-
-        Returns
-        -------
-        list of str
-            The list of storage types that can be used as input for this
-            storage interface.
-
-        """
-        return ["matrix", "vector", "timeseries"]
+        super().__init__(uri=uri, single_output=single_output)
 
     def _meta_row(self, meta: dict, meta_md5: str) -> pd.DataFrame:
         """Convert the metadata to a pandas DataFrame.
@@ -102,7 +96,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
         """
         # Make mapping between element access keys and values
-        elem_idx: dict[str, Iterable[str]] = {
+        elem_idx: dict[str, Sequence[str]] = {
             k: [v] * n_rows for k, v in element.items()
         }
 
@@ -160,7 +154,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict,
         data: Union[np.ndarray, list],
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
         rows_col_name: Optional[str] = None,
     ) -> None:
         """Store 2D data.
@@ -173,7 +167,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The element as a dictionary.
         data : numpy.ndarray or list
             The data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
         rows_col_name : str, optional
             The column name to use in case number of rows greater than 1.
@@ -199,7 +193,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict,
         data: Union[np.ndarray, list],
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store vector.
 
@@ -211,7 +205,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The element as a dictionary.
         data : numpy.ndarray or list
             The vector data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
 
         """
@@ -237,7 +231,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store timeseries.
 
@@ -249,7 +243,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
 
         """

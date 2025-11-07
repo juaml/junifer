@@ -5,13 +5,14 @@
 # License: AGPL
 
 import json
+from collections.abc import Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional, Union
 
 import numpy as np
 import pandas as pd
 from pandas.core.base import NoNewAttributesMixin
-from pandas.io.sql import pandasSQL_builder  # type: ignore
+from pandas.io.sql import pandasSQL_builder
 from sqlalchemy import create_engine, inspect
 from tqdm import tqdm
 
@@ -46,8 +47,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
     upsert : {"ignore", "update"}, optional
         Upsert mode. If "ignore" is used, the existing elements are ignored.
         If "update", the existing elements are updated (default "update").
-    **kwargs : dict
-            The keyword arguments passed to the superclass.
 
     See Also
     --------
@@ -61,9 +60,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         uri: Union[str, Path],
         single_output: bool = True,
         upsert: str = "update",
-        **kwargs: str,
     ) -> None:
-        # Check upsert argument value
+        # Check and set upsert argument value
         if upsert not in ["update", "ignore"]:
             raise_error(
                 msg=(
@@ -71,26 +69,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                     "Must be either 'update' or 'ignore'."
                 )
             )
-        # Convert str to Path
-        if not isinstance(uri, Path):
-            uri = Path(uri)
-        # Create parent directories if not present
-        if not uri.parent.exists():
-            logger.info(
-                f"Output directory ({uri.parent.absolute()!s}) "
-                "does not exist, creating now."
-            )
-            uri.parent.mkdir(parents=True, exist_ok=True)
-        # Available storage kinds
-        storage_types = ["vector", "timeseries", "matrix"]
+        self.upsert = upsert
         super().__init__(
             uri=uri,
-            storage_types=storage_types,
             single_output=single_output,
-            **kwargs,
         )
-        # Set upsert
-        self._upsert = upsert
 
     def get_engine(self, element: Optional[dict] = None) -> "Engine":
         """Get engine.
@@ -105,19 +88,23 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         sqlalchemy.engine.Engine
             The sqlalchemy engine.
 
+        Raises
+        ------
+        ValueError
+            If ``element=None`` when ``single_output=False``.
+
         """
         # Prefixed elements
         prefix = ""
         if self.single_output is False:
             if element is None:
-                msg = "element must be specified when single_output is False."
-                raise_error(msg)
-            prefix = element_to_prefix(element)
+                raise_error(
+                    "`element` cannot be None when `single_output=False`"
+                )
+            else:
+                prefix = element_to_prefix(element)
         # Format URI for engine creation
-        uri = (
-            f"sqlite:///{self.uri.parent}/"  # type: ignore
-            f"{prefix}{self.uri.name}"  # type: ignore
-        )
+        uri = f"sqlite:///{self.uri.parent}/{prefix}{self.uri.name}"
         return create_engine(uri, echo=False)
 
     def _save_upsert(
@@ -147,8 +134,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         Raises
         ------
         ValueError
-            If the table exists and if_exists is "fail" or if invalid option is
-            passed to `if_exists`.
+            If the table exists and ``if_exists="fail"`` or
+            if invalid option is passed to ``if_exists``.
 
         """
         # Get index names
@@ -187,12 +174,12 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                         warn_with_log(
                             f"Some rows (n={len(existing)}) are already "
                             "present in the database. The storage is "
-                            f"configured to {self._upsert} the existing "
+                            f"configured to {self.upsert} the existing "
                             f"elements. The new rows (n={len(new)}) will be "
                             "appended. This warning is shown because normally "
                             "all of the elements should be updated."
                         )
-                    if self._upsert == "update":
+                    if self.upsert == "update":
                         update_stmts = _generate_update_statements(
                             table, index_col, existing
                         )
@@ -257,10 +244,14 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         dict
             The stored feature as a dictionary.
 
+        Raises
+        ------
+        NotImplementedError
+
         """
         raise_error(
             msg=(
-                "read() for SQLiteFeatureStorage is not currently planned to "
+                "SQLiteFeatureStorage.read() is not currently planned to "
                 "be implemented in the near future. If you need the "
                 "functionality, contact the junifer developers "
                 "(https://juaml.github.io/junifer/main/help.html)."
@@ -434,8 +425,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[list[str]] = None,
-        row_names: Optional[list[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
         matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:
@@ -451,9 +442,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The matrix data to store.
         meta : dict
             The metadata as a dictionary.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : str, optional
+        row_names : list-like of str, optional
             The row labels (optional None).
         matrix_kind : str, optional
             The kind of matrix:
@@ -479,8 +470,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             matrix_kind=matrix_kind,
             diagonal=diagonal,
             data_shape=data.shape,
-            row_names_len=len(row_names),  # type: ignore
-            col_names_len=len(col_names),  # type: ignore
+            row_names_len=len(row_names),
+            col_names_len=len(col_names),
         )
         # Matrix to vector conversion
         flat_data, columns = matrix_to_vector(
@@ -533,13 +524,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 msg="collect() is not implemented for single output.",
                 klass=IOError,
             )
-        logger.info(
-            f"Collecting data from {self.uri.parent}/*{self.uri.name}"  # type: ignore
-        )
+        logger.info(f"Collecting data from {self.uri.parent}/*{self.uri.name}")
         # Create new instance
         out_storage = SQLiteFeatureStorage(uri=self.uri, upsert="ignore")
         # Glob files
-        files = self.uri.parent.glob(f"*{self.uri.name}")  # type: ignore
+        files = self.uri.parent.glob(f"*{self.uri.name}")
         for elem in tqdm(files, desc="file"):
             logger.debug(f"Reading from {elem.absolute()!s}")
             in_storage = SQLiteFeatureStorage(uri=elem)

@@ -111,7 +111,7 @@ def test_get_engine_multi_output(tmp_path: Path) -> None:
     storage = SQLiteFeatureStorage(
         uri=uri, single_output=False, upsert="ignore"
     )
-    with pytest.raises(ValueError, match="element must be specified"):
+    with pytest.raises(ValueError, match="`element` cannot be None"):
         storage.get_engine()
 
 

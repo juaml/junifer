@@ -4,6 +4,9 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Sequence
+from typing import ClassVar
+
 import pytest
 
 from junifer.storage.base import BaseFeatureStorage
@@ -12,10 +15,7 @@ from junifer.storage.base import BaseFeatureStorage
 def test_BaseFeatureStorage_abstractness() -> None:
     """Test BaseFeatureStorage is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
-        BaseFeatureStorage(
-            uri="/tmp",
-            storage_types=["matrix"],  # type: ignore
-        )
+        BaseFeatureStorage(uri="/tmp")
 
 
 def test_BaseFeatureStorage() -> None:
@@ -25,16 +25,18 @@ def test_BaseFeatureStorage() -> None:
     class MyFeatureStorage(BaseFeatureStorage):
         """Implement concrete class."""
 
+        _STORAGE_TYPES: ClassVar[Sequence[str]] = [
+            "matrix",
+            "vector",
+            "timeseries",
+            "timeseries_2d",
+        ]
+
         def __init__(self, uri, single_output=True):
-            storage_types = ["matrix", "vector", "timeseries", "timeseries_2d"]
             super().__init__(
                 uri=uri,
-                storage_types=storage_types,
                 single_output=single_output,
             )
-
-        def get_valid_inputs(self):
-            return ["matrix", "vector", "timeseries", "timeseries_2d"]
 
         def list_features(self):
             super().list_features()
@@ -107,4 +109,4 @@ def test_BaseFeatureStorage() -> None:
     with pytest.raises(ValueError):
         st.store(kind="lego", meta=meta)
 
-    assert st.uri == "/tmp"
+    assert str(st.uri) == "/tmp"

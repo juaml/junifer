@@ -5,14 +5,14 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
 
-from ..utils import raise_error
+from ..utils import logger, raise_error
 from .utils import process_meta
 
 
@@ -22,44 +22,47 @@ __all__ = ["BaseFeatureStorage"]
 class BaseFeatureStorage(ABC):
     """Abstract base class for feature storage.
 
-    For every interface that is required, one needs to provide a concrete
+    For every storage, one needs to provide a concrete
     implementation of this abstract class.
 
     Parameters
     ----------
     uri : str or pathlib.Path
         The path to the storage.
-    storage_types : str or list of str
-        The available storage types for the class.
     single_output : bool, optional
         Whether to have single output (default True).
 
     Raises
     ------
-    ValueError
-        If required storage type(s) is(are) missing from ``storage_types``.
+    AttributeError
+        If the storage does not have `_STORAGE_TYPES` attribute.
 
     """
+
+    _STORAGE_TYPES: ClassVar[Sequence[str]]
 
     def __init__(
         self,
         uri: Union[str, Path],
-        storage_types: Union[list[str], str],
         single_output: bool = True,
     ) -> None:
-        self.uri = uri
-        # Convert storage_types to list
-        if not isinstance(storage_types, list):
-            storage_types = [storage_types]
-        # Check if required inputs are found
-        if any(x not in self.get_valid_inputs() for x in storage_types):
-            wrong_storage_types = [
-                x for x in storage_types if x not in self.get_valid_inputs()
-            ]
+        # Check for missing storage types attribute
+        if not hasattr(self, "_STORAGE_TYPES"):
             raise_error(
-                f"{self.__class__.__name__} cannot store {wrong_storage_types}"
+                msg="Missing `_STORAGE_TYPES` for the storage",
+                klass=AttributeError,
             )
-        self._valid_inputs = storage_types
+        # Convert str to Path
+        if not isinstance(uri, Path):
+            uri = Path(uri)
+        self.uri = uri
+        # Create parent directories if not present
+        if not self.uri.parent.exists():
+            logger.info(
+                f"Output directory: '{self.uri.parent.resolve()}' "
+                "does not exist, creating now"
+            )
+            self.uri.parent.mkdir(parents=True, exist_ok=True)
         self.single_output = single_output
 
     def get_valid_inputs(self) -> list[str]:
@@ -69,13 +72,10 @@ class BaseFeatureStorage(ABC):
         -------
         list of str
             The list of storage types that can be used as input for this
-            storage interface.
+            storage.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement get_valid_inputs().",
-            klass=NotImplementedError,
-        )
+        return list(self._STORAGE_TYPES)
 
     def validate(self, input_: list[str]) -> None:
         """Validate the input to the pipeline step.
@@ -91,11 +91,12 @@ class BaseFeatureStorage(ABC):
             If the ``input_`` is invalid.
 
         """
-        if not any(x in input_ for x in self._valid_inputs):
+        # self._STORAGE_TYPES should be there already
+        if not any(x in input_ for x in self._STORAGE_TYPES):
             raise_error(
                 "Input does not have the required data."
                 f"\t Input: {input}"
-                f"\t Required (any of): {self._valid_inputs}"
+                f"\t Required (any of): {self._STORAGE_TYPES}"
             )
 
     @abstractmethod
@@ -113,7 +114,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement list_features().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     @abstractmethod
     def read(
@@ -141,7 +142,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement read().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     @abstractmethod
     def read_df(
@@ -167,7 +168,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement read_df().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     @abstractmethod
     def store_metadata(self, meta_md5: str, element: dict, meta: dict) -> None:
@@ -186,7 +187,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement store_metadata().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def store(self, kind: str, **kwargs) -> None:
         """Store extracted features data.
@@ -206,14 +207,16 @@ class BaseFeatureStorage(ABC):
         """
         # Do the check before calling the abstract methods, otherwise the
         # meta might be stored even if the data is not stored.
-        if kind not in self._valid_inputs:
+        if kind not in self._STORAGE_TYPES:
             raise_error(
                 msg=f"I don't know how to store {kind}.",
                 klass=ValueError,
             )
+        # Process and store metadata
         t_meta = kwargs.pop("meta")
         meta_md5, t_meta, t_element = process_meta(t_meta)
         self.store_metadata(meta_md5=meta_md5, element=t_element, meta=t_meta)
+        # Store data
         if kind == "matrix":
             self.store_matrix(meta_md5=meta_md5, element=t_element, **kwargs)
         elif kind == "timeseries":
@@ -236,8 +239,8 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
         matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:
@@ -251,9 +254,9 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray
             The matrix data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : str, optional
+        row_names : list-like of str, optional
             The row labels (default None).
         matrix_kind : str, optional
             The kind of matrix:
@@ -278,7 +281,7 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: Union[np.ndarray, list],
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store vector.
 
@@ -290,7 +293,7 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray or list
             The vector data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
 
         """
@@ -304,7 +307,7 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store timeseries.
 
@@ -316,7 +319,7 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
 
         """
@@ -330,8 +333,8 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store 2D timeseries.
 
@@ -343,9 +346,9 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : list or tuple of str, optional
+        row_names : list-like of str, optional
             The row labels (default None).
 
         """
@@ -359,8 +362,8 @@ class BaseFeatureStorage(ABC):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
         row_header_col_name: Optional[str] = "feature",
     ) -> None:
         """Store table with scalar values.
@@ -373,9 +376,9 @@ class BaseFeatureStorage(ABC):
             The element as a dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : str, optional
+        row_names : list-like of str, optional
             The row labels (default None).
         row_header_col_name : str, optional
             The column name for the row header column (default "feature").
@@ -392,7 +395,7 @@ class BaseFeatureStorage(ABC):
         raise_error(
             msg="Concrete classes need to implement collect().",
             klass=NotImplementedError,
-        )
+        )  # pragma: no cover
 
     def __str__(self) -> str:
         """Represent object as string.

@@ -5,9 +5,9 @@
 # License: AGPL
 
 from collections import defaultdict
-from collections.abc import Iterable
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -135,6 +135,14 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     """
 
+    _STORAGE_TYPES: ClassVar[Sequence[str]] = [
+        "vector",
+        "timeseries",
+        "matrix",
+        "scalar_table",
+        "timeseries_2d",
+    ]
+
     def __init__(
         self,
         uri: Union[str, Path],
@@ -144,60 +152,19 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         force_float32: bool = True,
         chunk_size: int = 100,
     ) -> None:
-        # Convert str to Path
-        if not isinstance(uri, Path):
-            uri = Path(uri)
-
-        # Create parent directories if not present
-        if not uri.parent.exists():
-            logger.info(
-                f"Output directory: '{uri.parent.resolve()}' "
-                "does not exist, creating now"
-            )
-            uri.parent.mkdir(parents=True, exist_ok=True)
-
-        # Available storage kinds
-        storage_types = [
-            "vector",
-            "timeseries",
-            "matrix",
-            "scalar_table",
-            "timeseries_2d",
-        ]
-
-        super().__init__(
-            uri=uri,
-            storage_types=storage_types,
-            single_output=single_output,
-        )
-
         self.overwrite = overwrite
         self.compression = compression
         self.force_float32 = force_float32
         self.chunk_size = chunk_size
-
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid storage types for input.
-
-        Returns
-        -------
-        list of str
-            The list of storage types that can be used as input for this
-            storage.
-
-        """
-        return [
-            "matrix",
-            "vector",
-            "timeseries",
-            "scalar_table",
-            "timeseries_2d",
-        ]
+        super().__init__(
+            uri=uri,
+            single_output=single_output,
+        )
 
     def _fetch_correct_uri_for_io(self, element: Optional[dict]) -> str:
-        """Return proper URI for I/O based on `element`.
+        """Return proper URI for I/O based on ``element``.
 
-        If `element` is None, will return `self.uri`.
+        If ``element`` is None, will return ``self.uri``.
 
         Parameters
         ----------
@@ -209,22 +176,25 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         str
             Formatted URI for accessing metadata and data.
 
+        Raises
+        ------
+        RuntimeError
+            If ``element=None`` when ``single_output=False``.
+
         """
-        if not self.single_output and not element:
+        if not self.single_output and element is None:
             raise_error(
-                msg=(
-                    "`element` must be provided when `single_output` is False"
-                ),
+                msg="`element` must be provided when `single_output=False`",
                 klass=RuntimeError,
             )
-        elif not self.single_output and element:
+        elif not self.single_output and element is not None:
             # element access for multi output only
             prefix = element_to_prefix(element=element)
         else:
             # parent access for single output, ignore element
             prefix = ""
         # Format URI based on prefix
-        return f"{self.uri.parent}/{prefix}{self.uri.name}"  # type: ignore
+        return f"{self.uri.parent}/{prefix}{self.uri.name}"
 
     def _read_metadata(
         self, element: Optional[dict[str, str]] = None
@@ -291,7 +261,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         """
         # Read metadata
         metadata = read_hdf5(
-            fname=str(self.uri.resolve()),  # type: ignore
+            fname=str(self.uri.resolve()),
             title="meta",
             slash="ignore",
         )
@@ -374,8 +344,14 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Raises
         ------
+        ValueError
+            If both ``feature_md5`` and ``feature_name`` are provided or
+            if none of ``feature_md5`` or ``feature_name`` is provided.
         IOError
             If HDF5 file does not exist.
+        RuntimeError
+            If feature is not found or
+            if duplicate feature is found with the same name.
 
         """
         # Parameter conflict
@@ -396,7 +372,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
         # Parameter check pass; read metadata
         metadata = read_hdf5(
-            fname=str(self.uri.resolve()),  # type: ignore
+            fname=str(self.uri.resolve()),
             title="meta",
             slash="ignore",
         )
@@ -411,15 +387,18 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
             # Validate MD5
             if feature_md5 in metadata:
-                md5 = feature_md5  # type: ignore
+                md5 = feature_md5
             else:
-                raise_error(msg=f"Feature MD5 '{feature_md5}' not found")
+                raise_error(
+                    msg=f"Feature MD5 '{feature_md5}' not found",
+                    klass=RuntimeError,
+                )
 
         # Consider feature_name
         elif feature_name:
             logger.debug(
                 f"Validating feature name '{feature_name}' in metadata "
-                f"for: {self.uri.resolve()} ..."  # type: ignore
+                f"for: {self.uri.resolve()} ..."
             )
             # Retrieve MD5 for feature_name
             # Implicit counter for duplicate feature_name with different
@@ -445,7 +424,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Read data from HDF5
         hdf_data = read_hdf5(
-            fname=str(self.uri.resolve()),  # type: ignore
+            fname=str(self.uri.resolve()),
             title=md5,
             slash="ignore",
         )
@@ -573,7 +552,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             reshaped_data = np.concatenate(all_data, axis=0)
 
         # Create dataframe for index
-        idx_df = pd.DataFrame(data=element_idx)  # type: ignore
+        idx_df = pd.DataFrame(data=element_idx)
         # Create multiindex from dataframe
         hdf_data_idx = pd.MultiIndex.from_frame(df=idx_df)
         logger.debug(
@@ -589,7 +568,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         df = pd.DataFrame(
             data=reshaped_data,
             index=hdf_data_idx,
-            columns=columns,  # type: ignore
+            columns=columns,
             dtype=reshaped_data.dtype,
         )
         logger.debug(
@@ -621,7 +600,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         write_hdf5(
             fname=fname,
             data=processed_data,
-            overwrite=self.overwrite,  # type: ignore
+            overwrite=self.overwrite,
             compression=self.compression,
             title=title,
             slash="error",
@@ -837,8 +816,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict[str, str],
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
         matrix_kind: str = "full",
         diagonal: bool = True,
         row_header_col_name: str = "ROI",
@@ -856,9 +835,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The element as dictionary.
         data : numpy.ndarray
             The matrix data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : list or tuple of str, optional
+        row_names : list-like of str, optional
             The row labels (default None).
         matrix_kind : str, optional
             The kind of matrix:
@@ -895,8 +874,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             matrix_kind=matrix_kind,
             diagonal=diagonal,
             data_shape=data.shape,
-            row_names_len=len(row_names),  # type: ignore
-            col_names_len=len(col_names),  # type: ignore
+            row_names_len=len(row_names),
+            col_names_len=len(col_names),
         )
         # Store
         self._store_data(
@@ -914,9 +893,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     def store_vector(
         self,
         meta_md5: str,
-        element: dict[str, str],
+        element: dict,
         data: Union[np.ndarray, list],
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store vector.
 
@@ -928,7 +907,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The element as dictionary.
         data : numpy.ndarray or list
             The vector data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
 
         """
@@ -957,9 +936,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     def store_timeseries(
         self,
         meta_md5: str,
-        element: dict[str, str],
+        element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
     ) -> None:
         """Store timeseries.
 
@@ -971,7 +950,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The element as dictionary.
         data : numpy.ndarray
             The timeseries data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
 
         """
@@ -987,31 +966,31 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     def store_timeseries_2d(
         self,
         meta_md5: str,
-        element: dict[str, str],
+        element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
     ) -> None:
-        """Store a 2D timeseries.
+        """Store 2D timeseries.
 
         Parameters
         ----------
         meta_md5 : str
             The metadata MD5 hash.
         element : dict
-            The element as dictionary.
+            The element as a dictionary.
         data : numpy.ndarray
             The 2D timeseries data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : list or tuple of str, optional
+        row_names : list-like of str, optional
             The row labels (default None).
 
         """
         store_timeseries_2d_checks(
             data_shape=data.shape,
-            row_names_len=len(row_names),  # type: ignore
-            col_names_len=len(col_names),  # type: ignore
+            row_names_len=len(row_names) if row_names is not None else 0,
+            col_names_len=len(col_names) if col_names is not None else 0,
         )
         self._store_data(
             kind="timeseries_2d",
@@ -1027,8 +1006,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Iterable[str]] = None,
-        row_names: Optional[Iterable[str]] = None,
+        col_names: Optional[Sequence[str]] = None,
+        row_names: Optional[Sequence[str]] = None,
         row_header_col_name: Optional[str] = "feature",
     ) -> None:
         """Store table with scalar values.
@@ -1041,9 +1020,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The element as a dictionary.
         data : numpy.ndarray
             The scalar table data to store.
-        col_names : list or tuple of str, optional
+        col_names : list-like of str, optional
             The column labels (default None).
-        row_names : str, optional
+        row_names : list-like of str, optional
             The row labels (default None).
         row_header_col_name : str, optional
             The column name for the row header column (default "feature").
@@ -1079,22 +1058,19 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 klass=NotImplementedError,
             )
 
-        # Glob files
-        globbed_files = list(
-            self.uri.parent.glob(f"*_{self.uri.name}")  # type: ignore
-        )
-
         # Create new storage instance
         out_storage = HDF5FeatureStorage(uri=self.uri, overwrite="update")
 
         # Run loop to collect metadata
         logger.info(
-            f"Collecting metadata from {self.uri.parent}/*_{self.uri.name}"  # type: ignore
+            f"Collecting metadata from {self.uri.parent}/*_{self.uri.name}"
         )
         # Collect element files per feature MD5
         elements_per_feature_md5 = defaultdict(list)
         out_metadata = {}
-        for file_ in tqdm(globbed_files, desc="file-metadata"):
+        for file_ in tqdm(
+            self.uri.parent.glob(f"*_{self.uri.name}"), desc="file-metadata"
+        ):
             logger.debug(f"Reading HDF5 file: {file_} ...")
             # Create new storage instance to load metadata
             in_storage = HDF5FeatureStorage(uri=file_)
@@ -1113,7 +1089,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         logger.info("Writing metadata to HDF5 file ...")
         # Save metadata out metadata
         out_storage._write_processed_data(
-            fname=str(self.uri.resolve()),  # type: ignore
+            fname=str(self.uri.resolve()),
             processed_data=out_metadata,
             title="meta",
         )
@@ -1194,9 +1170,9 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
                     # Write to HDF5
                     write_hdf5(
-                        fname=str(self.uri.resolve()),  # type: ignore
+                        fname=str(self.uri.resolve()),
                         data=to_write,
-                        overwrite="update",  # type: ignore
+                        overwrite="update",
                         compression=0,
                         title=feature_md5,
                         slash="error",

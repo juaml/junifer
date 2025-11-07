@@ -17,11 +17,11 @@ Storage is meant to be used inside the DataGrabber context but you can operate
 on them outside the context as long as the processed data is in the memory and
 the Python runtime has not garbage-collected it.
 
-The :ref:`Markers <marker>` are responsible for defining what *storage kind*
-(``matrix``, ``vector``, ``timeseries``, ``scalar_table``) they support for
-which :ref:`data type <data_types>` by overriding its ``get_output_type``
-method. The storage object in turn declares and provides implementation for
-specific *storage kind*. For example, :class:`.SQLiteFeatureStorage` supports
+The :ref:`Markers <marker>` are responsible for mapping the input
+:ref:`data type <data_types>` to its output :ref:`storage type <storage_types>`
+as shown :ref:`here <extending_markers_input_output>`.
+The storage object in turn declares and provides implementation for
+specific *storage type*. For example, :class:`.SQLiteFeatureStorage` supports
 saving ``matrix``, ``vector`` and ``timeseries`` via ``store_matrix``,
 ``store_vector`` and ``store_timeseries`` methods respectively.
 
@@ -57,6 +57,10 @@ Storage Types
      - A 2D square or non-square matrix of scalar values with column names
      - ``col_names``
      - :meth:`.BaseFeatureStorage.store_timeseries`
+   * - ``timeseries_2d``
+     - A 3D(2D+1D) square or non-square matrix of scalar values with column names across sessions
+     - ``col_names``
+     - :meth:`.BaseFeatureStorage.store_timeseries_2d`
    * - ``scalar_table``
      - | A 2D square or non-square matrix of scalar values with row name, column
        | name and row header column name
@@ -83,4 +87,4 @@ Storage Interfaces
    * - :class:`.HDF5FeatureStorage`
      - ``.hdf5``
      - HDF5
-     - ``matrix``, ``vector``, ``timeseries``, ``scalar_table``
+     - ``matrix``, ``vector``, ``timeseries``, ``timeseries_2d``, ``scalar_table``
