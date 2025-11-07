@@ -4,6 +4,9 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Sequence
+from typing import ClassVar
+
 import pytest
 
 from junifer.preprocess.base import BasePreprocessor
@@ -20,19 +23,15 @@ def test_base_preprocessor_subclassing() -> None:
 
     # Create concrete class
     class MyBasePreprocessor(BasePreprocessor):
+        _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["BOLD", "T1w"]
+
         def __init__(self, on):
             self.parameter = 1
             super().__init__(on=on)
 
-        def get_valid_inputs(self):
-            return ["BOLD", "T1w"]
-
-        def get_output_type(self, input_type):
-            return input_type
-
         def preprocess(self, input, extra_input=None):
             input["data"] = f"modified_{input['data']}"
-            return input, extra_input
+            return input
 
     with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
         MyBasePreprocessor(on=["BOLD", "T2w"])

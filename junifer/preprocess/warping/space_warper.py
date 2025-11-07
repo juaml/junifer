@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Sequence
 from typing import Any, ClassVar, Optional, Union
 
 from templateflow import api as tflow
@@ -62,6 +63,17 @@ class SpaceWarper(BasePreprocessor):
             "depends_on": [FSLWarper, ANTsWarper],
         },
     ]
+    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = [
+        "T1w",
+        "T2w",
+        "BOLD",
+        "VBM_GM",
+        "VBM_WM",
+        "VBM_CSF",
+        "fALFF",
+        "GCOR",
+        "LCOR",
+    ]
 
     def __init__(
         self, using: str, reference: str, on: Union[list[str], str]
@@ -94,50 +106,11 @@ class SpaceWarper(BasePreprocessor):
         else:
             raise_error(f"Unknown reference: {self.reference}")
 
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this
-            preprocessor.
-
-        """
-        return [
-            "T1w",
-            "T2w",
-            "BOLD",
-            "VBM_GM",
-            "VBM_WM",
-            "VBM_CSF",
-            "fALFF",
-            "GCOR",
-            "LCOR",
-        ]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the preprocessor.
-
-        Returns
-        -------
-        str
-            The data type output by the preprocessor.
-
-        """
-        # Does not add any new keys
-        return input_type
-
     def preprocess(  # noqa: C901
         self,
         input: dict[str, Any],
         extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
+    ) -> dict[str, Any]:
         """Preprocess.
 
         Parameters
@@ -151,9 +124,6 @@ class SpaceWarper(BasePreprocessor):
         -------
         dict
             The computed result as dictionary.
-        None
-            Extra "helper" data types as dictionary to add to the Junifer Data
-            object.
 
         Raises
         ------
@@ -288,4 +258,4 @@ class SpaceWarper(BasePreprocessor):
                         reference=self.reference,
                     )
 
-        return input, None
+        return input

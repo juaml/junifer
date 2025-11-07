@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Sequence
 from typing import (
     Any,
     ClassVar,
@@ -56,6 +57,7 @@ class TemporalFilter(BasePreprocessor):
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn"}
+    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["BOLD"]
 
     def __init__(
         self,
@@ -74,36 +76,7 @@ class TemporalFilter(BasePreprocessor):
         self.t_r = t_r
         self.masks = masks
 
-        super().__init__(on="BOLD", required_data_types=["BOLD"])
-
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this
-            preprocessor.
-
-        """
-        return ["BOLD"]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The input to the preprocessor.
-
-        Returns
-        -------
-        str
-            The data type output by the preprocessor.
-
-        """
-        # Does not add any new keys
-        return input_type
+        super().__init__()
 
     def _validate_data(
         self,
@@ -130,7 +103,7 @@ class TemporalFilter(BasePreprocessor):
         self,
         input: dict[str, Any],
         extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
+    ) -> dict[str, Any]:
         """Preprocess.
 
         Parameters
@@ -145,9 +118,6 @@ class TemporalFilter(BasePreprocessor):
         dict
             The computed result as dictionary. If `self.masks` is not None,
             then the target data computed mask is updated for further steps.
-        None
-            Extra "helper" data types as dictionary to add to the Junifer Data
-            object.
 
         """
         # Validate data
@@ -237,4 +207,4 @@ class TemporalFilter(BasePreprocessor):
             }
         )
 
-        return input, None
+        return input

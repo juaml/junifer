@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Sequence
 from typing import Any, ClassVar, Optional, Union
 
 from ...api.decorators import register_preprocessor
@@ -82,6 +83,7 @@ class Smoothing(BasePreprocessor):
             "depends_on": FSLSmoothing,
         },
     ]
+    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["T1w", "T2w", "BOLD"]
 
     def __init__(
         self,
@@ -102,40 +104,11 @@ class Smoothing(BasePreprocessor):
         )
         super().__init__(on=on)
 
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this
-            preprocessor.
-
-        """
-        return ["T1w", "T2w", "BOLD"]
-
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the preprocessor.
-
-        Returns
-        -------
-        str
-            The data type output by the preprocessor.
-
-        """
-        # Does not add any new keys
-        return input_type
-
     def preprocess(
         self,
         input: dict[str, Any],
         extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
+    ) -> dict[str, Any]:
         """Preprocess.
 
         Parameters
@@ -149,9 +122,6 @@ class Smoothing(BasePreprocessor):
         -------
         dict
             The computed result as dictionary.
-        None
-            Extra "helper" data types as dictionary to add to the Junifer Data
-            object.
 
         """
         logger.debug("Smoothing")
@@ -169,4 +139,4 @@ class Smoothing(BasePreprocessor):
             **self.smoothing_params,
         )
 
-        return input, None
+        return input

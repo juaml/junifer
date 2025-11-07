@@ -5,7 +5,8 @@
 # License: AGPL
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional, Union
+from collections.abc import Sequence
+from typing import Any, ClassVar, Optional, Union
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
@@ -15,15 +16,15 @@ __all__ = ["BasePreprocessor"]
 
 
 class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
-    """Abstract base class for all preprocessors.
+    """Abstract base class for preprocessor.
 
-    For every interface that is required, one needs to provide a concrete
+    For every preprocessor, one needs to provide a concrete
     implementation of this abstract class.
 
     Parameters
     ----------
     on : str or list of str or None, optional
-        The data type to apply the preprocessor on. If None,
+        The data type(s) to apply the preprocessor on. If None,
         will work on all available data types (default None).
     required_data_types : str or list of str, optional
         The data types needed for computation. If None,
@@ -31,10 +32,14 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     Raises
     ------
+    AttributeError
+        If the preprocessor does not have `_VALID_DATA_TYPES` attribute.
     ValueError
         If required input data type(s) is(are) not found.
 
     """
+
+    _VALID_DATA_TYPES: ClassVar[Sequence[str]]
 
     def __init__(
         self,
@@ -42,6 +47,12 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         required_data_types: Optional[Union[list[str], str]] = None,
     ) -> None:
         """Initialize the class."""
+        # Check for missing data types attributes
+        if not hasattr(self, "_VALID_DATA_TYPES"):
+            raise_error(
+                msg="Missing `_VALID_DATA_TYPES` for the preprocessor",
+                klass=AttributeError,
+            )
         # Use all data types if not provided
         if on is None:
             on = self.get_valid_inputs()
@@ -58,6 +69,9 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         if required_data_types is None:
             self._required_data_types = on
         else:
+            # Convert data types to list
+            if not isinstance(required_data_types, list):
+                required_data_types = [required_data_types]
             self._required_data_types = required_data_types
 
     def validate_input(self, input: list[str]) -> list[str]:
@@ -89,7 +103,6 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             )
         return [x for x in self._on if x in input]
 
-    @abstractmethod
     def get_valid_inputs(self) -> list[str]:
         """Get valid data types for input.
 
@@ -100,12 +113,8 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             preprocessor.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement get_valid_inputs().",
-            klass=NotImplementedError,
-        )
+        return list(self._VALID_DATA_TYPES)
 
-    @abstractmethod
     def get_output_type(self, input_type: str) -> str:
         """Get output type.
 
@@ -120,17 +129,15 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             The data type output by the preprocessor.
 
         """
-        raise_error(
-            msg="Concrete classes need to implement get_output_type().",
-            klass=NotImplementedError,
-        )
+        # Does not add any new keys
+        return input_type
 
     @abstractmethod
     def preprocess(
         self,
         input: dict[str, Any],
         extra_input: Optional[dict[str, Any]] = None,
-    ) -> tuple[dict[str, Any], Optional[dict[str, dict[str, Any]]]]:
+    ) -> dict[str, Any]:
         """Preprocess.
 
         Parameters
@@ -147,10 +154,6 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         -------
         dict
             The computed result as dictionary.
-        dict or None
-            Extra "helper" data types as dictionary to add to the Junifer Data
-            object. If no new "helper" data type(s) is(are) created, None is to
-            be passed.
 
         """
         raise_error(
@@ -192,19 +195,10 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
                     f"Extra data type for preprocess: {extra_input.keys()}"
                 )
                 # Preprocess data
-                t_out, t_extra_input = self.preprocess(
-                    input=t_input, extra_input=extra_input
-                )
+                t_out = self.preprocess(input=t_input, extra_input=extra_input)
                 # Set output to the Junifer Data object
                 logger.debug(f"Adding {type_} to output")
                 out[type_] = t_out
-                # Check if helper data types are to be added
-                if t_extra_input is not None:
-                    logger.debug(
-                        f"Adding helper data types: {t_extra_input.keys()} "
-                        "to output"
-                    )
-                    out.update(t_extra_input)
                 # Update metadata for step
                 self.update_meta(out[type_], "preprocess")
         return out
