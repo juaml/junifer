@@ -136,7 +136,11 @@ class RangeEntropyAUC(ComplexityBase):
                 range_ent_vec[idx_r] = range_en_auc_roi_tmp[0]
                 idx_r = idx_r + 1
 
-            range_en_auc_roi[idx_roi] = np.trapz(range_ent_vec)
+            range_en_auc_roi[idx_roi] = (
+                np.trapezoid(range_ent_vec)
+                if int(np.__version__[0]) > 1
+                else np.trapz(range_ent_vec)
+            )
 
         range_en_auc_roi = range_en_auc_roi / n_r
 
