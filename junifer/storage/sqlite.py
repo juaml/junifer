@@ -19,9 +19,9 @@ from tqdm import tqdm
 
 from ..api.decorators import register_storage
 from ..utils import logger, raise_error, warn_with_log
+from .base import MatrixKind
 from .pandas_base import PandasBaseFeatureStorage
 from .utils import (
-    MatrixKind,
     element_to_prefix,
     matrix_to_vector,
     store_matrix_checks,
@@ -57,10 +57,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         ``uri`` and store all the elements in the same file. This behaviour
         is only suitable for non-parallel executions. SQLite does not
         support concurrency (default True).
-    upsert : Upsert, optional
+    upsert : :enum:`.Upsert`, optional
         Upsert mode. If ``Upsert.Ignore`` is used, the existing elements are
         ignored. If ``Upsert.Update``, the existing elements are updated
-        (default Upsert.Update).
+        (default ``Upsert.Update``).
 
     See Also
     --------
@@ -460,8 +460,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (optional None).
-        matrix_kind : MatrixKind, optional
-            The matrix kind (default MatrixKind.Full).
+        matrix_kind : :enum:`.MatrixKind`, optional
+            The matrix kind (default ``MatrixKind.Full``).
         diagonal : bool, optional
             Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
             setting this to False will raise an error (default True).
@@ -534,7 +534,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             )
         logger.info(f"Collecting data from {self.uri.parent}/*{self.uri.name}")
         # Create new instance
-        out_storage = SQLiteFeatureStorage(uri=self.uri, upsert="ignore")
+        out_storage = SQLiteFeatureStorage(uri=self.uri, upsert=Upsert.Ignore)
         # Glob files
         files = self.uri.parent.glob(f"*{self.uri.name}")
         for elem in tqdm(files, desc="file"):

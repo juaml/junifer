@@ -169,7 +169,7 @@ def element_to_prefix(element: dict) -> str:
 
 
 def store_matrix_checks(
-    matrix_kind: str,
+    matrix_kind: "MatrixKind",
     diagonal: bool,
     data_shape: tuple[int, int],
     row_names_len: int,
@@ -179,7 +179,7 @@ def store_matrix_checks(
 
     Parameters
     ----------
-    matrix_kind : MatrixKind, optional
+    matrix_kind : :enum:`.MatrixKind`, optional
         The matrix kind.
     diagonal : bool
         Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
@@ -293,7 +293,7 @@ def matrix_to_vector(
         The column labels.
     row_names : list-like of str
         The row labels.
-    matrix_kind : MatrixKind
+    matrix_kind : :enum:`.MatrixKind`
         The matrix kind.
     diagonal : bool
         Whether to store the diagonal.

@@ -58,7 +58,7 @@ class BaseFeatureStorage(ABC):
 
     """
 
-    _STORAGE_TYPES: ClassVar[Sequence[str]]
+    _STORAGE_TYPES: ClassVar[Sequence[StorageType]]
 
     def __init__(
         self,
@@ -208,12 +208,12 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )  # pragma: no cover
 
-    def store(self, kind: str, **kwargs) -> None:
+    def store(self, kind: StorageType, **kwargs) -> None:
         """Store extracted features data.
 
         Parameters
         ----------
-        kind : {"matrix", "timeseries", "vector", "scalar_table"}
+        kind : :enum:`.StorageType`
             The storage kind.
         **kwargs
             The keyword arguments.
@@ -277,8 +277,8 @@ class BaseFeatureStorage(ABC):
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (default None).
-        matrix_kind : MatrixKind, optional
-            The matrix kind (default MatrixKind.Full).
+        matrix_kind : :enum:`.MatrixKind`, optional
+            The matrix kind (default ``MatrixKind.Full``).
         diagonal : bool, optional
             Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
             setting this to False will raise an error (default True).
