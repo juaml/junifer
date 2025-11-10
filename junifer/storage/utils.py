@@ -111,7 +111,7 @@ def process_meta(meta: dict) -> tuple[str, dict, dict]:
     Raises
     ------
     ValueError
-        If ``meta`` is None or if it does not contain the key "element".
+        If ``meta=None`` or if it does not contain the key "element".
 
     """
     if meta is None:
@@ -246,9 +246,9 @@ def store_timeseries_2d_checks(
     Raises
     ------
     ValueError
-        If the data is not a 3D array (timepoints, rows, columns)
-        If the number of row names does not match the number of rows
-        If the number of column names does not match the number of columns
+        If the data is not a 3D array (timepoints, rows, columns) or
+        if the number of row names does not match the number of rows or
+        if the number of column names does not match the number of columns.
 
     """
     # Data validation
