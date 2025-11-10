@@ -7,10 +7,11 @@
 from collections import defaultdict
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar, Literal, Optional, Union
 
 import numpy as np
 import pandas as pd
+from pydantic import PositiveInt
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
@@ -62,12 +63,6 @@ def _create_chunk(
     ChunkedArray or ChunkedList
         The chunked array or list.
 
-    Raises
-    ------
-    ValueError
-        If `kind` is not one of ['vector', 'matrix', 'timeseries',
-        'scalar_table'].
-
     """
     if kind in ["vector", "matrix"]:
         features_data = np.concatenate(chunk_data, axis=-1)
@@ -93,12 +88,6 @@ def _create_chunk(
             size=element_count,
             offset=i_chunk * chunk_size,
         )
-    else:
-        raise_error(
-            f"Invalid kind: {kind}. "
-            "Must be one of ['vector', 'matrix', 'timeseries', "
-            "'timeseries_2d', 'scalar_table']."
-        )
     return out
 
 
@@ -108,7 +97,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     Parameters
     ----------
-    uri : str or pathlib.Path
+    uri : pathlib.Path
         The path to the file to be used.
     single_output : bool, optional
         If False, will create one HDF5 file per element. The name
@@ -124,7 +113,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     force_float32 : bool, optional
         Whether to force casting of numpy.ndarray values to float32 if float64
         values are found (default True).
-    chunk_size : int, optional
+    chunk_size : positive int, optional
         The chunk size to use when collecting data from element files in
         :meth:`.collect`. If the file count is smaller than the value, the
         minimum is used (default 100).
@@ -143,23 +132,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         StorageType.Timeseries2D,
     ]
 
-    def __init__(
-        self,
-        uri: Union[str, Path],
-        single_output: bool = True,
-        overwrite: Union[bool, str] = "update",
-        compression: int = 7,
-        force_float32: bool = True,
-        chunk_size: int = 100,
-    ) -> None:
-        self.overwrite = overwrite
-        self.compression = compression
-        self.force_float32 = force_float32
-        self.chunk_size = chunk_size
-        super().__init__(
-            uri=uri,
-            single_output=single_output,
-        )
+    overwrite: Union[bool, str] = "update"
+    compression: Literal[0, 1, 2, 3, 4, 5, 6, 7, 8, 9] = 7
+    force_float32: bool = True
+    chunk_size: PositiveInt = 100
 
     def _fetch_correct_uri_for_io(self, element: Optional[dict]) -> str:
         """Return proper URI for I/O based on ``element``.
