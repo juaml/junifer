@@ -194,16 +194,12 @@ def store_matrix_checks(
     Raises
     ------
     ValueError
-        If the matrix kind is invalid
-        If the diagonal is False and the matrix kind is "full"
-        If the matrix kind is "triu" or "tril" and the matrix is not square
-        If the number of row names does not match the number of rows
-        If the number of column names does not match the number of columns
+        If ``diagonal=False`` and ``matrix_kind="full"`` or
+        if ``matrix_kind`` is "triu" or "tril" and the matrix is not square or
+        if the number of row names does not match the number of rows
+        If the number of column names does not match the number of columns.
 
     """
-    # Matrix kind validation
-    if matrix_kind not in ("triu", "tril", "full"):
-        raise_error(msg=f"Invalid kind {matrix_kind}", klass=ValueError)
     # Diagonal validation
     if diagonal is False and matrix_kind not in ["triu", "tril"]:
         raise_error(

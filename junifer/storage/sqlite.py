@@ -68,25 +68,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
     """
 
-    def __init__(
-        self,
-        uri: str | Path,
-        single_output: bool = True,
-        upsert: Upsert = Upsert.Update,
-    ) -> None:
-        # Check and set upsert argument value
-        if upsert not in ["update", "ignore"]:
-            raise_error(
-                msg=(
-                    "Invalid choice for `upsert`. "
-                    "Must be either 'update' or 'ignore'."
-                )
-            )
-        self.upsert = upsert
-        super().__init__(
-            uri=uri,
-            single_output=single_output,
-        )
+    upsert: Upsert = Upsert.Update
 
     def get_engine(self, element: dict | None = None) -> "Engine":
         """Get engine.
