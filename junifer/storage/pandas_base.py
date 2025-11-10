@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import raise_error
-from .base import BaseFeatureStorage
+from .base import BaseFeatureStorage, StorageType
 
 
 __all__ = ["PandasBaseFeatureStorage"]
@@ -38,10 +38,10 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
     """
 
-    _STORAGE_TYPES: ClassVar[Sequence[str]] = [
-        "vector",
-        "timeseries",
-        "matrix",
+    _STORAGE_TYPES: ClassVar[Sequence[StorageType]] = [
+        StorageType.Vector,
+        StorageType.Timeseries,
+        StorageType.Matrix,
     ]
 
     def __init__(

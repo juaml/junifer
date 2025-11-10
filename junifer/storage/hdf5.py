@@ -22,7 +22,7 @@ from ..external.h5io.h5io import (
     write_hdf5,
 )
 from ..utils import logger, raise_error
-from .base import BaseFeatureStorage, MatrixKind
+from .base import BaseFeatureStorage, MatrixKind, StorageType
 from .utils import (
     element_to_prefix,
     matrix_to_vector,
@@ -37,7 +37,7 @@ __all__ = ["HDF5FeatureStorage"]
 
 def _create_chunk(
     chunk_data: list[np.ndarray],
-    kind: str,
+    kind: StorageType,
     element_count: int,
     chunk_size: int,
     i_chunk: int,
@@ -48,7 +48,7 @@ def _create_chunk(
     ----------
     chunk_data : list of numpy.ndarray
         The data to be chunked.
-    kind : str
+    kind : :enum:`.StorageType`
         The kind of data to be chunked.
     element_count : int
         The total number of elements.
@@ -135,12 +135,12 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     """
 
-    _STORAGE_TYPES: ClassVar[Sequence[str]] = [
-        "vector",
-        "timeseries",
-        "matrix",
-        "scalar_table",
-        "timeseries_2d",
+    _STORAGE_TYPES: ClassVar[Sequence[StorageType]] = [
+        StorageType.Vector,
+        StorageType.Timeseries,
+        StorageType.Matrix,
+        StorageType.ScalarTable,
+        StorageType.Timeseries2D,
     ]
 
     def __init__(
@@ -670,7 +670,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     def _store_data(
         self,
-        kind: str,
+        kind: StorageType,
         meta_md5: str,
         element: list[dict[str, str]],
         data: np.ndarray,
@@ -685,7 +685,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Parameters
         ----------
-        kind : {"matrix", "vector", "timeseries", "scalar_table"}
+        kind : :enum:`.StorageType`
             The storage kind.
         meta_md5 : str
             The metadata MD5 hash.
@@ -839,8 +839,8 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (default None).
-        matrix_kind : MatrixKind, optional
-            The matrix kind (default MatrixKind.Full).
+        matrix_kind : :enum:`.MatrixKind`, optional
+            The matrix kind (default ``MatrixKind.Full``).
         diagonal : bool, optional
             Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
             setting this to False will raise an error (default True).
@@ -920,7 +920,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             processed_data = data.ravel()
 
         self._store_data(
-            kind="vector",
+            kind=StorageType.Vector,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=processed_data[:, np.newaxis],  # convert to 2D
@@ -949,7 +949,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         """
         self._store_data(
-            kind="timeseries",
+            kind=StorageType.Timeseries,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=[data],  # convert to list
@@ -987,7 +987,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             col_names_len=len(col_names) if col_names is not None else 0,
         )
         self._store_data(
-            kind="timeseries_2d",
+            kind=StorageType.Timeseries2D,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=[data],  # convert to list
@@ -1023,7 +1023,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         """
         self._store_data(
-            kind="scalar_table",
+            kind=StorageType.ScalarTable,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=[data],  # convert to list
