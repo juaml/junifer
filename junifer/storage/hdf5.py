@@ -252,7 +252,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         ----------
         md5 : str
             The MD5 used as the HDF5 group name.
-        element : dict, optional
+        element : dict or None, optional
             The element as dictionary (default None).
 
         Returns
@@ -822,15 +822,6 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             setting this to False will raise an error (default True).
         row_header_col_name : str, optional
             The column name for the row header column (default "ROI").
-
-        Raises
-        ------
-        ValueError
-            If invalid ``matrix_kind`` is provided, ``diagonal = False``
-            for ``matrix_kind = "full"``, non-square data is provided
-            for ``matrix_kind = {"triu", "tril"}``, length of ``row_names``
-            do not match data row count, or length of ``col_names`` do not
-            match data column count.
 
         """
         # Row data validation

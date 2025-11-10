@@ -435,8 +435,6 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The element as a dictionary.
         data : numpy.ndarray
             The matrix data to store.
-        meta : dict
-            The metadata as a dictionary.
         col_names : list-like of str, optional
             The column labels (default None).
         row_names : list-like of str, optional
