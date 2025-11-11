@@ -4,13 +4,13 @@
 # License: AGPL
 
 from collections.abc import Sequence
-from typing import Any, ClassVar, Optional, Union
 from enum import Enum
+from typing import Any, ClassVar, Literal, Optional
 
 from ...api.decorators import register_preprocessor
 from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
-from ...utils import logger, raise_error
+from ...utils import logger
 from ..base import BasePreprocessor
 from ._afni_smoothing import AFNISmoothing
 from ._fsl_smoothing import FSLSmoothing
@@ -81,16 +81,16 @@ class Smoothing(BasePreprocessor):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "depends_on": NilearnSmoothing,
             "using": SmoothingImpl.nilearn,
+            "depends_on": [NilearnSmoothing],
         },
         {
-            "depends_on": AFNISmoothing,
             "using": SmoothingImpl.afni,
+            "depends_on": [AFNISmoothing],
         },
         {
-            "depends_on": FSLSmoothing,
             "using": SmoothingImpl.fsl,
+            "depends_on": [FSLSmoothing],
         },
     ]
     _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [
@@ -99,24 +99,15 @@ class Smoothing(BasePreprocessor):
         DataType.BOLD,
     ]
 
-    def __init__(
-        self,
-        using: str,
-        on: Union[list[str], str],
-        smoothing_params: Optional[dict] = None,
-    ) -> None:
-        """Initialize the class."""
-        # Validate `using` parameter
-        valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]
-        if using not in valid_using:
-            raise_error(
-                f"Invalid value for `using`, should be one of: {valid_using}"
-            )
-        self.using = using
+    using: SmoothingImpl
+    on: list[Literal[DataType.T1w, DataType.T2w, DataType.BOLD]]
+    smoothing_params: Optional[dict] = None
+
+    def validate_preprocessor_params(self) -> None:
+        """Run extra logical validation for preprocessor."""
         self.smoothing_params = (
-            smoothing_params if smoothing_params is not None else {}
+            self.smoothing_params if self.smoothing_params is not None else {}
         )
-        super().__init__(on=on)
 
     def preprocess(
         self,

@@ -4,8 +4,8 @@
 # License: AGPL
 
 from collections.abc import Sequence
-from typing import Any, ClassVar, Optional, Union
 from enum import Enum
+from typing import Any, ClassVar, Literal, Optional
 
 from templateflow import api as tflow
 
@@ -47,12 +47,6 @@ class SpaceWarper(BasePreprocessor):
         type like ``"T1w"`` or a template space like ``"MNI152NLin2009cAsym"``.
         Use ``"T1w"`` for native space warping and named templates for
         template space warping.
-
-    Raises
-    ------
-    ValueError
-        If ``using`` is invalid or
-        if ``reference`` is invalid.
     on : list of {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``, \
          ``DataType.VBM_GM``, ``DataType.VBM_WM``, ``DataType.VBM_CSF``, \
          ``DataType.FALFF``, ``DataType.GCOR``, ``DataType.LCOR``}
@@ -62,12 +56,12 @@ class SpaceWarper(BasePreprocessor):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "depends_on": FSLWarper,
             "using": SpaceWarpingImpl.fsl,
+            "depends_on": [FSLWarper],
         },
         {
-            "depends_on": ANTsWarper,
             "using": SpaceWarpingImpl.ants,
+            "depends_on": [ANTsWarper],
         },
         {
             "using": SpaceWarpingImpl.auto,
@@ -86,35 +80,30 @@ class SpaceWarper(BasePreprocessor):
         DataType.LCOR,
     ]
 
-    def __init__(
-        self, using: str, reference: str, on: Union[list[str], str]
-    ) -> None:
-        """Initialize the class."""
-        # Validate `using` parameter
-        valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]
-        if using not in valid_using:
-            raise_error(
-                f"Invalid value for `using`, should be one of: {valid_using}"
-            )
-        self.using = using
-        self.reference = reference
-        # Set required data types based on reference and
-        # initialize superclass
-        if self.reference == "T1w":  # pragma: no cover
-            required_data_types = [self.reference, "Warp"]
-            # Listify on
-            if not isinstance(on, list):
-                on = [on]
-            # Extend required data types
-            required_data_types.extend(on)
+    using: SpaceWarpingImpl
+    reference: str
+    on: list[
+        Literal[
+            DataType.T1w,
+            DataType.T2w,
+            DataType.BOLD,
+            DataType.VBM_GM,
+            DataType.VBM_WM,
+            DataType.VBM_CSF,
+            DataType.FALFF,
+            DataType.GCOR,
+            DataType.LCOR,
+        ]
+    ]
 
-            super().__init__(
-                on=on,
-                required_data_types=required_data_types,
-            )
-        elif self.reference in tflow.templates():
-            super().__init__(on=on)
-        else:
+    def validate_preprocessor_params(self) -> None:
+        """Run extra logical validation for preprocessor."""
+        # Set required data types based on reference
+        if self.reference == "T1w":  # pragma: no cover
+            # Update required data types
+            self.required_data_types = [DataType.T1w, DataType.Warp]
+            self.required_data_types.extend(self.on)
+        elif self.reference not in tflow.templates():
             raise_error(f"Unknown reference: {self.reference}")
 
     def preprocess(  # noqa: C901

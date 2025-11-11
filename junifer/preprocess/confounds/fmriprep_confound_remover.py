@@ -182,7 +182,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     t_r : float, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
-    masks : str, dict or list of dict or str, optional
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -190,84 +190,29 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn"}
-
-    def __init__(
-        self,
-        strategy: Optional[dict[str, Union[str, bool]]] = None,
-        spike: Optional[float] = None,
-        scrub: Optional[int] = None,
-        fd_threshold: Optional[float] = None,
-        std_dvars_threshold: Optional[float] = None,
-        detrend: bool = True,
-        standardize: bool = True,
-        low_pass: Optional[float] = None,
-        high_pass: Optional[float] = None,
-        t_r: Optional[float] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-    ) -> None:
-        """Initialize the class."""
-        if strategy is None:
-            strategy = {
-                "motion": "full",
-                "wm_csf": "full",
-                "global_signal": "full",
     _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.BOLD]
+
+    strategy: Optional[Strategy] = None
+    spike: Optional[float] = None
+    scrub: Optional[int] = None
+    fd_threshold: Optional[float] = None
+    std_dvars_threshold: Optional[float] = None
+    detrend: bool = True
+    standardize: bool = True
+    low_pass: Optional[float] = None
+    high_pass: Optional[float] = None
+    t_r: Optional[float] = None
+    masks: Optional[list[Union[dict, str]]] = None
+
+    def validate_preprocessor_params(self) -> None:
+        """Run extra logical validation for preprocessor."""
+        if self.strategy is None:
+            self.strategy = {
+                "motion": Confounds.Full,
+                "wm_csf": Confounds.Full,
+                "global_signal": Confounds.Full,
                 "scrubbing": False,
             }
-        self.strategy = strategy
-        self.spike = spike
-        self.scrub = scrub
-        self.fd_threshold = fd_threshold
-        self.std_dvars_threshold = std_dvars_threshold
-        self.detrend = detrend
-        self.standardize = standardize
-        self.low_pass = low_pass
-        self.high_pass = high_pass
-        self.t_r = t_r
-        self.masks = masks
-
-        self._valid_components = [
-            "motion",
-            "wm_csf",
-            "global_signal",
-            "scrubbing",
-        ]
-        self._valid_confounds = ["basic", "power2", "derivatives", "full"]
-
-        if any(not isinstance(k, str) for k in strategy.keys()):
-            raise_error("Strategy keys must be strings", ValueError)
-
-        if any(
-            not isinstance(v, str)
-            for k, v in strategy.items()
-            if k != "scrubbing"
-        ):
-            raise_error("Strategy values must be strings", ValueError)
-
-        if any(x not in self._valid_components for x in strategy.keys()):
-            raise_error(
-                msg=f"Invalid component names {list(strategy.keys())}. "
-                f"Valid components are {self._valid_components}.\n"
-                f"If any of them is a valid parameter in "
-                "nilearn.interfaces.fmriprep.load_confounds we may "
-                "include it in the future",
-                klass=ValueError,
-            )
-
-        if any(
-            v not in self._valid_confounds
-            for k, v in strategy.items()
-            if k != "scrubbing"
-        ):
-            raise_error(
-                msg=f"Invalid confound types {list(strategy.values())}. "
-                f"Valid confound types are {self._valid_confounds}.\n"
-                f"If any of them is a valid parameter in "
-                "nilearn.interfaces.fmriprep.load_confounds we may "
-                "include it in the future",
-                klass=ValueError,
-            )
-        super().__init__()
 
     def _map_adhoc_to_fmriprep(self, input: dict[str, Any]) -> None:
         """Map the adhoc format to the fmpriprep format spec.
