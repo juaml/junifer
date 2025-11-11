@@ -5,6 +5,7 @@
 
 from collections.abc import Sequence
 from typing import Any, ClassVar, Optional, Union
+from enum import Enum
 
 from templateflow import api as tflow
 
@@ -16,7 +17,21 @@ from ._ants_warper import ANTsWarper
 from ._fsl_warper import FSLWarper
 
 
-__all__ = ["SpaceWarper"]
+__all__ = ["SpaceWarper", "SpaceWarpingImpl"]
+
+
+class SpaceWarpingImpl(str, Enum):
+    """Accepted space warping implementations.
+
+    * ``fsl`` : FSL's ``applywarp``
+    * ``ants`` : ANTs' ``antsApplyTransforms``
+    * ``auto`` : Auto-select tool when ``reference="T1w"``
+
+    """
+
+    fsl = "fsl"
+    ants = "ants"
+    auto = "auto"
 
 
 @register_preprocessor
@@ -25,13 +40,7 @@ class SpaceWarper(BasePreprocessor):
 
     Parameters
     ----------
-    using : {"fsl", "ants", "auto"}
-        Implementation to use for warping:
-
-        * "fsl" : Use FSL's ``applywarp``
-        * "ants" : Use ANTs' ``antsApplyTransforms``
-        * "auto" : Auto-select tool when ``reference="T1w"``
-
+    using : :enum:`.SpaceWarpingImpl`
     reference : str
         The data type to use as reference for warping, can be either a data
         type like ``"T1w"`` or a template space like ``"MNI152NLin2009cAsym"``.
@@ -51,15 +60,15 @@ class SpaceWarper(BasePreprocessor):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "using": "fsl",
             "depends_on": FSLWarper,
+            "using": SpaceWarpingImpl.fsl,
         },
         {
-            "using": "ants",
             "depends_on": ANTsWarper,
+            "using": SpaceWarpingImpl.ants,
         },
         {
-            "using": "auto",
+            "using": SpaceWarpingImpl.auto,
             "depends_on": [FSLWarper, ANTsWarper],
         },
     ]
