@@ -6,10 +6,12 @@
 # License: AGPL
 
 from collections.abc import Sequence
+from enum import Enum
 from typing import (
     Any,
     ClassVar,
     Optional,
+    TypedDict,
     Union,
 )
 
@@ -29,7 +31,7 @@ from ...utils import logger, raise_error
 from ..base import BasePreprocessor
 
 
-__all__ = ["fMRIPrepConfoundRemover"]
+__all__ = ["Confounds", "Strategy", "fMRIPrepConfoundRemover"]
 
 
 FMRIPREP_BASICS = {
@@ -100,6 +102,31 @@ FMRIPREP_VALID_NAMES = [
 FMRIPREP_VALID_NAMES.append("framewise_displacement")
 
 
+class Confounds(str, Enum):
+    """Accepted confounds.
+
+    * ``Basic`` : only the confounding time series
+    * ``Power2`` : signal + quadratic term
+    * ``Derivatives`` : signal + derivatives
+    * ``Full`` : signal + deriv. + quadratic terms + power2
+
+    """
+
+    Basic = "basic"
+    Power2 = "power2"
+    Derivatives = "derivatives"
+    Full = "full"
+
+
+class Strategy(TypedDict, total=False):
+    """Accepted confound removal strategy."""
+
+    motion: Confounds
+    wm_csf: Confounds
+    global_signal: Confounds
+    scrubbing: bool
+
+
 @register_preprocessor
 class fMRIPrepConfoundRemover(BasePreprocessor):
     """Class for confound removal using fMRIPrep confounds format.
@@ -111,27 +138,13 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
     Parameters
     ----------
-    strategy : dict, optional
+    strategy : :class:`.Strategy` or None, optional
         The strategy to use for each component. If None, will use the *full*
         strategy for all components except ``"scrubbing"`` which will be set
         to False (default None).
         The keys of the dictionary should correspond to names of noise
-        components to include:
-
-        * ``motion``
-        * ``wm_csf``
-        * ``global_signal``
-        * ``scrubbing``
-
-        The values of dictionary should correspond to types of confounds
-        extracted from each signal:
-
-        * ``basic`` : only the confounding time series
-        * ``power2`` : signal + quadratic term
-        * ``derivatives`` : signal + derivatives
-        * ``full`` : signal + deriv. + quadratic terms + power2 deriv.
-
-        except ``scrubbing`` which needs to be bool.
+        components (Strategy) to include and the values should correspond to
+        types of confounds (Confounds) extracted from each signal.
     spike : float, optional
         If None, no spike regressor is added. If spike is a float, it will
         add a spike regressor for every point at which framewise displacement
