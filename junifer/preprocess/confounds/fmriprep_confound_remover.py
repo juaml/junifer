@@ -25,6 +25,7 @@ from nilearn.interfaces.fmriprep.load_confounds_utils import prepare_output
 
 from ...api.decorators import register_preprocessor
 from ...data import get_data
+from ...datagrabber import DataType
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies
 from ...utils import logger, raise_error
@@ -189,7 +190,6 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn"}
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["BOLD"]
 
     def __init__(
         self,
@@ -211,6 +211,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 "motion": "full",
                 "wm_csf": "full",
                 "global_signal": "full",
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.BOLD]
                 "scrubbing": False,
             }
         self.strategy = strategy

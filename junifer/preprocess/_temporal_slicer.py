@@ -10,6 +10,7 @@ import nibabel as nib
 import nilearn.image as nimg
 
 from ..api.decorators import register_preprocessor
+from ..datagrabber import DataType
 from ..pipeline import WorkDirManager
 from ..typing import Dependencies
 from ..utils import logger, raise_error
@@ -46,7 +47,7 @@ class TemporalSlicer(BasePreprocessor):
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["BOLD"]
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.BOLD]
 
     def __init__(
         self,

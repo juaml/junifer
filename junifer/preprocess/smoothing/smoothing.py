@@ -8,6 +8,7 @@ from typing import Any, ClassVar, Optional, Union
 from enum import Enum
 
 from ...api.decorators import register_preprocessor
+from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
@@ -40,6 +41,8 @@ class Smoothing(BasePreprocessor):
     Parameters
     ----------
     using : :enum:`.SmoothingImpl`
+    on : list of {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``}
+        The data type(s) to apply smoothing to.
     smoothing_params : dict, optional
         Extra parameters for smoothing as a dictionary (default None).
         If ``using=SmoothingImpl.nilearn``, then the valid keys are:
@@ -90,7 +93,11 @@ class Smoothing(BasePreprocessor):
             "using": SmoothingImpl.fsl,
         },
     ]
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["T1w", "T2w", "BOLD"]
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [
+        DataType.T1w,
+        DataType.T2w,
+        DataType.BOLD,
+    ]
 
     def __init__(
         self,
