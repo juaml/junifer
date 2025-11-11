@@ -42,7 +42,7 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
     Raises
     ------
     AttributeError
-        If the preprocessor does not have `_VALID_DATA_TYPES` attribute.
+        If the preprocessor does not have ``_VALID_DATA_TYPES`` attribute.
     ValueError
         If required input data type(s) is(are) not found.
 
