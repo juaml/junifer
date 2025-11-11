@@ -19,6 +19,7 @@ from nilearn._utils.niimg_conversions import check_niimg_4d
 
 from ..api.decorators import register_preprocessor
 from ..data import get_data
+from ..datagrabber import DataType
 from ..pipeline import WorkDirManager
 from ..typing import Dependencies
 from ..utils import logger
@@ -57,7 +58,6 @@ class TemporalFilter(BasePreprocessor):
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn"}
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["BOLD"]
 
     def __init__(
         self,
@@ -77,6 +77,7 @@ class TemporalFilter(BasePreprocessor):
         self.masks = masks
 
         super().__init__()
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.BOLD]
 
     def _validate_data(
         self,

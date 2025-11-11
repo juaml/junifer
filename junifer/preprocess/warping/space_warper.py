@@ -10,6 +10,7 @@ from enum import Enum
 from templateflow import api as tflow
 
 from ...api.decorators import register_preprocessor
+from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
 from ...utils import logger, raise_error
 from ..base import BasePreprocessor
@@ -46,15 +47,16 @@ class SpaceWarper(BasePreprocessor):
         type like ``"T1w"`` or a template space like ``"MNI152NLin2009cAsym"``.
         Use ``"T1w"`` for native space warping and named templates for
         template space warping.
-    on : {"T1w", "T2w", "BOLD", "VBM_GM", "VBM_WM", "VBM_CSF", "fALFF", \
-        "GCOR", "LCOR"} or list of the options
-        The data type to warp.
 
     Raises
     ------
     ValueError
         If ``using`` is invalid or
         if ``reference`` is invalid.
+    on : list of {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``, \
+         ``DataType.VBM_GM``, ``DataType.VBM_WM``, ``DataType.VBM_CSF``, \
+         ``DataType.FALFF``, ``DataType.GCOR``, ``DataType.LCOR``}
+        The data type(s) to warp.
 
     """
 
@@ -72,16 +74,16 @@ class SpaceWarper(BasePreprocessor):
             "depends_on": [FSLWarper, ANTsWarper],
         },
     ]
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = [
-        "T1w",
-        "T2w",
-        "BOLD",
-        "VBM_GM",
-        "VBM_WM",
-        "VBM_CSF",
-        "fALFF",
-        "GCOR",
-        "LCOR",
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [
+        DataType.T1w,
+        DataType.T2w,
+        DataType.BOLD,
+        DataType.VBM_GM,
+        DataType.VBM_WM,
+        DataType.VBM_CSF,
+        DataType.FALFF,
+        DataType.GCOR,
+        DataType.LCOR,
     ]
 
     def __init__(

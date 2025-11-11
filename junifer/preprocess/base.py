@@ -8,6 +8,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from typing import Any, ClassVar, Optional, Union
 
+from ..datagrabber import DataType
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..utils import logger, raise_error
 
@@ -23,12 +24,14 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     Parameters
     ----------
-    on : str or list of str or None, optional
-        The data type(s) to apply the preprocessor on. If None,
-        will work on all available data types (default None).
-    required_data_types : str or list of str, optional
-        The data types needed for computation. If None,
-        will be equal to ``on`` (default None).
+    on : list of :enum:`.DataType` or None, optional
+        The data type(s) to apply the preprocessor on.
+        If None, will work on all available data types.
+        Check :enum:`.DataType` for valid values (default None).
+    required_data_types : list of :enum:`.DataType` or None, optional
+        The data type(s) needed for computation.
+        If None, will be equal to ``on``.
+        Check :enum:`.DataType` for valid values (default None).
 
     Raises
     ------
@@ -39,7 +42,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     """
 
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]]
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]]
 
     def __init__(
         self,
