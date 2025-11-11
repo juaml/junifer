@@ -1,3 +1,11 @@
-__all__ = ["fMRIPrepConfoundRemover"]
+__all__ = [
+    "fMRIPrepConfoundRemover",
+    "Confounds",
+    "Strategy",
+]
 
-from .fmriprep_confound_remover import fMRIPrepConfoundRemover
+from .fmriprep_confound_remover import (
+    fMRIPrepConfoundRemover,
+    Confounds,
+    Strategy,
+)
