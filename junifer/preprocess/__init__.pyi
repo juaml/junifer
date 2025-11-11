@@ -4,6 +4,7 @@ __all__ = [
     "Confounds",
     "Strategy",
     "SpaceWarper",
+    "SpaceWarpingImpl",
     "Smoothing",
     "SmoothingImpl",
     "TemporalSlicer",
@@ -11,8 +12,8 @@ __all__ = [
 ]
 
 from .base import BasePreprocessor
-from .warping import SpaceWarper
 from .confounds import fMRIPrepConfoundRemover, Confounds, Strategy
+from .warping import SpaceWarper, SpaceWarpingImpl
 from .smoothing import Smoothing, SmoothingImpl
 from ._temporal_slicer import TemporalSlicer
 from ._temporal_filter import TemporalFilter
