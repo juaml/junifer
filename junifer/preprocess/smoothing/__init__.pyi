@@ -1,3 +1,3 @@
-__all__ = ["Smoothing"]
+__all__ = ["Smoothing", "SmoothingImpl"]
 
-from .smoothing import Smoothing
+from .smoothing import Smoothing, SmoothingImpl
