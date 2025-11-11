@@ -4,10 +4,11 @@
 # License: AGPL
 
 from collections.abc import Sequence
-from typing import Any, ClassVar, Optional
+from typing import Any, ClassVar, Literal, Optional, Union
 
 import nibabel as nib
 import nilearn.image as nimg
+from pydantic import PositiveFloat
 
 from ..api.decorators import register_preprocessor
 from ..datagrabber import DataType
@@ -26,7 +27,7 @@ class TemporalSlicer(BasePreprocessor):
 
     Parameters
     ----------
-    start : float
+    start : ``zero`` or positive float
         Starting time point, in second.
     stop : float or None
         Ending time point, in second. If None, stops at the last time point.
@@ -39,32 +40,15 @@ class TemporalSlicer(BasePreprocessor):
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
 
-    Raises
-    ------
-    ValueError
-        If ``start`` is negative.
-
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
     _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.BOLD]
 
-    def __init__(
-        self,
-        start: float,
-        stop: Optional[float],
-        duration: Optional[float] = None,
-        t_r: Optional[float] = None,
-    ) -> None:
-        """Initialize the class."""
-        if start < 0:
-            raise_error("`start` cannot be negative")
-        else:
-            self.start = start
-        self.stop = stop
-        self.duration = duration
-        self.t_r = t_r
-        super().__init__()
+    start: Union[Literal[0], PositiveFloat]
+    stop: Optional[float]
+    duration: Optional[float] = None
+    t_r: Optional[float] = None
 
     def preprocess(
         self,
