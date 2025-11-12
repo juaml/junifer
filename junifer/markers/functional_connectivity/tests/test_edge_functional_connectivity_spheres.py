@@ -46,7 +46,7 @@ def test_EdgeCentricFCSpheres(
             conn_method_params=conn_method_params,
         )
         # Check correct output
-        assert "matrix" == marker.get_output_type(
+        assert "matrix" == marker.storage_type(
             input_type="BOLD", output_feature="functional_connectivity"
         )
 

@@ -27,7 +27,7 @@ def test_TemporalSNRMaps_computation(
         element_data = DefaultDataReader().fit_transform(element)
         marker = TemporalSNRMaps(maps="Smith_rsn_10")
         # Check correct output
-        assert "vector" == marker.get_output_type(
+        assert "vector" == marker.storage_type(
             input_type="BOLD", output_feature="tsnr"
         )
 

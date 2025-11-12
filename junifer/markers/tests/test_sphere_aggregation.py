@@ -83,7 +83,7 @@ def test_SphereAggregation_input_output(
         coords="DMNBuckner",
         method="mean",
         on=input_type,
-    ).get_output_type(input_type=input_type, output_feature="aggregation")
+    ).storage_type(input_type=input_type, output_feature="aggregation")
 
 
 def test_SphereAggregation_3D() -> None:

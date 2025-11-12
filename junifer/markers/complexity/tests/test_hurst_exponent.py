@@ -43,11 +43,11 @@ def test_compute() -> None:
         assert feature_map["BOLD"]["complexity"]["data"].ndim == 2
 
 
-def test_get_output_type() -> None:
-    """Test HurstExponent get_output_type()."""
-    assert "vector" == HurstExponent(
-        parcellation=PARCELLATION
-    ).get_output_type(input_type="BOLD", output_feature="complexity")
+def test_storage_type() -> None:
+    """Test HurstExponent storage_type."""
+    assert "vector" == HurstExponent(parcellation=PARCELLATION).storage_type(
+        input_type="BOLD", output_feature="complexity"
+    )
 
 
 @pytest.mark.skipif(

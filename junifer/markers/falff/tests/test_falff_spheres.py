@@ -28,8 +28,8 @@ COORDINATES = "DMNBuckner"
         "falff",
     ],
 )
-def test_ALFFSpheres_get_output_type(feature: str) -> None:
-    """Test ALFFSpheres get_output_type().
+def test_ALFFSpheres_storage_type(feature: str) -> None:
+    """Test ALFFSpheres storage_type.
 
     Parameters
     ----------
@@ -40,7 +40,7 @@ def test_ALFFSpheres_get_output_type(feature: str) -> None:
     assert "vector" == ALFFSpheres(
         coords=COORDINATES,
         using="junifer",
-    ).get_output_type(input_type="BOLD", output_feature=feature)
+    ).storage_type(input_type="BOLD", output_feature=feature)
 
 
 def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:

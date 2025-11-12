@@ -20,7 +20,7 @@ def test_TemporalSNRSpheres_computation() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         marker = TemporalSNRSpheres(coords="DMNBuckner", radius=5.0)
         # Check correct output
-        assert "vector" == marker.get_output_type(
+        assert "vector" == marker.storage_type(
             input_type="BOLD", output_feature="tsnr"
         )
 

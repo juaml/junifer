@@ -27,8 +27,8 @@ MAPS = "Smith_rsn_10"
         "falff",
     ],
 )
-def test_ALFFMaps_get_output_type(feature: str) -> None:
-    """Test ALFFMaps get_output_type().
+def test_ALFFMaps_storage_type(feature: str) -> None:
+    """Test ALFFMaps storage_type.
 
     Parameters
     ----------
@@ -39,7 +39,7 @@ def test_ALFFMaps_get_output_type(feature: str) -> None:
     assert "vector" == ALFFMaps(
         maps=MAPS,
         using="junifer",
-    ).get_output_type(input_type="BOLD", output_feature=feature)
+    ).storage_type(input_type="BOLD", output_feature=feature)
 
 
 def test_ALFFMaps(
@@ -74,7 +74,7 @@ def test_ALFFMaps(
             )
             # Check correct output
             for name in ["alff", "falff"]:
-                assert "vector" == marker.get_output_type(
+                assert "vector" == marker.storage_type(
                     input_type="BOLD", output_feature=name
                 )
 
