@@ -53,25 +53,6 @@ class PipelineStepMixin:
             klass=NotImplementedError,
         )  # pragma: no cover
 
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the marker.
-
-        Returns
-        -------
-        str
-            The storage type output by the marker.
-
-        """
-        raise_error(
-            msg="Concrete classes need to implement get_output_type().",
-            klass=NotImplementedError,
-        )  # pragma: no cover
-
     def _fit_transform(
         self,
         input: dict[str, dict],
@@ -223,8 +204,9 @@ class PipelineStepMixin:
                     for val in self._MARKER_INOUT_MAPPINGS[t_input].values()
                 }
             )
+        # Only for datareader and preprocessor
         else:
-            outputs = [self.get_output_type(t_input) for t_input in fit_input]
+            outputs = fit_input
         return outputs
 
     def fit_transform(

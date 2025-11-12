@@ -29,9 +29,6 @@ def test_PipelineStepMixin_correct_dependencies() -> None:
         def validate_input(self, input: list[str]) -> list[str]:
             return input
 
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
-
         def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
@@ -49,9 +46,6 @@ def test_PipelineStepMixin_incorrect_dependencies() -> None:
 
         def validate_input(self, input: list[str]) -> list[str]:
             return input
-
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
 
         def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
@@ -75,9 +69,6 @@ def test_PipelineStepMixin_correct_ext_dependencies() -> None:
         def validate_input(self, input: list[str]) -> list[str]:
             return input
 
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
-
         def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
@@ -100,9 +91,6 @@ def test_PipelineStepMixin_ext_deps_correct_commands() -> None:
 
         def validate_input(self, input: list[str]) -> list[str]:
             return input
-
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
 
         def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
@@ -129,9 +117,6 @@ def test_PipelineStepMixin_ext_deps_incorrect_commands() -> None:
         def validate_input(self, input: list[str]) -> list[str]:
             return input
 
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
-
         def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
@@ -152,9 +137,6 @@ def test_PipelineStepMixin_incorrect_ext_dependencies() -> None:
 
         def validate_input(self, input: list[str]) -> list[str]:
             return input
-
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
 
         def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
@@ -185,9 +167,6 @@ def test_PipelineStepMixin_correct_conditional_dependencies() -> None:
         def validate_input(self, input: list[str]) -> list[str]:
             return input
 
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
-
         def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
 
@@ -213,9 +192,6 @@ def test_PipelineStepMixin_incorrect_conditional_dependencies() -> None:
 
         def validate_input(self, input: list[str]) -> list[str]:
             return input
-
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
 
         def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
@@ -248,9 +224,6 @@ def test_PipelineStepMixin_correct_conditional_ext_dependencies() -> None:
 
         def validate_input(self, input: list[str]) -> list[str]:
             return input
-
-        def get_output_type(self, input_type: str) -> str:
-            return input_type
 
         def _fit_transform(self, input: dict[str, dict]) -> dict[str, dict]:
             return {"input": input}
