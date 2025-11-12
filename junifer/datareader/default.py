@@ -8,6 +8,7 @@ from pathlib import Path
 
 import nibabel as nib
 import pandas as pd
+from pydantic import BaseModel
 
 from ..api.decorators import register_datareader
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
@@ -33,7 +34,7 @@ _readers["TSV"] = {"func": pd.read_csv, "params": {"sep": "\t"}}
 
 
 @register_datareader
-class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
+class DefaultDataReader(BaseModel, PipelineStepMixin, UpdateMetaMixin):
     """Concrete implementation for common data reading."""
 
     def validate_input(self, input: list[str]) -> list[str]:
