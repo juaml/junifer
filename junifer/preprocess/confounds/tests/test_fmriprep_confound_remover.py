@@ -65,13 +65,6 @@ def test_fMRIPrepConfoundRemover_get_valid_inputs() -> None:
     assert confound_remover.get_valid_inputs() == ["BOLD"]
 
 
-def test_fMRIPrepConfoundRemover_get_output_type() -> None:
-    """Test fMRIPrepConfoundRemover get_output_type."""
-    confound_remover = fMRIPrepConfoundRemover()
-    # Confound remover works in place
-    assert confound_remover.get_output_type("BOLD") == "BOLD"
-
-
 def test_fMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
     """Test fMRIPrepConfoundRemover adhoc to fmriprep spec mapping."""
     confound_remover = fMRIPrepConfoundRemover()
