@@ -11,6 +11,7 @@ __all__ = [
     "EdgeCentricFCMaps",
     "EdgeCentricFCParcels",
     "EdgeCentricFCSpheres",
+    "ReHoImpl",
     "ReHoMaps",
     "ReHoParcels",
     "ReHoSpheres",
@@ -37,8 +38,8 @@ from .functional_connectivity import (
     EdgeCentricFCParcels,
     EdgeCentricFCSpheres,
 )
-from .reho import ReHoMaps, ReHoParcels, ReHoSpheres
 from .falff import ALFFMaps, ALFFParcels, ALFFSpheres
+from .reho import ReHoImpl, ReHoMaps, ReHoParcels, ReHoSpheres
 from .temporal_snr import (
     TemporalSNRMaps,
     TemporalSNRParcels,
