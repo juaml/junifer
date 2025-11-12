@@ -26,16 +26,11 @@ class ALFFSpheres(ALFFBase):
     coords : str
         The name of the coordinates list to use.
         See :func:`.list_data` for options.
-    using : {"junifer", "afni"}
-        Implementation to use for computing ALFF:
-
-        * "junifer" : Use ``junifer``'s own ALFF implementation
-        * "afni" : Use AFNI's ``3dRSFC``
-
     radius : float, optional
         The radius of the sphere in mm. If None, the signal will be extracted
         from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
         for more information (default None).
+    using : :enum:`.ALFFImpl`
     allow_overlap : bool, optional
         Whether to allow overlapping spheres. If False, an error is raised if
         the spheres overlap (default is False).

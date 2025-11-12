@@ -23,12 +23,7 @@ class ALFFMaps(ALFFBase):
     maps : str
         The name of the map(s) to use.
         See :func:`.list_data` for options.
-    using : {"junifer", "afni"}
-        Implementation to use for computing ALFF:
-
-        * "junifer" : Use ``junifer``'s own ALFF implementation
-        * "afni" : Use AFNI's ``3dRSFC``
-
+    using : :enum:`.ALFFImpl`
     highpass : positive float, optional
         The highpass cutoff frequency for the bandpass filter. If 0,
         it will not apply a highpass filter (default 0.01).
