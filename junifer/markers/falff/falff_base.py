@@ -6,6 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from enum import Enum
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -27,7 +28,19 @@ if TYPE_CHECKING:
     from nibabel.nifti1 import Nifti1Image
 
 
-__all__ = ["ALFFBase"]
+__all__ = ["ALFFBase", "ALFFImpl"]
+
+
+class ALFFImpl(str, Enum):
+    """Accepted ALFF implementations.
+
+    * ``junifer`` : ``junifer``'s ALFF
+    * ``afni`` : AFNI's ``3dRSFC``
+
+    """
+
+    junifer = "junifer"
+    afni = "afni"
 
 
 class ALFFBase(BaseMarker):
@@ -39,12 +52,7 @@ class ALFFBase(BaseMarker):
         Highpass cutoff frequency.
     lowpass : positive float
         Lowpass cutoff frequency.
-    using : {"junifer", "afni"}
-        Implementation to use for computing ALFF:
-
-        * "junifer" : Use ``junifer``'s own ALFF implementation
-        * "afni" : Use AFNI's ``3dRSFC``
-
+    using : :enum:`.ALFFImpl`
     tr : positive float, optional
         The Repetition Time of the BOLD data. If None, will extract
         the TR from NIfTI header (default None).
@@ -72,12 +80,12 @@ class ALFFBase(BaseMarker):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "using": "afni",
             "depends_on": AFNIALFF,
+            "using": ALFFImpl.afni,
         },
         {
-            "using": "junifer",
             "depends_on": JuniferALFF,
+            "using": ALFFImpl.junifer,
         },
     ]
 
