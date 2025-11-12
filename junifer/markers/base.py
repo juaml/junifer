@@ -8,7 +8,9 @@ from abc import ABC, abstractmethod
 from copy import deepcopy
 from typing import Any, ClassVar, Optional, Union
 
+from ..datagrabber import DataType
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
+from ..storage import StorageType
 from ..typing import MarkerInOutMappings, StorageLike
 from ..utils import logger, raise_error
 
@@ -24,9 +26,10 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     Parameters
     ----------
-    on : str or list of str or None, optional
-        The data type to apply the marker on. If None,
-        will work on all available data types (default None).
+    on : list of :enum:`.DataType` or None, optional
+        The data type(s) to apply the marker on.
+        If None, will work on all available data types.
+        Check :enum:`.DataType` for valid values (default None).
     name : str, optional
         The name of the marker. If None, will use the class name as the
         name of the marker (default None).
@@ -107,19 +110,21 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         """
         return list(self._MARKER_INOUT_MAPPINGS.keys())
 
-    def storage_type(self, input_type: str, output_feature: str) -> str:
-        """Get storage type for a feature.
+    def storage_type(
+        self, input_type: DataType, output_feature: str
+    ) -> StorageType:
+        """Get :enum:`.StorageType` for a feature.
 
         Parameters
         ----------
-        input_type : str
+        input_type : :enum:`.DataType`
             The data type input to the marker.
         output_feature : str
             The feature output of the marker.
 
         Returns
         -------
-        str
+        :enum:`.StorageType`
             The storage type output of the marker.
 
         """
@@ -155,7 +160,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     def store(
         self,
-        type_: str,
+        data_type: DataType,
         feature: str,
         out: dict[str, Any],
         storage: StorageLike,
@@ -164,7 +169,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
 
         Parameters
         ----------
-        type_ : str
+        data_type : :enum:`.DataType`
             The data type to store.
         feature : str
             The feature to store.
