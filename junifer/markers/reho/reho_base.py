@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from enum import Enum
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -23,7 +24,20 @@ from ._junifer_reho import JuniferReHo
 if TYPE_CHECKING:
     from nibabel.nifti1 import Nifti1Image
 
-__all__ = ["ReHoBase"]
+
+__all__ = ["ReHoBase", "ReHoImpl"]
+
+
+class ReHoImpl(str, Enum):
+    """Accepted ReHo implementations.
+
+    * ``junifer`` : ``junifer``'s ReHo
+    * ``afni`` : AFNI's ``3dReHo``
+
+    """
+
+    junifer = "junifer"
+    afni = "afni"
 
 
 class ReHoBase(BaseMarker):
@@ -31,12 +45,7 @@ class ReHoBase(BaseMarker):
 
     Parameters
     ----------
-    using : {"junifer", "afni"}
-        Implementation to use for computing ReHo:
-
-        * "junifer" : Use ``junifer``'s own ReHo implementation
-        * "afni" : Use AFNI's ``3dReHo``
-
+    using : :enum:`.ReHoImpl`
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
@@ -50,12 +59,12 @@ class ReHoBase(BaseMarker):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "using": "afni",
             "depends_on": AFNIReHo,
+            "using": ReHoImpl.afni,
         },
         {
-            "using": "junifer",
             "depends_on": JuniferReHo,
+            "using": ReHoImpl.junifer,
         },
     ]
 
