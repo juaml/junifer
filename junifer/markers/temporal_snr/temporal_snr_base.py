@@ -5,7 +5,7 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar, Literal, Optional, Union
 
 from nilearn import image as nimg
 
@@ -25,18 +25,19 @@ class TemporalSNRBase(BaseMarker):
     Parameters
     ----------
     agg_method : str, optional
-        The method to perform aggregation using. Check valid options in
-        :func:`.get_aggfunc_by_name` (default "mean").
-    agg_method_params : dict, optional
-        Parameters to pass to the aggregation function. Check valid options in
-        :func:`.get_aggfunc_by_name` (default None).
-    masks : str, dict or list of dict or str, optional
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options
+        (default "mean").
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, will use the class name (default
-        None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     """
 
@@ -48,17 +49,10 @@ class TemporalSNRBase(BaseMarker):
         },
     }
 
-    def __init__(
-        self,
-        agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.agg_method = agg_method
-        self.agg_method_params = agg_method_params
-        self.masks = masks
-        super().__init__(on="BOLD", name=name)
+    agg_method: str = "mean"
+    agg_method_params: Optional[dict] = None
+    masks: Optional[list[Union[dict, str]]] = None
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     @abstractmethod
     def aggregate(

@@ -3,9 +3,10 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional
 
 from ...api.decorators import register_marker
+from ...datagrabber import DataType
 from ...utils import logger
 from ..maps_aggregation import MapsAggregation
 from .falff_base import ALFFBase
@@ -25,20 +26,19 @@ class ALFFMaps(ALFFBase):
         See :func:`.list_data` for options.
     using : :enum:`.ALFFImpl`
     highpass : positive float, optional
-        The highpass cutoff frequency for the bandpass filter. If 0,
-        it will not apply a highpass filter (default 0.01).
+        Highpass cutoff frequency (default 0.01).
     lowpass : positive float, optional
-        The lowpass cutoff frequency for the bandpass filter (default 0.1).
+        Lowpass cutoff frequency (default 0.1).
     tr : positive float, optional
-        The Repetition Time of the BOLD data. If None, will extract
-        the TR from NIfTI header (default None).
-    masks : str, dict or list of dict or str, optional
+        The repetition time of the BOLD data.
+        If None, will extract the TR from NIfTI header (default None).
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, will use the class name (default
-        None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     Notes
     -----
@@ -54,26 +54,8 @@ class ALFFMaps(ALFFBase):
 
     """
 
-    def __init__(
-        self,
-        maps: str,
-        using: str,
-        highpass: float = 0.01,
-        lowpass: float = 0.1,
-        tr: Optional[float] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        # Superclass init first to validate `using` parameter
-        super().__init__(
-            highpass=highpass,
-            lowpass=lowpass,
-            using=using,
-            tr=tr,
-            name=name,
-        )
-        self.maps = maps
-        self.masks = masks
+    maps: str
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def compute(
         self,
@@ -127,7 +109,7 @@ class ALFFMaps(ALFFBase):
                 **MapsAggregation(
                     maps=self.maps,
                     masks=self.masks,
-                    on="BOLD",
+                    on=[DataType.BOLD],
                 ).compute(
                     input=aggregation_alff_input,
                     extra_input=extra_input,
@@ -137,7 +119,7 @@ class ALFFMaps(ALFFBase):
                 **MapsAggregation(
                     maps=self.maps,
                     masks=self.masks,
-                    on="BOLD",
+                    on=[DataType.BOLD],
                 ).compute(
                     input=aggregation_falff_input,
                     extra_input=extra_input,

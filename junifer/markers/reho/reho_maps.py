@@ -3,11 +3,12 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional
 
 import numpy as np
 
 from ...api.decorators import register_marker
+from ...datagrabber import DataType
 from ...utils import logger
 from ..maps_aggregation import MapsAggregation
 from .reho_base import ReHoBase
@@ -25,8 +26,8 @@ class ReHoMaps(ReHoBase):
     maps : str
         The name of the map(s) to use.
         See :func:`.list_data` for options.
-    reho_params : dict, optional
     using : :enum:`.ReHoImpl`
+    reho_params : dict or None, optional
         Extra parameters for computing ReHo map as a dictionary (default None).
         If ``using=ReHoImpl.afni``, then the valid keys are:
 
@@ -68,29 +69,18 @@ class ReHoMaps(ReHoBase):
             * 27 : for face-, edge-, and node-wise neighbors
             * 125 : for 5x5 cuboidal volume
 
-    masks : str, dict or list of dict or str, optional
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, it will use the class name
-        (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, it will use the class name (default None).
 
     """
 
-    def __init__(
-        self,
-        maps: str,
-        using: str,
-        reho_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        # Superclass init first to validate `using` parameter
-        super().__init__(using=using, name=name)
-        self.maps = maps
-        self.reho_params = reho_params
-        self.masks = masks
+    maps: str
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def compute(
         self,
@@ -139,7 +129,7 @@ class ReHoMaps(ReHoBase):
         maps_aggregation = MapsAggregation(
             maps=self.maps,
             masks=self.masks,
-            on="BOLD",
+            on=[DataType.BOLD],
         ).compute(
             input=aggregation_input,
             extra_input=extra_input,

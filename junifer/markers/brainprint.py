@@ -14,6 +14,7 @@ from typing import (
 
 import numpy as np
 import numpy.typing as npt
+from pydantic import PositiveInt
 
 from ..api.decorators import register_marker
 from ..datagrabber import DataType
@@ -62,9 +63,9 @@ class BrainPrint(BaseMarker):
         execution speed. Requires the ``scikit-sparse`` library. If it cannot
         be found, an error will be thrown. If False, will use slower LU
         decomposition (default False).
-    name : str, optional
-        The name of the marker. If None, will use the class name (default
-        None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     """
 
@@ -91,27 +92,17 @@ class BrainPrint(BaseMarker):
         }
     }
 
-    def __init__(
-        self,
-        num: int = 50,
-        skip_cortex=False,
-        keep_eigenvectors: bool = False,
-        norm: str = "none",
-        reweight: bool = False,
-        asymmetry: bool = False,
-        asymmetry_distance: str = "euc",
-        use_cholmod: bool = False,
-        name: Optional[str] = None,
-    ) -> None:
-        self.num = num
-        self.skip_cortex = skip_cortex
-        self.keep_eigenvectors = keep_eigenvectors
-        self.norm = norm
-        self.reweight = reweight
-        self.asymmetry = asymmetry
-        self.asymmetry_distance = asymmetry_distance
-        self.use_cholmod = use_cholmod
-        super().__init__(name=name, on="FreeSurfer")
+    num: PositiveInt = 50
+    skip_cortex: bool = False
+    keep_eigenvectors: bool = False
+    norm: str = "none"
+    reweight: bool = False
+    asymmetry: bool = False
+    asymmetry_distance: str = "euc"
+    use_cholmod: bool = False
+
+    _tempdir = Path()
+    _element_tempdir = Path()
 
     def _create_aseg_surface(
         self,
@@ -355,7 +346,7 @@ class BrainPrint(BaseMarker):
                 - ``col_names`` : surface labels as list of str
                 - ``row_names`` : eigenvalue count labels as list of str
                 - ``row_header_col_name`` : "eigenvalue"
-                                ()
+
             * ``areas`` : dictionary with the following keys:
 
                 - ``data`` : areas as ``np.ndarray``
