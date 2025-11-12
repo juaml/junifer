@@ -113,8 +113,8 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         """
         return list(self._MARKER_INOUT_MAPPINGS.keys())
 
-    def get_output_type(self, input_type: str, output_feature: str) -> str:
-        """Get output type.
+    def storage_type(self, input_type: str, output_feature: str) -> str:
+        """Get storage type for a feature.
 
         Parameters
         ----------
@@ -180,7 +180,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             The storage class, for example, SQLiteFeatureStorage.
 
         """
-        output_type_ = self.get_output_type(type_, feature)
+        output_type_ = self.storage_type(type_, feature)
         logger.debug(f"Storing {output_type_} in {storage}")
         storage.store(kind=output_type_, **out)
 

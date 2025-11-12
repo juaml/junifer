@@ -45,11 +45,11 @@ def test_compute() -> None:
         assert extacted_timeseries.shape[0] == len(rss_ets["rss_ets"]["data"])
 
 
-def test_get_output_type() -> None:
-    """Test RSS ETS get_output_type()."""
+def test_storage_type() -> None:
+    """Test RSS ETS storage_type."""
     assert "timeseries" == RSSETSMarker(
         parcellation=PARCELLATION
-    ).get_output_type(input_type="BOLD", output_feature="rss_ets")
+    ).storage_type(input_type="BOLD", output_feature="rss_ets")
 
 
 def test_store(tmp_path: Path) -> None:

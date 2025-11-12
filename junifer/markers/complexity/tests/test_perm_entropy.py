@@ -42,9 +42,9 @@ def test_compute() -> None:
         assert feature_map["BOLD"]["complexity"]["data"].ndim == 2
 
 
-def test_get_output_type() -> None:
-    """Test PermEntropy get_output_type()."""
-    assert "vector" == PermEntropy(parcellation=PARCELLATION).get_output_type(
+def test_storage_type() -> None:
+    """Test PermEntropy storage_type."""
+    assert "vector" == PermEntropy(parcellation=PARCELLATION).storage_type(
         input_type="BOLD", output_feature="complexity"
     )
 

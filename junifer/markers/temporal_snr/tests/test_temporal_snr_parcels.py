@@ -20,7 +20,7 @@ def test_TemporalSNRParcels_computation() -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym"
         )
         # Check correct output
-        assert "vector" == marker.get_output_type(
+        assert "vector" == marker.storage_type(
             input_type="BOLD", output_feature="tsnr"
         )
 

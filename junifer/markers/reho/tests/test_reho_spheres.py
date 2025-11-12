@@ -41,7 +41,7 @@ def test_ReHoSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
                 coords=COORDINATES, using="junifer", radius=10.0
             )
             # Check correct output
-            assert "vector" == marker.get_output_type(
+            assert "vector" == marker.storage_type(
                 input_type="BOLD", output_feature="reho"
             )
 

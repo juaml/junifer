@@ -48,7 +48,7 @@ def test_ReHoMaps(
                 using="junifer",
             )
             # Check correct output
-            assert "vector" == marker.get_output_type(
+            assert "vector" == marker.storage_type(
                 input_type="BOLD", output_feature="reho"
             )
 
