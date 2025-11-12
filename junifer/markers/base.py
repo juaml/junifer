@@ -6,10 +6,10 @@
 
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import Any, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
-from ..typing import StorageLike
+from ..typing import MarkerInOutMappings, StorageLike
 from ..utils import logger, raise_error
 
 
@@ -39,6 +39,8 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         If required input data type(s) is(are) not found.
 
     """
+
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings]
 
     def __init__(
         self,
