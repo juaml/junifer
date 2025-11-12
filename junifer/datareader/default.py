@@ -56,23 +56,6 @@ class DefaultDataReader(PipelineStepMixin, UpdateMetaMixin):
         # Nothing to validate, any input is fine
         return input
 
-    def get_output_type(self, input_type: str) -> str:
-        """Get output type.
-
-        Parameters
-        ----------
-        input_type : str
-            The data type input to the reader.
-
-        Returns
-        -------
-        str
-            The data type output by the reader.
-
-        """
-        # It will output the same type of data as the input
-        return input_type
-
     def _fit_transform(
         self,
         input: dict[str, dict],
