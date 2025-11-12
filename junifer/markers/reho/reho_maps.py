@@ -25,15 +25,10 @@ class ReHoMaps(ReHoBase):
     maps : str
         The name of the map(s) to use.
         See :func:`.list_data` for options.
-    using : {"junifer", "afni"}
-        Implementation to use for computing ReHo:
-
-        * "junifer" : Use ``junifer``'s own ReHo implementation
-        * "afni" : Use AFNI's ``3dReHo``
-
     reho_params : dict, optional
+    using : :enum:`.ReHoImpl`
         Extra parameters for computing ReHo map as a dictionary (default None).
-        If ``using="afni"``, then the valid keys are:
+        If ``using=ReHoImpl.afni``, then the valid keys are:
 
         * ``nneigh`` : {7, 19, 27}, optional (default 27)
             Number of voxels in the neighbourhood, inclusive. Can be:
@@ -63,7 +58,7 @@ class ReHoMaps(ReHoBase):
             The number of voxels for +/- z-axis of cuboidal volumes
             (default None).
 
-        else if ``using="junifer"``, then the valid keys are:
+        else if ``using=ReHoImpl.junifer``, then the valid keys are:
 
         * ``nneigh`` : {7, 19, 27, 125}, optional (default 27)
             Number of voxels in the neighbourhood, inclusive. Can be:
