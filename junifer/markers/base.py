@@ -27,10 +27,6 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
     on : str or list of str or None, optional
         The data type to apply the marker on. If None,
         will work on all available data types (default None).
-    masks : str, dict or list of dict or str, optional
-        The specification of the masks to apply to regions before extracting
-        signals. Check :ref:`Using Masks <using_masks>` for more details.
-        If None, will not apply any mask (default None).
     name : str, optional
         The name of the marker. If None, will use the class name as the
         name of the marker (default None).
@@ -49,7 +45,6 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
     def __init__(
         self,
         on: Optional[Union[list[str], str]] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         # Check for missing mapping attribute
@@ -71,7 +66,6 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             wrong_on = [x for x in on if x not in self.get_valid_inputs()]
             raise_error(f"{self.name} cannot be computed on {wrong_on}")
         self._on = on
-        self.masks = masks
 
     def validate_input(self, input: list[str]) -> list[str]:
         """Validate input.

@@ -76,7 +76,8 @@ class FunctionalConnectivityBase(BaseMarker):
         self.conn_method_params["empirical"] = self.conn_method_params.get(
             "empirical", True
         )
-        super().__init__(on="BOLD", masks=masks, name=name)
+        self.masks = masks
+        super().__init__(on="BOLD", name=name)
 
     @abstractmethod
     def aggregate(

@@ -77,7 +77,8 @@ class CrossParcellationFC(BaseMarker):
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
         self.corr_method = corr_method
-        super().__init__(on=["BOLD"], masks=masks, name=name)
+        self.masks = masks
+        super().__init__(on=["BOLD"], name=name)
 
     def compute(
         self,

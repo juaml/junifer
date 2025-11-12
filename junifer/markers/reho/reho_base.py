@@ -9,7 +9,6 @@ from typing import (
     Any,
     ClassVar,
     Optional,
-    Union,
 )
 
 from ...typing import ConditionalDependencies, MarkerInOutMappings
@@ -36,10 +35,6 @@ class ReHoBase(BaseMarker):
         * "junifer" : Use ``junifer``'s own ReHo implementation
         * "afni" : Use AFNI's ``3dReHo``
 
-    masks : str, dict or list of dict or str, optional
-        The specification of the masks to apply to regions before extracting
-        signals. Check :ref:`Using Masks <using_masks>` for more details.
-        If None, will not apply any mask (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
@@ -71,7 +66,6 @@ class ReHoBase(BaseMarker):
     def __init__(
         self,
         using: str,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         # Validate `using` parameter
@@ -81,7 +75,7 @@ class ReHoBase(BaseMarker):
                 f"Invalid value for `using`, should be one of: {valid_using}"
             )
         self.using = using
-        super().__init__(on="BOLD", masks=masks, name=name)
+        super().__init__(on="BOLD", name=name)
 
     def _compute(
         self,

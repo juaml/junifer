@@ -65,7 +65,8 @@ class RSSETSMarker(BaseMarker):
         self.parcellation = parcellation
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
-        super().__init__(name=name, masks=masks)
+        self.masks = masks
+        super().__init__(name=name)
 
     def compute(
         self,

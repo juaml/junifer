@@ -117,7 +117,8 @@ class SphereAggregation(BaseMarker):
         self.allow_overlap = allow_overlap
         self.method = method
         self.method_params = method_params or {}
-        super().__init__(on=on, masks=masks, name=name)
+        self.masks = masks
+        super().__init__(on=on, name=name)
 
         # Verify after super init so self._on is set
         if "BOLD" not in self._on and time_method is not None:

@@ -100,11 +100,12 @@ class ReHoParcels(ReHoBase):
         name: Optional[str] = None,
     ) -> None:
         # Superclass init first to validate `using` parameter
-        super().__init__(using=using, masks=masks, name=name)
+        super().__init__(using=using, name=name)
         self.parcellation = parcellation
         self.reho_params = reho_params
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
+        self.masks = masks
 
     def compute(
         self,
