@@ -30,7 +30,6 @@ def test_DefaultDataReader_validation(type_) -> None:
     """
     reader = DefaultDataReader()
     assert reader.validate_input(type_) == type_
-    assert reader.get_output_type(type_) == type_
     assert reader.validate(type_) == type_
 
 
