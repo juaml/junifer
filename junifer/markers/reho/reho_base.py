@@ -9,13 +9,15 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
+    Literal,
     Optional,
+    Union,
 )
 
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
-from ...utils import logger, raise_error
+from ...utils import logger
 from ..base import BaseMarker
 from ._afni_reho import AFNIReHo
 from ._junifer_reho import JuniferReHo
@@ -46,14 +48,62 @@ class ReHoBase(BaseMarker):
     Parameters
     ----------
     using : :enum:`.ReHoImpl`
-    name : str, optional
-        The name of the marker. If None, it will use the class name
-        (default None).
+    reho_params : dict or None, optional
+        Extra parameters for computing ReHo map as a dictionary (default None).
+        If ``using=ReHoImpl.afni``, then the valid keys are:
 
-    Raises
-    ------
-    ValueError
-        If ``using`` is invalid.
+        * ``nneigh`` : {7, 19, 27}, optional (default 27)
+            Number of voxels in the neighbourhood, inclusive. Can be:
+
+            - 7 : for facewise neighbours only
+            - 19 : for face- and edge-wise neighbours
+            - 27 : for face-, edge-, and node-wise neighbors
+
+        * ``neigh_rad`` : positive float, optional
+            The radius of a desired neighbourhood (default None).
+        * ``neigh_x`` : positive float, optional
+            The semi-radius for x-axis of ellipsoidal volumes (default None).
+        * ``neigh_y`` : positive float, optional
+            The semi-radius for y-axis of ellipsoidal volumes (default None).
+        * ``neigh_z`` : positive float, optional
+            The semi-radius for z-axis of ellipsoidal volumes (default None).
+        * ``box_rad`` : positive int, optional
+            The number of voxels outward in a given cardinal direction for a
+            cubic box centered on a given voxel (default None).
+        * ``box_x`` : positive int, optional
+            The number of voxels for +/- x-axis of cuboidal volumes
+            (default None).
+        * ``box_y`` : positive int, optional
+            The number of voxels for +/- y-axis of cuboidal volumes
+            (default None).
+        * ``box_z`` : positive int, optional
+            The number of voxels for +/- z-axis of cuboidal volumes
+            (default None).
+
+        else if ``using=ReHoImpl.junifer``, then the valid keys are:
+
+        * ``nneigh`` : {7, 19, 27, 125}, optional (default 27)
+            Number of voxels in the neighbourhood, inclusive. Can be:
+
+            * 7 : for facewise neighbours only
+            * 19 : for face- and edge-wise neighbours
+            * 27 : for face-, edge-, and node-wise neighbors
+            * 125 : for 5x5 cuboidal volume
+
+    agg_method : str, optional
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options
+        (default "mean").
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
+    masks : list of dict or str, or None, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, it will use the class name (default None).
 
     """
 
@@ -74,19 +124,12 @@ class ReHoBase(BaseMarker):
         },
     }
 
-    def __init__(
-        self,
-        using: str,
-        name: Optional[str] = None,
-    ) -> None:
-        # Validate `using` parameter
-        valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]
-        if using not in valid_using:
-            raise_error(
-                f"Invalid value for `using`, should be one of: {valid_using}"
-            )
-        self.using = using
-        super().__init__(on="BOLD", name=name)
+    using: ReHoImpl
+    reho_params: Optional[dict] = None
+    agg_method: str = "mean"
+    agg_method_params: Optional[dict] = None
+    masks: Optional[list[Union[dict, str]]] = None
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def _compute(
         self,

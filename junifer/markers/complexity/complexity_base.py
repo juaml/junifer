@@ -9,6 +9,7 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
+    Literal,
     Optional,
     Union,
 )
@@ -29,26 +30,27 @@ __all__ = ["ComplexityBase"]
 
 
 class ComplexityBase(BaseMarker):
-    """Base class for complexity computation.
+    """Abstract base class for complexity computation.
 
     Parameters
     ----------
-    parcellation : str or list of str
-        The name(s) of the parcellation(s). Check valid options by calling
-        :func:`junifer.data.parcellations.list_parcellations`.
+    parcellation : list of str
+        The name(s) of the parcellation(s) to use.
+        See :func:`.list_data` for options.
     agg_method : str, optional
-        The method to perform aggregation using. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
-    agg_method_params : dict, optional
-        Parameters to pass to the aggregation function. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default None).
-    masks : str, dict or list of dict or str, optional
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options
+        (default "mean").
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, it will use the class name
-        (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     """
 
@@ -60,19 +62,12 @@ class ComplexityBase(BaseMarker):
         },
     }
 
-    def __init__(
-        self,
-        parcellation: Union[str, list[str]],
-        agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.parcellation = parcellation
-        self.agg_method = agg_method
-        self.agg_method_params = agg_method_params
-        self.masks = masks
-        super().__init__(on="BOLD", name=name)
+    parcellation: list[str]
+    agg_method: str = "mean"
+    agg_method_params: Optional[dict] = None
+    masks: Optional[list[Union[dict, str]]] = None
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
+
 
     @abstractmethod
     def compute_complexity(
@@ -120,7 +115,7 @@ class ComplexityBase(BaseMarker):
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
-            on="BOLD",
+            on=[DataType.BOLD],
         ).compute(input=input, extra_input=extra_input)
         # Compute complexity measure
         return {

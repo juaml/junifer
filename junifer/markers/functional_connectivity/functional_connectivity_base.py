@@ -4,7 +4,7 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar, Literal, Optional, Union
 
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
@@ -25,31 +25,30 @@ class FunctionalConnectivityBase(BaseMarker):
     Parameters
     ----------
     agg_method : str, optional
-        The method to perform aggregation using.
-        Check valid options in :func:`.get_aggfunc_by_name`
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options
         (default "mean").
-    agg_method_params : dict, optional
-        Parameters to pass to the aggregation function.
-        Check valid options in :func:`.get_aggfunc_by_name`
-        (default None).
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
     conn_method : str, optional
-        The method to perform connectivity measure using.
-        Check valid options in :class:`.JuniferConnectivityMeasure`
+        The connectivity measure to use.
+        See :class:`.JuniferConnectivityMeasure` for more information
         (default "correlation").
-    conn_method_params : dict, optional
-        Parameters to pass to :class:`.JuniferConnectivityMeasure`.
+    conn_method_params : dict or None, optional
+        The parameters to pass to :class:`.JuniferConnectivityMeasure`.
         If None, ``{"empirical": True}`` will be used, which would mean
         :class:`sklearn.covariance.EmpiricalCovariance` is used to compute
         covariance. If usage of :class:`sklearn.covariance.LedoitWolf` is
         desired, ``{"empirical": False}`` should be passed
         (default None).
-    masks : str, dict or list of dict or str, optional
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, will use ``BOLD_<class_name>``
-        (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     """
 
@@ -61,25 +60,20 @@ class FunctionalConnectivityBase(BaseMarker):
         },
     }
 
-    def __init__(
-        self,
-        agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        conn_method: str = "correlation",
-        conn_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.agg_method = agg_method
-        self.agg_method_params = agg_method_params
-        self.conn_method = conn_method
-        self.conn_method_params = conn_method_params or {}
+    agg_method: str = "mean"
+    agg_method_params: Optional[dict] = None
+    conn_method: str = "correlation"
+    conn_method_params: Optional[dict] = None
+    masks: Optional[list[Union[dict, str]]] = None
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
+
+    def validate_marker_params(self) -> None:
+        """Run extra logical validation for marker."""
+        self.conn_method_params = self.conn_method_params or {}
         # Reverse of nilearn behavior
         self.conn_method_params["empirical"] = self.conn_method_params.get(
             "empirical", True
         )
-        self.masks = masks
-        super().__init__(on="BOLD", name=name)
 
     @abstractmethod
     def aggregate(
@@ -123,7 +117,7 @@ class FunctionalConnectivityBase(BaseMarker):
               - ``data`` : functional connectivity matrix as ``numpy.ndarray``
               - ``row_names`` : ROI labels as list of str
               - ``col_names`` : ROI labels as list of str
-              - ``matrix_kind`` : :obj:`.junifer.storage.MatrixKind`
+              - ``matrix_kind`` : :enum:`.MatrixKind`
 
         """
         # Perform necessary aggregation

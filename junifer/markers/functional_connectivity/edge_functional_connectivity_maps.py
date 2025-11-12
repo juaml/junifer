@@ -3,9 +3,10 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional
 
 from ...api.decorators import register_marker
+from ...datagrabber import DataType
 from ..maps_aggregation import MapsAggregation
 from ..utils import _ets
 from .functional_connectivity_base import FunctionalConnectivityBase
@@ -24,23 +25,23 @@ class EdgeCentricFCMaps(FunctionalConnectivityBase):
         The name of the map(s) to use.
         See :func:`.list_data` for options.
     conn_method : str, optional
-        The method to perform connectivity measure using.
+        The connectivity measure to use.
         See :class:`.JuniferConnectivityMeasure` for options
         (default "correlation").
-    conn_method_params : dict, optional
-        Parameters to pass to :class:`.JuniferConnectivityMeasure`.
+    conn_method_params : dict or None, optional
+        The parameters to pass to :class:`.JuniferConnectivityMeasure`.
         If None, ``{"empirical": True}`` will be used, which would mean
         :class:`sklearn.covariance.EmpiricalCovariance` is used to compute
         covariance. If usage of :class:`sklearn.covariance.LedoitWolf` is
         desired, ``{"empirical": False}`` should be passed
         (default None).
-    masks : str, dict or list of dict or str, optional
+    masks : list of dict or str, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, will use
-        ``BOLD_EdgeCentricFCParcels`` (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     References
     ----------
@@ -50,21 +51,8 @@ class EdgeCentricFCMaps(FunctionalConnectivityBase):
 
     """
 
-    def __init__(
-        self,
-        maps: str,
-        conn_method: str = "correlation",
-        conn_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.maps = maps
-        super().__init__(
-            conn_method=conn_method,
-            conn_method_params=conn_method_params,
-            masks=masks,
-            name=name,
-        )
+    maps: str
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def aggregate(
         self, input: dict[str, Any], extra_input: Optional[dict] = None
@@ -99,7 +87,7 @@ class EdgeCentricFCMaps(FunctionalConnectivityBase):
         aggregation = MapsAggregation(
             maps=self.maps,
             masks=self.masks,
-            on="BOLD",
+            on=[DataType.BOLD],
         ).compute(input, extra_input=extra_input)
         # Compute edgewise timeseries
         ets, edge_names = _ets(
