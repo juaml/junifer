@@ -25,16 +25,11 @@ class ReHoSpheres(ReHoBase):
     coords : str
         The name of the coordinates list to use.
         See :func:`.list_data` for options.
-    using : {"junifer", "afni"}
-        Implementation to use for computing ReHo:
-
-        * "junifer" : Use ``junifer``'s own ReHo implementation
-        * "afni" : Use AFNI's ``3dReHo``
-
     radius : float, optional
         The radius of the sphere in millimeters. If None, the signal will be
         extracted from a single voxel. See
         :class:`nilearn.maskers.NiftiSpheresMasker` for more information
+    using : :enum:`.ReHoImpl`
         (default None).
     allow_overlap : bool, optional
         Whether to allow overlapping spheres. If False, an error is raised if
@@ -44,7 +39,7 @@ class ReHoSpheres(ReHoBase):
         if available (default None).
     reho_params : dict, optional
         Extra parameters for computing ReHo map as a dictionary (default None).
-        If ``using="afni"``, then the valid keys are:
+        If ``using=ReHoImpl.afni``, then the valid keys are:
 
         * ``nneigh`` : {7, 19, 27}, optional (default 27)
             Number of voxels in the neighbourhood, inclusive. Can be:
@@ -74,7 +69,7 @@ class ReHoSpheres(ReHoBase):
             The number of voxels for +/- z-axis of cuboidal volumes
             (default None).
 
-        else if ``using="junifer"``, then the valid keys are:
+        else if ``using=ReHoImpl.junifer``, then the valid keys are:
 
         * ``nneigh`` : {7, 19, 27, 125}, optional (default 27)
             Number of voxels in the neighbourhood, inclusive. Can be:
