@@ -75,10 +75,10 @@ class ALFFMaps(ALFFBase):
             lowpass=lowpass,
             using=using,
             tr=tr,
+            masks=masks,
             name=name,
         )
         self.maps = maps
-        self.masks = masks
 
     def compute(
         self,

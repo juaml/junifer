@@ -92,10 +92,9 @@ class ReHoMaps(ReHoBase):
         name: Optional[str] = None,
     ) -> None:
         # Superclass init first to validate `using` parameter
-        super().__init__(using=using, name=name)
+        super().__init__(using=using, masks=masks, name=name)
         self.maps = maps
         self.reho_params = reho_params
-        self.masks = masks
 
     def compute(
         self,

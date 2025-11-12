@@ -86,12 +86,12 @@ class ALFFParcels(ALFFBase):
             lowpass=lowpass,
             using=using,
             tr=tr,
+            masks=masks,
             name=name,
         )
         self.parcellation = parcellation
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
-        self.masks = masks
 
     def compute(
         self,

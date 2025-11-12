@@ -54,8 +54,7 @@ class TemporalSNRBase(BaseMarker):
     ) -> None:
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
-        self.masks = masks
-        super().__init__(on="BOLD", name=name)
+        super().__init__(on="BOLD", masks=masks, name=name)
 
     @abstractmethod
     def aggregate(

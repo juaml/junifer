@@ -68,8 +68,7 @@ class ComplexityBase(BaseMarker):
         self.parcellation = parcellation
         self.agg_method = agg_method
         self.agg_method_params = agg_method_params
-        self.masks = masks
-        super().__init__(on="BOLD", name=name)
+        super().__init__(on="BOLD", masks=masks, name=name)
 
     @abstractmethod
     def compute_complexity(

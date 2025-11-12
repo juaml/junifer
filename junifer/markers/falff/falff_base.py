@@ -12,6 +12,7 @@ from typing import (
     Any,
     ClassVar,
     Optional,
+    Union,
 )
 
 from ...typing import ConditionalDependencies, MarkerInOutMappings
@@ -46,6 +47,10 @@ class ALFFBase(BaseMarker):
     tr : positive float, optional
         The Repetition Time of the BOLD data. If None, will extract
         the TR from NIfTI header (default None).
+    masks : str, dict or list of dict or str, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
     name : str, optional
         The name of the marker. If None, it will use the class name
         (default None).
@@ -92,6 +97,7 @@ class ALFFBase(BaseMarker):
         lowpass: float,
         using: str,
         tr: Optional[float] = None,
+        masks: Union[str, dict, list[Union[dict, str]], None] = None,
         name: Optional[str] = None,
     ) -> None:
         if highpass < 0:
@@ -110,7 +116,7 @@ class ALFFBase(BaseMarker):
             )
         self.using = using
         self.tr = tr
-        super().__init__(on="BOLD", name=name)
+        super().__init__(on="BOLD", masks=masks, name=name)
 
     def _compute(
         self,
