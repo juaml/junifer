@@ -13,7 +13,7 @@ from typing import (
 
 import nibabel as nib
 
-from ...pipeline import WorkDirManager
+from ...pipeline import ExtDep, WorkDirManager
 from ...typing import ExternalDependencies
 from ...utils import logger, run_ext_cmd
 from ...utils.singleton import Singleton
@@ -36,7 +36,7 @@ class AFNIReHo(metaclass=Singleton):
 
     _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
-            "name": "afni",
+            "name": ExtDep.AFNI,
             "commands": ["3dReHo", "3dAFNItoNIFTI"],
         },
     ]
