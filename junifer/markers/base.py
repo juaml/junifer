@@ -17,9 +17,9 @@ __all__ = ["BaseMarker"]
 
 
 class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
-    """Abstract base class for all markers.
+    """Abstract base class for marker.
 
-    For every interface that is required, one needs to provide a concrete
+    For every marker, one needs to provide a concrete
     implementation of this abstract class.
 
     Parameters
@@ -38,7 +38,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
     Raises
     ------
     AttributeError
-        If the marker does not have `_MARKER_INOUT_MAPPINGS` attribute.
+        If the marker does not have ``_MARKER_INOUT_MAPPINGS`` attribute.
     ValueError
         If required input data type(s) is(are) not found.
 
