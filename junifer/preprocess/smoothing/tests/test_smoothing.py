@@ -7,20 +7,20 @@ import pytest
 
 from junifer.datareader import DefaultDataReader
 from junifer.pipeline.utils import _check_afni, _check_fsl
-from junifer.preprocess import Smoothing
+from junifer.preprocess import Smoothing, SmoothingImpl
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
 @pytest.mark.parametrize(
     "data_type",
-    ["T1w", "BOLD"],
+    [["T1w"], ["BOLD"]],
 )
-def test_Smoothing_nilearn(data_type: str) -> None:
+def test_Smoothing_nilearn(data_type: list[str]) -> None:
     """Test Smoothing using nilearn.
 
     Parameters
     ----------
-    data_type : str
+    data_type : list of str
         The parametrized data type.
 
     """
@@ -29,7 +29,7 @@ def test_Smoothing_nilearn(data_type: str) -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data
         output = Smoothing(
-            using="nilearn",
+            using=SmoothingImpl.nilearn,
             on=data_type,
             smoothing_params={"fwhm": "fast"},
         ).fit_transform(element_data)
@@ -39,17 +39,17 @@ def test_Smoothing_nilearn(data_type: str) -> None:
 
 @pytest.mark.parametrize(
     "data_type",
-    ["T1w", "BOLD"],
+    [["T1w"], ["BOLD"]],
 )
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires AFNI to be in PATH"
 )
-def test_Smoothing_afni(data_type: str) -> None:
+def test_Smoothing_afni(data_type: list[str]) -> None:
     """Test Smoothing using AFNI.
 
     Parameters
     ----------
-    data_type : str
+    data_type : list of tr
         The parametrized data type.
 
     """
@@ -58,7 +58,7 @@ def test_Smoothing_afni(data_type: str) -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data
         output = Smoothing(
-            using="afni",
+            using=SmoothingImpl.afni,
             on=data_type,
             smoothing_params={"fwhm": 3},
         ).fit_transform(element_data)
@@ -68,15 +68,15 @@ def test_Smoothing_afni(data_type: str) -> None:
 
 @pytest.mark.parametrize(
     "data_type",
-    ["T1w", "BOLD"],
+    [["T1w"], ["BOLD"]],
 )
 @pytest.mark.skipif(_check_fsl() is False, reason="requires FSL to be in PATH")
-def test_Smoothing_fsl(data_type: str) -> None:
+def test_Smoothing_fsl(data_type: list[str]) -> None:
     """Test Smoothing using FSL.
 
     Parameters
     ----------
-    data_type : str
+    data_type : list of str
         The parametrized data type.
 
     """
@@ -85,7 +85,7 @@ def test_Smoothing_fsl(data_type: str) -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data
         output = Smoothing(
-            using="fsl",
+            using=SmoothingImpl.fsl,
             on=data_type,
             smoothing_params={"brightness_threshold": 10.0, "fwhm": 3.0},
         ).fit_transform(element_data)
