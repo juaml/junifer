@@ -81,18 +81,6 @@ class BaseFeatureStorage(BaseModel, ABC):
             )
             self.uri.parent.mkdir(parents=True, exist_ok=True)
 
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid storage types for input.
-
-        Returns
-        -------
-        list of str
-            The list of storage types that can be used as input for this
-            storage.
-
-        """
-        return list(self._STORAGE_TYPES)
-
     def validate(self, input_: list[str]) -> None:
         """Validate the input to the pipeline step.
 
