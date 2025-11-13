@@ -162,7 +162,7 @@ class MarkerCollection:
         logger.info(f"DataGrabber output type: {t_data}")
 
         logger.info("Validating Data Reader:")
-        t_data = self._datareader.validate(t_data)
+        t_data = self._datareader.validate_component(t_data)
         logger.info(f"Data Reader output type: {t_data}")
 
         if self._preprocessors is not None:
@@ -175,7 +175,7 @@ class MarkerCollection:
                 old_t_data = t_data.copy()
                 logger.info(f"Preprocessor input type: {t_data}")
                 # Validate preprocessor
-                new_t_data = preprocessor.validate(old_t_data)
+                new_t_data = preprocessor.validate_component(old_t_data)
                 # Set new data types
                 t_data = list(set(old_t_data) | set(new_t_data))
                 logger.info(f"Preprocessor output type: {t_data}")
@@ -183,7 +183,7 @@ class MarkerCollection:
         for marker in self._markers:
             logger.info(f"Validating Marker: {marker.name}")
             # Validate marker
-            m_data = marker.validate(input=t_data)
+            m_data = marker.validate_component(input=t_data)
             logger.info(f"Marker output type: {m_data}")
             # Check storage for the marker
             if self._storage is not None:
