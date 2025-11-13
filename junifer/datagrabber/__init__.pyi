@@ -9,6 +9,8 @@ __all__ = [
     "DataladAOMICPIOP1",
     "DataladAOMICPIOP2",
     "HCP1200",
+    "HCP1200Task",
+    "HCP1200PhaseEncoding",
     "DataladHCP1200",
     "MultipleDataGrabber",
     "DMCC13Benchmark",
@@ -27,13 +29,18 @@ from .datalad_base import DataladDataGrabber
 from .pattern import PatternDataGrabber, ConfoundsFormat
 from .pattern_datalad import PatternDataladDataGrabber
 
-from .hcp1200 import HCP1200, DataladHCP1200
 from .aomic import (
     AOMICSpace,
     AOMICTask,
     DataladAOMICID1000,
     DataladAOMICPIOP1,
     DataladAOMICPIOP2,
+)
+from .hcp1200 import (
+    HCP1200,
+    HCP1200Task,
+    HCP1200PhaseEncoding,
+    DataladHCP1200,
 )
 from .multiple import MultipleDataGrabber
 from .dmcc13_benchmark import DMCC13Benchmark
