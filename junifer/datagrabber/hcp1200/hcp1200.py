@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from enum import Enum
 from itertools import product
 from pathlib import Path
 from typing import Union
@@ -14,7 +15,28 @@ from ...utils import raise_error
 from ..pattern import PatternDataGrabber
 
 
-__all__ = ["HCP1200"]
+__all__ = ["HCP1200", "HCP1200PhaseEncoding", "HCP1200Task"]
+
+
+class HCP1200Task(str, Enum):
+    """Accepted HCP1200 tasks."""
+
+    REST1 = "REST1"
+    REST2 = "REST2"
+    SOCIAL = "SOCIAL"
+    WM = "WM"
+    RELATIONAL = "RELATIONAL"
+    EMOTION = "EMOTION"
+    LANGUAGE = "LANGUAGE"
+    GAMBLING = "GAMBLING"
+    MOTOR = "MOTOR"
+
+
+class HCP1200PhaseEncoding(str, Enum):
+    """Accepted HCP1200 phase encoding directions."""
+
+    LR = "LR"
+    RL = "RL"
 
 
 @register_datagrabber
