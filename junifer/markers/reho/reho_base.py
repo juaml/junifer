@@ -109,12 +109,12 @@ class ReHoBase(BaseMarker):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "depends_on": AFNIReHo,
             "using": ReHoImpl.afni,
+            "depends_on": [AFNIReHo],
         },
         {
-            "depends_on": JuniferReHo,
             "using": ReHoImpl.junifer,
+            "depends_on": [JuniferReHo],
         },
     ]
 
