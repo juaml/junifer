@@ -14,6 +14,10 @@ __all__ = [
     "DataladHCP1200",
     "MultipleDataGrabber",
     "DMCC13Benchmark",
+    "DMCCSession",
+    "DMCCTask",
+    "DMCCPhaseEncoding",
+    "DMCCRun",
     "DataTypeManager",
     "DataTypeSchema",
     "OptionalTypeSchema",
@@ -43,7 +47,13 @@ from .hcp1200 import (
     DataladHCP1200,
 )
 from .multiple import MultipleDataGrabber
-from .dmcc13_benchmark import DMCC13Benchmark
+from .dmcc13_benchmark import (
+    DMCC13Benchmark,
+    DMCCSession,
+    DMCCTask,
+    DMCCPhaseEncoding,
+    DMCCRun,
+)
 
 from .pattern_validation_mixin import (
     DataTypeManager,
