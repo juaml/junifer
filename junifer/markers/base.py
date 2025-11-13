@@ -6,7 +6,7 @@
 
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar, Optional
 
 from pydantic import BaseModel, ConfigDict
 
@@ -63,8 +63,6 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
                 msg=("Missing `_MARKER_INOUT_MAPPINGS` for the marker"),
                 klass=AttributeError,
             )
-        # Run extra validation for markers and fail early if needed
-        self.validate_marker_params()
         # Use all data types if not provided
         if self.on is None:
             self.on = self.valid_inputs
@@ -80,6 +78,8 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
                     f"{self.__class__.__name__} cannot be computed on "
                     f"{wrong_on}"
                 )
+        # Run extra validation for markers and fail early if needed
+        self.validate_marker_params()
         # Set default name if not provided
         self.name = self.__class__.__name__ if self.name is None else self.name
 
