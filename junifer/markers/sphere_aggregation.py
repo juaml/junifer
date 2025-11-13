@@ -107,19 +107,6 @@ class SphereAggregation(BaseMarker):
         },
     }
 
-    on: list[
-        Literal[
-            DataType.T1w,
-            DataType.T2w,
-            DataType.BOLD,
-            DataType.VBM_GM,
-            DataType.VBM_WM,
-            DataType.VBM_CSF,
-            DataType.FALFF,
-            DataType.GCOR,
-            DataType.LCOR,
-        ]
-    ]
     coords: str
     radius: Optional[Union[Literal[0], PositiveFloat]] = None
     allow_overlap: bool = False
@@ -128,6 +115,21 @@ class SphereAggregation(BaseMarker):
     time_method: Optional[str] = None
     time_method_params: Optional[dict[str, Any]] = None
     masks: Optional[list[Union[dict, str]]] = None
+    on: Optional[
+        list[
+            Literal[
+                DataType.T1w,
+                DataType.T2w,
+                DataType.BOLD,
+                DataType.VBM_GM,
+                DataType.VBM_WM,
+                DataType.VBM_CSF,
+                DataType.FALFF,
+                DataType.GCOR,
+                DataType.LCOR,
+            ]
+        ]
+    ] = None
 
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""
