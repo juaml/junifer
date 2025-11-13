@@ -3,9 +3,10 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from collections.abc import MutableMapping, Sequence
+from collections.abc import Sequence
 from typing import (
     TYPE_CHECKING,
+    TypedDict,
     Union,
 )
 
@@ -15,6 +16,7 @@ if TYPE_CHECKING:
     from ..datagrabber import BaseDataGrabber, DataType
     from ..datareader import DefaultDataReader
     from ..markers import BaseMarker
+    from ..pipeline import BaseDataDumpAsset, ExtDep
     from ..preprocess import BasePreprocessor
     from ..storage import BaseFeatureStorage, StorageType
 
@@ -38,7 +40,17 @@ __all__ = [
 ]
 
 
-DataDumpAssetLike = type["DataDumpAssetLike"]
+class ExternalDependency(TypedDict):
+    name: "ExtDep"
+    commands: list[str]
+
+
+class ConditionalDependency(TypedDict):
+    using: object
+    depends_on: list[object]
+
+
+DataDumpAssetLike = type["BaseDataDumpAsset"]
 DataRegistryLike = type["BasePipelineDataRegistry"]
 DataGrabberLike = type["BaseDataGrabber"]
 PreprocessorLike = type["BasePreprocessor"]
@@ -52,13 +64,8 @@ PipelineComponent = Union[
     "StorageLike",
 ]
 Dependencies = set[str]
-ConditionalDependencies = Sequence[
-    MutableMapping[
-        str,
-        str | PipelineComponent | Sequence[str] | Sequence[PipelineComponent],
-    ]
-]
-ExternalDependencies = Sequence[MutableMapping[str, str | Sequence[str]]]
+ConditionalDependencies = list[ConditionalDependency]
+ExternalDependencies = list[ExternalDependency]
 MarkerInOutMappings = dict["DataType", dict[str, "StorageType"]]
 DataGrabberPatterns = dict[str, dict[str, str] | list[dict[str, str]]]
 ConfigVal = bool | int | float | str
