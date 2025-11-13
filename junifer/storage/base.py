@@ -55,7 +55,7 @@ class BaseFeatureStorage(BaseModel, ABC):
     Raises
     ------
     AttributeError
-        If the storage does not have `_STORAGE_TYPES` attribute.
+        If the storage does not have ``_STORAGE_TYPES`` attribute.
 
     """
 
