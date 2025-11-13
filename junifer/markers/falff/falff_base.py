@@ -87,12 +87,12 @@ class ALFFBase(BaseMarker):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "depends_on": AFNIALFF,
             "using": ALFFImpl.afni,
+            "depends_on": [AFNIALFF],
         },
         {
-            "depends_on": JuniferALFF,
             "using": ALFFImpl.junifer,
+            "depends_on": [JuniferALFF],
         },
     ]
 
