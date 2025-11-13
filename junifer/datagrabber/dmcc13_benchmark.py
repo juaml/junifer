@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from enum import Enum
 from itertools import product
 from pathlib import Path
 from typing import Union
@@ -12,7 +13,45 @@ from ..utils import raise_error
 from .pattern_datalad import PatternDataladDataGrabber
 
 
-__all__ = ["DMCC13Benchmark"]
+__all__ = [
+    "DMCC13Benchmark",
+    "DMCCPhaseEncoding",
+    "DMCCRun",
+    "DMCCSession",
+    "DMCCTask",
+]
+
+
+class DMCCSession(str, Enum):
+    """Accepted DMCC sessions."""
+
+    Wave1Bas = "ses-wave1bas"
+    Wave1Pro = "ses-wave1pro"
+    Wave1Rea = "ses-wave1rea"
+
+
+class DMCCTask(str, Enum):
+    """Accepted DMCC tasks."""
+
+    Rest = "Rest"
+    Axcpt = "Axcpt"
+    Cuedts = "Cuedts"
+    Stern = "Stern"
+    Stroop = "Stroop"
+
+
+class DMCCPhaseEncoding(str, Enum):
+    """Accepted DMCC phase encoding directions."""
+
+    AP = "AP"
+    PA = "PA"
+
+
+class DMCCRun(str, Enum):
+    """Accepted DMCC runs."""
+
+    One = "1"
+    Two = "2"
 
 
 @register_datagrabber
