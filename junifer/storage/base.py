@@ -81,7 +81,7 @@ class BaseFeatureStorage(BaseModel, ABC):
             )
             self.uri.parent.mkdir(parents=True, exist_ok=True)
 
-    def validate(self, input_: list[str]) -> None:
+    def validate_input(self, input_: list[str]) -> None:
         """Validate the input to the pipeline step.
 
         Parameters
