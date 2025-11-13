@@ -94,14 +94,14 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
 
         Returns
         -------
-        list of DataType
+        list of :enum:`.DataType`
             The list of data types that can be used as input for this marker.
 
         """
         return [DataType(x) for x in self._VALID_DATA_TYPES]
 
     def validate_preprocessor_params(self) -> None:
-        """Run extra logical validation for preprocessor params.
+        """Run extra logical validation for preprocessor.
 
         Subclasses can override to provide validation.
         """
