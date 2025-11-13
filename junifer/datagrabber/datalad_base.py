@@ -9,12 +9,13 @@ import atexit
 import os
 import tempfile
 from pathlib import Path
-from typing import Optional, Union
+from typing import Any, NoReturn, Optional
 
 import datalad
 import datalad.api as dl
 from datalad.support.exceptions import IncompleteResultsError
 from datalad.support.gitrepo import GitRepo
+from pydantic import Field, HttpUrl, field_validator
 
 from ..pipeline import WorkDirManager
 from ..typing import Element
@@ -25,6 +26,23 @@ from .base import BaseDataGrabber
 __all__ = ["DataladDataGrabber"]
 
 
+def _create_datadir() -> Path:
+    """Create a temporary directory for datalad dataset."""
+    datadir = WorkDirManager().get_tempdir(prefix="datalad")
+    logger.info(
+        "Created a temporary directory for datalad dataset at: "
+        f"{datadir.resolve()!s}"
+    )
+    return datadir
+
+
+def _remove_datadir(datadir: Path) -> None:
+    """Remove temporary directory if it exists."""
+    if datadir.exists():
+        logger.debug(f"Removing temporary directory at: {datadir.resolve()!s}")
+        WorkDirManager().delete_tempdir(datadir)
+
+
 class DataladDataGrabber(BaseDataGrabber):
     """Abstract base class for datalad-based data fetching.
 
@@ -32,17 +50,15 @@ class DataladDataGrabber(BaseDataGrabber):
 
     Parameters
     ----------
-    rootdir : str or pathlib.Path, optional
+    uri : pydantic.HttpUrl
+        URI of the datalad sibling.
+    rootdir : pathlib.Path, optional
         The path within the datalad dataset to the root directory
-        (default ".").
-    datadir : str or pathlib.Path or None, optional
-        That directory where the datalad dataset will be cloned. If None,
-        the datalad dataset will be cloned into a temporary directory
-        (default None).
-    uri : str or None, optional
-        URI of the datalad sibling (default None).
-    **kwargs
-        Keyword arguments passed to superclass.
+        (default Path(".")).
+    datadir : pathlib.Path, optional
+        That path where the datalad dataset will be cloned.
+        If not specified, the datalad dataset will be cloned into a temporary
+        directory.
 
     Methods
     -------
@@ -69,22 +85,41 @@ class DataladDataGrabber(BaseDataGrabber):
 
     """
 
-    def __init__(
-        self,
-        rootdir: Union[str, Path] = ".",
-        datadir: Union[str, Path, None] = None,
-        uri: Optional[str] = None,
-        **kwargs,
-    ):
-        if datadir is None:
-            logger.info("`datadir` is None, creating a temporary directory")
-            # Create temporary directory
-            tmpdir = WorkDirManager().get_tempdir(prefix="datalad")
-            self._tmpdir = tmpdir
-            datadir = tmpdir / "datadir"
-            datadir.mkdir(parents=True, exist_ok=False)
-            logger.info(f"`datadir` set to {datadir}")
-            cache_dir = tmpdir / ".datalad_cache"
+    uri: HttpUrl = Field(frozen=True)
+    rootdir: Path = Field(frozen=True, default=Path("."))
+    datadir: Path = Field(default_factory=lambda: _create_datadir())
+    _repodir: Path = Path(".")
+    # Flag to indicate if the dataset was cloned before and it might be
+    # dirty
+    datalad_dirty: bool = False
+    datalad_commit_id: Optional[str] = None
+    datalad_id: Optional[str] = None
+    _dataset: Optional[dl.Dataset] = None
+    _got_files: list[str] = []  # noqa: RUF012
+    _was_cloned: bool = False
+
+    @field_validator("datalad_dirty", mode="before")
+    @classmethod
+    def disable_tag(cls, value: Any) -> NoReturn:
+        """Disable setting datalad_dirty directly."""
+        raise_error(
+            msg="datalad_dirty cannot be set directly",
+            klass=ValueError,
+        )
+
+    def validate_datagrabber_params(self) -> None:
+        """Run extra logical validation for datagrabber."""
+        logger.debug("Initializing DataladDataGrabber")
+        logger.debug(f"\turi = {self.uri}")
+        logger.debug(f"\trootdir = {self.rootdir}")
+        if self.datadir.stem.startswith("datalad"):
+            self._repodir = self.datadir / "dataset"
+            self._repodir.mkdir(parents=True, exist_ok=False)
+            logger.info(
+                "Datalad dataset installation path set to: "
+                f"{self._repodir.resolve()!s}"
+            )
+            cache_dir = self.datadir / ".datalad_cache"
             sockets_dir = cache_dir / "sockets"
             locks_dir = cache_dir / "locks"
             sockets_dir.mkdir(parents=True, exist_ok=False)
@@ -106,43 +141,27 @@ class DataladDataGrabber(BaseDataGrabber):
                 "Datalad locks set to "
                 f"{datalad.cfg.get('datalad.locations.locks')}"
             )
-            atexit.register(self._rmtmpdir)
-        # TODO: uri can be converted to a positional argument
-        if uri is None:
-            raise_error("`uri` must be provided")
-
-        super().__init__(datadir=datadir, **kwargs)
-        logger.debug("Initializing DataladDataGrabber")
-        logger.debug(f"\turi = {uri}")
-        logger.debug(f"\t_rootdir = {rootdir}")
-        self.uri = uri
-        self._rootdir = rootdir
-        # Flag to indicate if the dataset was cloned before and it might be
-        # dirty
-        self.datalad_dirty = False
+            atexit.register(_remove_datadir, self.datadir)
+        else:
+            self._repodir = self.datadir
+        super().validate_datagrabber_params()
 
     def __del__(self) -> None:
         """Destructor."""
-        if hasattr(self, "_tmpdir"):
-            self._rmtmpdir()
-
-    def _rmtmpdir(self) -> None:
-        """Remove temporary directory if it exists."""
-        if self._tmpdir.exists():
-            logger.debug("Removing temporary directory")
-            WorkDirManager().delete_tempdir(self._tmpdir)
+        if self.datadir.stem.startswith("datalad"):
+            _remove_datadir(self.datadir)
 
     @property
-    def datadir(self) -> Path:
-        """Get data directory path.
+    def fulldir(self) -> Path:
+        """Get complete data directory path.
 
         Returns
         -------
         pathlib.Path
-            Path to the data directory.
+            Complete path to the data directory.
 
         """
-        return super().datadir / self._rootdir
+        return self._repodir / self.rootdir
 
     def _get_dataset_id_remote(self) -> tuple[str, bool]:
         """Get the dataset ID from the remote.
@@ -165,8 +184,10 @@ class DataladDataGrabber(BaseDataGrabber):
         with tempfile.TemporaryDirectory() as tmpdir:
             if not config.get("datagrabber.skipidcheck", False):
                 logger.debug(f"Querying {self.uri} for dataset ID")
-                repo = GitRepo.clone(
-                    self.uri, path=tmpdir, clone_options=["-n", "--depth=1"]
+                repo: GitRepo = GitRepo.clone(
+                    str(self.uri),
+                    path=tmpdir,
+                    clone_options=["-n", "--depth=1"],
                 )
                 repo.checkout(name=".datalad/config", options=["HEAD"])
                 remote_id = repo.config.get("datalad.dataset.id", None)
@@ -179,6 +200,7 @@ class DataladDataGrabber(BaseDataGrabber):
                     is_dirty = False
             else:
                 logger.debug("Skipping dataset ID check")
+                # Should be already set to the dataset
                 remote_id = self._dataset.id
                 is_dirty = False
             logger.debug(
@@ -252,7 +274,7 @@ class DataladDataGrabber(BaseDataGrabber):
         return out
 
     def install(self) -> None:
-        """Install the datalad dataset into the ``datadir``.
+        """Installs the datalad dataset.
 
         Raises
         ------
@@ -262,12 +284,10 @@ class DataladDataGrabber(BaseDataGrabber):
             If there is a datalad-related problem while cloning dataset.
 
         """
-        isinstalled = dl.Dataset(self._datadir).is_installed()
-        if isinstalled:
+        is_installed = dl.Dataset(self._repodir).is_installed()
+        if is_installed:
             logger.debug("Dataset already installed")
-            self._got_files = []
-            self._dataset: dl.Dataset = dl.Dataset(self._datadir)
-
+            self._dataset = dl.Dataset(self._repodir)
             # Check if dataset is already installed with a different ID
             remote_id, is_dirty = self._get_dataset_id_remote()
             if remote_id != self._dataset.id:
@@ -275,7 +295,6 @@ class DataladDataGrabber(BaseDataGrabber):
                     "Dataset already installed but with a different "
                     f"ID: {self._dataset.id} (local) != {remote_id} (remote)"
                 )
-
             # Conditional reporting on dataset dirtiness
             self.datalad_dirty = is_dirty
             if self.datalad_dirty:
@@ -287,18 +306,18 @@ class DataladDataGrabber(BaseDataGrabber):
                 logger.debug(f"Dataset (id: {self._dataset.id}) is clean")
 
         else:
-            logger.debug(f"Installing dataset {self.uri} to {self._datadir}")
+            logger.debug(f"Installing dataset {self.uri} to {self._repodir}")
             try:
-                self._dataset: dl.Dataset = dl.clone(  # type: ignore
-                    self.uri, self._datadir, result_renderer="disabled"
+                self._dataset = dl.clone(
+                    self.uri, self._repodir, result_renderer="disabled"
                 )
             except IncompleteResultsError as e:
                 raise_error(f"Failed to clone dataset: {e.failed}")
             logger.debug("Dataset installed")
-        self._was_cloned = not isinstalled
-
-        self.datalad_commit_id = self._dataset.repo.get_hexsha(  # type: ignore
-            self._dataset.repo.get_corresponding_branch()  # type: ignore
+        self._was_cloned = not is_installed
+        # Dataset should be set already
+        self.datalad_commit_id = self._dataset.repo.get_hexsha(
+            self._dataset.repo.get_corresponding_branch()
         )
         self.datalad_id = self._dataset.id
 
@@ -321,7 +340,7 @@ class DataladDataGrabber(BaseDataGrabber):
 
         Parameters
         ----------
-        element : str or tuple of str
+        element : `Element`
             The element to be indexed. If one string is provided, it is
             assumed to be a tuple with only one item. If a tuple is provided,
             each item in the tuple is the value for the replacement string

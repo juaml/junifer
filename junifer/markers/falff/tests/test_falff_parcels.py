@@ -28,8 +28,8 @@ PARCELLATION = "TianxS1x3TxMNInonlinear2009cAsym"
         "falff",
     ],
 )
-def test_ALFFParcels_get_output_type(feature: str) -> None:
-    """Test ALFFParcels get_output_type().
+def test_ALFFParcels_storage_type(feature: str) -> None:
+    """Test ALFFParcels storage_type.
 
     Parameters
     ----------
@@ -40,7 +40,7 @@ def test_ALFFParcels_get_output_type(feature: str) -> None:
     assert "vector" == ALFFParcels(
         parcellation=PARCELLATION,
         using="junifer",
-    ).get_output_type(input_type="BOLD", output_feature=feature)
+    ).storage_type(input_type="BOLD", output_feature=feature)
 
 
 def test_ALFFParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
