@@ -9,9 +9,10 @@ import re
 from copy import deepcopy
 from enum import Enum
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
 
 import numpy as np
+from pydantic import Field
 
 from ..api.decorators import register_datagrabber
 from ..typing import DataGrabberPatterns, Elements
@@ -23,8 +24,6 @@ from .pattern_validation_mixin import PatternValidationMixin
 __all__ = ["ConfoundsFormat", "PatternDataGrabber"]
 
 
-# Accepted formats for confounds specification
-_CONFOUNDS_FORMATS = ("fmriprep", "adhoc")
 class ConfoundsFormat(str, Enum):
     """Accepted confounds format."""
 
@@ -40,125 +39,16 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
 
     Parameters
     ----------
-    types : list of str
-        The types of data to be grabbed.
-    patterns : dict
-        Data type patterns as a dictionary. It has the following schema:
-
-        * ``"T1w"`` :
-
-          .. code-block:: none
-
-            {
-              "mandatory": ["pattern", "space"],
-              "optional": {
-                  "mask": {
-                      "mandatory": ["pattern", "space"],
-                      "optional": []
-                  }
-              }
-            }
-
-        * ``"T2w"`` :
-
-          .. code-block:: none
-
-            {
-              "mandatory": ["pattern", "space"],
-              "optional": {
-                  "mask": {
-                      "mandatory": ["pattern", "space"],
-                      "optional": []
-                  }
-              }
-            }
-
-        * ``"BOLD"`` :
-
-          .. code-block:: none
-
-            {
-              "mandatory": ["pattern", "space"],
-              "optional": {
-                  "mask": {
-                      "mandatory": ["pattern", "space"],
-                      "optional": []
-                  }
-                  "confounds": {
-                      "mandatory": ["pattern", "format"],
-                      "optional": []
-                  }
-              }
-            }
-
-        * ``"Warp"`` :
-
-          .. code-block:: none
-
-            {
-              "mandatory": ["pattern", "src", "dst", "warper"],
-              "optional": []
-            }
-
-        * ``"VBM_GM"`` :
-
-          .. code-block:: none
-
-            {
-              "mandatory": ["pattern", "space"],
-              "optional": []
-            }
-
-        * ``"VBM_WM"`` :
-
-          .. code-block:: none
-
-            {
-              "mandatory": ["pattern", "space"],
-              "optional": []
-            }
-
-        Basically, for each data type, one needs to provide ``mandatory`` keys
-        and can choose to also provide ``optional`` keys. The value for each
-        key is a string. So, one needs to provide necessary data types as a
-        dictionary, for example:
-
-        .. code-block:: none
-
-          {
-              "BOLD": {
-                "pattern": "...",
-                "space": "...",
-              },
-              "T1w": {
-                "pattern": "...",
-                "space": "...",
-              },
-          }
-
-        except ``Warp``, which needs to be a list of dictionaries as there can
-        be multiple spaces to warp (for example, with fMRIPrep):
-
-        .. code-block:: none
-
-          {
-              "Warp": [
-                {
-                  "pattern": "...",
-                  "src": "...",
-                  "dst": "...",
-                  "warper": "...",
-                },
-              ],
-          }
-
-        taken from :class:`.HCP1200`.
-    replacements : str or list of str
-        Replacements in the ``pattern`` key of each data type. The value needs
-        to be a list of all possible replacements.
-    datadir : str or pathlib.Path
-        The directory where the data is / will be stored.
-    confounds_format : {"fmriprep", "adhoc"} or None, optional
+    types : list of :enum:`.DataType`
+        The data type(s) to grab.
+    datadir : pathlib.Path
+        The path where the data is stored.
+    patterns : ``DataGrabberPatterns``
+        The datagrabber patterns. Check :class:`.DataTypeSchema` for the \
+        schema.
+    replacements : list of str
+        All possible replacements in ``patterns.<data_type>.pattern``.
+    confounds_format : :enum:`.ConfoundsFormat` or None, optional
         The format of the confounds for the dataset (default None).
     partial_pattern_ok : bool, optional
         Whether to raise error if partial pattern for a data type is found.
@@ -168,52 +58,30 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         powerful when used with :class:`.MultipleDataGrabber`
         (default True).
 
-    Raises
-    ------
-    ValueError
-        If ``confounds_format`` is invalid.
+    Attributes
+    ----------
+    skip_file_check
 
     """
 
-    def __init__(
-        self,
-        types: list[str],
-        patterns: DataGrabberPatterns,
-        replacements: Union[list[str], str],
-        datadir: Union[str, Path],
-        confounds_format: Optional[str] = None,
-        partial_pattern_ok: bool = False,
-    ) -> None:
-        # Convert replacements to list if not already
-        if not isinstance(replacements, list):
-            replacements = [replacements]
+    patterns: DataGrabberPatterns = Field(frozen=True)
+    replacements: list[str] = Field(frozen=True)
+    confounds_format: Optional[ConfoundsFormat] = Field(None, frozen=True)
+    partial_pattern_ok: bool = Field(False, frozen=True)
+
+    def validate_datagrabber_params(self) -> None:
+        """Run extra logical validation for datagrabber."""
         # Validate patterns
         self.validate_patterns(
-            types=types,
-            replacements=replacements,
-            patterns=patterns,
-            partial_pattern_ok=partial_pattern_ok,
+            types=self.types,
+            replacements=self.replacements,
+            patterns=self.patterns,
+            partial_pattern_ok=self.partial_pattern_ok,
         )
-        self.replacements = replacements
-        self.patterns = patterns
-        self.partial_pattern_ok = partial_pattern_ok
-
-        # Validate confounds format
-        if (
-            confounds_format is not None
-            and confounds_format not in _CONFOUNDS_FORMATS
-        ):
-            raise_error(
-                "Invalid value for `confounds_format`, should be one of "
-                f"{_CONFOUNDS_FORMATS}."
-            )
-        self.confounds_format = confounds_format
-
-        super().__init__(types=types, datadir=datadir)
         logger.debug("Initializing PatternDataGrabber")
-        logger.debug(f"\tpatterns = {patterns}")
-        logger.debug(f"\treplacements = {replacements}")
-        logger.debug(f"\tconfounds_format = {confounds_format}")
+        logger.debug(f"\tpatterns = {self.patterns}")
+        logger.debug(f"\treplacements = {self.replacements}")
+        logger.debug(f"\tconfounds_format = {self.confounds_format}")
 
     @property
     def skip_file_check(self) -> bool:
@@ -331,7 +199,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         resolved_pattern = self._replace_patterns_glob(element, pattern)
         # Resolve path for wildcard
         if "*" in resolved_pattern:
-            t_matches = list(self.datadir.absolute().glob(resolved_pattern))
+            t_matches = list(self.fulldir.absolute().glob(resolved_pattern))
             # Multiple matches
             if len(t_matches) > 1:
                 raise_error(
@@ -347,7 +215,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
                 )
             path = t_matches[0]
         else:
-            path = self.datadir / resolved_pattern
+            path = self.fulldir / resolved_pattern
             if not self.skip_file_check:
                 if not path.exists() and not path.is_symlink():
                     raise_error(
@@ -374,7 +242,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         return self.replacements
 
     def get_item(self, **element: dict) -> dict[str, dict]:
-        """Implement single element indexing for the datagrabber.
+        """Get the specified item from the dataset.
 
         This method constructs a real path to the requested item's data, by
         replacing the ``patterns`` with actual values passed via ``**element``.
@@ -508,8 +376,8 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
                     glob_pattern,
                     t_replacements,
                 ) = self._replace_patterns_regex(pattern)
-                for fname in self.datadir.glob(glob_pattern):
-                    suffix = fname.relative_to(self.datadir).as_posix()
+                for fname in self.fulldir.glob(glob_pattern):
+                    suffix = fname.relative_to(self.fulldir).as_posix()
                     m = re.match(re_pattern, suffix)
                     if m is not None:
                         # Find the groups of replacements present in the

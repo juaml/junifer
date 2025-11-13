@@ -7,9 +7,11 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
-from enum import Enum
 from pathlib import Path
-from typing import Union
+from typing import Any
+
+from aenum import Enum
+from pydantic import BaseModel, ConfigDict, Field
 
 from ..pipeline import UpdateMetaMixin
 from ..typing import Element, Elements
@@ -35,46 +37,44 @@ class DataType(str, Enum):
     DWI = "DWI"
     FreeSurfer = "FreeSurfer"
 
-class BaseDataGrabber(ABC, UpdateMetaMixin):
-    """Abstract base class for DataGrabber.
 
-    For every interface that is required, one needs to provide a concrete
+class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
+    """Abstract base class for data fetcher.
+
+    For every datagrabber, one needs to provide a concrete
     implementation of this abstract class.
 
     Parameters
     ----------
-    types : list of str
-        The types of data to be grabbed.
-    datadir : str or pathlib.Path
-        The directory where the data is / will be stored.
-
-    Raises
-    ------
-    TypeError
-        If ``types`` is not a list or if the values are not string.
+    types : list of :enum:`.DataType`
+        The data type(s) to grab.
+    datadir : pathlib.Path
+        The path where the data is or will be stored.
 
     """
 
-    def __init__(self, types: list[str], datadir: Union[str, Path]) -> None:
-        # Validate types
-        if not isinstance(types, list):
-            raise_error(msg="`types` must be a list", klass=TypeError)
-        if any(not isinstance(x, str) for x in types):
-            raise_error(
-                msg="`types` must be a list of strings", klass=TypeError
-            )
-        self.types = types
+    model_config = ConfigDict(use_enum_values=True)
 
-        # Convert str to Path
-        if not isinstance(datadir, Path):
-            datadir = Path(datadir)
-        self._datadir = datadir
+    types: list[DataType] = Field(frozen=True)
+    datadir: Path
 
+    def model_post_init(self, context: Any):  # noqa: D102
         logger.debug("Initializing BaseDataGrabber")
-        logger.debug(f"\t_datadir = {datadir}")
-        logger.debug(f"\ttypes = {types}")
+        logger.debug(f"\tdatadir = {self.datadir}")
+        logger.debug(f"\ttypes = {self.types}")
+        # Run extra validation for datagrabbers and fail early if needed
+        self.validate_datagrabber_params()
+        # Convert to correct data type
+        # self.types = [DataType(t) for t in self.types]
 
-    def __iter__(self) -> Iterator:
+    def validate_datagrabber_params(self) -> None:
+        """Run extra logical validation for datagrabber.
+
+        Subclasses can override to provide validation.
+        """
+        pass
+
+    def __iter__(self) -> Iterator[Elements]:
         """Enable iterable support.
 
         Yields
@@ -90,7 +90,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
 
         Parameters
         ----------
-        element : str or tuple of str
+        element : `Element`
             The element to be indexed.
 
         Returns
@@ -100,10 +100,14 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
             specified element.
 
         """
+        # Convert element to tuple if not already and extract enum values if
+        # present
+        element = (
+            (element,)
+            if not isinstance(element, tuple)
+            else tuple(i.value if isinstance(i, Enum) else i for i in element)
+        )
         logger.info(f"Getting element {element}")
-        # Convert element to tuple if not already
-        if not isinstance(element, tuple):
-            element = (element,)
         # Zip through element keys and actual values to construct element
         # access dictionary
         named_element: dict = dict(zip(self.get_element_keys(), element))
@@ -136,29 +140,30 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
         Returns
         -------
         list of str
-            The types of data to be grabbed.
+            The data type(s) to grab.
 
         """
-        return self.types.copy()
+        return [x.value for x in self.types]
 
     @property
-    def datadir(self) -> Path:
-        """Get data directory path.
+    def fulldir(self) -> Path:
+        """Get complete data directory path.
 
         Returns
         -------
         pathlib.Path
-            Path to the data directory. Can be overridden by subclasses.
+            Complete path to the data directory.
+            Can be overridden by subclasses.
 
         """
-        return self._datadir
+        return self.datadir
 
     def filter(self, selection: Elements) -> Iterator:
         """Filter elements to be grabbed.
 
         Parameters
         ----------
-        selection : list
+        selection : `Elements`
             The list of partial or complete element selectors to filter using.
 
         Yields
@@ -173,7 +178,7 @@ class BaseDataGrabber(ABC, UpdateMetaMixin):
 
             Parameters
             ----------
-            element : str or tuple of str
+            element : `Elements`
                 The element to be filtered.
 
             Returns
