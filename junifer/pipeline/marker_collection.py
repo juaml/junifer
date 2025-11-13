@@ -189,4 +189,4 @@ class MarkerCollection:
             if self._storage is not None:
                 logger.info(f"Validating storage for {marker.name}")
                 # Validate storage
-                self._storage.validate(input_=m_data)
+                self._storage.validate_input(input_=m_data)
