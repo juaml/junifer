@@ -90,6 +90,10 @@ class MapsAggregation(BaseMarker):
         },
     }
 
+    maps: str
+    time_method: str | None = None
+    time_method_params: dict[str, Any] | None = None
+    masks: list[dict | str] | None = None
     on: list[
         Literal[
             DataType.T1w,
@@ -102,11 +106,7 @@ class MapsAggregation(BaseMarker):
             DataType.GCOR,
             DataType.LCOR,
         ]
-    ]
-    maps: str
-    time_method: str | None = None
-    time_method_params: dict[str, Any] | None = None
-    masks: list[dict | str] | None = None
+    ] | None = None
 
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""

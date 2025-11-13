@@ -100,6 +100,12 @@ class ParcelAggregation(BaseMarker):
         },
     }
 
+    parcellation: list[str]
+    method: str = "mean"
+    method_params: dict[str, Any] | None = None
+    time_method: str | None = None
+    time_method_params: dict[str, Any] | None = None
+    masks: list[dict | str] | None = None
     on: list[
         Literal[
             DataType.T1w,
@@ -112,13 +118,7 @@ class ParcelAggregation(BaseMarker):
             DataType.GCOR,
             DataType.LCOR,
         ]
-    ]
-    parcellation: list[str]
-    method: str = "mean"
-    method_params: dict[str, Any] | None = None
-    time_method: str | None = None
-    time_method_params: dict[str, Any] | None = None
-    masks: list[dict | str] | None = None
+    ] | None = None
 
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""
