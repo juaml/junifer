@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 
 from junifer.onthefly import read_transform
-from junifer.storage.hdf5 import HDF5FeatureStorage
+from junifer.storage import HDF5FeatureStorage, StorageType
 
 
 @pytest.fixture
@@ -23,9 +23,9 @@ def vector_storage(tmp_path: Path) -> HDF5FeatureStorage:
         The path to the test directory.
 
     """
-    storage = HDF5FeatureStorage(tmp_path / "vector_store.hdf5")
+    storage = HDF5FeatureStorage(uri=tmp_path / "vector_store.hdf5")
     storage.store(
-        kind="vector",
+        kind=StorageType.Vector,
         meta={
             "element": {"subject": "test"},
             "dependencies": [],
@@ -48,9 +48,9 @@ def matrix_storage(tmp_path: Path) -> HDF5FeatureStorage:
         The path to the test directory.
 
     """
-    storage = HDF5FeatureStorage(tmp_path / "matrix_store.hdf5")
+    storage = HDF5FeatureStorage(uri=tmp_path / "matrix_store.hdf5")
     storage.store(
-        kind="matrix",
+        kind=StorageType.Matrix,
         meta={
             "element": {"subject": "test"},
             "dependencies": [],
@@ -74,13 +74,13 @@ def matrix_storage_with_nan(tmp_path: Path) -> HDF5FeatureStorage:
         The path to the test directory.
 
     """
-    storage = HDF5FeatureStorage(tmp_path / "matrix_store_nan.hdf5")
+    storage = HDF5FeatureStorage(uri=tmp_path / "matrix_store_nan.hdf5")
     data = np.arange(36).reshape(3, 3, 4).astype(float)
     data[1, 1, 2] = np.nan
     data[1, 2, 2] = np.nan
     for i in range(4):
         storage.store(
-            kind="matrix",
+            kind=StorageType.Matrix,
             meta={
                 "element": {"subject": f"test{i + 1}"},
                 "dependencies": [],
