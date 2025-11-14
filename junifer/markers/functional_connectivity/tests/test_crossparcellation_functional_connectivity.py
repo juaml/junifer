@@ -9,11 +9,12 @@ from pathlib import Path
 
 import pytest
 
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
-from junifer.markers.functional_connectivity import CrossParcellationFC
+from junifer.markers import CrossParcellationFC
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_ants
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import SQLiteFeatureStorage, Upsert
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
@@ -35,7 +36,9 @@ def test_storage_type() -> None:
     """Test CrossParcellationFC storage_type."""
     assert "matrix" == CrossParcellationFC(
         parcellation_one=parcellation_one, parcellation_two=parcellation_two
-    ).storage_type(input_type="BOLD", output_feature="functional_connectivity")
+    ).storage_type(
+        input_type=DataType.BOLD, output_feature="functional_connectivity"
+    )
 
 
 @pytest.mark.skipif(
@@ -87,7 +90,8 @@ def test_store(tmp_path: Path) -> None:
             corr_method="spearman",
         )
         storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_crossparcellation.sqlite", upsert="ignore"
+            uri=tmp_path / "test_crossparcellation.sqlite",
+            upsert=Upsert.Ignore,
         )
         # Fit transform marker on data with storage
         crossparcellation.fit_transform(input=element_data, storage=storage)

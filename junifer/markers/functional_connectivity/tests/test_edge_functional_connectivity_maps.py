@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from junifer.datagrabber import PatternDataladDataGrabber
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.datareader import DefaultDataReader
 from junifer.markers import EdgeCentricFCMaps
 from junifer.storage import HDF5FeatureStorage
@@ -48,7 +48,7 @@ def test_EdgeCentricFCMaps(
         )
         # Check correct output
         assert "matrix" == marker.storage_type(
-            input_type="BOLD", output_feature="functional_connectivity"
+            input_type=DataType.BOLD, output_feature="functional_connectivity"
         )
 
         # Fit-transform the data

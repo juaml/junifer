@@ -7,10 +7,11 @@ import logging
 from pathlib import Path
 
 import pytest
-import scipy as sp
+import scipy.stats as sps
 
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
-from junifer.markers import ReHoParcels
+from junifer.markers import ReHoImpl, ReHoParcels
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni, _check_ants
 from junifer.storage import SQLiteFeatureStorage
@@ -39,12 +40,12 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 
             # Initialize marker
             marker = ReHoParcels(
-                parcellation="TianxS1x3TxMNInonlinear2009cAsym",
-                using="junifer",
+                parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+                using=ReHoImpl.junifer,
             )
             # Check correct output
             assert "vector" == marker.storage_type(
-                input_type="BOLD", output_feature="reho"
+                input_type=DataType.BOLD, output_feature="reho"
             )
 
             # Fit transform marker on data
@@ -70,7 +71,9 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             # Reset log capture
             caplog.clear()
             # Initialize storage
-            storage = SQLiteFeatureStorage(tmp_path / "reho_parcels.sqlite")
+            storage = SQLiteFeatureStorage(
+                uri=tmp_path / "reho_parcels.sqlite"
+            )
             # Fit transform marker on data with storage
             marker.fit_transform(
                 input=element_data,
@@ -102,7 +105,7 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
 
         # Initialize marker
         junifer_marker = ReHoParcels(
-            parcellation="Schaefer100x7", using="junifer"
+            parcellation=["Schaefer100x7"], using=ReHoImpl.junifer
         )
         # Fit transform marker on data
         junifer_output = junifer_marker.fit_transform(element_data)
@@ -110,14 +113,16 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
         junifer_output_bold = junifer_output["BOLD"]["reho"]
 
         # Initialize marker
-        afni_marker = ReHoParcels(parcellation="Schaefer100x7", using="afni")
+        afni_marker = ReHoParcels(
+            parcellation=["Schaefer100x7"], using=ReHoImpl.afni
+        )
         # Fit transform marker on data
         afni_output = afni_marker.fit_transform(element_data)
         # Get BOLD output
         afni_output_bold = afni_output["BOLD"]["reho"]
 
         # Check for Pearson correlation coefficient
-        r, _ = sp.stats.pearsonr(
+        r, _ = sps.pearsonr(
             junifer_output_bold["data"].flatten(),
             afni_output_bold["data"].flatten(),
         )
