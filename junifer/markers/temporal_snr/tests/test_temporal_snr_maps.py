@@ -5,7 +5,7 @@
 
 from pathlib import Path
 
-from junifer.datagrabber import PatternDataladDataGrabber
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.datareader import DefaultDataReader
 from junifer.markers import TemporalSNRMaps
 from junifer.storage import HDF5FeatureStorage
@@ -28,9 +28,8 @@ def test_TemporalSNRMaps_computation(
         marker = TemporalSNRMaps(maps="Smith_rsn_10")
         # Check correct output
         assert "vector" == marker.storage_type(
-            input_type="BOLD", output_feature="tsnr"
+            input_type=DataType.BOLD, output_feature="tsnr"
         )
-
         # Fit-transform the data
         tsnr_parcels = marker.fit_transform(element_data)
         tsnr_parcels_bold = tsnr_parcels["BOLD"]["tsnr"]
@@ -59,7 +58,7 @@ def test_TemporalSNRMaps_storage(
         element_data = DefaultDataReader().fit_transform(element)
         marker = TemporalSNRMaps(maps="Smith_rsn_10")
         # Store
-        storage = HDF5FeatureStorage(tmp_path / "test_tsnr_maps.hdf5")
+        storage = HDF5FeatureStorage(uri=tmp_path / "test_tsnr_maps.hdf5")
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(

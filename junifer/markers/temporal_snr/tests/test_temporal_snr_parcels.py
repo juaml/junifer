@@ -6,6 +6,7 @@
 
 from pathlib import Path
 
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.temporal_snr import TemporalSNRParcels
 from junifer.storage import HDF5FeatureStorage
@@ -17,13 +18,12 @@ def test_TemporalSNRParcels_computation() -> None:
     with PartlyCloudyTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         marker = TemporalSNRParcels(
-            parcellation="TianxS1x3TxMNInonlinear2009cAsym"
+            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"]
         )
         # Check correct output
         assert "vector" == marker.storage_type(
-            input_type="BOLD", output_feature="tsnr"
+            input_type=DataType.BOLD, output_feature="tsnr"
         )
-
         # Fit-transform the data
         tsnr_parcels = marker.fit_transform(element_data)
         tsnr_parcels_bold = tsnr_parcels["BOLD"]["tsnr"]
@@ -46,10 +46,10 @@ def test_TemporalSNRParcels_storage(tmp_path: Path) -> None:
     with PartlyCloudyTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         marker = TemporalSNRParcels(
-            parcellation="TianxS1x3TxMNInonlinear2009cAsym"
+            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"]
         )
         # Store
-        storage = HDF5FeatureStorage(tmp_path / "test_tsnr_parcels.hdf5")
+        storage = HDF5FeatureStorage(uri=tmp_path / "test_tsnr_parcels.hdf5")
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(

@@ -15,11 +15,12 @@ from numpy.testing import assert_array_almost_equal
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
 from junifer.data import ParcellationRegistry
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
-from junifer.markers.functional_connectivity import (
+from junifer.markers import (
     FunctionalConnectivityParcels,
 )
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import SQLiteFeatureStorage, Upsert
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
@@ -56,13 +57,13 @@ def test_FunctionalConnectivityParcels(
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Setup marker
         marker = FunctionalConnectivityParcels(
-            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
+            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
             conn_method="correlation",
             conn_method_params=conn_method_params,
         )
         # Check correct output
         assert "matrix" == marker.storage_type(
-            input_type="BOLD", output_feature="functional_connectivity"
+            input_type=DataType.BOLD, output_feature="functional_connectivity"
         )
 
         # Fit-transform the data
@@ -102,7 +103,7 @@ def test_FunctionalConnectivityParcels(
 
         # Store
         storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_fc_parcels.sqlite", upsert="ignore"
+            uri=tmp_path / "test_fc_parcels.sqlite", upsert=Upsert.Ignore
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
