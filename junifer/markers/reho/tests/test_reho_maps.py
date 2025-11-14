@@ -7,11 +7,11 @@ import logging
 from pathlib import Path
 
 import pytest
-import scipy as sp
+import scipy.stats as sps
 
-from junifer.datagrabber import PatternDataladDataGrabber
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.datareader import DefaultDataReader
-from junifer.markers import ReHoMaps
+from junifer.markers import ReHoImpl, ReHoMaps
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import HDF5FeatureStorage
@@ -45,11 +45,11 @@ def test_ReHoMaps(
             # Initialize marker
             marker = ReHoMaps(
                 maps="Smith_rsn_10",
-                using="junifer",
+                using=ReHoImpl.junifer,
             )
             # Check correct output
             assert "vector" == marker.storage_type(
-                input_type="BOLD", output_feature="reho"
+                input_type=DataType.BOLD, output_feature="reho"
             )
 
             # Fit transform marker on data
@@ -75,7 +75,7 @@ def test_ReHoMaps(
             # Reset log capture
             caplog.clear()
             # Initialize storage
-            storage = HDF5FeatureStorage(tmp_path / "reho_maps.hdf5")
+            storage = HDF5FeatureStorage(uri=tmp_path / "reho_maps.hdf5")
             # Fit transform marker on data with storage
             marker.fit_transform(
                 input=element_data,
@@ -114,21 +114,21 @@ def test_ReHoMaps_comparison(
         element_data = DefaultDataReader().fit_transform(element)
 
         # Initialize marker
-        junifer_marker = ReHoMaps(maps="Smith_rsn_10", using="junifer")
+        junifer_marker = ReHoMaps(maps="Smith_rsn_10", using=ReHoImpl.junifer)
         # Fit transform marker on data
         junifer_output = junifer_marker.fit_transform(element_data)
         # Get BOLD output
         junifer_output_bold = junifer_output["BOLD"]["reho"]
 
         # Initialize marker
-        afni_marker = ReHoMaps(maps="Smith_rsn_10", using="afni")
+        afni_marker = ReHoMaps(maps="Smith_rsn_10", using=ReHoImpl.afni)
         # Fit transform marker on data
         afni_output = afni_marker.fit_transform(element_data)
         # Get BOLD output
         afni_output_bold = afni_output["BOLD"]["reho"]
 
         # Check for Pearson correlation coefficient
-        r, _ = sp.stats.pearsonr(
+        r, _ = sps.pearsonr(
             junifer_output_bold["data"].flatten(),
             afni_output_bold["data"].flatten(),
         )
