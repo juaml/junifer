@@ -62,10 +62,10 @@ def test_BaseFeatureStorage() -> None:
     assert st.single_output is True
 
     # Check validate with valid argument
-    st.validate(input_=["matrix"])
+    st.validate_input(input_=["matrix"])
     # Check validate with invalid argument
     with pytest.raises(ValueError):
-        st.validate(input_=["duck"])
+        st.validate_input(input_=["duck"])
 
     with pytest.raises(NotImplementedError):
         st.list_features()
