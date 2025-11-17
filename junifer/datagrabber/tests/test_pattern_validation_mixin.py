@@ -9,7 +9,8 @@ from typing import Union
 
 import pytest
 
-from junifer.datagrabber.pattern_validation_mixin import (
+from junifer.datagrabber import (
+    DataType,
     DataTypeManager,
     DataTypeSchema,
     PatternValidationMixin,
@@ -111,8 +112,10 @@ def test_register_data_type() -> None:
     )
 
     assert "dtype" in DataTypeManager()
+    assert "dtype" in list(DataType)
     _ = DataTypeManager().pop("dtype")
-    assert "dumb" not in DataTypeManager()
+    assert "dtype" not in DataTypeManager()
+    assert "dtype" in list(DataType)
 
 
 @pytest.mark.parametrize(
