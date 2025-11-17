@@ -95,7 +95,7 @@ class DataDispatcher(MutableMapping):
         # Update global
         self._registries[key] = value
 
-    def popitem():
+    def popitem(self):
         """Not implemented."""
         pass
 
