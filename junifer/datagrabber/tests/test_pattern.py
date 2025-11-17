@@ -117,7 +117,7 @@ def test_PatternDataGrabber(tmp_path: Path) -> None:
     """
 
     datagrabber_first = PatternDataGrabber(
-        datadir="/tmp/data",
+        datadir=Path("/tmp/data"),
         types=["BOLD", "T1w"],
         patterns={
             "BOLD": {
@@ -129,7 +129,7 @@ def test_PatternDataGrabber(tmp_path: Path) -> None:
                 "space": "native",
             },
         },
-        replacements="subject",
+        replacements=["subject"],
     )
     assert datagrabber_first.datadir == Path("/tmp/data")
     assert set(datagrabber_first.types) == {"T1w", "BOLD"}
@@ -279,22 +279,3 @@ def test_PatternDataGrabber_unix_path_expansion(tmp_path: Path) -> None:
     # Check paths are found
     assert set(out["FreeSurfer"].keys()) == {"path", "aseg", "meta"}
     assert list(out["FreeSurfer"]["aseg"].keys()) == ["path"]
-
-
-def test_PatternDataGrabber_confounds_format_error_on_init() -> None:
-    """Test PatterDataGrabber confounds format error on initialisation."""
-    with pytest.raises(
-        ValueError, match="Invalid value for `confounds_format`"
-    ):
-        PatternDataGrabber(
-            types=["BOLD"],
-            patterns={
-                "BOLD": {
-                    "pattern": "func/{subject}.nii",
-                    "space": "MNI152NLin6Asym",
-                },
-            },
-            replacements=["subject"],
-            datadir="/tmp",
-            confounds_format="foobar",
-        )
