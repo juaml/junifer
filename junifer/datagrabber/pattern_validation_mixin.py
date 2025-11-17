@@ -6,6 +6,9 @@
 from collections.abc import Iterator, MutableMapping
 from typing import TypedDict
 
+from aenum import extend_enum
+
+from ..datagrabber import DataType
 from ..typing import DataGrabberPatterns
 from ..utils import logger, raise_error, warn_with_log
 
@@ -196,6 +199,7 @@ def register_data_type(name: str, schema: DataTypeSchema) -> None:
 
     """
     DataTypeManager()[name] = schema
+    extend_enum(DataType, name, name)
 
 
 class PatternValidationMixin:
