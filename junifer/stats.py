@@ -5,37 +5,58 @@
 # License: AGPL
 
 from collections.abc import Callable
+from enum import Enum
 from typing import Any
 
 import numpy as np
+from pydantic import validate_call
 from scipy.stats import mode, trim_mean
 from scipy.stats.mstats import winsorize
 
 from .utils import logger, raise_error
 
 
-__all__ = ["count", "get_aggfunc_by_name", "select", "winsorized_mean"]
+__all__ = [
+    "AggFunc",
+    "count",
+    "get_aggfunc_by_name",
+    "select",
+    "winsorized_mean",
+]
 
 
+class AggFunc(str, Enum):
+    """Accepted aggregation function names.
+
+    * ``mean`` -> :func:`numpy.mean`
+    * ``winsorized_mean`` -> :func:`scipy.stats.mstats.winsorize`
+    * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
+    * ``mode`` -> :func:`scipy.stats.mode`
+    * ``std`` -> :func:`numpy.std`
+    * ``count`` -> :func:`.count`
+    * ``select`` -> :func:`.select`
+
+    """
+
+    Mean = "mean"
+    WinsorizedMean = "winsorized_mean"
+    TrimMean = "trim_mean"
+    Mode = "mode"
+    Std = "std"
+    Count = "count"
+    Select = "select"
+
+
+@validate_call
 def get_aggfunc_by_name(
-    name: str, func_params: dict[str, Any] | None = None
+    name: AggFunc, func_params: dict[str, Any] | None = None
 ) -> Callable:
     """Get an aggregation function by its name.
 
     Parameters
     ----------
-    name : str
-        Name to identify the function. Currently supported names and
-        corresponding functions are:
-
-        * ``mean`` -> :func:`numpy.mean`
-        * ``winsorized_mean`` -> :func:`scipy.stats.mstats.winsorize`
-        * ``trim_mean`` -> :func:`scipy.stats.trim_mean`
-        * ``mode`` -> :func:`scipy.stats.mode`
-        * ``std`` -> :func:`numpy.std`
-        * ``count`` -> :func:`.count`
-        * ``select`` -> :func:`.select`
-
+    name : :enum:`.AggFunc`
+        Aggregation function name.
     func_params : dict, optional
         Parameters to pass to the function.
         E.g. for ``winsorized_mean``: ``func_params = {'limits': [0.1, 0.1]}``
@@ -49,16 +70,6 @@ def get_aggfunc_by_name(
     """
     from functools import partial  # local import to avoid sphinx error
 
-    # check validity of names
-    _valid_func_names = {
-        "winsorized_mean",
-        "mean",
-        "std",
-        "trim_mean",
-        "count",
-        "select",
-        "mode",
-    }
     if func_params is None:
         func_params = {}
     # apply functions
@@ -102,11 +113,7 @@ def get_aggfunc_by_name(
         func = partial(select, **func_params)
     elif name == "mode":
         func = partial(mode, **func_params)
-    else:
-        raise_error(
-            f"Function {name} unknown. Please provide any of "
-            f"{_valid_func_names}"
-        )
+
     return func
 
 
