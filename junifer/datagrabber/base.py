@@ -7,6 +7,7 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterator
+from enum import Enum
 from pathlib import Path
 from typing import Any
 
@@ -143,7 +144,7 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
             The data type(s) to grab.
 
         """
-        return [x.value for x in self.types]
+        return [x.value if isinstance(x, Enum) else x for x in self.types]
 
     @property
     def fulldir(self) -> Path:
