@@ -74,7 +74,7 @@ def test_MapsAggregation_input_output(
     """
     assert storage_type == MapsAggregation(
         maps="Smith_rsn_10", on=input_type
-    ).get_output_type(input_type=input_type, output_feature="aggregation")
+    ).storage_type(input_type=input_type, output_feature="aggregation")
 
 
 def test_MapsAggregation_3D(

@@ -6,10 +6,10 @@
 
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import Any, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
-from ..typing import StorageLike
+from ..typing import MarkerInOutMappings, StorageLike
 from ..utils import logger, raise_error
 
 
@@ -17,9 +17,9 @@ __all__ = ["BaseMarker"]
 
 
 class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
-    """Abstract base class for all markers.
+    """Abstract base class for marker.
 
-    For every interface that is required, one needs to provide a concrete
+    For every marker, one needs to provide a concrete
     implementation of this abstract class.
 
     Parameters
@@ -34,11 +34,13 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
     Raises
     ------
     AttributeError
-        If the marker does not have `_MARKER_INOUT_MAPPINGS` attribute.
+        If the marker does not have ``_MARKER_INOUT_MAPPINGS`` attribute.
     ValueError
         If required input data type(s) is(are) not found.
 
     """
+
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings]
 
     def __init__(
         self,
@@ -105,8 +107,8 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
         """
         return list(self._MARKER_INOUT_MAPPINGS.keys())
 
-    def get_output_type(self, input_type: str, output_feature: str) -> str:
-        """Get output type.
+    def storage_type(self, input_type: str, output_feature: str) -> str:
+        """Get storage type for a feature.
 
         Parameters
         ----------
@@ -172,7 +174,7 @@ class BaseMarker(ABC, PipelineStepMixin, UpdateMetaMixin):
             The storage class, for example, SQLiteFeatureStorage.
 
         """
-        output_type_ = self.get_output_type(type_, feature)
+        output_type_ = self.storage_type(type_, feature)
         logger.debug(f"Storing {output_type_} in {storage}")
         storage.store(kind=output_type_, **out)
 

@@ -43,11 +43,11 @@ def test_compute() -> None:
         assert feature_map["BOLD"]["complexity"]["data"].ndim == 2
 
 
-def test_get_output_type() -> None:
-    """Test RangeEntropyAUC get_output_type()."""
-    assert "vector" == RangeEntropyAUC(
-        parcellation=PARCELLATION
-    ).get_output_type(input_type="BOLD", output_feature="complexity")
+def test_storage_type() -> None:
+    """Test RangeEntropyAUC storage_type."""
+    assert "vector" == RangeEntropyAUC(parcellation=PARCELLATION).storage_type(
+        input_type="BOLD", output_feature="complexity"
+    )
 
 
 @pytest.mark.skipif(

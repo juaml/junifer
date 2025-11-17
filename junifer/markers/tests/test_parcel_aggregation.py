@@ -79,7 +79,7 @@ def test_ParcelAggregation_input_output(
     """
     assert storage_type == ParcelAggregation(
         parcellation="Schaefer100x7", method="mean", on=input_type
-    ).get_output_type(input_type=input_type, output_feature="aggregation")
+    ).storage_type(input_type=input_type, output_feature="aggregation")
 
 
 def test_ParcelAggregation_3D() -> None:

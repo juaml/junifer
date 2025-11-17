@@ -42,11 +42,11 @@ def test_compute() -> None:
         assert feature_map["BOLD"]["complexity"]["data"].ndim == 2
 
 
-def test_get_output_type() -> None:
-    """Test WeightedPermEntropy get_output_type()."""
+def test_storage_type() -> None:
+    """Test WeightedPermEntropy storage_type."""
     assert "vector" == WeightedPermEntropy(
         parcellation=PARCELLATION
-    ).get_output_type(input_type="BOLD", output_feature="complexity")
+    ).storage_type(input_type="BOLD", output_feature="complexity")
 
 
 @pytest.mark.skipif(

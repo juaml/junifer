@@ -31,13 +31,11 @@ def test_init() -> None:
         )
 
 
-def test_get_output_type() -> None:
-    """Test CrossParcellationFC get_output_type()."""
+def test_storage_type() -> None:
+    """Test CrossParcellationFC storage_type."""
     assert "matrix" == CrossParcellationFC(
         parcellation_one=parcellation_one, parcellation_two=parcellation_two
-    ).get_output_type(
-        input_type="BOLD", output_feature="functional_connectivity"
-    )
+    ).storage_type(input_type="BOLD", output_feature="functional_connectivity")
 
 
 @pytest.mark.skipif(

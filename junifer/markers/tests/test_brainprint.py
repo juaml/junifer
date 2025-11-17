@@ -22,8 +22,8 @@ from junifer.pipeline.utils import _check_freesurfer
         ("distances", "vector"),
     ],
 )
-def test_get_output_type(feature: str, storage_type: str) -> None:
-    """Test BrainPrint get_output_type().
+def test_storage_type(feature: str, storage_type: str) -> None:
+    """Test BrainPrint storage_type.
 
     Parameters
     ----------
@@ -33,7 +33,7 @@ def test_get_output_type(feature: str, storage_type: str) -> None:
         The parametrized storage type.
 
     """
-    assert storage_type == BrainPrint().get_output_type(
+    assert storage_type == BrainPrint().storage_type(
         input_type="FreeSurfer", output_feature=feature
     )
 
