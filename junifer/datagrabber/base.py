@@ -164,7 +164,7 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
 
         Parameters
         ----------
-        selection : `Elements`
+        selection : ``Elements``
             The list of partial or complete element selectors to filter using.
 
         Yields
@@ -179,7 +179,7 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
 
             Parameters
             ----------
-            element : `Elements`
+            element : ``Elements``
                 The element to be filtered.
 
             Returns
