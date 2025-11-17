@@ -790,7 +790,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     def store_matrix(
         self,
         meta_md5: str,
-        element: dict[str, str],
+        element: dict,
         data: np.ndarray,
         col_names: Optional[Sequence[str]] = None,
         row_names: Optional[Sequence[str]] = None,
