@@ -5,12 +5,14 @@
 # License: AGPL
 
 import tempfile
+from enum import Enum
 from pathlib import Path
+from typing import Any
 
 import nibabel as nib
 from nilearn import datasets, image
 
-from ..datagrabber.base import BaseDataGrabber
+from ..datagrabber import BaseDataGrabber, DataType
 
 
 __all__ = [
@@ -27,12 +29,9 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
 
     """
 
-    def __init__(self) -> None:
-        # Create temporary directory
-        datadir = tempfile.mkdtemp()
-        # Define types
-        types = ["VBM_GM"]
-        super().__init__(types=types, datadir=datadir)
+    types: list[DataType] = [DataType.VBM_GM]  # noqa: RUF012
+    datadir: Path = Path(tempfile.mkdtemp())
+    _dataset: Any = None
 
     def get_element_keys(self) -> list[str]:
         """Get element keys.
@@ -98,12 +97,8 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
 
     """
 
-    def __init__(self) -> None:
-        # Create temporary directory
-        datadir = tempfile.mkdtemp()
-        # Define types
-        types = ["BOLD", "T1w"]  # TODO: Check that they are T1w
-        super().__init__(types=types, datadir=datadir)
+    types: list[DataType] = [DataType.BOLD, DataType.T1w]  # noqa: RUF012
+    datadir: Path = Path(tempfile.mkdtemp())
 
     def get_element_keys(self) -> list[str]:
         """Get element keys.
@@ -143,8 +138,8 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         """
         out = {}
         nilearn_data = datasets.fetch_spm_auditory(subject_id=subject)
-        fmri_img = image.concat_imgs(nilearn_data.func)  # type: ignore
-        anat_img = image.concat_imgs(nilearn_data.anat)  # type: ignore
+        fmri_img = image.concat_imgs(nilearn_data.func)
+        anat_img = image.concat_imgs(nilearn_data.anat)
 
         fmri_fname = self.datadir / f"{subject}_bold.nii.gz"
         anat_fname = self.datadir / f"{subject}_T1w.nii.gz"
@@ -153,6 +148,20 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         out["BOLD"] = {"path": fmri_fname, "space": "MNI152Lin"}
         out["T1w"] = {"path": anat_fname, "space": "native"}
         return out
+
+
+class PartlyCloudyAgeGroup(str, Enum):
+    """Age group to fetch.
+
+    * ``Adult`` : fetch adults only (n=33, ages 18-39)
+    * ``Child`` : fetch children only (n=122, ages 3-12)
+    * ``Both`` : fetch full sample (n=155)
+
+    """
+
+    Adult = "adult"
+    Child = "child"
+    Both = "both"
 
 
 class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
@@ -169,28 +178,15 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         purpose of having realistic examples. Depending on your research
         question, other confounds might be more appropriate.
         If False, returns all :term:`fMRIPrep` confounds (default True).
-
-    age_group : {"adult", "child", "both"}, optional
-       Which age group to fetch:
-
-        * ``adult`` : fetch adults only (n=33, ages 18-39)
-        * ``child`` : fetch children only (n=122, ages 3-12)
-        * ``both`` : fetch full sample (n=155)
-
-        (default "both")
+    age_group : `PartlyCloudyAgeGroup`, optional
+       Age group to fetch (default PartlyCloudyAgeGroup.Both).
 
     """
 
-    def __init__(
-        self, reduce_confounds: bool = True, age_group: str = "both"
-    ) -> None:
-        """Initialize the class."""
-        datadir = tempfile.mkdtemp()
-        # Define types
-        types = ["BOLD"]
-        self.reduce_confounds = reduce_confounds
-        self.age_group = age_group
-        super().__init__(types=types, datadir=datadir)
+    types: list[DataType] = [DataType.BOLD]  # noqa: RUF012
+    datadir: Path = Path(tempfile.mkdtemp())
+    reduce_confounds: bool = True
+    age_group: PartlyCloudyAgeGroup = PartlyCloudyAgeGroup.Both
 
     def __enter__(self) -> "PartlyCloudyTestingDataGrabber":
         """Implement context entry.
@@ -203,7 +199,9 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         self._dataset = datasets.fetch_development_fmri(
             n_subjects=10,
             reduce_confounds=self.reduce_confounds,
-            age_group=self.age_group,
+            age_group=self.age_group.value
+            if isinstance(self.age_group, Enum)
+            else self.age_group,
         )
         return self
 
