@@ -14,7 +14,7 @@ from numpy.testing import assert_array_equal
 from pandas.testing import assert_frame_equal
 from sqlalchemy import create_engine
 
-from junifer.storage.sqlite import SQLiteFeatureStorage
+from junifer.storage import MatrixKind, SQLiteFeatureStorage
 from junifer.storage.utils import element_to_prefix, process_meta
 
 
@@ -503,16 +503,6 @@ def test_store_matrix(tmp_path: Path) -> None:
     read_df = storage.read_df(feature_md5=feature_md5)
     assert list(read_df.columns) == stored_names
 
-    with pytest.raises(ValueError, match="Invalid kind"):
-        storage.store_matrix(
-            meta_md5=meta_md5,
-            element=element_to_store,
-            data=data,
-            row_names=row_names,
-            col_names=col_names,
-            matrix_kind="wrong",
-        )
-
     with pytest.raises(ValueError, match="non-square"):
         storage.store_matrix(
             meta_md5=meta_md5,
@@ -520,7 +510,7 @@ def test_store_matrix(tmp_path: Path) -> None:
             data=data,
             row_names=row_names,
             col_names=col_names,
-            matrix_kind="triu",
+            matrix_kind=MatrixKind.UpperTriangle,
         )
 
     with pytest.raises(ValueError, match="cannot be False"):
@@ -530,7 +520,7 @@ def test_store_matrix(tmp_path: Path) -> None:
             data=data,
             row_names=row_names,
             col_names=col_names,
-            matrix_kind="full",
+            matrix_kind=MatrixKind.Full,
             diagonal=False,
         )
 
@@ -550,7 +540,7 @@ def test_store_matrix(tmp_path: Path) -> None:
         data=data,
         row_names=row_names,
         col_names=col_names,
-        matrix_kind="triu",
+        matrix_kind=MatrixKind.UpperTriangle,
     )
 
     stored_names = [
@@ -584,7 +574,7 @@ def test_store_matrix(tmp_path: Path) -> None:
         data=data,
         row_names=row_names,
         col_names=col_names,
-        matrix_kind="triu",
+        matrix_kind=MatrixKind.UpperTriangle,
         diagonal=False,
     )
 
@@ -619,7 +609,7 @@ def test_store_matrix(tmp_path: Path) -> None:
         data=data,
         row_names=row_names,
         col_names=col_names,
-        matrix_kind="tril",
+        matrix_kind=MatrixKind.LowerTriangle,
     )
 
     stored_names = [
@@ -653,7 +643,7 @@ def test_store_matrix(tmp_path: Path) -> None:
         data=data,
         row_names=row_names,
         col_names=col_names,
-        matrix_kind="tril",
+        matrix_kind=MatrixKind.LowerTriangle,
         diagonal=False,
     )
     stored_names = [
