@@ -15,7 +15,7 @@ from ....datagrabber import DataType, PatternDataladDataGrabber
 from ....typing import DataGrabberPatterns
 
 
-__all__ = ["JuselessDataladIXIVBM"]
+__all__ = ["IXISite", "JuselessDataladIXIVBM"]
 
 
 class IXISite(str, Enum):
