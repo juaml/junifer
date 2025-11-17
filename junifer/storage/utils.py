@@ -8,15 +8,12 @@ import hashlib
 import json
 from collections.abc import Sequence
 from importlib.metadata import PackageNotFoundError, version
-from typing import TYPE_CHECKING
 
 import numpy as np
+from pydantic import validate_call
 
 from ..utils.logging import logger, raise_error
-
-
-if TYPE_CHECKING:
-    from .base import MatrixKind
+from ._types import MatrixKind
 
 
 __all__ = [
@@ -168,8 +165,9 @@ def element_to_prefix(element: dict) -> str:
     return f"{prefix}_"
 
 
+@validate_call
 def store_matrix_checks(
-    matrix_kind: "MatrixKind",
+    matrix_kind: MatrixKind,
     diagonal: bool,
     data_shape: tuple[int, int],
     row_names_len: int,
@@ -276,7 +274,7 @@ def matrix_to_vector(
     data: np.ndarray,
     col_names: Sequence[str],
     row_names: Sequence[str],
-    matrix_kind: "MatrixKind",
+    matrix_kind: MatrixKind,
     diagonal: bool,
 ) -> tuple[np.ndarray, list[str]]:
     """Convert matrix to vector based on parameters.
@@ -301,6 +299,11 @@ def matrix_to_vector(
     list of str
         The column labels.
 
+    Raises
+    ------
+    ValueError
+        If the matrix kind is invalid.
+
     """
     # Prepare data indexing based on matrix kind
     if matrix_kind == "triu":
@@ -309,11 +312,13 @@ def matrix_to_vector(
     elif matrix_kind == "tril":
         k = 0 if diagonal is True else -1
         data_idx = np.tril_indices(data.shape[0], k=k)
-    else:  # full
+    elif matrix_kind == "full":  # full
         data_idx = (
             np.repeat(np.arange(data.shape[0]), data.shape[1]),
             np.tile(np.arange(data.shape[1]), data.shape[0]),
         )
+    else:
+        raise_error(f"Invalid matrix kind: {matrix_kind}")
     # Subset data as 1D
     flat_data = data[data_idx]
     # Generate flat 1D row X column names
