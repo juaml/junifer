@@ -49,7 +49,7 @@ class HTCondorAdapter(QueueContextAdapter):
         The path to the job directory.
     yaml_config_path : pathlib.Path
         The path to the YAML config file.
-    elements : Elements
+    elements : ``Elements``
         Element(s) to process. Will be used to index the DataGrabber.
     pre_run_cmds : str or None, optional
         Extra shell commands to source before the run (default None).
