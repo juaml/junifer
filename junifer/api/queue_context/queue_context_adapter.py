@@ -3,21 +3,60 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import sys
+
+
+if sys.version_info < (3, 12):  # pragma: no cover
+    from typing_extensions import TypedDict
+else:
+    from typing import TypedDict
+
 from abc import ABC, abstractmethod
+from enum import Enum
+
+from pydantic import BaseModel, ConfigDict
 
 from ...utils import raise_error
 
 
-__all__ = ["QueueContextAdapter"]
+__all__ = ["EnvKind", "EnvShell", "QueueContextAdapter", "QueueContextEnv"]
 
 
-class QueueContextAdapter(ABC):
+class EnvKind(str, Enum):
+    """Accepted Python environment kind."""
+
+    Venv = "venv"
+    Conda = "conda"
+    Local = "local"
+
+
+class EnvShell(str, Enum):
+    """Accepted environment shell."""
+
+    Bash = "bash"
+    Zsh = "zsh"
+
+
+class QueueContextEnv(TypedDict, total=False):
+    """Accepted environment configuration for queue context."""
+
+    name: str
+    kind: EnvKind
+    shell: EnvShell
+
+
+class QueueContextAdapter(BaseModel, ABC):
     """Abstract base class for queue context adapter.
 
     For every interface that is required, one needs to provide a concrete
     implementation of this abstract class.
 
     """
+
+    model_config = ConfigDict(
+        use_enum_values=True,
+        extra="allow",
+    )
 
     @abstractmethod
     def pre_run(self) -> str:
