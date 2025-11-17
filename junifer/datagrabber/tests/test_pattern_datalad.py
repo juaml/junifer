@@ -7,9 +7,9 @@
 
 from pathlib import Path
 
-import pytest
+from pydantic import HttpUrl
 
-from junifer.datagrabber import PatternDataladDataGrabber
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 
 
 _testing_dataset = {
@@ -26,45 +26,25 @@ _testing_dataset = {
 }
 
 
-def test_bids_PatternDataladDataGrabber_missing_uri() -> None:
-    """Test check of missing URI in PatternDataladDataGrabber."""
-    with pytest.raises(ValueError, match=r"`uri` must be provided"):
-        PatternDataladDataGrabber(
-            datadir=None,
-            types=[],
-            patterns={},
-            replacements=[],
-        )
-
-
 def test_bids_PatternDataladDataGrabber() -> None:
     """Test subject-based BIDS PatternDataladDataGrabber."""
-    # Define types
-    types = ["T1w", "BOLD"]
-    # Define patterns
-    patterns = {
-        "T1w": {
-            "pattern": "{subject}/anat/{subject}_T1w.nii.gz",
-            "space": "MNI152NLin6Asym",
-        },
-        "BOLD": {
-            "pattern": "{subject}/func/{subject}_task-rest_bold.nii.gz",
-            "space": "MNI152NLin6Asym",
-        },
-    }
-    # Define replacements
-    replacements = ["subject"]
-
-    repo_uri = _testing_dataset["example_bids"]["uri"]
-    rootdir = "example_bids"
     repo_commit = _testing_dataset["example_bids"]["commit"]
-
+    repo_uri = _testing_dataset["example_bids"]["uri"]
     with PatternDataladDataGrabber(
-        rootdir=rootdir,
-        uri=repo_uri,
-        types=types,
-        patterns=patterns,
-        replacements=replacements,
+        uri=HttpUrl(repo_uri),
+        types=[DataType.T1w, DataType.BOLD],
+        patterns={
+            "T1w": {
+                "pattern": "{subject}/anat/{subject}_T1w.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
+            "BOLD": {
+                "pattern": "{subject}/func/{subject}_task-rest_bold.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
+        },
+        replacements=["subject"],
+        rootdir=Path("example_bids"),
     ) as dg:
         subs = list(dg)
         expected_subs = [f"sub-{i:02d}" for i in range(1, 10)]
@@ -74,11 +54,11 @@ def test_bids_PatternDataladDataGrabber() -> None:
             t_sub = dg[elem]
             assert "path" in t_sub["T1w"]
             assert t_sub["T1w"]["path"] == (
-                dg.datadir / f"{elem}/anat/{elem}_T1w.nii.gz"
+                dg.fulldir / f"{elem}/anat/{elem}_T1w.nii.gz"
             )
             assert "path" in t_sub["BOLD"]
             assert t_sub["BOLD"]["path"] == (
-                dg.datadir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
+                dg.fulldir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
             )
 
             assert "meta" in t_sub["BOLD"]
@@ -88,7 +68,7 @@ def test_bids_PatternDataladDataGrabber() -> None:
             assert "class" in dg_meta
             assert dg_meta["class"] == "PatternDataladDataGrabber"
             assert "uri" in dg_meta
-            assert dg_meta["uri"] == repo_uri
+            assert str(dg_meta["uri"]) == repo_uri
             assert "datalad_commit_id" in dg_meta
             assert dg_meta["datalad_commit_id"] == repo_commit
 
@@ -98,80 +78,64 @@ def test_bids_PatternDataladDataGrabber() -> None:
 
 def test_bids_PatternDataladDataGrabber_datadir() -> None:
     """Test PatternDataladDataGrabber with a datadir set to a relative path."""
-    # Define patterns
-    patterns = {
-        "T1w": {
-            "pattern": "{subject}/anat/{subject}_T*w.nii.gz",
-            "space": "MNI152NLin6Asym",
-        },
-        "BOLD": {
-            "pattern": "{subject}/func/{subject}_task-rest_*.nii.gz",
-            "space": "MNI152NLin6Asym",
-        },
-    }
-    # Define datadir
-    datadir = "dataset"  # use string and not absolute path
+    datadir = Path("dataset")  # use string and not absolute path
     with PatternDataladDataGrabber(
-        uri=_testing_dataset["example_bids"]["uri"],
-        types=["T1w", "BOLD"],
-        patterns=patterns,
-        datadir=datadir,
-        rootdir="example_bids",
+        uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
+        types=[DataType.T1w, DataType.BOLD],
+        patterns={
+            "T1w": {
+                "pattern": "{subject}/anat/{subject}_T*w.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
+            "BOLD": {
+                "pattern": "{subject}/func/{subject}_task-rest_*.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
+        },
         replacements=["subject"],
+        datadir=datadir,
+        rootdir=Path("example_bids"),
     ) as dg:
-        assert dg.datadir == Path(datadir) / "example_bids"
+        assert dg.fulldir == Path(datadir) / "example_bids"
         for elem in dg:
             t_sub = dg[elem]
             assert "path" in t_sub["T1w"]
             assert t_sub["T1w"]["path"] == (
-                dg.datadir / f"{elem}/anat/{elem}_T1w.nii.gz"
+                dg.fulldir / f"{elem}/anat/{elem}_T1w.nii.gz"
             )
             assert "path" in t_sub["BOLD"]
             assert t_sub["BOLD"]["path"] == (
-                dg.datadir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
+                dg.fulldir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
             )
 
 
 def test_bids_PatternDataladDataGrabber_session():
     """Test a subject and session-based BIDS PatternDataladDataGrabber."""
-    types = ["T1w", "BOLD"]
-    patterns = {
-        "T1w": {
-            "pattern": (
-                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
-            ),
-            "space": "MNI152NLin6Asym",
-        },
-        "BOLD": {
-            "pattern": (
-                "{subject}/{session}/func/"
-                "{subject}_{session}_task-rest_bold.nii.gz"
-            ),
-            "space": "MNI152NLin6Asym",
-        },
-    }
-    replacements = ["subject", "session"]
-
-    # Check error
-    with pytest.raises(ValueError, match=r"`uri` must be provided"):
-        PatternDataladDataGrabber(
-            datadir=None,
-            types=types,
-            patterns=patterns,
-            replacements=replacements,
-        )
-
     # Set parameters
-    repo_uri = _testing_dataset["example_bids_ses"]["uri"]
-    rootdir = "example_bids_ses"
-
+    repo_uri = HttpUrl(_testing_dataset["example_bids_ses"]["uri"])
+    rootdir = Path("example_bids_ses")
+    replacements = ["subject", "session"]
     # With T1W and bold, only 2 sessions are available
     with PatternDataladDataGrabber(
-        rootdir=rootdir,
         uri=repo_uri,
-        types=types,
-        patterns=patterns,
+        types=[DataType.T1w, DataType.BOLD],
+        patterns={
+            "T1w": {
+                "pattern": (
+                    "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+                ),
+                "space": "MNI152NLin6Asym",
+            },
+            "BOLD": {
+                "pattern": (
+                    "{subject}/{session}/func/"
+                    "{subject}_{session}_task-rest_bold.nii.gz"
+                ),
+                "space": "MNI152NLin6Asym",
+            },
+        },
         replacements=replacements,
+        rootdir=rootdir,
     ) as dg:
         subs = list(dg.get_elements())
         expected_subs = [
@@ -182,21 +146,19 @@ def test_bids_PatternDataladDataGrabber_session():
         assert set(subs) == set(expected_subs)
 
     # Test with a different T1w only, it should have 3 sessions
-    types = ["T1w"]
-    patterns = {
-        "T1w": {
-            "pattern": (
-                "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
-            ),
-            "space": "MNI152NLin6Asym",
-        },
-    }
     with PatternDataladDataGrabber(
-        rootdir=rootdir,
         uri=repo_uri,
-        types=types,
-        patterns=patterns,
+        types=[DataType.T1w],
+        patterns={
+            "T1w": {
+                "pattern": (
+                    "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+                ),
+                "space": "MNI152NLin6Asym",
+            },
+        },
         replacements=replacements,
+        rootdir=rootdir,
     ) as dg:
         subs = list(dg)
         expected_subs = [
