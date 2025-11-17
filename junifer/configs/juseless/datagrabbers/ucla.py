@@ -13,7 +13,7 @@ from ....datagrabber import ConfoundsFormat, DataType, PatternDataGrabber
 from ....typing import DataGrabberPatterns
 
 
-__all__ = ["JuselessUCLA"]
+__all__ = ["JuselessUCLA", "UCLATask"]
 
 
 class UCLATask(str, Enum):
