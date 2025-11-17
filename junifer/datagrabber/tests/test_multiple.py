@@ -3,7 +3,10 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
+
 import pytest
+from pydantic import HttpUrl
 
 from junifer.datagrabber import MultipleDataGrabber, PatternDataladDataGrabber
 
@@ -22,8 +25,8 @@ _testing_dataset = {
 
 def test_MultipleDataGrabber() -> None:
     """Test MultipleDataGrabber."""
-    repo_uri = _testing_dataset["example_bids_ses"]["uri"]
-    rootdir = "example_bids_ses"
+    repo_uri = HttpUrl(_testing_dataset["example_bids_ses"]["uri"])
+    rootdir = Path("example_bids_ses")
     replacements = ["subject", "session"]
 
     dg1 = PatternDataladDataGrabber(
@@ -93,7 +96,7 @@ def test_MultipleDataGrabber() -> None:
         replacements=replacements,
     )
 
-    dg = MultipleDataGrabber([dg1, dg2])
+    dg = MultipleDataGrabber(datagrabbers=[dg1, dg2])
 
     types = dg.get_types()
     assert "T1w" in types
@@ -129,12 +132,12 @@ def test_MultipleDataGrabber() -> None:
 
 def test_MultipleDataGrabber_no_intersection() -> None:
     """Test MultipleDataGrabber without intersection (0 elements)."""
-    rootdir = "example_bids_ses"
+    rootdir = Path("example_bids_ses")
     replacements = ["subject", "session"]
 
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=_testing_dataset["example_bids"]["uri"],
+        uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
         types=["T1w", "Warp"],
         patterns={
             "T1w": {
@@ -171,7 +174,7 @@ def test_MultipleDataGrabber_no_intersection() -> None:
 
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=_testing_dataset["example_bids_ses"]["uri"],
+        uri=HttpUrl(_testing_dataset["example_bids_ses"]["uri"]),
         types=["BOLD"],
         patterns={
             "BOLD": {
@@ -185,7 +188,7 @@ def test_MultipleDataGrabber_no_intersection() -> None:
         replacements=replacements,
     )
 
-    dg = MultipleDataGrabber([dg1, dg2])
+    dg = MultipleDataGrabber(datagrabbers=[dg1, dg2])
     expected_subs = set()
     with dg:
         subs = list(dg)
@@ -195,8 +198,8 @@ def test_MultipleDataGrabber_no_intersection() -> None:
 def test_MultipleDataGrabber_get_item() -> None:
     """Test MultipleDataGrabber get_item() error."""
     dg1 = PatternDataladDataGrabber(
-        rootdir="example_bids_ses",
-        uri=_testing_dataset["example_bids"]["uri"],
+        rootdir=Path("example_bids_ses"),
+        uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
         types=["T1w"],
         patterns={
             "T1w": {
@@ -209,18 +212,18 @@ def test_MultipleDataGrabber_get_item() -> None:
         replacements=["subject", "session"],
     )
 
-    dg = MultipleDataGrabber([dg1])
+    dg = MultipleDataGrabber(datagrabbers=[dg1])
     with pytest.raises(NotImplementedError):
-        dg.get_item(subject="sub-01")  # type: ignore
+        dg.get_item(subject="sub-01")
 
 
 def test_MultipleDataGrabber_validation() -> None:
     """Test MultipleDataGrabber init validation."""
-    rootdir = "example_bids_ses"
+    rootdir = Path("example_bids_ses")
 
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=_testing_dataset["example_bids"]["uri"],
+        uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
         types=["T1w"],
         patterns={
             "T1w": {
@@ -235,7 +238,7 @@ def test_MultipleDataGrabber_validation() -> None:
 
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=_testing_dataset["example_bids_ses"]["uri"],
+        uri=HttpUrl(_testing_dataset["example_bids_ses"]["uri"]),
         types=["BOLD"],
         patterns={
             "BOLD": {
@@ -247,16 +250,16 @@ def test_MultipleDataGrabber_validation() -> None:
     )
 
     with pytest.raises(RuntimeError, match="have different element keys"):
-        MultipleDataGrabber([dg1, dg2])
+        MultipleDataGrabber(datagrabbers=[dg1, dg2])
 
     with pytest.raises(RuntimeError, match="have overlapping mandatory"):
-        MultipleDataGrabber([dg1, dg1])
+        MultipleDataGrabber(datagrabbers=[dg1, dg1])
 
 
 def test_MultipleDataGrabber_partial_pattern() -> None:
     """Test MultipleDataGrabber partial pattern."""
-    repo_uri = _testing_dataset["example_bids_ses"]["uri"]
-    rootdir = "example_bids_ses"
+    repo_uri = HttpUrl(_testing_dataset["example_bids_ses"]["uri"])
+    rootdir = Path("example_bids_ses")
     replacements = ["subject", "session"]
 
     dg1 = PatternDataladDataGrabber(
@@ -295,7 +298,7 @@ def test_MultipleDataGrabber_partial_pattern() -> None:
         partial_pattern_ok=True,
     )
 
-    dg = MultipleDataGrabber([dg1, dg2])
+    dg = MultipleDataGrabber(datagrabbers=[dg1, dg2])
 
     types = dg.get_types()
     assert "BOLD" in types
