@@ -14,7 +14,7 @@ Most of the functionality of a ``junifer`` Marker has been taken care by the
 :class:`.BaseMarker` class. Thus, only a few methods and class attributes are
 required:
 
-#. ``__init__``: The initialisation method, where the Marker is configured.
+#. (optional) ``validate_marker_params``: The method to perform logical validation of parameters (if required).
 #. ``compute``: The method that given the data, computes the Marker.
 
 As an example, we will develop a ``ParcelMean`` Marker, a Marker that first
@@ -29,8 +29,8 @@ Step 1: Configure input and output
 This step is quite simple: we need to define the input and output of the Marker.
 Based on the current :ref:`data types <data_types>`, we can have ``BOLD``,
 ``VBM_WM`` and ``VBM_GM`` as valid inputs. The output of the Marker depends on
-the input. For ``BOLD``, it will be ``timeseries``, while for the rest of the
-inputs, it will be ``vector``. Thus, we have a class attribute like so:
+the input. For ``BOLD``, it will be ``Timeseries``, while for the rest of the
+inputs, it will be ``Vector``. Thus, we have a class attribute like so:
 
 .. code-block:: python
 
@@ -38,14 +38,14 @@ inputs, it will be ``vector``. Thus, we have a class attribute like so:
     # You can have multiple features for one data type,
     # each feature having same or different storage type
     _MARKER_INOUT_MAPPINGS = {
-        "BOLD": {
-            "parcel_mean": "timeseries",
+        DataType.BOLD: {
+            "parcel_mean": StorageType.Timeseries,
         },
-        "VBM_WM": {
-            "parcel_mean": "vector",
+        DataType.VBM_WM: {
+            "parcel_mean": StorageType.Vector,
         },
-        "VBM_GM": {
-            "parcel_mean": "vector",
+        DataType.VBM_GM: {
+            "parcel_mean": StorageType.Vector,
         },
     }
 
@@ -57,13 +57,11 @@ Step 2: Initialise the Marker
 In this step we need to define the parameters of the Marker the user can provide
 to configure how the Marker will behave.
 
-The parameters of the Marker are defined in the ``__init__`` method. The
-:class:`.BaseMarker` class requires two optional parameters:
+The parameters of the Marker are defined as class attributes. The
+:class:`.BaseMarker` class defines two optional parameters:
 
-1. ``name``: the name of the Marker. This is used to identify the Marker in the
-   configuration file.
-2. ``on``: a list or string with the data types that the Marker will be applied
-   to.
+1. ``name``: the name of the Marker. This is used to identify the Marker in the configuration file.
+2. ``on``: a list of :enum:`.DataType` with the data types that the Marker will be applied to.
 
 .. attention::
 
@@ -72,18 +70,11 @@ The parameters of the Marker are defined in the ``__init__`` method. The
    JSON format, and JSON only supports these types.
 
 In this example, only parameter required for the computation is the name of the
-parcellation to use. Thus, we can define the ``__init__`` method as follows:
+parcellation to use. Thus, we can define as follows:
 
 .. code-block:: python
 
-    def __init__(
-        self,
-        parcellation: str,
-        on: str | list[str] | None = None,
-        name: str | None = None,
-    ) -> None:
-        self.parcellation = parcellation
-        super().__init__(on=on, name=name)
+    parcellation: str
 
 .. caution::
 
@@ -121,7 +112,7 @@ and the values would be a dictionary of storage type specific key-value pairs.
 
    To simplify the ``store`` method, define keys of the dictionary based on the
    corresponding store functions in the :ref:`storage types <storage_types>`.
-   For example, if the output is a ``vector``, the keys of the dictionary should
+   For example, if the output is a ``Vector``, the keys of the dictionary should
    be ``data`` and ``col_names``.
 
 .. code-block:: python
@@ -142,7 +133,7 @@ and the values would be a dictionary of storage type specific key-value pairs.
 
         # Get the parcellation tailored for the target
         t_parcellation, t_labels, _ = get_parcellation(
-            name=self.parcellation_name,
+            name=self.parcellation,
             target_data=input,
             extra_input=extra_input,
         )
@@ -195,7 +186,9 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
 
     from junifer.api.decorators import register_marker
     from junifer.data import get_parcellation
+    from junifer.datagrabber import DataType
     from junifer.markers import BaseMarker
+    from junifer.storage import StorageType
     from junifer.typing import Dependencies, MarkerInOutMappings
     from nilearn.maskers import NiftiLabelsMasker
 
@@ -206,25 +199,18 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
         _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "numpy"}
 
         _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-            "BOLD": {
-                "parcel_mean": "timeseries",
+            DataType.BOLD: {
+                "parcel_mean": StorageType.Timeseries,
             },
-            "VBM_WM": {
-                "parcel_mean": "vector",
+            DataType.VBM_WM: {
+                "parcel_mean": StorageType.Vector,
             },
-            "VBM_GM": {
-                "parcel_mean": "vector",
+            DataType.VBM_GM: {
+                "parcel_mean": StorageType.Vector,
             },
         }
 
-        def __init__(
-            self,
-            parcellation: str,
-            on: str | list[str] | None = None,
-            name: str | None = None,
-        ) -> None:
-            self.parcellation = parcellation
-            super().__init__(on=on, name=name)
+        parcellation: str
 
         def compute(
             self,
@@ -236,7 +222,7 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
 
             # Get the parcellation tailored for the target
             t_parcellation, t_labels, _ = get_parcellation(
-                name=self.parcellation_name,
+                name=self.parcellation,
                 target_data=input,
                 extra_input=extra_input,
             )
@@ -280,9 +266,13 @@ Template for a custom Marker
         # TODO: add the input-output mappings
         _MARKER_INOUT_MAPPINGS = {}
 
-        def __init__(self, on=None, name=None):
-            # TODO: add marker-specific parameters
-            super().__init__(on=on, name=name)
+        # TODO: define marker-specific parameters
+
+        # optional
+        def validate_marker_params(self):
+            # TODO: add validation logic for marker parameters
+            pass
 
         def compute(self, input, extra_input):
             # TODO: compute the marker and create the output dictionary
+            return {}
