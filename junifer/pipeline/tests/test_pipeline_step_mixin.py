@@ -9,7 +9,7 @@ from typing import ClassVar
 
 import pytest
 
-from junifer.pipeline.pipeline_step_mixin import PipelineStepMixin
+from junifer.pipeline import ExtDep, PipelineStepMixin
 from junifer.pipeline.utils import _check_afni
 from junifer.typing import (
     ConditionalDependencies,
@@ -64,7 +64,9 @@ def test_PipelineStepMixin_correct_ext_dependencies() -> None:
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
 
-        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [{"name": "afni"}]
+        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
+            {"name": ExtDep.AFNI}
+        ]
 
         def validate_input(self, input: list[str]) -> list[str]:
             return input
@@ -86,7 +88,7 @@ def test_PipelineStepMixin_ext_deps_correct_commands() -> None:
         """Test class for validation."""
 
         _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
-            {"name": "afni", "commands": ["3dReHo"]}
+            {"name": ExtDep.AFNI, "commands": ["3dReHo"]}
         ]
 
         def validate_input(self, input: list[str]) -> list[str]:
@@ -111,7 +113,7 @@ def test_PipelineStepMixin_ext_deps_incorrect_commands() -> None:
         """Test class for validation."""
 
         _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
-            {"name": "afni", "commands": ["3d"]}
+            {"name": ExtDep.AFNI, "commands": ["3d"]}
         ]
 
         def validate_input(self, input: list[str]) -> list[str]:
@@ -208,7 +210,9 @@ def test_PipelineStepMixin_correct_conditional_ext_dependencies() -> None:
     """Test fit-transform with correct conditional external dependencies."""
 
     class ExternalDependency:
-        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [{"name": "afni"}]
+        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
+            {"name": ExtDep.AFNI}
+        ]
 
     class CorrectMixer(PipelineStepMixin):
         """Test class for validation."""
