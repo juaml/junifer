@@ -359,7 +359,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         if feature_md5:
             logger.debug(
                 f"Validating feature MD5 '{feature_md5}' in metadata "
-                f"for: {self.uri.resolve()} ..."  # type: ignore
+                f"for: {self.uri.resolve()} ..."
             )
             # Validate MD5
             if feature_md5 in metadata:
@@ -1057,7 +1057,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Run loop to collect data per feature per file
         logger.info(
-            f"Collecting data from {self.uri.parent}/*_{self.uri.name}"  # type: ignore
+            f"Collecting data from {self.uri.parent}/*_{self.uri.name}"
         )
         logger.info(f"Will collect {len(elements_per_feature_md5)} features.")
 

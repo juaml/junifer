@@ -68,7 +68,6 @@ class ComplexityBase(BaseMarker):
     masks: Optional[list[Union[dict, str]]] = None
     on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
-
     @abstractmethod
     def compute_complexity(
         self,
