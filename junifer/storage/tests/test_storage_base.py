@@ -5,17 +5,18 @@
 # License: AGPL
 
 from collections.abc import Sequence
+from pathlib import Path
 from typing import ClassVar
 
 import pytest
 
-from junifer.storage.base import BaseFeatureStorage
+from junifer.storage import BaseFeatureStorage, StorageType
 
 
 def test_BaseFeatureStorage_abstractness() -> None:
     """Test BaseFeatureStorage is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
-        BaseFeatureStorage(uri="/tmp")
+        BaseFeatureStorage(uri=Path("."))
 
 
 def test_BaseFeatureStorage() -> None:
@@ -25,18 +26,12 @@ def test_BaseFeatureStorage() -> None:
     class MyFeatureStorage(BaseFeatureStorage):
         """Implement concrete class."""
 
-        _STORAGE_TYPES: ClassVar[Sequence[str]] = [
-            "matrix",
-            "vector",
-            "timeseries",
-            "timeseries_2d",
+        _STORAGE_TYPES: ClassVar[Sequence[StorageType]] = [
+            StorageType.Matrix,
+            StorageType.Vector,
+            StorageType.Timeseries,
+            StorageType.Timeseries2D,
         ]
-
-        def __init__(self, uri, single_output=True):
-            super().__init__(
-                uri=uri,
-                single_output=single_output,
-            )
 
         def list_features(self):
             super().list_features()
@@ -53,17 +48,17 @@ def test_BaseFeatureStorage() -> None:
                 feature_md5=feature_md5,
             )
 
-        def store_metadata(self, meta_md5, meta, element):
+        def store_metadata(self, meta_md5, element, meta):
             super().store_metadata(meta_md5, meta, element)
 
         def collect(self):
-            return super().collect()
+            super().collect()
 
     # Check single_output is False
-    st = MyFeatureStorage(uri="/tmp", single_output=False)
+    st = MyFeatureStorage(uri=Path("."), single_output=False)
     assert st.single_output is False
     # Check single_output is True
-    st = MyFeatureStorage(uri="/tmp", single_output=True)
+    st = MyFeatureStorage(uri=Path("."), single_output=True)
     assert st.single_output is True
 
     # Check validate with valid argument
@@ -109,4 +104,4 @@ def test_BaseFeatureStorage() -> None:
     with pytest.raises(ValueError):
         st.store(kind="lego", meta=meta)
 
-    assert str(st.uri) == "/tmp"
+    assert str(st.uri) == "."
