@@ -205,27 +205,6 @@ def register_data_type(name: str, schema: DataTypeSchema) -> None:
 class PatternValidationMixin:
     """Mixin class for pattern validation."""
 
-    def _validate_types(self, types: list[str]) -> None:
-        """Validate the types.
-
-        Parameters
-        ----------
-        types : list of str
-            The data types to validate.
-
-        Raises
-        ------
-        TypeError
-            If ``types`` is not a list or if the values are not string.
-
-        """
-        if not isinstance(types, list):
-            raise_error(msg="`types` must be a list", klass=TypeError)
-        if any(not isinstance(x, str) for x in types):
-            raise_error(
-                msg="`types` must be a list of strings", klass=TypeError
-            )
-
     def _validate_replacements(
         self,
         replacements: list[str],
@@ -245,8 +224,6 @@ class PatternValidationMixin:
 
         Raises
         ------
-        TypeError
-            If ``replacements`` is not a list or if the values are not string.
         ValueError
             If a value in ``replacements`` is not part of a data type pattern
             and ``partial_pattern_ok=False`` or
@@ -260,15 +237,6 @@ class PatternValidationMixin:
             and ``partial_pattern_ok=True``.
 
         """
-        if not isinstance(replacements, list):
-            raise_error(msg="`replacements` must be a list.", klass=TypeError)
-
-        if any(not isinstance(x, str) for x in replacements):
-            raise_error(
-                msg="`replacements` must be a list of strings",
-                klass=TypeError,
-            )
-
         # Make a list of all patterns recursively
         all_patterns = []
         for dtype_val in patterns.values():
@@ -416,8 +384,6 @@ class PatternValidationMixin:
 
         Raises
         ------
-        TypeError
-            If ``patterns`` is not a dictionary.
         ValueError
             If length of ``types`` and ``patterns`` are different or
             if ``patterns`` is missing entries from ``types`` or
@@ -425,12 +391,6 @@ class PatternValidationMixin:
             if data type pattern key contains '*' as value.
 
         """
-        # Validate types
-        self._validate_types(types=types)
-
-        # Validate patterns
-        if not isinstance(patterns, dict):
-            raise_error(msg="`patterns` must be a dict", klass=TypeError)
         # Unequal length of objects
         if len(types) > len(patterns):
             raise_error(
