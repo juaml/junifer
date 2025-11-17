@@ -48,7 +48,7 @@ class QueueContextEnv(TypedDict, total=False):
 class QueueContextAdapter(BaseModel, ABC):
     """Abstract base class for queue context adapter.
 
-    For every interface that is required, one needs to provide a concrete
+    For every queue context, one needs to provide a concrete
     implementation of this abstract class.
 
     """
