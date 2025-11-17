@@ -17,6 +17,7 @@ from ..datagrabber import BaseDataGrabber, DataType
 
 __all__ = [
     "OasisVBMTestingDataGrabber",
+    "PartlyCloudyAgeGroup",
     "PartlyCloudyTestingDataGrabber",
     "SPMAuditoryTestingDataGrabber",
 ]
@@ -178,7 +179,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         purpose of having realistic examples. Depending on your research
         question, other confounds might be more appropriate.
         If False, returns all :term:`fMRIPrep` confounds (default True).
-    age_group : `PartlyCloudyAgeGroup`, optional
+    age_group : :enum:`.PartlyCloudyAgeGroup`, optional
        Age group to fetch (default PartlyCloudyAgeGroup.Both).
 
     """
