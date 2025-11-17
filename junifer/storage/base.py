@@ -15,10 +15,11 @@ import pandas as pd
 from pydantic import BaseModel, ConfigDict
 
 from ..utils import logger, raise_error
+from ._types import MatrixKind
 from .utils import process_meta
 
 
-__all__ = ["BaseFeatureStorage", "MatrixKind", "StorageType"]
+__all__ = ["BaseFeatureStorage", "StorageType"]
 
 
 class StorageType(str, Enum):
@@ -29,14 +30,6 @@ class StorageType(str, Enum):
     Timeseries = "timeseries"
     Timeseries2D = "timeseries_2d"
     ScalarTable = "scalar_table"
-
-
-class MatrixKind(str, Enum):
-    """Accepted matrix kind value."""
-
-    UpperTriangle = "triu"
-    LowerTriangle = "tril"
-    Full = "full"
 
 
 class BaseFeatureStorage(BaseModel, ABC):
