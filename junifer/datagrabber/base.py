@@ -10,7 +10,7 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
-from aenum import Enum
+from aenum import Enum as AEnum
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..pipeline import UpdateMetaMixin
@@ -21,7 +21,7 @@ from ..utils import logger, raise_error
 __all__ = ["BaseDataGrabber", "DataType"]
 
 
-class DataType(str, Enum):
+class DataType(str, AEnum):
     """Accepted data type."""
 
     T1w = "T1w"
