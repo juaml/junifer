@@ -5,15 +5,25 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from pathlib import Path
-from typing import Union
+from enum import Enum
+from typing import Literal
+
+from pydantic import HttpUrl
 
 from ....api.decorators import register_datagrabber
-from ....datagrabber import PatternDataladDataGrabber
-from ....utils import raise_error
+from ....datagrabber import DataType, PatternDataladDataGrabber
+from ....typing import DataGrabberPatterns
 
 
 __all__ = ["JuselessDataladIXIVBM"]
+
+
+class IXISite(str, Enum):
+    """Accepted IXI sites."""
+
+    Guys = "Guys"
+    HH = "HH"
+    IOP = "IOP"
 
 
 @register_datagrabber
@@ -24,53 +34,25 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    datadir : str or pathlib.Path or None, optional
-        The directory where the datalad dataset will be cloned. If None,
-        the datalad dataset will be cloned into a temporary directory
-        (default None).
-    sites : {"Guys", "HH", "IOP"} or list of the options or None, optional
-        Which sites to access data from. If None, all available sites are
-        selected (default None).
+    datadir : pathlib.Path, optional
+        That path where the datalad dataset will be cloned.
+        If not specified, the datalad dataset will be cloned into a temporary
+        directory.
+    sites : list of :obj:`IXISite`, optional
+        IXI sites.
+        By default, all available sites are selected.
 
     """
 
-    def __init__(
-        self,
-        datadir: Union[str, Path, None] = None,
-        sites: Union[str, list[str], None] = None,
-    ) -> None:
-        uri = (
-            "ria+http://cat_12.5.ds.inm7.de"
-            "#b7107c52-8408-11ea-89c6-a0369f287950"
-        )
-        types = ["VBM_GM"]
-        replacements = ["site", "subject"]
-        patterns = {
-            "VBM_GM": {
-                "pattern": ("{site}/{subject}/mri/m0wp1{subject}.nii.gz"),
-                "space": "IXI549Space",
-            },
-        }
-
-        # validate and/or transform 'site' input
-        all_sites = ["HH", "Guys", "IOP"]
-        if sites is None:
-            sites = all_sites
-
-        if isinstance(sites, str):
-            sites = [sites]
-
-        for s in sites:
-            if s not in all_sites:
-                raise_error(
-                    f"{s} not a valid site in IXI VBM dataset!"
-                    f"Available sites are {all_sites}"
-                )
-        self.sites = sites
-        super().__init__(
-            types=types,
-            datadir=datadir,
-            uri=uri,
-            replacements=replacements,
-            patterns=patterns,
-        )
+    uri: HttpUrl = (
+        "ria+http://cat_12.5.ds.inm7.de#b7107c52-8408-11ea-89c6-a0369f287950"
+    )
+    types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012
+    sites: list[IXISite] = [IXISite.Guys, IXISite.HH, IXISite.IOP]  # noqa: RUF012
+    patterns: DataGrabberPatterns = {  # noqa: RUF012
+        "VBM_GM": {
+            "pattern": ("{site}/{subject}/mri/m0wp1{subject}.nii.gz"),
+            "space": "IXI549Space",
+        },
+    }
+    replacements: list[str] = ["site", "subject"]  # noqa: RUF012
