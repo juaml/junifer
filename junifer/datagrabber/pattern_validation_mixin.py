@@ -362,7 +362,7 @@ class PatternValidationMixin:
 
     def validate_patterns(
         self,
-        types: list[str],
+        types: list[DataType],
         replacements: list[str],
         patterns: DataGrabberPatterns,
         partial_pattern_ok: bool = False,

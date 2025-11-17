@@ -80,7 +80,7 @@ def test_dtype_mgr(dtype: DataTypeSchema) -> None:
 
     Parameters
     ----------
-    dtype : DataTypeSchema
+    dtype : ``DataTypeSchema``
         The parametrized schema.
 
     """
