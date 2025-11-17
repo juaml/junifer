@@ -38,7 +38,7 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         That path where the datalad dataset will be cloned.
         If not specified, the datalad dataset will be cloned into a temporary
         directory.
-    sites : list of :obj:`IXISite`, optional
+    sites : list of :enum:`.IXISite`, optional
         IXI sites.
         By default, all available sites are selected.
 
