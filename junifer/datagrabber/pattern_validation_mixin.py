@@ -194,7 +194,7 @@ def register_data_type(name: str, schema: DataTypeSchema) -> None:
     ----------
     name : str
         The data type name.
-    schema : DataTypeSchema
+    schema : ``DataTypeSchema``
         The data type schema.
 
     """
@@ -238,8 +238,8 @@ class PatternValidationMixin:
         ----------
         replacements : list of str
             The replacements to validate.
-        patterns : dict
-            The patterns to validate replacements against.
+        patterns : ``DataGrabberPatterns``
+            The patterns to validate ``replacements`` against.
         partial_pattern_ok : bool
             Whether to raise error if partial pattern for a data type is found.
 
@@ -403,11 +403,11 @@ class PatternValidationMixin:
 
         Parameters
         ----------
-        types : list of str
-            The data types to check patterns of.
+        types : list of :enum:`.DataType`
+            The data type(s) to check patterns of.
         replacements : list of str
-            The replacements to be replaced in the patterns.
-        patterns : dict
+            The replacements to be replaced in the ``patterns``.
+        patterns : ``DataGrabberPatterns``
             The patterns to validate.
         partial_pattern_ok : bool, optional
             Whether to raise error if partial pattern for a data type is found.
