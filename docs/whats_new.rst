@@ -146,7 +146,7 @@ Features
 ^^^^^^^^
 
 - Introduce :func:`.normalize` and :func:`.reweight` functions for downstream
-  BrainPrint analysis in :mod:`.onthefly.brainprint` by `Synchon Mandal`_
+  BrainPrint analysis in :mod:`.onthefly._brainprint` by `Synchon Mandal`_
   (:gh:`354`)
 - Introduce :class:`junifer.pipeline.PipelineComponentRegistry` to centralise
   pipeline component management by `Synchon Mandal`_ (:gh:`362`)
