@@ -36,12 +36,12 @@ markers = [
     {
         "name": "Schaefer100x17_RSSETS",
         "kind": "RSSETSMarker",
-        "parcellation": "Schaefer100x17",
+        "parcellation": ["Schaefer100x17"],
     },
     {
         "name": "Schaefer200x17_RSSETS",
         "kind": "RSSETSMarker",
-        "parcellation": "Schaefer200x17",
+        "parcellation": ["Schaefer200x17"],
     },
 ]
 
