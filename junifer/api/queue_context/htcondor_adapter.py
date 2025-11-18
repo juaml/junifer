@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any, Optional
 
 from ...typing import Elements
-from ...utils import logger, make_executable, run_ext_cmd
+from ...utils import logger, make_executable, raise_error, run_ext_cmd
 from .queue_context_adapter import (
     EnvKind,
     EnvShell,
@@ -112,6 +112,8 @@ class HTCondorAdapter(QueueContextAdapter):
             self._executable = "junifer"
             self._arguments = ""
         else:
+            if self.env["name"] is None:
+                raise_error("`env.name` is required")
             self._executable = f"run_{self.env['kind']}.{self.env['shell']}"
             self._arguments = f"{self.env['name']} junifer"
             self._exec_path = self.job_dir / self._executable
