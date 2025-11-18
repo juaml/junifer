@@ -19,7 +19,6 @@ from typing import (
     Any,
     ClassVar,
     Optional,
-    TypedDict,
     Union,
 )
 
