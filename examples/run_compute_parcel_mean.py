@@ -15,8 +15,10 @@ from junifer.testing.datagrabbers import (
     OasisVBMTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
 )
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers import ParcelAggregation
+from junifer.stats import AggFunc
 from junifer.utils import configure_logging
 
 
@@ -32,7 +34,10 @@ with OasisVBMTestingDataGrabber() as dg:
     # Read the element
     element_data = DefaultDataReader().fit_transform(dg[element])
     # Initialize marker
-    marker = ParcelAggregation(parcellation="Schaefer100x7", method="mean")
+    marker = ParcelAggregation(
+        parcellation=["Schaefer100x7"],
+        method=AggFunc.Mean,
+    )
     # Compute feature
     feature = marker.fit_transform(element_data)
     # Print the output
@@ -48,7 +53,9 @@ with SPMAuditoryTestingDataGrabber() as dg:
     element_data = DefaultDataReader().fit_transform(dg[element])
     # Initialize marker
     marker = ParcelAggregation(
-        parcellation="Schaefer100x7", method="mean", on="BOLD"
+        parcellation=["Schaefer100x7"],
+        method=AggFunc.Mean,
+        on=[DataType.BOLD],
     )
     # Compute feature
     feature = marker.fit_transform(element_data)

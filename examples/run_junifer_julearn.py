@@ -20,7 +20,7 @@ from julearn import run_cross_validation, PipelineCreator
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, run
-from junifer.storage.sqlite import SQLiteFeatureStorage
+from junifer.storage import SQLiteFeatureStorage
 from junifer.utils import configure_logging
 
 
@@ -36,14 +36,14 @@ marker_dicts = [
     {
         "name": "Schaefer100x17_TrimMean80",
         "kind": "ParcelAggregation",
-        "parcellation": "Schaefer100x17",
+        "parcellation": ["Schaefer100x17"],
         "method": "trim_mean",
         "method_params": {"proportiontocut": 0.2},
     },
     {
         "name": "Schaefer200x17_Mean",
         "kind": "ParcelAggregation",
-        "parcellation": "Schaefer200x17",
+        "parcellation": ["Schaefer200x17"],
         "method": "mean",
     },
 ]
