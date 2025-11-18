@@ -4,6 +4,7 @@
 # License: AGPL
 
 import sys
+from typing import Required
 
 
 if sys.version_info < (3, 12):  # pragma: no cover
@@ -40,9 +41,9 @@ class EnvShell(str, Enum):
 class QueueContextEnv(TypedDict, total=False):
     """Accepted environment configuration for queue context."""
 
+    kind: Required[EnvKind]
     name: str
-    kind: EnvKind
-    shell: EnvShell
+    shell: Required[EnvShell]
 
 
 class QueueContextAdapter(BaseModel, ABC):
