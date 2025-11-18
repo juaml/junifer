@@ -34,6 +34,7 @@ def test_get_dependency_information_short() -> None:
     """Test short version of _get_dependency_information()."""
     dependency_information = _get_dependency_information(long_=False)
     dependency_list = [
+        "aenum",
         "click",
         "numpy",
         "scipy",
@@ -50,6 +51,8 @@ def test_get_dependency_information_short() -> None:
         "looseversion",
         "junifer_data",
         "structlog",
+        "pydantic",
+        "typing_extensions",
     ]
 
     if sys.version_info < (3, 11):
