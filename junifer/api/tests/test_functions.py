@@ -62,19 +62,19 @@ def datagrabber() -> dict[str, str]:
 
 
 @pytest.fixture
-def markers() -> list[dict[str, str]]:
+def markers() -> list[dict[str, Union[list[str], str]]]:
     """Return markers as a list of dictionary."""
     return [
         {
             "name": "tian-s1-3T_mean",
             "kind": "ParcelAggregation",
-            "parcellation": "TianxS1x3TxMNInonlinear2009cAsym",
+            "parcellation": ["TianxS1x3TxMNInonlinear2009cAsym"],
             "method": "mean",
         },
         {
             "name": "tian-s1-3T_std",
             "kind": "ParcelAggregation",
-            "parcellation": "TianxS1x3TxMNInonlinear2009cAsym",
+            "parcellation": ["TianxS1x3TxMNInonlinear2009cAsym"],
             "method": "std",
         },
     ]
