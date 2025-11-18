@@ -4,13 +4,17 @@
 # License: AGPL
 
 import sys
-from typing import Required
 
 
 if sys.version_info < (3, 12):  # pragma: no cover
     from typing_extensions import TypedDict
 else:
     from typing import TypedDict
+
+if sys.version_info < (3, 11):  # pragma: no cover
+    from typing_extensions import Required
+else:
+    from typing import Required
 
 from abc import ABC, abstractmethod
 from enum import Enum
