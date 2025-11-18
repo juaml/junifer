@@ -119,7 +119,7 @@ and the values would be a dictionary of storage type specific key-value pairs.
 
     from typing import Any
 
-    from junifer.data import get_parcellation
+    from junifer.data import get_data
     from nilearn.maskers import NiftiLabelsMasker
 
 
@@ -132,8 +132,9 @@ and the values would be a dictionary of storage type specific key-value pairs.
         data = input["data"]
 
         # Get the parcellation tailored for the target
-        t_parcellation, t_labels, _ = get_parcellation(
-            name=self.parcellation,
+        t_parcellation, t_labels, _ = get_data(
+            kind="parcellation",
+            name=[self.parcellation],
             target_data=input,
             extra_input=extra_input,
         )
@@ -185,7 +186,7 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
     from typing import Any, ClassVar
 
     from junifer.api.decorators import register_marker
-    from junifer.data import get_parcellation
+    from junifer.data import get_data
     from junifer.datagrabber import DataType
     from junifer.markers import BaseMarker
     from junifer.storage import StorageType
@@ -221,8 +222,9 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
             data = input["data"]
 
             # Get the parcellation tailored for the target
-            t_parcellation, t_labels, _ = get_parcellation(
-                name=self.parcellation,
+            t_parcellation, t_labels, _ = get_data(
+                kind="parcellation",
+                name=[self.parcellation],
                 target_data=input,
                 extra_input=extra_input,
             )

@@ -124,7 +124,7 @@ parcellation when registering it. For example, we can add a
   markers:
     - name: CustomParcellation_mean
       kind: ParcelAggregation
-      parcellation: my_custom_parcellation
+      parcellation: [<my_custom_parcellation>]
       method: mean
 
 Now, you can simply use this YAML file to run your pipeline.
