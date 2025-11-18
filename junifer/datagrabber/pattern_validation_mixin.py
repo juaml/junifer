@@ -3,8 +3,16 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import sys
+
+
+if sys.version_info < (3, 12):  # pragma: no cover
+    from typing_extensions import TypedDict
+else:
+    from typing import TypedDict
+
+
 from collections.abc import Iterator, MutableMapping
-from typing import TypedDict
 
 from aenum import extend_enum
 
