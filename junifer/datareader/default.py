@@ -8,15 +8,18 @@ from pathlib import Path
 
 import nibabel as nib
 import pandas as pd
+import structlog
 from pydantic import BaseModel
 
 from ..api.decorators import register_datareader
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
-from ..utils.logging import logger, warn_with_log
+from ..utils.logging import warn_with_log
 
 
 __all__ = ["DefaultDataReader"]
 
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="datareader", step="datareader")
 
 # Map each file extension to a type
 _extensions = {
