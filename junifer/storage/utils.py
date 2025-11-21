@@ -12,8 +12,9 @@ from importlib.metadata import PackageNotFoundError, version
 import numpy as np
 from pydantic import validate_call
 
-from ..utils.logging import logger, raise_error
 from ._types import MatrixKind
+from ..utils import raise_error
+from .base import logger
 
 
 __all__ = [

@@ -17,8 +17,8 @@ from sqlalchemy import create_engine, inspect
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
-from ..utils import logger, raise_error, warn_with_log
-from .base import MatrixKind
+from ..utils import raise_error, warn_with_log
+from .base import MatrixKind, logger
 from .pandas_base import PandasBaseFeatureStorage
 from .utils import (
     element_to_prefix,
