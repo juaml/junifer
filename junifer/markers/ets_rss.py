@@ -15,8 +15,8 @@ from ..api.decorators import register_marker
 from ..datagrabber import DataType
 from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
-from ..utils import ensure_list, ensure_list_or_none, logger
-from .base import BaseMarker
+from ..utils import ensure_list, ensure_list_or_none
+from .base import BaseMarker, logger
 from .parcel_aggregation import ParcelAggregation
 from .utils import _ets
 
