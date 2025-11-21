@@ -16,9 +16,9 @@ from collections.abc import Iterator, MutableMapping
 
 from aenum import extend_enum
 
-from ..datagrabber import DataType
 from ..typing import DataGrabberPatterns
-from ..utils import logger, raise_error, warn_with_log
+from ..utils import raise_error, warn_with_log
+from .base import DataType, logger
 
 
 __all__ = [
