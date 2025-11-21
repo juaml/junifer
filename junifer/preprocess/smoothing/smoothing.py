@@ -10,8 +10,7 @@ from typing import Any, ClassVar, Literal, Optional
 from ...api.decorators import register_preprocessor
 from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
-from ...utils import logger
-from ..base import BasePreprocessor
+from ..base import BasePreprocessor, logger
 from ._afni_smoothing import AFNISmoothing
 from ._fsl_smoothing import FSLSmoothing
 from ._nilearn_smoothing import NilearnSmoothing

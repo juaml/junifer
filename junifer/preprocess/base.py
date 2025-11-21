@@ -8,14 +8,18 @@ from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from typing import Any, ClassVar, Optional
 
+import structlog
 from pydantic import BaseModel, ConfigDict
 
 from ..datagrabber import DataType
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
-from ..utils import logger, raise_error
+from ..utils import raise_error
 
 
 __all__ = ["BasePreprocessor"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="preprocess", step="preprocessing")
 
 
 class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
@@ -87,6 +91,10 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
             self.required_data_types = [
                 DataType(t) for t in self.required_data_types
             ]
+        logger.info(
+            f"Parameters: {self.model_dump(mode='json')}",
+            component=self.__class__.__name__,
+        )
 
     @property
     def valid_inputs(self) -> list[DataType]:

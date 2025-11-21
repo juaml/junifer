@@ -13,7 +13,8 @@ import nibabel as nib
 
 from ...pipeline import ExtDep, WorkDirManager
 from ...typing import Dependencies, ExternalDependencies
-from ...utils import logger, run_ext_cmd
+from ...utils import run_ext_cmd
+from ..base import logger
 
 
 __all__ = ["AFNISmoothing"]

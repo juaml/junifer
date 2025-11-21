@@ -35,8 +35,8 @@ from ...data import get_data
 from ...datagrabber import DataType
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies
-from ...utils import logger, raise_error
-from ..base import BasePreprocessor
+from ...utils import raise_error
+from ..base import BasePreprocessor, logger
 
 
 __all__ = ["Confounds", "Strategy", "fMRIPrepConfoundRemover"]
