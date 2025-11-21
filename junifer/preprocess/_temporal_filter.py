@@ -22,8 +22,8 @@ from ..data import get_data
 from ..datagrabber import DataType
 from ..pipeline import WorkDirManager
 from ..typing import Dependencies
-from ..utils import ensure_list_or_none, logger
-from .base import BasePreprocessor
+from ..utils import ensure_list_or_none
+from .base import BasePreprocessor, logger
 
 
 __all__ = ["TemporalFilter"]

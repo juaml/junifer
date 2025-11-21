@@ -13,8 +13,8 @@ from templateflow import api as tflow
 from ...api.decorators import register_preprocessor
 from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
-from ...utils import ensure_list_or_none, logger, raise_error
-from ..base import BasePreprocessor
+from ...utils import ensure_list_or_none, raise_error
+from ..base import BasePreprocessor, logger
 from ._ants_warper import ANTsWarper
 from ._fsl_warper import FSLWarper
 

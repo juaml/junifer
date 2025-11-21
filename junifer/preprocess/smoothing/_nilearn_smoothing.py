@@ -15,7 +15,7 @@ from numpy.typing import ArrayLike
 
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies
-from ...utils import logger
+from ..base import logger
 
 
 __all__ = ["NilearnSmoothing"]
