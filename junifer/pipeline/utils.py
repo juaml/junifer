@@ -10,7 +10,7 @@ from typing import Any, Optional
 
 from pydantic import validate_call
 
-from ..utils.logging import raise_error, warn_with_log
+from ..utils import raise_error, warn_with_log
 
 
 __all__ = ["ExtDep", "check_ext_dependencies"]

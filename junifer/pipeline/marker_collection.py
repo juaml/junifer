@@ -8,13 +8,18 @@ from collections import Counter
 from pathlib import Path
 from typing import Optional
 
+import structlog
+
 from ..datareader import DefaultDataReader
 from ..pipeline import DataObjectDumper, PipelineStepMixin, WorkDirManager
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
-from ..utils import config, logger, raise_error
+from ..utils import config, raise_error
 
 
 __all__ = ["MarkerCollection"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="pipeline")
 
 
 class MarkerCollection:
