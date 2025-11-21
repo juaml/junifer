@@ -111,7 +111,8 @@ structlog.configure(
     cache_logger_on_first_use=True,
 )
 
-logger = logging.getLogger("junifer")
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="utils")
 
 # Remove datalad logger handlers to avoid duplicate logging
 _datalad_lgr_hdlrs = datalad.log.lgr.handlers
