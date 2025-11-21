@@ -11,12 +11,16 @@ from pathlib import Path
 from typing import Union
 
 import pandas as pd
+import structlog
 
 from ..typing import Elements
-from ..utils import logger, raise_error, warn_with_log, yaml
+from ..utils import raise_error, warn_with_log, yaml
 
 
 __all__ = ["parse_elements", "parse_yaml"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="cli")
 
 
 def parse_yaml(filepath: Union[str, Path]) -> dict:  # noqa: C901
