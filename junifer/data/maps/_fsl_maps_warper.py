@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, run_ext_cmd
+from ...utils import run_ext_cmd
 
 
 if TYPE_CHECKING:
@@ -53,6 +53,9 @@ class FSLMapsWarper:
             The transformed maps image.
 
         """
+        # Imported here to avoid circular import
+        from ._maps import logger
+
         logger.debug("Using FSL for maps transformation")
 
         # Create element-scoped tempdir so that warped maps is

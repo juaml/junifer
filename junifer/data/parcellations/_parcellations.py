@@ -13,9 +13,10 @@ import nibabel as nib
 import nilearn.image as nimg
 import numpy as np
 import pandas as pd
+import structlog
 from junifer_data import get
 
-from ...utils import logger, raise_error, warn_with_log
+from ...utils import raise_error, warn_with_log
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..utils import (
     JUNIFER_DATA_PARAMS,
@@ -35,6 +36,9 @@ __all__ = [
     "ParcellationRegistry",
     "merge_parcellations",
 ]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="data")
 
 
 class ParcellationRegistry(BasePipelineDataRegistry):
@@ -58,8 +62,12 @@ class ParcellationRegistry(BasePipelineDataRegistry):
         # The built-in parcellations are files that are shipped with the
         # junifer-data dataset.
         # Make built-in and external dictionaries for validation later
-        self._builtin = {}
-        self._external = {}
+        self._builtin: dict[
+            str, dict[str, Union[str, int, Path, list[str], list[int]]]
+        ] = {}
+        self._external: dict[
+            str, dict[str, Union[str, int, Path, list[str], list[int]]]
+        ] = {}
 
         # Add SUIT
         self._builtin.update(

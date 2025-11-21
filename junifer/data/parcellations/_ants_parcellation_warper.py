@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any, Optional
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, raise_error, run_ext_cmd
+from ...utils import raise_error, run_ext_cmd
 from ..template_spaces import get_template, get_xfm
 
 
@@ -71,6 +71,9 @@ class ANTsParcellationWarper:
             If ``warp_data`` is None when ``dst="T1w"``.
 
         """
+        # Imported here to avoid circular import
+        from ._parcellations import logger
+
         # Create element-scoped tempdir so that warped parcellation is
         # available later as nibabel stores file path reference for
         # loading on computation
