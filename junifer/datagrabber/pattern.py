@@ -16,8 +16,8 @@ from pydantic import Field
 
 from ..api.decorators import register_datagrabber
 from ..typing import DataGrabberPatterns, Elements
-from ..utils import logger, raise_error
-from .base import BaseDataGrabber
+from ..utils import raise_error
+from .base import BaseDataGrabber, logger
 from .pattern_validation_mixin import PatternValidationMixin
 
 

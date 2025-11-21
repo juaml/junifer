@@ -11,15 +11,19 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
+import structlog
 from aenum import Enum as AEnum
 from pydantic import BaseModel, ConfigDict, Field
 
 from ..pipeline import UpdateMetaMixin
 from ..typing import Element, Elements
-from ..utils import logger, raise_error
+from ..utils import raise_error
 
 
 __all__ = ["BaseDataGrabber", "DataType"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="datagrabber", step="datagrabber")
 
 
 class DataType(str, AEnum):
@@ -67,6 +71,10 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
         self.validate_datagrabber_params()
         # Convert to correct data type
         # self.types = [DataType(t) for t in self.types]
+        logger.info(
+            f"Parameters: {self.model_dump(mode='json')}",
+            component=self.__class__.__name__,
+        )
 
     def validate_datagrabber_params(self) -> None:
         """Run extra logical validation for datagrabber.

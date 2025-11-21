@@ -8,7 +8,7 @@
 from pydantic import ConfigDict
 
 from ..api.decorators import register_datagrabber
-from ..utils import logger
+from .base import logger
 from .datalad_base import DataladDataGrabber
 from .pattern import PatternDataGrabber
 

@@ -19,8 +19,8 @@ from pydantic import Field, HttpUrl, field_validator
 
 from ..pipeline import WorkDirManager
 from ..typing import Element
-from ..utils import config, logger, raise_error, warn_with_log
-from .base import BaseDataGrabber
+from ..utils import config, raise_error, warn_with_log
+from .base import BaseDataGrabber, logger
 
 
 __all__ = ["DataladDataGrabber"]
