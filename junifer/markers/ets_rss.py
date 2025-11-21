@@ -14,8 +14,7 @@ from ..api.decorators import register_marker
 from ..datagrabber import DataType
 from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
-from ..utils import logger
-from .base import BaseMarker
+from .base import BaseMarker, logger
 from .parcel_aggregation import ParcelAggregation
 from .utils import _ets
 

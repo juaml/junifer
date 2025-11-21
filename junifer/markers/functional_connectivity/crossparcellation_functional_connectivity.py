@@ -12,8 +12,8 @@ from ...api.decorators import register_marker
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import Dependencies, MarkerInOutMappings
-from ...utils import logger, raise_error
-from ..base import BaseMarker
+from ...utils import raise_error
+from ..base import BaseMarker, logger
 from ..parcel_aggregation import ParcelAggregation
 from ..utils import _correlate_dataframes
 

@@ -7,7 +7,7 @@ from typing import Any, Literal, Optional
 
 from ...api.decorators import register_marker
 from ...datagrabber import DataType
-from ...utils import logger
+from ..base import logger
 from ..maps_aggregation import MapsAggregation
 from .falff_base import ALFFBase
 

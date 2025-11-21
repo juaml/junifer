@@ -18,8 +18,8 @@ from nilearn import image as nimg
 
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies
-from ...utils import logger
 from ...utils.singleton import Singleton
+from ..base import logger
 
 
 if TYPE_CHECKING:

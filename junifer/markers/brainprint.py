@@ -26,8 +26,8 @@ from ..external.BrainPrint.brainprint.surfaces import surf_to_vtk
 from ..pipeline import ExtDep, WorkDirManager
 from ..storage import StorageType
 from ..typing import Dependencies, ExternalDependencies, MarkerInOutMappings
-from ..utils import logger, run_ext_cmd
-from .base import BaseMarker
+from ..utils import run_ext_cmd
+from .base import BaseMarker, logger
 
 
 __all__ = ["BrainPrint"]

@@ -17,8 +17,7 @@ from typing import (
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
-from ...utils import logger
-from ..base import BaseMarker
+from ..base import BaseMarker, logger
 from ._afni_reho import AFNIReHo
 from ._junifer_reho import JuniferReHo
 

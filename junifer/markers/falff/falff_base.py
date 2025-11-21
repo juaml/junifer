@@ -22,8 +22,7 @@ from pydantic import PositiveFloat
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
-from ...utils.logging import logger
-from ..base import BaseMarker
+from ..base import BaseMarker, logger
 from ._afni_falff import AFNIALFF
 from ._junifer_falff import JuniferALFF
 

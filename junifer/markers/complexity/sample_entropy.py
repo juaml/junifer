@@ -12,7 +12,8 @@ import numpy as np
 
 from ...api.decorators import register_marker
 from ...datagrabber import DataType
-from ...utils import logger, warn_with_log
+from ...utils import warn_with_log
+from ..base import logger
 from .complexity_base import ComplexityBase
 
 

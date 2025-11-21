@@ -8,16 +8,20 @@ from abc import ABC, abstractmethod
 from copy import deepcopy
 from typing import Any, ClassVar, Optional
 
+import structlog
 from pydantic import BaseModel, ConfigDict
 
 from ..datagrabber import DataType
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..storage import StorageType
 from ..typing import MarkerInOutMappings, StorageLike
-from ..utils import logger, raise_error
+from ..utils import raise_error
 
 
 __all__ = ["BaseMarker"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="markers", step="marker")
 
 
 class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
@@ -82,6 +86,9 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
         self.validate_marker_params()
         # Set default name if not provided
         self.name = self.__class__.__name__ if self.name is None else self.name
+        logger.info(
+            f"Parameters: {self.model_dump(mode='json')}", component=self.name
+        )
 
     @property
     def valid_inputs(self) -> list[DataType]:
