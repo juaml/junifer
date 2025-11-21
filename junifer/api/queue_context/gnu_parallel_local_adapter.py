@@ -9,12 +9,13 @@ from pathlib import Path
 from typing import Any, Optional
 
 from ...typing import Elements
-from ...utils import logger, make_executable, raise_error, run_ext_cmd
+from ...utils import make_executable, raise_error, run_ext_cmd
 from .queue_context_adapter import (
     EnvKind,
     EnvShell,
     QueueContextAdapter,
     QueueContextEnv,
+    logger,
 )
 
 
