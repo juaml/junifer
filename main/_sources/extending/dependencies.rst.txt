@@ -28,7 +28,7 @@ component depends on. For example, for :class:`.RSSETSMarker`, we have:
 
 .. code-block:: python
 
-    _DEPENDENCIES: ClassVar[Set[str]] = {"nilearn"}
+    _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn"}
 
 The type annotation is for documentation and static type checking purposes.
 Although not required, we highly recommend you use them, your future self
@@ -39,12 +39,12 @@ and others who use it will thank you.
 Handling external dependencies from toolboxes
 ---------------------------------------------
 
-You can also specify dependencies of external toolboxes like AFIN, FSL and ANTs,
+You can also specify dependencies of external toolboxes like AFNI, FSL and ANTs,
 by having a class attribute like so:
 
 .. code-block:: python
 
-    _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+    _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
             "name": "afni",
             "commands": ["3dReHo", "3dAFNItoNIFTI"],
@@ -78,7 +78,7 @@ that it shows the problem a bit better and how we solve it:
 
     class SpaceWarper(BasePreprocessor):
         # docstring
-        _CONDITIONAL_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, Type]]]] = [
+        _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
             {
                 "using": "fsl",
                 "depends_on": FSLWarper,
@@ -86,6 +86,10 @@ that it shows the problem a bit better and how we solve it:
             {
                 "using": "ants",
                 "depends_on": ANTsWarper,
+            },
+            {
+                "using": "auto",
+                "depends_on": [FSLWarper, ANTsWarper],
             },
         ]
 
@@ -100,12 +104,19 @@ Here, you see a new class attribute ``_CONDITIONAL_DEPENDENCIES`` which is a
 list of dictionaries with two keys:
 
 * ``using`` (str) : lowercased name of the toolbox
-* ``depends_on`` (object) : a class which implements the particular tool's use
+* ``depends_on`` (object or list of objects) : a class or list of classes which \
+  implements the particular tool's use
 
 It is mandatory to have the ``using`` positional argument in the constructor in
 this case as the validation starts with this and moves further. It is also
 mandatory to only allow the value of ``using`` argument to be one of them
 specified in the ``using`` key of ``_CONDITIONAL_DEPENDENCIES`` entries.
+
+For some cases, like we have here, it might be worth to have ``"auto"`` for
+``"using"`` which eases the choice of a particular tool by the user and
+instead lets ``junifer`` do it automatically. In that case, ``"depends_on"``
+needs to be a list of the tool implementation classes. This also requires the
+user to have all the tools in the ``PATH``.
 
 For brevity, we only show the ``FSLWarper`` here but ``ANTsWarper`` looks very
 similar. ``FSLWarper`` looks like this (only the relevant part is shown here):
@@ -115,14 +126,14 @@ similar. ``FSLWarper`` looks like this (only the relevant part is shown here):
     class FSLWarper:
         # docstring
 
-        _EXT_DEPENDENCIES: ClassVar[List[Dict[str, Union[str, List[str]]]]] = [
+        _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
             {
                 "name": "fsl",
                 "commands": ["flirt", "applywarp"],
             },
         ]
 
-        _DEPENDENCIES: ClassVar[Set[str]] = {"numpy", "nibabel"}
+        _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nibabel"}
 
         def preprocess(
             self,

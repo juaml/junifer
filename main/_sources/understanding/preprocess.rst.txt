@@ -146,14 +146,23 @@ Warping to subject's native space
 To warp to subject's native space, the dataset needs to provide ``T1w`` and
 ``Warp`` data types and the DataGrabber needs to at least have
 ``["BOLD", "T1w", "Warp"]`` (if you are warping ``BOLD``) as the ``types``
-parameter's value. The :class:`.SpaceWarper`'s ``reference`` parameter needs
+parameter's value.
+
+The :class:`.SpaceWarper`'s ``reference`` parameter needs
 to be set to ``T1w``, which means that the ``BOLD`` data will be transformed
 using the ``T1w`` as reference (it's resampled internally to match the
-resolution of the ``BOLD``). The ``Warp`` data type is new and it's only purpose
-is to provide the warp or transformation file (can be linear, non-linear or
-linear + non-linear transform) for the purpose. For ``using`` parameter, you can
-pass either ``"fsl"`` or ``"ants"`` depending on the warp or transformation file
-format.
+resolution of the ``BOLD``).
+
+The ``Warp`` data type provides the warp or transformation file (can be linear,
+non-linear or linear + non-linear transform) for the purpose. For ``using``
+parameter, you can pass either ``fsl`` or ``ants`` depending on the warp or
+transformation file format. You can also provide ``auto`` to ``using`` in which
+case either ``FSL`` or ``ANTs`` will be used based on the file format provided
+by the DataGrabber. This also requires that both the tools are in the ``PATH``.
+
+And finally, you would need to set the ``on`` parameter to ``BOLD`` to make it
+clear which data type you intend to warp, as the :class:`.SpaceWarper` is also
+capable of warping ``T1w``.
 
 An example YAML might look like this:
 
@@ -163,6 +172,7 @@ An example YAML might look like this:
          - kind: SpaceWarper
            using: fsl
            reference: T1w
+           on: BOLD
 
 .. _preprocess_warping_template:
 
@@ -174,8 +184,8 @@ data type that you want to work on) in ``MNI152NLin6Asym`` template space but
 you would like to compute features in ``MNI152NLin2009cAsym`` template space,
 you can also use the :class:`.SpaceWarper` by setting the ``reference``
 parameter to the template space's name, in this case,
-``reference="MNI152NLin2009cAsym"``. The ``using`` parameter needs to be set
-to ``"ants"`` as we need it to warp the data.
+``reference: MNI152NLin2009cAsym``. The ``using`` parameter needs to be set
+to ``ants`` as we need it to warp the data.
 
 .. note::
 
@@ -190,3 +200,4 @@ For an YAML example:
          - kind: SpaceWarper
            using: ants
            reference: MNI152NLin2009cAsym
+           on: BOLD

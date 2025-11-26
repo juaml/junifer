@@ -6,7 +6,209 @@
 What's new
 ==========
 
+.. towncrier-draft-entries:: |release|
+
 .. towncrier release notes start
+
+Junifer 0.0.6 (2025-03-24)
+--------------------------
+
+Bugfixes
+^^^^^^^^
+
+- Fix ``mri_binarize`` command preparation for structures with multiple indices
+  in :class:`.BrainPrint` by `Fede Raimondo`_ (:gh:`356`)
+- Enable ``spike`` mapping from ``adhoc`` to ``fmriprep`` for
+  :class:`.fMRIPrepConfoundRemover` by `Leonard Sasse`_ and `Synchon Mandal`_
+  (:gh:`360`)
+- Correct listing for :class:`.fMRIPrepConfoundRemover` in
+  ``junifer.pipeline.registry`` by `Synchon Mandal`_ (:gh:`369`)
+- Add ``'emomatching'`` task to :class:`.DataladAOMICPIOP2` by `Leonard Sasse`_
+  (:gh:`370`)
+- Use correct return code for ANTs commands while checking presence of external
+  commands by `Synchon Mandal`_ (:gh:`385`)
+- Use the :class:`junifer.pipeline.WorkDirManager` for temporary directories in
+  the :class:`.DataladDataGrabber` by `Fede Raimondo`_ (:gh:`386`)
+- Fix coordinates space transformation using ANTs by `Synchon Mandal`_
+  (:gh:`388`)
+- Fix metadata update for :class:`.MultipleDataGrabber` and adjust
+  :meth:`.PatternDataGrabber.get_elements` to check ``list``-like data type
+  values by `Fede Raimondo`_ and `Synchon Mandal`_ (:gh:`398`)
+- Use correct file output suffices for AFNI-based markers by `Synchon Mandal`_
+  (:gh:`409`)
+- Fix ``t_r`` tampering by :func:`nilearn.image.clean_img` in
+  :class:`.fMRIPrepConfoundRemover` by `Fede Raimondo`_ and `Synchon Mandal`_
+  (:gh:`420`)
+- Fix coordinates fetching for Power and Dosenbach from ``junifer-data`` by
+  `Synchon Mandal`_ (:gh:`431`)
+- Remove ``Power2013`` from :class:`.CoordinatesRegistry` by `Synchon Mandal`_
+  (:gh:`436`)
+- Correct dispatch methods for ``*_data()`` functions by `Synchon Mandal`_
+  (:gh:`439`)
+
+
+API Changes
+^^^^^^^^^^^
+
+- ``get_parcellation``, ``load_parcellation``, ``list_parcellation``,
+  ``register_parcellation`` , ``get_coordinates``, ``load_coordinates``,
+  ``list_coordinates``, ``register_coordinates``, ``get_mask``, ``load_mask``,
+  ``list_mask``, ``register_mask`` have been removed in favour of
+  :func:`.get_data`, :func:`.load_data`, :func:`.list_data`,
+  :func:`.register_data` and :func:`.deregister_data` by `Synchon Mandal`_
+  (:gh:`387`)
+- :class:`.SpaceWarper`'s ``using`` now supports ``"auto"`` allowing auto tool
+  selection based on DataGrabber specification by `Synchon Mandal`_ (:gh:`390`)
+- Allow ``workdir`` to also be a mapping in YAML, with ``path`` and ``cleanup``
+  keys by `Synchon Mandal`_ (:gh:`402`)
+- Add ``source`` parameter and resurrect ``extra_input`` parameter for
+  ``compute_brain_mask`` by `Fede Raimondo`_ (:gh:`404`)
+- ``native_t1w`` parameter has been replaced with ``space`` to allow
+  :class:`.DataladAOMICID1000`, :class:`.DataladAOMICPIOP1` and
+  :class:`.DataladAOMICPIOP2` to fetch data in all available spaces by `Fede
+  Raimondo`_ (:gh:`405`)
+- :meth:`.ParcellationRegistry.load` now has a new parameter ``target_space``
+  to provide parcellation in highest possible resolution if it does not match
+  the space of the parcellation by `Fede Raimondo`_ and `Synchon Mandal`_
+  (:gh:`411`)
+- Introduce new CLI parameter ``--verbose-datalad`` to control ``datalad``'s
+  logging handler by `Fede Raimondo`_ (:gh:`412`)
+- ``target_data`` parameter of :func:`.get_template` has been replaced with
+  ``target_img`` by `Fede Raimondo`_ (:gh:`413`)
+- Add ``template_space`` parameter for ``compute_brain_mask`` and
+  ``resolution`` parameter for :func:`.get_template` by `Fede Raimondo`_
+  (:gh:`415`)
+- Add ``scrub``, ``fd_threshold`` and ``std_vars_threshold`` parameters to
+  :class:`.fMRIPrepConfoundRemover` and allow ``"scrubbing"`` key of type bool
+  for ``strategy`` by `Synchon Mandal`_ (:gh:`421`)
+
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Improve Sphinx configuration and extensions by `Synchon Mandal`_ (:gh:`358`)
+- Add documentation on analysing extracted features by `Synchon Mandal`_
+  (:gh:`359`)
+- Add documentation on how to make a ``junifer`` plugin by `Synchon Mandal`_
+  (:gh:`366`)
+
+
+Enhancements
+^^^^^^^^^^^^
+
+- Raise error when partial or complete element selectors are invalid when
+  running the pipeline by `Synchon Mandal`_ (:gh:`319`)
+- Add support for Spearman's correlation in
+  :class:`.JuniferConnectivityMeasure` by `Leonard Sasse`_ (:gh:`335`)
+- Set proper stdout encoding for :func:`.run_ext_cmd` to ease human readability
+  by `Fede Raimondo`_ (:gh:`357`)
+- Adapt usage of ``junifer-data`` client API to fetch parcellations, masks,
+  coordinates and xfms by `Synchon Mandal`_ (:gh:`363`)
+- Allow for external python files in the ``with`` section of the yaml to import
+  other files by `Fede Raimondo`_ (:gh:`367`)
+- Use ``datalad``-enabled repository for template space transform files in
+  :func:`.get_xfm` by `Synchon Mandal`_ (:gh:`368`)
+- Add a ``cleanup`` parameter to the :class:`junifer.pipeline.WorkDirManager`,
+  which allows to disable cleaning up temporary directories by `Fede Raimondo`_
+  (:gh:`389`)
+- Update ``Warp`` data type to be a list of dictionaries and adapt to allow
+  multiple transforms to be specified by `Synchon Mandal`_ (:gh:`390`)
+- Refactor the masking logic in the pipeline to account for and optimise space
+  transformations and merges by `Synchon Mandal`_ and `Fede Raimondo`_
+  (:gh:`395`)
+- Allow ``workdir`` mapping form in YAML for easy debugging of single element
+  ``run`` by disabling cleanup of :class:`junifer.pipeline.WorkDirManager` by
+  `Synchon Mandal`_ (:gh:`402`)
+- Use :func:`junifer.utils.ConfigManager` to skip time-consuming dataset ID and
+  dirty checks for :class:`.DataladDataGrabber` by `Fede Raimondo`_ (:gh:`403`)
+- Enable ``compute_brain_mask`` to use subject-specific probseg files by `Fede
+  Raimondo`_ (:gh:`404`)
+- Update :class:`.DataladAOMICID1000`, :class:`.DataladAOMICPIOP1` and
+  :class:`.DataladAOMICPIOP2` to fetch data in all available spaces by `Fede
+  Raimondo`_ (:gh:`405`)
+- Update Preprocessors to sync data their paths so that the results are
+  idempotent by `Synchon Mandal`_ (:gh:`408`)
+- Ease asset storage for AFNI-based markers by `Synchon Mandal`_ (:gh:`409`)
+- Refactor the parcellation logic in the pipeline to account for and optimise
+  space transformations and merges by `Synchon Mandal`_ and `Fede Raimondo`_
+  (:gh:`411`)
+- Adapt mask warpers to use correct interpolation method based on the type of
+  data by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`416`)
+- Adapt usage of ``junifer-data`` DataLad dataset to fetch parcellations,
+  masks, coordinates and xfms by `Synchon Mandal`_ (:gh:`418`)
+- Add scrubbing support to :class:`.fMRIPrepConfoundRemover` by `Synchon
+  Mandal`_ (:gh:`421`)
+- Add commit SHA check for ``junifer_data`` to simplify data fetching by `Fede
+  Raimondo`_ (:gh:`434`)
+
+
+Features
+^^^^^^^^
+
+- Introduce :func:`.normalize` and :func:`.reweight` functions for downstream
+  BrainPrint analysis in :mod:`.onthefly.brainprint` by `Synchon Mandal`_
+  (:gh:`354`)
+- Introduce :class:`junifer.pipeline.PipelineComponentRegistry` to centralise
+  pipeline component management by `Synchon Mandal`_ (:gh:`362`)
+- Add support for plugins by `Synchon Mandal`_ (:gh:`366`)
+- Introduce :class:`junifer.data.CoordinatesRegistry`,
+  :class:`junifer.data.ParcellationRegistry` and
+  :class:`junifer.data.MaskRegistry` to centralise data management by `Synchon
+  Mandal`_ (:gh:`387`)
+- Introduce ``junifer.typing`` sub-module to organise internal and external
+  type hints by `Synchon Mandal`_ (:gh:`392`)
+- Introduce :class:`junifer.utils.ConfigManager` singleton class to manage
+  global configuration by `Fede Raimondo`_ (:gh:`401`)
+- Introduce ``BOLD.reference`` nested type and adapt :class:`.SpaceWarper` and
+  necessary data components by `Fede Raimondo`_ (:gh:`407`)
+- Allow masks to be warped, if found, in :class:`.SpaceWarper` by `Synchon
+  Mandal`_ (:gh:`408`)
+- Add support for coloured :class:`logging.Formatter` to use with ``junifer``'s
+  :class:`logging.StreamHandler` based on environment by `Fede Raimondo`_
+  (:gh:`412`)
+- Allow storage of 2D timeseries, currently only supported by
+  HDF5FeatureStorage by `Fede Raimondo`_ (:gh:`422`)
+
+
+Miscellaneous
+^^^^^^^^^^^^^
+
+- Adopt lazy-import mechanism for the package by `Synchon Mandal`_ (:gh:`355`)
+- Refactor ``api`` sub-package and introduce new ``cli`` sub-package by
+  `Synchon Mandal`_ (:gh:`361`)
+- Add ``junifer-data`` as a dependency by `Synchon Mandal`_ (:gh:`363`)
+- Drop support for Python 3.8, add support for Python 3.13 and make Python 3.12
+  the base for code coverage by `Synchon Mandal`_ (:gh:`372`)
+- Add Dockerfile for docs CI and a corresponding action for building and
+  publishing the image by `Synchon Mandal`_ (:gh:`373`)
+- Adopt usage of custom docs CI image for building and previewing docs actions
+  by `Synchon Mandal`_ (:gh:`374`)
+- Update Dependabot GitHub Action to support groups by `Synchon Mandal`_
+  (:gh:`380`)
+- Add Dockerfile for CI and a corresponding action for building and publishing
+  the image by `Synchon Mandal`_ (:gh:`382`)
+- Adopt usage of custom CI image for testing junifer action by `Synchon
+  Mandal`_ (:gh:`383`)
+- Improve docs publishing action and add a manual trigger for it by `Synchon
+  Mandal`_ (:gh:`384`)
+- Refactor ``Singleton`` class to use a metaclass instead of a class decorator
+  by `Fede Raimondo`_ (:gh:`391`)
+- Update type hints across codebase to be Python>=3.9 compatible by `Synchon
+  Mandal`_ (:gh:`393`)
+- Update Docker image recipes and GitHub Actions workflows by `Synchon Mandal`_
+  (:gh:`396`)
+- Simplify logic for parcellation and mask space warping by `Synchon Mandal`_
+  (:gh:`414`)
+- Remove ``httpx`` as a dependency by `Synchon Mandal`_ (:gh:`418`)
+- Fix coverage in CI by `Fede Raimondo`_ (:gh:`424`)
+- Use ``junifer-data`` in CI images by `Synchon Mandal`_ (:gh:`427`)
+- Improve GitHub Actions workflows by `Synchon Mandal`_ (:gh:`428`)
+- Bump ``junifer-data`` to ``v2`` for CI workflows, remove ``Power`` and add
+  ``Seitzman2018`` to :class:`.CoordinatesRegistry` by `Synchon Mandal`_
+  (:gh:`437`)
+- Bump ``junifer-data`` to ``v2`` for Docker images by `Synchon Mandal`_
+  (:gh:`438`)
+
 
 Junifer 0.0.5 (2024-07-22)
 --------------------------
@@ -188,10 +390,10 @@ API Changes
 - Modify ``preprocessor`` to ``preprocessors`` in :func:`.run` and
   ``preprocessing`` to ``preprocessors`` in :class:`.MarkerCollection` to
   accept multiple preprocessors by `Synchon Mandal`_ (:gh:`263`)
-- Add ``space`` parameter to :func:`.register_coordinates`,
-  :func:`.register_parcellation` and :func:`.register_mask` and return space
-  from :func:`.load_coordinates`, :func:`.load_parcellation` and
-  :func:`.load_mask` by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
+- Add ``space`` parameter to ``register_coordinates``,
+  ``register_parcellation`` and ``register_mask`` and return space
+  from ``load_coordinates``, ``load_parcellation`` and
+  ``load_mask`` by `Synchon Mandal`_ and `Fede Raimondo`_ (:gh:`268`)
 - Add ``template_type`` parameter to :func:`.get_template` by `Synchon Mandal`_
   (:gh:`299`)
 - Change :meth:`.BasePreprocessor.preprocess` return values to preprocessed
@@ -243,7 +445,7 @@ Enhancements
   :func:`.get_aggfunc_by_name` by `Synchon Mandal`_ (:gh:`287`)
 - Adapt ``BOLDWarper`` to use FSL or ANTs depending on warp file
   extension by `Synchon Mandal`_ (:gh:`293`)
-- Rewrite :func:`.compute_brain_mask` to allow variable template fetching via
+- Rewrite ``compute_brain_mask`` to allow variable template fetching via
   templateflow, according to target data by `Synchon Mandal`_ (:gh:`299`)
 - Replace ``requests`` with ``httpx`` for fetching parcellations by `Synchon
   Mandal`_ (:gh:`300`)
@@ -283,9 +485,9 @@ Features
 - Introduce :class:`junifer.pipeline.WorkDirManager` singleton class to manage
   working and temporary directories across pipeline by `Synchon Mandal`_
   (:gh:`254`)
-- Introduce :func:`.get_parcellation` to fetch parcellation tailored for the
+- Introduce ``get_parcellation`` to fetch parcellation tailored for the
   data by `Synchon Mandal`_ (:gh:`264`)
-- Introduce :func:`.get_coordinates` to fetch coordinates tailored for the data
+- Introduce ``get_coordinates`` to fetch coordinates tailored for the data
   by `Synchon Mandal`_ (:gh:`265`)
 - Introduce ``junifer.preprocess.fsl.apply_warper._ApplyWarper`` to wrap FSL's
   ``applywarp`` by `Synchon Mandal`_ (:gh:`266`)
@@ -307,7 +509,7 @@ Features
 - Introduce :func:`.get_template` to fetch template space image tailored to a
   target data by `Synchon Mandal`_ (:gh:`298`)
 - Add support for on-the-fly template space transformation in
-  :func:`.get_parcellation` and :func:`.get_mask` to allow parcellation and
+  ``get_parcellation`` and ``get_mask`` to allow parcellation and
   mask in different template spaces to work with a ``DataGrabber``'s data in a
   specified template space. (:gh:`299`)
 - Introduce :class:`.SpaceWarper` for warping ``T1w``, ``BOLD``, ``VBM_GM``,
@@ -478,7 +680,7 @@ Bugfixes
 - Fix an issue with datalad cache and locks in which the overridden settings in
   Junifer were not propagated to subprocesses, resulting in using the default
   settings by `Fede Raimondo`_ (:gh:`199`)
-- Fix a bug in which :func:`.get_mask` fails for FunctionalConnectivityBase
+- Fix a bug in which ``get_mask`` fails for ``FunctionalConnectivityBase``
   class, because of missing extra_input parameter by `Leonard Sasse`_
   (:gh:`200`)
 - Fix the output of :class:`.RSSETSMarker` to be 2D by `Synchon Mandal`_
@@ -558,7 +760,7 @@ Features
 
 - Add :class:`.EdgeCentricFCParcels` and :class:`.EdgeCentricFCSpheres` by
   `Leonard Sasse`_ (:gh:`64`)
-- Expose a :func:`.merge_parcellations` function to merge a list of
+- Expose a ``merge_parcellations`` function to merge a list of
   parcellations by `Leonard Sasse`_ (:gh:`146`)
 - Add support for HDF5 feature storage via :class:`.HDF5FeatureStorage` by
   `Synchon Mandal`_ (:gh:`147`)
@@ -668,8 +870,8 @@ Features
   connectivity using a parcellation by `Amir Omidvarnia`_ and
   `Kaustubh R. Patil`_ (:gh:`41`)
 
-- Implement :func:`.register_coordinates`, :func:`.list_coordinates` and
-  :func:`.load_coordinates` by `Fede Raimondo`_ (:gh:`11`)
+- Implement ``register_coordinates``, ``list_coordinates`` and
+  ``load_coordinates`` by `Fede Raimondo`_ (:gh:`11`)
 
 - Add :class:`.DataladAOMICID1000` datagrabber for AOMIC ID1000 dataset
   including tests and creation of mock dataset for testing by

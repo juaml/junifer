@@ -73,14 +73,14 @@ Set the logging level to info to see extra information:
 
  .. code-block:: none
 
-    2024-08-14 13:31:37,193 - JUNIFER - INFO - ===== Lib Versions =====
-    2024-08-14 13:31:37,193 - JUNIFER - INFO - numpy: 1.26.4
-    2024-08-14 13:31:37,193 - JUNIFER - INFO - scipy: 1.14.0
-    2024-08-14 13:31:37,193 - JUNIFER - INFO - pandas: 2.1.4
-    2024-08-14 13:31:37,193 - JUNIFER - INFO - nilearn: 0.10.4
-    2024-08-14 13:31:37,193 - JUNIFER - INFO - nibabel: 5.2.1
-    2024-08-14 13:31:37,193 - JUNIFER - INFO - junifer: 0.0.6.dev23
-    2024-08-14 13:31:37,193 - JUNIFER - INFO - ========================
+    2025-11-26 08:42:13,183 - JUNIFER - INFO - ===== Lib Versions =====
+    2025-11-26 08:42:13,183 - JUNIFER - INFO - numpy: 1.26.4
+    2025-11-26 08:42:13,183 - JUNIFER - INFO - scipy: 1.15.0
+    2025-11-26 08:42:13,184 - JUNIFER - INFO - pandas: 2.1.4
+    2025-11-26 08:42:13,184 - JUNIFER - INFO - nilearn: 0.10.4
+    2025-11-26 08:42:13,184 - JUNIFER - INFO - nibabel: 5.3.2
+    2025-11-26 08:42:13,184 - JUNIFER - INFO - junifer: 0.0.6
+    2025-11-26 08:42:13,184 - JUNIFER - INFO - ========================
 
 
 
@@ -198,400 +198,532 @@ Create a temporary directory for junifer feature extraction:
 
  .. code-block:: none
 
-    2024-08-14 13:31:37,207 - JUNIFER - INFO - Validating Marker Collection
-    2024-08-14 13:31:37,207 - JUNIFER - INFO - DataGrabber output type: ['VBM_GM']
-    2024-08-14 13:31:37,207 - JUNIFER - INFO - Validating Data Reader:
-    2024-08-14 13:31:37,207 - JUNIFER - INFO - Data Reader output type: ['VBM_GM']
-    2024-08-14 13:31:37,207 - JUNIFER - INFO - Validating Marker: Schaefer100x17_TrimMean80
-    2024-08-14 13:31:37,207 - JUNIFER - INFO - Marker output type: ['vector']
-    2024-08-14 13:31:37,207 - JUNIFER - INFO - Validating storage for Schaefer100x17_TrimMean80
-    2024-08-14 13:31:37,207 - JUNIFER - INFO - Validating Marker: Schaefer200x17_Mean
-    2024-08-14 13:31:37,208 - JUNIFER - INFO - Marker output type: ['vector']
-    2024-08-14 13:31:37,208 - JUNIFER - INFO - Validating storage for Schaefer200x17_Mean
-    2024-08-14 13:31:37,212 - JUNIFER - INFO - Getting element sub-01
-    2024-08-14 13:31:37,212 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:31:37,212 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:31:37,212 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:31:37,213 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:31:37,213 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:31:37,213 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:31:37,214 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:31:37,214 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:31:37,214 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:31:37,214 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:31:37,215 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:31:37,245 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:31:38,273 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:31:38,370 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsk_7rlurr/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsk_7rlurr/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpyf0mk8g3/parcellations01lh7bnf/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:31:39,758 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:42:13,427 - JUNIFER - INFO - Validating Marker Collection
+    2025-11-26 08:42:13,427 - JUNIFER - INFO - DataGrabber output type: ['VBM_GM']
+    2025-11-26 08:42:13,427 - JUNIFER - INFO - Validating Data Reader:
+    2025-11-26 08:42:13,428 - JUNIFER - INFO - Data Reader output type: ['VBM_GM']
+    2025-11-26 08:42:13,428 - JUNIFER - INFO - Validating Marker: Schaefer100x17_TrimMean80
+    2025-11-26 08:42:13,428 - JUNIFER - INFO - Marker output type: ['vector']
+    2025-11-26 08:42:13,428 - JUNIFER - INFO - Validating storage for Schaefer100x17_TrimMean80
+    2025-11-26 08:42:13,428 - JUNIFER - INFO - Validating Marker: Schaefer200x17_Mean
+    2025-11-26 08:42:13,428 - JUNIFER - INFO - Marker output type: ['vector']
+    2025-11-26 08:42:13,428 - JUNIFER - INFO - Validating storage for Schaefer200x17_Mean
+    2025-11-26 08:42:13,436 - JUNIFER - INFO - Getting element sub-01
+    2025-11-26 08:42:13,436 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:42:13,436 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:42:13,436 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:42:13,439 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:42:13,439 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:42:13,439 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:42:13,439 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:42:13,439 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:42:13,439 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:42:13,439 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:42:13,439 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:42:13,578 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:42:15,358 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:42:16,456 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/parcellation_warped.nii.gz
+    2025-11-26 08:42:21,762 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o:/data/mount_1 --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o:/data/mount_1 --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:31:40,778 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:31:40,811 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:31:40,811 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:31:40,812 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:31:40,812 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:31:40,812 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:31:40,812 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:31:40,812 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:31:40,813 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:31:40,844 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:31:41,894 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:31:41,991 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsn1cbu0s3/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsn1cbu0s3/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpyf0mk8g3/parcellations76xt8d63/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:31:44,030 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:42:23,010 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:42:23,036 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:42:23,036 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:42:23,036 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:42:23,036 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:42:23,036 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:42:23,036 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:42:23,036 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:42:23,036 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:42:23,240 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:42:25,033 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:42:26,122 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/parcellation_warped.nii.gz
+    2025-11-26 08:42:35,310 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg:/data/mount_1 --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg:/data/mount_1 --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:31:45,057 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:31:45,103 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:31:45,104 - JUNIFER - INFO - Getting element sub-02
-    2024-08-14 13:31:45,104 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:31:45,104 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:31:45,104 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:31:45,105 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:31:45,105 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:31:45,105 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:31:45,105 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:31:45,105 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:31:45,105 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:31:45,106 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:31:45,107 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:31:45,136 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:31:46,172 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:31:46,268 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsze7on4ow/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsze7on4ow/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpehxlabxz/parcellationslsci3gpa/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:31:47,672 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:42:36,550 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:42:36,586 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:42:36,588 - JUNIFER - INFO - Getting element sub-02
+    2025-11-26 08:42:36,588 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:42:36,588 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:42:36,588 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:42:36,590 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:42:36,590 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:42:36,590 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:42:36,590 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:42:36,590 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:42:36,590 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:42:36,590 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:42:36,590 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:42:36,726 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:42:38,514 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:42:39,607 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/parcellation_warped.nii.gz
+    2025-11-26 08:42:44,907 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf:/data/mount_1 --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf:/data/mount_1 --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:31:48,693 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:31:48,728 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:31:48,728 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:31:48,729 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:31:48,729 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:31:48,729 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:31:48,729 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:31:48,729 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:31:48,730 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:31:48,761 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:31:49,798 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:31:49,895 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellations_n837ejg/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellations_n837ejg/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpehxlabxz/parcellationsea2v8nng/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:31:51,924 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:42:46,323 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:42:46,349 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:42:46,349 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:42:46,349 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:42:46,349 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:42:46,349 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:42:46,349 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:42:46,350 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:42:46,350 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:42:46,478 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:42:48,280 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:42:49,369 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/parcellation_warped.nii.gz
+    2025-11-26 08:42:58,605 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q:/data/mount_1 --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q:/data/mount_1 --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:31:52,911 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:31:52,958 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:31:52,959 - JUNIFER - INFO - Getting element sub-03
-    2024-08-14 13:31:52,959 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:31:52,959 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:31:52,959 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:31:52,960 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:31:52,960 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:31:52,960 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:31:52,960 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:31:52,961 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:31:52,961 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:31:52,961 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:31:52,962 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:31:52,991 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:31:54,002 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:31:54,099 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationskhx67939/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationskhx67939/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmplbrzzzt_/parcellationscn0krced/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:31:55,485 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:42:59,853 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:42:59,890 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:42:59,892 - JUNIFER - INFO - Getting element sub-03
+    2025-11-26 08:42:59,892 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:42:59,892 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:42:59,892 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:42:59,894 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:42:59,894 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:42:59,894 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:42:59,894 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:42:59,894 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:42:59,894 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:42:59,894 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:42:59,894 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:43:00,019 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:43:01,821 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:43:02,908 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/parcellation_warped.nii.gz
+    2025-11-26 08:43:08,172 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu:/data/mount_1 --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu:/data/mount_1 --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:31:56,487 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:31:56,518 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:31:56,518 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:31:56,518 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:31:56,519 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:31:56,519 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:31:56,519 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:31:56,519 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:31:56,520 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:31:56,550 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:31:57,578 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:31:57,675 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsp7_2emuc/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsp7_2emuc/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmplbrzzzt_/parcellations2u0_jtr1/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:31:59,706 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:43:09,421 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:43:09,446 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:43:09,446 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:43:09,446 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:43:09,446 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:43:09,446 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:43:09,446 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:43:09,446 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:43:09,446 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:43:09,587 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:43:11,388 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:43:12,476 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/parcellation_warped.nii.gz
+    2025-11-26 08:43:21,657 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7:/data/mount_1 --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7:/data/mount_1 --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:00,771 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:00,818 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:32:00,818 - JUNIFER - INFO - Getting element sub-04
-    2024-08-14 13:32:00,819 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:32:00,819 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:32:00,819 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:32:00,820 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:32:00,820 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:00,820 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:00,820 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:00,820 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:00,820 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:32:00,821 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:00,822 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:00,852 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:01,909 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:02,006 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationstp4y7ax8/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationstp4y7ax8/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpa8btuy0o/parcellations_s2i5892/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:03,400 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:43:22,907 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:43:22,943 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:43:22,944 - JUNIFER - INFO - Getting element sub-04
+    2025-11-26 08:43:22,945 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:43:22,945 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:43:22,945 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:43:22,947 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:43:22,947 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:43:22,947 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:43:22,947 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:43:22,947 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:43:22,947 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:43:22,947 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:43:22,947 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:43:23,088 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:43:24,951 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:43:26,038 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/prewarp_parcellation.nii.gz -r /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/parcellation_warped.nii.gz
+    2025-11-26 08:43:31,379 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x:/data/mount_1 --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x:/data/mount_1 --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:04,506 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:04,539 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:32:04,539 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:04,540 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:04,540 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:04,540 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:04,540 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:32:04,540 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:04,541 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:04,572 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:05,634 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:05,731 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsf56ght22/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsf56ght22/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpa8btuy0o/parcellationseukriiwm/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:07,759 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:43:32,654 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:43:32,680 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:43:32,680 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:43:32,680 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:43:32,680 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:43:32,680 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:43:32,680 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:43:32,680 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:43:32,680 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:43:32,820 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:43:34,612 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:43:35,702 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/prewarp_parcellation.nii.gz -r /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/parcellation_warped.nii.gz
+    2025-11-26 08:43:44,979 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th:/data/mount_1 --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th:/data/mount_1 --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:08,763 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:08,809 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:32:08,809 - JUNIFER - INFO - Getting element sub-05
-    2024-08-14 13:32:08,810 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:32:08,810 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:32:08,810 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:32:08,811 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:32:08,811 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:08,811 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:08,811 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:08,811 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:08,811 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:32:08,812 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:08,813 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:08,842 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:09,911 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:10,008 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellations3aydknh0/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellations3aydknh0/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpqtg8ujtl/parcellationsotc7h1wh/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:11,393 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:43:46,234 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:43:46,270 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:43:46,271 - JUNIFER - INFO - Getting element sub-05
+    2025-11-26 08:43:46,271 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:43:46,271 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:43:46,271 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:43:46,273 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:43:46,273 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:43:46,273 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:43:46,273 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:43:46,273 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:43:46,273 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:43:46,273 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:43:46,273 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:43:46,398 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:43:48,193 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:43:49,280 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/parcellation_warped.nii.gz
+    2025-11-26 08:43:54,597 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6:/data/mount_1 --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6:/data/mount_1 --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:12,392 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:12,422 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:32:12,423 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:12,423 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:12,423 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:12,423 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:12,423 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:32:12,423 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:12,425 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:12,455 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:13,479 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:13,576 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellations756e923l/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellations756e923l/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpqtg8ujtl/parcellationsp7jnsh3z/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:15,608 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:43:55,898 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:43:55,925 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:43:55,925 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:43:55,925 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:43:55,925 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:43:55,925 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:43:55,925 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:43:55,925 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:43:55,925 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:43:56,056 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:43:57,858 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:43:58,947 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/parcellation_warped.nii.gz
+    2025-11-26 08:44:08,158 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j:/data/mount_1 --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j:/data/mount_1 --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:16,593 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:16,638 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:32:16,639 - JUNIFER - INFO - Getting element sub-06
-    2024-08-14 13:32:16,639 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:32:16,639 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:32:16,639 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:32:16,640 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:32:16,640 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:16,641 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:16,641 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:16,641 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:16,641 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:32:16,641 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:16,642 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:16,672 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:17,691 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:17,787 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellations__0x6lgs/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellations__0x6lgs/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpy93ai3yc/parcellationsg0ee7xqy/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:19,179 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:44:09,403 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:44:09,440 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:44:09,441 - JUNIFER - INFO - Getting element sub-06
+    2025-11-26 08:44:09,441 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:44:09,441 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:44:09,441 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:44:09,443 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:44:09,443 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:44:09,443 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:44:09,443 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:44:09,443 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:44:09,443 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:44:09,443 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:44:09,443 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:44:09,570 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:44:11,348 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:44:12,433 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/parcellation_warped.nii.gz
+    2025-11-26 08:44:17,711 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f:/data/mount_1 --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f:/data/mount_1 --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:20,177 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:20,210 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:32:20,210 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:20,210 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:20,210 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:20,210 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:20,211 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:32:20,211 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:20,212 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:20,242 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:21,271 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:21,369 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationssj1c90m3/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationssj1c90m3/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpy93ai3yc/parcellations3jcgmobs/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:23,407 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:44:19,021 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:44:19,045 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:44:19,045 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:44:19,046 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:44:19,046 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:44:19,046 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:44:19,046 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:44:19,046 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:44:19,046 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:44:19,172 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:44:20,973 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:44:22,062 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/parcellation_warped.nii.gz
+    2025-11-26 08:44:31,222 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi:/data/mount_1 --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi:/data/mount_1 --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:24,402 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:24,449 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:32:24,449 - JUNIFER - INFO - Getting element sub-07
-    2024-08-14 13:32:24,449 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:32:24,449 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:32:24,449 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:32:24,450 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:32:24,450 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:24,451 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:24,451 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:24,451 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:24,451 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:32:24,451 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:24,452 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:24,482 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:25,519 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:25,616 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellations7h6rfx6r/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellations7h6rfx6r/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp5xe2_a29/parcellations0e2bl88y/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:27,005 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:44:32,463 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:44:32,499 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:44:32,500 - JUNIFER - INFO - Getting element sub-07
+    2025-11-26 08:44:32,500 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:44:32,501 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:44:32,501 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:44:32,503 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:44:32,503 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:44:32,503 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:44:32,503 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:44:32,503 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:44:32,503 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:44:32,503 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:44:32,503 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:44:32,722 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:44:34,505 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:44:35,592 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/parcellation_warped.nii.gz
+    2025-11-26 08:44:40,860 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod:/data/mount_1 --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod:/data/mount_1 --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:28,019 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:28,049 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:32:28,049 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:28,049 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:28,050 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:28,050 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:28,050 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:32:28,050 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:28,051 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:28,082 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:29,122 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:29,220 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsfngfzmv9/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsfngfzmv9/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp5xe2_a29/parcellationsgmzoforx/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:31,240 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:44:42,185 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:44:42,210 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:44:42,210 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:44:42,210 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:44:42,210 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:44:42,210 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:44:42,210 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:44:42,210 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:44:42,210 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:44:42,343 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:44:44,137 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:44:45,227 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/parcellation_warped.nii.gz
+    2025-11-26 08:44:54,406 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi:/data/mount_1 --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi:/data/mount_1 --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:32,291 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:32,338 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:32:32,339 - JUNIFER - INFO - Getting element sub-08
-    2024-08-14 13:32:32,339 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:32:32,339 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:32:32,339 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:32:32,340 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:32:32,340 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:32,341 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:32,341 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:32,341 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:32,341 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:32:32,341 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:32,342 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:32,372 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:33,422 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:33,521 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsaw8_w077/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsaw8_w077/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpzugufs9u/parcellationst_44g44z/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:34,909 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:44:55,667 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:44:55,703 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:44:55,704 - JUNIFER - INFO - Getting element sub-08
+    2025-11-26 08:44:55,704 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:44:55,704 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:44:55,704 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:44:55,706 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:44:55,706 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:44:55,707 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:44:55,707 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:44:55,707 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:44:55,707 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:44:55,707 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:44:55,707 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:44:55,849 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:44:57,649 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:44:58,736 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/parcellation_warped.nii.gz
+    2025-11-26 08:45:03,990 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u:/data/mount_1 --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u:/data/mount_1 --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:35,985 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:36,018 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:32:36,018 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:36,019 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:36,019 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:36,019 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:36,019 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:32:36,019 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:36,021 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:36,051 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:37,112 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:37,210 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellations18_tv4sz/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellations18_tv4sz/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpzugufs9u/parcellations2dd0_ar6/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:39,254 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:45:05,251 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:45:05,278 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:45:05,278 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:45:05,278 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:45:05,278 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:45:05,278 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:45:05,278 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:45:05,279 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:45:05,279 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:45:05,418 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:45:07,213 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:45:08,304 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/parcellation_warped.nii.gz
+    2025-11-26 08:45:17,620 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig:/data/mount_1 --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig:/data/mount_1 --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:40,326 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:40,373 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:32:40,373 - JUNIFER - INFO - Getting element sub-09
-    2024-08-14 13:32:40,373 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:32:40,374 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:32:40,374 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:32:40,375 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:32:40,375 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:40,375 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:40,375 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:40,375 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:40,375 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:32:40,375 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:40,377 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:40,406 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:41,454 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:41,552 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsb0n2se5k/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsb0n2se5k/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmphskxfxzs/parcellationscv61ycth/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:42,941 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:45:18,864 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:45:18,900 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:45:18,901 - JUNIFER - INFO - Getting element sub-09
+    2025-11-26 08:45:18,901 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:45:18,901 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:45:18,902 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:45:18,903 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:45:18,903 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:45:18,904 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:45:18,904 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:45:18,904 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:45:18,904 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:45:18,904 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:45:18,904 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:45:19,039 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:45:20,836 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:45:21,923 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/parcellation_warped.nii.gz
+    2025-11-26 08:45:27,191 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv:/data/mount_1 --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv:/data/mount_1 --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:44,046 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:44,080 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:32:44,080 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:44,081 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:44,081 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:44,081 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:44,081 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:32:44,081 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:44,082 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:44,113 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:45,166 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:45,264 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsodev0ycx/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsodev0ycx/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmphskxfxzs/parcellationsonq8_2nd/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:47,289 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:45:28,478 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:45:28,502 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:45:28,502 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:45:28,502 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:45:28,502 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:45:28,502 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:45:28,502 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:45:28,502 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:45:28,502 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:45:28,638 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:45:30,439 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:45:31,536 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/parcellation_warped.nii.gz
+    2025-11-26 08:45:40,749 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f:/data/mount_1 --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f:/data/mount_1 --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:48,369 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:48,420 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:32:48,420 - JUNIFER - INFO - Getting element sub-10
-    2024-08-14 13:32:48,421 - JUNIFER - INFO - Fitting pipeline
-    2024-08-14 13:32:48,421 - JUNIFER - INFO - Reading VBM_GM from /home/runner/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz
-    2024-08-14 13:32:48,421 - JUNIFER - INFO - VBM_GM is of type NIFTI
-    2024-08-14 13:32:48,422 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
-    2024-08-14 13:32:48,422 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:48,422 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:48,422 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:48,422 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:48,422 - JUNIFER - INFO -      n_rois: 100
-    2024-08-14 13:32:48,423 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:48,424 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:48,454 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:49,506 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:49,603 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellationsbw9yjhtk/Schaefer100x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellationsbw9yjhtk/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp6kuq71nf/parcellationsmf3ak3f6/Schaefer100x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:50,983 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:45:42,028 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:45:42,064 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:45:42,066 - JUNIFER - INFO - Getting element sub-10
+    2025-11-26 08:45:42,066 - JUNIFER - INFO - Fitting pipeline
+    2025-11-26 08:45:42,066 - JUNIFER - INFO - Reading VBM_GM from /home/synchon/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz
+    2025-11-26 08:45:42,066 - JUNIFER - INFO - VBM_GM is of type NIFTI
+    2025-11-26 08:45:42,068 - JUNIFER - INFO - Fitting marker Schaefer100x17_TrimMean80
+    2025-11-26 08:45:42,068 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:45:42,068 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:45:42,068 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:45:42,068 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:45:42,068 - JUNIFER - INFO -      n_rois: 100
+    2025-11-26 08:45:42,068 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:45:42,068 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:45:42,300 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:45:44,092 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:45:45,182 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/parcellation_warped.nii.gz
+    2025-11-26 08:45:50,427 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y:/data/mount_1 --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y:/data/mount_1 --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:52,041 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:52,075 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
-    2024-08-14 13:32:52,075 - JUNIFER - INFO - Computing VBM_GM
-    2024-08-14 13:32:52,076 - JUNIFER - INFO - Fetching one of Schaefer parcellations.
-    2024-08-14 13:32:52,076 - JUNIFER - INFO - Parcellation parameters:
-    2024-08-14 13:32:52,076 - JUNIFER - INFO -      resolution: 2.0
-    2024-08-14 13:32:52,076 - JUNIFER - INFO -      n_rois: 200
-    2024-08-14 13:32:52,076 - JUNIFER - INFO -      yeo_networks: 17
-    2024-08-14 13:32:52,078 - JUNIFER - INFO - Loading parcellation /home/runner/junifer/data/parcellations/schaefer_2018/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz
-    2024-08-14 13:32:52,108 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
-    2024-08-14 13:32:53,166 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
-    2024-08-14 13:32:53,262 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpp3v3ecmt/parcellations5nwsw_yx/Schaefer200x17.nii.gz -r /tmp/tmpp3v3ecmt/parcellations5nwsw_yx/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp6kuq71nf/parcellations16_zsodk/Schaefer200x17_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
-    2024-08-14 13:32:55,286 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    2025-11-26 08:45:51,680 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:45:51,705 - JUNIFER - INFO - Fitting marker Schaefer200x17_Mean
+    2025-11-26 08:45:51,705 - JUNIFER - INFO - Computing VBM_GM
+    2025-11-26 08:45:51,705 - JUNIFER - INFO - Parcellation will be warped from MNI152NLin6Asym to MNI152Lin using highest resolution
+    2025-11-26 08:45:51,705 - JUNIFER - INFO - Parcellation parameters:
+    2025-11-26 08:45:51,705 - JUNIFER - INFO -      resolution: None
+    2025-11-26 08:45:51,705 - JUNIFER - INFO -      n_rois: 200
+    2025-11-26 08:45:51,705 - JUNIFER - INFO -      yeo_networks: 17
+    2025-11-26 08:45:51,705 - JUNIFER - INFO - Resolution set to None, using highest resolution.
+    2025-11-26 08:45:51,842 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
+    2025-11-26 08:45:53,636 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
+    2025-11-26 08:45:54,725 - JUNIFER - INFO - antsApplyTransforms command to be executed:
+    antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/parcellation_warped.nii.gz
+    2025-11-26 08:46:03,899 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
+    /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/prewarp_parcellation.nii.gz is a file
+    /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/MNI152Lin_T1w.nii.gz is a file
+    /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 is a file
+    /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/parcellation_warped.nii.gz is a prefix
+    Singularity args: --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm:/data/mount_1 --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm:/data/mount_4
+    Corrected args for ANTS: antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
+    Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --cleanenv --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm:/data/mount_1 --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm:/data/mount_2 --bind /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5:/data/mount_3 --bind /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm:/data/mount_4 /data/group/appliedml/tools/ants_2.5.0/ants_v2.5.0.sif antsApplyTransforms -d 3 -e 3 -n GenericLabel[NearestNeighbor] -i /data/mount_1/prewarp_parcellation.nii.gz -r /data/mount_2/MNI152Lin_T1w.nii.gz -t /data/mount_3/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /data/mount_4/parcellation_warped.nii.gz
 
-    2024-08-14 13:32:56,341 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpqe457sad/test.sqlite (multiple output)>
-    2024-08-14 13:32:56,388 - JUNIFER - INFO - Marker collection fitting done
-    2024-08-14 13:32:56,389 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
-    2024-08-14 13:32:56,389 - JUNIFER - INFO - Collecting data from /tmp/tmpqe457sad/*test.sqlite
+    2025-11-26 08:46:05,141 - JUNIFER - INFO - Storing in <SQLiteFeatureStorage @ /tmp/tmpwa8g2uae/test.sqlite (multiple output)>
+    2025-11-26 08:46:05,177 - JUNIFER - INFO - Marker collection fitting done
+    2025-11-26 08:46:05,178 - JUNIFER - INFO - Collecting data using SQLiteFeatureStorage
+    2025-11-26 08:46:05,178 - JUNIFER - INFO - Collecting data from /tmp/tmpwa8g2uae/*test.sqlite
     file: 0it [00:00, ?it/s]
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 22.53it/s]
+
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 25.05it/s]
+    file: 2it [00:00, 10.70it/s]
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 25.01it/s]
+
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 25.07it/s]
+    file: 4it [00:00, 11.05it/s]
     feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00, 15.52it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 15.49it/s]
-    file: 1it [00:00,  7.13it/s]
+    feature: 100%|██████████| 2/2 [00:00<00:00, 10.10it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 10.08it/s]
+
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 25.23it/s]
+    file: 6it [00:00,  8.58it/s]
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 25.23it/s]
+
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 25.15it/s]
+    file: 8it [00:00,  9.50it/s]
+    feature:   0%|          | 0/2 [00:00<?, ?it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 25.04it/s]
+
     feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00, 17.38it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 17.35it/s]
-    file: 2it [00:00,  7.60it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00, 17.04it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 17.01it/s]
-    file: 3it [00:00,  7.70it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00, 17.39it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 17.35it/s]
-    file: 4it [00:00,  7.80it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00,  8.34it/s]    feature: 100%|██████████| 2/2 [00:00<00:00,  8.34it/s]
-    file: 5it [00:00,  5.81it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00, 16.81it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 16.78it/s]
-    file: 6it [00:00,  6.33it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00, 17.03it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 17.00it/s]
-    file: 7it [00:01,  6.75it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00, 16.99it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 16.96it/s]
-    file: 8it [00:01,  7.04it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00, 17.00it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 16.96it/s]
-    file: 9it [00:01,  7.26it/s]
-    feature:   0%|          | 0/2 [00:00<?, ?it/s]
-    feature: 100%|██████████| 2/2 [00:00<00:00, 17.43it/s]    feature: 100%|██████████| 2/2 [00:00<00:00, 17.40it/s]
-    file: 10it [00:01,  7.47it/s]    file: 10it [00:01,  7.09it/s]
-    2024-08-14 13:32:57,799 - JUNIFER - INFO - Collect done
+    feature: 100%|██████████| 2/2 [00:00<00:00,  9.93it/s]    feature: 100%|██████████| 2/2 [00:00<00:00,  9.92it/s]
+    file: 10it [00:01,  8.25it/s]    file: 10it [00:01,  8.82it/s]
+    2025-11-26 08:46:06,312 - JUNIFER - INFO - Collect done
 
 
 
@@ -637,12 +769,10 @@ We predict the age given our vbm features and sex as a confound.
 
  .. code-block:: none
 
-       fit_time  score_time  ...  fold                          cv_mdsum
-    0  0.134054    0.019021  ...     0  509497eb21da473048117e0c6704d3ea
-    1  0.131629    0.019209  ...     1  509497eb21da473048117e0c6704d3ea
-    2  0.131074    0.019018  ...     2  509497eb21da473048117e0c6704d3ea
-
-    [3 rows x 8 columns]
+       fit_time  score_time  test_score  n_train  n_test  repeat  fold                          cv_mdsum
+    0  0.098416    0.012304    0.261686        6       4       0     0  509497eb21da473048117e0c6704d3ea
+    1  0.087528    0.012003   -4.392809        7       3       0     1  509497eb21da473048117e0c6704d3ea
+    2  0.087795    0.011976    0.733589        7       3       0     2  509497eb21da473048117e0c6704d3ea
 
 
 
@@ -657,7 +787,7 @@ for different cross-validation folds.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (1 minutes 21.352 seconds)
+   **Total running time of the script:** (3 minutes 54.330 seconds)
 
 
 .. _sphx_glr_download_auto_examples_run_junifer_julearn.py:
@@ -673,6 +803,10 @@ for different cross-validation folds.
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: run_junifer_julearn.py <run_junifer_julearn.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-zip
+
+      :download:`Download zipped: run_junifer_julearn.zip <run_junifer_julearn.zip>`
 
 
 .. only:: html

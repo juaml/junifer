@@ -18,19 +18,28 @@ provides them already.
 If you checked the in-built coordinates, and they are not there already (for
 example if you came up with your own set of coordinates), then ``junifer``
 provides an easy way for you to register them using the
-:func:`.register_coordinates` function, so you can use your own set of
+:func:`.register_data` function, so you can use your own set of
 coordinates within a ``junifer`` pipeline.
 
-From the API reference, we can see that it has 4 positional arguments
-(``name``, ``coordinates``, ``voi_names`` and ``space``) as well as one
-optional keyword argument (``overwrite``).
+From the API reference, we can see that it has 3 positional arguments:
+
+* ``kind``
+* ``name``
+* ``space``
+
+as well as one optional keyword argument: ``overwrite``.
+As the ``kind`` needs to be ``"coordinates"``, we can check
+``CoordinatesRegistry.register`` for keyword arguments to be passed:
+
+* ``coordinates``
+* ``voi_names``
 
 The ``name`` argument takes a string indicating the name you want to give to
 this set of coordinates. This ``name`` can be used to obtain and operate on a
 set of coordinates in ``junifer``. For example, you can obtain your coordinates
-after registration by providing ``name`` to :func:`.load_coordinates`. We could
-simply call it ``"my_set_of_coordinates"``, but likely you want a more
-descriptive and more informative name most of the time.
+after registration by providing ``name`` to :func:`.load_data` with
+``kind="coordinates"``. We could simply call it ``"my_set_of_coordinates"``,
+but likely you want a more descriptive and more informative name most of the time.
 
 The ``coordinates`` argument takes the actual coordinates as a 2-dimensional
 :class:`numpy.ndarray`. It contains one row for every location, and three
@@ -57,8 +66,8 @@ packages:
 
 .. code-block:: python
 
-  from junifer.data import register_coordinates
   import numpy as np
+  from junifer.data import register_data
 
 For the sake of this example, we can create a set of coordinates that belong
 to the Default Mode Network (DMN), and register this set of coordinates with
@@ -86,8 +95,12 @@ simply use this to register our coordinates:
 
 .. code-block:: python
 
-  register_coordinates(
-      name="DMNCustom", coordinates=dmn_coords, voi_names=voi_names, space="MNI"
+  register_data(
+      kind="coordinates",
+      name="DMNCustom",
+      coordinates=dmn_coords,
+      voi_names=voi_names,
+      space="MNI",
   )
 
 Now, when we run this script, ``junifer`` registers these coordinates and we can

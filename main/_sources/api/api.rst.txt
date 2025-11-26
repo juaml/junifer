@@ -1,10 +1,10 @@
 API Functions
 =============
 
-Main API functions
-------------------
+Main Functions
+--------------
 
-.. automodule:: junifer.api
+.. automodule:: junifer.api.functions
    :members:
    :imported-members:
 

@@ -163,6 +163,14 @@ Available
        | ``fMRIPrep``-ed data
      - In Progress
      - :gh:`161`
+   * - ``TemporalSlicer``
+     - Slice ``BOLD`` data temporally
+     - | Done
+     - :gh:`443`
+   * - ``TemporalFilter``
+     - Filter (clean) ``BOLD`` data temporally
+     - | Done
+     - :gh:`432`
 
 
 ..
@@ -201,20 +209,28 @@ Available
      - Apply parcellation and perform aggregation function
      - Done
      - 0.0.1
-   * - :class:`.FunctionalConnectivityParcels`
-     - Compute functional connectivity over parcellation
-     - Done
-     - 0.0.1
-   * - :class:`.CrossParcellationFC`
-     - Compute functional connectivity across two parcellations
-     - Done
-     - 0.0.1
    * - :class:`.SphereAggregation`
      - Spherical aggregation using mean
      - Done
      - 0.0.1
+   * - :class:`.MapsAggregation`
+     - Apply maps (probabilistic atlas) and extract mean time series per region
+     - Done
+     - 0.0.7
+   * - :class:`.FunctionalConnectivityParcels`
+     - Compute functional connectivity over parcellation
+     - Done
+     - 0.0.1
    * - :class:`.FunctionalConnectivitySpheres`
      - Compute functional connectivity over spheres placed on coordinates
+     - Done
+     - 0.0.1
+   * - :class:`.FunctionalConnectivityMaps`
+     - Compute functional connectivity over maps (probabilistic atlas)
+     - Done
+     - 0.0.7
+   * - :class:`.CrossParcellationFC`
+     - Compute functional connectivity across two parcellations
      - Done
      - 0.0.1
    * - :class:`.RSSETSMarker`
@@ -229,6 +245,10 @@ Available
      - Calculate regional homogeneity over spheres placed on coordinates
      - Done
      - 0.0.1
+   * - :class:`.ReHoMaps`
+     - Calculate regional homogeneity over maps (probabilistic atlas)
+     - Done
+     - 0.0.7
    * - :class:`.ALFFParcels`
      - Calculate (f)ALFF and aggregate using parcellations
      - Done
@@ -237,6 +257,10 @@ Available
      - Calculate (f)ALFF and aggregate using spheres placed on coordinates
      - Done
      - 0.0.1
+   * - :class:`.ALFFMaps`
+     - Calculate (f)ALFF and aggregate using maps (probabilistic atlas)
+     - Done
+     - 0.0.7
    * - :class:`.EdgeCentricFCParcels`
      - | Calculate edge-centric functional connectivity over parcellation, as
        | found in
@@ -249,6 +273,12 @@ Available
        | `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.2
+   * - :class:`.EdgeCentricFCMaps`
+     - | Calculate edge-centric functional connectivity over maps (probabilistic atlas),
+       | as found in
+       | `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
+     - Done
+     - 0.0.7
    * - :class:`.TemporalSNRParcels`
      - Calculate temporal signal-to-noise ratio using parcellations
      - Done
@@ -258,6 +288,10 @@ Available
        | coordinates
      - Done
      - 0.0.2
+   * - :class:`.TemporalSNRMaps`
+     - Calculate temporal signal-to-noise ratio using maps (probabilistic atlas)
+     - Done
+     - 0.0.7
    * - :class:`.HurstExponent`
      - | Calculate Hurst exponent of a time series as found in
        | `Peng et al. (1995) <https://doi.org/10.1063/1.166141>`_
@@ -419,6 +453,16 @@ Available
        | Architecture
        | Cerebral Cortex, Volume 26(8), Pages 3508–3526 (2016).
        | https://doi.org/10.1093/cercor/bhw157
+   * - FreeSurfer 7.4.1 anatomical segmentation atlas
+     - None
+     - ``aseg-7_4_1``
+     - ``fsaverage``
+     - 0.0.7
+     - | Fischl B, Salat DH, Busa E, et al.
+       | Whole brain segmentation: automated labeling of neuroanatomical
+       | structures in the human brain.
+       | Neuron., Volume 33(3), Pages 341-355 (2002).
+       | https://doi:10.1016/s0896-6273(02)00569-x
 
 
 Planned
@@ -458,12 +502,6 @@ Planned
        | anatomical nomenclature.
        | NeuroImage, Volume 53(1), Pages 1–15 (2010).
        | http://doi.org/10.1016/j.neuroimage.2010.06.010.
-   * - Fan
-     - | Fan, L., Li, H., Zhuo, J. et al.
-       | The human brainnetome atlas: a new brain atlas based on connectional
-       | architecture.
-       | Cerebral cortex, Volume 26(8), Pages 3508-3526 (2016).
-       | https://doi.org/10.1093/cercor/bhw157
    * - Buckner
      - | Buckner, R.L., Krienen, F.M., Castellanos, A., Diaz, J.C., Yeo, B.T.T.
        | The organization of the human cerebellum estimated by intrinsic
@@ -631,14 +669,6 @@ Available
        | Prediction of Individual Brain Maturity Using fMRI
        | Science, Volume 329(5997), Pages 1358-1361 (2010).
        | https://doi.org/10.1126/science.1194144
-   * - Areal functional network from Power et al. (2013)
-     - ``Power2013``
-     - 0.0.4
-     - | Power, J. D., Schlaggar, B. L., Lessov-Schlaggar, C. N., &
-       | Petersen, S. E.
-       | Evidence for hubs in human functional brain networks.
-       | Neuron, Volume 79(4), Pages 798–813 (2013).
-       | https://doi.org/10.1016/j.neuron.2013.07.035
    * - Autobiographical Memory from Spreng et al. (2009)
      - ``AutobiographicalMemory``
      - 0.0.4
@@ -648,6 +678,15 @@ Available
        | Meta-analysis.
        | Journal of Cognitive Neuroscience, Volume 21(3), Pages 489–510 (2009).
        | https://doi.org/10.1162/jocn.2008.21029
+   * - | Functionally-constrained ROIs from non-cortical structures from
+       | Seitzman et al. (2020)
+     - ``Seitzman2018``
+     - 0.0.6
+     - | Seitzman, B. A., Gratton, C., Marek, S. et al.
+       | A set of functionally-defined brain regions with improved representation
+       | of the subcortex and cerebellum.
+       | NeuroImage, Volume 206 (2020).
+       | https://doi.org/10.1016/j.neuroimage.2019.116290
 
 
 Planned
@@ -733,6 +772,40 @@ Available
 ..
    Planned
    ~~~~~~~
+
+
+Maps
+----
+
+..
+    Provide a list of the maps that are implemented or planned.
+
+    Version added: The junifer version in which the maps was added.
+
+Available
+~~~~~~~~~
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - Name
+     - Options
+     - Keys
+     - Template Spaces
+     - Version Added
+     - Publication
+   * - Smith
+     - ``components``, ``dimension``
+     - | ``Smith_rsn_10``, ``Smith_rsn_20``, ``Smith_rsn_70``,
+       | ``Smith_bm_10``, ``Smith_bm_20``, ``Smith_bm_70``
+     - ``MNI152NLin6Asym``
+     - 0.0.7
+     - | S.M. Smith, P.T. Fox, K.L. Miller et al.
+       | Correspondence of the brain's functional architecture during activation and rest
+       | Proc. Natl. Acad. Sci. U.S.A. 106 (31) 13040-13045 (2009)
+       | https://doi.org/10.1073/pnas.0905267106
+
 
 ..
   helpful site for creating tables: https://rest-sphinx-memo.readthedocs.io/en/latest/ReST.html#tables
