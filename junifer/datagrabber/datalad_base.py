@@ -206,7 +206,7 @@ class DataladDataGrabber(BaseDataGrabber):
                 remote_id = self._dataset.id
                 is_dirty = False
             logger.debug(
-                f"Remote dataset is {'' if is_dirty else 'not'} dirty"
+                f"Remote dataset is{'' if is_dirty else ' not '}dirty"
             )
         if remote_id is None:
             raise_error("Could not get dataset ID from remote")
