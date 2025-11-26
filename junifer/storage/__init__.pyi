@@ -8,8 +8,7 @@ __all__ = [
     "Upsert",
 ]
 
-from ._types import MatrixKind
-from .base import BaseFeatureStorage, StorageType
+from .base import BaseFeatureStorage, MatrixKind, StorageType
 from .hdf5 import HDF5FeatureStorage
 from .pandas_base import PandasBaseFeatureStorage
 from .sqlite import SQLiteFeatureStorage, Upsert
