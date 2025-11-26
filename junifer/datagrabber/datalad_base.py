@@ -17,6 +17,7 @@ from datalad.support.exceptions import IncompleteResultsError
 from datalad.support.gitrepo import GitRepo
 from pydantic import Field, HttpUrl, field_validator
 
+from ..api.decorators import register_datagrabber
 from ..pipeline import WorkDirManager
 from ..typing import Element
 from ..utils import config, logger, raise_error, warn_with_log
@@ -43,6 +44,7 @@ def _remove_datadir(datadir: Path) -> None:
         WorkDirManager().delete_tempdir(datadir)
 
 
+@register_datagrabber
 class DataladDataGrabber(BaseDataGrabber):
     """Abstract base class for datalad-based data fetching.
 
