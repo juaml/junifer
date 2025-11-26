@@ -355,7 +355,7 @@ class BrainPrint(BaseMarker):
                 - ``data`` : volumes as ``np.ndarray``
                 - ``col_names`` : surface labels as list of str
 
-            * ``distances`` : dictionary with the following keys
+            * ``distances`` : dictionary with the following keys \
                               if ``asymmetry = True``:
 
                 - ``data`` : distances as ``np.ndarray``
