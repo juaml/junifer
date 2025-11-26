@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import atexit
 from functools import lru_cache
 from pathlib import Path
 from typing import (
@@ -41,8 +42,10 @@ class AFNIReHo(metaclass=Singleton):
         },
     ]
 
-    def __del__(self) -> None:  # pragma: no cover
-        """Terminate the class."""
+    def __init__(self) -> None:
+        atexit.register(self._del)
+
+    def _del(self) -> None:
         # Clear the computation cache
         logger.debug("Clearing cache for ReHo computation via AFNI")
         self.compute.cache_clear()
