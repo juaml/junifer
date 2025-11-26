@@ -15,11 +15,17 @@ import pandas as pd
 from pydantic import BaseModel, ConfigDict
 
 from ..utils import logger, raise_error
-from ._types import MatrixKind
-from .utils import process_meta
 
 
-__all__ = ["BaseFeatureStorage", "StorageType"]
+__all__ = ["BaseFeatureStorage", "MatrixKind", "StorageType"]
+
+
+class MatrixKind(str, Enum):
+    """Accepted matrix kind value."""
+
+    UpperTriangle = "triu"
+    LowerTriangle = "tril"
+    Full = "full"
 
 
 class StorageType(str, Enum):
@@ -202,6 +208,9 @@ class BaseFeatureStorage(BaseModel, ABC):
             If ``kind`` is invalid.
 
         """
+        # Imported here to avoid circular import
+        from .utils import process_meta
+
         # Do the check before calling the abstract methods, otherwise the
         # meta might be stored even if the data is not stored.
         if kind not in self._STORAGE_TYPES:
