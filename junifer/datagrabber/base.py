@@ -65,8 +65,6 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
         logger.debug(f"\ttypes = {self.types}")
         # Run extra validation for datagrabbers and fail early if needed
         self.validate_datagrabber_params()
-        # Convert to correct data type
-        # self.types = [DataType(t) for t in self.types]
 
     def validate_datagrabber_params(self) -> None:
         """Run extra logical validation for datagrabber.
