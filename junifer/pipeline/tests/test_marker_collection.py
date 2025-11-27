@@ -26,12 +26,12 @@ def test_marker_collection_incorrect_markers() -> None:
     """Test incorrect markers for MarkerCollection."""
     wrong_markers = [
         ParcelAggregation(
-            parcellation=["Schaefer100x7"],
+            parcellation="Schaefer100x7",
             method="mean",
             name="gmd_schaefer100x7_mean",
         ),
         ParcelAggregation(
-            parcellation=["Schaefer100x7"],
+            parcellation="Schaefer100x7",
             method="mean",
             name="gmd_schaefer100x7_mean",
         ),
@@ -44,17 +44,17 @@ def test_marker_collection() -> None:
     """Test MarkerCollection."""
     markers = [
         ParcelAggregation(
-            parcellation=["TianxS2x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
         ),
         ParcelAggregation(
-            parcellation=["TianxS2x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
             method="std",
             name="tian_std",
         ),
         ParcelAggregation(
-            parcellation=["TianxS2x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
             method="trim_mean",
             method_params={"proportiontocut": 0.1},
             name="tian_trim_mean90",
@@ -150,17 +150,17 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     """
     markers = [
         ParcelAggregation(
-            parcellation=["TianxS2x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
         ),
         ParcelAggregation(
-            parcellation=["TianxS2x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
             method="std",
             name="tian_std",
         ),
         ParcelAggregation(
-            parcellation=["TianxS2x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
             method="trim_mean",
             method_params={"proportiontocut": 0.1},
             name="tian_trim_mean90",

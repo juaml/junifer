@@ -3,14 +3,16 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Literal, Optional
+from typing import Annotated, Any, Literal, Optional, Union
 
 import numpy as np
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_marker
 from ...datagrabber import DataType
 from ...utils import logger
 from ..parcel_aggregation import ParcelAggregation
+from ..utils import _ensure_list
 from .reho_base import ReHoBase
 
 
@@ -23,7 +25,7 @@ class ReHoParcels(ReHoBase):
 
     Parameters
     ----------
-    parcellation : list of str
+    parcellation : str or list of str
         The name(s) of the parcellation(s) to use.
         See :func:`.list_data` for options.
     using : :enum:`.ReHoImpl`
@@ -86,7 +88,9 @@ class ReHoParcels(ReHoBase):
 
     """
 
-    parcellation: list[str]
+    parcellation: Annotated[
+        Union[str, list[str]], BeforeValidator(_ensure_list)
+    ]
     on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def compute(

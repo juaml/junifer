@@ -6,9 +6,10 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Literal, Optional, Union
+from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 
 import numpy as np
+from pydantic import BeforeValidator
 
 from ..api.decorators import register_marker
 from ..datagrabber import DataType
@@ -17,7 +18,7 @@ from ..typing import Dependencies, MarkerInOutMappings
 from ..utils import logger
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
-from .utils import _ets
+from .utils import _ensure_list, _ets
 
 
 __all__ = ["RSSETSMarker"]
@@ -29,7 +30,7 @@ class RSSETSMarker(BaseMarker):
 
     Parameters
     ----------
-    parcellation : list of str
+    parcellation : str or list of str
         The name(s) of the parcellation(s) to use.
         See :func:`.list_data` for options.
     agg_method : str, optional
@@ -57,7 +58,9 @@ class RSSETSMarker(BaseMarker):
         },
     }
 
-    parcellation: list[str]
+    parcellation: Annotated[
+        Union[str, list[str]], BeforeValidator(_ensure_list)
+    ]
     agg_method: str = "mean"
     agg_method_params: Optional[dict] = None
     masks: Optional[list[Union[dict, str]]] = None

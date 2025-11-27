@@ -4,11 +4,12 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Literal, Optional, Union
+from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 
 import numpy as np
 from nilearn.image import math_img
 from nilearn.maskers import NiftiMasker
+from pydantic import BeforeValidator
 
 from ..api.decorators import register_marker
 from ..data import get_data
@@ -18,6 +19,7 @@ from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
 from ..utils import logger, raise_error, warn_with_log
 from .base import BaseMarker
+from .utils import _ensure_list
 
 
 __all__ = ["ParcelAggregation"]
@@ -29,7 +31,7 @@ class ParcelAggregation(BaseMarker):
 
     Parameters
     ----------
-    parcellation : list of str
+    parcellation : str or list of str
         The name(s) of the parcellation(s) to use.
         See :func:`.list_data` for options.
     method : str, optional
@@ -100,7 +102,9 @@ class ParcelAggregation(BaseMarker):
         },
     }
 
-    parcellation: list[str]
+    parcellation: Annotated[
+        Union[str, list[str]], BeforeValidator(_ensure_list)
+    ]
     method: str = "mean"
     method_params: Optional[dict[str, Any]] = None
     time_method: Optional[str] = None

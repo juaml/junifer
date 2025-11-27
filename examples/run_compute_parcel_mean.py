@@ -35,7 +35,7 @@ with OasisVBMTestingDataGrabber() as dg:
     element_data = DefaultDataReader().fit_transform(dg[element])
     # Initialize marker
     marker = ParcelAggregation(
-        parcellation=["Schaefer100x7"],
+        parcellation="Schaefer100x7",
         method=AggFunc.Mean,
     )
     # Compute feature
@@ -53,7 +53,7 @@ with SPMAuditoryTestingDataGrabber() as dg:
     element_data = DefaultDataReader().fit_transform(dg[element])
     # Initialize marker
     marker = ParcelAggregation(
-        parcellation=["Schaefer100x7"],
+        parcellation="Schaefer100x7",
         method=AggFunc.Mean,
         on=[DataType.BOLD],
     )

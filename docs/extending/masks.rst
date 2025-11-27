@@ -86,7 +86,7 @@ mask as an argument. For example:
   markers:
     - name: CustomMaskParcelAggregation_mean
       kind: ParcelAggregation
-      parcellation: [Schaefer200x17]
+      parcellation: Schaefer200x17
       method: mean
       masks: "my_custom_mask"
 

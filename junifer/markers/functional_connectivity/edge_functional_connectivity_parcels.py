@@ -4,12 +4,14 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Literal, Optional
+from typing import Annotated, Any, Literal, Optional, Union
+
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_marker
 from ...datagrabber import DataType
 from ..parcel_aggregation import ParcelAggregation
-from ..utils import _ets
+from ..utils import _ensure_list, _ets
 from .functional_connectivity_base import FunctionalConnectivityBase
 
 
@@ -22,7 +24,7 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
 
     Parameters
     ----------
-    parcellation : list of str
+    parcellation : str or list of str
         The name(s) of the parcellation(s) to use.
         See :func:`.list_data` for options.
     agg_method : str, optional
@@ -59,7 +61,9 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
 
     """
 
-    parcellation: list[str]
+    parcellation: Annotated[
+        Union[str, list[str]], BeforeValidator(_ensure_list)
+    ]
     on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def aggregate(
