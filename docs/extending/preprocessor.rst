@@ -42,8 +42,8 @@ For input we can accept ``T1w``, ``T2w`` and ``BOLD``
 Step 2: Initialise the Preprocessor
 -----------------------------------
 
-Now we need to define our Preprocessor class' parameters.
-Our class will have the following arguments:
+Now we need to define our Preprocessor class' parameters as class attributes.
+Our class will have the following:
 
 1. ``fwhm``: The smoothing strength as a full-width at half maximum
    (in millimetres). Since we depend on :func:`nilearn.image.smooth_img`, we
