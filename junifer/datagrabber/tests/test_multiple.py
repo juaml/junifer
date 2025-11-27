@@ -76,7 +76,7 @@ def test_MultipleDataGrabber() -> None:
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri,
-        types=["BOLD"],
+        types="BOLD",
         patterns={
             "BOLD": {
                 "pattern": (
@@ -175,7 +175,7 @@ def test_MultipleDataGrabber_no_intersection() -> None:
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=HttpUrl(_testing_dataset["example_bids_ses"]["uri"]),
-        types=["BOLD"],
+        types="BOLD",
         patterns={
             "BOLD": {
                 "pattern": (
@@ -200,7 +200,7 @@ def test_MultipleDataGrabber_get_item() -> None:
     dg1 = PatternDataladDataGrabber(
         rootdir=Path("example_bids_ses"),
         uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
-        types=["T1w"],
+        types="T1w",
         patterns={
             "T1w": {
                 "pattern": (
@@ -224,7 +224,7 @@ def test_MultipleDataGrabber_validation() -> None:
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
-        types=["T1w"],
+        types="T1w",
         patterns={
             "T1w": {
                 "pattern": (
@@ -239,7 +239,7 @@ def test_MultipleDataGrabber_validation() -> None:
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=HttpUrl(_testing_dataset["example_bids_ses"]["uri"]),
-        types=["BOLD"],
+        types="BOLD",
         patterns={
             "BOLD": {
                 "pattern": "{subject}/func/{subject}_task-rest_bold.nii.gz",
@@ -265,7 +265,7 @@ def test_MultipleDataGrabber_partial_pattern() -> None:
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri,
-        types=["BOLD"],
+        types="BOLD",
         patterns={
             "BOLD": {
                 "pattern": (
@@ -281,7 +281,7 @@ def test_MultipleDataGrabber_partial_pattern() -> None:
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
         uri=repo_uri,
-        types=["BOLD"],
+        types="BOLD",
         patterns={
             "BOLD": {
                 "confounds": {

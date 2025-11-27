@@ -5,12 +5,13 @@
 
 from enum import Enum
 from itertools import product
-from typing import Literal
+from typing import Annotated, Literal, Union
 
-from pydantic import HttpUrl
+from pydantic import BeforeValidator, HttpUrl
 
 from ..api.decorators import register_datagrabber
 from ..typing import DataGrabberPatterns
+from ..utils import ensure_list
 from .base import DataType
 from .pattern import ConfoundsFormat
 from .pattern_datalad import PatternDataladDataGrabber
@@ -57,30 +58,64 @@ class DMCCRun(str, Enum):
     Two = "2"
 
 
+_types = Literal[
+    DataType.BOLD,
+    DataType.T1w,
+    DataType.VBM_CSF,
+    DataType.VBM_GM,
+    DataType.VBM_WM,
+    DataType.Warp,
+]
+
+_sessions = Literal[
+    DMCCSession.Wave1Bas,
+    DMCCSession.Wave1Pro,
+    DMCCSession.Wave1Rea,
+]
+
+_tasks = Literal[
+    DMCCTask.Rest,
+    DMCCTask.Axcpt,
+    DMCCTask.Cuedts,
+    DMCCTask.Stern,
+    DMCCTask.Stroop,
+]
+
+_phase_encodings = Literal[
+    DMCCPhaseEncoding.AP,
+    DMCCPhaseEncoding.PA,
+]
+
+_runs = Literal[
+    DMCCRun.One,
+    DMCCRun.Two,
+]
+
+
 @register_datagrabber
 class DMCC13Benchmark(PatternDataladDataGrabber):
     """Concrete implementation for datalad-based data fetching of DMCC13.
 
     Parameters
     ----------
-    types : list of {``DataType.BOLD``, ``DataType.T1w``, \
+    types : {``DataType.BOLD``, ``DataType.T1w``, \
             ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``, \
-            ``DataType.Warp``}, optional
+            ``DataType.Warp``} or list of them, optional
         The data type(s) to grab.
     datadir : pathlib.Path, optional
         That path where the datalad dataset will be cloned.
         If not specified, the datalad dataset will be cloned into a temporary
         directory.
-    sessions : list of :enum:`.DMCCSession`, optional
+    sessions : :enum:`.DMCCSession` or list of variants, optional
         DMCC sessions.
         By default, all available sessions are selected.
-    tasks : list of :enum:`.DMCCTask`, optional
+    tasks : :enum:`.DMCCTask` or list of variants, optional
         DMCC tasks.
         By default, all available tasks are selected.
-    phase_encodings : list of :enum:`.DMCCPhaseEncoding`, optional
+    phase_encodings : :enum:`.DMCCPhaseEncoding` or list of variants, optional
         DMCC phase encoding directions.
         By default, all available phase encodings are selected.
-    runs : list of :enum:`.DMCCRun`, optional
+    runs : :enum:`.DMCCRun` or list of variants, optional
         DMCC runs.
         By default, all available runs are selected.
     native_t1w : bool, optional
@@ -89,15 +124,8 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
     """
 
     uri: HttpUrl = HttpUrl("https://github.com/OpenNeuroDatasets/ds003452.git")
-    types: list[
-        Literal[
-            DataType.BOLD,
-            DataType.T1w,
-            DataType.VBM_CSF,
-            DataType.VBM_GM,
-            DataType.VBM_WM,
-            DataType.Warp,
-        ]
+    types: Annotated[
+        Union[_types, list[_types]], BeforeValidator(ensure_list)
     ] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
@@ -105,23 +133,32 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         DataType.VBM_GM,
         DataType.VBM_WM,
     ]
-    sessions: list[DMCCSession] = [  # noqa: RUF012
+    sessions: Annotated[
+        Union[_sessions, list[_sessions]], BeforeValidator(ensure_list)
+    ] = [  # noqa: RUF012
         DMCCSession.Wave1Bas,
         DMCCSession.Wave1Pro,
         DMCCSession.Wave1Rea,
     ]
-    tasks: list[DMCCTask] = [  # noqa: RUF012
+    tasks: Annotated[
+        Union[_tasks, list[_tasks]], BeforeValidator(ensure_list)
+    ] = [  # noqa: RUF012
         DMCCTask.Rest,
         DMCCTask.Axcpt,
         DMCCTask.Cuedts,
         DMCCTask.Stern,
         DMCCTask.Stroop,
     ]
-    phase_encodings: list[DMCCPhaseEncoding] = [  # noqa: RUF012
+    phase_encodings: Annotated[
+        Union[_phase_encodings, list[_phase_encodings]],
+        BeforeValidator(ensure_list),
+    ] = [  # noqa: RUF012
         DMCCPhaseEncoding.AP,
         DMCCPhaseEncoding.PA,
     ]
-    runs: list[DMCCRun] = [  # noqa: RUF012
+    runs: Annotated[
+        Union[_runs, list[_runs]], BeforeValidator(ensure_list)
+    ] = [  # noqa: RUF012
         DMCCRun.One,
         DMCCRun.Two,
     ]

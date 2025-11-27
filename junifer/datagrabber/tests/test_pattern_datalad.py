@@ -148,7 +148,7 @@ def test_bids_PatternDataladDataGrabber_session():
     # Test with a different T1w only, it should have 3 sessions
     with PatternDataladDataGrabber(
         uri=repo_uri,
-        types=[DataType.T1w],
+        types=DataType.T1w,
         patterns={
             "T1w": {
                 "pattern": (

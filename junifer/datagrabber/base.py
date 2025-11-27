@@ -9,14 +9,14 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any, Union
 
 from aenum import Enum as AEnum
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
 
 from ..pipeline import UpdateMetaMixin
 from ..typing import Element, Elements
-from ..utils import logger, raise_error
+from ..utils import ensure_list, logger, raise_error
 
 
 __all__ = ["BaseDataGrabber", "DataType"]
@@ -47,7 +47,7 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
 
     Parameters
     ----------
-    types : list of :enum:`.DataType`
+    types : :enum:`.DataType` or list of variants
         The data type(s) to grab.
     datadir : pathlib.Path
         The path where the data is or will be stored.
@@ -56,7 +56,11 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
 
     model_config = ConfigDict(use_enum_values=True)
 
-    types: list[DataType] = Field(frozen=True)
+    types: Annotated[
+        Union[DataType, list[DataType]],
+        Field(frozen=True),
+        BeforeValidator(ensure_list),
+    ]
     datadir: Path
 
     def model_post_init(self, context: Any):  # noqa: D102

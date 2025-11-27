@@ -6,11 +6,14 @@
 
 from enum import Enum
 from pathlib import Path
-from typing import Literal
+from typing import Annotated, Literal, Union
+
+from pydantic import BeforeValidator
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import ConfoundsFormat, DataType, PatternDataGrabber
 from ....typing import DataGrabberPatterns
+from ....utils import ensure_list
 
 
 __all__ = ["JuselessUCLA", "UCLATask"]
@@ -29,6 +32,26 @@ class UCLATask(str, Enum):
     STOPSIGNAL = "stopsignal"
 
 
+_types = Literal[
+    DataType.BOLD,
+    DataType.T1w,
+    DataType.VBM_CSF,
+    DataType.VBM_GM,
+    DataType.VBM_WM,
+]
+
+_tasks = Literal[
+    UCLATask.REST,
+    UCLATask.BART,
+    UCLATask.BHT,
+    UCLATask.PAMENC,
+    UCLATask.PAMRET,
+    UCLATask.SCAP,
+    UCLATask.TASKSWITCH,
+    UCLATask.STOPSIGNAL,
+]
+
+
 @register_datagrabber
 class JuselessUCLA(PatternDataGrabber):
     """Concrete implementation for Juseless UCLA data fetching.
@@ -40,11 +63,11 @@ class JuselessUCLA(PatternDataGrabber):
     datadir : Path, optional
         The directory where the dataset is stored.
         (default "/data/project/psychosis_thalamus/data/fmriprep").
-    types: list of {``DataType.BOLD``, ``DataType.T1w``, \
-           ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``}, \
-           optional
+    types: {``DataType.BOLD``, ``DataType.T1w``, \
+           ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``} \
+           or list of them, optional
         The data type(s) to grab.
-    tasks : list of ``UCLATask``, optional
+    tasks : :enum:`.UCLATask` or list of variants, optional
         UCLA task sessions.
         By default, all available task are selected.
 
@@ -54,14 +77,8 @@ class JuselessUCLA(PatternDataGrabber):
     # NOT have preprocessed data
     # uri = "https://github.com/OpenNeuroDatasets/ds000030.git"
     datadir: Path = Path("/data/project/psychosis_thalamus/data/fmriprep")
-    types: list[
-        Literal[
-            DataType.BOLD,
-            DataType.T1w,
-            DataType.VBM_CSF,
-            DataType.VBM_GM,
-            DataType.VBM_WM,
-        ]
+    types: Annotated[
+        Union[_types, list[_types]], BeforeValidator(ensure_list)
     ] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
@@ -69,7 +86,9 @@ class JuselessUCLA(PatternDataGrabber):
         DataType.VBM_GM,
         DataType.VBM_WM,
     ]
-    tasks: list[UCLATask] = [  # noqa: RUF012
+    tasks: Annotated[
+        Union[UCLATask, list[UCLATask]], BeforeValidator(ensure_list)
+    ] = [  # noqa: RUF012
         UCLATask.REST,
         UCLATask.BART,
         UCLATask.BHT,
