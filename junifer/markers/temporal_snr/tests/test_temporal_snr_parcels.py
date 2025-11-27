@@ -18,7 +18,7 @@ def test_TemporalSNRParcels_computation() -> None:
     with PartlyCloudyTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         marker = TemporalSNRParcels(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"]
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym"
         )
         # Check correct output
         assert "vector" == marker.storage_type(
@@ -46,7 +46,7 @@ def test_TemporalSNRParcels_storage(tmp_path: Path) -> None:
     with PartlyCloudyTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         marker = TemporalSNRParcels(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"]
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym"
         )
         # Store
         storage = HDF5FeatureStorage(uri=tmp_path / "test_tsnr_parcels.hdf5")

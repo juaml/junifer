@@ -89,7 +89,7 @@ def test_ParcelAggregation_3D() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Create ParcelAggregation object
         marker = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             on=[DataType.BOLD],
         )
@@ -156,7 +156,7 @@ def test_ParcelAggregation_3D() -> None:
 
         # Create ParcelAggregation object
         marker = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="std",
             on=[DataType.BOLD],
         )
@@ -180,7 +180,7 @@ def test_ParcelAggregation_3D() -> None:
 
         # Create ParcelAggregation object
         marker = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="trim_mean",
             method_params={"proportiontocut": 0.1},
             on=[DataType.BOLD],
@@ -199,7 +199,7 @@ def test_ParcelAggregation_4D():
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Create ParcelAggregation object
         marker = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"], method="mean"
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym", method="mean"
         )
         parcel_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -243,7 +243,7 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
             upsert=Upsert.Ignore,
         )
         marker = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             on=[DataType.BOLD],
         )
@@ -265,7 +265,7 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
             upsert=Upsert.Ignore,
         )
         marker = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             on=[DataType.BOLD],
         )
@@ -283,7 +283,7 @@ def test_ParcelAggregation_3D_mask() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Create ParcelAggregation object
         marker = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
             on=[DataType.BOLD],
@@ -361,7 +361,7 @@ def test_ParcelAggregation_3D_mask_computed() -> None:
 
         # Use the ParcelAggregation object
         marker = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             masks=[{"compute_brain_mask": {"threshold": 0.2}}],
             name="tian_mean",
@@ -444,7 +444,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
 
         # Use the ParcelAggregation object on the original parcellation
         marker_original = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
             on=[DataType.BOLD],
@@ -549,7 +549,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
 
         # Use the ParcelAggregation object on the original parcellation
         marker_original = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
             on=[DataType.BOLD],
@@ -658,7 +658,7 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
 
         # Use the ParcelAggregation object on the original parcellation
         marker_original = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
             on=[DataType.BOLD],
@@ -712,7 +712,7 @@ def test_ParcelAggregation_4D_agg_time():
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Create ParcelAggregation object
         marker = ParcelAggregation(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             time_method="mean",
             on=[DataType.BOLD],
@@ -770,7 +770,7 @@ def test_ParcelAggregation_errors() -> None:
     """Test errors for ParcelAggregation."""
     with pytest.raises(ValueError, match="can only be used with BOLD data"):
         ParcelAggregation(
-            parcellation=["Schaefer100x7"],
+            parcellation="Schaefer100x7",
             method="mean",
             time_method="select",
             time_method_params={"pick": [0]},
@@ -781,7 +781,7 @@ def test_ParcelAggregation_errors() -> None:
         ValueError, match="can only be used with `time_method`"
     ):
         ParcelAggregation(
-            parcellation=["Schaefer100x7"],
+            parcellation="Schaefer100x7",
             method="mean",
             time_method_params={"pick": [0]},
             on=[DataType.VBM_GM],
@@ -796,7 +796,7 @@ def test_ParcelAggregation_warning() -> None:
             RuntimeWarning, match="No time dimension to aggregate"
         ):
             marker = ParcelAggregation(
-                parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+                parcellation="TianxS1x3TxMNInonlinear2009cAsym",
                 method="mean",
                 time_method="select",
                 time_method_params={"pick": [0]},

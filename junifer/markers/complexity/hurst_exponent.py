@@ -25,7 +25,7 @@ class HurstExponent(ComplexityBase):
 
     Parameters
     ----------
-    parcellation : list of str
+    parcellation : str or list of str
         The name(s) of the parcellation(s) to use.
         See :func:`.list_data` for options.
     agg_method : str, optional

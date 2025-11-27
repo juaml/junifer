@@ -7,10 +7,13 @@
 from abc import abstractmethod
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Any,
     ClassVar,
     Literal,
 )
+
+from pydantic import BeforeValidator
 
 from ...datagrabber import DataType
 from ...storage import StorageType
@@ -18,6 +21,7 @@ from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import raise_error
 from ..base import BaseMarker
 from ..parcel_aggregation import ParcelAggregation
+from ..utils import _ensure_list
 
 
 if TYPE_CHECKING:
@@ -32,7 +36,7 @@ class ComplexityBase(BaseMarker):
 
     Parameters
     ----------
-    parcellation : list of str
+    parcellation : str or list of str
         The name(s) of the parcellation(s) to use.
         See :func:`.list_data` for options.
     agg_method : str, optional
@@ -60,7 +64,9 @@ class ComplexityBase(BaseMarker):
         },
     }
 
-    parcellation: list[str]
+    parcellation: Annotated[
+        Union[str, list[str]], BeforeValidator(_ensure_list)
+    ]
     agg_method: str = "mean"
     agg_method_params: dict | None = None
     masks: list[dict | str] | None = None
