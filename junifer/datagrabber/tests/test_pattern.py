@@ -181,7 +181,7 @@ def test_PatternDataGrabber(tmp_path: Path) -> None:
 
     datagrabber_third = PatternDataGrabber(
         datadir=tmpdir,
-        types=["T1w"],
+        types="T1w",
         patterns={
             "T1w": {
                 "pattern": "anat/{subject}_{session}.nii",
@@ -258,7 +258,7 @@ def test_PatternDataGrabber_unix_path_expansion(tmp_path: Path) -> None:
     # Create datagrabber
     dg = PatternDataGrabber(
         datadir=tmp_path,
-        types=["FreeSurfer"],
+        types="FreeSurfer",
         patterns={
             "FreeSurfer": {
                 "pattern": "derivatives/freesurfer/[!f]{subject}/mri/T1.mg[z]",

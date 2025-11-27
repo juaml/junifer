@@ -6,13 +6,13 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union
+from typing import Annotated, Union
 
-from pydantic import ConfigDict
+from pydantic import BeforeValidator, ConfigDict
 
 from ..api.decorators import register_datagrabber
 from ..typing import DataGrabberLike, Element
-from ..utils import deep_update, raise_error
+from ..utils import deep_update, ensure_list, raise_error
 from .base import BaseDataGrabber, DataType
 from .pattern import PatternDataGrabber
 from .pattern_datalad import PatternDataladDataGrabber
@@ -52,7 +52,9 @@ class MultipleDataGrabber(BaseDataGrabber):
             PatternDataladDataGrabber,
         ]
     ]
-    types: list[DataType] = []  # noqa: RUF012
+    types: Annotated[
+        Union[DataType, list[DataType]], BeforeValidator(ensure_list)
+    ] = []  # noqa: RUF012
     datadir: Path = Path(".")
 
     def validate_datagrabber_params(self) -> None:

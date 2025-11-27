@@ -6,11 +6,12 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Literal
+from typing import Annotated, Literal, Union
 
-from pydantic import HttpUrl
+from pydantic import BeforeValidator, HttpUrl
 
 from ...api.decorators import register_datagrabber
+from ...utils import ensure_list
 from ..base import DataType
 from ..datalad_base import DataladDataGrabber
 from .hcp1200 import HCP1200
@@ -19,14 +20,17 @@ from .hcp1200 import HCP1200
 __all__ = ["DataladHCP1200"]
 
 
+_types = Literal[DataType.BOLD, DataType.T1w, DataType.Warp]
+
+
 @register_datagrabber
 class DataladHCP1200(DataladDataGrabber, HCP1200):
     """Concrete implementation for datalad-based data fetching of HCP1200.
 
     Parameters
     ----------
-    types : list of {``DataType.BOLD``, ``DataType.T1w``, ``DataType.Warp``}, \
-            optional
+    types : {``DataType.BOLD``, ``DataType.T1w``, ``DataType.Warp``} \
+            or list of them, optional
         The data type(s) to grab.
     datadir : pathlib.Path, optional
         That path where the datalad dataset will be cloned.
@@ -50,7 +54,9 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
         "https://github.com/datalad-datasets/"
         "human-connectome-project-openaccess.git"
     )
-    types: list[Literal[DataType.BOLD, DataType.T1w, DataType.Warp]] = [  # noqa: RUF012
+    types: Annotated[
+        Union[_types, list[_types]], BeforeValidator(ensure_list)
+    ] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
         DataType.Warp,

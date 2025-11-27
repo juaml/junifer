@@ -42,7 +42,7 @@ def maps_datagrabber(tmp_path: Path) -> PatternDataladDataGrabber:
     """
     dg = PatternDataladDataGrabber(
         uri=HttpUrl("https://github.com/OpenNeuroDatasets/ds005226.git"),
-        types=[DataType.BOLD],
+        types=DataType.BOLD,
         patterns={
             "BOLD": {
                 "pattern": (

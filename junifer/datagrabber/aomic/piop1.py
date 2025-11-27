@@ -8,12 +8,13 @@
 # License: AGPL
 
 from itertools import product
-from typing import Literal
+from typing import Annotated, Literal, Union
 
-from pydantic import HttpUrl
+from pydantic import BeforeValidator, HttpUrl
 
 from ...api.decorators import register_datagrabber
 from ...typing import DataGrabberPatterns
+from ...utils import ensure_list
 from ..base import DataType
 from ..pattern import ConfoundsFormat
 from ..pattern_datalad import PatternDataladDataGrabber
@@ -22,6 +23,26 @@ from ._types import AOMICSpace, AOMICTask
 
 __all__ = ["DataladAOMICPIOP1"]
 
+_types = Literal[
+    DataType.BOLD,
+    DataType.T1w,
+    DataType.VBM_CSF,
+    DataType.VBM_GM,
+    DataType.VBM_WM,
+    DataType.DWI,
+    DataType.FreeSurfer,
+    DataType.Warp,
+]
+
+_tasks = Literal[
+    AOMICTask.RestingState,
+    AOMICTask.Anticipation,
+    AOMICTask.EmoMatching,
+    AOMICTask.Faces,
+    AOMICTask.Gstroop,
+    AOMICTask.WorkingMemory,
+]
+
 
 @register_datagrabber
 class DataladAOMICPIOP1(PatternDataladDataGrabber):
@@ -29,18 +50,19 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    types : list of {``DataType.BOLD``, ``DataType.T1w``, \
+    types : {``DataType.BOLD``, ``DataType.T1w``, \
             ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``, \
-            ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``}, \
-            optional
+            ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``} \
+            or list of them, optional
         The data type(s) to grab.
     datadir : pathlib.Path, optional
         That path where the datalad dataset will be cloned.
         If not specified, the datalad dataset will be cloned into a temporary
         directory.
-    tasks : list of {``AOMICTask.RestingState``, ``AOMICTask.Anticipation``, \
+    tasks : {``AOMICTask.RestingState``, ``AOMICTask.Anticipation``, \
             ``AOMICTask.EmoMatching``, ``AOMICTask.Faces``, \
-            ``AOMICTask.Gstroop``, ``AOMICTask.WorkingMemory``}, optional
+            ``AOMICTask.Gstroop``, ``AOMICTask.WorkingMemory``} or \
+            list of them, optional
         AOMIC PIOP1 task sessions.
         By default, all available task sessions are selected.
     space : :enum:`.AOMICSpace`, optional
@@ -49,17 +71,8 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
     """
 
     uri: HttpUrl = HttpUrl("https://github.com/OpenNeuroDatasets/ds002785")
-    types: list[
-        Literal[
-            DataType.BOLD,
-            DataType.T1w,
-            DataType.VBM_CSF,
-            DataType.VBM_GM,
-            DataType.VBM_WM,
-            DataType.DWI,
-            DataType.FreeSurfer,
-            DataType.Warp,
-        ]
+    types: Annotated[
+        Union[_types, list[_types]], BeforeValidator(ensure_list)
     ] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
@@ -70,15 +83,8 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         DataType.FreeSurfer,
         DataType.Warp,
     ]
-    tasks: list[
-        Literal[
-            AOMICTask.RestingState,
-            AOMICTask.Anticipation,
-            AOMICTask.EmoMatching,
-            AOMICTask.Faces,
-            AOMICTask.Gstroop,
-            AOMICTask.WorkingMemory,
-        ]
+    tasks: Annotated[
+        Union[_tasks, list[_tasks]], BeforeValidator(ensure_list)
     ] = [  # noqa: RUF012
         AOMICTask.RestingState,
         AOMICTask.Anticipation,
