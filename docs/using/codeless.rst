@@ -171,11 +171,11 @@ For the ``Oasis VBM Testing dataset`` example, we want to compute the mean
   markers:
     - name: Schaefer100x7_mean
       kind: ParcelAggregation
-      parcellation: [Schaefer100x7]
+      parcellation: Schaefer100x7
       method: mean
     - name: Schaefer200x7_mean
       kind: ParcelAggregation
-      parcellation: [Schaefer200x7]
+      parcellation: Schaefer200x7
       method: mean
     - name: DMNBuckner_5mm_mean
       kind: SphereAggregation
@@ -219,11 +219,11 @@ looks like:
   markers:
     - name: Schaefer100x7_mean
       kind: ParcelAggregation
-      parcellation: [Schaefer100x7]
+      parcellation: Schaefer100x7
       method: mean
     - name: Schaefer200x7_mean
       kind: ParcelAggregation
-      parcellation: [Schaefer200x7]
+      parcellation: Schaefer200x7
       method: mean
     - name: DMNBuckner_5mm_mean
       kind: SphereAggregation

@@ -40,7 +40,7 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 
             # Initialize marker
             marker = ReHoParcels(
-                parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+                parcellation="TianxS1x3TxMNInonlinear2009cAsym",
                 using=ReHoImpl.junifer,
             )
             # Check correct output
@@ -105,7 +105,7 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
 
         # Initialize marker
         junifer_marker = ReHoParcels(
-            parcellation=["Schaefer100x7"], using=ReHoImpl.junifer
+            parcellation="Schaefer100x7", using=ReHoImpl.junifer
         )
         # Fit transform marker on data
         junifer_output = junifer_marker.fit_transform(element_data)
@@ -114,7 +114,7 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
 
         # Initialize marker
         afni_marker = ReHoParcels(
-            parcellation=["Schaefer100x7"], using=ReHoImpl.afni
+            parcellation="Schaefer100x7", using=ReHoImpl.afni
         )
         # Fit transform marker on data
         afni_output = afni_marker.fit_transform(element_data)

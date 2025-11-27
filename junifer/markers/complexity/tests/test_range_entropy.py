@@ -23,7 +23,7 @@ from junifer.testing.datagrabbers import (
 
 
 # Set parcellation
-PARCELLATION = ["Schaefer100x17"]
+PARCELLATION = "Schaefer100x17"
 
 
 @pytest.mark.skipif(

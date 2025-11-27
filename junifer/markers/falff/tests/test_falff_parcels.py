@@ -19,7 +19,7 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
-PARCELLATION = ["TianxS1x3TxMNInonlinear2009cAsym"]
+PARCELLATION = "TianxS1x3TxMNInonlinear2009cAsym"
 
 
 @pytest.mark.parametrize(

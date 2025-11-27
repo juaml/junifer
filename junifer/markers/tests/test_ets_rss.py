@@ -18,7 +18,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
 # Set parcellation
-PARCELLATION = ["TianxS1x3TxMNInonlinear2009cAsym"]
+PARCELLATION = "TianxS1x3TxMNInonlinear2009cAsym"
 
 
 def test_compute() -> None:

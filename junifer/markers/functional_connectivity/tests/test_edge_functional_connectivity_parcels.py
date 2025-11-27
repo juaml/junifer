@@ -41,7 +41,7 @@ def test_EdgeCentricFCParcels(
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Setup marker
         marker = EdgeCentricFCParcels(
-            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             conn_method="correlation",
             conn_method_params=conn_method_params,
         )
