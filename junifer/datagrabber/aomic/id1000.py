@@ -7,12 +7,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Literal
+from typing import Annotated, Literal, Union
 
-from pydantic import HttpUrl
+from pydantic import BeforeValidator, HttpUrl
 
 from ...api.decorators import register_datagrabber
 from ...typing import DataGrabberPatterns
+from ...utils import ensure_list
 from ..base import DataType
 from ..pattern import ConfoundsFormat
 from ..pattern_datalad import PatternDataladDataGrabber
@@ -21,6 +22,17 @@ from ._types import AOMICSpace
 
 __all__ = ["DataladAOMICID1000"]
 
+_types = Literal[
+    DataType.BOLD,
+    DataType.T1w,
+    DataType.VBM_CSF,
+    DataType.VBM_GM,
+    DataType.VBM_WM,
+    DataType.DWI,
+    DataType.FreeSurfer,
+    DataType.Warp,
+]
+
 
 @register_datagrabber
 class DataladAOMICID1000(PatternDataladDataGrabber):
@@ -28,10 +40,10 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    types : list of {``DataType.BOLD``, ``DataType.T1w``, \
+    types : {``DataType.BOLD``, ``DataType.T1w``, \
             ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``, \
-            ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``}, \
-            optional
+            ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``} \
+            or list of them, optional
         The data type(s) to grab.
     datadir : pathlib.Path, optional
         That path where the datalad dataset will be cloned.
@@ -43,17 +55,8 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
     """
 
     uri: HttpUrl = HttpUrl("https://github.com/OpenNeuroDatasets/ds003097.git")
-    types: list[
-        Literal[
-            DataType.BOLD,
-            DataType.T1w,
-            DataType.VBM_CSF,
-            DataType.VBM_GM,
-            DataType.VBM_WM,
-            DataType.DWI,
-            DataType.FreeSurfer,
-            DataType.Warp,
-        ]
+    types: Annotated[
+        Union[_types, list[_types]], BeforeValidator(ensure_list)
     ] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,

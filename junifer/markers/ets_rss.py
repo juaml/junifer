@@ -15,10 +15,10 @@ from ..api.decorators import register_marker
 from ..datagrabber import DataType
 from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
-from ..utils import logger
+from ..utils import ensure_list, logger
 from .base import BaseMarker
 from .parcel_aggregation import ParcelAggregation
-from .utils import _ensure_list, _ets
+from .utils import _ets
 
 
 __all__ = ["RSSETSMarker"]
@@ -59,7 +59,7 @@ class RSSETSMarker(BaseMarker):
     }
 
     parcellation: Annotated[
-        Union[str, list[str]], BeforeValidator(_ensure_list)
+        Union[str, list[str]], BeforeValidator(ensure_list)
     ]
     agg_method: str = "mean"
     agg_method_params: Optional[dict] = None

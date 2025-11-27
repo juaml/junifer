@@ -6,13 +6,14 @@
 # License: AGPL
 
 from enum import Enum
-from typing import Literal
+from typing import Annotated, Literal, Union
 
-from pydantic import HttpUrl
+from pydantic import BeforeValidator, HttpUrl
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import DataType, PatternDataladDataGrabber
 from ....typing import DataGrabberPatterns
+from ....utils import ensure_list
 
 
 __all__ = ["IXISite", "JuselessDataladIXIVBM"]
@@ -24,6 +25,9 @@ class IXISite(str, Enum):
     Guys = "Guys"
     HH = "HH"
     IOP = "IOP"
+
+
+_sites = Literal[IXISite.Guys, IXISite.HH, IXISite.IOP]
 
 
 @register_datagrabber
@@ -38,7 +42,7 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         That path where the datalad dataset will be cloned.
         If not specified, the datalad dataset will be cloned into a temporary
         directory.
-    sites : list of :enum:`.IXISite`, optional
+    sites : :enum:`.IXISite` or list of variants, optional
         IXI sites.
         By default, all available sites are selected.
 
@@ -48,7 +52,9 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         "ria+http://cat_12.5.ds.inm7.de#b7107c52-8408-11ea-89c6-a0369f287950"
     )
     types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012
-    sites: list[IXISite] = [IXISite.Guys, IXISite.HH, IXISite.IOP]  # noqa: RUF012
+    sites: Annotated[
+        Union[IXISite, list[IXISite]], BeforeValidator(ensure_list)
+    ] = [IXISite.Guys, IXISite.HH, IXISite.IOP]  # noqa: RUF012
     patterns: DataGrabberPatterns = {  # noqa: RUF012
         "VBM_GM": {
             "pattern": ("{site}/{subject}/mri/m0wp1{subject}.nii.gz"),

@@ -7,11 +7,13 @@
 
 from enum import Enum
 from itertools import product
-from typing import Literal
+from typing import Annotated, Literal, Union
+
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_datagrabber
 from ...typing import DataGrabberPatterns
-from ...utils import raise_error
+from ...utils import ensure_list, raise_error
 from ..base import DataType
 from ..pattern import PatternDataGrabber
 
@@ -40,21 +42,42 @@ class HCP1200PhaseEncoding(str, Enum):
     RL = "RL"
 
 
+_types = Literal[DataType.BOLD, DataType.T1w, DataType.Warp]
+
+_tasks = Literal[
+    HCP1200Task.REST1,
+    HCP1200Task.REST2,
+    HCP1200Task.SOCIAL,
+    HCP1200Task.WM,
+    HCP1200Task.RELATIONAL,
+    HCP1200Task.EMOTION,
+    HCP1200Task.LANGUAGE,
+    HCP1200Task.GAMBLING,
+    HCP1200Task.MOTOR,
+]
+
+_phase_encodings = Literal[
+    HCP1200PhaseEncoding.RL,
+    HCP1200PhaseEncoding.LR,
+]
+
+
 @register_datagrabber
 class HCP1200(PatternDataGrabber):
     """Concrete implementation for pattern-based data fetching of HCP1200.
 
     Parameters
     ----------
-    types : list of {``DataType.BOLD``, ``DataType.T1w``, ``DataType.Warp``}, \
-            optional
+    types : {``DataType.BOLD``, ``DataType.T1w``, ``DataType.Warp``} \
+            or list of them, optional
         The data type(s) to grab.
     datadir : pathlib.Path
         The path where the data is stored.
-    tasks : list of :enum:`.HCP1200Task`, optional
+    tasks : :enum:`.HCP1200Task` or list of variants, optional
         HCP task sessions.
         By default, all available task sessions are selected.
-    phase_encodings : list of :enum:`.HCP1200PhaseEncoding`, optional
+    phase_encodings : :enum:`.HCP1200PhaseEncoding` or list of variants, \
+        optional
         HCP phase encoding directions.
         By default, all are used.
     ica_fix : bool, optional
@@ -65,12 +88,16 @@ class HCP1200(PatternDataGrabber):
 
     """
 
-    types: list[Literal[DataType.BOLD, DataType.T1w, DataType.Warp]] = [  # noqa: RUF012
+    types: Annotated[
+        Union[_types, list[_types]], BeforeValidator(ensure_list)
+    ] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
         DataType.Warp,
     ]
-    tasks: list[HCP1200Task] = [  # noqa: RUF012
+    tasks: Annotated[
+        Union[_tasks, list[_tasks]], BeforeValidator(ensure_list)
+    ] = [  # noqa: RUF012
         HCP1200Task.REST1,
         HCP1200Task.REST2,
         HCP1200Task.SOCIAL,
@@ -81,7 +108,10 @@ class HCP1200(PatternDataGrabber):
         HCP1200Task.GAMBLING,
         HCP1200Task.MOTOR,
     ]
-    phase_encodings: list[HCP1200PhaseEncoding] = [  # noqa: RUF012
+    phase_encodings: Annotated[
+        Union[_phase_encodings, list[_phase_encodings]],
+        BeforeValidator(ensure_list),
+    ] = [  # noqa: RUF012
         HCP1200PhaseEncoding.RL,
         HCP1200PhaseEncoding.LR,
     ]

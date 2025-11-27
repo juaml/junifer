@@ -14,7 +14,7 @@ from ...api.decorators import register_marker
 from ...datagrabber import DataType
 from ...utils import logger
 from ..parcel_aggregation import ParcelAggregation
-from ..utils import _ensure_list
+from ..utils import ensure_list
 from .falff_base import ALFFBase
 
 
@@ -67,7 +67,7 @@ class ALFFParcels(ALFFBase):
     """
 
     parcellation: Annotated[
-        Union[str, list[str]], BeforeValidator(_ensure_list)
+        Union[str, list[str]], BeforeValidator(ensure_list)
     ]
     on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 

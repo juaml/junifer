@@ -39,7 +39,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
 
     Parameters
     ----------
-    types : list of :enum:`.DataType`
+    types : :enum:`.DataType` or list of variants
         The data type(s) to grab.
     datadir : pathlib.Path
         The path where the data is stored.

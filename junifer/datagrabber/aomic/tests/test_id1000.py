@@ -7,7 +7,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional
+from typing import Optional, Union
 
 import pytest
 from pydantic import HttpUrl
@@ -21,21 +21,21 @@ URI = HttpUrl("https://gin.g-node.org/juaml/datalad-example-aomic1000")
 @pytest.mark.parametrize(
     "type_, nested_types, space",
     [
-        (["BOLD"], ["confounds", "mask", "reference"], "MNI152NLin2009cAsym"),
+        ("BOLD", ["confounds", "mask", "reference"], "MNI152NLin2009cAsym"),
         (["BOLD"], ["confounds", "mask", "reference"], "native"),
-        (["T1w"], ["mask"], "MNI152NLin2009cAsym"),
+        ("T1w", ["mask"], "MNI152NLin2009cAsym"),
         (["T1w"], ["mask"], "native"),
-        (["VBM_CSF"], None, "MNI152NLin2009cAsym"),
+        ("VBM_CSF", None, "MNI152NLin2009cAsym"),
         (["VBM_CSF"], None, "native"),
-        (["VBM_GM"], None, "MNI152NLin2009cAsym"),
+        ("VBM_GM", None, "MNI152NLin2009cAsym"),
         (["VBM_GM"], None, "native"),
-        (["VBM_WM"], None, "MNI152NLin2009cAsym"),
+        ("VBM_WM", None, "MNI152NLin2009cAsym"),
         (["DWI"], None, "MNI152NLin2009cAsym"),
         (["FreeSurfer"], None, "MNI152NLin2009cAsym"),
     ],
 )
 def test_DataladAOMICID1000(
-    type_: list[str],
+    type_: Union[str, list[str]],
     nested_types: Optional[list[str]],
     space: str,
 ) -> None:
@@ -43,7 +43,7 @@ def test_DataladAOMICID1000(
 
     Parameters
     ----------
-    type_ : list of str
+    type_ : str or list of str
         The parametrized type.
     nested_types : list of str or None
         The parametrized nested types.
@@ -57,6 +57,8 @@ def test_DataladAOMICID1000(
         test_element = all_elements[0]
         out = dg[test_element]
         # Assert data type
+        if isinstance(type_, str):
+            type_ = [type_]
         for t in type_:
             assert t in out
             assert out[t]["path"].exists()
@@ -77,12 +79,12 @@ def test_DataladAOMICID1000(
 @pytest.mark.parametrize(
     "types",
     [
-        ["BOLD"],
-        ["T1w"],
-        ["VBM_CSF"],
-        ["VBM_GM"],
-        ["VBM_WM"],
-        ["DWI"],
+        "BOLD",
+        "T1w",
+        "VBM_CSF",
+        "VBM_GM",
+        "VBM_WM",
+        "DWI",
         ["BOLD", "VBM_CSF"],
         ["T1w", "VBM_CSF"],
         ["VBM_GM", "VBM_WM"],
@@ -90,13 +92,13 @@ def test_DataladAOMICID1000(
     ],
 )
 def test_DataladAOMICID1000_partial_data_access(
-    types: list[str],
+    types: Union[str, list[str]],
 ) -> None:
     """Test DataladAOMICID1000 DataGrabber partial data access.
 
     Parameters
     ----------
-    types : list of str
+    types : str or list of str
         The parametrized types.
 
     """
@@ -106,5 +108,7 @@ def test_DataladAOMICID1000_partial_data_access(
         test_element = all_elements[0]
         out = dg[test_element]
         # Assert data type
+        if isinstance(types, str):
+            types = [types]
         for t in types:
             assert t in out

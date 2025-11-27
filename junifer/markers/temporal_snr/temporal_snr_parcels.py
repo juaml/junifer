@@ -10,8 +10,8 @@ from pydantic import BeforeValidator
 
 from ...api.decorators import register_marker
 from ...datagrabber import DataType
+from ...utils import ensure_list
 from ..parcel_aggregation import ParcelAggregation
-from ..utils import _ensure_list
 from .temporal_snr_base import TemporalSNRBase
 
 
@@ -45,7 +45,7 @@ class TemporalSNRParcels(TemporalSNRBase):
     """
 
     parcellation: Annotated[
-        Union[str, list[str]], BeforeValidator(_ensure_list)
+        Union[str, list[str]], BeforeValidator(ensure_list)
     ]
     on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 

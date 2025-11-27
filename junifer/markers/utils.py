@@ -8,7 +8,7 @@
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Callable, Optional, Union
+from typing import Callable, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -118,11 +118,3 @@ def _correlate_dataframes(
         .corr(method=method)  # type: ignore
         .loc["df2", "df1"]
     )
-
-
-def _ensure_list(value: Any) -> Any:
-    """Ensure list."""
-    if not isinstance(value, list):
-        return [value]
-    else:
-        return value

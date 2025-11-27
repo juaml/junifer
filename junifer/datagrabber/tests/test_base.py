@@ -26,7 +26,7 @@ def test_BaseDataGrabber() -> None:
         def get_element_keys(self):
             return ["subject"]
 
-    dg = MyDataGrabber(datadir="/tmp", types=["BOLD"])
+    dg = MyDataGrabber(datadir="/tmp", types="BOLD")
     elem = dg["sub01"]
     assert "BOLD" in elem
     assert "meta" in elem["BOLD"]
@@ -55,7 +55,7 @@ def test_BaseDataGrabber() -> None:
         def get_element_keys(self):
             return super().get_element_keys()
 
-    dg = MyDataGrabber2(datadir="/tmp", types=["BOLD"])
+    dg = MyDataGrabber2(datadir="/tmp", types="BOLD")
     with pytest.raises(NotImplementedError):
         dg.get_element_keys()
 
@@ -77,7 +77,7 @@ def test_BaseDataGrabber_filter_single() -> None:
         def get_element_keys(self):
             return ["subject"]
 
-    dg = FilterDataGrabber(datadir="/tmp", types=["BOLD"])
+    dg = FilterDataGrabber(datadir="/tmp", types="BOLD")
     with dg:
         assert "sub01" in list(dg.filter(["sub01"]))
         assert "sub02" not in list(dg.filter(["sub01"]))
@@ -104,7 +104,7 @@ def test_BaseDataGrabber_filter_multi() -> None:
         def get_element_keys(self):
             return ["subject", "task"]
 
-    dg = FilterDataGrabber(datadir="/tmp", types=["BOLD"])
+    dg = FilterDataGrabber(datadir="/tmp", types="BOLD")
     with dg:
         assert ("sub01", "rest") in list(
             dg.filter([("sub01", "rest")])  # type: ignore

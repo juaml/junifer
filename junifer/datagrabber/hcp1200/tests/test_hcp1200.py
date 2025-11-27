@@ -7,6 +7,7 @@ import shutil
 import tempfile
 from collections.abc import Iterable
 from pathlib import Path
+from typing import Union
 
 import pytest
 from pydantic import HttpUrl
@@ -36,34 +37,34 @@ def hcpdg() -> Iterable[DataladHCP1200]:
 @pytest.mark.parametrize(
     "tasks, phase_encodings, ica_fix, expected_path_name",
     [
-        (["REST1"], ["LR"], False, "rfMRI_REST1_LR.nii.gz"),
+        ("REST1", "LR", False, "rfMRI_REST1_LR.nii.gz"),
         (["REST1"], ["RL"], False, "rfMRI_REST1_RL.nii.gz"),
-        (["REST2"], ["LR"], False, "rfMRI_REST2_LR.nii.gz"),
+        ("REST2", "LR", False, "rfMRI_REST2_LR.nii.gz"),
         (["REST2"], ["RL"], False, "rfMRI_REST2_RL.nii.gz"),
-        (["SOCIAL"], ["LR"], False, "tfMRI_SOCIAL_LR.nii.gz"),
+        ("SOCIAL", "LR", False, "tfMRI_SOCIAL_LR.nii.gz"),
         (["SOCIAL"], ["RL"], False, "tfMRI_SOCIAL_RL.nii.gz"),
-        (["WM"], ["LR"], False, "tfMRI_WM_LR.nii.gz"),
+        ("WM", "LR", False, "tfMRI_WM_LR.nii.gz"),
         (["WM"], ["RL"], False, "tfMRI_WM_RL.nii.gz"),
-        (["RELATIONAL"], ["LR"], False, "tfMRI_RELATIONAL_LR.nii.gz"),
+        ("RELATIONAL", "LR", False, "tfMRI_RELATIONAL_LR.nii.gz"),
         (["RELATIONAL"], ["RL"], False, "tfMRI_RELATIONAL_RL.nii.gz"),
-        (["EMOTION"], ["LR"], False, "tfMRI_EMOTION_LR.nii.gz"),
+        ("EMOTION", "LR", False, "tfMRI_EMOTION_LR.nii.gz"),
         (["EMOTION"], ["RL"], False, "tfMRI_EMOTION_RL.nii.gz"),
-        (["LANGUAGE"], ["LR"], False, "tfMRI_LANGUAGE_LR.nii.gz"),
+        ("LANGUAGE", "LR", False, "tfMRI_LANGUAGE_LR.nii.gz"),
         (["LANGUAGE"], ["RL"], False, "tfMRI_LANGUAGE_RL.nii.gz"),
-        (["GAMBLING"], ["LR"], False, "tfMRI_GAMBLING_LR.nii.gz"),
+        ("GAMBLING", "LR", False, "tfMRI_GAMBLING_LR.nii.gz"),
         (["GAMBLING"], ["RL"], False, "tfMRI_GAMBLING_RL.nii.gz"),
-        (["MOTOR"], ["LR"], False, "tfMRI_MOTOR_LR.nii.gz"),
+        ("MOTOR", "LR", False, "tfMRI_MOTOR_LR.nii.gz"),
         (["MOTOR"], ["RL"], False, "tfMRI_MOTOR_RL.nii.gz"),
-        (["REST1"], ["LR"], True, "rfMRI_REST1_LR_hp2000_clean.nii.gz"),
+        ("REST1", "LR", True, "rfMRI_REST1_LR_hp2000_clean.nii.gz"),
         (["REST1"], ["RL"], True, "rfMRI_REST1_RL_hp2000_clean.nii.gz"),
-        (["REST2"], ["LR"], True, "rfMRI_REST2_LR_hp2000_clean.nii.gz"),
+        ("REST2", "LR", True, "rfMRI_REST2_LR_hp2000_clean.nii.gz"),
         (["REST2"], ["RL"], True, "rfMRI_REST2_RL_hp2000_clean.nii.gz"),
     ],
 )
 def test_HCP1200(
     hcpdg: DataladHCP1200,
-    tasks: list[str],
-    phase_encodings: list[str],
+    tasks: Union[str, list[str]],
+    phase_encodings: Union[str, list[str]],
     ica_fix: bool,
     expected_path_name: str,
 ) -> None:
@@ -74,9 +75,9 @@ def test_HCP1200(
     hcpdg : DataladHCP1200
         The Datalad version of the DataGrabber with the first subject
         already cloned.
-    tasks : list of str
+    tasks : str or list of str
         The parametrized tasks.
-    phase_encodings : list of str
+    phase_encodings : str or list of str
         The parametrized phase encodings.
     ica_fix : bool
         The parametrized ICA-FIX flag.
@@ -116,30 +117,30 @@ def test_HCP1200(
 @pytest.mark.parametrize(
     "tasks, phase_encodings",
     [
-        (["REST1"], ["LR"]),
+        ("REST1", "LR"),
         (["REST1"], ["RL"]),
-        (["REST2"], ["LR"]),
+        ("REST2", "LR"),
         (["REST2"], ["RL"]),
-        (["SOCIAL"], ["LR"]),
+        ("SOCIAL", "LR"),
         (["SOCIAL"], ["RL"]),
-        (["WM"], ["LR"]),
+        ("WM", "LR"),
         (["WM"], ["RL"]),
-        (["RELATIONAL"], ["LR"]),
+        ("RELATIONAL", "LR"),
         (["RELATIONAL"], ["RL"]),
-        (["EMOTION"], ["LR"]),
+        ("EMOTION", "LR"),
         (["EMOTION"], ["RL"]),
-        (["LANGUAGE"], ["LR"]),
+        ("LANGUAGE", "LR"),
         (["LANGUAGE"], ["RL"]),
-        (["GAMBLING"], ["LR"]),
+        ("GAMBLING", "LR"),
         (["GAMBLING"], ["RL"]),
-        (["MOTOR"], ["LR"]),
+        ("MOTOR", "LR"),
         (["MOTOR"], ["RL"]),
     ],
 )
 def test_HCP1200_single_access(
     hcpdg: DataladHCP1200,
-    tasks: list[str],
-    phase_encodings: list[str],
+    tasks: Union[str, list[str]],
+    phase_encodings: Union[str, list[str]],
 ) -> None:
     """Test HCP1200 DataGrabber single access.
 
@@ -148,9 +149,9 @@ def test_HCP1200_single_access(
     hcpdg : DataladHCP1200
         The Datalad version of the DataGrabber with the first subject
         already cloned.
-    tasks : list of str
+    tasks : str or list of str
         The parametrized tasks.
-    phase_encodings : list of str
+    phase_encodings : str or list of str
         The parametrized phase encodings.
 
     """
@@ -165,8 +166,12 @@ def test_HCP1200_single_access(
         all_elements = dg.get_elements()
         # Check only specified task and phase encoding are found
         for element in all_elements:
-            assert element[1] == tasks[0]
-            assert element[2] == phase_encodings[0]
+            assert element[1] == tasks if isinstance(tasks, str) else tasks[0]
+            assert (
+                element[2] == phase_encodings
+                if isinstance(phase_encodings, str)
+                else phase_encodings[0]
+            )
 
 
 def test_HCP1200_multi_access(
@@ -211,7 +216,7 @@ def test_HCP1200_multi_access_task_simple(
     configure_logging(level="DEBUG")
     dg = HCP1200(
         datadir=hcpdg.datadir,
-        tasks=["REST1"],
+        tasks="REST1",
         phase_encodings=["LR", "RL"],
     )
     with dg:
@@ -239,7 +244,7 @@ def test_HCP1200_multi_access_phase_simple(
     dg = HCP1200(
         datadir=hcpdg.datadir,
         tasks=["REST1", "REST2"],
-        phase_encodings=["LR"],
+        phase_encodings="LR",
     )
     with dg:
         # Get all elements
@@ -265,8 +270,8 @@ def test_HCP1200_elements(
     configure_logging(level="DEBUG")
     dg = HCP1200(
         datadir=hcpdg.datadir,
-        tasks=["REST1"],
-        phase_encodings=["LR"],
+        tasks="REST1",
+        phase_encodings="LR",
     )
     with dg:
         # Get all elements
@@ -286,22 +291,22 @@ def test_HCP1200_elements(
     "tasks, ica_fix",
     [
         (["SOCIAL"], True),
-        (["WM"], True),
+        ("WM", True),
         (["RELATIONAL"], True),
-        (["EMOTION"], True),
+        ("EMOTION", True),
         (["LANGUAGE"], True),
-        (["GAMBLING"], True),
+        ("GAMBLING", True),
         (["MOTOR"], True),
     ],
 )
 def test_HCP1200_incorrect_access_icafix(
-    tasks: list[str], ica_fix: bool
+    tasks: Union[str, list[str]], ica_fix: bool
 ) -> None:
     """Test HCP1200 DataGrabber incorrect access for icafix.
 
     Parameters
     ----------
-    tasks : list of str
+    tasks : str or list of str
         The parametrized tasks.
     ica_fix : bool
         The parametrized ICA-FIX flag.

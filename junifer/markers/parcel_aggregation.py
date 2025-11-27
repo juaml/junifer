@@ -17,9 +17,8 @@ from ..datagrabber import DataType
 from ..stats import get_aggfunc_by_name
 from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
-from ..utils import logger, raise_error, warn_with_log
+from ..utils import ensure_list, logger, raise_error, warn_with_log
 from .base import BaseMarker
-from .utils import _ensure_list
 
 
 __all__ = ["ParcelAggregation"]
@@ -103,7 +102,7 @@ class ParcelAggregation(BaseMarker):
     }
 
     parcellation: Annotated[
-        Union[str, list[str]], BeforeValidator(_ensure_list)
+        Union[str, list[str]], BeforeValidator(ensure_list)
     ]
     method: str = "mean"
     method_params: Optional[dict[str, Any]] = None

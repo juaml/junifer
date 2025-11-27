@@ -7,7 +7,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional
+from typing import Optional, Union
 
 import pytest
 from pydantic import HttpUrl
@@ -22,9 +22,9 @@ URI = HttpUrl("https://gin.g-node.org/juaml/datalad-example-aomicpiop1")
     "type_, nested_types, tasks, space",
     [
         (
-            ["BOLD"],
+            "BOLD",
             ["confounds", "mask", "reference"],
-            ["anticipation"],
+            "anticipation",
             "MNI152NLin2009cAsym",
         ),
         (
@@ -34,9 +34,9 @@ URI = HttpUrl("https://gin.g-node.org/juaml/datalad-example-aomicpiop1")
             "MNI152NLin2009cAsym",
         ),
         (
-            ["BOLD"],
+            "BOLD",
             ["confounds", "mask", "reference"],
-            ["restingstate"],
+            "restingstate",
             "MNI152NLin2009cAsym",
         ),
         (
@@ -51,33 +51,33 @@ URI = HttpUrl("https://gin.g-node.org/juaml/datalad-example-aomicpiop1")
             ["anticipation", "faces", "restingstate"],
             "MNI152NLin2009cAsym",
         ),
-        (["T1w"], ["mask"], ["restingstate"], "MNI152NLin2009cAsym"),
-        (["T1w"], ["mask"], ["restingstate"], "native"),
-        (["VBM_CSF"], None, ["restingstate"], "MNI152NLin2009cAsym"),
-        (["VBM_CSF"], None, ["restingstate"], "native"),
-        (["VBM_GM"], None, ["restingstate"], "MNI152NLin2009cAsym"),
-        (["VBM_GM"], None, ["restingstate"], "native"),
-        (["VBM_WM"], None, ["restingstate"], "MNI152NLin2009cAsym"),
-        (["VBM_WM"], None, ["restingstate"], "native"),
-        (["DWI"], None, ["restingstate"], "MNI152NLin2009cAsym"),
+        (["T1w"], ["mask"], "restingstate", "MNI152NLin2009cAsym"),
+        ("T1w", ["mask"], ["restingstate"], "native"),
+        (["VBM_CSF"], None, "restingstate", "MNI152NLin2009cAsym"),
+        ("VBM_CSF", None, ["restingstate"], "native"),
+        (["VBM_GM"], None, "restingstate", "MNI152NLin2009cAsym"),
+        ("VBM_GM", None, ["restingstate"], "native"),
+        (["VBM_WM"], None, "restingstate", "MNI152NLin2009cAsym"),
+        ("VBM_WM", None, ["restingstate"], "native"),
+        (["DWI"], None, "restingstate", "MNI152NLin2009cAsym"),
         (["FreeSurfer"], None, ["restingstate"], "MNI152NLin2009cAsym"),
     ],
 )
 def test_DataladAOMICPIOP1(
-    type_: list[str],
+    type_: Union[str, list[str]],
     nested_types: Optional[list[str]],
-    tasks: list[str],
+    tasks: Union[str, list[str]],
     space: str,
 ) -> None:
     """Test DataladAOMICPIOP1 DataGrabber.
 
     Parameters
     ----------
-    type_ : list of str
+    type_ : str or list of str
         The parametrized type.
     nested_types : list of str or None
         The parametrized nested types.
-    tasks : list of str
+    tasks : str or list of str
         The parametrized task values.
     space: str
         The parametrized space.
@@ -89,6 +89,8 @@ def test_DataladAOMICPIOP1(
         test_element = all_elements[0]
         out = dg[test_element]
         # Assert data type
+        if isinstance(type_, str):
+            type_ = [type_]
         for t in type_:
             assert t in out
             # Check task name if BOLD
@@ -121,12 +123,12 @@ def test_DataladAOMICPIOP1(
 @pytest.mark.parametrize(
     "types",
     [
-        ["BOLD"],
-        ["T1w"],
-        ["VBM_CSF"],
-        ["VBM_GM"],
-        ["VBM_WM"],
-        ["DWI"],
+        "BOLD",
+        "T1w",
+        "VBM_CSF",
+        "VBM_GM",
+        "VBM_WM",
+        "DWI",
         ["BOLD", "VBM_CSF"],
         ["T1w", "VBM_CSF"],
         ["VBM_GM", "VBM_WM"],
@@ -134,13 +136,13 @@ def test_DataladAOMICPIOP1(
     ],
 )
 def test_DataladAOMICPIOP1_partial_data_access(
-    types: list[str],
+    types: Union[str, list[str]],
 ) -> None:
     """Test DataladAOMICPIOP1 DataGrabber partial data access.
 
     Parameters
     ----------
-    types : list of str
+    types : str or list of str
         The parametrized types.
 
     """
@@ -150,5 +152,7 @@ def test_DataladAOMICPIOP1_partial_data_access(
         test_element = all_elements[0]
         out = dg[test_element]
         # Assert data type
+        if isinstance(types, str):
+            types = [types]
         for t in types:
             assert t in out

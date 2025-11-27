@@ -3,6 +3,8 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from typing import Union
+
 import pytest
 from pydantic import HttpUrl
 
@@ -194,15 +196,15 @@ def test_DMCC13Benchmark(
     "types, native_t1w",
     [
         (["BOLD"], True),
-        (["BOLD"], False),
+        ("BOLD", False),
         (["T1w"], True),
-        (["T1w"], False),
+        ("T1w", False),
         (["VBM_CSF"], True),
-        (["VBM_CSF"], False),
+        ("VBM_CSF", False),
         (["VBM_GM"], True),
-        (["VBM_GM"], False),
+        ("VBM_GM", False),
         (["VBM_WM"], True),
-        (["VBM_WM"], False),
+        ("VBM_WM", False),
         (["BOLD", "VBM_CSF"], True),
         (["BOLD", "VBM_CSF"], False),
         (["T1w", "VBM_CSF"], True),
@@ -212,14 +214,14 @@ def test_DMCC13Benchmark(
     ],
 )
 def test_DMCC13Benchmark_partial_data_access(
-    types: list[str],
+    types: Union[str, list[str]],
     native_t1w: bool,
 ) -> None:
     """Test DMCC13Benchmark DataGrabber partial data access.
 
     Parameters
     ----------
-    types : list of str
+    types : str or list of str
         The parametrized types.
     native_t1w : bool
         The parametrized values for fetching native T1w.
@@ -236,5 +238,7 @@ def test_DMCC13Benchmark_partial_data_access(
         _, ses, task, phase, run = test_element
         out = dg[("sub-01", ses, task, phase, run)]
         # Assert data type
+        if isinstance(types, str):
+            types = [types]
         for type_ in types:
             assert type_ in out

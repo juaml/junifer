@@ -20,10 +20,9 @@ from pydantic import BeforeValidator
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import Dependencies, MarkerInOutMappings
-from ...utils import raise_error
+from ...utils import ensure_list, raise_error
 from ..base import BaseMarker
 from ..parcel_aggregation import ParcelAggregation
-from ..utils import _ensure_list
 
 
 if TYPE_CHECKING:
@@ -67,7 +66,7 @@ class ComplexityBase(BaseMarker):
     }
 
     parcellation: Annotated[
-        Union[str, list[str]], BeforeValidator(_ensure_list)
+        Union[str, list[str]], BeforeValidator(ensure_list)
     ]
     agg_method: str = "mean"
     agg_method_params: Optional[dict] = None
