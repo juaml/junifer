@@ -35,7 +35,7 @@ For input we can accept ``T1w``, ``T2w`` and ``BOLD``
 
 .. code-block:: python
 
-    _VALID_DATA_TYPES = [DataType.T1w, DataType.T2w, DataType.BOLD]
+    _VALID_DATA_TYPES = ["T1w", "T2w", "BOLD"]
 
 .. _extending_preprocessors_init:
 
@@ -147,7 +147,6 @@ decorator and our final code should look like this:
     from typing import Any, ClassVar, Literal
 
     from junifer.api.decorators import register_preprocessor
-    from junifer.datagrabber import DataType
     from junifer.preprocess import BasePreprocessor
 
     from nilearn import image as nimg
@@ -159,7 +158,7 @@ decorator and our final code should look like this:
 
         _DEPENDENCIES = {"nilearn"}
 
-        _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.T1w, DataType.T2w, DataType.BOLD]
+        _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = ["T1w", "T2w", "BOLD"]
 
         fwhm: int | float | ArrayLike | Literal["fast"] | None
 
