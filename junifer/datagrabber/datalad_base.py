@@ -29,7 +29,9 @@ __all__ = ["DataladDataGrabber"]
 
 def _create_datadir() -> Path:
     """Create a temporary directory for datalad dataset."""
-    datadir = WorkDirManager().get_tempdir(prefix="datalad")
+    datadir = WorkDirManager().get_tempdir(
+        prefix="datalad", suffix="juniferauto"
+    )
     logger.info(
         "Created a temporary directory for datalad dataset at: "
         f"{datadir.resolve()!s}"
@@ -114,7 +116,9 @@ class DataladDataGrabber(BaseDataGrabber):
         logger.debug("Initializing DataladDataGrabber")
         logger.debug(f"\turi = {self.uri}")
         logger.debug(f"\trootdir = {self.rootdir}")
-        if self.datadir.stem.startswith("datalad"):
+        if self.datadir.stem.startswith(
+            "datalad"
+        ) and self.datadir.stem.endswith("juniferauto"):
             self._repodir = self.datadir / "dataset"
             self._repodir.mkdir(parents=True, exist_ok=False)
             logger.info(
@@ -150,7 +154,9 @@ class DataladDataGrabber(BaseDataGrabber):
 
     def __del__(self) -> None:
         """Destructor."""
-        if self.datadir.stem.startswith("datalad"):
+        if self.datadir.stem.startswith(
+            "datalad"
+        ) and self.datadir.stem.endswith("juniferauto"):
             _remove_datadir(self.datadir)
 
     @property
