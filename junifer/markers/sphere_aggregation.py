@@ -71,7 +71,7 @@ class SphereAggregation(BaseMarker):
         The data type(s) to apply the marker on.
         If None, will work on all available data.
         Check :enum:`.DataType` for valid values (default None).
-    masks : list of dict or str, or None, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -126,7 +126,10 @@ class SphereAggregation(BaseMarker):
     method_params: dict[str, Any] | None = None
     time_method: str | None = None
     time_method_params: dict[str, Any] | None = None
-    masks: list[dict | str] | None = None
+    masks: Annotated[
+        dict | str | list[dict | str] | None,
+        BeforeValidator(ensure_list_or_none),
+    ] = None
     on: Annotated[
         _on | list[_on] | None, BeforeValidator(ensure_list_or_none)
     ] = None

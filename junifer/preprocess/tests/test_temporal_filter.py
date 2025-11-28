@@ -27,7 +27,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
             0.1,
             None,
             None,
-            ["compute_brain_mask"],
+            "compute_brain_mask",
         ],
         [
             True,
@@ -51,7 +51,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
             0.1,
             0.08,
             2,
-            ["compute_brain_mask"],
+            "compute_brain_mask",
         ],
     ),
 )
@@ -61,7 +61,7 @@ def test_TemporalFilter(
     low_pass: float | None,
     high_pass: float | None,
     t_r: float | None,
-    masks: list[str] | None,
+    masks: str | list[str] | None,
 ) -> None:
     """Test TemporalFilter.
 
@@ -77,7 +77,7 @@ def test_TemporalFilter(
         The parametrized high pass value.
     t_r : float or None
         The parametrized repetition time.
-    masks : list of str or None
+    masks : str, list of str or None
         The parametrized mask.
 
     """
