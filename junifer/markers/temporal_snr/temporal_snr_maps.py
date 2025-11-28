@@ -23,7 +23,7 @@ class TemporalSNRMaps(TemporalSNRBase):
     maps : str
         The name of the map(s) to use.
         See :func:`.list_data` for options.
-    masks : list of dict or str, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).

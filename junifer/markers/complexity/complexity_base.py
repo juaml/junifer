@@ -10,7 +10,6 @@ from typing import (
     Annotated,
     Any,
     ClassVar,
-    Literal,
 )
 
 from pydantic import BeforeValidator
@@ -18,7 +17,7 @@ from pydantic import BeforeValidator
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import Dependencies, MarkerInOutMappings
-from ...utils import ensure_list, raise_error
+from ...utils import ensure_list, ensure_list_or_none, raise_error
 from ..base import BaseMarker
 from ..parcel_aggregation import ParcelAggregation
 
@@ -45,7 +44,7 @@ class ComplexityBase(BaseMarker):
     agg_method_params : dict or None, optional
         The parameters to pass to the aggregation function.
         See :func:`.get_aggfunc_by_name` for options (default None).
-    masks : list of dict or str, or None, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -68,7 +67,10 @@ class ComplexityBase(BaseMarker):
     ]
     agg_method: str = "mean"
     agg_method_params: dict | None = None
-    masks: list[dict | str] | None = None
+    masks: Annotated[
+        dict | str | list[dict | str] | None,
+        BeforeValidator(ensure_list_or_none),
+    ] = None
 
     @abstractmethod
     def compute_complexity(

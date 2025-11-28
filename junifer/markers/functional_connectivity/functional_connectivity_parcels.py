@@ -46,7 +46,7 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
         covariance. If usage of :class:`sklearn.covariance.LedoitWolf` is
         desired, ``{"empirical": False}`` should be passed
         (default None).
-    masks : list of dict or str, or None, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
