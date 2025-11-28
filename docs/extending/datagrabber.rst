@@ -253,14 +253,14 @@ And we can create our DataGrabber:
 
     from junifer.api.decorators import register_datagrabber
     from junifer.datagrabber import PatternDataladDataGrabber
-    from pydantic import HttpUrl
+    from pydantic import AnyUrl
 
 
     @register_datagrabber
     class ExampleBIDSDataGrabber(PatternDataladDataGrabber):
 
-        uri: HttpUrl = HttpUrl("https://gin.g-node.org/juaml/datalad-example-bids")
-        types: list[DataType] = [DataType.T1w, DataType.BOLD]
+        uri: AnyUrl = "https://gin.g-node.org/juaml/datalad-example-bids"
+        types: list[DataType] = ["T1w", "BOLD"]
         patterns: DataGrabberPatterns = {
             "T1w": {
                 "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
@@ -272,7 +272,7 @@ And we can create our DataGrabber:
             },
         }
         replacements: list[str] = ["subject", "session"]
-        rootdir: Path = Path("example_bids_ses")
+        rootdir: Path = "example_bids_ses"
 
 This approach can be used directly from the YAML, like so:
 
