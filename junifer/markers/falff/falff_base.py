@@ -12,7 +12,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Literal,
 )
 
 from pydantic import PositiveFloat
@@ -108,7 +107,6 @@ class ALFFBase(BaseMarker):
     agg_method: str = "mean"
     agg_method_params: dict | None = None
     masks: list[dict | str] | None = None
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def _compute(
         self,

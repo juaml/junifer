@@ -6,7 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Annotated, Any, ClassVar, Literal
+from typing import Annotated, Any, ClassVar
 
 import numpy as np
 from pydantic import BeforeValidator
@@ -64,7 +64,6 @@ class RSSETSMarker(BaseMarker):
     agg_method: str = "mean"
     agg_method_params: dict | None = None
     masks: list[dict | str] | None = None
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def compute(
         self,

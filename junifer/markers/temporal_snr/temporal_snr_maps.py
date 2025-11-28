@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Literal
+from typing import Any
 
 from ...api.decorators import register_marker
 from ...datagrabber import DataType
@@ -34,7 +34,6 @@ class TemporalSNRMaps(TemporalSNRBase):
     """
 
     maps: str
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def aggregate(
         self, input: dict[str, Any], extra_input: dict | None = None
