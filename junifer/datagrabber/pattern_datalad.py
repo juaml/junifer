@@ -25,7 +25,7 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
 
     Parameters
     ----------
-    uri : pydantic.HttpUrl
+    uri : pydantic.AnyUrl
         URI of the datalad sibling.
     types : enum:`.DataType` or list of variants
         The data type(s) to grab.

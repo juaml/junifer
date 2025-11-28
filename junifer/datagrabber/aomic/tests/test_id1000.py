@@ -10,12 +10,12 @@
 from typing import Optional, Union
 
 import pytest
-from pydantic import HttpUrl
+from pydantic import AnyUrl
 
 from junifer.datagrabber.aomic.id1000 import DataladAOMICID1000
 
 
-URI = HttpUrl("https://gin.g-node.org/juaml/datalad-example-aomic1000")
+URI = AnyUrl("https://gin.g-node.org/juaml/datalad-example-aomic1000")
 
 
 @pytest.mark.parametrize(

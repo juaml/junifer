@@ -8,7 +8,7 @@
 from pathlib import Path
 from typing import Literal
 
-from pydantic import HttpUrl
+from pydantic import AnyUrl
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import DataType, PatternDataladDataGrabber
@@ -33,7 +33,7 @@ class JuselessDataladUKBVBM(PatternDataladDataGrabber):
 
     """
 
-    uri: HttpUrl = "ria+http://ukb.ds.inm7.de#~cat_m0wp1"
+    uri: AnyUrl = AnyUrl("ria+http://ukb.ds.inm7.de#~cat_m0wp1")
     rootdir: Path = Path("m0wp1")
     types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012
     patterns: DataGrabberPatterns = {  # noqa: RUF012

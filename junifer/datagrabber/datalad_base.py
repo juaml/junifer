@@ -15,7 +15,7 @@ import datalad
 import datalad.api as dl
 from datalad.support.exceptions import IncompleteResultsError
 from datalad.support.gitrepo import GitRepo
-from pydantic import Field, HttpUrl, field_validator
+from pydantic import AnyUrl, Field, field_validator
 
 from ..api.decorators import register_datagrabber
 from ..pipeline import WorkDirManager
@@ -52,7 +52,7 @@ class DataladDataGrabber(BaseDataGrabber):
 
     Parameters
     ----------
-    uri : pydantic.HttpUrl
+    uri : pydantic.AnyUrl
         URI of the datalad sibling.
     rootdir : pathlib.Path, optional
         The path within the datalad dataset to the root directory
@@ -87,7 +87,7 @@ class DataladDataGrabber(BaseDataGrabber):
 
     """
 
-    uri: HttpUrl = Field(frozen=True)
+    uri: AnyUrl = Field(frozen=True)
     rootdir: Path = Field(frozen=True, default=Path("."))
     datadir: Path = Field(default_factory=lambda: _create_datadir())
     _repodir: Path = Path(".")

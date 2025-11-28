@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Union
 
 import pytest
-from pydantic import HttpUrl
+from pydantic import AnyUrl
 
 from junifer.datagrabber import HCP1200, DataladHCP1200
 from junifer.utils import config, configure_logging
@@ -22,7 +22,7 @@ def hcpdg() -> Iterable[DataladHCP1200]:
     tmpdir = Path(tempfile.gettempdir())
     config.set(key="datagrabber.skipidcheck", val=True)
     dg = DataladHCP1200(
-        uri=HttpUrl("https://gin.g-node.org/juaml/datalad-example-hcp1200"),
+        uri=AnyUrl("https://gin.g-node.org/juaml/datalad-example-hcp1200"),
         datadir=tmpdir / "hcp1200_test",
         rootdir=Path("."),
     )
