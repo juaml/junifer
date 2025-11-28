@@ -6,7 +6,7 @@
 from pathlib import Path
 
 import pytest
-from pydantic import HttpUrl
+from pydantic import AnyUrl
 
 from junifer.datagrabber import MultipleDataGrabber, PatternDataladDataGrabber
 
@@ -25,7 +25,7 @@ _testing_dataset = {
 
 def test_MultipleDataGrabber() -> None:
     """Test MultipleDataGrabber."""
-    repo_uri = HttpUrl(_testing_dataset["example_bids_ses"]["uri"])
+    repo_uri = AnyUrl(_testing_dataset["example_bids_ses"]["uri"])
     rootdir = Path("example_bids_ses")
     replacements = ["subject", "session"]
 
@@ -137,7 +137,7 @@ def test_MultipleDataGrabber_no_intersection() -> None:
 
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
+        uri=AnyUrl(_testing_dataset["example_bids"]["uri"]),
         types=["T1w", "Warp"],
         patterns={
             "T1w": {
@@ -174,7 +174,7 @@ def test_MultipleDataGrabber_no_intersection() -> None:
 
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=HttpUrl(_testing_dataset["example_bids_ses"]["uri"]),
+        uri=AnyUrl(_testing_dataset["example_bids_ses"]["uri"]),
         types="BOLD",
         patterns={
             "BOLD": {
@@ -199,7 +199,7 @@ def test_MultipleDataGrabber_get_item() -> None:
     """Test MultipleDataGrabber get_item() error."""
     dg1 = PatternDataladDataGrabber(
         rootdir=Path("example_bids_ses"),
-        uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
+        uri=AnyUrl(_testing_dataset["example_bids"]["uri"]),
         types="T1w",
         patterns={
             "T1w": {
@@ -223,7 +223,7 @@ def test_MultipleDataGrabber_validation() -> None:
 
     dg1 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
+        uri=AnyUrl(_testing_dataset["example_bids"]["uri"]),
         types="T1w",
         patterns={
             "T1w": {
@@ -238,7 +238,7 @@ def test_MultipleDataGrabber_validation() -> None:
 
     dg2 = PatternDataladDataGrabber(
         rootdir=rootdir,
-        uri=HttpUrl(_testing_dataset["example_bids_ses"]["uri"]),
+        uri=AnyUrl(_testing_dataset["example_bids_ses"]["uri"]),
         types="BOLD",
         patterns={
             "BOLD": {
@@ -258,7 +258,7 @@ def test_MultipleDataGrabber_validation() -> None:
 
 def test_MultipleDataGrabber_partial_pattern() -> None:
     """Test MultipleDataGrabber partial pattern."""
-    repo_uri = HttpUrl(_testing_dataset["example_bids_ses"]["uri"])
+    repo_uri = AnyUrl(_testing_dataset["example_bids_ses"]["uri"])
     rootdir = Path("example_bids_ses")
     replacements = ["subject", "session"]
 

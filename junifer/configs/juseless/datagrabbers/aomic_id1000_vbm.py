@@ -6,7 +6,7 @@
 
 from typing import Literal
 
-from pydantic import HttpUrl
+from pydantic import AnyUrl
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import DataType, PatternDataladDataGrabber
@@ -31,7 +31,7 @@ class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
 
     """
 
-    uri: HttpUrl = HttpUrl("https://gin.g-node.org/felixh/ds003097_ReproVBM")
+    uri: AnyUrl = AnyUrl("https://gin.g-node.org/felixh/ds003097_ReproVBM")
     types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012
     patterns: DataGrabberPatterns = {  # noqa: RUF012
         "VBM_GM": {

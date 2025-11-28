@@ -6,14 +6,12 @@
 from typing import Union
 
 import pytest
-from pydantic import HttpUrl
+from pydantic import AnyUrl
 
 from junifer.datagrabber import DataType, DMCC13Benchmark
 
 
-URI = HttpUrl(
-    "https://gin.g-node.org/synchon/datalad-example-dmcc13-benchmark"
-)
+URI = AnyUrl("https://gin.g-node.org/synchon/datalad-example-dmcc13-benchmark")
 
 
 @pytest.mark.parametrize(

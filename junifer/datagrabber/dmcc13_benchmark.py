@@ -7,7 +7,7 @@ from enum import Enum
 from itertools import product
 from typing import Annotated, Literal, Union
 
-from pydantic import BeforeValidator, HttpUrl
+from pydantic import AnyUrl, BeforeValidator
 
 from ..api.decorators import register_datagrabber
 from ..typing import DataGrabberPatterns
@@ -123,7 +123,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
 
     """
 
-    uri: HttpUrl = HttpUrl("https://github.com/OpenNeuroDatasets/ds003452.git")
+    uri: AnyUrl = AnyUrl("https://github.com/OpenNeuroDatasets/ds003452.git")
     types: Annotated[
         Union[_types, list[_types]], BeforeValidator(ensure_list)
     ] = [  # noqa: RUF012

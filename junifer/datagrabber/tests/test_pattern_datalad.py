@@ -7,7 +7,7 @@
 
 from pathlib import Path
 
-from pydantic import HttpUrl
+from pydantic import AnyUrl
 
 from junifer.datagrabber import DataType, PatternDataladDataGrabber
 
@@ -31,7 +31,7 @@ def test_bids_PatternDataladDataGrabber() -> None:
     repo_commit = _testing_dataset["example_bids"]["commit"]
     repo_uri = _testing_dataset["example_bids"]["uri"]
     with PatternDataladDataGrabber(
-        uri=HttpUrl(repo_uri),
+        uri=AnyUrl(repo_uri),
         types=[DataType.T1w, DataType.BOLD],
         patterns={
             "T1w": {
@@ -80,7 +80,7 @@ def test_bids_PatternDataladDataGrabber_datadir() -> None:
     """Test PatternDataladDataGrabber with a datadir set to a relative path."""
     datadir = Path("dataset")  # use string and not absolute path
     with PatternDataladDataGrabber(
-        uri=HttpUrl(_testing_dataset["example_bids"]["uri"]),
+        uri=AnyUrl(_testing_dataset["example_bids"]["uri"]),
         types=[DataType.T1w, DataType.BOLD],
         patterns={
             "T1w": {
@@ -112,7 +112,7 @@ def test_bids_PatternDataladDataGrabber_datadir() -> None:
 def test_bids_PatternDataladDataGrabber_session():
     """Test a subject and session-based BIDS PatternDataladDataGrabber."""
     # Set parameters
-    repo_uri = HttpUrl(_testing_dataset["example_bids_ses"]["uri"])
+    repo_uri = AnyUrl(_testing_dataset["example_bids_ses"]["uri"])
     rootdir = Path("example_bids_ses")
     replacements = ["subject", "session"]
     # With T1W and bold, only 2 sessions are available

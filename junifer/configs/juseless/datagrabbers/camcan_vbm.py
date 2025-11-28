@@ -7,7 +7,7 @@
 
 from typing import Literal
 
-from pydantic import HttpUrl
+from pydantic import AnyUrl
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import DataType, PatternDataladDataGrabber
@@ -32,7 +32,7 @@ class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
 
     """
 
-    uri: HttpUrl = (
+    uri: AnyUrl = AnyUrl(
         "ria+http://cat_12.5.ds.inm7.de#a139b26a-8406-11ea-8f94-a0369f287950"
     )
     types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012

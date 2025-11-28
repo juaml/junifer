@@ -8,7 +8,7 @@
 from pathlib import Path
 from typing import Annotated, Literal, Union
 
-from pydantic import BeforeValidator, HttpUrl
+from pydantic import AnyUrl, BeforeValidator
 
 from ...api.decorators import register_datagrabber
 from ...utils import ensure_list
@@ -50,7 +50,7 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
 
     """
 
-    uri: HttpUrl = HttpUrl(
+    uri: AnyUrl = AnyUrl(
         "https://github.com/datalad-datasets/"
         "human-connectome-project-openaccess.git"
     )
