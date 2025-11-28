@@ -10,10 +10,8 @@ Authors: Federico Raimondo
 License: BSD 3 clause
 """
 
-from pathlib import Path
 from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.utils import configure_logging
-from pydantic import HttpUrl
 
 
 ###############################################################################
@@ -40,8 +38,8 @@ replacements = ["subject"]
 ###############################################################################
 # Additionally, a datalad-based DataGrabber requires the URI of the remote
 # sibling and the location of the dataset within the remote sibling.
-repo_uri = HttpUrl("https://gin.g-node.org/juaml/datalad-example-bids")
-rootdir = Path("example_bids")
+repo_uri = "https://gin.g-node.org/juaml/datalad-example-bids"
+rootdir = "example_bids"
 
 ###############################################################################
 # Now we can use the DataGrabber within a `with` context.
