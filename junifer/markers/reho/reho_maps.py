@@ -69,7 +69,7 @@ class ReHoMaps(ReHoBase):
             * 27 : for face-, edge-, and node-wise neighbors
             * 125 : for 5x5 cuboidal volume
 
-    masks : list of dict or str, or None, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).

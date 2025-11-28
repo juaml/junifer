@@ -4,15 +4,16 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Optional, Union
+from typing import Annotated, Any, ClassVar, Optional, Union
 
 import pandas as pd
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_marker
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import Dependencies, MarkerInOutMappings
-from ...utils import logger, raise_error
+from ...utils import ensure_list_or_none, logger, raise_error
 from ..base import BaseMarker
 from ..parcel_aggregation import ParcelAggregation
 from ..utils import _correlate_dataframes
@@ -42,7 +43,7 @@ class CrossParcellationFC(BaseMarker):
     corr_method : str, optional
         Any method that can be passed to
         :meth:`pandas.DataFrame.corr` (default "pearson").
-    masks : list of dict or str, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -65,7 +66,10 @@ class CrossParcellationFC(BaseMarker):
     agg_method: str = "mean"
     agg_method_params: Optional[dict] = None
     corr_method: str = "pearson"
-    masks: Optional[list[Union[dict, str]]] = None
+    masks: Annotated[
+        Union[dict, str, list[Union[dict, str]], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
 
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""

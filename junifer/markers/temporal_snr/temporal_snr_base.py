@@ -5,14 +5,15 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Optional, Union
+from typing import Annotated, Any, ClassVar, Optional, Union
 
 from nilearn import image as nimg
+from pydantic import BeforeValidator
 
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import Dependencies, MarkerInOutMappings
-from ...utils import raise_error
+from ...utils import ensure_list_or_none, raise_error
 from ..base import BaseMarker
 
 
@@ -31,7 +32,7 @@ class TemporalSNRBase(BaseMarker):
     agg_method_params : dict or None, optional
         The parameters to pass to the aggregation function.
         See :func:`.get_aggfunc_by_name` for options (default None).
-    masks : list of dict or str, or None, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -51,7 +52,10 @@ class TemporalSNRBase(BaseMarker):
 
     agg_method: str = "mean"
     agg_method_params: Optional[dict] = None
-    masks: Optional[list[Union[dict, str]]] = None
+    masks: Annotated[
+        Union[dict, str, list[Union[dict, str]], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
 
     @abstractmethod
     def aggregate(

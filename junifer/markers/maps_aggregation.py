@@ -55,7 +55,7 @@ class MapsAggregation(BaseMarker):
         The data type(s) to apply the marker on.
         If None, will work on all available data.
         Check :enum:`.DataType` for valid values (default None).
-    masks : list of dict or str, or None, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -106,7 +106,10 @@ class MapsAggregation(BaseMarker):
     maps: str
     time_method: Optional[str] = None
     time_method_params: Optional[dict[str, Any]] = None
-    masks: Optional[list[Union[dict, str]]] = None
+    masks: Annotated[
+        Union[dict, str, list[Union[dict, str]], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
     on: Annotated[
         Union[_on, list[_on], None], BeforeValidator(ensure_list_or_none)
     ] = None

@@ -6,6 +6,7 @@
 # License: AGPL
 
 import sys
+from typing import Annotated
 
 
 if sys.version_info < (3, 12):  # pragma: no cover
@@ -29,13 +30,14 @@ from nilearn import image as nimg
 from nilearn._utils.niimg_conversions import check_niimg_4d
 from nilearn.interfaces.fmriprep.load_confounds_components import _load_scrub
 from nilearn.interfaces.fmriprep.load_confounds_utils import prepare_output
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_preprocessor
 from ...data import get_data
 from ...datagrabber import DataType
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies
-from ...utils import logger, raise_error
+from ...utils import ensure_list_or_none, logger, raise_error
 from ..base import BasePreprocessor
 
 
@@ -189,7 +191,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     t_r : float, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
-    masks : list of dict or str, or None, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -209,7 +211,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     low_pass: Optional[float] = None
     high_pass: Optional[float] = None
     t_r: Optional[float] = None
-    masks: Optional[list[Union[dict, str]]] = None
+    masks: Annotated[
+        Union[dict, str, list[Union[dict, str]], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
 
     def validate_preprocessor_params(self) -> None:
         """Run extra logical validation for preprocessor."""

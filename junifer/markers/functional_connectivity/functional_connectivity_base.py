@@ -4,15 +4,16 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Optional, Union
+from typing import Annotated, Any, ClassVar, Optional, Union
 
+from pydantic import BeforeValidator
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
 from ...datagrabber import DataType
 from ...external.nilearn import JuniferConnectivityMeasure
 from ...storage import MatrixKind, StorageType
 from ...typing import Dependencies, MarkerInOutMappings
-from ...utils import raise_error
+from ...utils import ensure_list_or_none, raise_error
 from ..base import BaseMarker
 
 
@@ -42,7 +43,7 @@ class FunctionalConnectivityBase(BaseMarker):
         covariance. If usage of :class:`sklearn.covariance.LedoitWolf` is
         desired, ``{"empirical": False}`` should be passed
         (default None).
-    masks : list of dict or str, or None, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -64,7 +65,10 @@ class FunctionalConnectivityBase(BaseMarker):
     agg_method_params: Optional[dict] = None
     conn_method: str = "correlation"
     conn_method_params: Optional[dict] = None
-    masks: Optional[list[Union[dict, str]]] = None
+    masks: Annotated[
+        Union[dict, str, list[Union[dict, str]], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
 
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""

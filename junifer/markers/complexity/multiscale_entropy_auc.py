@@ -34,7 +34,7 @@ class MultiscaleEntropyAUC(ComplexityBase):
     agg_method_params : dict or None, optional
         The parameters to pass to the aggregation function.
         See :func:`.get_aggfunc_by_name` for options (default None).
-    masks : list of dict or str, or None, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
