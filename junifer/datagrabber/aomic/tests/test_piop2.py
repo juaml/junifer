@@ -8,12 +8,12 @@
 # License: AGPL
 
 import pytest
-from pydantic import HttpUrl
+from pydantic import AnyUrl
 
 from junifer.datagrabber import DataladAOMICPIOP2
 
 
-URI = HttpUrl("https://gin.g-node.org/juaml/datalad-example-aomicpiop2")
+URI = AnyUrl("https://gin.g-node.org/juaml/datalad-example-aomicpiop2")
 
 
 @pytest.mark.parametrize(

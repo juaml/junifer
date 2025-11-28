@@ -8,7 +8,7 @@
 from enum import Enum
 from typing import Annotated, Literal, Union
 
-from pydantic import BeforeValidator, HttpUrl
+from pydantic import AnyUrl, BeforeValidator
 
 from ....api.decorators import register_datagrabber
 from ....datagrabber import DataType, PatternDataladDataGrabber
@@ -48,7 +48,7 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
 
     """
 
-    uri: HttpUrl = (
+    uri: AnyUrl = AnyUrl(
         "ria+http://cat_12.5.ds.inm7.de#b7107c52-8408-11ea-89c6-a0369f287950"
     )
     types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012
