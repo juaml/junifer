@@ -64,12 +64,11 @@ class ComplexityBase(BaseMarker):
     }
 
     parcellation: Annotated[
-        Union[str, list[str]], BeforeValidator(ensure_list)
+        str | list[str], BeforeValidator(ensure_list)
     ]
     agg_method: str = "mean"
     agg_method_params: dict | None = None
     masks: list[dict | str] | None = None
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     @abstractmethod
     def compute_complexity(

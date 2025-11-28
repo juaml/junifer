@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any
 
 import numpy as np
 from pydantic import BeforeValidator
@@ -88,9 +88,8 @@ class ReHoParcels(ReHoBase):
     """
 
     parcellation: Annotated[
-        Union[str, list[str]], BeforeValidator(ensure_list)
+        str | list[str], BeforeValidator(ensure_list)
     ]
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def compute(
         self,

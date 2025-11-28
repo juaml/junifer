@@ -4,7 +4,7 @@
 #          Kaustubh R. Patil <k.patil@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Literal
+from typing import Any, ClassVar
 
 import pandas as pd
 
@@ -66,7 +66,6 @@ class CrossParcellationFC(BaseMarker):
     agg_method_params: dict | None = None
     corr_method: str = "pearson"
     masks: list[dict | str] | None = None
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""

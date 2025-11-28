@@ -6,7 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any
 
 from pydantic import BeforeValidator
 
@@ -69,7 +69,6 @@ class ALFFParcels(ALFFBase):
     parcellation: Annotated[
         str | list[str], BeforeValidator(ensure_list)
     ]
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def compute(
         self,

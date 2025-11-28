@@ -54,7 +54,6 @@ class TemporalSNRSpheres(TemporalSNRBase):
     coords: str
     radius: Literal[0] | PositiveFloat | None = None
     allow_overlap: bool = False
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def aggregate(
         self, input: dict[str, Any], extra_input: dict | None = None

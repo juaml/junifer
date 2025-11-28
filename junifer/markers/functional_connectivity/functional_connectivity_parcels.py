@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any
 
 from pydantic import BeforeValidator
 
@@ -57,9 +57,8 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
     """
 
     parcellation: Annotated[
-        Union[str, list[str]], BeforeValidator(ensure_list)
+        str | list[str], BeforeValidator(ensure_list)
     ]
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def aggregate(
         self, input: dict[str, Any], extra_input: dict | None = None
