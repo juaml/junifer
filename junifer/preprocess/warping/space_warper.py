@@ -5,14 +5,15 @@
 
 from collections.abc import Sequence
 from enum import Enum
-from typing import Any, ClassVar, Literal, Optional
+from typing import Annotated, Any, ClassVar, Literal, Optional, Union
 
+from pydantic import BeforeValidator
 from templateflow import api as tflow
 
 from ...api.decorators import register_preprocessor
 from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
-from ...utils import logger, raise_error
+from ...utils import ensure_list_or_none, logger, raise_error
 from ..base import BasePreprocessor
 from ._ants_warper import ANTsWarper
 from ._fsl_warper import FSLWarper
@@ -35,6 +36,19 @@ class SpaceWarpingImpl(str, Enum):
     auto = "auto"
 
 
+_on = Literal[
+    DataType.T1w,
+    DataType.T2w,
+    DataType.BOLD,
+    DataType.VBM_GM,
+    DataType.VBM_WM,
+    DataType.VBM_CSF,
+    DataType.FALFF,
+    DataType.GCOR,
+    DataType.LCOR,
+]
+
+
 @register_preprocessor
 class SpaceWarper(BasePreprocessor):
     """Class for warping data to other template spaces.
@@ -47,9 +61,10 @@ class SpaceWarper(BasePreprocessor):
         type like ``"T1w"`` or a template space like ``"MNI152NLin2009cAsym"``.
         Use ``"T1w"`` for native space warping and named templates for
         template space warping.
-    on : list of {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``, \
+    on : {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``, \
          ``DataType.VBM_GM``, ``DataType.VBM_WM``, ``DataType.VBM_CSF``, \
-         ``DataType.FALFF``, ``DataType.GCOR``, ``DataType.LCOR``}
+         ``DataType.FALFF``, ``DataType.GCOR``, ``DataType.LCOR``} or \
+         list of them
         The data type(s) to warp.
 
     """
@@ -82,18 +97,9 @@ class SpaceWarper(BasePreprocessor):
 
     using: SpaceWarpingImpl
     reference: str
-    on: list[
-        Literal[
-            DataType.T1w,
-            DataType.T2w,
-            DataType.BOLD,
-            DataType.VBM_GM,
-            DataType.VBM_WM,
-            DataType.VBM_CSF,
-            DataType.FALFF,
-            DataType.GCOR,
-            DataType.LCOR,
-        ]
+    on: Annotated[
+        Union[_on, list[_on]],
+        BeforeValidator(ensure_list_or_none),
     ]
 
     def validate_preprocessor_params(self) -> None:

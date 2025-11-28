@@ -6,13 +6,13 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-from typing import Any, ClassVar, Optional
+from typing import Annotated, Any, ClassVar, Optional, Union
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, BeforeValidator, ConfigDict
 
 from ..datagrabber import DataType
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
-from ..utils import logger, raise_error
+from ..utils import ensure_list_or_none, logger, raise_error
 
 
 __all__ = ["BasePreprocessor"]
@@ -26,11 +26,12 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
 
     Parameters
     ----------
-    on : list of :enum:`.DataType` or None, optional
+    on : :enum:`.DataType` or list of variants or None, optional
         The data type(s) to apply the preprocessor on.
         If None, will work on all available data types.
         Check :enum:`.DataType` for valid values (default None).
-    required_data_types : list of :enum:`.DataType` or None, optional
+    required_data_types : :enum:`.DataType` or list of variants or None, \
+                          optional
         The data type(s) needed for computation.
         If None, will be equal to ``on``.
         Check :enum:`.DataType` for valid values (default None).
@@ -52,8 +53,14 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
 
     model_config = ConfigDict(use_enum_values=True)
 
-    on: Optional[list[DataType]] = None
-    required_data_types: Optional[list[DataType]] = None
+    on: Annotated[
+        Union[DataType, list[DataType], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
+    required_data_types: Annotated[
+        Union[DataType, list[DataType], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
 
     def model_post_init(self, context: Any):  # noqa: D102
         # Check for missing data types attributes

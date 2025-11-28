@@ -15,7 +15,7 @@ from junifer.preprocess.base import BasePreprocessor
 def test_base_preprocessor_abstractness() -> None:
     """Test BasePreprocessor is abstract base class."""
     with pytest.raises(TypeError, match=r"abstract"):
-        BasePreprocessor(on=["BOLD"])
+        BasePreprocessor(on="BOLD")
 
 
 def test_base_preprocessor_subclassing() -> None:
@@ -35,7 +35,7 @@ def test_base_preprocessor_subclassing() -> None:
         MyBasePreprocessor(on=["BOLD", "T2w"])
 
     with pytest.raises(ValueError, match=r"cannot be computed on \['T2w'\]"):
-        MyBasePreprocessor(on=["T2w"])
+        MyBasePreprocessor(on="T2w")
 
     # Create input for marker
     input_ = {
@@ -58,7 +58,7 @@ def test_base_preprocessor_subclassing() -> None:
             },
         },
     }
-    prep = MyBasePreprocessor(on=["BOLD"])
+    prep = MyBasePreprocessor(on="BOLD")
 
     with pytest.raises(ValueError, match="not have the required data"):
         prep.validate_input(["T1w"])
