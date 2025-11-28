@@ -12,9 +12,8 @@ from pydantic import BeforeValidator
 
 from ...api.decorators import register_marker
 from ...datagrabber import DataType
-from ...utils import logger
+from ...utils import ensure_list, logger
 from ..parcel_aggregation import ParcelAggregation
-from ..utils import ensure_list
 from .falff_base import ALFFBase
 
 
