@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Literal, Optional
+from typing import Any, Optional
 
 import numpy as np
 
@@ -80,7 +80,6 @@ class ReHoMaps(ReHoBase):
     """
 
     maps: str
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def compute(
         self,

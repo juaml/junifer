@@ -5,13 +5,12 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Literal, Optional
+from typing import Optional
 
 import neurokit2 as nk
 import numpy as np
 
 from ...api.decorators import register_marker
-from ...datagrabber import DataType
 from ...utils import logger, warn_with_log
 from .complexity_base import ComplexityBase
 
@@ -57,7 +56,6 @@ class PermEntropy(ComplexityBase):
     """
 
     params: Optional[dict] = None
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""

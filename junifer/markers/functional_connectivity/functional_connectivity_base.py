@@ -4,7 +4,7 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Literal, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
@@ -65,7 +65,6 @@ class FunctionalConnectivityBase(BaseMarker):
     conn_method: str = "correlation"
     conn_method_params: Optional[dict] = None
     masks: Optional[list[Union[dict, str]]] = None
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""

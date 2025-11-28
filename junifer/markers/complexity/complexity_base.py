@@ -10,7 +10,6 @@ from typing import (
     Annotated,
     Any,
     ClassVar,
-    Literal,
     Optional,
     Union,
 )
@@ -71,7 +70,6 @@ class ComplexityBase(BaseMarker):
     agg_method: str = "mean"
     agg_method_params: Optional[dict] = None
     masks: Optional[list[Union[dict, str]]] = None
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     @abstractmethod
     def compute_complexity(

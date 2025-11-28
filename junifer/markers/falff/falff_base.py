@@ -12,7 +12,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Literal,
     Optional,
     Union,
 )
@@ -110,7 +109,6 @@ class ALFFBase(BaseMarker):
     agg_method: str = "mean"
     agg_method_params: Optional[dict] = None
     masks: Optional[list[Union[dict, str]]] = None
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def _compute(
         self,

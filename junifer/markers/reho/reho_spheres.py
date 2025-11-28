@@ -98,7 +98,6 @@ class ReHoSpheres(ReHoBase):
     coords: str
     radius: Optional[Union[Literal[0], PositiveFloat]] = None
     allow_overlap: bool = False
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def compute(
         self,

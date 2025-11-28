@@ -5,7 +5,7 @@
 # License: AGPL
 
 from abc import abstractmethod
-from typing import Any, ClassVar, Literal, Optional, Union
+from typing import Any, ClassVar, Optional, Union
 
 from nilearn import image as nimg
 
@@ -52,7 +52,6 @@ class TemporalSNRBase(BaseMarker):
     agg_method: str = "mean"
     agg_method_params: Optional[dict] = None
     masks: Optional[list[Union[dict, str]]] = None
-    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     @abstractmethod
     def aggregate(
