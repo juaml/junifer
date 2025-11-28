@@ -76,7 +76,9 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
             self.on = self.valid_inputs
         else:
             # Convert to correct data type
-            self.on = [DataType(t) for t in self.on]
+            self.on = [
+                DataType(t) if isinstance(t, str) else t for t in self.on
+            ]
             # Check if required input data types are provided
             if any(x not in self.valid_inputs for x in self.on):
                 wrong_on = [
@@ -92,7 +94,8 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
         else:
             # Convert to correct data type
             self.required_data_types = [
-                DataType(t) for t in self.required_data_types
+                DataType(t) if isinstance(t, str) else t
+                for t in self.required_data_types
             ]
 
     @property
@@ -105,7 +108,10 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
             The list of data types that can be used as input for this marker.
 
         """
-        return [DataType(x) for x in self._VALID_DATA_TYPES]
+        return [
+            DataType(x) if isinstance(x, str) else x
+            for x in self._VALID_DATA_TYPES
+        ]
 
     def validate_preprocessor_params(self) -> None:
         """Run extra logical validation for preprocessor.
