@@ -5,12 +5,19 @@
 
 from collections.abc import Sequence
 from enum import Enum
-from typing import Any, ClassVar, Literal
+from typing import (
+    Annotated,
+    Any,
+    ClassVar,
+    Literal,
+)
+
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_preprocessor
 from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
-from ...utils import logger
+from ...utils import ensure_list_or_none, logger
 from ..base import BasePreprocessor
 from ._afni_smoothing import AFNISmoothing
 from ._fsl_smoothing import FSLSmoothing
@@ -34,6 +41,9 @@ class SmoothingImpl(str, Enum):
     fsl = "fsl"
 
 
+_on = Literal[DataType.T1w, DataType.T2w, DataType.BOLD]
+
+
 @register_preprocessor
 class Smoothing(BasePreprocessor):
     """Class for smoothing.
@@ -41,7 +51,8 @@ class Smoothing(BasePreprocessor):
     Parameters
     ----------
     using : :enum:`.SmoothingImpl`
-    on : list of {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``}
+    on : {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``} or \
+         list of them
         The data type(s) to apply smoothing to.
     smoothing_params : dict, optional
         Extra parameters for smoothing as a dictionary (default None).
@@ -100,7 +111,10 @@ class Smoothing(BasePreprocessor):
     ]
 
     using: SmoothingImpl
-    on: list[Literal[DataType.T1w, DataType.T2w, DataType.BOLD]]
+    on: Annotated[
+        _on | list[_on],
+        BeforeValidator(ensure_list_or_none),
+    ]
     smoothing_params: dict | None = None
 
     def validate_preprocessor_params(self) -> None:

@@ -59,7 +59,7 @@ def test_SpaceWarper_errors(
             SpaceWarper(
                 using=using,
                 reference=reference,
-                on=[DataType.BOLD],
+                on=DataType.BOLD,
             ).preprocess(
                 input=element_data["BOLD"],
                 extra_input=element_data,
@@ -72,10 +72,10 @@ def test_SpaceWarper_errors(
         [
             DMCC13Benchmark(
                 types=[DataType.BOLD, DataType.T1w, DataType.Warp],
-                sessions=[DMCCSession.Wave1Bas],
-                tasks=[DMCCTask.Rest],
-                phase_encodings=[DMCCPhaseEncoding.AP],
-                runs=[DMCCRun.One],
+                sessions=DMCCSession.Wave1Bas,
+                tasks=DMCCTask.Rest,
+                phase_encodings=DMCCPhaseEncoding.AP,
+                runs=DMCCRun.One,
                 native_t1w=True,
             ),
             ("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1"),
@@ -83,8 +83,8 @@ def test_SpaceWarper_errors(
         ],
         [
             DataladHCP1200(
-                tasks=[HCP1200Task.REST1],
-                phase_encodings=[HCP1200PhaseEncoding.LR],
+                tasks=HCP1200Task.REST1,
+                phase_encodings=HCP1200PhaseEncoding.LR,
                 ica_fix=True,
             ),
             ("100206", "REST1", "LR"),
@@ -122,7 +122,7 @@ def test_SpaceWarper_native(
         output = SpaceWarper(
             using=using,
             reference="T1w",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         ).preprocess(
             input=element_data["BOLD"],
             extra_input=element_data,
@@ -135,11 +135,11 @@ def test_SpaceWarper_native(
     [
         [
             DMCC13Benchmark(
-                types=[DataType.T1w],
-                sessions=[DMCCSession.Wave1Bas],
-                tasks=[DMCCTask.Rest],
-                phase_encodings=[DMCCPhaseEncoding.AP],
-                runs=[DMCCRun.One],
+                types=DataType.T1w,
+                sessions=DMCCSession.Wave1Bas,
+                tasks=DMCCTask.Rest,
+                phase_encodings=DMCCPhaseEncoding.AP,
+                runs=DMCCRun.One,
                 native_t1w=False,
             ),
             ("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1"),
@@ -147,11 +147,11 @@ def test_SpaceWarper_native(
         ],
         [
             DMCC13Benchmark(
-                types=[DataType.T1w],
-                sessions=[DMCCSession.Wave1Bas],
-                tasks=[DMCCTask.Rest],
-                phase_encodings=[DMCCPhaseEncoding.AP],
-                runs=[DMCCRun.One],
+                types=DataType.T1w,
+                sessions=DMCCSession.Wave1Bas,
+                tasks=DMCCTask.Rest,
+                phase_encodings=DMCCPhaseEncoding.AP,
+                runs=DMCCRun.One,
                 native_t1w=False,
             ),
             ("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1"),
@@ -185,7 +185,7 @@ def test_SpaceWarper_multi_mni(
         output = SpaceWarper(
             using=SpaceWarpingImpl.ants,
             reference=space,
-            on=[DataType.T1w],
+            on=DataType.T1w,
         ).preprocess(
             input=element_data["T1w"],
             extra_input=element_data,
