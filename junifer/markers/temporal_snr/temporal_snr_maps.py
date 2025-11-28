@@ -68,5 +68,5 @@ class TemporalSNRMaps(TemporalSNRBase):
         return MapsAggregation(
             maps=self.maps,
             masks=self.masks,
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         ).compute(input=input, extra_input=extra_input)

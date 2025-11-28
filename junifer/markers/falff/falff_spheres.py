@@ -134,7 +134,7 @@ class ALFFSpheres(ALFFBase):
                     method=self.agg_method,
                     method_params=self.agg_method_params,
                     masks=self.masks,
-                    on=[DataType.BOLD],
+                    on=DataType.BOLD,
                 ).compute(
                     input=aggregation_alff_input,
                     extra_input=extra_input,
@@ -148,7 +148,7 @@ class ALFFSpheres(ALFFBase):
                     method=self.agg_method,
                     method_params=self.agg_method_params,
                     masks=self.masks,
-                    on=[DataType.BOLD],
+                    on=DataType.BOLD,
                 ).compute(
                     input=aggregation_falff_input,
                     extra_input=extra_input,

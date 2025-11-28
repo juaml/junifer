@@ -125,7 +125,7 @@ def test_SphereAggregation_4D() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Create SphereAggregation object
         marker = SphereAggregation(
-            coords=COORDS, method="mean", radius=RADIUS, on=[DataType.BOLD]
+            coords=COORDS, method="mean", radius=RADIUS, on=DataType.BOLD
         )
         sphere_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -185,7 +185,7 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
             upsert=Upsert.Ignore,
         )
         marker = SphereAggregation(
-            coords=COORDS, method="mean", radius=RADIUS, on=[DataType.BOLD]
+            coords=COORDS, method="mean", radius=RADIUS, on=DataType.BOLD
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
@@ -248,7 +248,7 @@ def test_SphereAggregation_4D_agg_time() -> None:
             method="mean",
             radius=RADIUS,
             time_method="mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         sphere_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -284,7 +284,7 @@ def test_SphereAggregation_4D_agg_time() -> None:
             radius=RADIUS,
             time_method="select",
             time_method_params={"pick": [0]},
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         sphere_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -336,7 +336,7 @@ def test_SphereAggregation_warning() -> None:
                 radius=RADIUS,
                 time_method="select",
                 time_method_params={"pick": [0]},
-                on=[DataType.BOLD],
+                on=DataType.BOLD,
             )
             element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
                 ..., 0:1

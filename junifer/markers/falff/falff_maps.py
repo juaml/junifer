@@ -109,7 +109,7 @@ class ALFFMaps(ALFFBase):
                 **MapsAggregation(
                     maps=self.maps,
                     masks=self.masks,
-                    on=[DataType.BOLD],
+                    on=DataType.BOLD,
                 ).compute(
                     input=aggregation_alff_input,
                     extra_input=extra_input,
@@ -119,7 +119,7 @@ class ALFFMaps(ALFFBase):
                 **MapsAggregation(
                     maps=self.maps,
                     masks=self.masks,
-                    on=[DataType.BOLD],
+                    on=DataType.BOLD,
                 ).compute(
                     input=aggregation_falff_input,
                     extra_input=extra_input,

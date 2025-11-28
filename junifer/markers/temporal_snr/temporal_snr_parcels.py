@@ -83,5 +83,5 @@ class TemporalSNRParcels(TemporalSNRBase):
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         ).compute(input=input, extra_input=extra_input)
