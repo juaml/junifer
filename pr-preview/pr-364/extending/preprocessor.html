@@ -253,8 +253,8 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of 8. Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.1. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.2. UKB VBM GMD Extraction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.3. Generic BIDS DataGrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.2. Generic BIDS DataGrabber for datalad.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.3. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">8.4. Extracting root sum of squares from edge-wise timeseries.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.5. Computer Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
@@ -347,14 +347,14 @@ desirable in cases where your data is preprocessed using <code class="docutils l
 <p>In this step, we define the input data types of the Preprocessor.
 For input we can accept <code class="docutils literal notranslate"><span class="pre">T1w</span></code>, <code class="docutils literal notranslate"><span class="pre">T2w</span></code> and <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>
 <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a> and thus declare them in a class attribute:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_VALID_DATA_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="n">DataType</span><span class="o">.</span><span class="n">T1w</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">T2w</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">BOLD</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_VALID_DATA_TYPES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;T1w&quot;</span><span class="p">,</span> <span class="s2">&quot;T2w&quot;</span><span class="p">,</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </section>
 <section id="step-2-initialise-the-preprocessor">
 <span id="extending-preprocessors-init"></span><h2><span class="section-number">7.4.2. </span>Step 2: Initialise the Preprocessor<a class="headerlink" href="#step-2-initialise-the-preprocessor" title="Link to this heading">¶</a></h2>
-<p>Now we need to define our Preprocessor class’ parameters.
-Our class will have the following arguments:</p>
+<p>Now we need to define our Preprocessor class’ parameters as class attributes.
+Our class will have the following:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">fwhm</span></code>: The smoothing strength as a full-width at half maximum
 (in millimetres). Since we depend on <a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.image.smooth_img.html#nilearn.image.smooth_img" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.image.smooth_img()</span></code></a>, we
@@ -446,7 +446,6 @@ decorator and our final code should look like this:</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Literal</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">junifer.api.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_preprocessor</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">junifer.datagrabber</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataType</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">junifer.preprocess</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasePreprocessor</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">nilearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">image</span> <span class="k">as</span> <span class="n">nimg</span>
@@ -458,7 +457,7 @@ decorator and our final code should look like this:</p>
 
     <span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">}</span>
 
-    <span class="n">_VALID_DATA_TYPES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">DataType</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">DataType</span><span class="o">.</span><span class="n">T1w</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">T2w</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">BOLD</span><span class="p">]</span>
+    <span class="n">_VALID_DATA_TYPES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">DataType</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;T1w&quot;</span><span class="p">,</span> <span class="s2">&quot;T2w&quot;</span><span class="p">,</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">]</span>
 
     <span class="n">fwhm</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">|</span> <span class="n">ArrayLike</span> <span class="o">|</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;fast&quot;</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span>
 
@@ -574,7 +573,7 @@ decorator and our final code should look like this:</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=d2786d52"></script>
+</div><script src="../_static/documentation_options.js?v=f3fd6e18"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
