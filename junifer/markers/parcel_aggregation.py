@@ -17,11 +17,29 @@ from ..datagrabber import DataType
 from ..stats import get_aggfunc_by_name
 from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
-from ..utils import ensure_list, logger, raise_error, warn_with_log
+from ..utils import (
+    ensure_list,
+    ensure_list_or_none,
+    logger,
+    raise_error,
+    warn_with_log,
+)
 from .base import BaseMarker
 
 
 __all__ = ["ParcelAggregation"]
+
+_on = Literal[
+    DataType.T1w,
+    DataType.T2w,
+    DataType.BOLD,
+    DataType.VBM_GM,
+    DataType.VBM_WM,
+    DataType.VBM_CSF,
+    DataType.FALFF,
+    DataType.GCOR,
+    DataType.LCOR,
+]
 
 
 @register_marker
@@ -46,10 +64,10 @@ class ParcelAggregation(BaseMarker):
         it will not operate on the time dimension (default None).
     time_method_params : dict or None, optional
         The parameters to pass to the time aggregation function (default None).
-    on : list of {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``, \
+    on : {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``, \
          ``DataType.VBM_GM``, ``DataType.VBM_WM``, ``DataType.VBM_CSF``, \
-         ``DataType.FALFF``, ``DataType.GCOR``, ``DataType.LCOR``} or None, \
-         optional
+         ``DataType.FALFF``, ``DataType.GCOR``, ``DataType.LCOR``} or \
+         list of them or None, optional
         The data type(s) to apply the marker on.
         If None, will work on all available data.
         Check :enum:`.DataType` for valid values (default None).
@@ -102,26 +120,16 @@ class ParcelAggregation(BaseMarker):
     }
 
     parcellation: Annotated[
-        Union[str, list[str]], BeforeValidator(ensure_list)
+        str | list[str], BeforeValidator(ensure_list)
     ]
     method: str = "mean"
     method_params: dict[str, Any] | None = None
     time_method: str | None = None
     time_method_params: dict[str, Any] | None = None
     masks: list[dict | str] | None = None
-    on: list[
-        Literal[
-            DataType.T1w,
-            DataType.T2w,
-            DataType.BOLD,
-            DataType.VBM_GM,
-            DataType.VBM_WM,
-            DataType.VBM_CSF,
-            DataType.FALFF,
-            DataType.GCOR,
-            DataType.LCOR,
-        ]
-    ] | None = None
+    on: Annotated[
+        _on | list[_on] | None, BeforeValidator(ensure_list_or_none)
+    ] = None
 
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""

@@ -87,7 +87,7 @@ class EdgeCentricFCMaps(FunctionalConnectivityBase):
         aggregation = MapsAggregation(
             maps=self.maps,
             masks=self.masks,
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         ).compute(input, extra_input=extra_input)
         # Compute edgewise timeseries
         ets, edge_names = _ets(

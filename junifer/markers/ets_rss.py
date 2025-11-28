@@ -108,7 +108,7 @@ class RSSETSMarker(BaseMarker):
             parcellation=self.parcellation,
             method=self.agg_method,
             method_params=self.agg_method_params,
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
             masks=self.masks,
         ).compute(input=input, extra_input=extra_input)
         # Compute edgewise timeseries

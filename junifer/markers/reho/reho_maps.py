@@ -129,7 +129,7 @@ class ReHoMaps(ReHoBase):
         maps_aggregation = MapsAggregation(
             maps=self.maps,
             masks=self.masks,
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         ).compute(
             input=aggregation_input,
             extra_input=extra_input,

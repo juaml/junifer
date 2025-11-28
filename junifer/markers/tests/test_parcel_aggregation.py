@@ -91,7 +91,7 @@ def test_ParcelAggregation_3D() -> None:
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
             ..., 0:1
@@ -158,7 +158,7 @@ def test_ParcelAggregation_3D() -> None:
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="std",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         parcel_agg_std_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -183,7 +183,7 @@ def test_ParcelAggregation_3D() -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="trim_mean",
             method_params={"proportiontocut": 0.1},
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         parcel_agg_trim_mean_bold_data = marker.fit_transform(element_data)[
             "BOLD"
@@ -245,7 +245,7 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
             ..., 0:1
@@ -267,7 +267,7 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
@@ -286,7 +286,7 @@ def test_ParcelAggregation_3D_mask() -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
             masks=["compute_brain_mask"],
         )
         element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
@@ -365,7 +365,7 @@ def test_ParcelAggregation_3D_mask_computed() -> None:
             method="mean",
             masks=[{"compute_brain_mask": {"threshold": 0.2}}],
             name="tian_mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         parcel_agg_mean_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -447,7 +447,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         orig_mean = marker_original.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -465,7 +465,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
             ],
             method="mean",
             name="tian_mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
 
         # No warnings should be raised
@@ -552,7 +552,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         orig_mean = marker_original.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -570,7 +570,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
             ],
             method="mean",
             name="tian_mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         # Warning should be raised
         with pytest.warns(RuntimeWarning, match="overlapping voxels"):
@@ -661,7 +661,7 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         orig_mean = marker_original.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -679,7 +679,7 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
             ],
             method="mean",
             name="tian_mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
 
         # Warning should be raised
@@ -715,7 +715,7 @@ def test_ParcelAggregation_4D_agg_time():
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             time_method="mean",
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         parcel_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -751,7 +751,7 @@ def test_ParcelAggregation_4D_agg_time():
             method="mean",
             time_method="select",
             time_method_params={"pick": [0]},
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         )
         parcel_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -800,7 +800,7 @@ def test_ParcelAggregation_warning() -> None:
                 method="mean",
                 time_method="select",
                 time_method_params={"pick": [0]},
-                on=[DataType.BOLD],
+                on=DataType.BOLD,
             )
             element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
                 ..., 0:1

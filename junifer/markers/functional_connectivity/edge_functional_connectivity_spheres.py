@@ -111,7 +111,7 @@ class EdgeCentricFCSpheres(FunctionalConnectivityBase):
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         ).compute(input, extra_input=extra_input)
         # Compute edgewise timeseries
         ets, edge_names = _ets(
