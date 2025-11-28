@@ -28,7 +28,7 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
 
     Parameters
     ----------
-    on : list of :enum:`.DataType` or None, optional
+    on : :enum:`.DataType` or list of variants or None, optional
         The data type(s) to apply the marker on.
         If None, will work on all available data types.
         Check :enum:`.DataType` for valid values (default None).

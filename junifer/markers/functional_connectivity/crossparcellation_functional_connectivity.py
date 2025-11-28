@@ -122,14 +122,14 @@ class CrossParcellationFC(BaseMarker):
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         ).compute(input, extra_input=extra_input)
         aggregation_parcellation_two = ParcelAggregation(
             parcellation=[self.parcellation_two],
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
-            on=[DataType.BOLD],
+            on=DataType.BOLD,
         ).compute(input, extra_input=extra_input)
 
         return {
