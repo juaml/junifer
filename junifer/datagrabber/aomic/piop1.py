@@ -50,22 +50,18 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    types : {``DataType.BOLD``, ``DataType.T1w``, \
-            ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``, \
-            ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``} \
-            or list of them, optional
+    types : {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM", "DWI", \
+            "FreeSurfer", "Warp"} or list of the options, optional
         The data type(s) to grab.
     datadir : pathlib.Path, optional
         That path where the datalad dataset will be cloned.
         If not specified, the datalad dataset will be cloned into a temporary
         directory.
-    tasks : {``AOMICTask.RestingState``, ``AOMICTask.Anticipation``, \
-            ``AOMICTask.EmoMatching``, ``AOMICTask.Faces``, \
-            ``AOMICTask.Gstroop``, ``AOMICTask.WorkingMemory``} or \
-            list of them, optional
+    tasks : {"restingstate", "anticipation", "emomatching", "faces", \
+            "gstroop", "workingmemory"} or list of the options, optional
         AOMIC PIOP1 task sessions.
         By default, all available task sessions are selected.
-    space : :enum:`.AOMICSpace`, optional
+    space : {"native", "MNI152NLin2009cAsym"}, optional
         AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).
 
     """
