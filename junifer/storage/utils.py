@@ -78,9 +78,10 @@ def _meta_hash(meta: dict) -> str:
     meta["dependencies"] = {
         dep: get_dependency_version(dep) for dep in meta["dependencies"]
     }
-    # Remove datadir from datagrabber
-    if meta.get("datagrabber"):
-        _ = meta.get("datagrabber").pop("datadir", None)
+    # Remove datadir from datagrabber only if datalad-based
+    if meta.get("datagrabber") is not None:
+        if meta["datagrabber"].get("uri") is not None:
+            _ = meta["datagrabber"].pop("datadir")
     meta_md5 = hashlib.md5(
         json.dumps(meta, sort_keys=True).encode("utf-8")
     ).hexdigest()
