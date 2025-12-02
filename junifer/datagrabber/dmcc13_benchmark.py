@@ -98,24 +98,25 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    types : {``DataType.BOLD``, ``DataType.T1w``, \
-            ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``, \
-            ``DataType.Warp``} or list of them, optional
+    types : {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM", "Warp"} or \
+            list of the options, optional
         The data type(s) to grab.
     datadir : pathlib.Path, optional
         That path where the datalad dataset will be cloned.
         If not specified, the datalad dataset will be cloned into a temporary
         directory.
-    sessions : :enum:`.DMCCSession` or list of variants, optional
+    sessions : {"ses-wave1bas", "ses-wave1pro", "ses-wave1rea"} or \
+               list of the options, optional
         DMCC sessions.
         By default, all available sessions are selected.
-    tasks : :enum:`.DMCCTask` or list of variants, optional
+    tasks : {"Rest", "Axcpt", "Cuedts", "Stern", "Stroop"} or \
+            list of the options, optional
         DMCC tasks.
         By default, all available tasks are selected.
-    phase_encodings : :enum:`.DMCCPhaseEncoding` or list of variants, optional
+    phase_encodings : {"AP", "PA"} or list of the options, optional
         DMCC phase encoding directions.
         By default, all available phase encodings are selected.
-    runs : :enum:`.DMCCRun` or list of variants, optional
+    runs : {"1", "2"} or list of the options, optional
         DMCC runs.
         By default, all available runs are selected.
     native_t1w : bool, optional

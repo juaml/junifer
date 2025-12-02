@@ -29,17 +29,17 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
 
     Parameters
     ----------
-    types : {``DataType.BOLD``, ``DataType.T1w``, ``DataType.Warp``} \
-            or list of them, optional
+    types : {"BOLD", "T1w", "Warp"} or list of the options, optional
         The data type(s) to grab.
     datadir : pathlib.Path, optional
         That path where the datalad dataset will be cloned.
         If not specified, the datalad dataset will be cloned into a temporary
         directory.
-    tasks : list of :enum:`.HCP1200Task`, optional
+    tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
+            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
         HCP task sessions.
         By default, all available task sessions are selected.
-    phase_encodings : list of :enum:`.HCP1200PhaseEncoding`, optional
+    phase_encodings : {"LR", "RL"} or list of the options, optional
         HCP phase encoding directions.
         By default, all are used.
     ica_fix : bool, optional

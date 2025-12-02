@@ -40,16 +40,14 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    types : {``DataType.BOLD``, ``DataType.T1w``, \
-            ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``, \
-            ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``} \
-            or list of them, optional
+    types : {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM", "DWI", \
+            "FreeSurfer", "Warp"} or list of the options, optional
         The data type(s) to grab.
     datadir : pathlib.Path, optional
         That path where the datalad dataset will be cloned.
         If not specified, the datalad dataset will be cloned into a temporary
         directory.
-    space : :enum:`.AOMICSpace`, optional
+    space : {"native", "MNI152NLin2009cAsym"}, optional
         AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).
 
     """
