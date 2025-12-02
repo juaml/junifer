@@ -63,11 +63,12 @@ class JuselessUCLA(PatternDataGrabber):
     datadir : Path, optional
         The directory where the dataset is stored.
         (default "/data/project/psychosis_thalamus/data/fmriprep").
-    types: {``DataType.BOLD``, ``DataType.T1w``, \
-           ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``} \
-           or list of them, optional
+    types: {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM"} or \
+           list of the options, optional
         The data type(s) to grab.
-    tasks : :enum:`.UCLATask` or list of variants, optional
+    tasks : {"rest", "bart", "bht", "pamenc", "pamret", \
+            "scap", "taskswitch", "stopsignal"} or \
+            list of the options, optional
         UCLA task sessions.
         By default, all available task are selected.
 

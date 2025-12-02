@@ -68,16 +68,15 @@ class HCP1200(PatternDataGrabber):
 
     Parameters
     ----------
-    types : {``DataType.BOLD``, ``DataType.T1w``, ``DataType.Warp``} \
-            or list of them, optional
+    types : {"BOLD", "T1w", "Warp"} or list of the options, optional
         The data type(s) to grab.
     datadir : pathlib.Path
         The path where the data is stored.
-    tasks : :enum:`.HCP1200Task` or list of variants, optional
+    tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
+            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
         HCP task sessions.
         By default, all available task sessions are selected.
-    phase_encodings : :enum:`.HCP1200PhaseEncoding` or list of variants, \
-        optional
+    phase_encodings : {"LR", "RL"} or list of the options, optional
         HCP phase encoding directions.
         By default, all are used.
     ica_fix : bool, optional
