@@ -811,7 +811,7 @@ This is useful if you want to do some validation that requires the entire model 
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>sites</strong><span class="classifier"><a class="reference internal" href="#junifer.configs.juseless.datagrabbers.IXISite" title="junifer.configs.juseless.datagrabbers.IXISite"><code class="xref py py-enum docutils literal notranslate"><span class="pre">IXISite</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">variants</span></code>, optional</span></dt><dd><p>IXI sites.
+<dt><strong>sites</strong><span class="classifier">{“Guys”, “HH”, “IOP”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>IXI sites.
 By default, all available sites are selected.</p>
 </dd>
 </dl>
@@ -824,7 +824,7 @@ validated to form a valid model.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JuselessDataladIXIVBM&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for Juseless IXI VBM data fetching.\n\nImplements a DataGrabber to access the IXI VBM data in Juseless.\n\nParameters\n----------\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\nsites : :enum:`.IXISite` or list of variants, optional\n    IXI sites.\n    By default, all available sites are selected.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for Juseless IXI VBM data fetching.\n\nImplements a DataGrabber to access the IXI VBM data in Juseless.\n\nParameters\n----------\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\nsites : {\&quot;Guys\&quot;, \&quot;HH\&quot;, \&quot;IOP\&quot;} or list of the options, optional\n    IXI sites.\n    By default, all available sites are selected.&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1040,7 +1040,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1308,9 +1308,9 @@ This is useful if you want to do some validation that requires the entire model 
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Path</span></code></a>, optional</span></dt><dd><p>The directory where the dataset is stored.
 (default “/data/project/psychosis_thalamus/data/fmriprep”).</p>
 </dd>
-<dt><strong>types: {``DataType.BOLD``, ``DataType.T1w``,            ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``}            or list of them, optional</strong></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types: {“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”} or            list of the options, optional</strong></dt><dd><p>The data type(s) to grab.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier"><a class="reference internal" href="#junifer.configs.juseless.datagrabbers.UCLATask" title="junifer.configs.juseless.datagrabbers.UCLATask"><code class="xref py py-enum docutils literal notranslate"><span class="pre">UCLATask</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">variants</span></code>, optional</span></dt><dd><p>UCLA task sessions.
+<dt><strong>tasks</strong><span class="classifier">{“rest”, “bart”, “bht”, “pamenc”, “pamret”,             “scap”, “taskswitch”, “stopsignal”} or             <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>UCLA task sessions.
 By default, all available task are selected.</p>
 </dd>
 </dl>
@@ -1323,7 +1323,7 @@ validated to form a valid model.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;JuselessUCLA&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for Juseless UCLA data fetching.\n\nImplements a DataGrabber to access the UCLA data in Juseless.\n\nParameters\n----------\ndatadir : Path, optional\n    The directory where the dataset is stored.\n    (default \&quot;/data/project/psychosis_thalamus/data/fmriprep\&quot;).\ntypes: {``DataType.BOLD``, ``DataType.T1w``,            ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``}            or list of them, optional\n    The data type(s) to grab.\ntasks : :enum:`.UCLATask` or list of variants, optional\n    UCLA task sessions.\n    By default, all available task are selected.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for Juseless UCLA data fetching.\n\nImplements a DataGrabber to access the UCLA data in Juseless.\n\nParameters\n----------\ndatadir : Path, optional\n    The directory where the dataset is stored.\n    (default \&quot;/data/project/psychosis_thalamus/data/fmriprep\&quot;).\ntypes: {\&quot;BOLD\&quot;, \&quot;T1w\&quot;, \&quot;VBM_CSF\&quot;, \&quot;VBM_GM\&quot;, \&quot;VBM_WM\&quot;} or            list of the options, optional\n    The data type(s) to grab.\ntasks : {\&quot;rest\&quot;, \&quot;bart\&quot;, \&quot;bht\&quot;, \&quot;pamenc\&quot;, \&quot;pamret\&quot;,             \&quot;scap\&quot;, \&quot;taskswitch\&quot;, \&quot;stopsignal\&quot;} or             list of the options, optional\n    UCLA task sessions.\n    By default, all available task are selected.&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1552,7 +1552,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1565,7 +1565,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1775,7 +1775,7 @@ imposing constraints based on specified tasks.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=5785ea01"></script>
+</div><script src="../_static/documentation_options.js?v=1be7cdda"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>

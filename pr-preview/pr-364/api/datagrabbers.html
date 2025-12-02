@@ -493,7 +493,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -650,22 +650,22 @@ Can be overridden by subclasses.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{<code class="docutils literal notranslate"><span class="pre">DataType.BOLD</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.T1w</span></code>,             <code class="docutils literal notranslate"><span class="pre">DataType.VBM_CSF</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.VBM_GM</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.VBM_WM</span></code>,             <code class="docutils literal notranslate"><span class="pre">DataType.Warp</span></code>} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">them</span></code>, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “Warp”} or             <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>That path where the datalad dataset will be cloned.
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>sessions</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.DMCCSession" title="junifer.datagrabber.DMCCSession"><code class="xref py py-enum docutils literal notranslate"><span class="pre">DMCCSession</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">variants</span></code>, optional</span></dt><dd><p>DMCC sessions.
+<dt><strong>sessions</strong><span class="classifier">{“ses-wave1bas”, “ses-wave1pro”, “ses-wave1rea”} or                <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>DMCC sessions.
 By default, all available sessions are selected.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.DMCCTask" title="junifer.datagrabber.DMCCTask"><code class="xref py py-enum docutils literal notranslate"><span class="pre">DMCCTask</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">variants</span></code>, optional</span></dt><dd><p>DMCC tasks.
+<dt><strong>tasks</strong><span class="classifier">{“Rest”, “Axcpt”, “Cuedts”, “Stern”, “Stroop”} or             <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>DMCC tasks.
 By default, all available tasks are selected.</p>
 </dd>
-<dt><strong>phase_encodings</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.DMCCPhaseEncoding" title="junifer.datagrabber.DMCCPhaseEncoding"><code class="xref py py-enum docutils literal notranslate"><span class="pre">DMCCPhaseEncoding</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">variants</span></code>, optional</span></dt><dd><p>DMCC phase encoding directions.
+<dt><strong>phase_encodings</strong><span class="classifier">{“AP”, “PA”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>DMCC phase encoding directions.
 By default, all available phase encodings are selected.</p>
 </dd>
-<dt><strong>runs</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.DMCCRun" title="junifer.datagrabber.DMCCRun"><code class="xref py py-enum docutils literal notranslate"><span class="pre">DMCCRun</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">variants</span></code>, optional</span></dt><dd><p>DMCC runs.
+<dt><strong>runs</strong><span class="classifier">{“1”, “2”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>DMCC runs.
 By default, all available runs are selected.</p>
 </dd>
 <dt><strong>native_t1w</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to use T1w in native space (default False).</p>
@@ -680,7 +680,7 @@ validated to form a valid model.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DMCC13Benchmark&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for datalad-based data fetching of DMCC13.\n\nParameters\n----------\ntypes : {``DataType.BOLD``, ``DataType.T1w``,             ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``,             ``DataType.Warp``} or list of them, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\nsessions : :enum:`.DMCCSession` or list of variants, optional\n    DMCC sessions.\n    By default, all available sessions are selected.\ntasks : :enum:`.DMCCTask` or list of variants, optional\n    DMCC tasks.\n    By default, all available tasks are selected.\nphase_encodings : :enum:`.DMCCPhaseEncoding` or list of variants, optional\n    DMCC phase encoding directions.\n    By default, all available phase encodings are selected.\nruns : :enum:`.DMCCRun` or list of variants, optional\n    DMCC runs.\n    By default, all available runs are selected.\nnative_t1w : bool, optional\n    Whether to use T1w in native space (default False).&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for datalad-based data fetching of DMCC13.\n\nParameters\n----------\ntypes : {\&quot;BOLD\&quot;, \&quot;T1w\&quot;, \&quot;VBM_CSF\&quot;, \&quot;VBM_GM\&quot;, \&quot;VBM_WM\&quot;, \&quot;Warp\&quot;} or             list of the options, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\nsessions : {\&quot;ses-wave1bas\&quot;, \&quot;ses-wave1pro\&quot;, \&quot;ses-wave1rea\&quot;} or                list of the options, optional\n    DMCC sessions.\n    By default, all available sessions are selected.\ntasks : {\&quot;Rest\&quot;, \&quot;Axcpt\&quot;, \&quot;Cuedts\&quot;, \&quot;Stern\&quot;, \&quot;Stroop\&quot;} or             list of the options, optional\n    DMCC tasks.\n    By default, all available tasks are selected.\nphase_encodings : {\&quot;AP\&quot;, \&quot;PA\&quot;} or list of the options, optional\n    DMCC phase encoding directions.\n    By default, all available phase encodings are selected.\nruns : {\&quot;1\&quot;, \&quot;2\&quot;} or list of the options, optional\n    DMCC runs.\n    By default, all available runs are selected.\nnative_t1w : bool, optional\n    Whether to use T1w in native space (default False).&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1048,7 +1048,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1066,7 +1066,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1079,7 +1079,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1092,7 +1092,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1105,7 +1105,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1399,13 +1399,13 @@ This is useful if you want to do some validation that requires the entire model 
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{<code class="docutils literal notranslate"><span class="pre">DataType.BOLD</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.T1w</span></code>,             <code class="docutils literal notranslate"><span class="pre">DataType.VBM_CSF</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.VBM_GM</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.VBM_WM</span></code>,             <code class="docutils literal notranslate"><span class="pre">DataType.DWI</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.FreeSurfer</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.Warp</span></code>}             or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">them</span></code>, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “DWI”,             “FreeSurfer”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>That path where the datalad dataset will be cloned.
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>space</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.AOMICSpace" title="junifer.datagrabber.AOMICSpace"><code class="xref py py-enum docutils literal notranslate"><span class="pre">AOMICSpace</span></code></a>, optional</span></dt><dd><p>AOMIC space (default <code class="docutils literal notranslate"><span class="pre">AOMICSpace.MNI152NLin2009cAsym</span></code>).</p>
+<dt><strong>space</strong><span class="classifier">{“native”, “MNI152NLin2009cAsym”}, optional</span></dt><dd><p>AOMIC space (default <code class="docutils literal notranslate"><span class="pre">AOMICSpace.MNI152NLin2009cAsym</span></code>).</p>
 </dd>
 </dl>
 </dd>
@@ -1417,7 +1417,7 @@ validated to form a valid model.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DataladAOMICID1000&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for datalad-based data fetching of AOMIC ID1000.\n\nParameters\n----------\ntypes : {``DataType.BOLD``, ``DataType.T1w``,             ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``,             ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``}             or list of them, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\nspace : :enum:`.AOMICSpace`, optional\n    AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for datalad-based data fetching of AOMIC ID1000.\n\nParameters\n----------\ntypes : {\&quot;BOLD\&quot;, \&quot;T1w\&quot;, \&quot;VBM_CSF\&quot;, \&quot;VBM_GM\&quot;, \&quot;VBM_WM\&quot;, \&quot;DWI\&quot;,             \&quot;FreeSurfer\&quot;, \&quot;Warp\&quot;} or list of the options, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\nspace : {\&quot;native\&quot;, \&quot;MNI152NLin2009cAsym\&quot;}, optional\n    AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1715,7 +1715,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1753,16 +1753,16 @@ This is useful if you want to do some validation that requires the entire model 
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{<code class="docutils literal notranslate"><span class="pre">DataType.BOLD</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.T1w</span></code>,             <code class="docutils literal notranslate"><span class="pre">DataType.VBM_CSF</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.VBM_GM</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.VBM_WM</span></code>,             <code class="docutils literal notranslate"><span class="pre">DataType.DWI</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.FreeSurfer</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.Warp</span></code>}             or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">them</span></code>, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “DWI”,             “FreeSurfer”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>That path where the datalad dataset will be cloned.
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier">{<code class="docutils literal notranslate"><span class="pre">AOMICTask.RestingState</span></code>, <code class="docutils literal notranslate"><span class="pre">AOMICTask.Anticipation</span></code>,             <code class="docutils literal notranslate"><span class="pre">AOMICTask.EmoMatching</span></code>, <code class="docutils literal notranslate"><span class="pre">AOMICTask.Faces</span></code>,             <code class="docutils literal notranslate"><span class="pre">AOMICTask.Gstroop</span></code>, <code class="docutils literal notranslate"><span class="pre">AOMICTask.WorkingMemory</span></code>} or             <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">them</span></code>, optional</span></dt><dd><p>AOMIC PIOP1 task sessions.
+<dt><strong>tasks</strong><span class="classifier">{“restingstate”, “anticipation”, “emomatching”, “faces”,             “gstroop”, “workingmemory”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>AOMIC PIOP1 task sessions.
 By default, all available task sessions are selected.</p>
 </dd>
-<dt><strong>space</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.AOMICSpace" title="junifer.datagrabber.AOMICSpace"><code class="xref py py-enum docutils literal notranslate"><span class="pre">AOMICSpace</span></code></a>, optional</span></dt><dd><p>AOMIC space (default <code class="docutils literal notranslate"><span class="pre">AOMICSpace.MNI152NLin2009cAsym</span></code>).</p>
+<dt><strong>space</strong><span class="classifier">{“native”, “MNI152NLin2009cAsym”}, optional</span></dt><dd><p>AOMIC space (default <code class="docutils literal notranslate"><span class="pre">AOMICSpace.MNI152NLin2009cAsym</span></code>).</p>
 </dd>
 </dl>
 </dd>
@@ -1774,7 +1774,7 @@ validated to form a valid model.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DataladAOMICPIOP1&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for pattern-based data fetching of AOMIC PIOP1.\n\nParameters\n----------\ntypes : {``DataType.BOLD``, ``DataType.T1w``,             ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``,             ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``}             or list of them, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\ntasks : {``AOMICTask.RestingState``, ``AOMICTask.Anticipation``,             ``AOMICTask.EmoMatching``, ``AOMICTask.Faces``,             ``AOMICTask.Gstroop``, ``AOMICTask.WorkingMemory``} or             list of them, optional\n    AOMIC PIOP1 task sessions.\n    By default, all available task sessions are selected.\nspace : :enum:`.AOMICSpace`, optional\n    AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for pattern-based data fetching of AOMIC PIOP1.\n\nParameters\n----------\ntypes : {\&quot;BOLD\&quot;, \&quot;T1w\&quot;, \&quot;VBM_CSF\&quot;, \&quot;VBM_GM\&quot;, \&quot;VBM_WM\&quot;, \&quot;DWI\&quot;,             \&quot;FreeSurfer\&quot;, \&quot;Warp\&quot;} or list of the options, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\ntasks : {\&quot;restingstate\&quot;, \&quot;anticipation\&quot;, \&quot;emomatching\&quot;, \&quot;faces\&quot;,             \&quot;gstroop\&quot;, \&quot;workingmemory\&quot;} or list of the options, optional\n    AOMIC PIOP1 task sessions.\n    By default, all available task sessions are selected.\nspace : {\&quot;native\&quot;, \&quot;MNI152NLin2009cAsym\&quot;}, optional\n    AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2112,7 +2112,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2125,7 +2125,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2200,16 +2200,16 @@ This is useful if you want to do some validation that requires the entire model 
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{<code class="docutils literal notranslate"><span class="pre">DataType.BOLD</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.T1w</span></code>,             <code class="docutils literal notranslate"><span class="pre">DataType.VBM_CSF</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.VBM_GM</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.VBM_WM</span></code>,             <code class="docutils literal notranslate"><span class="pre">DataType.DWI</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.FreeSurfer</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.Warp</span></code>}             or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">them</span></code>, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “DWI”,             “FreeSurfer”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>That path where the datalad dataset will be cloned.
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of {<code class="docutils literal notranslate"><span class="pre">AOMICTask.RestingState</span></code>, <code class="docutils literal notranslate"><span class="pre">AOMICTask.StopSignal</span></code>,             <code class="docutils literal notranslate"><span class="pre">AOMICTask.WorkingMemory</span></code>, <code class="docutils literal notranslate"><span class="pre">AOMICTask.EmoMatching</span></code>} or             <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">them</span></code>, optional</span></dt><dd><p>AOMIC PIOP2 task sessions.
+<dt><strong>tasks</strong><span class="classifier">{“restingstate”, “stopsignal”, “workingmemory”, “emomatching”} or             <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>AOMIC PIOP2 task sessions.
 By default, all available task sessions are selected.</p>
 </dd>
-<dt><strong>space</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.AOMICSpace" title="junifer.datagrabber.AOMICSpace"><code class="xref py py-enum docutils literal notranslate"><span class="pre">AOMICSpace</span></code></a>, optional</span></dt><dd><p>AOMIC space (default <code class="docutils literal notranslate"><span class="pre">AOMICSpace.MNI152NLin2009cAsym</span></code>).</p>
+<dt><strong>space</strong><span class="classifier">{“native”, “MNI152NLin2009cAsym”}, optional</span></dt><dd><p>AOMIC space (default <code class="docutils literal notranslate"><span class="pre">AOMICSpace.MNI152NLin2009cAsym</span></code>).</p>
 </dd>
 </dl>
 </dd>
@@ -2221,7 +2221,7 @@ validated to form a valid model.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DataladAOMICPIOP2&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for pattern-based data fetching of AOMIC PIOP2.\n\nParameters\n----------\ntypes : {``DataType.BOLD``, ``DataType.T1w``,             ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``,             ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``}             or list of them, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\ntasks : list of {``AOMICTask.RestingState``, ``AOMICTask.StopSignal``,             ``AOMICTask.WorkingMemory``, ``AOMICTask.EmoMatching``} or             list of them, optional\n    AOMIC PIOP2 task sessions.\n    By default, all available task sessions are selected.\nspace : :enum:`.AOMICSpace`, optional\n    AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for pattern-based data fetching of AOMIC PIOP2.\n\nParameters\n----------\ntypes : {\&quot;BOLD\&quot;, \&quot;T1w\&quot;, \&quot;VBM_CSF\&quot;, \&quot;VBM_GM\&quot;, \&quot;VBM_WM\&quot;, \&quot;DWI\&quot;,             \&quot;FreeSurfer\&quot;, \&quot;Warp\&quot;} or list of the options, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\ntasks : {\&quot;restingstate\&quot;, \&quot;stopsignal\&quot;, \&quot;workingmemory\&quot;, \&quot;emomatching\&quot;} or             list of the options, optional\n    AOMIC PIOP2 task sessions.\n    By default, all available task sessions are selected.\nspace : {\&quot;native\&quot;, \&quot;MNI152NLin2009cAsym\&quot;}, optional\n    AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2553,7 +2553,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2566,7 +2566,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2912,16 +2912,16 @@ This is useful if you want to do some validation that requires the entire model 
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{<code class="docutils literal notranslate"><span class="pre">DataType.BOLD</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.T1w</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.Warp</span></code>}             or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">them</span></code>, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>That path where the datalad dataset will be cloned.
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#junifer.datagrabber.HCP1200Task" title="junifer.datagrabber.HCP1200Task"><code class="xref py py-enum docutils literal notranslate"><span class="pre">HCP1200Task</span></code></a>, optional</span></dt><dd><p>HCP task sessions.
+<dt><strong>tasks</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”,             “LANGUAGE”, “GAMBLING”, “MOTOR”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP task sessions.
 By default, all available task sessions are selected.</p>
 </dd>
-<dt><strong>phase_encodings</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference internal" href="#junifer.datagrabber.HCP1200PhaseEncoding" title="junifer.datagrabber.HCP1200PhaseEncoding"><code class="xref py py-enum docutils literal notranslate"><span class="pre">HCP1200PhaseEncoding</span></code></a>, optional</span></dt><dd><p>HCP phase encoding directions.
+<dt><strong>phase_encodings</strong><span class="classifier">{“LR”, “RL”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP phase encoding directions.
 By default, all are used.</p>
 </dd>
 <dt><strong>ica_fix</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to retrieve data that was processed with ICA+FIX.
@@ -2939,7 +2939,7 @@ validated to form a valid model.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;DataladHCP1200&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for datalad-based data fetching of HCP1200.\n\nParameters\n----------\ntypes : {``DataType.BOLD``, ``DataType.T1w``, ``DataType.Warp``}             or list of them, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\ntasks : list of :enum:`.HCP1200Task`, optional\n    HCP task sessions.\n    By default, all available task sessions are selected.\nphase_encodings : list of :enum:`.HCP1200PhaseEncoding`, optional\n    HCP phase encoding directions.\n    By default, all are used.\nica_fix : bool, optional\n    Whether to retrieve data that was processed with ICA+FIX.\n    Only ``HCP1200Task.REST1`` and ``HCP1200Task.REST2`` tasks\n    are available with ICA+FIX\n    (default False).&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for datalad-based data fetching of HCP1200.\n\nParameters\n----------\ntypes : {\&quot;BOLD\&quot;, \&quot;T1w\&quot;, \&quot;Warp\&quot;} or list of the options, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path, optional\n    That path where the datalad dataset will be cloned.\n    If not specified, the datalad dataset will be cloned into a temporary\n    directory.\ntasks : {\&quot;REST1\&quot;, \&quot;REST2\&quot;, \&quot;SOCIAL\&quot;, \&quot;WM\&quot;, \&quot;RELATIONAL\&quot;, \&quot;EMOTION\&quot;,             \&quot;LANGUAGE\&quot;, \&quot;GAMBLING\&quot;, \&quot;MOTOR\&quot;} or list of the options, optional\n    HCP task sessions.\n    By default, all available task sessions are selected.\nphase_encodings : {\&quot;LR\&quot;, \&quot;RL\&quot;} or list of the options, optional\n    HCP phase encoding directions.\n    By default, all are used.\nica_fix : bool, optional\n    Whether to retrieve data that was processed with ICA+FIX.\n    Only ``HCP1200Task.REST1`` and ``HCP1200Task.REST2`` tasks\n    are available with ICA+FIX\n    (default False).&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3232,7 +3232,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3268,14 +3268,14 @@ This is useful if you want to do some validation that requires the entire model 
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{<code class="docutils literal notranslate"><span class="pre">DataType.BOLD</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.T1w</span></code>, <code class="docutils literal notranslate"><span class="pre">DataType.Warp</span></code>}             or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">them</span></code>, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The path where the data is stored.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.HCP1200Task" title="junifer.datagrabber.HCP1200Task"><code class="xref py py-enum docutils literal notranslate"><span class="pre">HCP1200Task</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">variants</span></code>, optional</span></dt><dd><p>HCP task sessions.
+<dt><strong>tasks</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”,             “LANGUAGE”, “GAMBLING”, “MOTOR”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP task sessions.
 By default, all available task sessions are selected.</p>
 </dd>
-<dt><strong>phase_encodings</strong><span class="classifier"><a class="reference internal" href="#junifer.datagrabber.HCP1200PhaseEncoding" title="junifer.datagrabber.HCP1200PhaseEncoding"><code class="xref py py-enum docutils literal notranslate"><span class="pre">HCP1200PhaseEncoding</span></code></a> or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <code class="xref py py-obj docutils literal notranslate"><span class="pre">variants</span></code>,         optional</span></dt><dd><p>HCP phase encoding directions.
+<dt><strong>phase_encodings</strong><span class="classifier">{“LR”, “RL”} or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP phase encoding directions.
 By default, all are used.</p>
 </dd>
 <dt><strong>ica_fix</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values" title="(in Python v3.14)"><span class="xref std std-ref">bool</span></a>, optional</span></dt><dd><p>Whether to retrieve data that was processed with ICA+FIX.
@@ -3293,7 +3293,7 @@ validated to form a valid model.</p>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HCP1200&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for pattern-based data fetching of HCP1200.\n\nParameters\n----------\ntypes : {``DataType.BOLD``, ``DataType.T1w``, ``DataType.Warp``}             or list of them, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path\n    The path where the data is stored.\ntasks : :enum:`.HCP1200Task` or list of variants, optional\n    HCP task sessions.\n    By default, all available task sessions are selected.\nphase_encodings : :enum:`.HCP1200PhaseEncoding` or list of variants,         optional\n    HCP phase encoding directions.\n    By default, all are used.\nica_fix : bool, optional\n    Whether to retrieve data that was processed with ICA+FIX.\n    Only ``HCP1200Task.REST1`` and ``HCP1200Task.REST2`` tasks\n    are available with ICA+FIX\n    (default False).&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Concrete implementation for pattern-based data fetching of HCP1200.\n\nParameters\n----------\ntypes : {\&quot;BOLD\&quot;, \&quot;T1w\&quot;, \&quot;Warp\&quot;} or list of the options, optional\n    The data type(s) to grab.\ndatadir : pathlib.Path\n    The path where the data is stored.\ntasks : {\&quot;REST1\&quot;, \&quot;REST2\&quot;, \&quot;SOCIAL\&quot;, \&quot;WM\&quot;, \&quot;RELATIONAL\&quot;, \&quot;EMOTION\&quot;,             \&quot;LANGUAGE\&quot;, \&quot;GAMBLING\&quot;, \&quot;MOTOR\&quot;} or list of the options, optional\n    HCP task sessions.\n    By default, all available task sessions are selected.\nphase_encodings : {\&quot;LR\&quot;, \&quot;RL\&quot;} or list of the options, optional\n    HCP phase encoding directions.\n    By default, all are used.\nica_fix : bool, optional\n    Whether to retrieve data that was processed with ICA+FIX.\n    Only ``HCP1200Task.REST1`` and ``HCP1200Task.REST2`` tasks\n    are available with ICA+FIX\n    (default False).&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;types&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -3553,7 +3553,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3571,7 +3571,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3584,7 +3584,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -4093,7 +4093,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f10c0721bc0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f57e008ab60&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -5051,7 +5051,7 @@ if data type pattern key contains ‘*’ as value.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=5785ea01"></script>
+</div><script src="../_static/documentation_options.js?v=1be7cdda"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
