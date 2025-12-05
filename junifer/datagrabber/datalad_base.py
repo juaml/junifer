@@ -87,6 +87,10 @@ class DataladDataGrabber(BaseDataGrabber):
     This class is intended to be used as a superclass of a subclass
     with multiple inheritance.
 
+    If the ``datadir`` is specified and has the stem prefix as ``"datalad"``
+    and the stem suffix as ``"juniferauto"``, it will be automatically
+    deleted after use.
+
     """
 
     uri: AnyUrl = Field(frozen=True)
