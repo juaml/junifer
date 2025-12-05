@@ -5,11 +5,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional, Union
+
+from pydantic import PositiveFloat
 
 from ...api.decorators import register_marker
+from ...datagrabber import DataType
 from ..sphere_aggregation import SphereAggregation
-from ..utils import raise_error
 from .functional_connectivity_base import FunctionalConnectivityBase
 
 
@@ -25,68 +27,45 @@ class FunctionalConnectivitySpheres(FunctionalConnectivityBase):
     coords : str
         The name of the coordinates list to use.
         See :func:`.list_data` for options.
-    radius : positive float, optional
-        The radius of the sphere around each coordinates in millimetres.
+    radius : ``zero`` or positive float or None, optional
+        The radius of the sphere in millimetres.
         If None, the signal will be extracted from a single voxel.
         See :class:`.JuniferNiftiSpheresMasker` for more information
         (default None).
     allow_overlap : bool, optional
-        Whether to allow overlapping spheres. If False, an error is raised if
-        the spheres overlap (default False).
+        Whether to allow overlapping spheres.
+        If False, an error is raised if the spheres overlap (default False).
     agg_method : str, optional
-        The method to perform aggregation using.
+        The aggregation function to use.
         See :func:`.get_aggfunc_by_name` for options
         (default "mean").
-    agg_method_params : dict, optional
-        Parameters to pass to the aggregation function.
-        See :func:`.get_aggfunc_by_name` for options
-        (default None).
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
     conn_method : str, optional
-        The method to perform connectivity measure using.
+        The connectivity measure to use.
         See :class:`.JuniferConnectivityMeasure` for options
         (default "correlation").
-    conn_method_params : dict, optional
-        Parameters to pass to :class:`.JuniferConnectivityMeasure`.
+    conn_method_params : dict or None, optional
+        The parameters to pass to :class:`.JuniferConnectivityMeasure`.
         If None, ``{"empirical": True}`` will be used, which would mean
         :class:`sklearn.covariance.EmpiricalCovariance` is used to compute
         covariance. If usage of :class:`sklearn.covariance.LedoitWolf` is
         desired, ``{"empirical": False}`` should be passed
         (default None).
-    masks : str, dict or list of dict or str, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, will use
-        ``BOLD_FunctionalConnectivitySpheres`` (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     """
 
-    def __init__(
-        self,
-        coords: str,
-        radius: Optional[float] = None,
-        allow_overlap: bool = False,
-        agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        conn_method: str = "correlation",
-        conn_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.coords = coords
-        self.radius = radius
-        self.allow_overlap = allow_overlap
-        if radius is None or radius <= 0:
-            raise_error(f"radius should be > 0: provided {radius}")
-        super().__init__(
-            agg_method=agg_method,
-            agg_method_params=agg_method_params,
-            conn_method=conn_method,
-            conn_method_params=conn_method_params,
-            masks=masks,
-            name=name,
-        )
+    coords: str
+    radius: Optional[Union[Literal[0], PositiveFloat]] = None
+    allow_overlap: bool = False
 
     def aggregate(
         self, input: dict[str, Any], extra_input: Optional[dict] = None
@@ -124,5 +103,5 @@ class FunctionalConnectivitySpheres(FunctionalConnectivityBase):
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
-            on="BOLD",
+            on=DataType.BOLD,
         ).compute(input=input, extra_input=extra_input)

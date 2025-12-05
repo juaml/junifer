@@ -3,104 +3,98 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional, Union
+from typing import Union
 
 import pytest
+from pydantic import AnyUrl
 
-from junifer.datagrabber import DMCC13Benchmark
+from junifer.datagrabber import DataType, DMCC13Benchmark
 
 
-URI = "https://gin.g-node.org/synchon/datalad-example-dmcc13-benchmark"
+URI = AnyUrl("https://gin.g-node.org/synchon/datalad-example-dmcc13-benchmark")
 
 
 @pytest.mark.parametrize(
     "sessions, tasks, phase_encodings, runs, native_t1w",
     [
-        (None, None, None, None, False),
-        ("ses-wave1bas", "Rest", "AP", "1", False),
-        ("ses-wave1bas", "Axcpt", "AP", "1", False),
-        ("ses-wave1bas", "Cuedts", "AP", "1", False),
-        ("ses-wave1bas", "Stern", "AP", "1", False),
-        ("ses-wave1bas", "Stroop", "AP", "1", False),
-        ("ses-wave1bas", "Rest", "PA", "2", False),
-        ("ses-wave1bas", "Axcpt", "PA", "2", False),
-        ("ses-wave1bas", "Cuedts", "PA", "2", False),
-        ("ses-wave1bas", "Stern", "PA", "2", False),
-        ("ses-wave1bas", "Stroop", "PA", "2", False),
-        ("ses-wave1bas", "Rest", "AP", "1", True),
-        ("ses-wave1bas", "Axcpt", "AP", "1", True),
-        ("ses-wave1bas", "Cuedts", "AP", "1", True),
-        ("ses-wave1bas", "Stern", "AP", "1", True),
-        ("ses-wave1bas", "Stroop", "AP", "1", True),
-        ("ses-wave1bas", "Rest", "PA", "2", True),
-        ("ses-wave1bas", "Axcpt", "PA", "2", True),
-        ("ses-wave1bas", "Cuedts", "PA", "2", True),
-        ("ses-wave1bas", "Stern", "PA", "2", True),
-        ("ses-wave1bas", "Stroop", "PA", "2", True),
-        ("ses-wave1pro", "Rest", "AP", "1", False),
-        ("ses-wave1pro", "Rest", "PA", "2", False),
-        ("ses-wave1pro", "Rest", "AP", "1", True),
-        ("ses-wave1pro", "Rest", "PA", "2", True),
-        ("ses-wave1rea", "Rest", "AP", "1", False),
-        ("ses-wave1rea", "Rest", "PA", "2", False),
-        ("ses-wave1rea", "Rest", "AP", "1", True),
-        ("ses-wave1rea", "Rest", "PA", "2", True),
+        (["ses-wave1bas"], ["Rest"], ["AP"], ["1"], False),
+        (["ses-wave1bas"], ["Axcpt"], ["AP"], ["1"], False),
+        (["ses-wave1bas"], ["Cuedts"], ["AP"], ["1"], False),
+        (["ses-wave1bas"], ["Stern"], ["AP"], ["1"], False),
+        (["ses-wave1bas"], ["Stroop"], ["AP"], ["1"], False),
+        (["ses-wave1bas"], ["Rest"], ["PA"], ["2"], False),
+        (["ses-wave1bas"], ["Axcpt"], ["PA"], ["2"], False),
+        (["ses-wave1bas"], ["Cuedts"], ["PA"], ["2"], False),
+        (["ses-wave1bas"], ["Stern"], ["PA"], ["2"], False),
+        (["ses-wave1bas"], ["Stroop"], ["PA"], ["2"], False),
+        (["ses-wave1bas"], ["Rest"], ["AP"], ["1"], True),
+        (["ses-wave1bas"], ["Axcpt"], ["AP"], ["1"], True),
+        (["ses-wave1bas"], ["Cuedts"], ["AP"], ["1"], True),
+        (["ses-wave1bas"], ["Stern"], ["AP"], ["1"], True),
+        (["ses-wave1bas"], ["Stroop"], ["AP"], ["1"], True),
+        (["ses-wave1bas"], ["Rest"], ["PA"], ["2"], True),
+        (["ses-wave1bas"], ["Axcpt"], ["PA"], ["2"], True),
+        (["ses-wave1bas"], ["Cuedts"], ["PA"], ["2"], True),
+        (["ses-wave1bas"], ["Stern"], ["PA"], ["2"], True),
+        (["ses-wave1bas"], ["Stroop"], ["PA"], ["2"], True),
+        (["ses-wave1pro"], ["Rest"], ["AP"], ["1"], False),
+        (["ses-wave1pro"], ["Rest"], ["PA"], ["2"], False),
+        (["ses-wave1pro"], ["Rest"], ["AP"], ["1"], True),
+        (["ses-wave1pro"], ["Rest"], ["PA"], ["2"], True),
+        (["ses-wave1rea"], ["Rest"], ["AP"], ["1"], False),
+        (["ses-wave1rea"], ["Rest"], ["PA"], ["2"], False),
+        (["ses-wave1rea"], ["Rest"], ["AP"], ["1"], True),
+        (["ses-wave1rea"], ["Rest"], ["PA"], ["2"], True),
     ],
 )
 def test_DMCC13Benchmark(
-    sessions: Optional[str],
-    tasks: Optional[str],
-    phase_encodings: Optional[str],
-    runs: Optional[str],
+    sessions: list[str],
+    tasks: list[str],
+    phase_encodings: list[str],
+    runs: list[str],
     native_t1w: bool,
 ) -> None:
     """Test DMCC13Benchmark DataGrabber.
 
     Parameters
     ----------
-    sessions : str or None
+    sessions : list of str
         The parametrized session values.
-    tasks : str or None
+    tasks : list of str
         The parametrized task values.
-    phase_encodings : str or None
+    phase_encodings : list of str
         The parametrized phase encoding values.
-    runs : str or None
+    runs : list of str
         The parametrized run values.
     native_t1w : bool
         The parametrized values for fetching native T1w.
 
     """
     dg = DMCC13Benchmark(
+        uri=URI,
         sessions=sessions,
         tasks=tasks,
         phase_encodings=phase_encodings,
         runs=runs,
         native_t1w=native_t1w,
     )
-    # Set URI to Gin
-    dg.uri = URI
-
     with dg:
-        # Get all elements
         all_elements = dg.get_elements()
-        # Get test element
         test_element = all_elements[0]
-        # Get test element's access values
         _, ses, task, phase, run = test_element
-        # Access data
         out = dg[("sub-01", ses, task, phase, run)]
 
         # Available data types
         data_types = [
-            "BOLD",
-            "VBM_CSF",
-            "VBM_GM",
-            "VBM_WM",
-            "T1w",
+            DataType.BOLD,
+            DataType.VBM_CSF,
+            DataType.VBM_GM,
+            DataType.VBM_WM,
+            DataType.T1w,
         ]
         # Add Warp if native T1w is accessed
         if native_t1w:
-            data_types.append("Warp")
+            data_types.append(DataType.Warp)
 
         # Data type file name formats
         data_file_names = [
@@ -131,9 +125,9 @@ def test_DMCC13Benchmark(
 
         for data_type, data_file_name in zip(data_types, data_file_names):
             # Assert data type
-            assert data_type in out
+            assert data_type in out.keys()
             # Conditional for Warp
-            if data_type == "Warp":
+            if data_type is DataType.Warp:
                 for idx, fname in enumerate(data_file_name):
                     # Assert data file path exists
                     assert out[data_type][idx]["path"].exists()
@@ -199,15 +193,15 @@ def test_DMCC13Benchmark(
 @pytest.mark.parametrize(
     "types, native_t1w",
     [
-        ("BOLD", True),
+        (["BOLD"], True),
         ("BOLD", False),
-        ("T1w", True),
+        (["T1w"], True),
         ("T1w", False),
-        ("VBM_CSF", True),
+        (["VBM_CSF"], True),
         ("VBM_CSF", False),
-        ("VBM_GM", True),
+        (["VBM_GM"], True),
         ("VBM_GM", False),
-        ("VBM_WM", True),
+        (["VBM_WM"], True),
         ("VBM_WM", False),
         (["BOLD", "VBM_CSF"], True),
         (["BOLD", "VBM_CSF"], False),
@@ -231,66 +225,18 @@ def test_DMCC13Benchmark_partial_data_access(
         The parametrized values for fetching native T1w.
 
     """
-    dg = DMCC13Benchmark(types=types, native_t1w=native_t1w)
-    # Set URI to Gin
-    dg.uri = URI
-
+    dg = DMCC13Benchmark(
+        uri=URI,
+        types=types,
+        native_t1w=native_t1w,
+    )
     with dg:
-        # Get all elements
         all_elements = dg.get_elements()
-        # Get test element
         test_element = all_elements[0]
-        # Get test element's access values
         _, ses, task, phase, run = test_element
-        # Access data
         out = dg[("sub-01", ses, task, phase, run)]
         # Assert data type
-        if isinstance(types, list):
-            for type_ in types:
-                assert type_ in out
-        else:
-            assert types in out
-
-
-def test_DMCC13Benchmark_incorrect_data_type() -> None:
-    """Test DMCC13Benchmark DataGrabber incorrect data type."""
-    with pytest.raises(
-        ValueError, match="`patterns` must contain all `types`"
-    ):
-        _ = DMCC13Benchmark(types="Orcus")
-
-
-def test_DMCC13Benchmark_invalid_sessions():
-    """Test DMCC13Benchmark DataGrabber invalid sessions."""
-    with pytest.raises(
-        ValueError,
-        match=("phonyses is not a valid session in the DMCC dataset"),
-    ):
-        DMCC13Benchmark(sessions="phonyses")
-
-
-def test_DMCC13Benchmark_invalid_tasks():
-    """Test DMCC13Benchmark DataGrabber invalid tasks."""
-    with pytest.raises(
-        ValueError,
-        match=("thisisnotarealtask is not a valid task in the DMCC dataset"),
-    ):
-        DMCC13Benchmark(tasks="thisisnotarealtask")
-
-
-def test_DMCC13Benchmark_phase_encodings():
-    """Test DMCC13Benchmark DataGrabber invalid phase encodings."""
-    with pytest.raises(
-        ValueError,
-        match=("moonphase is not a valid phase encoding in the DMCC dataset"),
-    ):
-        DMCC13Benchmark(phase_encodings="moonphase")
-
-
-def test_DMCC13Benchmark_runs():
-    """Test DMCC13Benchmark DataGrabber invalid runs."""
-    with pytest.raises(
-        ValueError,
-        match=("cerebralrun is not a valid run in the DMCC dataset"),
-    ):
-        DMCC13Benchmark(runs="cerebralrun")
+        if isinstance(types, str):
+            types = [types]
+        for type_ in types:
+            assert type_ in out

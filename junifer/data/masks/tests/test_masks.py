@@ -98,11 +98,11 @@ def test_compute_brain_mask_for_native(mask_type: str) -> None:
 
     """
     with DMCC13Benchmark(
-        types=["BOLD"],
-        sessions=["ses-wave1bas"],
-        tasks=["Rest"],
-        phase_encodings=["AP"],
-        runs=["1"],
+        types="BOLD",
+        sessions="ses-wave1bas",
+        tasks="Rest",
+        phase_encodings="AP",
+        runs="1",
         native_t1w=True,
     ) as dg:
         element_data = DefaultDataReader().fit_transform(
@@ -177,7 +177,7 @@ def test_register_already_registered() -> None:
 )
 def test_register(
     name: str,
-    mask_path: str,
+    mask_path: Union[str, Path],
     space: str,
     overwrite: bool,
 ) -> None:

@@ -8,10 +8,20 @@ import socket
 import pytest
 from numpy.testing import assert_array_equal, assert_raises
 
-from junifer.datagrabber import DataladHCP1200, DMCC13Benchmark
+from junifer.datagrabber import (
+    DataladHCP1200,
+    DataType,
+    DMCC13Benchmark,
+    DMCCPhaseEncoding,
+    DMCCRun,
+    DMCCSession,
+    DMCCTask,
+    HCP1200PhaseEncoding,
+    HCP1200Task,
+)
 from junifer.datareader import DefaultDataReader
 from junifer.pipeline.utils import _check_ants, _check_fsl
-from junifer.preprocess import SpaceWarper
+from junifer.preprocess import SpaceWarper, SpaceWarpingImpl
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.typing import DataGrabberLike
 
@@ -19,14 +29,12 @@ from junifer.typing import DataGrabberLike
 @pytest.mark.parametrize(
     "using, reference, error_type, error_msg",
     [
-        ("jam", "T1w", ValueError, "`using`"),
-        ("ants", "juice", ValueError, "reference"),
-        ("ants", "MNI152NLin2009cAsym", RuntimeError, "remove"),
-        ("fsl", "MNI152NLin2009cAsym", RuntimeError, "ANTs"),
+        (SpaceWarpingImpl.ants, "MNI152NLin2009cAsym", RuntimeError, "remove"),
+        (SpaceWarpingImpl.fsl, "MNI152NLin2009cAsym", RuntimeError, "ANTs"),
     ],
 )
 def test_SpaceWarper_errors(
-    using: str,
+    using: SpaceWarpingImpl,
     reference: str,
     error_type: type[Exception],
     error_msg: str,
@@ -35,7 +43,7 @@ def test_SpaceWarper_errors(
 
     Parameters
     ----------
-    using : str
+    using : SpaceWarpingImpl
         The parametrized implementation method.
     reference : str
         The parametrized reference to use.
@@ -46,14 +54,12 @@ def test_SpaceWarper_errors(
 
     """
     with PartlyCloudyTestingDataGrabber() as dg:
-        # Read data
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
-        # Preprocess data
         with pytest.raises(error_type, match=error_msg):
             SpaceWarper(
                 using=using,
                 reference=reference,
-                on="BOLD",
+                on=DataType.BOLD,
             ).preprocess(
                 input=element_data["BOLD"],
                 extra_input=element_data,
@@ -65,24 +71,24 @@ def test_SpaceWarper_errors(
     [
         [
             DMCC13Benchmark(
-                types=["BOLD", "T1w", "Warp"],
-                sessions=["ses-wave1bas"],
-                tasks=["Rest"],
-                phase_encodings=["AP"],
-                runs=["1"],
+                types=[DataType.BOLD, DataType.T1w, DataType.Warp],
+                sessions=DMCCSession.Wave1Bas,
+                tasks=DMCCTask.Rest,
+                phase_encodings=DMCCPhaseEncoding.AP,
+                runs=DMCCRun.One,
                 native_t1w=True,
             ),
             ("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1"),
-            "ants",
+            SpaceWarpingImpl.ants,
         ],
         [
             DataladHCP1200(
-                tasks=["REST1"],
-                phase_encodings=["LR"],
+                tasks=HCP1200Task.REST1,
+                phase_encodings=HCP1200PhaseEncoding.LR,
                 ica_fix=True,
             ),
             ("100206", "REST1", "LR"),
-            "fsl",
+            SpaceWarpingImpl.fsl,
         ],
     ],
 )
@@ -95,7 +101,9 @@ def test_SpaceWarper_errors(
     reason="only for juseless",
 )
 def test_SpaceWarper_native(
-    datagrabber: DataGrabberLike, element: tuple[str, ...], using: str
+    datagrabber: DataGrabberLike,
+    element: tuple[str, ...],
+    using: SpaceWarpingImpl,
 ) -> None:
     """Test SpaceWarper for native space warping.
 
@@ -105,23 +113,20 @@ def test_SpaceWarper_native(
         The parametrized DataGrabber objects.
     element : tuple of str
         The parametrized elements.
-    using : str
+    using : SpaceWarpingImpl
         The parametrized implementation method.
 
     """
     with datagrabber as dg:
-        # Read data
         element_data = DefaultDataReader().fit_transform(dg[element])
-        # Preprocess data
         output = SpaceWarper(
             using=using,
             reference="T1w",
-            on="BOLD",
+            on=DataType.BOLD,
         ).preprocess(
             input=element_data["BOLD"],
             extra_input=element_data,
         )
-        # Check
         assert isinstance(output, dict)
 
 
@@ -130,11 +135,11 @@ def test_SpaceWarper_native(
     [
         [
             DMCC13Benchmark(
-                types=["T1w"],
-                sessions=["ses-wave1bas"],
-                tasks=["Rest"],
-                phase_encodings=["AP"],
-                runs=["1"],
+                types=DataType.T1w,
+                sessions=DMCCSession.Wave1Bas,
+                tasks=DMCCTask.Rest,
+                phase_encodings=DMCCPhaseEncoding.AP,
+                runs=DMCCRun.One,
                 native_t1w=False,
             ),
             ("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1"),
@@ -142,11 +147,11 @@ def test_SpaceWarper_native(
         ],
         [
             DMCC13Benchmark(
-                types=["T1w"],
-                sessions=["ses-wave1bas"],
-                tasks=["Rest"],
-                phase_encodings=["AP"],
-                runs=["1"],
+                types=DataType.T1w,
+                sessions=DMCCSession.Wave1Bas,
+                tasks=DMCCTask.Rest,
+                phase_encodings=DMCCPhaseEncoding.AP,
+                runs=DMCCRun.One,
                 native_t1w=False,
             ),
             ("sub-f9057kp", "ses-wave1bas", "Rest", "AP", "1"),
@@ -175,19 +180,16 @@ def test_SpaceWarper_multi_mni(
 
     """
     with datagrabber as dg:
-        # Read data
         element_data = DefaultDataReader().fit_transform(dg[element])
         pre_xfm_data = element_data["T1w"]["data"].get_fdata().copy()
-        # Preprocess data
         output = SpaceWarper(
-            using="ants",
+            using=SpaceWarpingImpl.ants,
             reference=space,
-            on=["T1w"],
+            on=DataType.T1w,
         ).preprocess(
             input=element_data["T1w"],
             extra_input=element_data,
         )
-        # Checks
         assert isinstance(output, dict)
         assert output["space"] == space
         with assert_raises(AssertionError):

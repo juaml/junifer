@@ -1,19 +1,25 @@
 """Provide base class for complexity."""
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 from abc import abstractmethod
 from typing import (
     TYPE_CHECKING,
+    Annotated,
     Any,
     ClassVar,
     Optional,
     Union,
 )
 
+from pydantic import BeforeValidator
+
+from ...datagrabber import DataType
+from ...storage import StorageType
 from ...typing import Dependencies, MarkerInOutMappings
-from ...utils import raise_error
+from ...utils import ensure_list, ensure_list_or_none, raise_error
 from ..base import BaseMarker
 from ..parcel_aggregation import ParcelAggregation
 
@@ -26,50 +32,47 @@ __all__ = ["ComplexityBase"]
 
 
 class ComplexityBase(BaseMarker):
-    """Base class for complexity computation.
+    """Abstract base class for complexity computation.
 
     Parameters
     ----------
     parcellation : str or list of str
-        The name(s) of the parcellation(s). Check valid options by calling
-        :func:`junifer.data.parcellations.list_parcellations`.
+        The name(s) of the parcellation(s) to use.
+        See :func:`.list_data` for options.
     agg_method : str, optional
-        The method to perform aggregation using. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
-    agg_method_params : dict, optional
-        Parameters to pass to the aggregation function. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default None).
-    masks : str, dict or list of dict or str, optional
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options
+        (default "mean").
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, it will use the class name
-        (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "neurokit2"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "BOLD": {
-            "complexity": "vector",
+        DataType.BOLD: {
+            "complexity": StorageType.Vector,
         },
     }
 
-    def __init__(
-        self,
-        parcellation: Union[str, list[str]],
-        agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.parcellation = parcellation
-        self.agg_method = agg_method
-        self.agg_method_params = agg_method_params
-        self.masks = masks
-        super().__init__(on="BOLD", name=name)
+    parcellation: Annotated[
+        Union[str, list[str]], BeforeValidator(ensure_list)
+    ]
+    agg_method: str = "mean"
+    agg_method_params: Optional[dict] = None
+    masks: Annotated[
+        Union[dict, str, list[Union[dict, str]], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
 
     @abstractmethod
     def compute_complexity(
@@ -117,7 +120,7 @@ class ComplexityBase(BaseMarker):
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
-            on="BOLD",
+            on=DataType.BOLD,
         ).compute(input=input, extra_input=extra_input)
         # Compute complexity measure
         return {

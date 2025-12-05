@@ -5,22 +5,35 @@
 # License: AGPL
 
 import subprocess
+from enum import Enum
 from typing import Any, Optional
 
-from junifer.utils.logging import raise_error, warn_with_log
+from pydantic import validate_call
+
+from ..utils.logging import raise_error, warn_with_log
 
 
-__all__ = ["check_ext_dependencies"]
+__all__ = ["ExtDep", "check_ext_dependencies"]
 
 
+class ExtDep(str, Enum):
+    """Accepted external dependencies."""
+
+    AFNI = "afni"
+    FSL = "fsl"
+    ANTs = "ants"
+    FreeSurfer = "freesurfer"
+
+
+@validate_call
 def check_ext_dependencies(
-    name: str, optional: bool = False, **kwargs: Any
+    name: ExtDep, optional: bool = False, **kwargs: Any
 ) -> bool:
     """Check if external dependency `name` is found if mandatory.
 
     Parameters
     ----------
-    name : str
+    name : :enum:`.ExtDep`
         The name of the dependency.
     optional : bool, optional
         Whether the dependency is optional (default False).
@@ -34,18 +47,10 @@ def check_ext_dependencies(
 
     Raises
     ------
-    ValueError
-        If ``name`` is invalid.
     RuntimeError
         If ``name`` is mandatory and is not found.
 
     """
-    valid_ext_dependencies = ("afni", "fsl", "ants", "freesurfer")
-    if name not in valid_ext_dependencies:
-        raise_error(
-            "Invalid value for `name`, should be one of: "
-            f"{valid_ext_dependencies}"
-        )
     # Check for afni
     if name == "afni":
         found = _check_afni(**kwargs)

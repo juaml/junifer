@@ -3,12 +3,14 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Annotated, Any, Optional, Union
 
 import numpy as np
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_marker
-from ...utils import logger
+from ...datagrabber import DataType
+from ...utils import ensure_list, logger
 from ..parcel_aggregation import ParcelAggregation
 from .reho_base import ReHoBase
 
@@ -25,15 +27,10 @@ class ReHoParcels(ReHoBase):
     parcellation : str or list of str
         The name(s) of the parcellation(s) to use.
         See :func:`.list_data` for options.
-    using : {"junifer", "afni"}
-        Implementation to use for computing ReHo:
-
-        * "junifer" : Use ``junifer``'s own ReHo implementation
-        * "afni" : Use AFNI's ``3dReHo``
-
-    reho_params : dict, optional
+    using : :enum:`.ReHoImpl`
+    reho_params : dict or None, optional
         Extra parameters for computing ReHo map as a dictionary (default None).
-        If ``using="afni"``, then the valid keys are:
+        If ``using=ReHoImpl.afni``, then the valid keys are:
 
         * ``nneigh`` : {7, 19, 27}, optional (default 27)
             Number of voxels in the neighbourhood, inclusive. Can be:
@@ -63,7 +60,7 @@ class ReHoParcels(ReHoBase):
             The number of voxels for +/- z-axis of cuboidal volumes
             (default None).
 
-        else if ``using="junifer"``, then the valid keys are:
+        else if ``using=ReHoImpl.junifer``, then the valid keys are:
 
         * ``nneigh`` : {7, 19, 27, 125}, optional (default 27)
             Number of voxels in the neighbourhood, inclusive. Can be:
@@ -74,38 +71,25 @@ class ReHoParcels(ReHoBase):
             * 125 : for 5x5 cuboidal volume
 
     agg_method : str, optional
-        The method to perform aggregation using. Check valid options in
-        :func:`.get_aggfunc_by_name` (default "mean").
-    agg_method_params : dict, optional
-        Parameters to pass to the aggregation function. Check valid options in
-        :func:`.get_aggfunc_by_name` (default None).
-    masks : str, dict or list of dict or str, optional
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options
+        (default "mean").
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, it will use the class name
-        (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, it will use the class name (default None).
 
     """
 
-    def __init__(
-        self,
-        parcellation: Union[str, list[str]],
-        using: str,
-        reho_params: Optional[dict] = None,
-        agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        # Superclass init first to validate `using` parameter
-        super().__init__(using=using, name=name)
-        self.parcellation = parcellation
-        self.reho_params = reho_params
-        self.agg_method = agg_method
-        self.agg_method_params = agg_method_params
-        self.masks = masks
+    parcellation: Annotated[
+        Union[str, list[str]], BeforeValidator(ensure_list)
+    ]
 
     def compute(
         self,
@@ -156,7 +140,7 @@ class ReHoParcels(ReHoBase):
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
-            on="BOLD",
+            on=DataType.BOLD,
         ).compute(
             input=aggregation_input,
             extra_input=extra_input,

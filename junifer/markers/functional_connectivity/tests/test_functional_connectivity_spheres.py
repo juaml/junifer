@@ -16,11 +16,12 @@ from numpy.testing import assert_array_almost_equal
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
 from junifer.data import CoordinatesRegistry
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.functional_connectivity import (
     FunctionalConnectivitySpheres,
 )
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import SQLiteFeatureStorage, Upsert
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
@@ -64,7 +65,7 @@ def test_FunctionalConnectivitySpheres(
         )
         # Check correct output
         assert "matrix" == marker.storage_type(
-            input_type="BOLD", output_feature="functional_connectivity"
+            input_type=DataType.BOLD, output_feature="functional_connectivity"
         )
 
         # Fit-transform the data
@@ -103,7 +104,7 @@ def test_FunctionalConnectivitySpheres(
 
         # Store
         storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_fc_spheres.sqlite", upsert="ignore"
+            uri=tmp_path / "test_fc_spheres.sqlite", upsert=Upsert.Ignore
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
@@ -111,12 +112,4 @@ def test_FunctionalConnectivitySpheres(
             x["name"]
             == "BOLD_FunctionalConnectivitySpheres_functional_connectivity"
             for x in features.values()
-        )
-
-
-def test_FunctionalConnectivitySpheres_error() -> None:
-    """Test FunctionalConnectivitySpheres errors."""
-    with pytest.raises(ValueError, match="radius should be > 0"):
-        FunctionalConnectivitySpheres(
-            coords="DMNBuckner", radius=-0.1, conn_method="correlation"
         )

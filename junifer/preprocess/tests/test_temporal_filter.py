@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional
+from typing import Optional, Union
 
 import pytest
 
@@ -37,7 +37,7 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
             None,
             0.08,
             None,
-            "compute_background_mask",
+            ["compute_background_mask"],
         ],
         [
             False,
@@ -63,7 +63,7 @@ def test_TemporalFilter(
     low_pass: Optional[float],
     high_pass: Optional[float],
     t_r: Optional[float],
-    masks: Optional[str],
+    masks: Optional[Union[str, list[str]]],
 ) -> None:
     """Test TemporalFilter.
 
@@ -79,7 +79,7 @@ def test_TemporalFilter(
         The parametrized high pass value.
     t_r : float or None
         The parametrized repetition time.
-    masks : str or None
+    masks : str, list of str or None
         The parametrized mask.
 
     """

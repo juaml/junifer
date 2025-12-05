@@ -71,10 +71,6 @@ class WorkDirManager(metaclass=Singleton):
                 f"Setting working directory to {self._workdir.resolve()!s}"
             )
 
-    def __del__(self) -> None:
-        """Destructor."""
-        self._cleanup()
-
     def _cleanup(self) -> None:
         """Clean up the element and temporary directories."""
         if self._cleanup_dirs is False:

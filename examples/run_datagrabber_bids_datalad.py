@@ -10,7 +10,7 @@ Authors: Federico Raimondo
 License: BSD 3 clause
 """
 
-from junifer.datagrabber import PatternDataladDataGrabber
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.utils import configure_logging
 
 
@@ -23,7 +23,7 @@ configure_logging(level="INFO")
 # The BIDS DataGrabber requires three parameters: the types of data we want,
 # the specific pattern that matches each type, and the variables that will be
 # replaced in the patterns.
-types = ["T1w", "BOLD"]
+types = [DataType.T1w, DataType.BOLD]
 patterns = {
     "T1w": {
         "pattern": "{subject}/anat/{subject}_T1w.nii.gz",

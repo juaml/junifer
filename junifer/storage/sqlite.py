@@ -6,7 +6,7 @@
 
 import json
 from collections.abc import Sequence
-from pathlib import Path
+from enum import Enum
 from typing import TYPE_CHECKING, Any, Optional, Union
 
 import numpy as np
@@ -18,15 +18,27 @@ from tqdm import tqdm
 
 from ..api.decorators import register_storage
 from ..utils import logger, raise_error, warn_with_log
+from .base import MatrixKind
 from .pandas_base import PandasBaseFeatureStorage
-from .utils import element_to_prefix, matrix_to_vector, store_matrix_checks
+from .utils import (
+    element_to_prefix,
+    matrix_to_vector,
+    store_matrix_checks,
+)
 
 
 if TYPE_CHECKING:
     from sqlalchemy.engine import Engine
 
 
-__all__ = ["SQLiteFeatureStorage"]
+__all__ = ["SQLiteFeatureStorage", "Upsert"]
+
+
+class Upsert(str, Enum):
+    """Accepted upsert value."""
+
+    Update = "update"
+    Ignore = "ignore"
 
 
 @register_storage
@@ -44,9 +56,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         ``uri`` and store all the elements in the same file. This behaviour
         is only suitable for non-parallel executions. SQLite does not
         support concurrency (default True).
-    upsert : {"ignore", "update"}, optional
-        Upsert mode. If "ignore" is used, the existing elements are ignored.
-        If "update", the existing elements are updated (default "update").
+    upsert : :enum:`.Upsert`, optional
+        Upsert mode. If ``Upsert.Ignore`` is used, the existing elements are
+        ignored. If ``Upsert.Update``, the existing elements are updated
+        (default ``Upsert.Update``).
 
     See Also
     --------
@@ -55,25 +68,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
     """
 
-    def __init__(
-        self,
-        uri: Union[str, Path],
-        single_output: bool = True,
-        upsert: str = "update",
-    ) -> None:
-        # Check and set upsert argument value
-        if upsert not in ["update", "ignore"]:
-            raise_error(
-                msg=(
-                    "Invalid choice for `upsert`. "
-                    "Must be either 'update' or 'ignore'."
-                )
-            )
-        self.upsert = upsert
-        super().__init__(
-            uri=uri,
-            single_output=single_output,
-        )
+    upsert: Upsert = Upsert.Update
 
     def get_engine(self, element: Optional[dict] = None) -> "Engine":
         """Get engine.
@@ -427,7 +422,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         data: np.ndarray,
         col_names: Optional[Sequence[str]] = None,
         row_names: Optional[Sequence[str]] = None,
-        matrix_kind: str = "full",
+        matrix_kind: MatrixKind = MatrixKind.Full,
         diagonal: bool = True,
     ) -> None:
         """Store matrix.
@@ -440,23 +435,15 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The element as a dictionary.
         data : numpy.ndarray
             The matrix data to store.
-        meta : dict
-            The metadata as a dictionary.
         col_names : list-like of str, optional
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (optional None).
-        matrix_kind : str, optional
-            The kind of matrix:
-
-            * ``triu`` : store upper triangular only
-            * ``tril`` : store lower triangular
-            * ``full`` : full matrix
-
-            (default "full").
+        matrix_kind : :enum:`.MatrixKind`, optional
+            The matrix kind (default ``MatrixKind.Full``).
         diagonal : bool, optional
-            Whether to store the diagonal. If ``matrix_kind = full``, setting
-            this to False will raise an error (default True).
+            Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
+            setting this to False will raise an error (default True).
 
         """
         # Row data validation
@@ -526,7 +513,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             )
         logger.info(f"Collecting data from {self.uri.parent}/*{self.uri.name}")
         # Create new instance
-        out_storage = SQLiteFeatureStorage(uri=self.uri, upsert="ignore")
+        out_storage = SQLiteFeatureStorage(uri=self.uri, upsert=Upsert.Ignore)
         # Glob files
         files = self.uri.parent.glob(f"*{self.uri.name}")
         for elem in tqdm(files, desc="file"):

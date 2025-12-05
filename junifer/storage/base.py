@@ -6,20 +6,39 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
+from enum import Enum
 from pathlib import Path
 from typing import Any, ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
+from pydantic import BaseModel, ConfigDict
 
 from ..utils import logger, raise_error
-from .utils import process_meta
 
 
-__all__ = ["BaseFeatureStorage"]
+__all__ = ["BaseFeatureStorage", "MatrixKind", "StorageType"]
 
 
-class BaseFeatureStorage(ABC):
+class MatrixKind(str, Enum):
+    """Accepted matrix kind value."""
+
+    UpperTriangle = "triu"
+    LowerTriangle = "tril"
+    Full = "full"
+
+
+class StorageType(str, Enum):
+    """Accepted storage type."""
+
+    Vector = "vector"
+    Matrix = "matrix"
+    Timeseries = "timeseries"
+    Timeseries2D = "timeseries_2d"
+    ScalarTable = "scalar_table"
+
+
+class BaseFeatureStorage(BaseModel, ABC):
     """Abstract base class for feature storage.
 
     For every storage, one needs to provide a concrete
@@ -27,7 +46,7 @@ class BaseFeatureStorage(ABC):
 
     Parameters
     ----------
-    uri : str or pathlib.Path
+    uri : pathlib.Path
         The path to the storage.
     single_output : bool, optional
         Whether to have single output (default True).
@@ -35,27 +54,24 @@ class BaseFeatureStorage(ABC):
     Raises
     ------
     AttributeError
-        If the storage does not have `_STORAGE_TYPES` attribute.
+        If the storage does not have ``_STORAGE_TYPES`` attribute.
 
     """
 
-    _STORAGE_TYPES: ClassVar[Sequence[str]]
+    _STORAGE_TYPES: ClassVar[Sequence[StorageType]]
 
-    def __init__(
-        self,
-        uri: Union[str, Path],
-        single_output: bool = True,
-    ) -> None:
+    model_config = ConfigDict(frozen=True, use_enum_values=True)
+
+    uri: Path
+    single_output: bool = True
+
+    def model_post_init(self, context: Any):  # noqa: D102
         # Check for missing storage types attribute
         if not hasattr(self, "_STORAGE_TYPES"):
             raise_error(
                 msg="Missing `_STORAGE_TYPES` for the storage",
                 klass=AttributeError,
             )
-        # Convert str to Path
-        if not isinstance(uri, Path):
-            uri = Path(uri)
-        self.uri = uri
         # Create parent directories if not present
         if not self.uri.parent.exists():
             logger.info(
@@ -63,21 +79,8 @@ class BaseFeatureStorage(ABC):
                 "does not exist, creating now"
             )
             self.uri.parent.mkdir(parents=True, exist_ok=True)
-        self.single_output = single_output
 
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid storage types for input.
-
-        Returns
-        -------
-        list of str
-            The list of storage types that can be used as input for this
-            storage.
-
-        """
-        return list(self._STORAGE_TYPES)
-
-    def validate(self, input_: list[str]) -> None:
+    def validate_input(self, input_: list[str]) -> None:
         """Validate the input to the pipeline step.
 
         Parameters
@@ -189,12 +192,12 @@ class BaseFeatureStorage(ABC):
             klass=NotImplementedError,
         )  # pragma: no cover
 
-    def store(self, kind: str, **kwargs) -> None:
+    def store(self, kind: StorageType, **kwargs) -> None:
         """Store extracted features data.
 
         Parameters
         ----------
-        kind : {"matrix", "timeseries", "vector", "scalar_table"}
+        kind : :enum:`.StorageType`
             The storage kind.
         **kwargs
             The keyword arguments.
@@ -205,6 +208,9 @@ class BaseFeatureStorage(ABC):
             If ``kind`` is invalid.
 
         """
+        # Imported here to avoid circular import
+        from .utils import process_meta
+
         # Do the check before calling the abstract methods, otherwise the
         # meta might be stored even if the data is not stored.
         if kind not in self._STORAGE_TYPES:
@@ -241,7 +247,7 @@ class BaseFeatureStorage(ABC):
         data: np.ndarray,
         col_names: Optional[Sequence[str]] = None,
         row_names: Optional[Sequence[str]] = None,
-        matrix_kind: str = "full",
+        matrix_kind: MatrixKind = MatrixKind.Full,
         diagonal: bool = True,
     ) -> None:
         """Store matrix.
@@ -258,17 +264,11 @@ class BaseFeatureStorage(ABC):
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (default None).
-        matrix_kind : str, optional
-            The kind of matrix:
-
-            * ``triu`` : store upper triangular only
-            * ``tril`` : store lower triangular
-            * ``full`` : full matrix
-
-            (default "full").
+        matrix_kind : :enum:`.MatrixKind`, optional
+            The matrix kind (default ``MatrixKind.Full``).
         diagonal : bool, optional
-            Whether to store the diagonal. If ``matrix_kind = full``, setting
-            this to False will raise an error (default True).
+            Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
+            setting this to False will raise an error (default True).
 
         """
         raise_error(

@@ -75,8 +75,8 @@ class PipelineStepMixin:
             klass=NotImplementedError,
         )  # pragma: no cover
 
-    def validate(self, input: list[str]) -> list[str]:
-        """Validate the the pipeline step.
+    def validate_component(self, input: list[str]) -> list[str]:
+        """Validate the pipeline component.
 
         Parameters
         ----------
@@ -228,5 +228,6 @@ class PipelineStepMixin:
             The processed output of the pipeline step.
 
         """
-        self.validate(input=list(input.keys()))
+        # Needs to be validated if called directly via API
+        self.validate_component(input=list(input.keys()))
         return self._fit_transform(input=input, **kwargs)

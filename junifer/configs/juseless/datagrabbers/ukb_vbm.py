@@ -6,10 +6,13 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union
+from typing import Literal
+
+from pydantic import AnyUrl
 
 from ....api.decorators import register_datagrabber
-from ....datagrabber import PatternDataladDataGrabber
+from ....datagrabber import DataType, PatternDataladDataGrabber
+from ....typing import DataGrabberPatterns
 
 
 __all__ = ["JuselessDataladUKBVBM"]
@@ -23,29 +26,20 @@ class JuselessDataladUKBVBM(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    datadir : str or pathlib.Path or None, optional
-        The directory where the datalad dataset will be cloned. If None,
-        the datalad dataset will be cloned into a temporary directory
-        (default None).
+    datadir : pathlib.Path, optional
+        That path where the datalad dataset will be cloned.
+        If not specified, the datalad dataset will be cloned into a temporary
+        directory.
 
     """
 
-    def __init__(self, datadir: Union[str, Path, None] = None) -> None:
-        uri = "ria+http://ukb.ds.inm7.de#~cat_m0wp1"
-        rootdir = "m0wp1"
-        types = ["VBM_GM"]
-        replacements = ["subject", "session"]
-        patterns = {
-            "VBM_GM": {
-                "pattern": "m0wp1{subject}_ses-{session}_T1w.nii.gz",
-                "space": "IXI549Space",
-            },
-        }
-        super().__init__(
-            types=types,
-            datadir=datadir,
-            uri=uri,
-            rootdir=rootdir,
-            replacements=replacements,
-            patterns=patterns,
-        )
+    uri: AnyUrl = AnyUrl("ria+http://ukb.ds.inm7.de#~cat_m0wp1")
+    rootdir: Path = Path("m0wp1")
+    types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012
+    patterns: DataGrabberPatterns = {  # noqa: RUF012
+        "VBM_GM": {
+            "pattern": "m0wp1{subject}_ses-{session}_T1w.nii.gz",
+            "space": "IXI549Space",
+        },
+    }
+    replacements: list[str] = ["subject", "session"]  # noqa: RUF012

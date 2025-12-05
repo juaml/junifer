@@ -4,9 +4,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Annotated, Any, Optional, Union
+
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_marker
+from ...datagrabber import DataType
+from ...utils import ensure_list
 from ..parcel_aggregation import ParcelAggregation
 from ..utils import _ets
 from .functional_connectivity_base import FunctionalConnectivityBase
@@ -25,31 +29,30 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
         The name(s) of the parcellation(s) to use.
         See :func:`.list_data` for options.
     agg_method : str, optional
-        The method to perform aggregation using.
+        The aggregation function to use.
         See :func:`.get_aggfunc_by_name` for options
         (default "mean").
-    agg_method_params : dict, optional
-        Parameters to pass to the aggregation function.
-        See :func:`.get_aggfunc_by_name` for options
-        (default None).
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
     conn_method : str, optional
-        The method to perform connectivity measure using.
+        The connectivity measure to use.
         See :class:`.JuniferConnectivityMeasure` for options
         (default "correlation").
-    conn_method_params : dict, optional
-        Parameters to pass to :class:`.JuniferConnectivityMeasure`.
+    conn_method_params : dict or None, optional
+        The parameters to pass to :class:`.JuniferConnectivityMeasure`.
         If None, ``{"empirical": True}`` will be used, which would mean
         :class:`sklearn.covariance.EmpiricalCovariance` is used to compute
         covariance. If usage of :class:`sklearn.covariance.LedoitWolf` is
         desired, ``{"empirical": False}`` should be passed
         (default None).
-    masks : str, dict or list of dict or str, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, will use
-        ``BOLD_EdgeCentricFCParcels`` (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     References
     ----------
@@ -59,25 +62,9 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
 
     """
 
-    def __init__(
-        self,
-        parcellation: Union[str, list[str]],
-        agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        conn_method: str = "correlation",
-        conn_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.parcellation = parcellation
-        super().__init__(
-            agg_method=agg_method,
-            agg_method_params=agg_method_params,
-            conn_method=conn_method,
-            conn_method_params=conn_method_params,
-            masks=masks,
-            name=name,
-        )
+    parcellation: Annotated[
+        Union[str, list[str]], BeforeValidator(ensure_list)
+    ]
 
     def aggregate(
         self, input: dict[str, Any], extra_input: Optional[dict] = None
@@ -114,7 +101,7 @@ class EdgeCentricFCParcels(FunctionalConnectivityBase):
             method=self.agg_method,
             method_params=self.agg_method_params,
             masks=self.masks,
-            on="BOLD",
+            on=DataType.BOLD,
         ).compute(input, extra_input=extra_input)
         # Compute edgewise timeseries
         ets, edge_names = _ets(

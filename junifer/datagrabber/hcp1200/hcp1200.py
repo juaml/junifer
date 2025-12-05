@@ -5,16 +5,61 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from enum import Enum
 from itertools import product
-from pathlib import Path
-from typing import Union
+from typing import Annotated, Literal, Union
+
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_datagrabber
-from ...utils import raise_error
+from ...typing import DataGrabberPatterns
+from ...utils import ensure_list, raise_error
+from ..base import DataType
 from ..pattern import PatternDataGrabber
 
 
-__all__ = ["HCP1200"]
+__all__ = ["HCP1200", "HCP1200PhaseEncoding", "HCP1200Task"]
+
+
+class HCP1200Task(str, Enum):
+    """Accepted HCP1200 tasks."""
+
+    REST1 = "REST1"
+    REST2 = "REST2"
+    SOCIAL = "SOCIAL"
+    WM = "WM"
+    RELATIONAL = "RELATIONAL"
+    EMOTION = "EMOTION"
+    LANGUAGE = "LANGUAGE"
+    GAMBLING = "GAMBLING"
+    MOTOR = "MOTOR"
+
+
+class HCP1200PhaseEncoding(str, Enum):
+    """Accepted HCP1200 phase encoding directions."""
+
+    LR = "LR"
+    RL = "RL"
+
+
+_types = Literal[DataType.BOLD, DataType.T1w, DataType.Warp]
+
+_tasks = Literal[
+    HCP1200Task.REST1,
+    HCP1200Task.REST2,
+    HCP1200Task.SOCIAL,
+    HCP1200Task.WM,
+    HCP1200Task.RELATIONAL,
+    HCP1200Task.EMOTION,
+    HCP1200Task.LANGUAGE,
+    HCP1200Task.GAMBLING,
+    HCP1200Task.MOTOR,
+]
+
+_phase_encodings = Literal[
+    HCP1200PhaseEncoding.RL,
+    HCP1200PhaseEncoding.LR,
+]
 
 
 @register_datagrabber
@@ -23,135 +68,103 @@ class HCP1200(PatternDataGrabber):
 
     Parameters
     ----------
-    datadir : str or Path, optional
-        The directory where the data is / will be stored.
+    types : {"BOLD", "T1w", "Warp"} or list of the options, optional
+        The data type(s) to grab.
+    datadir : pathlib.Path
+        The path where the data is stored.
     tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
-            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options or None \
-            , optional
-        HCP task sessions. If None, all available task sessions are selected
-        (default None).
-    phase_encodings : {"LR", "RL"} or list of the options or None, optional
-        HCP phase encoding directions. If None, both will be used
-        (default None).
+            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options, optional
+        HCP task sessions.
+        By default, all available task sessions are selected.
+    phase_encodings : {"LR", "RL"} or list of the options, optional
+        HCP phase encoding directions.
+        By default, all are used.
     ica_fix : bool, optional
         Whether to retrieve data that was processed with ICA+FIX.
-        Only "REST1" and "REST2" tasks are available with ICA+FIX (default
-        False).
-
-    Raises
-    ------
-    ValueError
-        If invalid value is passed for ``tasks`` or ``phase_encodings``.
+        Only ``HCP1200Task.REST1`` and ``HCP1200Task.REST2`` tasks
+        are available with ICA+FIX
+        (default False).
 
     """
 
-    def __init__(
-        self,
-        datadir: Union[str, Path],
-        tasks: Union[str, list[str], None] = None,
-        phase_encodings: Union[str, list[str], None] = None,
-        ica_fix: bool = False,
-    ) -> None:
-        # All tasks
-        all_tasks = [
-            "REST1",
-            "REST2",
-            "SOCIAL",
-            "WM",
-            "RELATIONAL",
-            "EMOTION",
-            "LANGUAGE",
-            "GAMBLING",
-            "MOTOR",
-        ]
-        # Set default tasks
-        if tasks is None:
-            self.tasks: list[str] = all_tasks
-        # Convert single task into list
-        else:
-            if not isinstance(tasks, list):
-                tasks = [tasks]
-            # Check for invalid task(s)
-            for task in tasks:
-                if task not in all_tasks:
-                    raise_error(
-                        f"'{task}' is not a valid HCP-YA fMRI task input. "
-                        f"Valid task values can be any or all of {all_tasks}."
-                    )
-            self.tasks: list[str] = tasks
+    types: Annotated[
+        Union[_types, list[_types]], BeforeValidator(ensure_list)
+    ] = [  # noqa: RUF012
+        DataType.BOLD,
+        DataType.T1w,
+        DataType.Warp,
+    ]
+    tasks: Annotated[
+        Union[_tasks, list[_tasks]], BeforeValidator(ensure_list)
+    ] = [  # noqa: RUF012
+        HCP1200Task.REST1,
+        HCP1200Task.REST2,
+        HCP1200Task.SOCIAL,
+        HCP1200Task.WM,
+        HCP1200Task.RELATIONAL,
+        HCP1200Task.EMOTION,
+        HCP1200Task.LANGUAGE,
+        HCP1200Task.GAMBLING,
+        HCP1200Task.MOTOR,
+    ]
+    phase_encodings: Annotated[
+        Union[_phase_encodings, list[_phase_encodings]],
+        BeforeValidator(ensure_list),
+    ] = [  # noqa: RUF012
+        HCP1200PhaseEncoding.RL,
+        HCP1200PhaseEncoding.LR,
+    ]
+    ica_fix: bool = False
+    patterns: DataGrabberPatterns = {  # noqa: RUF012
+        "BOLD": {
+            "pattern": (
+                "{subject}/MNINonLinear/Results/"
+                "{task}_{phase_encoding}/"
+                "{task}_{phase_encoding}"
+                "{suffix}.nii.gz"
+            ),
+            "space": "MNI152NLin6Asym",
+        },
+        "T1w": {
+            "pattern": "{subject}/T1w/T1w_acpc_dc_restore.nii.gz",
+            "space": "native",
+        },
+        "Warp": [
+            {
+                "pattern": (
+                    "{subject}/MNINonLinear/xfms/standard2acpc_dc.nii.gz"
+                ),
+                "src": "MNI152NLin6Asym",
+                "dst": "native",
+                "warper": "fsl",
+            },
+            {
+                "pattern": (
+                    "{subject}/MNINonLinear/xfms/acpc_dc2standard.nii.gz"
+                ),
+                "src": "native",
+                "dst": "MNI152NLin6Asym",
+                "warper": "fsl",
+            },
+        ],
+    }
+    replacements: list[str] = ["subject", "task", "phase_encoding"]  # noqa: RUF012
 
-        # All phase encodings
-        all_phase_encodings = ["LR", "RL"]
-        # Set phase encodings
-        if phase_encodings is None:
-            phase_encodings = all_phase_encodings
-        # Convert single phase encoding into list
-        if isinstance(phase_encodings, str):
-            phase_encodings = [phase_encodings]
-        # Check for invalid phase encoding(s)
-        for pe in phase_encodings:
-            if pe not in all_phase_encodings:
-                raise_error(
-                    f"'{pe}' is not a valid HCP-YA phase encoding. "
-                    "Valid phase encoding can be any or all of "
-                    f"{all_phase_encodings}."
-                )
-        self.phase_encodings = phase_encodings
-
-        if ica_fix:
+    def validate_datagrabber_params(self) -> None:
+        """Run extra logical validation for datagrabber."""
+        if self.ica_fix:
             if not all(task in ["REST1", "REST2"] for task in self.tasks):
                 raise_error(
                     "ICA+FIX is only available for 'REST1' and 'REST2' tasks."
                 )
-        suffix = "_hp2000_clean" if ica_fix else ""
-
-        # The types of data
-        types = ["BOLD", "T1w", "Warp"]
-        # The patterns
-        patterns = {
-            "BOLD": {
-                "pattern": (
-                    "{subject}/MNINonLinear/Results/"
-                    "{task}_{phase_encoding}/"
-                    "{task}_{phase_encoding}"
-                    f"{suffix}.nii.gz"
-                ),
-                "space": "MNI152NLin6Asym",
-            },
-            "T1w": {
-                "pattern": "{subject}/T1w/T1w_acpc_dc_restore.nii.gz",
-                "space": "native",
-            },
-            "Warp": [
-                {
-                    "pattern": (
-                        "{subject}/MNINonLinear/xfms/standard2acpc_dc.nii.gz"
-                    ),
-                    "src": "MNI152NLin6Asym",
-                    "dst": "native",
-                    "warper": "fsl",
-                },
-                {
-                    "pattern": (
-                        "{subject}/MNINonLinear/xfms/acpc_dc2standard.nii.gz"
-                    ),
-                    "src": "native",
-                    "dst": "MNI152NLin6Asym",
-                    "warper": "fsl",
-                },
-            ],
-        }
-        # The replacements
-        replacements = ["subject", "task", "phase_encoding"]
-        super().__init__(
-            types=types,
-            datadir=datadir,
-            patterns=patterns,
-            replacements=replacements,
-        )
+        suffix = "_hp2000_clean" if self.ica_fix else ""
+        self.patterns["BOLD"]["pattern"] = self.patterns["BOLD"][
+            "pattern"
+        ].replace("{suffix}", suffix)
+        super().validate_datagrabber_params()
 
     def get_item(self, subject: str, task: str, phase_encoding: str) -> dict:
-        """Implement single element indexing in the database.
+        """Get the specified item from the dataset.
 
         Parameters
         ----------
