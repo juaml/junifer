@@ -470,25 +470,48 @@ class MaskRegistry(BasePipelineDataRegistry):
         target_space = target_data["space"]
         logger.debug(f"Getting masks: {masks} in {target_space} space")
 
+        # Set once for future use
+        nilearn_callable_masks = [
+            "compute_epi_mask",
+            "compute_background_mask",
+        ]
+        # Convert masks to list if not already
+        if not isinstance(masks, list):
+            masks = [masks]
+
         # Extra data type requirement check if target space is native
         if target_space == "native":
-            # Check for extra inputs
-            if extra_input is None:
-                raise_error(
-                    "No extra input provided, requires `Warp` and `T1w` "
-                    "data types in particular for transformation to "
-                    f"{target_data['space']} space for further computation."
+            # Check for in-built callable masks so that get_native_warper is
+            # not called in case only callable masks are used
+            if (
+                set(masks) == {nilearn_callable_masks[0]}
+                or set(masks) == {nilearn_callable_masks[1]}
+                or set(masks) == set(nilearn_callable_masks)
+            ):
+                logger.debug(
+                    "Target space is native. "
+                    f"No warping will be done for: {masks}"
                 )
-            # Get native space warper spec
-            warper_spec = get_native_warper(
-                target_data=target_data,
-                other_data=extra_input,
-            )
-            # Set target standard space to warp file space source
-            target_std_space = warper_spec["src"]
-            logger.debug(
-                f"Target space is native. Will warp from {target_std_space}"
-            )
+            else:
+                # Check for extra inputs
+                if extra_input is None:
+                    raise_error(
+                        "No extra input provided, requires `Warp` and `T1w` "
+                        "data types in particular for transformation to "
+                        f"{target_data['space']} space for further "
+                        "computation."
+                    )
+                # Get native space warper spec
+                warper_spec = get_native_warper(
+                    target_data=target_data,
+                    other_data=extra_input,
+                )
+                # Set target standard space to warp file space source
+                target_std_space = warper_spec["src"]
+                logger.debug(
+                    "Target space is native. "
+                    f"Will warp from {target_std_space}"
+                )
         else:
             # Set warper_spec so that compute_brain_mask does not fail when
             # target space is non-native
@@ -499,10 +522,6 @@ class MaskRegistry(BasePipelineDataRegistry):
         # Get the min of the voxels sizes and use it as the resolution
         target_img = target_data["data"]
         resolution = np.min(target_img.header.get_zooms()[:3])
-
-        # Convert masks to list if not already
-        if not isinstance(masks, list):
-            masks = [masks]
 
         # Check that masks passed as dicts have only one key
         invalid_mask_specs = [
@@ -588,10 +607,7 @@ class MaskRegistry(BasePipelineDataRegistry):
                     if mask_params is None:
                         mask_params = {}
                     # From nilearn
-                    if mask_name in [
-                        "compute_epi_mask",
-                        "compute_background_mask",
-                    ]:
+                    if mask_name in nilearn_callable_masks:
                         mask_img = mask_object(target_img, **mask_params)
                     # custom compute_brain_mask
                     elif mask_name == "compute_brain_mask":
