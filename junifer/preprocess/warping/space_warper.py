@@ -140,9 +140,7 @@ class SpaceWarper(BasePreprocessor):
         """
         logger.info(f"Warping to {self.reference} space using SpaceWarper")
         # Transform to native space
-        if (
-            self.using in ["fsl", "ants", "auto"] and self.reference == "T1w"
-        ):  # pragma: no cover
+        if self.reference == "T1w":  # pragma: no cover
             # Check for extra inputs
             if extra_input is None:
                 raise_error(
@@ -150,20 +148,8 @@ class SpaceWarper(BasePreprocessor):
                     f"`{self.reference}` data types in particular."
                 )
             # Conditional preprocessor
-            if self.using == "fsl":
-                input = FSLWarper().preprocess(
-                    input=input,
-                    extra_input=extra_input,
-                    reference=self.reference,
-                )
-            elif self.using == "ants":
-                input = ANTsWarper().preprocess(
-                    input=input,
-                    extra_input=extra_input,
-                    reference=self.reference,
-                )
-            elif self.using == "auto":
-                warper = None
+            warper = None
+            if self.using == "auto":
                 for entry in extra_input["Warp"]:
                     if entry["dst"] == "native":
                         warper = entry["warper"]
@@ -171,34 +157,24 @@ class SpaceWarper(BasePreprocessor):
                     raise_error(
                         klass=RuntimeError, msg="Could not find correct warper"
                     )
-                if warper == "fsl":
-                    input = FSLWarper().preprocess(
-                        input=input,
-                        extra_input=extra_input,
-                        reference=self.reference,
-                    )
-                elif warper == "ants":
-                    input = ANTsWarper().preprocess(
-                        input=input,
-                        extra_input=extra_input,
-                        reference=self.reference,
-                    )
-        # Transform to template space
-        if self.using in ["fsl", "ants"] and self.reference != "T1w":
-            input_space = input["space"]
-            # Check pre-requirements for space manipulation
-            if self.using == "ants" and self.reference == input_space:
-                raise_error(
-                    (
-                        f"The target data is in {self.reference} space "
-                        "and thus warping will not be performed, hence you "
-                        "should remove the SpaceWarper from the preprocess "
-                        "step."
-                    ),
-                    klass=RuntimeError,
+            else:
+                warper = self.using
+            if warper == "fsl":
+                input = FSLWarper().preprocess(
+                    input=input,
+                    extra_input=extra_input,
+                    reference=self.reference,
                 )
-            # Transform from native to MNI possible conditionally
-            if input_space == "native":  # pragma: no cover
+            elif warper == "ants":
+                input = ANTsWarper().preprocess(
+                    input=input,
+                    extra_input=extra_input,
+                    reference=self.reference,
+                )
+        else:
+            input_space = input["space"]
+            # Transform from native space
+            if input_space == "native":
                 # Check for reference as no T1w available
                 if input.get("reference") is None:
                     raise_error(
@@ -257,5 +233,10 @@ class SpaceWarper(BasePreprocessor):
                         extra_input={},
                         reference=self.reference,
                     )
-
+        logger.debug("Completed warping step")
+        logger.debug("Warped data types: ")
+        for k, v in input.items():
+            if k in ["data", "meta"]:
+                continue
+            logger.debug(f"\t{k}: {v}")
         return input
