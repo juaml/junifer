@@ -129,13 +129,16 @@ class SpaceWarper(BasePreprocessor):
         ------
         ValueError
             If ``extra_input`` is None when transforming to native space
-            i.e., using ``"T1w"`` as reference.
+            i.e., using ``"T1w"`` as reference or converting from native to
+            template space or
+            if the ``reference`` key is missing from ``input`` when converting
+            from native to template space.
         RuntimeError
             If warper could not be found in ``extra_input`` when
             ``using="auto"`` or converting from native space or
             if the data is in the correct space and does not require
             warping or
-            if FSL is used when ``reference="T1w"``.
+            if FSL or "auto" is used when ``reference!="T1w"``.
 
         """
         logger.info(f"Warping to {self.reference} space using SpaceWarper")
