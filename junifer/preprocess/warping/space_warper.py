@@ -228,12 +228,12 @@ class SpaceWarper(BasePreprocessor):
                     )
             else:
                 # Transform from MNI to MNI template space not possible
-                if self.using == "fsl":
+                if self.using in ["fsl", "auto"]:
                     raise_error(
                         (
                             f"Warping from {input_space} space to "
                             f"{self.reference} space not possible with "
-                            "FSL, use ANTs instead."
+                            f"{self.using}, use ANTs instead."
                         ),
                         klass=RuntimeError,
                     )
