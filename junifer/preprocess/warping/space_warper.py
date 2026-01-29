@@ -173,8 +173,19 @@ class SpaceWarper(BasePreprocessor):
                 )
         else:
             input_space = input["space"]
-            # Transform from native space
-            if input_space == "native":
+            # Check pre-requirements for space manipulation
+            if self.using == "ants" and self.reference == input_space:
+                raise_error(
+                    (
+                        f"The target data is in {self.reference} space "
+                        "and thus warping will not be performed, hence you "
+                        "should remove the SpaceWarper from the preprocess "
+                        "step."
+                    ),
+                    klass=RuntimeError,
+                )
+            # Transform from native to MNI possible conditionally
+            if input_space == "native":  # pragma: no cover
                 # Check for reference as no T1w available
                 if input.get("reference") is None:
                     raise_error(
