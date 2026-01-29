@@ -14,7 +14,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Add junifer-data
-COPY --from=ghcr.io/juaml/junifer-data:v4 /opt/junifer-data /root/junifer_data/v4
+COPY --from=ghcr.io/juaml/junifer-data:v6 /opt/junifer-data /root/junifer_data/v6
 
 # Add ANTs
 COPY --from=antsx/ants:latest /opt/ants /opt/ants
