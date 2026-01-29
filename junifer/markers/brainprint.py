@@ -14,17 +14,20 @@ from typing import (
 
 import numpy as np
 import numpy.typing as npt
+from pydantic import PositiveInt
 
 from ..api.decorators import register_marker
+from ..datagrabber import DataType
 from ..external.BrainPrint.brainprint.brainprint import (
     compute_asymmetry,
     compute_brainprint,
 )
 from ..external.BrainPrint.brainprint.surfaces import surf_to_vtk
-from ..pipeline import WorkDirManager
+from ..pipeline import ExtDep, WorkDirManager
+from ..storage import StorageType
 from ..typing import Dependencies, ExternalDependencies, MarkerInOutMappings
-from ..utils import logger, run_ext_cmd
-from .base import BaseMarker
+from ..utils import run_ext_cmd
+from .base import BaseMarker, logger
 
 
 __all__ = ["BrainPrint"]
@@ -60,15 +63,15 @@ class BrainPrint(BaseMarker):
         execution speed. Requires the ``scikit-sparse`` library. If it cannot
         be found, an error will be thrown. If False, will use slower LU
         decomposition (default False).
-    name : str, optional
-        The name of the marker. If None, will use the class name (default
-        None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     """
 
     _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
-            "name": "freesurfer",
+            "name": ExtDep.FreeSurfer,
             "commands": [
                 "mri_binarize",
                 "mri_pretess",
@@ -81,35 +84,25 @@ class BrainPrint(BaseMarker):
     _DEPENDENCIES: ClassVar[Dependencies] = {"lapy", "numpy"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "FreeSurfer": {
-            "eigenvalues": "scalar_table",
-            "areas": "vector",
-            "volumes": "vector",
-            "distances": "vector",
+        DataType.FreeSurfer: {
+            "eigenvalues": StorageType.ScalarTable,
+            "areas": StorageType.Vector,
+            "volumes": StorageType.Vector,
+            "distances": StorageType.Vector,
         }
     }
 
-    def __init__(
-        self,
-        num: int = 50,
-        skip_cortex=False,
-        keep_eigenvectors: bool = False,
-        norm: str = "none",
-        reweight: bool = False,
-        asymmetry: bool = False,
-        asymmetry_distance: str = "euc",
-        use_cholmod: bool = False,
-        name: Optional[str] = None,
-    ) -> None:
-        self.num = num
-        self.skip_cortex = skip_cortex
-        self.keep_eigenvectors = keep_eigenvectors
-        self.norm = norm
-        self.reweight = reweight
-        self.asymmetry = asymmetry
-        self.asymmetry_distance = asymmetry_distance
-        self.use_cholmod = use_cholmod
-        super().__init__(name=name, on="FreeSurfer")
+    num: PositiveInt = 50
+    skip_cortex: bool = False
+    keep_eigenvectors: bool = False
+    norm: str = "none"
+    reweight: bool = False
+    asymmetry: bool = False
+    asymmetry_distance: str = "euc"
+    use_cholmod: bool = False
+
+    _tempdir = Path()
+    _element_tempdir = Path()
 
     def _create_aseg_surface(
         self,
@@ -353,7 +346,7 @@ class BrainPrint(BaseMarker):
                 - ``col_names`` : surface labels as list of str
                 - ``row_names`` : eigenvalue count labels as list of str
                 - ``row_header_col_name`` : "eigenvalue"
-                                ()
+
             * ``areas`` : dictionary with the following keys:
 
                 - ``data`` : areas as ``np.ndarray``

@@ -11,6 +11,7 @@ import pytest
 
 pytest.importorskip("neurokit2")
 
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.complexity import SampleEntropy
 from junifer.pipeline.utils import _check_ants
@@ -21,7 +22,7 @@ from junifer.testing.datagrabbers import (
 
 
 # Set parcellation
-PARCELLATION = "Schaefer100x17"
+PARCELLATION = ["Schaefer100x17"]
 
 
 @pytest.mark.skipif(
@@ -45,7 +46,7 @@ def test_compute() -> None:
 def test_storage_type() -> None:
     """Test SampleEntropy storage_type."""
     assert "vector" == SampleEntropy(parcellation=PARCELLATION).storage_type(
-        input_type="BOLD", output_feature="complexity"
+        input_type=DataType.BOLD, output_feature="complexity"
     )
 
 

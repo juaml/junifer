@@ -10,6 +10,8 @@ import shutil
 from pathlib import Path
 from typing import Optional, Union
 
+import structlog
+
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from ..datagrabber import BaseDataGrabber
 from ..markers import BaseMarker
@@ -27,10 +29,13 @@ from ..typing import (
     PreprocessorLike,
     StorageLike,
 )
-from ..utils import logger, raise_error, warn_with_log, yaml
+from ..utils import raise_error, warn_with_log, yaml
 
 
 __all__ = ["collect", "list_elements", "queue", "reset", "run"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="api")
 
 
 def _get_datagrabber(datagrabber_config: dict) -> DataGrabberLike:

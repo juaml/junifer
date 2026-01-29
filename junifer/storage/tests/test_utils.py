@@ -261,16 +261,6 @@ def test_element_to_prefix_invalid_type() -> None:
     [
         (
             {
-                "matrix_kind": "half",
-                "diagonal": True,
-                "data_shape": (1, 1),
-                "row_names_len": 1,
-                "col_names_len": 1,
-            },
-            "Invalid kind",
-        ),
-        (
-            {
                 "matrix_kind": "full",
                 "diagonal": False,
                 "data_shape": (1, 1),

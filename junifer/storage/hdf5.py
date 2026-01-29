@@ -7,10 +7,11 @@
 from collections import defaultdict
 from collections.abc import Sequence
 from pathlib import Path
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar, Literal, Optional, Union
 
 import numpy as np
 import pandas as pd
+from pydantic import PositiveInt
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
@@ -21,8 +22,8 @@ from ..external.h5io.h5io import (
     read_hdf5,
     write_hdf5,
 )
-from ..utils import logger, raise_error
-from .base import BaseFeatureStorage
+from ..utils import raise_error
+from .base import BaseFeatureStorage, MatrixKind, StorageType, logger
 from .utils import (
     element_to_prefix,
     matrix_to_vector,
@@ -37,7 +38,7 @@ __all__ = ["HDF5FeatureStorage"]
 
 def _create_chunk(
     chunk_data: list[np.ndarray],
-    kind: str,
+    kind: StorageType,
     element_count: int,
     chunk_size: int,
     i_chunk: int,
@@ -48,7 +49,7 @@ def _create_chunk(
     ----------
     chunk_data : list of numpy.ndarray
         The data to be chunked.
-    kind : str
+    kind : :enum:`.StorageType`
         The kind of data to be chunked.
     element_count : int
         The total number of elements.
@@ -61,12 +62,6 @@ def _create_chunk(
     -------
     ChunkedArray or ChunkedList
         The chunked array or list.
-
-    Raises
-    ------
-    ValueError
-        If `kind` is not one of ['vector', 'matrix', 'timeseries',
-        'scalar_table'].
 
     """
     if kind in ["vector", "matrix"]:
@@ -93,12 +88,6 @@ def _create_chunk(
             size=element_count,
             offset=i_chunk * chunk_size,
         )
-    else:
-        raise_error(
-            f"Invalid kind: {kind}. "
-            "Must be one of ['vector', 'matrix', 'timeseries', "
-            "'timeseries_2d', 'scalar_table']."
-        )
     return out
 
 
@@ -108,7 +97,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     Parameters
     ----------
-    uri : str or pathlib.Path
+    uri : pathlib.Path
         The path to the file to be used.
     single_output : bool, optional
         If False, will create one HDF5 file per element. The name
@@ -124,7 +113,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     force_float32 : bool, optional
         Whether to force casting of numpy.ndarray values to float32 if float64
         values are found (default True).
-    chunk_size : int, optional
+    chunk_size : positive int, optional
         The chunk size to use when collecting data from element files in
         :meth:`.collect`. If the file count is smaller than the value, the
         minimum is used (default 100).
@@ -135,31 +124,18 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     """
 
-    _STORAGE_TYPES: ClassVar[Sequence[str]] = [
-        "vector",
-        "timeseries",
-        "matrix",
-        "scalar_table",
-        "timeseries_2d",
+    _STORAGE_TYPES: ClassVar[Sequence[StorageType]] = [
+        StorageType.Vector,
+        StorageType.Timeseries,
+        StorageType.Matrix,
+        StorageType.ScalarTable,
+        StorageType.Timeseries2D,
     ]
 
-    def __init__(
-        self,
-        uri: Union[str, Path],
-        single_output: bool = True,
-        overwrite: Union[bool, str] = "update",
-        compression: int = 7,
-        force_float32: bool = True,
-        chunk_size: int = 100,
-    ) -> None:
-        self.overwrite = overwrite
-        self.compression = compression
-        self.force_float32 = force_float32
-        self.chunk_size = chunk_size
-        super().__init__(
-            uri=uri,
-            single_output=single_output,
-        )
+    overwrite: Union[bool, str] = "update"
+    compression: Literal[0, 1, 2, 3, 4, 5, 6, 7, 8, 9] = 7
+    force_float32: bool = True
+    chunk_size: PositiveInt = 100
 
     def _fetch_correct_uri_for_io(self, element: Optional[dict]) -> str:
         """Return proper URI for I/O based on ``element``.
@@ -276,7 +252,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         ----------
         md5 : str
             The MD5 used as the HDF5 group name.
-        element : dict, optional
+        element : dict or None, optional
             The element as dictionary (default None).
 
         Returns
@@ -383,7 +359,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         if feature_md5:
             logger.debug(
                 f"Validating feature MD5 '{feature_md5}' in metadata "
-                f"for: {self.uri.resolve()} ..."  # type: ignore
+                f"for: {self.uri.resolve()} ..."
             )
             # Validate MD5
             if feature_md5 in metadata:
@@ -670,7 +646,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
     def _store_data(
         self,
-        kind: str,
+        kind: StorageType,
         meta_md5: str,
         element: list[dict[str, str]],
         data: np.ndarray,
@@ -685,7 +661,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         Parameters
         ----------
-        kind : {"matrix", "vector", "timeseries", "scalar_table"}
+        kind : :enum:`.StorageType`
             The storage kind.
         meta_md5 : str
             The metadata MD5 hash.
@@ -814,11 +790,11 @@ class HDF5FeatureStorage(BaseFeatureStorage):
     def store_matrix(
         self,
         meta_md5: str,
-        element: dict[str, str],
+        element: dict,
         data: np.ndarray,
         col_names: Optional[Sequence[str]] = None,
         row_names: Optional[Sequence[str]] = None,
-        matrix_kind: str = "full",
+        matrix_kind: MatrixKind = MatrixKind.Full,
         diagonal: bool = True,
         row_header_col_name: str = "ROI",
     ) -> None:
@@ -839,28 +815,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (default None).
-        matrix_kind : str, optional
-            The kind of matrix:
-
-            * ``triu`` : store upper triangular only
-            * ``tril`` : store lower triangular
-            * ``full`` : full matrix
-
-            (default "full").
+        matrix_kind : :enum:`.MatrixKind`, optional
+            The matrix kind (default ``MatrixKind.Full``).
         diagonal : bool, optional
-            Whether to store the diagonal. If ``matrix_kind`` is "full",
+            Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
             setting this to False will raise an error (default True).
         row_header_col_name : str, optional
             The column name for the row header column (default "ROI").
-
-        Raises
-        ------
-        ValueError
-            If invalid ``matrix_kind`` is provided, ``diagonal = False``
-            for ``matrix_kind = "full"``, non-square data is provided
-            for ``matrix_kind = {"triu", "tril"}``, length of ``row_names``
-            do not match data row count, or length of ``col_names`` do not
-            match data column count.
 
         """
         # Row data validation
@@ -879,7 +840,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         )
         # Store
         self._store_data(
-            kind="matrix",
+            kind=StorageType.Matrix,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=data[:, :, np.newaxis],  # convert to 3D
@@ -926,7 +887,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             processed_data = data.ravel()
 
         self._store_data(
-            kind="vector",
+            kind=StorageType.Vector,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=processed_data[:, np.newaxis],  # convert to 2D
@@ -955,7 +916,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         """
         self._store_data(
-            kind="timeseries",
+            kind=StorageType.Timeseries,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=[data],  # convert to list
@@ -993,7 +954,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             col_names_len=len(col_names) if col_names is not None else 0,
         )
         self._store_data(
-            kind="timeseries_2d",
+            kind=StorageType.Timeseries2D,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=[data],  # convert to list
@@ -1029,7 +990,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         """
         self._store_data(
-            kind="scalar_table",
+            kind=StorageType.ScalarTable,
             meta_md5=meta_md5,
             element=[element],  # convert to list
             data=[data],  # convert to list
@@ -1096,7 +1057,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Run loop to collect data per feature per file
         logger.info(
-            f"Collecting data from {self.uri.parent}/*_{self.uri.name}"  # type: ignore
+            f"Collecting data from {self.uri.parent}/*_{self.uri.name}"
         )
         logger.info(f"Will collect {len(elements_per_feature_md5)} features.")
 

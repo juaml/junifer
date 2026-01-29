@@ -12,42 +12,6 @@ import pytest
 from junifer.api.queue_context import HTCondorAdapter
 
 
-def test_HTCondorAdapter_env_kind_error() -> None:
-    """Test error for invalid env kind."""
-    with pytest.raises(ValueError, match=r"Invalid value for `env.kind`"):
-        HTCondorAdapter(
-            job_name="check_env_kind",
-            job_dir=Path("."),
-            yaml_config_path=Path("."),
-            elements=["sub01"],
-            env={"kind": "jambalaya"},
-        )
-
-
-def test_HTCondorAdapter_env_shell_error() -> None:
-    """Test error for invalid env shell."""
-    with pytest.raises(ValueError, match=r"Invalid value for `env.shell`"):
-        HTCondorAdapter(
-            job_name="check_env_shell",
-            job_dir=Path("."),
-            yaml_config_path=Path("."),
-            elements=["sub01"],
-            env={"kind": "conda", "shell": "fish"},
-        )
-
-
-def test_HTCondorAdapter_collect_error() -> None:
-    """Test error for invalid collect option."""
-    with pytest.raises(ValueError, match=r"Invalid value for `collect`"):
-        HTCondorAdapter(
-            job_name="check_collect",
-            job_dir=Path("."),
-            yaml_config_path=Path("."),
-            elements=["sub01"],
-            collect="off",
-        )
-
-
 @pytest.mark.parametrize(
     "pre_run, expected_text, shell",
     [
@@ -80,7 +44,7 @@ def test_HTCondorAdapter_pre_run(
         yaml_config_path=Path("."),
         elements=["sub01"],
         env={"kind": "conda", "name": "junifer", "shell": shell},
-        pre_run=pre_run,
+        pre_run_cmds=pre_run,
     )
     assert shell in adapter.pre_run()
     assert expected_text in adapter.pre_run()
@@ -125,8 +89,8 @@ def test_HTCondorAdapter_pre_collect(
         yaml_config_path=Path("."),
         elements=["sub01"],
         env={"kind": "venv", "name": "junifer", "shell": shell},
-        pre_collect=pre_collect,
-        collect=collect,
+        pre_collect_cmds=pre_collect,
+        collect_task=collect,
     )
     assert shell in adapter.pre_collect()
     assert expected_text in adapter.pre_collect()
@@ -200,7 +164,7 @@ def test_HTCondor_dag(
         job_dir=Path("."),
         yaml_config_path=Path("."),
         elements=elements,
-        collect=collect,
+        collect_task=collect,
     )
     assert expected_text in adapter.dag()
 

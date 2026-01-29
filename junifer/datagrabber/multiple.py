@@ -5,12 +5,17 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
 from typing import Union
 
+from pydantic import ConfigDict
+
 from ..api.decorators import register_datagrabber
-from ..typing import DataGrabberLike
+from ..typing import DataGrabberLike, Element
 from ..utils import deep_update, raise_error
-from .base import BaseDataGrabber
+from .base import BaseDataGrabber, DataType
+from .pattern import PatternDataGrabber
+from .pattern_datalad import PatternDataladDataGrabber
 
 
 __all__ = ["MultipleDataGrabber"]
@@ -38,22 +43,35 @@ class MultipleDataGrabber(BaseDataGrabber):
 
     """
 
-    def __init__(self, datagrabbers: list[DataGrabberLike], **kwargs) -> None:
+    model_config = ConfigDict(extra="allow")
+
+    datagrabbers: list[
+        Union[
+            DataGrabberLike,
+            PatternDataGrabber,
+            PatternDataladDataGrabber,
+        ]
+    ]
+    types: list[DataType] = []  # noqa: RUF012
+    datadir: Path = Path(".")
+
+    def validate_datagrabber_params(self) -> None:
+        """Run extra logical validation for datagrabber."""
         # Check datagrabbers consistency
         # Check for same element keys
-        first_keys = datagrabbers[0].get_element_keys()
-        for dg in datagrabbers[1:]:
+        first_keys = self.datagrabbers[0].get_element_keys()
+        for dg in self.datagrabbers[1:]:
             if dg.get_element_keys() != first_keys:
                 raise_error(
                     msg="DataGrabbers have different element keys",
                     klass=RuntimeError,
                 )
         # Check for no overlapping types (and nested data types)
-        types = [x for dg in datagrabbers for x in dg.get_types()]
+        types = [x for dg in self.datagrabbers for x in dg.get_types()]
         if len(types) != len(set(types)):
-            if all(hasattr(dg, "patterns") for dg in datagrabbers):
-                first_patterns = datagrabbers[0].patterns
-                for dg in datagrabbers[1:]:
+            if all(hasattr(dg, "patterns") for dg in self.datagrabbers):
+                first_patterns = self.datagrabbers[0].patterns
+                for dg in self.datagrabbers[1:]:
                     for data_type in set(types):
                         dtype_pattern = dg.patterns.get(data_type)
                         if dtype_pattern is None:
@@ -77,14 +95,13 @@ class MultipleDataGrabber(BaseDataGrabber):
                     msg="DataGrabbers have overlapping types",
                     klass=RuntimeError,
                 )
-        self._datagrabbers = datagrabbers
 
-    def __getitem__(self, element: Union[str, tuple]) -> dict:
+    def __getitem__(self, element: Element) -> dict:
         """Implement indexing.
 
         Parameters
         ----------
-        element : str or tuple
+        element : `Element`
             The element to be indexed. If one string is provided, it is
             assumed to be a tuple with only one item. If a tuple is provided,
             each item in the tuple is the value for the replacement string
@@ -100,7 +117,7 @@ class MultipleDataGrabber(BaseDataGrabber):
 
         out = {}
         metas = []
-        for dg in self._datagrabbers:
+        for dg in self.datagrabbers:
             t_out = dg[element]
             deep_update(out, t_out)
             # Now get the meta for this datagrabber
@@ -121,16 +138,15 @@ class MultipleDataGrabber(BaseDataGrabber):
 
     def __enter__(self) -> "MultipleDataGrabber":
         """Implement context entry."""
-        for dg in self._datagrabbers:
+        for dg in self.datagrabbers:
             dg.__enter__()
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback) -> None:
         """Implement context exit."""
-        for dg in self._datagrabbers:
+        for dg in self.datagrabbers:
             dg.__exit__(exc_type, exc_value, exc_traceback)
 
-    # TODO: return type should be List[List[str]], but base type is List[str]
     def get_types(self) -> list[str]:
         """Get types.
 
@@ -140,7 +156,7 @@ class MultipleDataGrabber(BaseDataGrabber):
             The types of data to be grabbed.
 
         """
-        types = [x for dg in self._datagrabbers for x in dg.get_types()]
+        types = [x for dg in self.datagrabbers for x in dg.get_types()]
         return types
 
     def get_element_keys(self) -> list[str]:
@@ -155,7 +171,7 @@ class MultipleDataGrabber(BaseDataGrabber):
             The element keys.
 
         """
-        return self._datagrabbers[0].get_element_keys()
+        return self.datagrabbers[0].get_element_keys()
 
     def get_elements(self) -> list:
         """Get elements.
@@ -169,7 +185,7 @@ class MultipleDataGrabber(BaseDataGrabber):
             related DataGrabbers.
 
         """
-        all_elements = [dg.get_elements() for dg in self._datagrabbers]
+        all_elements = [dg.get_elements() for dg in self.datagrabbers]
         elements = set(all_elements[0])
         for s in all_elements[1:]:
             elements.intersection_update(s)

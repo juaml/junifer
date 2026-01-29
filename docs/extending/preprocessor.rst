@@ -16,8 +16,7 @@ own Preprocessor.
 While implementing your own Preprocessor, you need to always inherit from
 :class:`.BasePreprocessor` and implement a few methods and class attributes:
 
-#. ``__init__``: The initialisation method, where the Preprocessor is
-   configured.
+#. (optional) ``validate_preprocessor_params``: The method to perform logical validation of parameters (if required).
 #. ``preprocess``: The method that given the data, preprocesses the data.
 
 As an example, we will develop a ``NilearnSmoothing`` Preprocessor, which
@@ -36,15 +35,15 @@ For input we can accept ``T1w``, ``T2w`` and ``BOLD``
 
 .. code-block:: python
 
-    _VALID_DATA_TYPES = ["T1w", "T2w", "BOLD"]
+    _VALID_DATA_TYPES = [DataType.T1w, DataType.T2w, DataType.BOLD]
 
 .. _extending_preprocessors_init:
 
 Step 2: Initialise the Preprocessor
 -----------------------------------
 
-Now we need to define our Preprocessor class' constructor which is also how
-you configure it. Our class will have the following arguments:
+Now we need to define our Preprocessor class' parameters.
+Our class will have the following arguments:
 
 1. ``fwhm``: The smoothing strength as a full-width at half maximum
    (in millimetres). Since we depend on :func:`nilearn.image.smooth_img`, we
@@ -59,6 +58,8 @@ you configure it. Our class will have the following arguments:
    are allowed as parameters. This is because the parameters are stored in
    JSON format, and JSON only supports these types.
 
+As :class:`.BasePreprocessor` already defines ``on``, we can define the other:
+
 .. code-block:: python
 
     from typing import Literal
@@ -68,15 +69,7 @@ you configure it. Our class will have the following arguments:
 
     ...
 
-
-    def __init__(
-        self,
-        fwhm: int | float | ArrayLike | Literal["fast"] | None,
-        on: str | list[str] | None = None,
-    ) -> None:
-        self.fwhm = fwhm
-        super().__init__(on=on)
-
+    fwhm: int | float | ArrayLike | Literal["fast"] | None
 
     ...
 
@@ -154,6 +147,7 @@ decorator and our final code should look like this:
     from typing import Any, ClassVar, Literal
 
     from junifer.api.decorators import register_preprocessor
+    from junifer.datagrabber import DataType
     from junifer.preprocess import BasePreprocessor
 
     from nilearn import image as nimg
@@ -165,15 +159,9 @@ decorator and our final code should look like this:
 
         _DEPENDENCIES = {"nilearn"}
 
-        _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["T1w", "T2w", "BOLD"]
+        _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.T1w, DataType.T2w, DataType.BOLD]
 
-        def __init__(
-            self,
-            fwhm: int | float | ArrayLike | Literal["fast"] | None,
-            on: str | list[str] | None = None,
-        ) -> None:
-            self.fwhm = fwhm
-            super().__init__(on=on)
+        fwhm: int | float | ArrayLike | Literal["fast"] | None
 
         def preprocess(
             self,
@@ -204,9 +192,12 @@ Template for a custom Preprocessor
         # TODO: add the inputs
         _VALID_DATA_TYPES = []
 
-        def __init__(self, on=None):
-            # TODO: add preprocessor-specific parameters
-            super().__init__(on=on)
+        # TODO: define preprocessor-specific parameters
+
+        # optional
+        def validate_preprocessor_params(self):
+            # TODO: add validation logic for preprocessor parameters
+            pass
 
         def preprocess(self, input, extra_input):
             # TODO: add the preprocessor logic

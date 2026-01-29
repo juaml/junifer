@@ -19,10 +19,10 @@ from nilearn._utils.niimg_conversions import check_niimg_4d
 
 from ..api.decorators import register_preprocessor
 from ..data import get_data
+from ..datagrabber import DataType
 from ..pipeline import WorkDirManager
 from ..typing import Dependencies
-from ..utils import logger
-from .base import BasePreprocessor
+from .base import BasePreprocessor, logger
 
 
 __all__ = ["TemporalFilter"]
@@ -49,7 +49,7 @@ class TemporalFilter(BasePreprocessor):
     t_r : float, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
-    masks : str, dict or list of dict or str, optional
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -57,26 +57,14 @@ class TemporalFilter(BasePreprocessor):
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn"}
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["BOLD"]
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.BOLD]
 
-    def __init__(
-        self,
-        detrend: bool = True,
-        standardize: bool = True,
-        low_pass: Optional[float] = None,
-        high_pass: Optional[float] = None,
-        t_r: Optional[float] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-    ) -> None:
-        """Initialize the class."""
-        self.detrend = detrend
-        self.standardize = standardize
-        self.low_pass = low_pass
-        self.high_pass = high_pass
-        self.t_r = t_r
-        self.masks = masks
-
-        super().__init__()
+    detrend: bool = True
+    standardize: bool = True
+    low_pass: Optional[float] = None
+    high_pass: Optional[float] = None
+    t_r: Optional[float] = None
+    masks: Optional[list[Union[dict, str]]] = None
 
     def _validate_data(
         self,

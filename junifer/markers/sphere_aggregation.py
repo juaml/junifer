@@ -4,15 +4,19 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar, Literal, Optional, Union
+
+from pydantic import PositiveFloat
 
 from ..api.decorators import register_marker
 from ..data import get_data
+from ..datagrabber import DataType
 from ..external.nilearn import JuniferNiftiSpheresMasker
 from ..stats import get_aggfunc_by_name
+from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
-from ..utils import logger, raise_error, warn_with_log
-from .base import BaseMarker
+from ..utils import raise_error, warn_with_log
+from .base import BaseMarker, logger
 
 
 __all__ = ["SphereAggregation"]
@@ -27,37 +31,41 @@ class SphereAggregation(BaseMarker):
     coords : str
         The name of the coordinates list to use.
         See :func:`.list_data` for options.
-    radius : float, optional
-        The radius of the sphere in millimeters. If None, the signal will be
-        extracted from a single voxel. See
-        :class:`nilearn.maskers.NiftiSpheresMasker` for more information
+    radius : ``zero`` or positive float or None, optional
+        The radius of the sphere in millimeters.
+        If None, the signal will be extracted from a single voxel.
+        See :class:`.JuniferNiftiSpheresMasker` for more information
         (default None).
     allow_overlap : bool, optional
-        Whether to allow overlapping spheres. If False, an error is raised if
-        the spheres overlap (default is False).
+        Whether to allow overlapping spheres.
+        If False, an error is raised if the spheres overlap (default False).
     method : str, optional
-        The aggregation method to use.
-        See :func:`.get_aggfunc_by_name` for more information
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options
         (default "mean").
-    method_params : dict, optional
-        The parameters to pass to the aggregation method (default None).
-    time_method : str, optional
-        The method to use to aggregate the time series over the time points,
-        after applying :term:`method` (only applicable to BOLD data). If None,
+    method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
+    time_method : str or None, optional
+        The aggregation function to use for time series after applying
+        :term:`method` (only applicable to BOLD data). If None,
         it will not operate on the time dimension (default None).
-    time_method_params : dict, optional
-        The parameters to pass to the time aggregation method (default None).
-    masks : str, dict or list of dict or str, optional
+    time_method_params : dict or None, optional
+        The parameters to pass to the time aggregation function (default None).
+    on : list of {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``, \
+        ``DataType.VBM_GM``, ``DataType.VBM_WM``, ``DataType.VBM_CSF``, \
+        ``DataType.FALFF``, ``DataType.GCOR``, ``DataType.LCOR``} or None,
+        optional
+        The data type(s) to apply the marker on.
+        If None, will work on all available data.
+        Check :enum:`.DataType` for valid values (default None).
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    on : {"T1w", "T2w", "BOLD", "VBM_GM", "VBM_WM", "VBM_CSF", "fALFF", \
-        "GCOR", "LCOR"} or list of the options, optional
-        The data types to apply the marker to. If None, will work on all
-        available data (default None).
-    name : str, optional
-        The name of the marker. By default, it will use KIND_SphereAggregation
-        where KIND is the kind of data it was applied to (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     Raises
     ------
@@ -70,69 +78,72 @@ class SphereAggregation(BaseMarker):
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "numpy"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "T1w": {
-            "aggregation": "vector",
+        DataType.T1w: {
+            "aggregation": StorageType.Vector,
         },
-        "T2w": {
-            "aggregation": "vector",
+        DataType.T2w: {
+            "aggregation": StorageType.Vector,
         },
-        "BOLD": {
-            "aggregation": "timeseries",
+        DataType.BOLD: {
+            "aggregation": StorageType.Timeseries,
         },
-        "VBM_GM": {
-            "aggregation": "vector",
+        DataType.VBM_GM: {
+            "aggregation": StorageType.Vector,
         },
-        "VBM_WM": {
-            "aggregation": "vector",
+        DataType.VBM_WM: {
+            "aggregation": StorageType.Vector,
         },
-        "VBM_CSF": {
-            "aggregation": "vector",
+        DataType.VBM_CSF: {
+            "aggregation": StorageType.Vector,
         },
-        "fALFF": {
-            "aggregation": "vector",
+        DataType.FALFF: {
+            "aggregation": StorageType.Vector,
         },
-        "GCOR": {
-            "aggregation": "vector",
+        DataType.GCOR: {
+            "aggregation": StorageType.Vector,
         },
-        "LCOR": {
-            "aggregation": "vector",
+        DataType.LCOR: {
+            "aggregation": StorageType.Vector,
         },
     }
 
-    def __init__(
-        self,
-        coords: str,
-        radius: Optional[float] = None,
-        allow_overlap: bool = False,
-        method: str = "mean",
-        method_params: Optional[dict[str, Any]] = None,
-        time_method: Optional[str] = None,
-        time_method_params: Optional[dict[str, Any]] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        on: Union[list[str], str, None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.coords = coords
-        self.radius = radius
-        self.allow_overlap = allow_overlap
-        self.method = method
-        self.method_params = method_params or {}
-        self.masks = masks
-        super().__init__(on=on, name=name)
+    coords: str
+    radius: Optional[Union[Literal[0], PositiveFloat]] = None
+    allow_overlap: bool = False
+    method: str = "mean"
+    method_params: Optional[dict[str, Any]] = None
+    time_method: Optional[str] = None
+    time_method_params: Optional[dict[str, Any]] = None
+    masks: Optional[list[Union[dict, str]]] = None
+    on: Optional[
+        list[
+            Literal[
+                DataType.T1w,
+                DataType.T2w,
+                DataType.BOLD,
+                DataType.VBM_GM,
+                DataType.VBM_WM,
+                DataType.VBM_CSF,
+                DataType.FALFF,
+                DataType.GCOR,
+                DataType.LCOR,
+            ]
+        ]
+    ] = None
 
-        # Verify after super init so self._on is set
-        if "BOLD" not in self._on and time_method is not None:
+    def validate_marker_params(self) -> None:
+        """Run extra logical validation for marker."""
+        # self.on is set already
+        if "BOLD" not in self.on and self.time_method is not None:
             raise_error(
                 "`time_method` can only be used with BOLD data. "
                 "Please remove `time_method` parameter."
             )
-        if time_method is None and time_method_params is not None:
+        if self.time_method is None and self.time_method_params is not None:
             raise_error(
                 "`time_method_params` can only be used with `time_method`. "
                 "Please remove `time_method_params` parameter."
             )
-        self.time_method = time_method
-        self.time_method_params = time_method_params or {}
 
     def compute(
         self,

@@ -10,7 +10,7 @@ import nibabel as nib
 import numpy as np
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, run_ext_cmd
+from ...utils import run_ext_cmd
 
 
 if TYPE_CHECKING:
@@ -74,6 +74,9 @@ class FSLMaskWarper:
             The transformed mask image.
 
         """
+        # Imported here to avoid circular import
+        from ._masks import logger
+
         logger.debug("Using FSL for mask transformation")
 
         # Create element-scoped tempdir so that warped mask is

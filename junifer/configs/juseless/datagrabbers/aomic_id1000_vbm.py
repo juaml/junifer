@@ -4,11 +4,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from pathlib import Path
-from typing import Union
+from typing import Literal
+
+from pydantic import HttpUrl
 
 from ....api.decorators import register_datagrabber
-from ....datagrabber import PatternDataladDataGrabber
+from ....datagrabber import DataType, PatternDataladDataGrabber
+from ....typing import DataGrabberPatterns
 
 
 __all__ = ["JuselessDataladAOMICID1000VBM"]
@@ -22,27 +24,19 @@ class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    datadir : str or pathlib.Path or None, optional
-        The directory where the datalad dataset will be cloned. If None,
-        the datalad dataset will be cloned into a temporary directory
-        (default None).
+    datadir : pathlib.Path, optional
+        That path where the datalad dataset will be cloned.
+        If not specified, the datalad dataset will be cloned into a temporary
+        directory.
 
     """
 
-    def __init__(self, datadir: Union[str, Path, None] = None) -> None:
-        uri = "https://gin.g-node.org/felixh/ds003097_ReproVBM"
-        types = ["VBM_GM"]
-        replacements = ["subject"]
-        patterns = {
-            "VBM_GM": {
-                "pattern": ("{subject}/mri/mwp1{subject}_run-2_T1w.nii.gz"),
-                "space": "IXI549Space",
-            },
-        }
-        super().__init__(
-            types=types,
-            datadir=datadir,
-            uri=uri,
-            replacements=replacements,
-            patterns=patterns,
-        )
+    uri: HttpUrl = HttpUrl("https://gin.g-node.org/felixh/ds003097_ReproVBM")
+    types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012
+    patterns: DataGrabberPatterns = {  # noqa: RUF012
+        "VBM_GM": {
+            "pattern": ("{subject}/mri/mwp1{subject}_run-2_T1w.nii.gz"),
+            "space": "IXI549Space",
+        },
+    }
+    replacements: list[str] = ["subject"]  # noqa: RUF012

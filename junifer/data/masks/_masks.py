@@ -16,6 +16,7 @@ from typing import (
 import nibabel as nib
 import nilearn.image as nimg
 import numpy as np
+import structlog
 from junifer_data import get
 from nilearn.masking import (
     compute_background_mask,
@@ -23,7 +24,7 @@ from nilearn.masking import (
     intersect_masks,
 )
 
-from ...utils import logger, raise_error
+from ...utils import raise_error
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..template_spaces import get_template
 from ..utils import (
@@ -41,6 +42,9 @@ if TYPE_CHECKING:
 
 
 __all__ = ["MaskRegistry", "compute_brain_mask"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="data")
 
 
 def compute_brain_mask(

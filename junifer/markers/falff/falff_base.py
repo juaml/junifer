@@ -6,17 +6,23 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from enum import Enum
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
+    Literal,
     Optional,
+    Union,
 )
 
+from pydantic import PositiveFloat
+
+from ...datagrabber import DataType
+from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
-from ...utils.logging import logger, raise_error
-from ..base import BaseMarker
+from ..base import BaseMarker, logger
 from ._afni_falff import AFNIALFF
 from ._junifer_falff import JuniferALFF
 
@@ -25,7 +31,19 @@ if TYPE_CHECKING:
     from nibabel.nifti1 import Nifti1Image
 
 
-__all__ = ["ALFFBase"]
+__all__ = ["ALFFBase", "ALFFImpl"]
+
+
+class ALFFImpl(str, Enum):
+    """Accepted ALFF implementations.
+
+    * ``junifer`` : ``junifer``'s ALFF
+    * ``afni`` : AFNI's ``3dRSFC``
+
+    """
+
+    junifer = "junifer"
+    afni = "afni"
 
 
 class ALFFBase(BaseMarker):
@@ -33,22 +51,28 @@ class ALFFBase(BaseMarker):
 
     Parameters
     ----------
-    highpass : positive float
-        Highpass cutoff frequency.
-    lowpass : positive float
-        Lowpass cutoff frequency.
-    using : {"junifer", "afni"}
-        Implementation to use for computing ALFF:
-
-        * "junifer" : Use ``junifer``'s own ALFF implementation
-        * "afni" : Use AFNI's ``3dRSFC``
-
+    using : :enum:`.ALFFImpl`
+    highpass : positive float, optional
+        Highpass cutoff frequency (default 0.01).
+    lowpass : positive float, optional
+        Lowpass cutoff frequency (default 0.1).
     tr : positive float, optional
-        The Repetition Time of the BOLD data. If None, will extract
-        the TR from NIfTI header (default None).
-    name : str, optional
-        The name of the marker. If None, it will use the class name
-        (default None).
+        The repetition time of the BOLD data.
+        If None, will extract the TR from NIfTI header (default None).
+    agg_method : str, optional
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options
+        (default "mean").
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
+    masks : list of dict or str, or None, optional
+        The specification of the masks to apply to regions before extracting
+        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        If None, will not apply any mask (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, it will use the class name (default None).
 
     Notes
     -----
@@ -58,59 +82,34 @@ class ALFFBase(BaseMarker):
     reported that some preprocessed data might not have the correct ``tr`` in
     the NIfTI header.
 
-    Raises
-    ------
-    ValueError
-        If ``highpass`` is not positive or zero or
-        if ``lowpass`` is not positive or
-        if ``highpass`` is higher than ``lowpass`` or
-        if ``using`` is invalid.
-
     """
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "using": "afni",
-            "depends_on": AFNIALFF,
+            "using": ALFFImpl.afni,
+            "depends_on": [AFNIALFF],
         },
         {
-            "using": "junifer",
-            "depends_on": JuniferALFF,
+            "using": ALFFImpl.junifer,
+            "depends_on": [JuniferALFF],
         },
     ]
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "BOLD": {
-            "alff": "vector",
-            "falff": "vector",
+        DataType.BOLD: {
+            "alff": StorageType.Vector,
+            "falff": StorageType.Vector,
         },
     }
 
-    def __init__(
-        self,
-        highpass: float,
-        lowpass: float,
-        using: str,
-        tr: Optional[float] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        if highpass < 0:
-            raise_error("Highpass must be positive or 0")
-        if lowpass <= 0:
-            raise_error("Lowpass must be positive")
-        if highpass >= lowpass:
-            raise_error("Highpass must be lower than lowpass")
-        self.highpass = highpass
-        self.lowpass = lowpass
-        # Validate `using` parameter
-        valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]
-        if using not in valid_using:
-            raise_error(
-                f"Invalid value for `using`, should be one of: {valid_using}"
-            )
-        self.using = using
-        self.tr = tr
-        super().__init__(on="BOLD", name=name)
+    using: ALFFImpl
+    highpass: PositiveFloat = 0.01
+    lowpass: PositiveFloat = 0.1
+    tr: Optional[PositiveFloat] = None
+    agg_method: str = "mean"
+    agg_method_params: Optional[dict] = None
+    masks: Optional[list[Union[dict, str]]] = None
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def _compute(
         self,

@@ -80,14 +80,6 @@ def test_JuselessUCLA_partial_data_access(
             assert types in out
 
 
-def test_JuselessUCLA_incorrect_data_type() -> None:
-    """Test JuselessUCLA DataGrabber incorrect data type."""
-    with pytest.raises(
-        ValueError, match="`patterns` must contain all `types`"
-    ):
-        _ = JuselessUCLA(types="Eunomia")
-
-
 @pytest.mark.parametrize(
     "tasks",
     [None, "rest", ["rest", "stopsignal"]],
@@ -125,11 +117,3 @@ def test_JuselessUCLA_task_params(tasks: Optional[str]) -> None:
         else:
             for el in all_elements:
                 assert el[1] in ["rest", "stopsignal"]
-
-
-def test_JuselessUCLA_invalid_tasks() -> None:
-    """Test JuselessUCLA with invalid task parameters."""
-    with pytest.raises(
-        ValueError, match="invalid is not a valid task in the UCLA"
-    ):
-        JuselessUCLA(tasks="invalid")

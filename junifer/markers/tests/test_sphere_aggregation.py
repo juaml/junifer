@@ -11,9 +11,10 @@ from nilearn.maskers import NiftiSpheresMasker
 from numpy.testing import assert_array_equal
 
 from junifer.data import CoordinatesRegistry, MaskRegistry
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.sphere_aggregation import SphereAggregation
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import SQLiteFeatureStorage, StorageType, Upsert
 from junifer.testing.datagrabbers import (
     OasisVBMTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
@@ -29,60 +30,60 @@ RADIUS = 8
     "input_type, storage_type",
     [
         (
-            "T1w",
-            "vector",
+            DataType.T1w,
+            StorageType.Vector,
         ),
         (
-            "T2w",
-            "vector",
+            DataType.T2w,
+            StorageType.Vector,
         ),
         (
-            "BOLD",
-            "timeseries",
+            DataType.BOLD,
+            StorageType.Timeseries,
         ),
         (
-            "VBM_GM",
-            "vector",
+            DataType.VBM_GM,
+            StorageType.Vector,
         ),
         (
-            "VBM_WM",
-            "vector",
+            DataType.VBM_WM,
+            StorageType.Vector,
         ),
         (
-            "VBM_CSF",
-            "vector",
+            DataType.VBM_CSF,
+            StorageType.Vector,
         ),
         (
-            "fALFF",
-            "vector",
+            DataType.FALFF,
+            StorageType.Vector,
         ),
         (
-            "GCOR",
-            "vector",
+            DataType.GCOR,
+            StorageType.Vector,
         ),
         (
-            "LCOR",
-            "vector",
+            DataType.LCOR,
+            StorageType.Vector,
         ),
     ],
 )
 def test_SphereAggregation_input_output(
-    input_type: str, storage_type: str
+    input_type: DataType, storage_type: StorageType
 ) -> None:
     """Test SphereAggregation input and output types.
 
     Parameters
     ----------
-    input_type : str
+    input_type : DataType
         The parametrized input type.
-    storage_type : str
+    storage_type : StorageType
         The parametrized storage type.
 
     """
     assert storage_type == SphereAggregation(
         coords="DMNBuckner",
         method="mean",
-        on=input_type,
+        on=[input_type],
     ).storage_type(input_type=input_type, output_feature="aggregation")
 
 
@@ -92,7 +93,7 @@ def test_SphereAggregation_3D() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Create SphereAggregation object
         marker = SphereAggregation(
-            coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
+            coords=COORDS, method="mean", radius=RADIUS, on=[DataType.VBM_GM]
         )
         sphere_agg_vbm_gm_data = marker.fit_transform(element_data)["VBM_GM"][
             "aggregation"
@@ -124,7 +125,7 @@ def test_SphereAggregation_4D() -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Create SphereAggregation object
         marker = SphereAggregation(
-            coords=COORDS, method="mean", radius=RADIUS, on="BOLD"
+            coords=COORDS, method="mean", radius=RADIUS, on=[DataType.BOLD]
         )
         sphere_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -163,10 +164,11 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     with OasisVBMTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_sphere_storage_3D.sqlite", upsert="ignore"
+            uri=tmp_path / "test_sphere_storage_3D.sqlite",
+            upsert=Upsert.Ignore,
         )
         marker = SphereAggregation(
-            coords=COORDS, method="mean", radius=RADIUS, on="VBM_GM"
+            coords=COORDS, method="mean", radius=RADIUS, on=[DataType.VBM_GM]
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
@@ -179,10 +181,11 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     with SPMAuditoryTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_sphere_storage_4D.sqlite", upsert="ignore"
+            uri=tmp_path / "test_sphere_storage_4D.sqlite",
+            upsert=Upsert.Ignore,
         )
         marker = SphereAggregation(
-            coords=COORDS, method="mean", radius=RADIUS, on="BOLD"
+            coords=COORDS, method="mean", radius=RADIUS, on=[DataType.BOLD]
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
@@ -201,8 +204,8 @@ def test_SphereAggregation_3D_mask() -> None:
             coords=COORDS,
             method="mean",
             radius=RADIUS,
-            on="VBM_GM",
-            masks="compute_brain_mask",
+            on=[DataType.VBM_GM],
+            masks=["compute_brain_mask"],
         )
         sphere_agg_vbm_gm_data = marker.fit_transform(element_data)["VBM_GM"][
             "aggregation"
@@ -245,7 +248,7 @@ def test_SphereAggregation_4D_agg_time() -> None:
             method="mean",
             radius=RADIUS,
             time_method="mean",
-            on="BOLD",
+            on=[DataType.BOLD],
         )
         sphere_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -281,7 +284,7 @@ def test_SphereAggregation_4D_agg_time() -> None:
             radius=RADIUS,
             time_method="select",
             time_method_params={"pick": [0]},
-            on="BOLD",
+            on=[DataType.BOLD],
         )
         sphere_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -305,7 +308,7 @@ def test_SphereAggregation_errors() -> None:
             radius=RADIUS,
             time_method="pick",
             time_method_params={"pick": [0]},
-            on="VBM_GM",
+            on=[DataType.VBM_GM],
         )
 
     with pytest.raises(
@@ -316,7 +319,7 @@ def test_SphereAggregation_errors() -> None:
             method="mean",
             radius=RADIUS,
             time_method_params={"pick": [0]},
-            on="VBM_GM",
+            on=[DataType.VBM_GM],
         )
 
 
@@ -333,7 +336,7 @@ def test_SphereAggregation_warning() -> None:
                 radius=RADIUS,
                 time_method="select",
                 time_method_params={"pick": [0]},
-                on="BOLD",
+                on=[DataType.BOLD],
             )
             element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
                 ..., 0:1

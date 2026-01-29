@@ -32,10 +32,8 @@ class UpdateMetaMixin:
         t_meta = {}
         # Set class name for the step
         t_meta["class"] = self.__class__.__name__
-        # Add object variables to metadata if name doesn't start with "_"
-        for k, v in vars(self).items():
-            if not k.startswith("_"):
-                t_meta[k] = v
+        # Dump model
+        t_meta.update(self.model_dump(mode="json"))
         # Conditional for list dtype vals like Warp
         if not isinstance(input, list):
             input = [input]
