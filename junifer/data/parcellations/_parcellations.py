@@ -208,6 +208,17 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                 }
             }
         )
+        # Add Julich-Brain
+        for v in ["V1_18", "V2_9", "V3_0_3", "V3_1"]:
+            self._builtin.update(
+                {
+                    f"Julich-Brain_{v}": {
+                        "family": "Julich-Brain",
+                        "version": v,
+                        "space": "MNI152NLin2009cAsym",
+                    }
+                }
+            )
 
         # Update registry with built-in ones
         self._registry.update(self._builtin)
@@ -375,6 +386,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
             "Brainnetome",
             "FreeSurfer",
             "Glasser",
+            "Julich-Brain",
         ]:
             # Load parcellation and labels
             if t_family == "Schaefer2018":
@@ -421,6 +433,13 @@ class ParcellationRegistry(BasePipelineDataRegistry):
             elif t_family == "Glasser":
                 parcellation_fname, parcellation_labels = _retrieve_glasser(
                     resolution=resolution,
+                )
+            elif t_family == "Julich-Brain":
+                parcellation_fname, parcellation_labels = (
+                    _retrieve_julich_brain(
+                        resolution=resolution,
+                        **parcellation_definition,
+                    )
                 )
         else:
             raise_error(f"Unknown parcellation family: {t_family}")
@@ -1466,6 +1485,67 @@ def _retrieve_glasser(
     path_prefix = Path("parcellations/Glasser/2021")
     parcellation_img_path = get(
         file_path=path_prefix / "MNI_Glasser_HCP_v1.0.nii.gz",
+        dataset_path=get_dataset_path(),
+        **JUNIFER_DATA_PARAMS,
+    )
+    parcellation_label_path = get(
+        file_path=path_prefix / "labels.csv",
+        dataset_path=get_dataset_path(),
+        **JUNIFER_DATA_PARAMS,
+    )
+    labels = pd.read_csv(parcellation_label_path, sep=",")["label"].to_list()
+
+    return parcellation_img_path, labels
+
+
+def _retrieve_julich_brain(
+    resolution: Optional[float] = None,
+    version: str = "v3_1",
+) -> tuple[Path, list[str]]:
+    """Retrieve Julich-Brain labelled parcellations.
+
+    Parameters
+    ----------
+    resolution : 1.0, optional
+        The desired resolution of the parcellation to load. If it is not
+        available, the closest resolution will be loaded. Preferably, use a
+        resolution higher than the desired one. By default, will load the
+        highest one (default None). Available resolution for this
+        parcellation is 1mm.
+    version : {"V1_18", "V2_9", "V3_0_3", "V3_1"}, optional
+        The version of the parcellation to use (default "V3_1").
+
+    Returns
+    -------
+    pathlib.Path
+        File path to the parcellation image.
+    list of str
+        Parcellation labels.
+
+    Raises
+    ------
+    ValueError
+        If invalid value is provided for ``version``.
+
+    """
+    logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
+    logger.info(f"\tversion: {version}")
+
+    # Check version
+    _valid_version = ["V1_18", "V2_9", "V3_0_3", "V3_1"]
+    if version not in _valid_version:
+        raise_error(
+            f"The parameter `version` ({version}) needs to be one of the "
+            f"following: {_valid_version}"
+        )
+
+    _valid_resolutions = [1.0]
+    _ = closest_resolution(resolution, _valid_resolutions)
+
+    path_prefix = Path(f"parcellations/Julich-Brain/{version}")
+    parcellation_img_path = get(
+        file_path=path_prefix / "labelled.nii.gz",
         dataset_path=get_dataset_path(),
         **JUNIFER_DATA_PARAMS,
     )
