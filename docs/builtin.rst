@@ -463,6 +463,24 @@ Available
        | structures in the human brain.
        | Neuron., Volume 33(3), Pages 341-355 (2002).
        | https://doi:10.1016/s0896-6273(02)00569-x
+   * - Glasser
+     - None
+     - ``Glasser``
+     - ``MNI152NLin2009cAsym``
+     - 0.0.7
+     - | Glasser, M.F., Coalson, T.S., Robinson, E.C. et al.
+       | A multi-modal parcellation of human cerebral cortex.
+       | Nature (2016).
+       | http://doi.org/10.1038/nature18933
+   * - Julich-Brain
+     - ``version``
+     - ``Julich-Brain_V1_18``, ``Julich-Brain_V2_9``, ``Julich-Brain_V3_0_3``, ``Julich-Brain_V3_1``
+     - ``MNI152NLin2009cAsym``
+     - 0.0.7
+     - | Amunts, K. et al.
+       | Julich-Brain: A 3D probabilistic atlas of the human brain’s cytoarchitecture.
+       | Science, 369, 988-992 (2020)
+       | https://doi.org/10.1126/science.abb4588
 
 
 Planned
@@ -480,11 +498,6 @@ Planned
        | on MRI scans into gyral based regions of interest.
        | NeuroImage, Volume 31(3), Pages 968-980 (2006).
        | http://doi.org/10.1016/j.neuroimage.2006.01.021
-   * - Glasser
-     - | Glasser, M.F., Coalson, T.S., Robinson, E.C. et al.
-       | A multi-modal parcellation of human cerebral cortex.
-       | Nature (2016).
-       | http://doi.org/10.1038/nature18933
    * - AAL
      - | Rolls, E.T., Huang, C.C., Lin, C.P., et al.
        | Automated anatomical labelling atlas 3.
