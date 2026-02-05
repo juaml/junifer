@@ -962,6 +962,27 @@ def test_aseg() -> None:
     )
 
 
+def test_glasser() -> None:
+    """Test Glasser parcellation."""
+    parcellations = list_data(kind="parcellation")
+    assert "Glasser" in parcellations
+
+    # Load parcellation
+    img, label, img_path, space = load_data(
+        kind="parcellation",
+        name="Glasser",
+        target_space="MNI152NLin2009cAsym",
+    )
+    assert img is not None
+    assert img_path.name == "MNI_Glasser_HCP_v1.0.nii.gz"
+    assert space == "MNI152NLin2009cAsym"
+    assert len(label) == 360
+    assert_array_equal(
+        img.header["pixdim"][1:4],
+        3 * [1],
+    )
+
+
 def test_merge_parcellations() -> None:
     """Test merging parcellations."""
     # load some parcellations for testing

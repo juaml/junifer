@@ -199,6 +199,15 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                 }
             }
         )
+        # Add Glasser
+        self._builtin.update(
+            {
+                "Glasser": {
+                    "family": "Glasser",
+                    "space": "MNI152NLin2009cAsym",
+                }
+            }
+        )
 
         # Update registry with built-in ones
         self._registry.update(self._builtin)
@@ -365,6 +374,7 @@ class ParcellationRegistry(BasePipelineDataRegistry):
             "Yan2023",
             "Brainnetome",
             "FreeSurfer",
+            "Glasser",
         ]:
             # Load parcellation and labels
             if t_family == "Schaefer2018":
@@ -406,6 +416,10 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                 )
             elif t_family == "FreeSurfer":
                 parcellation_fname, parcellation_labels = _retrieve_aseg(
+                    resolution=resolution,
+                )
+            elif t_family == "Glasser":
+                parcellation_fname, parcellation_labels = _retrieve_glasser(
                     resolution=resolution,
                 )
         else:
@@ -1417,6 +1431,50 @@ def _retrieve_aseg(
         .loc[idxs][1]
         .to_list()
     )
+
+    return parcellation_img_path, labels
+
+
+def _retrieve_glasser(
+    resolution: Optional[float] = None,
+) -> tuple[Path, list[str]]:
+    """Retrieve Glasser v1.0 .
+
+    Parameters
+    ----------
+    resolution : 1.0, optional
+        The desired resolution of the parcellation to load. If it is not
+        available, the closest resolution will be loaded. Preferably, use a
+        resolution higher than the desired one. By default, will load the
+        highest one (default None). Available resolution for this
+        parcellation is 1mm.
+
+    Returns
+    -------
+    pathlib.Path
+        File path to the parcellation image.
+    list of str
+        Parcellation labels.
+
+    """
+    logger.info("Parcellation parameters:")
+    logger.info(f"\tresolution: {resolution}")
+
+    _valid_resolutions = [1.0]
+    _ = closest_resolution(resolution, _valid_resolutions)
+
+    path_prefix = Path("parcellations/Glasser/2021")
+    parcellation_img_path = get(
+        file_path=path_prefix / "MNI_Glasser_HCP_v1.0.nii.gz",
+        dataset_path=get_dataset_path(),
+        **JUNIFER_DATA_PARAMS,
+    )
+    parcellation_label_path = get(
+        file_path=path_prefix / "labels.csv",
+        dataset_path=get_dataset_path(),
+        **JUNIFER_DATA_PARAMS,
+    )
+    labels = pd.read_csv(parcellation_label_path, sep=",")["label"].to_list()
 
     return parcellation_img_path, labels
 
