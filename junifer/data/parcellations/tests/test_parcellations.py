@@ -23,6 +23,7 @@ from junifer.data.parcellations import merge_parcellations
 from junifer.data.parcellations._parcellations import (
     _retrieve_aicha,
     _retrieve_brainnetome,
+    _retrieve_julich_brain,
     _retrieve_schaefer,
     _retrieve_shen,
     _retrieve_suit,
@@ -960,6 +961,75 @@ def test_aseg() -> None:
         img.header["pixdim"][1:4],
         3 * [1],
     )
+
+
+def test_glasser() -> None:
+    """Test Glasser parcellation."""
+    parcellations = list_data(kind="parcellation")
+    assert "Glasser" in parcellations
+
+    # Load parcellation
+    img, label, img_path, space = load_data(
+        kind="parcellation",
+        name="Glasser",
+        target_space="MNI152NLin2009cAsym",
+    )
+    assert img is not None
+    assert img_path.name == "MNI_Glasser_HCP_v1.0.nii.gz"
+    assert space == "MNI152NLin2009cAsym"
+    assert len(label) == 360
+    assert_array_equal(
+        img.header["pixdim"][1:4],
+        3 * [1],
+    )
+
+
+@pytest.mark.parametrize(
+    "version, rois",
+    [
+        ("V1_18", 202),
+        ("V2_9", 294),
+        ("V3_0_3", 314),
+        ("V3_1", 414),
+    ],
+)
+def test_julich_brain(version: str, rois: int) -> None:
+    """Test Julich-Brain parcellation.
+
+    Parameters
+    ----------
+    version : str
+        The parametrized version.
+    rois : int
+        The parametrized # of ROIs.
+
+    """
+    parcellations = list_data(kind="parcellation")
+    n = f"Julich-Brain_{version}"
+    assert n in parcellations
+
+    # Load parcellation
+    img, label, img_path, space = load_data(
+        kind="parcellation",
+        name=n,
+        target_space="MNI152NLin2009cAsym",
+    )
+    assert img is not None
+    assert img_path.name == "labelled.nii.gz"
+    assert space == "MNI152NLin2009cAsym"
+    assert len(label) == rois
+    assert_array_equal(
+        img.header["pixdim"][1:4],
+        3 * [1],
+    )
+
+
+def test_retrieve_julich_brain_incorrect_version() -> None:
+    """Test retrieve Julich-Brain with incorrect version."""
+    with pytest.raises(ValueError, match=r"The parameter `version`"):
+        _retrieve_julich_brain(
+            version="v0",
+        )
 
 
 def test_merge_parcellations() -> None:
