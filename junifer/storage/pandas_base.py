@@ -6,14 +6,13 @@
 
 import json
 from collections.abc import Sequence
-from pathlib import Path
 from typing import ClassVar, Optional, Union
 
 import numpy as np
 import pandas as pd
 
 from ..utils import raise_error
-from .base import BaseFeatureStorage
+from .base import BaseFeatureStorage, StorageType
 
 
 __all__ = ["PandasBaseFeatureStorage"]
@@ -38,18 +37,11 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
 
     """
 
-    _STORAGE_TYPES: ClassVar[Sequence[str]] = [
-        "vector",
-        "timeseries",
-        "matrix",
+    _STORAGE_TYPES: ClassVar[Sequence[StorageType]] = [
+        StorageType.Vector,
+        StorageType.Timeseries,
+        StorageType.Matrix,
     ]
-
-    def __init__(
-        self,
-        uri: Union[str, Path],
-        single_output: bool = True,
-    ) -> None:
-        super().__init__(uri=uri, single_output=single_output)
 
     def _meta_row(self, meta: dict, meta_md5: str) -> pd.DataFrame:
         """Convert the metadata to a pandas DataFrame.

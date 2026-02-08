@@ -4,18 +4,46 @@
 # License: AGPL
 
 from collections.abc import Sequence
-from typing import Any, ClassVar, Optional, Union
+from enum import Enum
+from typing import (
+    Annotated,
+    Any,
+    ClassVar,
+    Literal,
+    Optional,
+    Union,
+)
+
+from pydantic import BeforeValidator
 
 from ...api.decorators import register_preprocessor
+from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
-from ...utils import logger, raise_error
+from ...utils import ensure_list_or_none, logger
 from ..base import BasePreprocessor
 from ._afni_smoothing import AFNISmoothing
 from ._fsl_smoothing import FSLSmoothing
 from ._nilearn_smoothing import NilearnSmoothing
 
 
-__all__ = ["Smoothing"]
+__all__ = ["Smoothing", "SmoothingImpl"]
+
+
+class SmoothingImpl(str, Enum):
+    """Accepted smoothing implementations.
+
+    * ``nilearn`` : :func:`nilearn.image.smooth_img`
+    * ``afni`` : AFNI's ``3dBlurToFWHM``
+    * ``fsl`` : FSL SUSAN's ``susan``
+
+    """
+
+    nilearn = "nilearn"
+    afni = "afni"
+    fsl = "fsl"
+
+
+_on = Literal[DataType.T1w, DataType.T2w, DataType.BOLD]
 
 
 @register_preprocessor
@@ -24,18 +52,13 @@ class Smoothing(BasePreprocessor):
 
     Parameters
     ----------
-    using : {"nilearn", "afni", "fsl"}
-        Implementation to use for smoothing:
-
-        * "nilearn" : Use :func:`nilearn.image.smooth_img`
-        * "afni" : Use AFNI's ``3dBlurToFWHM``
-        * "fsl" : Use FSL SUSAN's ``susan``
-
-    on : {"T1w", "T2w", "BOLD"} or list of the options
-        The data type to apply smoothing to.
+    using : :enum:`.SmoothingImpl`
+    on : {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``} or \
+         list of them
+        The data type(s) to apply smoothing to.
     smoothing_params : dict, optional
         Extra parameters for smoothing as a dictionary (default None).
-        If ``using="nilearn"``, then the valid keys are:
+        If ``using=SmoothingImpl.nilearn``, then the valid keys are:
 
         * ``fmhw`` : scalar, ``numpy.ndarray``, tuple or list of scalar, \
                      "fast" or None
@@ -52,13 +75,13 @@ class Smoothing(BasePreprocessor):
             - If None, no filtering is performed (useful when just removal of
               non-finite values is needed).
 
-        else if ``using="afni"``, then the valid keys are:
+        else if ``using=SmoothingImpl.afni``, then the valid keys are:
 
         * ``fwhm`` : int or float
             Smooth until the value. AFNI estimates the smoothing and then
             applies smoothing to reach ``fwhm``.
 
-        else if ``using="fsl"``, then the valid keys are:
+        else if ``using=SmoothingImpl.fsl``, then the valid keys are:
 
         * ``brightness_threshold`` : float
             Threshold to discriminate between noise and the underlying image.
@@ -71,38 +94,36 @@ class Smoothing(BasePreprocessor):
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "using": "nilearn",
-            "depends_on": NilearnSmoothing,
+            "using": SmoothingImpl.nilearn,
+            "depends_on": [NilearnSmoothing],
         },
         {
-            "using": "afni",
-            "depends_on": AFNISmoothing,
+            "using": SmoothingImpl.afni,
+            "depends_on": [AFNISmoothing],
         },
         {
-            "using": "fsl",
-            "depends_on": FSLSmoothing,
+            "using": SmoothingImpl.fsl,
+            "depends_on": [FSLSmoothing],
         },
     ]
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["T1w", "T2w", "BOLD"]
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [
+        DataType.T1w,
+        DataType.T2w,
+        DataType.BOLD,
+    ]
 
-    def __init__(
-        self,
-        using: str,
-        on: Union[list[str], str],
-        smoothing_params: Optional[dict] = None,
-    ) -> None:
-        """Initialize the class."""
-        # Validate `using` parameter
-        valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]
-        if using not in valid_using:
-            raise_error(
-                f"Invalid value for `using`, should be one of: {valid_using}"
-            )
-        self.using = using
+    using: SmoothingImpl
+    on: Annotated[
+        Union[_on, list[_on]],
+        BeforeValidator(ensure_list_or_none),
+    ]
+    smoothing_params: Optional[dict] = None
+
+    def validate_preprocessor_params(self) -> None:
+        """Run extra logical validation for preprocessor."""
         self.smoothing_params = (
-            smoothing_params if smoothing_params is not None else {}
+            self.smoothing_params if self.smoothing_params is not None else {}
         )
-        super().__init__(on=on)
 
     def preprocess(
         self,

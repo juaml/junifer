@@ -10,31 +10,32 @@
 from typing import Optional, Union
 
 import pytest
+from pydantic import AnyUrl
 
 from junifer.datagrabber.aomic.id1000 import DataladAOMICID1000
 
 
-URI = "https://gin.g-node.org/juaml/datalad-example-aomic1000"
+URI = AnyUrl("https://gin.g-node.org/juaml/datalad-example-aomic1000")
 
 
 @pytest.mark.parametrize(
     "type_, nested_types, space",
     [
         ("BOLD", ["confounds", "mask", "reference"], "MNI152NLin2009cAsym"),
-        ("BOLD", ["confounds", "mask", "reference"], "native"),
+        (["BOLD"], ["confounds", "mask", "reference"], "native"),
         ("T1w", ["mask"], "MNI152NLin2009cAsym"),
-        ("T1w", ["mask"], "native"),
+        (["T1w"], ["mask"], "native"),
         ("VBM_CSF", None, "MNI152NLin2009cAsym"),
-        ("VBM_CSF", None, "native"),
+        (["VBM_CSF"], None, "native"),
         ("VBM_GM", None, "MNI152NLin2009cAsym"),
-        ("VBM_GM", None, "native"),
+        (["VBM_GM"], None, "native"),
         ("VBM_WM", None, "MNI152NLin2009cAsym"),
-        ("DWI", None, "MNI152NLin2009cAsym"),
-        ("FreeSurfer", None, "MNI152NLin2009cAsym"),
+        (["DWI"], None, "MNI152NLin2009cAsym"),
+        (["FreeSurfer"], None, "MNI152NLin2009cAsym"),
     ],
 )
 def test_DataladAOMICID1000(
-    type_: str,
+    type_: Union[str, list[str]],
     nested_types: Optional[list[str]],
     space: str,
 ) -> None:
@@ -42,7 +43,7 @@ def test_DataladAOMICID1000(
 
     Parameters
     ----------
-    type_ : str
+    type_ : str or list of str
         The parametrized type.
     nested_types : list of str or None
         The parametrized nested types.
@@ -50,32 +51,29 @@ def test_DataladAOMICID1000(
         The parametrized space.
 
     """
-    dg = DataladAOMICID1000(types=type_, space=space)
-    # Set URI to Gin
-    dg.uri = URI
-
+    dg = DataladAOMICID1000(uri=URI, types=type_, space=space)
     with dg:
-        # Get all elements
         all_elements = dg.get_elements()
-        # Get test element
         test_element = all_elements[0]
-        # Get test element data
         out = dg[test_element]
         # Assert data type
-        assert type_ in out
-        assert out[type_]["path"].exists()
-        assert out[type_]["path"].is_file()
-        # Asserts data type metadata
-        assert "meta" in out[type_]
-        meta = out[type_]["meta"]
-        assert "element" in meta
-        assert "subject" in meta["element"]
-        assert test_element == meta["element"]["subject"]
-        # Assert nested data type if not None
-        if nested_types is not None:
-            for nested_type in nested_types:
-                assert out[type_][nested_type]["path"].exists()
-                assert out[type_][nested_type]["path"].is_file()
+        if isinstance(type_, str):
+            type_ = [type_]
+        for t in type_:
+            assert t in out
+            assert out[t]["path"].exists()
+            assert out[t]["path"].is_file()
+            # Asserts data type metadata
+            assert "meta" in out[t]
+            meta = out[t]["meta"]
+            assert "element" in meta
+            assert "subject" in meta["element"]
+            assert test_element == meta["element"]["subject"]
+            # Assert nested data type if not None
+            if nested_types is not None:
+                for nested_type in nested_types:
+                    assert out[t][nested_type]["path"].exists()
+                    assert out[t][nested_type]["path"].is_file()
 
 
 @pytest.mark.parametrize(
@@ -104,28 +102,13 @@ def test_DataladAOMICID1000_partial_data_access(
         The parametrized types.
 
     """
-    dg = DataladAOMICID1000(types=types)
-    # Set URI to Gin
-    dg.uri = URI
-
+    dg = DataladAOMICID1000(uri=URI, types=types)
     with dg:
-        # Get all elements
         all_elements = dg.get_elements()
-        # Get test element
         test_element = all_elements[0]
-        # Get test element data
         out = dg[test_element]
         # Assert data type
-        if isinstance(types, list):
-            for type_ in types:
-                assert type_ in out
-        else:
-            assert types in out
-
-
-def test_DataladAOMICID1000_incorrect_data_type() -> None:
-    """Test DataladAOMICID1000 DataGrabber incorrect data type."""
-    with pytest.raises(
-        ValueError, match="`patterns` must contain all `types`"
-    ):
-        _ = DataladAOMICID1000(types="Scooby-Doo")
+        if isinstance(types, str):
+            types = [types]
+        for t in types:
+            assert t in out

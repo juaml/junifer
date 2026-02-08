@@ -7,7 +7,7 @@ import pytest
 
 from junifer.datareader import DefaultDataReader
 from junifer.pipeline.utils import _check_afni, _check_fsl
-from junifer.preprocess import Smoothing
+from junifer.preprocess import Smoothing, SmoothingImpl
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
@@ -29,7 +29,7 @@ def test_Smoothing_nilearn(data_type: str) -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data
         output = Smoothing(
-            using="nilearn",
+            using=SmoothingImpl.nilearn,
             on=data_type,
             smoothing_params={"fwhm": "fast"},
         ).fit_transform(element_data)
@@ -58,7 +58,7 @@ def test_Smoothing_afni(data_type: str) -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data
         output = Smoothing(
-            using="afni",
+            using=SmoothingImpl.afni,
             on=data_type,
             smoothing_params={"fwhm": 3},
         ).fit_transform(element_data)
@@ -85,7 +85,7 @@ def test_Smoothing_fsl(data_type: str) -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data
         output = Smoothing(
-            using="fsl",
+            using=SmoothingImpl.fsl,
             on=data_type,
             smoothing_params={"brightness_threshold": 10.0, "fwhm": 3.0},
         ).fit_transform(element_data)

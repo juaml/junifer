@@ -10,11 +10,12 @@
 from typing import Optional, Union
 
 import pytest
+from pydantic import AnyUrl
 
 from junifer.datagrabber import DataladAOMICPIOP2
 
 
-URI = "https://gin.g-node.org/juaml/datalad-example-aomicpiop2"
+URI = AnyUrl("https://gin.g-node.org/juaml/datalad-example-aomicpiop2")
 
 
 @pytest.mark.parametrize(
@@ -23,18 +24,11 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomicpiop2"
         (
             "BOLD",
             ["confounds", "mask", "reference"],
-            None,
-            "MNI152NLin2009cAsym",
-        ),
-        ("BOLD", ["confounds", "mask", "reference"], None, "native"),
-        (
-            "BOLD",
-            ["confounds", "mask", "reference"],
-            ["restingstate"],
+            "restingstate",
             "MNI152NLin2009cAsym",
         ),
         (
-            "BOLD",
+            ["BOLD"],
             ["confounds", "mask", "reference"],
             ["restingstate", "stopsignal"],
             "MNI152NLin2009cAsym",
@@ -46,72 +40,69 @@ URI = "https://gin.g-node.org/juaml/datalad-example-aomicpiop2"
             "MNI152NLin2009cAsym",
         ),
         (
-            "BOLD",
+            ["BOLD"],
             ["confounds", "mask", "reference"],
-            ["workingmemory"],
+            "workingmemory",
             "MNI152NLin2009cAsym",
         ),
-        ("T1w", ["mask"], None, "MNI152NLin2009cAsym"),
-        ("T1w", ["mask"], None, "native"),
-        ("VBM_CSF", None, None, "MNI152NLin2009cAsym"),
-        ("VBM_CSF", None, None, "native"),
-        ("VBM_GM", None, None, "MNI152NLin2009cAsym"),
-        ("VBM_GM", None, None, "native"),
-        ("VBM_WM", None, None, "MNI152NLin2009cAsym"),
-        ("VBM_WM", None, None, "native"),
-        ("DWI", None, None, "MNI152NLin2009cAsym"),
-        ("FreeSurfer", None, None, "MNI152NLin2009cAsym"),
+        (["T1w"], ["mask"], "restingstate", "MNI152NLin2009cAsym"),
+        ("T1w", ["mask"], ["restingstate"], "native"),
+        (["VBM_CSF"], None, "restingstate", "MNI152NLin2009cAsym"),
+        ("VBM_CSF", None, ["restingstate"], "native"),
+        (["VBM_GM"], None, "restingstate", "MNI152NLin2009cAsym"),
+        ("VBM_GM", None, ["restingstate"], "native"),
+        (["VBM_WM"], None, "restingstate", "MNI152NLin2009cAsym"),
+        ("VBM_WM", None, ["restingstate"], "native"),
+        (["DWI"], None, "restingstate", "MNI152NLin2009cAsym"),
+        (["FreeSurfer"], None, ["restingstate"], "MNI152NLin2009cAsym"),
     ],
 )
 def test_DataladAOMICPIOP2(
-    type_: str,
+    type_: Union[str, list[str]],
     nested_types: Optional[list[str]],
-    tasks: Optional[list[str]],
+    tasks: Union[str, list[str]],
     space: str,
 ) -> None:
     """Test DataladAOMICPIOP2 DataGrabber.
 
     Parameters
     ----------
-    type_ : str
+    type_ : str or list of str
         The parametrized type.
     nested_types : list of str or None
         The parametrized nested types.
-    tasks : list of str or None
+    tasks : str or list of str
         The parametrized task values.
     space: str
         The parametrized space.
 
     """
-    dg = DataladAOMICPIOP2(types=type_, tasks=tasks, space=space)
-    # Set URI to Gin
-    dg.uri = URI
-
+    dg = DataladAOMICPIOP2(uri=URI, types=type_, tasks=tasks, space=space)
     with dg:
-        # Get all elements
         all_elements = dg.get_elements()
-        # Get test element
         test_element = all_elements[0]
-        # Get test element data
         out = dg[test_element]
         # Assert data type
-        assert type_ in out
-        # Check task name if BOLD
-        if type_ == "BOLD" and tasks is not None:
-            assert test_element[1] in out[type_]["path"].name
-        assert out[type_]["path"].exists()
-        assert out[type_]["path"].is_file()
-        # Asserts data type metadata
-        assert "meta" in out[type_]
-        meta = out[type_]["meta"]
-        assert "element" in meta
-        assert "subject" in meta["element"]
-        assert test_element[0] == meta["element"]["subject"]
-        # Assert nested data type if not None
-        if nested_types is not None:
-            for nested_type in nested_types:
-                assert out[type_][nested_type]["path"].exists()
-                assert out[type_][nested_type]["path"].is_file()
+        if isinstance(type_, str):
+            type_ = [type_]
+        for t in type_:
+            assert t in out
+            # Check task name if BOLD
+            if t == "BOLD":
+                assert test_element[1] in out[t]["path"].name
+            assert out[t]["path"].exists()
+            assert out[t]["path"].is_file()
+            # Asserts data type metadata
+            assert "meta" in out[t]
+            meta = out[t]["meta"]
+            assert "element" in meta
+            assert "subject" in meta["element"]
+            assert test_element[0] == meta["element"]["subject"]
+            # Assert nested data type if not None
+            if nested_types is not None:
+                for nested_type in nested_types:
+                    assert out[t][nested_type]["path"].exists()
+                    assert out[t][nested_type]["path"].is_file()
 
 
 @pytest.mark.parametrize(
@@ -140,40 +131,13 @@ def test_DataladAOMICPIOP2_partial_data_access(
         The parametrized types.
 
     """
-    dg = DataladAOMICPIOP2(types=types)
-    # Set URI to Gin
-    dg.uri = URI
-
+    dg = DataladAOMICPIOP2(uri=URI, types=types)
     with dg:
-        # Get all elements
         all_elements = dg.get_elements()
-        # Get test element
         test_element = all_elements[0]
-        # Get test element data
         out = dg[test_element]
         # Assert data type
-        if isinstance(types, list):
-            for type_ in types:
-                assert type_ in out
-        else:
-            assert types in out
-
-
-def test_DataladAOMICPIOP2_incorrect_data_type() -> None:
-    """Test DataladAOMICPIOP2 DataGrabber incorrect data type."""
-    with pytest.raises(
-        ValueError, match="`patterns` must contain all `types`"
-    ):
-        _ = DataladAOMICPIOP2(types="Vesta")
-
-
-def test_DataladAOMICPIOP2_invalid_tasks():
-    """Test DataladAOMICIDPIOP2 DataGrabber invalid tasks."""
-    with pytest.raises(
-        ValueError,
-        match=(
-            "thisisnotarealtask is not a valid task in "
-            "the AOMIC PIOP2 dataset!"
-        ),
-    ):
-        DataladAOMICPIOP2(tasks="thisisnotarealtask")
+        if isinstance(types, str):
+            types = [types]
+        for t_ in types:
+            assert t_ in out

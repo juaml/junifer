@@ -33,7 +33,7 @@ def test_compute() -> None:
         # Compare with nilearn
         # Load testing parcellation
         test_parcellation, _ = ParcellationRegistry().get(
-            parcellations=[PARCELLATION],
+            parcellations=PARCELLATION,
             target_data=element_data["BOLD"],
         )
         # Extract timeseries
@@ -65,7 +65,7 @@ def test_store(tmp_path: Path) -> None:
         # Get element data
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Create storage
-        storage = SQLiteFeatureStorage(tmp_path / "test_rss_ets.sqlite")
+        storage = SQLiteFeatureStorage(uri=tmp_path / "test_rss_ets.sqlite")
         # Compute the RSSETSMarker and store
         _ = RSSETSMarker(parcellation=PARCELLATION).fit_transform(
             input=element_data, storage=storage

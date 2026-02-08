@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import atexit
 import os
 import shutil
 from pathlib import Path
@@ -212,6 +213,8 @@ def run(
     )
     # Validate the marker collection for the datagrabber
     mc.validate(datagrabber_object)
+
+    atexit.register(WorkDirManager()._cleanup)
 
     # Fit elements
     with datagrabber_object:

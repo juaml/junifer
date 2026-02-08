@@ -7,8 +7,9 @@
 from typing import Union
 
 import pytest
+from pydantic import BaseModel
 
-from junifer.pipeline.update_meta_mixin import UpdateMetaMixin
+from junifer.pipeline import UpdateMetaMixin
 
 
 @pytest.mark.parametrize(
@@ -41,7 +42,7 @@ def test_UpdateMetaMixin(
 
     """
 
-    class TestUpdateMetaMixin(UpdateMetaMixin):
+    class TestUpdateMetaMixin(BaseModel, UpdateMetaMixin):
         """Test UpdateMetaMixin."""
 
         _DEPENDENCIES = dependencies

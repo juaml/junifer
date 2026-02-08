@@ -3,11 +3,12 @@ __all__ = [
     "AssetLoaderDispatcher",
     "BaseDataDumpAsset",
     "DataObjectDumper",
+    "ExtDep",
+    "MarkerCollection",
     "PipelineComponentRegistry",
     "PipelineStepMixin",
     "UpdateMetaMixin",
     "WorkDirManager",
-    "MarkerCollection",
 ]
 
 from ._data_object_dumper import (
@@ -16,8 +17,9 @@ from ._data_object_dumper import (
     BaseDataDumpAsset,
     DataObjectDumper,
 )
+from .marker_collection import MarkerCollection
 from .pipeline_component_registry import PipelineComponentRegistry
 from .pipeline_step_mixin import PipelineStepMixin
 from .update_meta_mixin import UpdateMetaMixin
+from .utils import ExtDep
 from .workdir_manager import WorkDirManager
-from .marker_collection import MarkerCollection

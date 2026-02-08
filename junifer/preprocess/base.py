@@ -6,16 +6,19 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-from typing import Any, ClassVar, Optional, Union
+from typing import Annotated, Any, ClassVar, Optional, Union
 
+from pydantic import BaseModel, BeforeValidator, ConfigDict
+
+from ..datagrabber import DataType
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
-from ..utils import logger, raise_error
+from ..utils import ensure_list_or_none, logger, raise_error
 
 
 __all__ = ["BasePreprocessor"]
 
 
-class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
+class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
     """Abstract base class for preprocessor.
 
     For every preprocessor, one needs to provide a concrete
@@ -23,56 +26,99 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
 
     Parameters
     ----------
-    on : str or list of str or None, optional
-        The data type(s) to apply the preprocessor on. If None,
-        will work on all available data types (default None).
-    required_data_types : str or list of str, optional
-        The data types needed for computation. If None,
-        will be equal to ``on`` (default None).
+    on : :enum:`.DataType` or list of variants or None, optional
+        The data type(s) to apply the preprocessor on.
+        If None, will work on all available data types.
+        Check :enum:`.DataType` for valid values (default None).
+    required_data_types : :enum:`.DataType` or list of variants or None, \
+                          optional
+        The data type(s) needed for computation.
+        If None, will be equal to ``on``.
+        Check :enum:`.DataType` for valid values (default None).
+
+    Attributes
+    ----------
+    valid_inputs
 
     Raises
     ------
     AttributeError
-        If the preprocessor does not have `_VALID_DATA_TYPES` attribute.
+        If the preprocessor does not have ``_VALID_DATA_TYPES`` attribute.
     ValueError
         If required input data type(s) is(are) not found.
 
     """
 
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]]
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]]
 
-    def __init__(
-        self,
-        on: Optional[Union[list[str], str]] = None,
-        required_data_types: Optional[Union[list[str], str]] = None,
-    ) -> None:
-        """Initialize the class."""
+    model_config = ConfigDict(use_enum_values=True)
+
+    on: Annotated[
+        Union[DataType, list[DataType], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
+    required_data_types: Annotated[
+        Union[DataType, list[DataType], None],
+        BeforeValidator(ensure_list_or_none),
+    ] = None
+
+    def model_post_init(self, context: Any):  # noqa: D102
         # Check for missing data types attributes
         if not hasattr(self, "_VALID_DATA_TYPES"):
             raise_error(
                 msg="Missing `_VALID_DATA_TYPES` for the preprocessor",
                 klass=AttributeError,
             )
+        # Run extra validation for preprocessors and fail early if needed
+        self.validate_preprocessor_params()
         # Use all data types if not provided
-        if on is None:
-            on = self.get_valid_inputs()
-        # Convert data types to list
-        if not isinstance(on, list):
-            on = [on]
-        # Check if required inputs are found
-        if any(x not in self.get_valid_inputs() for x in on):
-            name = self.__class__.__name__
-            wrong_on = [x for x in on if x not in self.get_valid_inputs()]
-            raise_error(f"{name} cannot be computed on {wrong_on}")
-        self._on = on
-        # Set required data types for validation
-        if required_data_types is None:
-            self._required_data_types = on
+        if self.on is None:
+            self.on = self.valid_inputs
         else:
-            # Convert data types to list
-            if not isinstance(required_data_types, list):
-                required_data_types = [required_data_types]
-            self._required_data_types = required_data_types
+            # Convert to correct data type
+            self.on = [
+                DataType(t) if isinstance(t, str) else t for t in self.on
+            ]
+            # Check if required input data types are provided
+            if any(x not in self.valid_inputs for x in self.on):
+                wrong_on = [
+                    x.value for x in self.on if x not in self.valid_inputs
+                ]
+                raise_error(
+                    f"{self.__class__.__name__} cannot be computed on "
+                    f"{wrong_on}"
+                )
+        # Set required data types for validation
+        if self.required_data_types is None:
+            self.required_data_types = self.on
+        else:
+            # Convert to correct data type
+            self.required_data_types = [
+                DataType(t) if isinstance(t, str) else t
+                for t in self.required_data_types
+            ]
+
+    @property
+    def valid_inputs(self) -> list[DataType]:
+        """Valid data types to operate on.
+
+        Returns
+        -------
+        list of :enum:`.DataType`
+            The list of data types that can be used as input for this marker.
+
+        """
+        return [
+            DataType(x) if isinstance(x, str) else x
+            for x in self._VALID_DATA_TYPES
+        ]
+
+    def validate_preprocessor_params(self) -> None:
+        """Run extra logical validation for preprocessor.
+
+        Subclasses can override to provide validation.
+        """
+        pass
 
     def validate_input(self, input: list[str]) -> list[str]:
         """Validate input.
@@ -95,25 +141,14 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
             If the input does not have the required data.
 
         """
-        if any(x not in input for x in self._required_data_types):
+        if any(x not in input for x in self.required_data_types):
             raise_error(
-                "Input does not have the required data."
-                f"\t Input: {input}"
-                f"\t Required (all of): {self._required_data_types}"
+                "Input does not have the required data.\n"
+                f"\t Input: {input}\n"
+                f"\t Required (all of): "
+                f"{[t.value for t in self.required_data_types]}"
             )
-        return [x for x in self._on if x in input]
-
-    def get_valid_inputs(self) -> list[str]:
-        """Get valid data types for input.
-
-        Returns
-        -------
-        list of str
-            The list of data types that can be used as input for this
-            preprocessor.
-
-        """
-        return list(self._VALID_DATA_TYPES)
+        return [x for x in self.on if x in input]
 
     @abstractmethod
     def preprocess(
@@ -164,7 +199,7 @@ class BasePreprocessor(ABC, PipelineStepMixin, UpdateMetaMixin):
         # Copy input to not modify the original
         out = input.copy()
         # For each data type, run preprocessing
-        for type_ in self._on:
+        for type_ in self.on:
             # Check if data type is available
             if type_ in input.keys():
                 logger.info(f"Preprocessing {type_}")

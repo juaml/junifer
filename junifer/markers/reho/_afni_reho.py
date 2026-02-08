@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import atexit
 from functools import lru_cache
 from pathlib import Path
 from typing import (
@@ -13,7 +14,7 @@ from typing import (
 
 import nibabel as nib
 
-from ...pipeline import WorkDirManager
+from ...pipeline import ExtDep, WorkDirManager
 from ...typing import ExternalDependencies
 from ...utils import logger, run_ext_cmd
 from ...utils.singleton import Singleton
@@ -36,13 +37,15 @@ class AFNIReHo(metaclass=Singleton):
 
     _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
-            "name": "afni",
+            "name": ExtDep.AFNI,
             "commands": ["3dReHo", "3dAFNItoNIFTI"],
         },
     ]
 
-    def __del__(self) -> None:  # pragma: no cover
-        """Terminate the class."""
+    def __init__(self) -> None:
+        atexit.register(self._del)
+
+    def _del(self) -> None:
         # Clear the computation cache
         logger.debug("Clearing cache for ReHo computation via AFNI")
         self.compute.cache_clear()

@@ -6,7 +6,9 @@
 
 import pytest
 
-from junifer.markers.base import BaseMarker
+from junifer.datagrabber import DataType
+from junifer.markers import BaseMarker
+from junifer.storage import StorageType
 
 
 def test_base_marker_abstractness() -> None:
@@ -21,14 +23,12 @@ def test_base_marker_subclassing() -> None:
     # Create concrete class
     class MyBaseMarker(BaseMarker):
         _MARKER_INOUT_MAPPINGS = {  # noqa: RUF012
-            "BOLD": {
-                "feat_1": "timeseries",
+            DataType.BOLD: {
+                "feat_1": StorageType.Timeseries,
             },
         }
 
-        def __init__(self, on, name=None) -> None:
-            self.parameter = 1
-            super().__init__(on, name)
+        parameter: int = 1
 
         def compute(self, input, extra_input):
             return {

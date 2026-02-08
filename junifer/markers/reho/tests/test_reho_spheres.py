@@ -7,10 +7,11 @@ import logging
 from pathlib import Path
 
 import pytest
-import scipy as sp
+import scipy.stats as sps
 
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
-from junifer.markers import ReHoSpheres
+from junifer.markers import ReHoImpl, ReHoSpheres
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
@@ -38,11 +39,11 @@ def test_ReHoSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             WorkDirManager().workdir = tmp_path
             # Initialize marker
             marker = ReHoSpheres(
-                coords=COORDINATES, using="junifer", radius=10.0
+                coords=COORDINATES, using=ReHoImpl.junifer, radius=10.0
             )
             # Check correct output
             assert "vector" == marker.storage_type(
-                input_type="BOLD", output_feature="reho"
+                input_type=DataType.BOLD, output_feature="reho"
             )
 
             # Fit transform marker on data
@@ -68,7 +69,9 @@ def test_ReHoSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             # Reset log capture
             caplog.clear()
             # Initialize storage
-            storage = SQLiteFeatureStorage(tmp_path / "reho_spheres.sqlite")
+            storage = SQLiteFeatureStorage(
+                uri=tmp_path / "reho_spheres.sqlite"
+            )
             # Fit transform marker on data with storage
             marker.fit_transform(
                 input=element_data,
@@ -98,7 +101,7 @@ def test_ReHoSpheres_comparison(tmp_path: Path) -> None:
         # Initialize marker
         junifer_marker = ReHoSpheres(
             coords=COORDINATES,
-            using="junifer",
+            using=ReHoImpl.junifer,
             radius=10.0,
         )
         # Fit transform marker on data
@@ -109,7 +112,7 @@ def test_ReHoSpheres_comparison(tmp_path: Path) -> None:
         # Initialize marker
         afni_marker = ReHoSpheres(
             coords=COORDINATES,
-            using="afni",
+            using=ReHoImpl.afni,
             radius=10.0,
         )
         # Fit transform marker on data
@@ -118,7 +121,7 @@ def test_ReHoSpheres_comparison(tmp_path: Path) -> None:
         afni_output_bold = afni_output["BOLD"]["reho"]
 
         # Check for Pearson correlation coefficient
-        r, _ = sp.stats.pearsonr(
+        r, _ = sps.pearsonr(
             junifer_output_bold["data"].flatten(),
             afni_output_bold["data"].flatten(),
         )

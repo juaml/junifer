@@ -12,63 +12,63 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 from junifer.data import MapsRegistry, MaskRegistry
 from junifer.data.masks import compute_brain_mask
-from junifer.datagrabber import PatternDataladDataGrabber
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.datareader import DefaultDataReader
 from junifer.markers import MapsAggregation
-from junifer.storage import HDF5FeatureStorage
+from junifer.storage import HDF5FeatureStorage, StorageType
 
 
 @pytest.mark.parametrize(
     "input_type, storage_type",
     [
         (
-            "T1w",
-            "vector",
+            DataType.T1w,
+            StorageType.Vector,
         ),
         (
-            "T2w",
-            "vector",
+            DataType.T2w,
+            StorageType.Vector,
         ),
         (
-            "BOLD",
-            "timeseries",
+            DataType.BOLD,
+            StorageType.Timeseries,
         ),
         (
-            "VBM_GM",
-            "vector",
+            DataType.VBM_GM,
+            StorageType.Vector,
         ),
         (
-            "VBM_WM",
-            "vector",
+            DataType.VBM_WM,
+            StorageType.Vector,
         ),
         (
-            "VBM_CSF",
-            "vector",
+            DataType.VBM_CSF,
+            StorageType.Vector,
         ),
         (
-            "fALFF",
-            "vector",
+            DataType.FALFF,
+            StorageType.Vector,
         ),
         (
-            "GCOR",
-            "vector",
+            DataType.GCOR,
+            StorageType.Vector,
         ),
         (
-            "LCOR",
-            "vector",
+            DataType.LCOR,
+            StorageType.Vector,
         ),
     ],
 )
 def test_MapsAggregation_input_output(
-    input_type: str, storage_type: str
+    input_type: DataType, storage_type: StorageType
 ) -> None:
     """Test MapsAggregation input and output types.
 
     Parameters
     ----------
-    input_type : str
+    input_type : DataType
         The parametrized input type.
-    storage_type : str
+    storage_type : StorageType
         The parametrized storage type.
 
     """
@@ -184,7 +184,7 @@ def test_MapsAggregation_storage(
         )
         marker = MapsAggregation(
             maps="Smith_rsn_10",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
             ..., 0:1
@@ -205,7 +205,7 @@ def test_MapsAggregation_storage(
         )
         marker = MapsAggregation(
             maps="Smith_rsn_10",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
@@ -238,8 +238,8 @@ def test_MapsAggregation_3D_mask(
         ]
         marker = MapsAggregation(
             maps="Smith_rsn_10",
-            on="BOLD",
-            masks="compute_brain_mask",
+            on=DataType.BOLD,
+            masks=["compute_brain_mask"],
         )
         maps_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -306,8 +306,8 @@ def test_MapsAggregation_3D_mask_computed(
         # Use the MapsAggregation object
         marker = MapsAggregation(
             maps="Smith_rsn_10",
-            masks={"compute_brain_mask": {"threshold": 0.2}},
-            on="BOLD",
+            masks=[{"compute_brain_mask": {"threshold": 0.2}}],
+            on=DataType.BOLD,
         )
         maps_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -342,7 +342,7 @@ def test_MapsAggregation_4D_agg_time(
         marker = MapsAggregation(
             maps="Smith_rsn_10",
             time_method="mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         maps_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -375,7 +375,7 @@ def test_MapsAggregation_4D_agg_time(
             maps="Smith_rsn_10",
             time_method="select",
             time_method_params={"pick": [0]},
-            on="BOLD",
+            on=DataType.BOLD,
         )
         maps_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -395,7 +395,7 @@ def test_MapsAggregation_errors() -> None:
             maps="Smith_rsn_10",
             time_method="select",
             time_method_params={"pick": [0]},
-            on="VBM_GM",
+            on=[DataType.VBM_GM],
         )
 
     with pytest.raises(
@@ -404,7 +404,7 @@ def test_MapsAggregation_errors() -> None:
         MapsAggregation(
             maps="Smith_rsn_10",
             time_method_params={"pick": [0]},
-            on="VBM_GM",
+            on=[DataType.VBM_GM],
         )
 
 
@@ -422,7 +422,7 @@ def test_MapsAggregation_warning(
                 maps="Smith_rsn_10",
                 time_method="select",
                 time_method_params={"pick": [0]},
-                on="BOLD",
+                on=DataType.BOLD,
             )
             element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
                 ..., 0:1

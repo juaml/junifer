@@ -11,6 +11,7 @@ import pytest
 
 pytest.importorskip("neurokit2")
 
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.complexity import PermEntropy
 from junifer.pipeline.utils import _check_ants
@@ -45,7 +46,7 @@ def test_compute() -> None:
 def test_storage_type() -> None:
     """Test PermEntropy storage_type."""
     assert "vector" == PermEntropy(parcellation=PARCELLATION).storage_type(
-        input_type="BOLD", output_feature="complexity"
+        input_type=DataType.BOLD, output_feature="complexity"
     )
 
 

@@ -9,7 +9,8 @@ from typing import Union
 
 import pytest
 
-from junifer.datagrabber.pattern_validation_mixin import (
+from junifer.datagrabber import (
+    DataType,
     DataTypeManager,
     DataTypeSchema,
     PatternValidationMixin,
@@ -80,7 +81,7 @@ def test_dtype_mgr(dtype: DataTypeSchema) -> None:
 
     Parameters
     ----------
-    dtype : DataTypeSchema
+    dtype : ``DataTypeSchema``
         The parametrized schema.
 
     """
@@ -111,33 +112,15 @@ def test_register_data_type() -> None:
     )
 
     assert "dtype" in DataTypeManager()
+    assert "dtype" in list(DataType)
     _ = DataTypeManager().pop("dtype")
-    assert "dumb" not in DataTypeManager()
+    assert "dtype" not in DataTypeManager()
+    assert "dtype" in list(DataType)
 
 
 @pytest.mark.parametrize(
     "types, replacements, patterns, expect",
     [
-        (
-            "wrong",
-            [],
-            {},
-            pytest.raises(TypeError, match="`types` must be a list"),
-        ),
-        (
-            [1],
-            [],
-            {},
-            pytest.raises(
-                TypeError, match="`types` must be a list of strings"
-            ),
-        ),
-        (
-            ["BOLD"],
-            [],
-            "wrong",
-            pytest.raises(TypeError, match="`patterns` must be a dict"),
-        ),
         (
             ["T1w", "BOLD"],
             "",
@@ -204,30 +187,6 @@ def test_register_data_type() -> None:
                 },
             },
             pytest.raises(ValueError, match="following a replacement"),
-        ),
-        (
-            ["T1w"],
-            "wrong",
-            {
-                "T1w": {
-                    "pattern": "{subject}/anat/{subject}_T1w.nii",
-                    "space": "native",
-                },
-            },
-            pytest.raises(TypeError, match="`replacements` must be a list"),
-        ),
-        (
-            ["T1w"],
-            [1],
-            {
-                "T1w": {
-                    "pattern": "{subject}/anat/{subject}_T1w.nii",
-                    "space": "native",
-                },
-            },
-            pytest.raises(
-                TypeError, match="`replacements` must be a list of strings"
-            ),
         ),
         (
             ["T1w", "BOLD"],

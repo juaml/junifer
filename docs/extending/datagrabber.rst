@@ -140,29 +140,24 @@ With the variables defined above, we can create our DataGrabber and name it
 
     from pathlib import Path
 
-    from junifer.datagrabber import PatternDataGrabber
+    from junifer.datagrabber import PatternDataGrabber, DataType
+    from junifer.typing import DataGrabberPatterns
 
 
     class ExampleBIDSDataGrabber(PatternDataGrabber):
-        def __init__(self, datadir: str | Path) -> None:
-            types = ["T1w", "BOLD"]
-            patterns = {
-                "T1w": {
-                    "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-                    "space": "native",
-                },
-                "BOLD": {
-                    "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-                    "space": "MNI152NLin6Asym",
-                },
-            }
-            replacements = ["subject", "session"]
-            super().__init__(
-                datadir=datadir,
-                types=types,
-                patterns=patterns,
-                replacements=replacements,
-            )
+
+        types: list[DataType] = [DataType.T1w, DataType.BOLD]
+        patterns: DataGrabberPatterns = {
+            "T1w": {
+                "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                "space": "native",
+            },
+            "BOLD": {
+                "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
+        }
+        replacements: list[str] = ["subject", "session"]
 
 Our DataGrabber is ready to be used by ``junifer``. However, it is still unknown
 to the library. We need to register it in the library. To do so, we need to
@@ -175,29 +170,24 @@ use the :func:`.register_datagrabber` decorator.
 
     from junifer.api.decorators import register_datagrabber
     from junifer.datagrabber import PatternDataGrabber
+    from junifer.typing import DataGrabberPatterns
 
 
     @register_datagrabber
     class ExampleBIDSDataGrabber(PatternDataGrabber):
-        def __init__(self, datadir: str | Path) -> None:
-            types = ["T1w", "BOLD"]
-            patterns = {
-                "T1w": {
-                    "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-                    "space": "native",
-                },
-                "BOLD": {
-                    "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-                    "space": "MNI152NLin6Asym",
-                },
-            }
-            replacements = ["subject", "session"]
-            super().__init__(
-                datadir=datadir,
-                types=types,
-                patterns=patterns,
-                replacements=replacements,
-            )
+
+        types: list[DataType] = [DataType.T1w, DataType.BOLD]
+        patterns: DataGrabberPatterns = {
+            "T1w": {
+                "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                "space": "native",
+            },
+            "BOLD": {
+                "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
+        }
+        replacements: list[str] = ["subject", "session"]
 
 
 Now, we can use our DataGrabber in ``junifer``, by setting the ``datagrabber``
@@ -259,35 +249,30 @@ And we can create our DataGrabber:
 
 .. code-block:: python
 
+    from pathlib import Path
+
     from junifer.api.decorators import register_datagrabber
     from junifer.datagrabber import PatternDataladDataGrabber
+    from pydantic import AnyUrl
 
 
     @register_datagrabber
     class ExampleBIDSDataGrabber(PatternDataladDataGrabber):
-        def __init__(self) -> None:
-            types = ["T1w", "BOLD"]
-            patterns = {
-                "T1w": {
-                    "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
-                    "space": "native",
-                },
-                "BOLD": {
-                    "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
-                    "space": "MNI152NLin6Asym",
-                },
-            }
-            replacements = ["subject", "session"]
-            uri = "https://gin.g-node.org/juaml/datalad-example-bids"
-            rootdir = "example_bids_ses"
-            super().__init__(
-                datadir=None,
-                uri=uri,
-                rootdir=rootdir,
-                types=types,
-                patterns=patterns,
-                replacements=replacements,
-            )
+
+        uri: AnyUrl = "https://gin.g-node.org/juaml/datalad-example-bids"
+        types: list[DataType] = ["T1w", "BOLD"]
+        patterns: DataGrabberPatterns = {
+            "T1w": {
+                "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                "space": "native",
+            },
+            "BOLD": {
+                "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
+        }
+        replacements: list[str] = ["subject", "session"]
+        rootdir: Path = "example_bids_ses"
 
 This approach can be used directly from the YAML, like so:
 
@@ -376,8 +361,8 @@ need to implement the following methods:
 
 .. note::
 
-   The ``__init__`` method could also be implemented, but it is not mandatory.
-   This is required if the DataGrabber requires any extra parameter.
+   If the DataGrabber requires any extra parameter, they could be defined as
+   class attributes.
 
 We will now implement our BIDS example with this method.
 
@@ -494,8 +479,8 @@ more information about the format of the confounds file. Thus, the
 ``BOLD.confounds`` element is a dictionary with the following keys:
 
 - ``path``: the path to the confounds file.
-- ``format``: the format of the confounds file. Currently, this can be either
-  ``fmriprep`` or ``adhoc``.
+- ``format``: the format of the confounds file. Check :enum:`.ConfoundsFormat`
+  for options.
 
 The ``fmriprep`` format corresponds to the format of the confounds files
 generated by `fMRIPrep`_. The ``adhoc`` format corresponds to a format that is

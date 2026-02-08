@@ -62,7 +62,7 @@ def datagrabber() -> dict[str, str]:
 
 
 @pytest.fixture
-def markers() -> list[dict[str, str]]:
+def markers() -> list[dict[str, Union[list[str], str]]]:
     """Return markers as a list of dictionary."""
     return [
         {

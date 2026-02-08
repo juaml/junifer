@@ -277,7 +277,16 @@ class PipelineComponentRegistry(metaclass=Singleton):
         logger.debug(f"\tInit params: {init_params}")
         try:
             # Create instance of the class
-            object_ = klass(**init_params)
+            if step == "datagrabber" and name == "MultipleDataGrabber":
+                dgs = []
+                for d in init_params["datagrabbers"]:
+                    k = d.pop("kind")
+                    dg_klass = self.get_class(step=step, name=k)
+                    dg_obj = dg_klass(**d)
+                    dgs.append(dg_obj)
+                object_ = klass(datagrabbers=dgs)
+            else:
+                object_ = klass(**init_params)
         except (ValueError, TypeError) as e:
             raise_error(
                 msg=f"Failed to create {step} ({name}). Error: {e}",
